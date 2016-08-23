@@ -418,10 +418,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApprovalG/apprGFormPreview";
 	}
-	
-		
-		
-		
 	///////////////////////
 	
 	/**

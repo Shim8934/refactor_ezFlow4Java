@@ -98,7 +98,7 @@ function InitFormCont() {
 	treeView.DataSource(xmlTree);
 	treeView.DataBind("divFromTreeView");
 }
-
+var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent)
 {
 //	var parameter = pAlertContent;

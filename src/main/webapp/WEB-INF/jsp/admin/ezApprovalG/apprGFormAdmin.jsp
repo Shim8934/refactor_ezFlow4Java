@@ -254,13 +254,13 @@
 		                        Tree_setconfig();
 		                        InitFormCont();
 		                    } else {
-		                        alert("<spring:message code = 'ezApprovalG.t1615' />");
+		                    	OpenAlertUI("<spring:message code = 'ezApprovalG.t1615' />");
 		                    }
 		                } else {
-		                    alert("<spring:message code = 'ezApprovalG.t1613' />");
+		                	OpenAlertUI("<spring:message code = 'ezApprovalG.t1613' />");
 		                }
 		            } else {
-		                alert("<spring:message code = 'ezApprovalG.t1614' />");
+		            	OpenAlertUI("<spring:message code = 'ezApprovalG.t1614' />");
 		            }
 		        }
 		    }
@@ -299,13 +299,13 @@
 		                    url = "/admin/ezApprovalG/formMain.do?tCheck=fIns&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURI(companyID);
 		                }
 		                
-		                var retVal = window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
+		                window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 				        Tree_setconfig();
 		                InitFormCont();
 		                
 		            } else {
-		                alert("<spring:message code = 'ezApprovalG.t722' />");
+		            	OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
 		            }
 		        }
 		    }
@@ -320,13 +320,15 @@
 		        listview.LoadFromID("lvtForm");
 	
 		        nodeIdx = treeView.GetSelectNode();
+
 		        if (nodeIdx > 0) {
 		            para[0] = "U";
 		            para[1] = nodeIdx.GetNodeData("DATA1");
 		        }
 		        
-		        var selRow = listview.GetSelectedRows();        
-		        if (selRow) {
+		        var selRow = listview.GetSelectedRows();
+		        
+		        if (selRow!= "") {
 		            para[2] = GetAttribute(selRow[0], "DATA1");
 		            para[3] = GetAttribute(selRow[0], "DATA5");
 		            para[4] = GetAttribute(selRow[0], "DATA2");
@@ -343,10 +345,12 @@
 		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURI(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURI(companyID);
 		            }
 		            
-		            var retVal = window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
+		            window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();
 		            InitFormCont();
+		        } else {
+		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
 		        }
 		    }
 	
@@ -355,9 +359,9 @@
 		        listview.LoadFromID("lvtForm");
 	
 		        var selRow = listview.GetSelectedRows();
-		        if (selRow) {
+		        if (selRow != "") {
 		            if (confirm("<spring:message code = 'ezApprovalG.t999933' />") == true) {
-		                var xmlRtn = createXmlDom();
+		                var tempRet = "";
 		                
 		                $.ajax({
 		                	type : "POST",
@@ -365,20 +369,22 @@
 		                	async : false,
 		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID},
 		                	success : function (result) {
-		                		xmlRtn = loadXMLString(result);
+		                		tempRet = result;
 		                	}
 		                });
 		                
-		                if (getNodeText(SelectNodes(xmlRtn, "RESULT")[0]) == "TRUE") {
+		                if (tempRet == "TRUE") {
 		                    listview.DeleteRow(GetAttribute(selRow[0], "id"));
 		                    descrip.innerText = "";
 		                } else {
-		                    window.alert("<spring:message code = 'ezApprovalG.t173' />");
+		                	OpenAlertUI("<spring:message code = 'ezApprovalG.t173' />");
 		                }
 		            } else {
 		                return;
 		            }
-		        }        
+		        } else {
+		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
+		        }
 		    }    
 	
 		    function lvtForm_Row_click() {
@@ -438,13 +444,13 @@
 		        	data : {formContID : nodeIdx.GetNodeData("DATA1"), boardIDList : strFormList, companyID : companyID},
 		        	success : function(result) {
 		        		if (result == "OK") {
-				            alert("<spring:message code = 'ezApprovalG.t1581' />");
+		        			OpenAlertUI("<spring:message code = 'ezApprovalG.t1581' />");
 				        } else {
-				            alert("<spring:message code = 'ezApprovalG.t426' />");
+				        	OpenAlertUI("<spring:message code = 'ezApprovalG.t426' />");
 				        }
 		        	},
 		        	error : function() {
-		        		alert("<spring:message code = 'ezApprovalG.t426' />");
+		        		OpenAlertUI("<spring:message code = 'ezApprovalG.t426' />");
 		        	}
 		        });
 		    }
@@ -456,7 +462,7 @@
 		        var tr = oArrRows[0];
 
 		        var url = "/admin/ezApprovalG/formPreview.do?href=" + encodeURI(GetAttribute(tr, "DATA4"));
-		        var retVal = window.showModalDialog(url, "", "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
+		        window.showModalDialog(url, "", "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 		    }
 		</script>
 	
@@ -507,7 +513,7 @@
 		<table class="content" style="width:1000px">
 			<tr>
 		    	<th><spring:message code = 'ezApprovalG.t1540' /></th>
-		    	<td><select name="select" style="WIDTH:200px;" language="javascript" onchange="return select_onchange()" id="FromList">
+		    	<td><select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
 		        	<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
 		        	${docType}
 		      	</select></td>

@@ -606,7 +606,7 @@
 			                var width = window.screen.availWidth;
 			                var left = (parseInt(width) - 420) / 2;
 			                var top = (parseInt(heigth) - 450) / 2;
-			                window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", GetOpenWindowfeature(270, 600));
+			                window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 			            }
 			        } else if (jobState == "RECIPENT") {
 			            var heigth = window.screen.availHeight;
