@@ -64,6 +64,8 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -104,7 +106,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
-
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
@@ -152,10 +157,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
-
-		//TODO: userinfo.DisplayName2 가져오기.
-		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
-		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
+		
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1");
+		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName() : mailGeneralVO.getMailSenderNm();
 
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (int i=0; i<senderList.length; i++) {

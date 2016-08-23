@@ -286,9 +286,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
 		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
 		
-		//TODO: userinfo.DisplayName2 가져오기.
-		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? "" : mailGeneralVO.getMailSenderNm();
-		//_PmailSenderNM = string.IsNullOrEmpty(xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText) ? userinfo.DisplayName2 : xmldom.SelectSingleNode("DATA/MAILSENDERNM").InnerText;
+		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName() : mailGeneralVO.getMailSenderNm();
 		
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
