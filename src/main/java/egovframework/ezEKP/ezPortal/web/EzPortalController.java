@@ -1399,4 +1399,26 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/portalWpNewBirth";
 	
 	}
+	
+	/**
+	 * 포탈 - webPart totalSection5 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpTotalSection5.do")
+	public String wpTotalSection5(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+		String pPhotoGalleryID = "";
+			
+		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
+			pPhotoGalleryID = req.getParameter("photoGalleryID");
+		}
+		
+		model.addAttribute("curMon", curMon);	
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
+		
+		return "/ezPortal/portalWpTotalSection5";
+	}
 }
