@@ -30,6 +30,7 @@
 	<typeAlias  alias="ApprGHistoryAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO"/>
 	<typeAlias  alias="ApprGDocAttachInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO"/>
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
+	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
 	
 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -1037,7 +1038,10 @@
 	</procedure>
 	
 	<procedure id="EzApprovalG.getDeliveryListCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLISTCOUNT(#v_DEPTID# , #v_SUBQUERY#, #v_MANAGEDEPTID#, #v_ORGANID# , #v_DOCTITLE#, #v_CHARGENAME#, #v_SREGDATE#, #v_EREGDATE#)}
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLISTCOUNT(#v_DEPTID# , #v_SUBQUERY#, #v_MANAGEDEPTID#, #v_ORGANID# , #v_DOCTITLE#, #v_CHARGENAME#, #v_SREGDATE#, #v_EREGDATE#,#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	<procedure id="EzApprovalG.getDeliveryList" parameterClass="Map" resultClass="ApprGDeliveryListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLIST(#v_DEPTID#,#v_SUBQUERY#,#iv_PAGESIZE#,#iv_PAGESIZE2#,#v_ORDEROPTION#,#v_ORDEROPTION2#,#v_MANAGEDEPTID#,#v_ORGANID#,#v_DOCTITLE#,#v_CHARGENAME#,#v_SREGDATE#,#v_EREGDATE#,#v_ISDOCPRINT# ,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
 	</procedure>
 	
 	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
@@ -1065,5 +1069,26 @@
 	<procedure id="EzApprovalG.getTaskCharger" parameterClass="Map" resultClass="ApprGRecordVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCHARGER(#v_CABCLASSNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> 
-
+		<procedure id="EzApprovalG.sendOfferCheck_EndReceipt" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_SENDOFFERCHECK_ENDRECEIPT(#v_DOCID#, #v_FLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	
+	</procedure>
+	<procedure id="EzApprovalG.getSearchList" parameterClass="Map" resultClass="String">
+		{CALL EZAPPROVALG_$companyID$.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
+	</procedure>
+		<procedure id="EzApprovalG.updateReceiptOffer" parameterClass="Map" >
+		{CALL EZAPPROVALG_$companyID$.EZSP_UPDATERECEIPTOFFER(#v_DOCID#,#v_ORGDOCID#)}	
+	</procedure>
+		<procedure id="EzApprovalG.doSendOffer_endDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFER_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
+		<procedure id="EzApprovalG.doSendOffer_expendDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFER_EXPENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
+		<procedure id="EzApprovalG.getReceiptInfo_receivesNm" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIPTINFO_RECEIVESNM(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	
+	</procedure>
+		<procedure id="EzApprovalG.doSendOffer_receiptId" parameterClass="Map" resultClass="ApprGReceiptVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFER_RECEIPTID(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
+  
 </sqlMap>

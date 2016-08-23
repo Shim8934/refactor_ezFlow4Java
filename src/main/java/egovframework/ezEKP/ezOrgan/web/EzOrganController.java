@@ -171,7 +171,7 @@ public class EzOrganController {
 	@RequestMapping(value = "/ezOrgan/getSearchList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSearchList(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String searchlist = request.getParameter("search");
+		String searchlist = request.getParameter("search").trim();
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");

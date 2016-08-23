@@ -757,7 +757,7 @@ function InsertToRecListView(Resultxml) {
                 NodeListLen = 0;
         }
 
-        var xmlDoc
+        var xmlDoc;
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -1739,7 +1739,7 @@ function btnSearchDelivery_onclick(opnOption) {
     searchdelivery_cross_dialogArguments[0] = para;
     searchdelivery_cross_dialogArguments[1] = btnSearchDelivery_onclick_Complete;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/SearchDelivery_Cross.aspx";
+    var url = "/ezApprovalG/searchDelivery.do";
 
     var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(465, 370));
     try { OpenWin.focus(); } catch (e) { }

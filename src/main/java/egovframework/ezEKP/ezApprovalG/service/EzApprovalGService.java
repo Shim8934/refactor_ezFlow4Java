@@ -333,4 +333,11 @@ public interface EzApprovalGService {
 	public String getTaskCharger(Document xmlDom, String lang) throws Exception;
 
 	public String saveCabRoleInfo(Document xmlDom) throws Exception;
+
+	public String updateReceiptOffer(String docID, String orgDocID, String companyID)throws Exception;
+
+	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang)throws Exception;
+
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang)throws Exception;
+
 }

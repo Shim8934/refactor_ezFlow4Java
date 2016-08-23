@@ -327,7 +327,7 @@
     }
     function selRegisterType_onchange() {
         var Val = selRegisterType.value;
-        
+
         if (Val == "5" || Val == "6") {
             divAudioVisualDummy.style.display = "none";
             divAudioVisual.style.display = "";

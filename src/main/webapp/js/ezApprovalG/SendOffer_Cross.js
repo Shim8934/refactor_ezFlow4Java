@@ -69,7 +69,7 @@ function OpenSendOfferUI() {
         ezselectone_cross_dialogArguments[0] = parameter;
         ezselectone_cross_dialogArguments[1] = SendOffer_Complete;
 
-        var OpenWin = window.open("/myoffice/ezApprovalG/enforce/ezSelectOne_Cross.aspx", "ezSelectOne_Cross", GetOpenWindowfeature(600, 500));
+        var OpenWin = window.open("/ezApprovalG/ezSelectOne.do", "ezSelectOne_Cross", GetOpenWindowfeature(600, 500));
         try { OpenWin.focus(); } catch (e) { }
     //}
 }
@@ -156,9 +156,9 @@ function UpdateReceiptOffer(pDocID, pOrgDocID)
 	var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);	
+    createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pOrgDocID);	
 	
-	xmlhttp.open("POST","../enforce/aspx/UpdateReceiptOffer.aspx",false);
+	xmlhttp.open("POST","/ezApprovalG/updateReceiptOffer.do",false);
 	xmlhttp.send(xmlpara);
 	
 	var dataNodes = GetChildNodes(xmlhttp.responseXML); 
@@ -190,7 +190,7 @@ function doSendOffer(newDocID, pDocID, array, pHref)
     createNodeAndInsertText(xmlpara, objNode, "SIMSAUSERDEPTNAME2", array[7]);	
     createNodeAndInsertText(xmlpara, objNode, "SIMSAUSERJOBTITLE2", array[8]);	    
 
-	xmlhttp.open("POST","../enforce/aspx/sendOfferG.aspx",false);
+	xmlhttp.open("POST","/ezApprovalG/sendOfferG.do",false);
 	xmlhttp.send(xmlpara);
 	
 	var dataNodes = GetChildNodes(xmlhttp.responseXML); 
@@ -263,12 +263,12 @@ function SendOfferCheck(pDocID, pUserID)
         createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);  
 		
-		xmlhttp.open("POST","../enforce/aspx/sendOfferCheck.aspx",false);
+		xmlhttp.open("POST","/ezApprovalG/sendOfferCheck.do",false);
 		xmlhttp.send(xmlpara);
-		
 		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
+
 	    var rtnVal = getNodeText(dataNodes[0]);	
-		
+
 		if (rtnVal == "FALSE")
 		{
 			var pAlertContent = strLang200;
@@ -331,64 +331,58 @@ function SendOfferCheck_OpenUI(Ans) {
 
 function CreateNewDoc(pDocID, pUserID)
 {
-	try
-	{
-		var objRoot;
-		var objNode;
-			
-		var xmlpara = createXmlDom();
-		var xmlhttp = createXMLHttpRequest();
-		
-		var objNode;
-	    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-        createNodeAndInsertText(xmlpara, objNode, "FormID", getEndFormID(pDocID));
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);  			
-		
-		xmlhttp.open("POST","../aspx/createnewdoc.aspx",false);
-		xmlhttp.send(xmlpara);
-		
-		
-		if(xmlhttp.responseText == "False")
-		{
-			return ""
-		}else{
-			return xmlhttp.responseText;
-		}
-	}
-	catch(e)
-	{
-		alert("createNewDoc()" + e.description);
-		return "";
-	}
+    try {
+    	var result = "";
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/createNewDoc.do",
+    		data : {
+    			formID : getEndFormID(pDocID),
+    			pUserID : pUserID
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
+        if (result == "False") {
+            var pAlertContent = strLang131 + "<br> " + strLang132;
+            OpenAlertUI(pAlertContent);
+        } else {
+            return result;
+        }
+    } catch (e) {
+        alert("createNewDoc()" + e.description);
+    }
 }
 
 function getEndFormID(pDocID)
 {
-	try
-	{
-		var objRoot;
-		var objNode;
-			
-		var xmlpara = createXmlDom();
-		var xmlhttp = createXMLHttpRequest();
-		
-		var objNode;
-	    createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "FormID", pDocID); 
-        createNodeAndInsertText(xmlpara, objNode, "pFlag", "END");
-        createNodeAndInsertText(xmlpara, objNode, "pData", "FormID");
-        			
-		xmlhttp.open("POST","../aspx/getDocData.aspx",false);
-		xmlhttp.send(xmlpara);
+	
+	 try {
+	    	var result = "";
+	    	
+	        $.ajax({
+	    		type : "POST",
+	    		dataType : "xml",
+	    		async : false,
+	    		url : "/ezApprovalG/getDocData.do",
+	    		data : {
+	    			docID : pDocID,
+	    			mode  : "END",
+	    			sel   : "FormID"
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}        			
+	    	});
+	        
+	        pFormID = getNodeText(GetChildNodes(result)[0]);
 
-        var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	    return getNodeText(dataNodes[0]).trim();	
-	}
-	catch(e)
-	{
-		alert("getEndFormID()" + e.description);
-		return "";
-	}
+	    } catch (e) {
+	        alert("GetAprDocFormID : " + e.description);
+	    }
 }
 
 var selectreceipts_cross_dialogArguments = new Array();

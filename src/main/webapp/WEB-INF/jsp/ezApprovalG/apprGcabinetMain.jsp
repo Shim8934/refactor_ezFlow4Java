@@ -1265,7 +1265,7 @@
         ezSelectSusin_Cross_dialogArguments[0] = parameter;
         ezSelectSusin_Cross_dialogArguments[1] = btnReSend_onclick_Complete;
 
-        var url = "/myoffice/ezApprovalG/enforce/ezSelectSusin_Cross.aspx";
+        var url = "/ezApprovalG/ezSelectSusin.do";
         
         var OpenWin = window.open(url, "ezSelectSusin_Cross", GetOpenWindowfeature(750, 650));
         try { OpenWin.focus(); } catch (e) { }
@@ -1295,7 +1295,7 @@
         createNodeInsert(xmlpara, objNode, "PARAMETER");
         createNodeAndInsertText(xmlpara, objNode, "DOCID", DocID);
 
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/getCheckEndHref.aspx", false);
+        xmlhttp.open("POST", "/ezApprovalG/getCheckEndHref.do", false);
         xmlhttp.send(xmlpara);
 
         if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "TRUE") {
@@ -1311,7 +1311,7 @@
         parameter[3] = "011";
         parameter[4] = arr_userinfo[4];
 
-        var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx?mode=add&pdocid=" + DocID;
+        var url = "/ezApprovalG/ezReceiveDistributeUI.do?mode=add&pdocid=" + DocID;
 
         ezreceivedistributeui_cross_dialogArguments[0] = parameter;
         ezreceivedistributeui_cross_dialogArguments[1] = btnBaeBu_onclick_Complete;

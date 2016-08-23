@@ -126,7 +126,35 @@ public class ApprGTaskVO {
 	private String tVolumNo;
 	private String transferDate;
 	private String serialNo;
+	private String tTaskName;
+	private String tTaskCode;
+	private String tRegSerialNo;
+	private String tVolumeNo; 
 	
+	public String gettRegSerialNo() {
+		return tRegSerialNo;
+	}
+	public void settRegSerialNo(String tRegSerialNo) {
+		this.tRegSerialNo = tRegSerialNo;
+	}
+	public String gettVolumeNo() {
+		return tVolumeNo;
+	}
+	public void settVolumeNo(String tVolumeNo) {
+		this.tVolumeNo = tVolumeNo;
+	}
+	public String gettTaskName() {
+		return tTaskName;
+	}
+	public void settTaskName(String tTaskName) {
+		this.tTaskName = tTaskName;
+	}
+	public String gettTaskCode() {
+		return tTaskCode;
+	}
+	public void settTaskCode(String tTaskCode) {
+		this.tTaskCode = tTaskCode;
+	}
 	public String getSerialNo() {
 		return serialNo;
 	}

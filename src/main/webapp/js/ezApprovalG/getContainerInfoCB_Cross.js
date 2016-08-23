@@ -284,7 +284,7 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     g_szParamXml = getXmlString(xmlpara);
    
     g_DeliveryXmlhttp = createXMLHttpRequest();
-    g_DeliveryXmlhttp.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/getDeliveryList.aspx", true);
+    g_DeliveryXmlhttp.open("POST", "/ezApprovalG/getDeliveryList.do", true);
     g_DeliveryXmlhttp.onreadystatechange = onreadystatechange_GetDocDeliveryList;
     g_DeliveryXmlhttp.send(xmlpara);
 }

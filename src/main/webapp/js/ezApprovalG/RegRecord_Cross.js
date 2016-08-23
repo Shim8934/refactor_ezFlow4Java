@@ -17,7 +17,6 @@ function InitCabinetInfo() {
     tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
     
     tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
-
     InitCabClassInfo(GetCabinetClassInfo(g_CabID));
 }
 
@@ -38,20 +37,19 @@ function InitRegisterType() {
 
     var RegTypeCodeXml = createXmlDom();
     var objRoot, objNode;
-
     objRoot = createNodeInsert(RegTypeCodeXml, objRoot, "REGISTERTYPE");
     switch (g_RecTypeCode) {
-
+ 
         case "1":
             if (ListTypeFlag == "10") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
             }
             else if (ListTypeFlag == "11") {
             	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0].innerHTML);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             break;
 
@@ -63,27 +61,27 @@ function InitRegisterType() {
             	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);;
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2].innerHTML);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
             }
             break;
 
         case "3":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4].innerHTML);
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
             break;
 
         case "4":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5].innerHTML);
+        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
             break;
 
         case "5":
 
             if (ListTypeFlag == "10" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
 
             if (ListTypeFlag == "11" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6].innerHTML);
+            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
 
             break;
