@@ -1219,7 +1219,8 @@ public class EzApprovalGarchiveController {
 	public String addBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String dirpath = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
+		String realPath = request.getServletContext().getRealPath("");
+		String dirpath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
 		String result = ezApprovalGService.addBebu(xmlDom, dirpath , userInfo.getCompanyID(), userInfo.getLang());
 		return result;
 	}
