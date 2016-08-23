@@ -50,7 +50,7 @@ function setPublicFlag(vPublicFlag) {
             break;
     }
     rdoSecType_onclick(vPublicFlag.substring(0, 1));
-    for (i = 1; i <= 8; i++) {
+    for (var i = 1; i <= 8; i++) {
         if (vPublicFlag.substring(i, i + 1) == "Y") {
             switch (i) {
                 case 1:
@@ -185,7 +185,7 @@ function setSecurityList() {
             strValue = objNodes.item(i).childNodes(0).text;
             strText = objNodes.item(i).childNodes(1).text;
             selOption[i] = new Option(strText, strValue);
-            selOption[i].id = strValue
+            selOption[i].id = strValue;
             selSecLevel.options[i] = selOption[i];
         }
     }

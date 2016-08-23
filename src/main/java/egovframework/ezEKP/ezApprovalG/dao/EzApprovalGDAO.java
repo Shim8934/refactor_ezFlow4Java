@@ -465,6 +465,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getDocAprLine(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getDocAprLine", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getDocType(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzApprovalG.getDocType", map);
 	}
@@ -609,6 +614,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public String getFormConnFlag(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getFormConnFlag", map);
+	}
+	
+	public String getDocInfoDState(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getDocInfoDState", map);
 	}
 	
 	public int getAprDocListCount(Map<String, Object> map) throws Exception{
@@ -764,6 +773,22 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public int getAprPortletDocCount(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getAprPortletDocCount", map);
 		return (int)map.get("v_pCount");
+	}
+	
+	public int getDocAprCnt(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.getDocAprCnt", map);
+	}
+	
+	public int getDocInfoRef(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.getDocInfoRef", map);
+	}
+	
+	public int getDocInfoHab(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.getDocInfoHab", map);
+	}
+	
+	public int getDocInfoJeonKyul(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.getDocInfoJeonKyul", map);
 	}
 	
 	public void transactionSQL(Map<String, Object> map) throws Exception{

@@ -14,7 +14,6 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {
-alert(300);
 		        try {
 		            RetValue = parent.InsDisplayInfo_Cross_dialogArguments[0];
 		            ReturnFunction = parent.InsDisplayInfo_Cross_dialogArguments[1];

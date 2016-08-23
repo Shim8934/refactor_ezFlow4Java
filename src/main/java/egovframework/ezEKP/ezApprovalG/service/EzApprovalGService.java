@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezApprovalG.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -279,6 +281,8 @@ public interface EzApprovalGService {
 	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID) throws Exception;
+	
+	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request) throws Exception;
 	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	

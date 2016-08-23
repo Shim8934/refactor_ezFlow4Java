@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -40,7 +39,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -4675,5 +4673,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String insDisplayInfo() throws Exception{
 		return "ezApprovalG/apprGinsDisplayInfo";
 	}
-	
+
+	/**
+	 * 전자결재G 결재 일괄결재 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do")
+	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		String rtnVal = "OK/0/0/0";
+		int totCnt = 0, trueCnt = 0, falseCnt = 0;
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+		String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim();
+		String deptID = xmlDom.getElementsByTagName("DEPTID").item(0).getTextContent().trim();
+		String deptName = xmlDom.getElementsByTagName("DEPTNAME").item(0).getTextContent().trim();
+		String jikChek = xmlDom.getElementsByTagName("JIKCHEK").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		String pw = xmlDom.getElementsByTagName("PASSWD").item(0).getTextContent().trim();
+		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
+		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+		String orgUID = "";
+		
+		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
+			totCnt = xmlDom.getElementsByTagName("DOCID").getLength();
+			String aprType_aprState = "";
+			
+			for (int k = 0; k < xmlDom.getElementsByTagName("DOCID").getLength(); k++) {
+				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();
+				rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request);
+				
+				if (rtnVal.equals("ERROR")) {
+					falseCnt++;
+				} else {
+					trueCnt++;
+				}
+			}
+			
+			rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt;
+		}
+		
+		return rtnVal;
+	}
 }

@@ -183,7 +183,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECORDCLASSINFO(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO">
+	<procedure id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -369,6 +369,10 @@
 	
 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDEPTSTACTICS(#v_pStartDate#, #v_pEndDate#, #iv_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.getDocAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRLINEINFO_ID(#v_PDOCID#, #v_PUSERID#, #v_PAPRSTATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
@@ -861,11 +865,123 @@
 	<select id="EzApprovalG.getApprovalPWD1" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				PWD 
+				pwd 
       		FROM 
       			EZCOMMON.TBPWDINFO
       		WHERE  
       			userid = #v_PUSERID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getDocInfoDState" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				 $v_COL$ 
+			FROM 
+				EZAPPROVALG_$companyID$.TBAPRDOCINFO A
+      		INNER JOIN 
+      			EZAPPROVALG_$companyID$.TBEXPAPRDOCINFO B
+      		ON 
+      			A.docid = B.docid
+      		WHERE 
+      			A.docid = #v_DOCID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getDocAprCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+      		FROM 
+      			EZAPPROVALG_$companyID$.TBAPRLINEINFO A
+            JOIN 
+            	EZAPPROVALG_$companyID$.TBEXPAPRLINE B
+            ON 
+            	A.docid = B.docid
+            AND 
+            	A.aprmembersn = B.aprmembersn
+          	WHERE  
+          		A.docid = #v_PDOCID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getDocInfoRef" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+       		WHERE  
+       			aprmembersn < ( SELECT 
+       								aprmembersn 
+                              	FROM 
+                              		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+                               	WHERE  
+                               		docid = #v_PDOCID#
+                                AND 
+                                	aprmemberid = #v_PUSERID#
+                                AND 
+                                	aprstate = #v_PAPRSTATE# )
+			AND 
+				docid = #v_PDOCID#
+			AND 
+				(aprtype = '002' 
+					OR 
+				 aprtype = '007' 
+				 	OR 
+				 aprtype = '008' 
+				 	OR 
+				 aprtype = '009' 
+				 	OR 
+				 aprtype = '080' )
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+       		WHERE  
+       			aprmembersn < ( SELECT 
+       								aprmembersn 
+                              	FROM 
+                              		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+                               	WHERE  
+                               		docid = #v_PDOCID#
+                                AND 
+                                	aprmemberid = #v_PUSERID#
+                                AND 
+                                	aprstate = #v_PAPRSTATE# )
+            AND 
+            	docid = #v_PDOCID#
+            AND 
+            	aprtype IN ( '018','019','007','031','002')
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getDocInfoJeonKyul" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+       		WHERE  
+       			aprmembersn < ( SELECT 
+       								aprmembersn 
+                              	FROM 
+                              		EZAPPROVALG_$companyID$.TBAPRLINEINFO 
+                               	WHERE  
+                               		docid = #v_PDOCID#
+                                AND 
+                                	aprmemberid = #v_PUSERID#
+                                AND 
+                                	aprstate = #v_PAPRSTATE# )
+            AND 
+            	docid = #v_PDOCID#
+            AND 
+            	aprtype = '004'
         ]]>
 	</select>
 	
@@ -924,7 +1040,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDELIVERYLISTCOUNT(#v_DEPTID# , #v_SUBQUERY#, #v_MANAGEDEPTID#, #v_ORGANID# , #v_DOCTITLE#, #v_CHARGENAME#, #v_SREGDATE#, #v_EREGDATE#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO">
+	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
 	</procedure>
 	

@@ -81,7 +81,7 @@
 		            }
 		        }
 		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezApprovalTotal/aspx/doApprovAllG.aspx", false);
+		        xmlhttp.open("POST", "/ezApprovalG/doApprovAllG.do", false);
 		        xmlhttp.send(xmlpara);
 		        var RtnVal = xmlhttp.responseText;
 		        var arrRtnVal = new Array();
