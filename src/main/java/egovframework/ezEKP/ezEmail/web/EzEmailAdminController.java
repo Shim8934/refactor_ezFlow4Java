@@ -316,27 +316,31 @@ public class EzEmailAdminController {
 				
 				if(pClass.equals("group")) {
 					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"));
-					sb.append("<ROW>");
-					sb.append("<CLASS>" + pClass + "</CLASS>");
-					sb.append("<CN>" + pCn + "</CN>");
-					sb.append("<DISPLAYNAME>" + dept.getDisplayName() + "</DISPLAYNAME>");
-					sb.append("<MAIL>" + dept.getMail() + "</MAIL>");
-					sb.append("<COMPANY>" + dept.getExtensionAttribute3() + "</COMPANY>");
-					sb.append("<DEPT>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</DEPT>");
-					sb.append("<TITLE>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</TITLE>");
-					sb.append("</ROW>");
+					if (dept != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + pCn + "</CN>");
+						sb.append("<DISPLAYNAME>" + dept.getDisplayName() + "</DISPLAYNAME>");
+						sb.append("<MAIL>" + dept.getMail() + "</MAIL>");
+						sb.append("<COMPANY>" + dept.getExtensionAttribute3() + "</COMPANY>");
+						sb.append("<DEPT>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</DEPT>");
+						sb.append("<TITLE>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</TITLE>");
+						sb.append("</ROW>");
+					}
 				
 				} else {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"));
-					sb.append("<ROW>");
-					sb.append("<CLASS>" + pClass + "</CLASS>");
-					sb.append("<CN>" + pCn + "</CN>");
-					sb.append("<DISPLAYNAME>" + user.getDisplayName() + "</DISPLAYNAME>");
-					sb.append("<MAIL>" + user.getMail() + "</MAIL>");
-					sb.append("<COMPANY>" + user.getCompany() + "</COMPANY>");
-					sb.append("<DEPT>" + user.getDescription() + "</DEPT>");
-					sb.append("<TITLE>" + user.getTitle() + "</TITLE>");
-					sb.append("</ROW>");
+					if (user != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + pCn + "</CN>");
+						sb.append("<DISPLAYNAME>" + user.getDisplayName() + "</DISPLAYNAME>");
+						sb.append("<MAIL>" + user.getMail() + "</MAIL>");
+						sb.append("<COMPANY>" + user.getCompany() + "</COMPANY>");
+						sb.append("<DEPT>" + user.getDescription() + "</DEPT>");
+						sb.append("<TITLE>" + user.getTitle() + "</TITLE>");
+						sb.append("</ROW>");
+					}
 				}
 				
 			}
