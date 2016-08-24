@@ -28,7 +28,7 @@
 
 function ezIcd_ActiveX(idName)
 {
-	document.writeln('<OBJECT id="' + idName + '" style="DISPLAY: none" codeBase="/ezIcd2.cab#version=1,0,2,5" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="')
+	document.writeln('<OBJECT id="' + idName + '" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,2,5" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="')
 	document.writeln('classid="CLSID:475DF11A-2BC2-41A9-8A97-E989E023E517" VIEWASTEXT></OBJECT>');
 }
 

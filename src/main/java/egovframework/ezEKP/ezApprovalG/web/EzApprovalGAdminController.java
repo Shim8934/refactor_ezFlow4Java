@@ -1,11 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -411,14 +412,48 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 미리보기 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formPreview.do")
-	public String formPreview(HttpServletRequest request, Model model) {
+	public String formPreview(HttpServletRequest request, Model model) throws Exception {
 		String docHref = request.getParameter("href");
 		 
 		model.addAttribute("docHref", docHref);
 		
 		return "admin/ezApprovalG/apprGFormPreview";
 	}
-	///////////////////////
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) ActiveX 다운로드 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		StringBuilder result = new StringBuilder();
+		String realPath = request.getServletContext().getRealPath(""); 
+		String path = "xml" + commonUtil.separator + "ezApprovalG" + commonUtil.separator + "componentlist_admin.xml";
+		path = realPath + commonUtil.separator + path;
+		try {
+			File file = new File(path);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = null;
+	
+			while ((line = br.readLine()) != null) {
+				result.append(line);
+			}
+			System.out.println(result);
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) ActiveX 다운로드 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
+	public String progressAdmin() {
+		return "/admin/ezApprovalG/apprGProgressAdmin";
+	}
 	
 	/**
 	 * 전자결재G관리 문서함관리 메뉴 호출 함수

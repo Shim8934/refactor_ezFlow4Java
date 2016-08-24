@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<components>
+  	<activex>
+		<url os="all" size="183">DOWNLOADSERVER/files/component/ezDHTMLEditor.ent</url>
+		<clsid>75C3B556-E712-42CD-9B21-CF5B86CC7425</clsid>
+		<version>1,0,1,7</version>
+		<compressed>ocx</compressed>
+		<type>inproc</type>
+	</activex>
+	<activex>
+		<url os="all" size="324">DOWNLOADSERVER/files/component/pzFormProc_utf8.ent</url>
+		<clsid>999C3A80-04F3-44B7-8815-36ADF2319B98</clsid>
+		<version>1,8,0,28</version>
+		<compressed>dll</compressed>
+		<type>inproc</type>
+	</activex>
+  <activex>
+    <url os="all" size="140">DOWNLOADSERVER/files/component/ezMhtFormat.ent</url>
+    <clsid>241828DA-76FC-412D-8FFC-099704F25959</clsid>
+    <version>1,0,1,19</version>
+    <compressed>dll</compressed>
+    <type>inproc</type>
+  </activex>
+  <activex>
+    <url os="all" size="67">DOWNLOADSERVER/files/component/ezLVCtrl.ent</url>
+    <clsid>4AB10C10-1861-4A7D-A6D0-2B836CCC36A7</clsid>
+    <version>1,0,0,10</version>
+    <compressed>dll</compressed>
+    <type>inproc</type>
+  </activex>
+</components>

@@ -8,13 +8,18 @@
 		<link rel="stylesheet" href="/css/admin.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
-			function window_onload(){				
+			function window_onload(){
 				if("<c:out value='${use_portal}'/>" != 'YES'){
 					window.open("index_personal.aspx","bottom")
 				}else{
 					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 					window.open("/admin/ezBoard/boardMain.do", "bottom");
 				}
+				
+				var ua = navigator.userAgent;
+		    	if ((/msie/i.test(ua)) || (/rv:11.0/i.test(ua))) {
+					GetObject();
+		    	}
 			}
 			function menu_change(width, e){
 		        var menuname = e.target.id;
@@ -76,9 +81,37 @@
 					//20120725 모바일 기기 관리자 메뉴 추가	end				
 				}
 			}
+			
+			function GetObject() {
+                i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                }
+                else {
+                    finish_download();
+                }
+            }
+			
+			function finish_download() {
+                OfficeBugPatch();
+            }
+
+            function OfficeBugPatch() {
+                try {
+                    var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+                    ezUtil.OfficeRegistryPatch();
+                    ezUtil = null;
+                } catch (e) {
+                }
+            }
 		</script>
 	</head>
-	<body class="admin_top" onload="javascript:window_onload()">		
+	<body class="admin_top" onload="javascript:window_onload()">
+		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
 		<form method="post">
 			<h1 title="logo"></h1>
 			<div id="adminmenu">
@@ -114,6 +147,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
+		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 	</body>
 </html>
 
