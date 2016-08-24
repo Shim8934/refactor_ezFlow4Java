@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -57,8 +58,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzCommonService ezCommonService;
-	
-	
+
+	// dhlee
+	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
+	// dhlee - end
+	 
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
@@ -427,21 +432,30 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		} else {
 			String domain = config.getProperty("config.DomainName");
 			String cn = vo.getCn();
-			
+						
 			int cnt = ezOrganAdminService.userCheck(cn);
 			
 			if (cnt > 0) {
 				result = "PRE";
 			} else {
 				String mailAddr = cn + "@" + domain;
-				vo.setMail(mailAddr);				
-				String userPrincipalName = cn + "@" + domain;
-				vo.setUpnName(userPrincipalName);
-				String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
-				vo.setPassword(pass);
+
+				// dhlee
+				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
 				
-				ezOrganAdminService.insertDBData_user(vo);
-				result = "OK";
+				if (rc == 0) { // 성공
+					vo.setMail(mailAddr);				
+					String userPrincipalName = cn + "@" + domain;
+					vo.setUpnName(userPrincipalName);
+					String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+					vo.setPassword(pass);
+
+					ezOrganAdminService.insertDBData_user(vo);
+					result = "OK";					
+				} else {
+					result = "EMAIL_ERROR";
+				}
+				// dhlee - end								
 			}
 		}
 		return result;

@@ -373,9 +373,11 @@
 						    birthType : birthtype, birth : document.getElementById("txtBirth").value
 					},
 					success : function(result){
-						if(result == "PRE"){
+						if (result == "PRE") {
 							alert("<spring:message code='ezOrgan.t119' />");
-						}else{
+						} else if (result == "EMAIL_ERROR") {
+							alert("<spring:message code='ezOrgan.t269' />");
+						} else {
 							if (ReturnFunction != null){
 				                ReturnFunction(DeptID);
 							}else{
