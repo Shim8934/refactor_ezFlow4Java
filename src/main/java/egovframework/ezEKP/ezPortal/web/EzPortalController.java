@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPortal.web;
 
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -32,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
@@ -1420,5 +1424,79 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
 		
 		return "/ezPortal/portalWpTotalSection5";
+	}
+	
+	/**
+	 * 포탈 - webPart getQuickLink 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/getQuickLink.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String getQuickLink(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int noViewCnt = 0;
+		int cnt = 0;
+		String[] noViewArrayID = new String[1000];
+		String[] arrayID = new String[1000];
+		StringBuilder result = new StringBuilder("<DATA>");
+		
+		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID());
+
+		String[] splitDeptPath = new String[deptFullPath.split("\\,").length];
+		String reversePath = "";
+		splitDeptPath = deptFullPath.split("\\,");
+		
+		for (int i=0; i<splitDeptPath.length; i++) {
+			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
+		}
+		
+		String pAccessID = userInfo.getId() + "," + reversePath + "everyone";
+		
+		for (int j=0; j<pAccessID.split("\\,").length; j++) {
+			PersonalGetQuickLinkMenuVO getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim());
+
+			if (getQuickLinkMenu != null) {
+				boolean TF = true;
+				if (getQuickLinkMenu != null && getQuickLinkMenu.getView_Flag().equals("N")) {
+					noViewArrayID[noViewCnt] = getQuickLinkMenu.getQuickLinkID();
+					noViewCnt++;
+				} else {
+					for (int z=0; z < noViewCnt; z++) {
+						if (noViewArrayID != null && noViewArrayID[z].equals(getQuickLinkMenu.getQuickLinkID())) {
+							TF = false;
+							break;
+						}
+					}
+					
+					for (int i=0; i < cnt; i++) {
+						if (arrayID[i] != null && arrayID[i].equals(getQuickLinkMenu.getQuickLinkID())) {
+							TF = false;
+							break;
+						}
+					}
+
+					if (TF) {
+						arrayID[cnt] = getQuickLinkMenu.getQuickLinkID();
+						cnt ++;
+						result.append("<ROW>");
+						
+						for (Field field : getQuickLinkMenu.getClass().getDeclaredFields()) {
+							field.setAccessible(true);
+							String data = String.valueOf(field.get(getQuickLinkMenu));
+							
+							if(data == null || data.equals(null) || data.equals("null")){
+								data = "";
+							}	
+							result.append("<" + field.getName().toUpperCase() + ">");
+							result.append(commonUtil.cleanValue(data));
+							result.append("</" + field.getName().toUpperCase() + ">");
+						}
+						result.append("</ROW>");
+					}
+				}
+			}
+		}
+		result.append("</DATA>");
+		return result.toString();
 	}
 }

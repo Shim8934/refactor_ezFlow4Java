@@ -7,6 +7,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 
 public interface EzPersonalService {
@@ -25,6 +26,8 @@ public interface EzPersonalService {
 	public PersonalGetCurrentPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
 	
 	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) throws Exception;
+	
+	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) throws Exception;
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
 

@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -58,7 +59,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) {
 		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
 	}
-
+	
+	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) {
+		return (PersonalGetQuickLinkMenuVO) select("EzPersonalDAO.getQuickLinkMenu", accessID);
+	}
+	
 	public int getPollCount(Map<String, Object> map) {
 		select("EzPersonalDAO.getPollCount", map);
 		return (int) map.get("v_pCount");

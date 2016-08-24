@@ -9,6 +9,7 @@
 	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
 	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
 	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
+	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
 	
 	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
@@ -67,6 +68,12 @@
 	<procedure id="EzPersonalDAO.getPopUpListUser" parameterClass="String"  resultClass="PersonalGetPopUpListUserVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOPUPLISTUSER(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getQuickLinkMenu" parameterClass="String"  resultClass="PersonalGetQuickLinkMenuVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETQUICKLINKMENU(#v_ACCESSID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

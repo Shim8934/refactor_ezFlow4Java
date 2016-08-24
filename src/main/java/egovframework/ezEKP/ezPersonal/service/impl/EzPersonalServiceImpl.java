@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -170,6 +171,11 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(pComapnyID);
 	}
 	
+	@Override
+	public PersonalGetQuickLinkMenuVO getQuickLinkMenu(String accessID) throws Exception {
+		return ezPersonalDAO.getQuickLinkMenu(accessID);
+	}
+
 	public String getBirthUserList(String companyID, String curMon) throws Exception {
 		
 		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(companyID); 

@@ -169,10 +169,10 @@
 
 		        xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezPortal/interASP/GetQuickLink.aspx", true);
+		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do", true);
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
 		        xmlhttp.send(xmlpara);
-                	        
+
 		    }
 		    function event_GetQuickLink() {
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -181,7 +181,7 @@
 		                for (i = 0; i < xmldomNode.length; i++) {
 
 		                    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
-		                    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE");
+		                    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
 
 
 		                    var _li = document.createElement("li");
