@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.net.HttpCookie;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -609,15 +610,43 @@ public class EzPersonalController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String useOCS = config.getProperty("config.USE_OCS");
 		String searchString = "";
-		
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
-		
+System.out.println("searchString:"+searchString);
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
 		
 		return "/ezPersonal/persPersonSearch";
+	}
+	
+	/**
+	 * 포탈 환경설정 left 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/leftEnvironment.do")
+	public String leftEnvironment(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String funCode = "";
+		String ezInfoSSL = "";
+		String SSL = "";
+		String usePortal = "";
+		
+		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
+			funCode = req.getParameter("funCode");
+		}
+		if (config.getProperty("config.ezInfoSSL") != null && !config.getProperty("config.ezInfoSSL").equals("")) {
+			 ezInfoSSL = config.getProperty("config.ezInfoSSL");
+		}
+		
+		SSL = req.getRequestURL().toString();
+		usePortal = config.getProperty("config.Use_Portal");
+		
+		model.addAttribute("usePortal", usePortal);
+		model.addAttribute("ezInfoSSL", ezInfoSSL);
+		model.addAttribute("funCode", funCode);
+		model.addAttribute("SSL", SSL);
+		
+		return "/ezPersonal/persLeftEnvirionment";
 	}
 }

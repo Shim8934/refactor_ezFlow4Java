@@ -61,6 +61,10 @@ public interface EzPortalService {
 	
 	public List<PortalTBLPortalPageGeneralVO> getUserInfo5 (int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception;
 	
+	public List<PortalTBLPortalPageGeneralVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception;
+	
+	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (String pUserID, String pGubunFlag) throws Exception;
+	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID) throws Exception;
@@ -169,6 +173,8 @@ public interface EzPortalService {
 	
 	public String ezCkAdminACL (String pOwnerPageID) throws Exception;
 	
+	public String searchMyPortal (String pDisplayName, String pGubunFlag, int pStartRow, int pEndRow, String pCompanyID) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
@@ -178,6 +184,8 @@ public interface EzPortalService {
 	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
 	
 	public int daysInMonth (int month, int year) throws Exception;
+	
+	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception;
 	
 	public void deleteCacheValue (String uID, String accessListID) throws Exception;
 	

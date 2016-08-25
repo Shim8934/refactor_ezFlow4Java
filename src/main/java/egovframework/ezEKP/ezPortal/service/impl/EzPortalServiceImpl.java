@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -562,6 +563,14 @@ public class EzPortalServiceImpl implements EzPortalService {
 	@Override
 	public String ezCkAdminACL(String pOwnerPageID) throws Exception {
 		return ezPortalDAO.ezCkAdminACL(pOwnerPageID);
+	}
+	
+	@Override
+	public List<PortalTBLPortalPageGeneralVO> newMyPortalList(String pUserID, String pGubunFlag) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pDISPLAYNAME", pUserID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		return ezPortalDAO.newMyPortalList(map);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
@@ -2490,6 +2499,74 @@ public class EzPortalServiceImpl implements EzPortalService {
 		return aclResult;
 	}
 	
+	public List<PortalTBLPortalPageGeneralVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+		String[] pAccessID = pAccessIDList.split("\\,");
+		String pIDUser = pAccessID[0].trim();
+		String pIDDept = "";
+		
+		if (pAccessID.length == 4) {
+			pIDDept = pAccessID[3].trim();
+		} else {
+			pIDDept = "";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		map.put("v_pIDUSER", pIDUser);
+		map.put("v_pIDDEPT", pIDDept);
+		map.put("v_pIDCOMPANY", pCompanyID);
+		List<PortalTBLPortalPageGeneralVO> list = ezPortalDAO.myPortalList(map);
+		
+		return list;
+	}
+	
+	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+		String[] pAccessID = pAccessIDList.split("\\,");
+		String pIDUser = pAccessID[0].trim();
+		String pIDDept = "";
+		
+		if (pAccessID.length == 4) {
+			pIDDept = pAccessID[3].trim();
+		} else {
+			pIDDept = "";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		map.put("v_pIDUSER", pIDUser);
+		map.put("v_pIDDEPT", pIDDept);
+		int count = ezPortalDAO.searchMyPortalPageCount(map);
+		
+		return count;
+	}
+	
+	public String searchMyPortal (String pDisplayName, String pGubunFlag, int pStartRow, int pEndRow, String pCompanyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pENDROW", pEndRow);
+		map.put("v_pDISPLAYNAME", pDisplayName);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		List<PortalSearchMyPortalPage3VO> list = ezPortalDAO.searchMyPortalPage3(map);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (int i=0; i<list.size(); i++) {
+			if (i >= pStartRow - 1) {
+				sb.append("<ROW>");
+                sb.append("<UID_>" + list.get(i).getuID_() + "</UID_>");
+                sb.append("<DISPLAYNAME>" +  list.get(i).getDisplayName() + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
+                sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
+                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
+                sb.append("<IMAGEURL>" + list.get(i).getImageUrl() + "</IMAGEURL>");      
+                sb.append("</ROW>");
+			}
+		}
+		sb.append("</DATA>");
+		return sb.toString();
+	}
 	
 }
 

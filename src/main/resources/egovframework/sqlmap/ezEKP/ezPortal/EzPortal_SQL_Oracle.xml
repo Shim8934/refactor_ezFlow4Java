@@ -24,6 +24,7 @@
 	<typeAlias  alias="PortalTBLPortletHtmlPageVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletHtmlPageVO"/>
 	<typeAlias  alias="PortalTBLPortletImageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
 	<typeAlias  alias="PortalGetPortletParametersVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
+	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -592,6 +593,30 @@
 	<procedure id="EzPortalDAO.getPorletProperties" parameterClass="Map"  resultMap="portalPortletGeneralVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.myPortalList" parameterClass="Map" resultClass="PortalTBLPortalPageGeneralVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_MYPORTALLIST(#v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pIDUSER#, #v_pIDDEPT#, #v_pIDCOMPANY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.newMyPortalList" parameterClass="Map" resultClass="portalTBLPortalPageGeneralVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_NEWMYPOTALPAGELIST(#v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.searchMyPortalPageCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHMYPORTALPAGECOUNT(#v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pIDUSER#, #v_pIDDEPT#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.searchMyPortalPage3" parameterClass="Map" resultClass="PortalSearchMyPortalPage3VO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHMYPORTALPAGE3(#v_pCOMPANYID#, #v_pENDROW#, #v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

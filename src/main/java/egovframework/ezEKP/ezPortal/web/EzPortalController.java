@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
@@ -129,7 +130,8 @@ public class EzPortalController extends EgovFileMngUtil {
 				} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
 					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 				} else {
-					if (pUserThemeUID.equals("")) {
+					if (pUserThemeUID == null || pUserThemeUID.equals("")) {
+System.out.println("???");
 						String commentHtml = "<!DOCTYPE html><HTML>" +
 								"<HEAD>" +
                                 "<link href=\"/css/" + egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
@@ -169,6 +171,7 @@ public class EzPortalController extends EgovFileMngUtil {
 								resp.setCharacterEncoding("UTF-8");
 								resp.setContentType("text/html; charset=UTF-8");
 								resp.getWriter().write(commentHtml);
+								resp.getWriter().flush();
 					}
 				}
 			}
@@ -242,9 +245,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
 			
-			if (!xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
-				topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
+			if (xmlDomACL != null) {
+				if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent() != null && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
+					topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
+				}
 			}
+			
 			topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
 			topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 			String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
@@ -730,8 +736,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				//resp.getWriter().flush();
 			}
 			
-			if (pageID == null || ("").equals(pageID)) {
-				//권한이 있는 포탈페이지가 없을 경우
+			if (pageID == null || pageID.equals("")) {
 				String commentHtml = "<!DOCTYPE html><HTML>" +
                         "<HEAD>" +
                         "<link href=\"/css/" + egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
@@ -1499,4 +1504,164 @@ public class EzPortalController extends EgovFileMngUtil {
 		result.append("</DATA>");
 		return result.toString();
 	}
+	
+	
+	/**
+	 * 포탈 - 환경설정 메인 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/environmentMain.do")
+	public String environmentMain(Model model, HttpServletRequest req) throws Exception {
+		String usePortal = "";
+		String url = "";
+		String funCode = "";
+		
+		usePortal = config.getProperty("config.Use_Portal");
+		
+		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
+			funCode = req.getParameter("funCode");
+		}
+		
+		if (funCode.equals("1")) {
+			url = "/ezPersonal/leftEnvironment.do?funCode=1";
+		} else {
+			url = "/ezPersonal/leftEnvironment.do";
+		}
+System.out.println("usePortal:"+usePortal);
+		model.addAttribute("usePortal", usePortal);
+		model.addAttribute("url", url);
+		
+		return "/ezPortal/portalEnvironmentMain";
+	}
+	
+	/**
+	 * 포탈 - 환경설정 MyPortalPageList 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/myPortalPageList.do")
+	public String environmentMain(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pSearchString = "";
+		String portalGubun = "";
+		String portalPageCategoryXML = "";
+		String myPortalListXML = "";
+		String parentPageID = "";
+		String pageID = "";
+		String gubunFlag = "";
+		String newMyPortalPage = "";
+		String newMyPortalPageXML = "";
+		String newMyPortalPageList = "";
+		String searchNewMyPortalPageList = "";
+		int recordCnt = 0;
+		int intPage = 1;
+		int totalPage = 1;
+		
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		} else {
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID);
+			} else {
+				parentPageID = "Top";
+			}
+		}
+		
+		gubunFlag = "1";
+		List<PortalTBLPortalPageGeneralVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
+		
+		if (myPortalList.size() > 0) {
+			gubunFlag = "1c";
+			for (PortalTBLPortalPageGeneralVO myPortal : myPortalList) {
+				parentPageID = myPortal.getuID();
+				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "");
+			}
+		}
+		
+		if (myPortalList.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
+			for (int i=0; i<myPortalList.size(); i++) {
+				List<PortalTBLPortalPageGeneralVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag);
+				for (int t=0; t<tempNewMyPortalPageList.size(); t++) {
+					String uID = tempNewMyPortalPageList.get(t).getuID();
+					String newPortalParentUID = tempNewMyPortalPageList.get(t).getParentUID().trim();
+					
+					if (uID != null && uID.equals(newPortalParentUID)) {
+						sb.append("<ROW>");
+						sb.append("<UID_>" + tempNewMyPortalPageList.get(t).getuID() + "</UID_>");
+                        sb.append("<DISPLAYNAME>" + tempNewMyPortalPageList.get(t).getDisplayName() + "</DISPLAYNAME>");
+                        sb.append("<USEFLAG>" + tempNewMyPortalPageList.get(t).getUseFlag() + "</USEFLAG>");
+                        sb.append("</ROW>");
+					}
+				}
+			}
+			sb.append("</DATA>");
+			newMyPortalPageList = sb.toString();
+		}
+		
+		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
+			intPage = Integer.parseInt(req.getParameter("intPage"));
+		}
+		
+		int listPageSize = 15;
+		
+		List<PortalTBLPortalPageCategoryVO> portalPageCategory = ezPortalService.getPortalPageCategory();
+		
+		if (portalGubun == null || portalGubun.equals("")) {
+			for (PortalTBLPortalPageCategoryVO temp : portalPageCategory) {
+				if (portalGubun == null || portalGubun.equals("")) {
+					portalGubun = "'" + temp.getCategory() + "'";
+				} else {
+					portalGubun = ",'" + temp.getCategory() + "'";
+				}
+ 			}
+		}
+		
+		gubunFlag = "1c";
+		
+		recordCnt = ezPortalService.searchMyPortalPageCount(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
+		totalPage = (recordCnt - 1) / listPageSize + 1;
+		int pStartRow = 0;
+		int pEndRow = 0;
+		pStartRow = intPage * listPageSize - listPageSize + 1;
+		pEndRow = intPage * listPageSize;
+		
+		searchNewMyPortalPageList = ezPortalService.searchMyPortal(userInfo.getId(), gubunFlag, pStartRow, pEndRow, userInfo.getCompanyID());
+		
+		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
+		
+		String resultHTML = "";
+		
+		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().equals("Y")) {
+				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick='setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)' ondblclick='selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)'>";
+				resultHTML	+= "<dt>";
+				resultHTML	+= "<div class='onimg'></div>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML+= "</dt>";
+				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+        		resultHTML += "</dl>";
+			} else {
+				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick='setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)' ondblclick='selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)'>";
+				resultHTML	+= "<dt>";
+				resultHTML	+= "<div>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML+= "</dt>";
+				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+        		resultHTML += "</dl>";
+			}
+		}
+		
+System.out.println("resultHTML:"+resultHTML);
+		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
+		model.addAttribute("resultHTML", resultHTML);
+		model.addAttribute("intPage", intPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("pSearchString", pSearchString);
+		model.addAttribute("portalGubun", portalGubun);
+		return "/ezPortal/portalMyPortalPageList";
+	}
+	
+	
+	
 }

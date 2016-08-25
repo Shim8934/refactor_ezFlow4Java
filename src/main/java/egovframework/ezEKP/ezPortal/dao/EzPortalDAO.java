@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -110,6 +111,21 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalTBLPortalPageGeneralVO> getUserInfo5 (Map<String, Object> map) {
 		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.getUserInfo5", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageGeneralVO> myPortalList (Map<String, Object> map) {
+		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.myPortalList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (Map<String, Object> map) {
+		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.newMyPortalList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalSearchMyPortalPage3VO> searchMyPortalPage3 (Map<String, Object> map) {
+		return (List<PortalSearchMyPortalPage3VO>) list("EzPortalDAO.searchMyPortalPage3", map);
 	}
 	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
@@ -264,6 +280,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public int getUserInfo4(Map<String, Object> map) {
 		select("EzPortalDAO.getUserInfo4", map);
+		return (int) map.get("v_pCount");
+	}
+	
+	public int searchMyPortalPageCount(Map<String, Object> map) {
+		select("EzPortalDAO.searchMyPortalPageCount", map);
 		return (int) map.get("v_pCount");
 	}
 	
