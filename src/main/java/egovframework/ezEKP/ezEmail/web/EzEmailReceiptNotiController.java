@@ -415,7 +415,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			JSONParser parser = new JSONParser();
 			JSONObject object = (JSONObject)parser.parse(strJson);
 	        
-	        if (object.get("result") != null) {
+	        if (object.get("resultCode").equals("OK")) {
 	        	JSONArray array = (JSONArray)object.get("result");
 	        	rValue = new String[array.size()];
 	        	for (int i=0; i<array.size(); i++) {

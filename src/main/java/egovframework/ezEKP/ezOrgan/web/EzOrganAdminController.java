@@ -140,9 +140,18 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			result = "PRE";
 		} else {
 			String mailAddr = cn + "@" + domain;
-			ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
 			
-			result = "OK";
+			// skyblue0o0
+			int rc = ezEmailUserAdminService.addGroup(mailAddr);
+			
+			if (rc == 0) { // 성공
+				ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
+				result = "OK";				
+			} else {
+				result = "EMAIL_ERROR";
+			}
+			// skyblue0o0 - end
+			
 		}
 		
 		return result;
@@ -218,13 +227,22 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			if (cnt > 0) {
 				result = "PRE";
-			} else {							
+			} else {
+
 				String mailAddr = cn + "@" + domain;
-				vo.setMail(mailAddr);
 				
-				ezOrganAdminService.insertDBData_dept(vo);
+				// skyblue0o0
+				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
-				result = "OK";
+				if (rc == 0) { // 성공
+					vo.setMail(mailAddr);
+					ezOrganAdminService.insertDBData_dept(vo);
+					result = "OK";				
+				} else {
+					result = "EMAIL_ERROR";
+				}
+				// skyblue0o0 - end
+				
 			}
 		}
 		

@@ -40,4 +40,10 @@ public interface EzEmailUserAdminService {
 	 */
 	public int removeUser(String userEmailAddress) throws Exception;
 	
+	/**
+	 * Email Server에 Group(Company or Department) Account를 생성한다. 
+	 * @param groupEmailAddress 생성하고자 하는 Group Account의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int addGroup(String groupEmailAddress) throws Exception;
 }

@@ -2536,7 +2536,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				
 				String resultCode = (String)responseObj.get("resultCode");
 				
-				if (resultCode.equalsIgnoreCase("OK")) {
+				if (resultCode.equals("OK")) {
 					resultArray = (JSONArray)responseObj.get("result");
 				}
 			}

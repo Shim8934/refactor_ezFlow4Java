@@ -871,7 +871,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
-		if (object.get("result") != null) {
+		
+		if (object.get("resultCode").equals("OK")) {
 			JSONArray array = (JSONArray)object.get("result");
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -1134,7 +1135,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		JSONParser parser = new JSONParser();
 		JSONObject object = (JSONObject)parser.parse(strJson);
 
-		if (object.get("result") != null) {
+		if (object.get("resultCode").equals("OK") && object.get("result") != null) {
 			JSONObject resultObject = (JSONObject)object.get("result");
 			gOofState = resultObject.get("oofState").toString();
 			gStartDate = resultObject.get("startDate").toString();

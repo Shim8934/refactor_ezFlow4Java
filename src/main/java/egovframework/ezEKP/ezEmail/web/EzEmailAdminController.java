@@ -207,8 +207,8 @@ public class EzEmailAdminController {
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		
 		String domain = config.getProperty("config.DomainName");
+		int reasonCode = -100;
 		String result = "ERROR";
-		
 		try {
 			if (cn == null || cn.equals("")) {
 				String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8")
@@ -231,7 +231,10 @@ public class EzEmailAdminController {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 
-					result = (String)responseObj.get("resultCode");
+					String resultCode = (String)responseObj.get("resultCode");
+					if (resultCode.equals("OK")) {
+						reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+					}
 				}
 
 			} else {
@@ -256,12 +259,23 @@ public class EzEmailAdminController {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 
-					result = (String)responseObj.get("resultCode");
+					String resultCode = (String)responseObj.get("resultCode");
+					if (resultCode.equals("OK")) {
+						reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		if (reasonCode == 0) {
+			result = "OK";
+		} else if (reasonCode == -1) {
+			result = "GROUP_NAME";
+		} else if (reasonCode == -2) {
+			result = "GROUP_ID";
 		}
 		
 		return result;

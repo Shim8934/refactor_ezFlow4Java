@@ -78,6 +78,8 @@
 		        		 
 		        		 if (retVal == "PRE"){
 		        			 alert("<spring:message code='ezOrgan.t119' />");
+		        		 }else if (retVal == "EMAIL_ERROR"){
+		        			 alert("<spring:message code='ezOrgan.t118' />");
 		        		 }else{
 		        			 if(ReturnFunction != null){
 		 			            ReturnFunction(CompanyID.value);

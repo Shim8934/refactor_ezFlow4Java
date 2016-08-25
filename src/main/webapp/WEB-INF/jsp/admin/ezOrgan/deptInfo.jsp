@@ -155,6 +155,8 @@
 					success : function(result){						
 						if (result == "PRE"){
 							alert("<spring:message code='ezOrgan.t119' />");
+						}else if (result == "EMAIL_ERROR"){
+							alert("<spring:message code='ezOrgan.t217' />");//TODO: 적절한 메시지 넣기
 						}else{
 							if (ReturnFunction != null){
 					            ReturnFunction(DeptID.value);

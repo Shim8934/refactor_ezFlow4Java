@@ -40,7 +40,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
-		int result = -100; 
+		int reasonCode = -100; 
 				
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -49,13 +49,13 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 			resultCode = (String)responseObj.get("resultCode");		
 			
 			if (resultCode.equals("OK")) {
-				result = ((Long)responseObj.get("result")).intValue();
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
 			}
 		}						
 		
-		logger.debug("addUser ended. resultCode=" + resultCode + ",result=" + result);
+		logger.debug("addUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
-		return result;
+		return reasonCode;
 	}
 
 	@Override
@@ -74,6 +74,38 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	public int removeUser(String userEmailAddress) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int addGroup(String groupEmailAddress) throws Exception {
+		logger.debug("addGroup started. groupEmailAddress=" + groupEmailAddress);
+		
+		String inputParams = "groupEmail=" + URLEncoder.encode(groupEmailAddress, "UTF-8");
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/addGroup";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("addGroup ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
 	}
 
 }
