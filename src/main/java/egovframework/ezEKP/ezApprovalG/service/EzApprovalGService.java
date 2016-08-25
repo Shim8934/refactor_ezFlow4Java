@@ -294,23 +294,23 @@ public interface EzApprovalGService {
 
 	public String GetRecordInfo(Document xmlDom, String lang)throws Exception;
 
-	public String getRecViewer(Document xmlDom, String companyID, String lang)throws Exception;
+	public String getRecViewer(Document xmlDom,String lang)throws Exception;
 
-	public String saveRecUserRoleInfo(Document xmlDom, String companyID, String lang)throws Exception;
+	public String saveRecUserRoleInfo(Document xmlDom, String lang)throws Exception;
 
-	public String getRecReadHistory(Document xmlDom, String companyID, String lang, String docID) throws Exception;
+	public String getRecReadHistory(Document xmlDom) throws Exception;
 
 	public String getRecordClassInfo(Document xmlDom, String lang) throws Exception;
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception;
 
-	public String getRecordHistory(Document xmlDom, String companyID, String lang) throws Exception;
+	public String getRecordHistory(Document xmlDom, String lang) throws Exception;
 
-	public String moveRecord(Document xmlDom, String companyID, String lang) throws Exception;
+	public String moveRecord(Document xmlDom, String lang) throws Exception;
 
-	public String getRecordSimpleInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	public String getRecordSimpleInfo(Document xmlDom, String lang) throws Exception;
 
-	public String changeRecordInfo(Document xmlDom, String companyID, String lang) throws Exception;
+	public String changeRecordInfo(Document xmlDom, String lang) throws Exception;
 
 	public String getDeliveryList(String p_DeptID, String pPageSize, String pPageNum, String pOrderCell, String pOrderOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate,	String debenturer, String isdocprint) throws Exception;
 

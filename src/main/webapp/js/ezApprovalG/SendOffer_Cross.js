@@ -379,7 +379,7 @@ function getEndFormID(pDocID)
 	    	});
 	        
 	        pFormID = getNodeText(GetChildNodes(result)[0]);
-
+	       return pFormID;
 	    } catch (e) {
 	        alert("GetAprDocFormID : " + e.description);
 	    }
@@ -391,7 +391,7 @@ function OpenSelectReceipts(pDocID)
     selectreceipts_cross_dialogArguments[0] = "";
     selectreceipts_cross_dialogArguments[1] = OpenSelectReceipts_Complete;
 
-    var OpenWin = window.open("/myoffice/ezApprovalG/ezDocInfo/SelectReceipts_Cross.aspx?pDocID=" + pDocID, "SelectReceipts_Cross", GetOpenWindowfeature(728, 600));
+    var OpenWin = window.open("/ezApprovalG/selectReceipts.do?pDocID=" + pDocID, "SelectReceipts_Cross", GetOpenWindowfeature(728, 600));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -429,7 +429,7 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
         createNodeAndInsertText(xmlpara, objNode, "tempDeptName", tempDeptName);
         createNodeAndInsertText(xmlpara, objNode, "tempDeptName2", tempDeptName2);
 		
-		xmlhttp.open("POST","../enforce/aspx/UpdateProcessYN.aspx",false);
+		xmlhttp.open("POST","/ezApprovalG/UpdateProcessYN.do",false);
 		xmlhttp.send(xmlpara);
 		
 		var dataNodes = GetChildNodes(xmlhttp.responseXML); 

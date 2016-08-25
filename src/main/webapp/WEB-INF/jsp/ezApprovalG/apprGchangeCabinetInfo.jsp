@@ -260,7 +260,7 @@
 
             objNode = createNodeAndInsertText(xmlpara, objRoot, "CHANGEREASON", txtChangeReason.value);
 
-            objNode = createNodeAndInsertText(xmlpara, objRoot, "SCFLAG", "");
+            objNode = createNodeAndInsertText(xmlpara, objRoot, "SCFLAG", g_SCFlag);
 
             var scinfo = createNodeAndAppandNode(xmlpara, objRoot, scinfo, "SCINFO");
 

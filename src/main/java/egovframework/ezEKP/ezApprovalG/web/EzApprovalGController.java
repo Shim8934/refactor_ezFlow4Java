@@ -3609,7 +3609,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 특수목록위치 추가 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/insSpecialList.do")
-	public String insSpecialList() throws Exception{
+	public String insSpecialList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
 		return "ezApprovalG/apprGinsSpecialList";
 	}
 

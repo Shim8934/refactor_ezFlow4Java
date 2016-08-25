@@ -42,7 +42,7 @@
     arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
     var UserLang = "${userInfo.lang}";
     var rtnVal = new Array();
-    function window_onload() {
+     window.onload = function (){
         var ua = navigator.userAgent;
         if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
             KeEventControl(document.getElementById("txtTitle"));
@@ -120,7 +120,6 @@
     }
     function cmdConfirm_onclick()
     { 
-    	alert(arrTask[0]);
         if(typeof(arrTask[0])=="undefined" || arrTask[0]=="" )
         {
             alert("<spring:message code='ezApprovalG.t997'/>");
@@ -151,6 +150,8 @@
         }
     }
     window.onunload = function () {
+        if (ReturnFunction != null)
+            ReturnFunction(rtnVal);
         window.returnValue = rtnVal;
     }
 </script>

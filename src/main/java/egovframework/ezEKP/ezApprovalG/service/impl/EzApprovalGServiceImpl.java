@@ -6377,6 +6377,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	// 수신 문서와 심사 문서를 같이 가져온다. admin, user = 수신문서, simsa = 심사문서
 	public String getReceiveDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
 			String searchQuery, Document xmlDomSub) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
@@ -6823,7 +6824,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String createDate = EgovDateUtil.getTodayTime();
-		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent();
+		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim();
 		String taskCode = xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent();
 		String regSN = formatSerialNum(getSerialNum("001", deptCode, taskCode, companyID, strLang));
 		String produceY = getAccountingYear(createDate, companyID, strLang);
@@ -7234,11 +7235,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
-			map.put("v_YEAR", EgovDateUtil.getTodayTime().subSequence(0, 4));
+			map.put("v_YEAR", EgovDateUtil.getTodayTime().substring(0,4));
 			map.put("v_DEPTID", deptID.trim());
-			
-			int maxSN = ezApprovalGDAO.updateDeliveryListSNMax(map);
-			
+			int maxSN = ezApprovalGDAO.updateDeliveryListSNMax(map) + 1;
             strSQL.append("INSERT INTO TBDOCDELIVERY (sn, DocID, Href, ReceiptDate, ");
             strSQL.append("OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, ChargeID, ");
             strSQL.append("ChargeName, ChargeName2, DeptID, Remark, OrgDocNumCode, DocTitle) SELECT '");
@@ -13300,8 +13299,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecViewer(Document xmlDom, String companyID, String lang) throws Exception {
+	public String getRecViewer(Document xmlDom, String lang) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
 		
@@ -13396,13 +13396,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String saveRecUserRoleInfo(Document xmlDom, String companyID, String lang) throws Exception {
+	public String saveRecUserRoleInfo(Document xmlDom, String lang) throws Exception {
 			StringBuilder strSQL = new StringBuilder();
 			String rtnVal = "<RESULT>TRUE</RESULT>";
 		    String Flag	= "0";
 			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
 			String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
-			
+			String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 			strSQL.append("Delete TBRECROLEINFO WHERE RecordID = '" + RecID);
             strSQL.append("' And SeperateAttachNo = '" + SepAttachNo + "' ;\n");
 			if(Flag.equals("0")){
@@ -13442,9 +13442,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecReadHistory(Document xmlDom, String companyID, String lang , String docID) throws Exception {
+	public String getRecReadHistory(Document xmlDom) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
-
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		String lang = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
+		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
@@ -13674,10 +13676,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordHistory(Document xmlDom, String companyID, String lang) throws Exception {
+	public String getRecordHistory(Document xmlDom, String lang) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_RECORDID", RecID);
@@ -13762,11 +13765,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String moveRecord(Document xmlDom, String companyID, String lang) throws Exception {
+	public String moveRecord(Document xmlDom, String lang) throws Exception {
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String NewCabID = xmlDom.getElementsByTagName("NEWCABID").item(0).getTextContent().trim();
 		String Flag = xmlDom.getElementsByTagName("FLAG").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String rtnVal="";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -13786,11 +13790,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordSimpleInfo(Document xmlDom, String companyID, String lang) throws Exception {
+	public String getRecordSimpleInfo(Document xmlDom , String lang) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_RECORDID", RecID);
@@ -13882,9 +13888,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String changeRecordInfo(Document xmlDom, String companyID, String lang) throws Exception {
+	public String changeRecordInfo(Document xmlDom, String lang) throws Exception {
 		String pChangeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent().trim();
 		StringBuilder strSQL = new StringBuilder("");
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		if(pChangeType.equals("0")){
 			try{
 				String RecType = xmlDom.getElementsByTagName("RECORDTYPE").item(0).getTextContent().trim();
@@ -14149,6 +14156,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   sb.append("</DATA>");
 	
 	   Document docXML = commonUtil.convertStringToDocument(sb.toString());
+	   
     	String fieldName = "";
 		String fieldValue = "";
 		resultXML.append("<ROWS>");
@@ -15127,30 +15135,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb2.append("</DATA>");
 			
 			Document docXML2 = commonUtil.convertStringToDocument(sb2.toString());
-			strXML.append("<NAME>");
-			strXML.append("<DATALIST>");
+			
+			
 			
 			for(int j=0; j<docXML2.getElementsByTagName("ROW").getLength();j++){
-				String sepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(j).getTextContent());
+				String sepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(j).getTextContent().trim());
 			
 				if(sepAttSN.trim().equals("000")){
+					strXML.append("<NAME>");
 					strXML.append("<SN>" + sepAttSN + "</SN>");
 					strXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(j).getTextContent()) +"</LIST1>");
 					strXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(j).getTextContent()) +"</LIST2>");
 					strXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(j).getTextContent()) +"</LIST3>");
+					strXML.append("</NAME>");
 				}
 				else{
+					strXML.append("<DATALIST>");
 					strXML.append("<DATA>");
 					strXML.append("<SN>" + sepAttSN + "</SN>");
 					strXML.append("<LIST1>" + makeListField(docXML2.getElementsByTagName("SC1").item(j).getTextContent()) +"</LIST1>");
 					strXML.append("<LIST2>" + makeListField(docXML2.getElementsByTagName("SC2").item(j).getTextContent()) +"</LIST2>");
 					strXML.append("<LIST3>" + makeListField(docXML2.getElementsByTagName("SC3").item(j).getTextContent()) +"</LIST3>");
 					strXML.append("</DATA>");
+					strXML.append("</DATALIST>");
 				}
 			}
-			strXML.append("</DATALIST>");
-			strXML.append("</NAME>");
-		
 		}
 		strXML.append("</SCINFO>");
 		strXML.append("</RESULT>");
@@ -15202,6 +15211,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 strSQL.append("BEGIN \n ");
 		 strSQL.append("Insert Into TBCABINETHISTORY (Version, CabinetClassNo, Title, RecTypeCode, ");
 		 strSQL.append("ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ");
+		 
          // 2010.08.02 다국어 
          strSQL.append("ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) ");
 		 strSQL.append("Select v_NewVersion, CabinetClassNo, Title, RecTypeCode, ");
@@ -15237,13 +15247,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		StringBuilder subSQL = new StringBuilder();
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
-		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
-		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
-		String usreName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
+		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+		String usreName2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent().trim();
 		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 		String recTypeCode = xmlDom.getElementsByTagName("RECTYPECODE").item(0).getTextContent();
 		String changeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent();
-		NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
+		String SCFlag = xmlDom.getElementsByTagName("SCFLAG").item(0).getTextContent().trim();
 		
 		strSQL.append("Declare v_NewVersion Number := 0; \n BEGIN \n");
         strSQL.append("Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBCABINETHISTORY  ");
@@ -15259,7 +15269,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         strSQL.append("'0','0' From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '");
 		strSQL.append(makeRightField(cabClassNo) + "'; \n");
 
-		if (nodeSC.equals("1"))
+		if (SCFlag.equals("1"))
         {
 			strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, ");
 			strSQL.append("SC1, SC2, SC3) Select v_NewVersion, CabinetClassNo, SerialNo, SC1, ");
@@ -15312,27 +15322,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			{
 				strSQL.append("INSERT INTO TBSPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3) Values ('");
 				strSQL.append(makeRightField(cabClassNo) + "', '");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("SN").item(i).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST1").item(i).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST2").item(i).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST3").item(i).getTextContent().trim()) + "');\n");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(0).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(1).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(2).getTextContent().trim()) + "', N'");
+                strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(3).getTextContent().trim()) + "');\n");
 			}
 		}
-		strSQL.append("Declare @NewVersion2 int ;\n");
-        strSQL.append("Set @NewVersion2 = (Select ISNULL(max(Version), 0) From TBCABINETHISTORY WITH (NOLOCK) ");
-		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "');\n");
-		strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3) ");
-		strSQL.append("Select @NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3 ");
-        strSQL.append("From TBSPECIALCATALOGINFO_CAB WITH (NOLOCK) Where CabinetClassNo = '");
-        strSQL.append(makeRightField(cabClassNo) + "';\n ");
-        strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
-        strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBCABINETHISTORY ");
-		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
-		strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3) ");
-		strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3 ");
-        strSQL.append("From TBSPECIALCATALOGINFO_CAB  Where CabinetClassNo = '");
-        strSQL.append(makeRightField(cabClassNo) + "';\n END; \n ");
-               		return strSQL;
+		  strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
+          strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBCABINETHISTORY ");
+		  strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
+		  strSQL.append("Insert Into TBSCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3) ");
+		  strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3 ");
+          strSQL.append("From TBSPECIALCATALOGINFO_CAB  Where CabinetClassNo = '");
+          strSQL.append(makeRightField(cabClassNo) + "';\n END; \n ");
+          return strSQL;
 	}
 
 	@Override
@@ -15512,7 +15515,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String doSendOffer(Document xmlDom, String dirPath,	String companyID, String lang) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
+		StringBuilder strSQL = new StringBuilder("");
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
 		String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
