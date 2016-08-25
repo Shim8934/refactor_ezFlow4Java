@@ -3262,6 +3262,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return resultVal;
 	}
 
+	@Override
+	public String reqDelayCabEndY(String cabClassList, String flag, String companyID) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		String rtnVal = "";
+		
+		strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = '" + flag);
+		strSQL.append("' Where TBCABINETCLASS.CabinetClassNo IN (Select Value ");
+		strSQL.append("From TABLE(fn_StringToTable('" + cabClassList + "', ',')));\n");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+		
+		try {
+			ezApprovalGDAO.transactionSQL(map);
+			
+			rtnVal = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
 	public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
 			String passWord, HttpServletRequest request) throws Exception{
 		// TODO Auto-generated method stub

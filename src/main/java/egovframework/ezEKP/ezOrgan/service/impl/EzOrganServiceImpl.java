@@ -347,15 +347,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         for (int i = 0; i < celllist.length; i++){
         	cellvalue = "";
-     System.out.println("pXMLString:"+pXMLString);       
-            //if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
+//            if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
             if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pDeptID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))){
             	switch (celllist[i].toLowerCase()){
                 case "department":
                     cellvalue = pDeptID;
                     break;
                 case "description":
-                    cellvalue = pDeptName;
+                    cellvalue = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
                     break;
                 case "title":
                 	//if (doc.getElementsByTagName("ADDJOB") != null && !doc.getElementsByTagName("ADDJOB").item(0).getTextContent().equals("")){

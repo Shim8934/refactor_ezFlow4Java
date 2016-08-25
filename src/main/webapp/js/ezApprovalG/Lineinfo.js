@@ -910,7 +910,7 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
 			{			
 				if (getNodeText(GetChildNodes(SelectSingleNodeNew(AprTypeXML, "APRTYPES/USERTYPES"))[i].getElementsByTagName("CODE")[0]) == "001")
 				{
-				    nAprType = "001"
+				    nAprType = "001";
 			    }
 			}
         }

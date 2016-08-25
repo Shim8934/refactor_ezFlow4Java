@@ -772,18 +772,24 @@
         }
     }
     function ReqDelayCabEndY(CabClassList, Flag) {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-        createNodeAndInsertText(xmlpara, objNode, "CABCLASSLIST", CabClassList);
-        createNodeAndInsertText(xmlpara, objNode, "FLAG", Flag);
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_ReqDelayCabEndY.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/reqDelayCabEndY.do",
+    		data : {
+    				companyID : CompanyID,
+    				cabClassList  : CabClassList,
+    				flag : Flag
+    				},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        var dataNodes = GetChildNodes(result);
         return getNodeText(dataNodes[0]);
     }
     var endcabproduce_cross_dialogArguments = new Array();

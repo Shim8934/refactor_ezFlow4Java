@@ -94,6 +94,7 @@ public class ApprGCabinetVO{
 	private String endYear;
 	private String displayRecFlag;
 	private String delayFlag;
+	private String delayEndYFlag;
 	private String transferFlag;
 	private String version;
 	private String modifyReason;
@@ -443,6 +444,12 @@ public class ApprGCabinetVO{
 	}
 	public void setCabTitle(String cabTitle) {
 		this.cabTitle = cabTitle;
+	}
+	public String getDelayEndYFlag() {
+		return delayEndYFlag;
+	}
+	public void setDelayEndYFlag(String delayEndYFlag) {
+		this.delayEndYFlag = delayEndYFlag;
 	}
 	
 }

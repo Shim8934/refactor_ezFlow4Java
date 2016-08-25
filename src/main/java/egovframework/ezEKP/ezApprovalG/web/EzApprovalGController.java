@@ -4716,4 +4716,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return rtnVal;
 	}
+
+	/**
+	 * 전자결재G 종료연기 종료연기신청 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/reqDelayCabEndY.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String reqDelayCabEndY(HttpServletRequest request) throws Exception{
+		String companyID = request.getParameter("companyID");
+		String cabClassList = request.getParameter("cabClassList");
+		String flag = request.getParameter("flag");
+		
+		String result = ezApprovalGService.reqDelayCabEndY(cabClassList, flag, companyID);
+		
+		return result;
+	}
 }

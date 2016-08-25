@@ -284,6 +284,8 @@ public interface EzApprovalGService {
 	
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request) throws Exception;
 	
+	public String reqDelayCabEndY(String cabClassList, String flag, String companyID) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
