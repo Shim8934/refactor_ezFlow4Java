@@ -40,7 +40,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
-		int reasonCode = -100; 
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
 				
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -59,21 +59,48 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 
 	@Override
-	public int updateUserPassword(String userEmailAddress, String newPassword) {
+	public int updateUserPassword(String userEmailAddress, String newPassword) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public boolean testUserPassword(String userEmailAddress, String password) {
+	public boolean testUserPassword(String userEmailAddress, String password) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public int removeUser(String userEmailAddress) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int removeUser(String userEmailAddress) throws Exception {
+		logger.debug("removeUser started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/removeUser";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("removeUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
 	}
 
 	@Override

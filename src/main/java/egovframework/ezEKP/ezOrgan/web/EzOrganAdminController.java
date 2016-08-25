@@ -430,9 +430,19 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
 	public void delUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String cn[] = request.getParameter("cn").split(",");
+		
+		// dhlee
+		String domain = config.getProperty("config.DomainName");		
+		// dhlee - end
 				
-		for (int i=0; i < cn.length; i++) {			
-			ezOrganAdminService.deleteDBData(cn[i], "user");
+		for (int i=0; i < cn.length; i++) {
+			// dhlee
+			int rc = ezEmailUserAdminService.removeUser(cn[i] + "@" + domain);
+			
+			if (rc == 0) { // 성공			
+				ezOrganAdminService.deleteDBData(cn[i], "user");
+			}
+			// dhlee - end
 		}		
 	}
 	
