@@ -135,4 +135,106 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;
 	}
 
+	@Override
+	public int removeGroup(String groupEmailAddress) throws Exception {
+		logger.debug("removeGroup started. groupEmailAddress=" + groupEmailAddress);
+		
+		String inputParams = "groupEmail=" + URLEncoder.encode(groupEmailAddress, "UTF-8");
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/delGroup";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("removeGroup ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+	
+	@Override
+	public int updateGroupAdd(String groupEmailAddress, String targetEmail) throws Exception {
+		logger.debug("updateGroupAdd started");
+		
+		String groupEmailParam = "groupEmail=" + URLEncoder.encode(groupEmailAddress, "UTF-8");
+		String targetEmailParam = "targetEmail=" + URLEncoder.encode(targetEmail, "UTF-8");
+		
+		String inputParams = groupEmailParam + "&" + targetEmailParam;
+
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateGroupAdd";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("updateGroupAdd ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+
+	@Override
+	public int updateGroupDel(String groupEmailAddress, String targetEmail) throws Exception {
+		logger.debug("updateGroupDel started");
+		
+		String groupEmailParam = "groupEmail=" + URLEncoder.encode(groupEmailAddress, "UTF-8");
+		String targetEmailParam = "targetEmail=" + URLEncoder.encode(targetEmail, "UTF-8");
+		
+		String inputParams = groupEmailParam + "&" + targetEmailParam;
+
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateGroupDel";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("updateGroupDel ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+
 }

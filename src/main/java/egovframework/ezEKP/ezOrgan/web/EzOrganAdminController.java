@@ -26,6 +26,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -55,6 +56,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
@@ -144,9 +148,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			// skyblue0o0
 			int rc = ezEmailUserAdminService.addGroup(mailAddr);
 			
-			if (rc == 0) { // 성공
-				ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
-				result = "OK";				
+			if (rc == 0) { // addGroup 성공
+				
+				String groupAddr = parentCn + "@" + domain;
+				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				
+				if (rc == 0) { // updateGroupAdd 성공
+					ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
+					result = "OK";				
+				}
+							
 			} else {
 				result = "EMAIL_ERROR";
 			}
@@ -173,9 +184,27 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			result = "HASCHILD";
 		} else if(usercnt>0){
 			result = "HASCHILD";
-		}else {			
-			ezOrganAdminService.deleteDBData(cn, pClass);			
-			result = "OK";
+		}else {
+			
+			// skyblue0o0
+			String domain = config.getProperty("config.DomainName");
+			String mailAddr = cn + "@" + domain;
+			
+			int rc = ezEmailUserAdminService.removeGroup(mailAddr);
+			
+			if (rc == 0) { // removeGroup 성공
+				
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"));
+				String groupAddr = dept.getExtensionAttribute1() + "@" + domain;
+				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+				
+				if (rc == 0) { // updateGroupDel 성공
+					ezOrganAdminService.deleteDBData(cn, pClass);
+					result = "OK";
+				}
+			}
+			// skyblue0o0 - end
+			
 		}
 		
 		return result;
@@ -234,10 +263,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				// skyblue0o0
 				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
-				if (rc == 0) { // 성공
-					vo.setMail(mailAddr);
-					ezOrganAdminService.insertDBData_dept(vo);
-					result = "OK";				
+				if (rc == 0) { // addGroup 성공
+					String groupAddr = vo.getParentCn() + "@" + domain;
+					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+					
+					if (rc == 0) { // updateGroupAdd 성공
+						vo.setMail(mailAddr);
+						ezOrganAdminService.insertDBData_dept(vo);
+						result = "OK";				
+					}
+					
 				} else {
 					result = "EMAIL_ERROR";
 				}
@@ -425,7 +460,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 조직도관리 사원이동 실행 함수
+	 * 조직도관리 사원삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
 	public void delUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -439,8 +474,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			// dhlee
 			int rc = ezEmailUserAdminService.removeUser(cn[i] + "@" + domain);
 			
-			if (rc == 0) { // 성공			
-				ezOrganAdminService.deleteDBData(cn[i], "user");
+			if (rc == 0) { // removeUser 성공
+				
+				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], config.getProperty("config.primary"));
+				String groupAddr = userVO.getDepartment() + "@" + domain;
+				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, cn[i] + "@" + domain);
+				
+				if (rc == 0) { // updateGroupDel 성공
+					ezOrganAdminService.deleteDBData(cn[i], "user");
+				}
+				
 			}
 			// dhlee - end
 		}		
@@ -471,15 +514,25 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				// dhlee
 				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
 				
-				if (rc == 0) { // 성공
-					vo.setMail(mailAddr);				
-					String userPrincipalName = cn + "@" + domain;
-					vo.setUpnName(userPrincipalName);
-					String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
-					vo.setPassword(pass);
+				if (rc == 0) { // addUser 성공
+					
+					String groupAddr = vo.getParentCn() + "@" + domain;
+					
+					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+					
+					if (rc == 0) { // updateGroup 성공
+						vo.setMail(mailAddr);				
+						String userPrincipalName = cn + "@" + domain;
+						vo.setUpnName(userPrincipalName);
+						String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+						vo.setPassword(pass);
 
-					ezOrganAdminService.insertDBData_user(vo);
-					result = "OK";					
+						ezOrganAdminService.insertDBData_user(vo);
+						result = "OK";		
+					
+					} else {
+						result = "EMAIL_ERROR";
+					}
 				} else {
 					result = "EMAIL_ERROR";
 				}

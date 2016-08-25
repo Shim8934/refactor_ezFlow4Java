@@ -46,4 +46,27 @@ public interface EzEmailUserAdminService {
 	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
 	 */
 	public int addGroup(String groupEmailAddress) throws Exception;
+	
+	/**
+	 * Email Server에서 지정한 Group Account를 제거한다.
+	 * @param groupEmailAddress 제거하고자 하는 Group Account의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int removeGroup(String groupEmailAddress) throws Exception;
+	
+	/**
+	 * Email Server에 Group의 멤버를 추가한다.
+	 * @param groupEmailAddress 추가하고자 하는 Group의 Email 주소
+	 * @param targetEmail 추가할 멤버의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int updateGroupAdd(String groupEmailAddress, String targetEmail) throws Exception;
+	
+	/**
+	 * Email Server에 Group의 멤버를 삭제한다.
+	 * @param groupEmailAddress 삭제하고자 하는 Group의 Email 주소
+	 * @param targetEmail 삭제할 멤버의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int updateGroupDel(String groupEmailAddress, String targetEmail) throws Exception;
 }
