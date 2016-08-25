@@ -37,6 +37,7 @@
 	            	document.body.style.UserSelect = 'none';
 	            	window.resizeTo(770, 645);
 	        	}
+
 	        	if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
 		            window.resizeTo(770, 595);
 	        	}
@@ -53,7 +54,7 @@
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
 	            	xmlTree = loadXMLString(xmlHTTP.responseText);
-	            	var treeXML = loadXMLFile("/xml/organtree_config.xml");
+	            	var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
 	            	document.getElementById('TreeView').innerHTML = "";
 	            	var treeView = new TreeView();
 	            	treeView.SetConfig(treeXML);
@@ -66,7 +67,7 @@
 
 	            	if (strSearch != "") {
 		                document.getElementById('keyword').value = strSearch;
-	            	    search_click();
+	            	    search_click("search");
 	            	}
 		        } catch (ErrMsg) {
 	            	alert(" TreeViewinitialize : " + ErrMsg.description);
@@ -110,6 +111,7 @@
 	        	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + nodeIdx.GetNodeData("VALUE");
 	        	SelectDeptNM.setAttribute("countinfo","")
 	        	displayUserList(nodeIdx.GetNodeData("CN"));
+
 	    	}
 	    	var tempDeptID = "";
 	    	function displayUserList(DeptID) {
@@ -128,11 +130,8 @@
 	  						page : CurPage ,
 	  						type : "user"
 	  					} ,
-	      				success : function(data, textStatus, jqXHR) {
-	      					pListXML_Info = data;
-							pSeach = false;
-	 		                DisplayUserImageList();
-	 		                makePageSelPage();	 		                
+	      				success : function(xml) {
+	 		                event_displayUserList(xml);
 	  					},
 	  					error : function(jqXHR, textStatus, errorThrown) {
 	  						alert(error);
@@ -140,21 +139,14 @@
 	  				});   
 	    	}
 	    	
-	    	function event_displayUserList() {
-		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
-	    	            pListXML_Info = g_xmlHTTP.responseXML;
-	                	g_xmlHTTP = null;
-	                	pSeach = false;
-	                	DisplayUserImageList();
-	                	makePageSelPage();
-	            	} else {
-	                alert("<spring:message code='ezPersonal.t60'/>" + g_xmlHTTP.statusText)
-	            	}
-
-		            g_xmlHTTP = null;
+	     	function event_displayUserList(xml) {
+		        if (xml != null) {
+    	            pListXML_Info = xml;
+                	pSeach = false;
+                	DisplayUserImageList();
+                	makePageSelPage();
 		        }
-		    }
+		    } 
 		    var m_strColorSelect = "#DBE1E7";
 	    	var m_strColorOver = "#f4f5f5";
 	    	var m_strColorDefault = "#ffffff";
@@ -209,8 +201,6 @@
 	    	var pSeach = false;
 	    	function DisplayUserImageList() {
 		        var xmlRtn = pListXML_Info;
-		        //totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
-		       // totalPage = 1;
 		        totalPage = Math.ceil(new Number(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length / 50));
 	    	    document.getElementById("DeptUserImgList").innerHTML = "";
 	        	document.getElementById("txtlist_Layer").scrollTop = "0";
@@ -463,6 +453,7 @@
 		    }
 	    	var issearch = false;
 	    	function search_click(type) {
+
 		        if (keyword.value == "") {
 	            	alert("<spring:message code='ezPersonal.t61'/>");
 	            	keyword.focus();
@@ -477,6 +468,7 @@
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
 					dataType : "xml",
+					async : false,
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
@@ -484,34 +476,33 @@
 						page : CurPage ,
 						type : "user"
 					} ,
-   					success : function(data, textStatus, jqXHR) {
-   						pListXML_Info = data;
-						pSeach = true;
-		            	DisplayUserImageList();
-		            	makePageSelPage();
+   					success : function(xml) {
+//alert("333");
+   						pListXML_Info = xml;
+   						event_displayUserList2(xml);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code="ezResource.t2"/>" + textStatus);
 					}
-				}); 
+				});
+	        	var usedefault;
+	        	if (browserIE) {
+	        		usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
+	        	} else {
+	        		usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
+	        	}
 	        	
 	    	}
-	    	function event_displayUserList2() {
-		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-	            	if (g_xmlHTTP.statusText == "OK") {
-		                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
-	                    	alert("<spring:message code='ezPersonal.t211'/>");
-	                	else {
-		                    pListXML_Info = g_xmlHTTP.responseXML;
-	                    	pSeach = true;
-	                    	DisplayUserImageList();
-	                    	makePageSelPage();
-	                	}
-	            	}
-	            	else
-		                alert("<spring:message code='ezPersonal.t212'/>" + g_xmlHTTP.statusText)
-
-		            g_xmlHTTP = null;
+	    	function event_displayUserList2(xml) {
+		        if (xml != null) {
+	                if (SelectNodes(xml, "LISTVIEWDATA/ROWS/ROW").length == 0) {
+                    	alert("<spring:message code='ezPersonal.t211'/>");
+	                } else {
+	                    pListXML_Info = xml;
+                    	pSeach = true;
+                    	DisplayUserImageList();
+                    	makePageSelPage();
+                	}
 	    	    }
 	    	}
 	    	function SelectReceiverWindow(Title, selectedWindow) {
@@ -562,7 +553,7 @@
 	        	} else if (adCount == 1) {
 	            	bSearch = true;
 	            	g_xmlHTTP = createXMLHttpRequest();
-	            
+
 	            	if(CrossYN())
 		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 	            	else
