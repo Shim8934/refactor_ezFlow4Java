@@ -252,7 +252,7 @@
 		    		url : "/ezApprovalG/getLineList.do",
 		    		data : {
 		    				docID : tempGDocID,
-		    				flag  : "APR"
+		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
 		    			getAprovSub_after(xml);

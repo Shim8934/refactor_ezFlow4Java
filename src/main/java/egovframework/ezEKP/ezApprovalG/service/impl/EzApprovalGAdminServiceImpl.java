@@ -1270,7 +1270,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+			
+			if (vo.getDelDate() == null) {
+				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
+			} else {
+				sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+			}
 
 			if (lang.equals("1")) {
 				sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
