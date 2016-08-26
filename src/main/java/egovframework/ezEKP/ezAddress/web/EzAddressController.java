@@ -344,7 +344,7 @@ public class EzAddressController{
 			if (addressId.equals("")) {
 				//주소록 추가
 				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
-				ezAddressService.insertAddress(ownerId, Integer.parseInt(folderId), userInfo.getId(), sUserNM, sUserNM2, photoPath, sName,
+				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), sUserNM, sUserNM2, photoPath, sName,
 						sCompany, sDept, sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip,
 						sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, "");
 			} else {
@@ -475,7 +475,7 @@ public class EzAddressController{
 			String sType = "G";
 			
 			if (addressId.equals("")) {
-				ezAddressService.insertAddress(ownerId, Integer.parseInt(folderId), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), "", sGroupName,
+				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), "", sGroupName,
 						"", "", "", "", "", "", sEmail, "", "",
 						"", "", "", sMemo, sType, "");
 			} else {

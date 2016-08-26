@@ -279,7 +279,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 
 	@Override
-	public void insertAddress(String pOwnerId, int pFolderId, String pCreatorId, String pCreatorName,
+	public void insertAddress(String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName,
 			String pCreatorName2, String pPhotoPath, String sName, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sEmail, String sHomePage, String sCompanyZip,
 			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType, String pAttachXML)
