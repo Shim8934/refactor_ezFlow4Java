@@ -250,8 +250,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.deleteSealInfo", map);
 	}
 	
-	public void deleteDeptSealInfo(Map<String, Object> map) throws Exception {
-		update("EzApprovalGAdmin.deleteSealInfo", map);
+	public void deleteSealDeptInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.deleteSealDeptInfo", map);
 	}
 	
 	public void setFormOrder(Map<String, Object> map) throws Exception {

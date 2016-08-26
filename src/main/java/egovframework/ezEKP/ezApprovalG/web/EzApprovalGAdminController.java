@@ -1351,7 +1351,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 관인대장 관인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다. db에서만 삭제 파일삭제X) 
+	 * 전자결재G관리 관인대장 관인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다. 삭제일자만 추가, 파일삭제X) 
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -1504,7 +1504,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 부서별관인대장 직인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다.db에서만삭제 파일삭제X) 
+	 * 전자결재G관리 부서별관인대장 직인삭제 실행 함수(버튼이 애초에 만들어져있지 않음 apprGManageSeal.jsp 에 버튼추가 + ajax추가 하면 삭제버튼 만들수있다.삭제일자만 추가 파일삭제X) 
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteDeptSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody

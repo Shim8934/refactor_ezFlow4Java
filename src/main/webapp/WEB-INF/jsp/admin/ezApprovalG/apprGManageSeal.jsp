@@ -122,11 +122,11 @@
 		    		url : "/admin/ezApprovalG/insertSealInfo.do",
 		    		async : false,
 		    		data : {pSealNum : pSealNum, 
-		    				pSealName : pSealName, 
-		    				pSealPath : pSealPath, 
-		    				pSealWidth : pSealWidth, 
-		    				pSealHeight : pSealHeight, 
-		    				pRegUserID : pUserID, 
+		    				pSealName : pSealName,
+		    				pSealPath : pSealPath,
+		    				pSealWidth : pSealWidth,
+		    				pSealHeight : pSealHeight,
+		    				pRegUserID : pUserID,
 		    				pRegUserName : pUserName1,
 		    				pRegUserName2 : pUserName2,
 		    				companyID : pCompanyID
@@ -243,34 +243,17 @@
 		        }
 		    }
 		    
-		    /* function btnDel_onclick() {
+		    function btnDel_onclick() {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvtDocForm");
 	
 		        var selRow = listview.GetSelectedRows();
 		        
 		        if (selRow) {
-		            parameter[0] = selRow[0].getAttribute("DATA1");
-		            parameter[1] = selRow[0].cells[0].innerText;
-		            parameter[2] = encodeURI(selRow[0].getAttribute("DATA2"));
-		            parameter[3] = selRow[0].cells[1].innerText;
-		            parameter[4] = selRow[0].cells[2].innerText;
-		            parameter[5] = selRow[0].cells[3].innerText;
-		            parameter[6] = selRow[0].cells[4].innerText;
-		            parameter[7] = selRow[0].getAttribute("DATA3");
-		            parameter[8] = selRow[0].cells[5].innerText;
-		            
-		            if (CrossYN()) {
-		                ezsealinfo_dialogArguments[0] = parameter;
-		                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
-	
-		                var ezSealInfo = window.open("/admin/ezApprovalG/ezSealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420));
-		                try { ezSealInfo.focus(); } catch (e) {
-		                }
+		            if (confirm("관인을 삭제하시겠습니까?")) {
+		            	DeleteSealInfo(selRow[0].getAttribute("DATA1"));
 		            } else {
-		                var url = "/admin/ezApprovalG/ezSealInfo.do";
-		                var feature = GetShowModalPosition(610, 265);
-		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
+		            	return;
 		            }
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
@@ -278,8 +261,7 @@
 		          
 		            return;
 		        }
-		    	
-		    } */
+		    }
 		    
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {
@@ -334,7 +316,7 @@
 	    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
 	    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 	    	<!-- 2016-08-26 이효진 삭제버튼 생성 -->
-	    	<!-- <li><span onClick="return btnDel_onclick()" >관인삭제</span></li> -->
+	    	<li><span onClick="return btnDel_onclick()" >관인삭제</span></li>
 	  	</ul>
 		</div>
 	

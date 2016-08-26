@@ -247,9 +247,9 @@
 		]]>	
 	</procedure>
 	
-	<procedure id="EzApprovalGAdmin.deleteDeptSealInfo" 			parameterClass="Map">
+	<procedure id="EzApprovalGAdmin.deleteSealDeptInfo" 			parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETEDEPTSEALINFO(#v_SEALNUM#, #v_DEPTID#)}
+			{CALL EZAPPROVALG_$companyID$.EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, #v_DEPTID#)}
 		]]>
 	</procedure>
 	

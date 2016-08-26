@@ -213,10 +213,7 @@
 	            
 	            var url = "/admin/ezApprovalG/addDeptSealInfo.do";
 	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(430, 360));
-	            try { addSealWindow.focus(); } catch (e) {}
-	            
-	
-	            
+	            try { addSealWindow.focus(); } catch (e) {}   
 	    	}
 	        
 	        function btnAdd_onclick_complete(ret) {
@@ -243,6 +240,26 @@
 	            	}
 	        	}
 	        }
+	        
+	        function btnDel_onclick() {
+		    	var listview = new ListView();
+		        listview.LoadFromID("lvtDocForm");
+	
+		        var selRow = listview.GetSelectedRows();
+		        
+		        if (selRow) {
+		            if (confirm("관인을 삭제하시겠습니까?")) {
+		            	DeleteSealInfo(selRow[0].getAttribute("DATA1"));
+		            } else {
+		            	return;
+		            }
+		        } else {
+		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
+		            OpenAlertUI(pInformationString);
+		          
+		            return;
+		        }
+		    }
 	        
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {
@@ -294,7 +311,7 @@
 		        </SELECT><br /><br />
 	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>
 	            <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
-	
+				<li><span onClick="return btnDel_onclick()" >직인삭제</span></li>
 	        </ul>
 	    </div>
 	
@@ -307,7 +324,7 @@
 	            </td>
 	            <td style="padding-left: 5px">
 	                <div class="listview">
-	                    <div id="lvtForm" style="border: 0; HEIGHT: 400px; WIDTH: 530px; OVERFLOW-Y: auto; OVERFLOW-X: auto;">
+	                    <div id="lvtForm" style="border: 0; HEIGHT: 400px; WIDTH: 700px; OVERFLOW-Y: auto; OVERFLOW-X: auto;">
 	                    </div>
 	                </div>
 	            </td>

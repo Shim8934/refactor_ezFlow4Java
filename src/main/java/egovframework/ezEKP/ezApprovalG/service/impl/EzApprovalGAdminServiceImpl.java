@@ -1322,7 +1322,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_DEPTID", deptID);
 			map.put("companyID", companyID);
 			
-			ezApprovalGAdminDAO.deleteDeptSealInfo(map);
+			ezApprovalGAdminDAO.deleteSealDeptInfo(map);
 			
 			return "TRUE";
 		} catch (Exception e) {
