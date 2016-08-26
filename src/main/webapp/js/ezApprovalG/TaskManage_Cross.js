@@ -101,7 +101,7 @@ function btnViewTaskInfo_onclick() {
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
-        alert(strLang437);
+    	OpenAlertUI(strLang437);
     }
 }
 
@@ -597,7 +597,7 @@ function btnViewTaskHistoryInfo_onclick() {
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
-        alert(strLang437);
+    	OpenAlertUI(strLang437);
     }
 
 }

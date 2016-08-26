@@ -7,12 +7,12 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
-            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(325, 200));
+            var OpenWin = window.open(url, "ezAPRALERT", GetOpenWindowfeature(325, 200));
             try { OpenWin.focus(); } catch (e) { }
         }
         else {
             ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(325, 200));
+            var OpenWin = window.open(url, "ezAPRALERT", GetOpenWindowfeature(325, 200));
             try { OpenWin.focus(); } catch (e) { }
         }
     }
