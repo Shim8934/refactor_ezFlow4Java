@@ -121,7 +121,7 @@
 			}
 			
 			function InsFContTotal() {
-			    if (document.getElementById("tbFormContName").value == "") {
+			    if (document.getElementById("tbFormContName").value == "" || document.getElementById("tbManage").value == "") {
 			        RtnState = false;
 			        return;
 			    }
@@ -149,7 +149,7 @@
 			}
 			
 			function InsFContGroup() {
-			    if (document.getElementById("tbFormContName").value == "") {
+			    if (document.getElementById("tbFormContName").value == "" || document.getElementById("tbManage").value == "") {
 			        RtnState = false;
 			        return;
 			    }

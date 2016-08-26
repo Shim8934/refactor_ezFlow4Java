@@ -708,7 +708,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		String pDirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String tempPath = pDirPath  + "TempUploadFile";
-		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "UploadFile";
+		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "uploadFile";
 		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
 		
 		File tempDir = new File(tempPath);
@@ -2635,7 +2635,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		map.put("v_USERINFO_USERID", id);
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_GUBUN", gubun);
-System.out.println("@@@@@@@@@@@@@@@@@@@");
+		
 		return ezCommunityDAO.deleteOneLineReply(map);
 	}
 	
@@ -4671,7 +4671,7 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 			docPath = realPath + commonUtil.separator + strFilePath + commonUtil.separator;
 			
 			if (!new File(docPath + strBoardID).exists()) {
-				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "UploadFile");
+				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
 				File dir2 = new File(docPath + strBoardID + commonUtil.separator + "doc");
 				dir1.mkdirs();
 				dir2.mkdirs();
@@ -4718,7 +4718,7 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 				filePath = attachments.split(";")[i];
 				
 				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
 					FileUtils.moveFile(file, destFile);
 					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
 				}
@@ -4728,9 +4728,9 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("TempUpload") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
-						map.put("filePath", boardID + commonUtil.separator + "UploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
 					} else {
 						map.put("filePath", thumbPath.split(";")[i]);
 					}
@@ -4744,7 +4744,7 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
 				map.put("fileName", fileName);
 				
 				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
-					map.put("filePath", boardID + commonUtil.separator + "UploadFile" + filePath);
+					map.put("filePath", boardID + commonUtil.separator + "uploadFile" + filePath);
 					ezCommunityDAO.insertAttachInfo(map);
 				} else {
 					map.put("filePath", filePath);
@@ -5002,7 +5002,7 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
         	destdir.mkdir();
         	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
         	destdir2.mkdir();
         }
         
@@ -5021,7 +5021,7 @@ System.out.println("@@@@@@@@@@@@@@@@@@@");
         	destdir.mkdir();
         	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "UploadFile");
+        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
         	destdir2.mkdir();
         }
         

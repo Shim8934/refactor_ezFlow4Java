@@ -106,16 +106,17 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getFormRecvAdmin", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiveDocVO> getDeptTranSendDocCount(Map<String, Object> map) throws Exception {
+		return (List<ApprGReceiveDocVO>) list("EzApprovalGAdmin.getDeptTranSendDocCount", map);
+	}
+	
 	public ApprGTaskVO getTaskCode(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskCode", map);
 	}
 	
 	public ApprGTaskVO getTaskName(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskName", map);
-	}
-	
-	public ApprGReceiveDocVO getDeptTranSendDocCount(Map<String, Object> map) throws Exception {
-		return (ApprGReceiveDocVO) select("EzApprovalGAdmin.getDeptTranSendDocCount", map);
 	}
 	
 	public ApprGFormVO getFormContent(Map<Object, String> map) throws Exception {

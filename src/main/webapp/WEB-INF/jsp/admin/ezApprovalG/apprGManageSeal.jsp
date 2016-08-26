@@ -171,9 +171,8 @@
 		            }
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
-		          //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
 		            OpenAlertUI(pInformationString);
-// 		            alert(pInformationString);
+		          
 		            return;
 		        }
 		    }
@@ -202,22 +201,18 @@
 		                RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
 		                if (RtnVal == "TRUE") {
 		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
-		                  //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
 		 		            OpenAlertUI(pInformationString);
-// 				            alert(pInformationString);
 		                    getSealList();
 		                } else {
 		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
-		                  //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
 		 		            OpenAlertUI(pInformationString);
-// 				            alert(pInformationString);
+
 		                    return;
 		                }
 		            } else {
 		                var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
-		              //2016-07-28 이효진 OpenAlertUI화면 alert로 대체
 	 		            OpenAlertUI(pInformationString);
-// 			            alert(pInformationString);
+
 		                return;
 		            }
 		        }
@@ -279,7 +274,7 @@
 		</div>
 	
 		<div class="listview"  style="width:790px" >
-			<DIV id=lvtForm class="text" style="border:0;HEIGHT: 300px; WIDTH:790px"></DIV>
+			<DIV id=lvtForm class="text" style="border:0; WIDTH:790px"></DIV>
 		</div>
 	
 		<script type="text/javascript">

@@ -462,25 +462,6 @@
 		        if (RtnVal) {
 		            listview.LoadFromID("lvtDocForm");
 		            var selRow = listview.GetSelectedRows();
-/* 		            var xmlpara = createXmlDom();
-		            var xmlhttp = createXMLHttpRequest();
-		            var objNode;
-	
-		            createNodeInsert(xmlpara, objNode, "ROW");
-		            createNodeAndInsertText(xmlpara, objNode, "TASKCODE", selRow[0].getAttribute("DATA1"));
-		            createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-	
-		            xmlhttp.open("POST", "aspx/API_RemoveTaskCode.aspx", false);
-		            xmlhttp.send(xmlpara);
-	
-		            if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "TRUE") {
-		                var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
-		              	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 	                    OpenAlertUI(pAlertContent);
-	                    alert(pAlertContent);
-
-	                    TreeView_onNodeSelect();
-		            } */
 		            
 		            $.ajax({
 		            	type : "POST",

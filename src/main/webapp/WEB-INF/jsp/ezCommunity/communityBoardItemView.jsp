@@ -349,7 +349,7 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                alert(filepath);
+alert(filepath);
 	                filename = filepath.substr(89, filepath.length - 88);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");

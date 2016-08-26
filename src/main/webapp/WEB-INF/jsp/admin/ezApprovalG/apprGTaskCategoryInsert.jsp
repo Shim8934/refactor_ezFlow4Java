@@ -132,7 +132,7 @@
 		    function OpenAlertUI(pAlertContent) {
 		        ezapralert_cross_dialogArguments[0] = pAlertContent;
 		        ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		        var ezAPRALERT_Cross = window.open("../../ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		    }
 		    
@@ -166,25 +166,15 @@
 		        var tempValue = GetTaskCategoryDuplicate();
 		        
 		        if (tempValue == "NULL") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
-		            alert("<spring:message code = 'ezApprovalG.t719' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
 		        } else if (tempValue == "TRUE") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t720' />");
-		            alert("<spring:message code = 'ezApprovalG.t720' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t720' />");
 		        } else if (tempValue == "FALSE") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t721' />");
-		            alert("<spring:message code = 'ezApprovalG.t721' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t721' />");
 		        } else if (tempValue == "LENGTH") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
-		            alert("<spring:message code = 'ezApprovalG.t722' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
 		        } else {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t723' />");
-		            alert("<spring:message code = 'ezApprovalG.t723' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t723' />");
 		        }
 		    }
 		    
@@ -192,26 +182,18 @@
 		        var tempValue = GetTaskCategoryDuplicate();
 		        
 		        if (tempValue == "NULL") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
-		            alert("<spring:message code = 'ezApprovalG.t719' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
 		            return false;
 		        } else if (tempValue == "TRUE") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t720' />");
-		            alert("<spring:message code = 'ezApprovalG.t720' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t720' />");
 		            return false;
 		        } else if (tempValue == "FALSE") {
 		            return true;
 		        } else if (tempValue == "LENGTH") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
-		            alert("<spring:message code = 'ezApprovalG.t722' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
 		            return false;
 		        } else {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t723' />");
-		            alert("<spring:message code = 'ezApprovalG.t723' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t723' />");
 		            return false;
 		        }
 		    }
@@ -242,28 +224,20 @@
 		        var tempCode = trim(tbCateCode.value);
 		        
 		        if (tempCode == "") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
-		            alert("<spring:message code = 'ezApprovalG.t719' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
 		            return;
 		        } else if (tempCode.length != 8) {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t724' />");
-		            alert("<spring:message code = 'ezApprovalG.t724' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t724' />");
 		            return;
 		        }
 
 		        if (trim(tbCateName.value) == "") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t725' />");
-		            alert("<spring:message code = 'ezApprovalG.t725' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t725' />");
 		            return;
 		        }
 
 		        if (trim(tbCateDesc.value) == "") {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t726' />");
-		            alert("<spring:message code = 'ezApprovalG.t726' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t726' />");
 		            return;
 		        }
 
@@ -286,9 +260,7 @@
 		            ReturnFunction(reParam);
 		            window.close();
 		        } else {
-		        	//2016-07-15 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t727' />");
-		            alert("<spring:message code = 'ezApprovalG.t727' />");
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t727' />");
 		        }
 		    }
 		    

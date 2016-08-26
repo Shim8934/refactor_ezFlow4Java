@@ -128,6 +128,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID);
 		
+		System.out.println(result);
+		
 		return result;
 	}
 	

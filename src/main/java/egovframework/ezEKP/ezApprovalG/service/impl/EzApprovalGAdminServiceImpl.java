@@ -1184,7 +1184,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+			
+			if (vo.getDelDate() == null) {
+				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
+			} else {
+				sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+			}
+			
 			sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
 			sb.append("</ROW>");
 		}
@@ -1364,19 +1370,21 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_LANGTYPE", lang);
 		map1.put("companyID", companyID);
 		
-		ApprGReceiveDocVO vo = ezApprovalGAdminDAO.getDeptTranSendDocCount(map1);
+		List<ApprGReceiveDocVO> list = ezApprovalGAdminDAO.getDeptTranSendDocCount(map1);
 		
-		if (vo != null) {
-			sb.append("<ROW>");
-			
-			if (!pMode.equals("RECV")) {
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSentDeptName()) + "</VALUE></CELL>");
+		for(ApprGReceiveDocVO vo : list) {
+			if (vo != null) {
+				sb.append("<ROW>");
+				
+				if (!pMode.equals("RECV")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getSentDeptName()) + "</VALUE></CELL>");
+				}
+				if (!pMode.equals("SEND")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getReceivedDeptName()) + "</VALUE></CELL>");
+				}
+				
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL></ROW>");
 			}
-			if (!pMode.equals("SEND")) {
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getReceivedDeptName()) + "</VALUE></CELL>");
-			}
-			
-			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL></ROW>");
 		}
 		
 		sb.append("</ROWS></LISTVIEWDATA>");

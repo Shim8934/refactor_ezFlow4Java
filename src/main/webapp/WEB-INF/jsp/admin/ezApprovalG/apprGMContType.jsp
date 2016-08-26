@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-			var labelcolor = "gray"
+			var labelcolor = "gray";
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
 		    var gFContID, gFormID, gState, gRtnVal;

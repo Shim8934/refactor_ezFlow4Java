@@ -30,8 +30,8 @@
 		    
 		    $(document).ready(function(){
 		        try {
-		        	para = opener.ezaddSeal_cross_dialogArguments[0];
-		        	ReturnFunction = opener.ezaddSeal_cross_dialogArguments[1];
+		        	para = opener.ezapralert_cross_dialogArguments[0];
+		        	ReturnFunction = opener.ezapralert_cross_dialogArguments[1];
 		            pRegUserID = para[0];
 		            pRegUserName = para[1];
 		            pCompanyID = para[2];

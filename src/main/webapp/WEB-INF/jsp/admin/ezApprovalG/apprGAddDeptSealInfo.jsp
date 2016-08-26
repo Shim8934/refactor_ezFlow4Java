@@ -210,7 +210,6 @@
 			            		if (fileName.length > 1000) {
 			                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1246' />";
 			                        OpenAlertUI(pInformationString);
-			                        alert(fileName);
 			                        
 			                        return;
 			                    }

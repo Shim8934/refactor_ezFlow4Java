@@ -3539,8 +3539,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (item.getExtensionAttribute5().length() > 0) {
-			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile//s_", "/UploadFile/"));
-			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/UploadFile/s_", "/UploadFile/"));
+			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
+			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
 			

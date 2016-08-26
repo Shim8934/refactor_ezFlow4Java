@@ -721,10 +721,10 @@
 						    FileName = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENT").item(i));
 						    FileURL = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENTURL").item(i));
 						    ItemID = getNodeText(loadXMLString(xmlHTTP.responseText).getElementsByTagName("ITEMID").item(0));
-						    attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\UploadFile" + "&NewGuid=" + NewGuid, false);
+						    attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\uploadFile" + "&NewGuid=" + NewGuid, false);
 						    attachHTTP.send();
 						    
-						    filefullpath = pUploadFilePath + "\\" + pBoardID + "\\UploadFile\\" + NewGuid + "_" + FileName;
+						    filefullpath = pUploadFilePath + "\\" + pBoardID + "\\uploadFile\\" + NewGuid + "_" + FileName;
 						    var fileHTTP = createXMLHttpRequest();
 						    fileHTTP.open("POST", "interASP/getFileSize.aspx?filepath=" + encodeURIComponent(filefullpath), false);
 						    fileHTTP.send();

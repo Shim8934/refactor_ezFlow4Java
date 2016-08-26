@@ -421,7 +421,7 @@ function TreeView() {
                 treeDiv.setAttribute("SELECTNODEID", _selectedNodeID);
 
                 //this.DisplaySelectNode();
-
+//TODO 트리출력시 에러
                 var oFunc = new Function("node_select(\"" + _selectedNodeID + "\", \"" + _selectedNodeNM + "\", \"" + _thisID + "\", " + _nodeClick + ");");
                 oFunc.call();
             }

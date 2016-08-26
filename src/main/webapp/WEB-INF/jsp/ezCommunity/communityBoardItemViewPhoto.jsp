@@ -314,6 +314,7 @@
 	        }
 
 	        function encodeBase64(p_str) {
+	        	alert(1);
 	            var objEzUtil = new ActiveXObject("EzUtil.MiscFunc");
 	            ret = objEzUtil.EncodeBase64(p_str);
 	            objEzUtil = null;
