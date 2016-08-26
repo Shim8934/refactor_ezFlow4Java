@@ -155,7 +155,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				
 				if (rc == 0) { // updateGroupAdd 성공
 					
-					//insertDBData_company 실패했을 경우 JMocha에서 부서 다시 삭제.
+					//insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 					try {
 						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
 						result = "OK";	
