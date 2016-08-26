@@ -237,4 +237,41 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;
 	}
 
+	@Override
+	public int updateGroupMove(String oldGroupEmailAddress, String newGroupEmailAddress, String targetEmail)
+			throws Exception {
+		logger.debug("updateGroupMove started");
+		
+		String oldGroupEmailParam = "oldGroupEmail=" + URLEncoder.encode(oldGroupEmailAddress, "UTF-8");
+		String newGroupEmailParam = "newGroupEmail=" + URLEncoder.encode(newGroupEmailAddress, "UTF-8");
+		String targetEmailParam = "targetEmail=" + URLEncoder.encode(targetEmail, "UTF-8");
+		
+		String inputParams = oldGroupEmailParam + "&" + newGroupEmailParam + "&" + targetEmailParam;
+
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateGroupMove";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("updateGroupMove ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+
 }

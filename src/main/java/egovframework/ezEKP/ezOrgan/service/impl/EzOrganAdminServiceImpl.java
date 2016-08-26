@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -26,6 +28,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	private EzOrganService ezOrganService;
 	
 	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
+	
+	@Autowired
 	private EzOrganDAO ezOrganDao;
 		
 	@Autowired
@@ -33,6 +38,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Autowired
 	private LoginDAO loginDAO;
+	
+	@Autowired
+	private Properties config;
 	
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -135,8 +143,29 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if(parentCn.equals(cn)){
 			result = "SAME";
 		}else{
-			moveDBData(parentCn, cn, type);
-			result = "OK";
+			
+			// skyblue0o0
+			String oldGroupAddr = "";
+			
+			if (type.equalsIgnoreCase("group")) {
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"));
+				oldGroupAddr = dept.getExtensionAttribute1() + "@" + config.getProperty("config.DomainName");
+			} else {
+				OrganUserVO userVO = getUserInfo(cn, config.getProperty("config.primary"));
+				oldGroupAddr = userVO.getDepartment() + "@" + config.getProperty("config.DomainName");
+			}
+			
+			String newGroupAddr = parentCn + "@" + config.getProperty("config.DomainName");
+			String mailAddr = cn + "@" + config.getProperty("config.DomainName");
+			
+			int rc = ezEmailUserAdminService.updateGroupMove(oldGroupAddr, newGroupAddr, mailAddr);
+			
+			if (rc == 0) { // 성공
+				moveDBData(parentCn, cn, type);
+				result = "OK";
+			}
+			// skyblue0o0 - end
+			
 		}
 		
 		return result;
