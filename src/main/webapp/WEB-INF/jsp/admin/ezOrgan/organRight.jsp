@@ -266,6 +266,8 @@
 		        	success : function(result){
 		        		if (result == "HASCHILD"){
 		        			alert("<spring:message code='ezOrgan.t37' />");
+		        		}else if (result == "EMAIL_ERROR") {
+		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t66' />");
 		        		}else{
 		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t38' />");
 							getDeptFullTree(topid);
@@ -349,7 +351,9 @@
 					success : function(result){
 						if (result == "HASCHILD"){
 							alert("<spring:message code='ezOrgan.t37' />");
-						}else{
+						}else if (result == "EMAIL_ERROR") {
+		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36' />");
+		        		}else{
 							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t38' />");
 							getDeptFullTree(topid);
 						}
@@ -442,6 +446,8 @@
 		            	success : function(result){
 		            		if(result == "SAME"){
 		            			alert("<spring:message code='ezOrgan.t21' />");
+		            		}else if (result == "EMAIL_ERROR") {
+		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
 		            		}else{
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
 				                getDeptFullTree(selectedCN);
@@ -1024,7 +1030,9 @@
 		            	async : false,
 		            	data : {parentCn : rtnValue, cn : data},
 		            	success : function(result){
-		            		if(result != "OK"){
+		            		if (result == "EMAIL_ERROR") {
+		            			alert("<spring:message code='ezOrgan.t15' />");
+		            		}else if (result == "SAME") {
 		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		}else{
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");

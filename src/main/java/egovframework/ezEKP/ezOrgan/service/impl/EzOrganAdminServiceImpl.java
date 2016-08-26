@@ -163,6 +163,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			if (rc == 0) { // 성공
 				moveDBData(parentCn, cn, type);
 				result = "OK";
+			} else {
+				result = "EMAIL_ERROR";
 			}
 			// skyblue0o0 - end
 			

@@ -154,10 +154,20 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				
 				if (rc == 0) { // updateGroupAdd 성공
-					ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
-					result = "OK";				
+					
+					//insertDBData_company 실패했을 경우 JMocha에서 부서 다시 삭제.
+					try {
+						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
+						result = "OK";	
+					} catch (Exception e) {
+						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+						ezEmailUserAdminService.removeGroup(mailAddr);
+						throw e;
+					}
+								
+				} else {
+					result = "EMAIL_ERROR";
 				}
-							
 			} else {
 				result = "EMAIL_ERROR";
 			}
@@ -201,7 +211,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				if (rc == 0) { // updateGroupDel 성공
 					ezOrganAdminService.deleteDBData(cn, pClass);
 					result = "OK";
+				} else {
+					result = "EMAIL_ERROR";
 				}
+			} else {
+				result = "EMAIL_ERROR";
 			}
 			// skyblue0o0 - end
 			
@@ -269,10 +283,21 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					
 					if (rc == 0) { // updateGroupAdd 성공
 						vo.setMail(mailAddr);
-						ezOrganAdminService.insertDBData_dept(vo);
-						result = "OK";				
+						
+						//insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제.
+						try {
+							ezOrganAdminService.insertDBData_dept(vo);
+							result = "OK";	
+						} catch (Exception e) {
+							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+							ezEmailUserAdminService.removeGroup(mailAddr);
+							throw e;
+						}
+									
 					}
-					
+					else {
+						result = "EMAIL_ERROR";
+					}
 				} else {
 					result = "EMAIL_ERROR";
 				}
@@ -467,7 +492,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
-		String domain = config.getProperty("config.DomainName");		
+		String domain = config.getProperty("config.DomainName");
 		// dhlee - end
 				
 		for (int i=0; i < cn.length; i++) {
@@ -526,10 +551,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						vo.setUpnName(userPrincipalName);
 						String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
 						vo.setPassword(pass);
-
-						ezOrganAdminService.insertDBData_user(vo);
-						result = "OK";		
-					
+						
+						//insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
+						try {
+							ezOrganAdminService.insertDBData_user(vo);
+							result = "OK";
+						} catch (Exception e) {
+							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+							ezEmailUserAdminService.removeUser(mailAddr);
+							throw e;
+						}
 					} else {
 						result = "EMAIL_ERROR";
 					}
