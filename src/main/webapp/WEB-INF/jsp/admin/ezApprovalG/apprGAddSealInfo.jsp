@@ -86,9 +86,10 @@
 		        ret[0] = "OK";
 		        ret[1] = "";
 		        ret[2] = pSealName;
-		        ret[3] = pSealPath.split("/files")[1];
+		        ret[3] = pSealPath;
 		        ret[4] = pSealWidth;
 		        ret[5] = pSealHeight;
+		        
 		        ReturnFunction(ret);
 		        window.close();
 		    }

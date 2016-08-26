@@ -173,7 +173,7 @@
 		        if (selRow!="") {
 		            parameter[0] = selRow[0].getAttribute("DATA1");
 		            parameter[1] = selRow[0].cells[0].innerText;
-		            parameter[2] = encodeURI("/files" + selRow[0].getAttribute("DATA2"));
+		            parameter[2] = encodeURI(selRow[0].getAttribute("DATA2"));
 		            parameter[3] = selRow[0].cells[1].innerText;
 		            parameter[4] = selRow[0].cells[2].innerText;
 		            parameter[5] = selRow[0].cells[3].innerText;
