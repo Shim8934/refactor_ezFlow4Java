@@ -338,7 +338,7 @@ public class EzCommonController extends EgovFileMngUtil{
         	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getLang());
         	
         	Document xmldom = commonUtil.convertStringToDocument(infoXML);
-        	if (xmldom.getElementsByTagName("EMAIL") == null) {
+        	if (xmldom.getElementsByTagName("MAIL") == null) {
         		literalEmail = email;
         		literalDisplayName = email;
         		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
