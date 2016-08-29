@@ -129,18 +129,14 @@
 		        
 		        if (draftfrom != "" && draftto != "") {
 		            if (draftfrom > draftto) {
-		            	//2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-// 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1326' /><br><spring:message code ='ezApprovalG.t1327' />");
-		                alert("<spring:message code ='ezApprovalG.t1326' /><br><spring:message code ='ezApprovalG.t1327' />");
+		                OpenAlertUI("<spring:message code ='ezApprovalG.t1326' /><br><spring:message code ='ezApprovalG.t1327' />");
 		                return;
 		            }
 		        }
 		
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
-		            	//2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-// 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1328' /><br><spring:message code ='ezApprovalG.t1327' />");
-		                alert("<spring:message code ='ezApprovalG.t1328' /><br><spring:message code ='ezApprovalG.t1327' />");
+		                OpenAlertUI("<spring:message code ='ezApprovalG.t1328' /><br><spring:message code ='ezApprovalG.t1327' />");
 		                return;
 		            }
 		        }
@@ -212,9 +208,7 @@
 		
 		        if (!chkVal) {
 		            RtnVal = "";
-		          //2016-07-29 이효진 OpenAlertUI화면 alert로 대체
-// 		            OpenAlertUI("<spring:message code ='ezApprovalG.t1329' />");
-		            alert("<spring:message code ='ezApprovalG.t1329' />");
+		            OpenAlertUI("<spring:message code ='ezApprovalG.t1329' />");
 		        } else {
 		            if (CrossYN()) {
 		                ReturnFucntion(RtnVal);
@@ -231,12 +225,12 @@
 		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = pAlertContent;
 		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            var ezAPRALERT_Cross = window.open("/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
 		            try { ezAPRALERT_Cross.focus(); } catch (e) {
 		            }
 		        } else {
 		            var parameter = pAlertContent;
-		            var url = "../ezAPRALERT_Cross.aspx";
+		            var url = "/ezApprovalG/ezAprAlert.do";
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
