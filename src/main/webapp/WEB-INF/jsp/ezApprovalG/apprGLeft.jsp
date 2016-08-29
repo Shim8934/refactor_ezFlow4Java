@@ -629,7 +629,7 @@
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
 		
-		            parent.frames["left"].location.href = "/myoffice/ezApprovalG/left_approval_Cross.aspx?listType=" + pListTypeValue;
+		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
 		    function ChangeCookies() {
