@@ -447,8 +447,18 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String pw = request.getParameter("password");
 		String cn[] = request.getParameter("cn").split(",");
 		
-		for (int i=0; i < cn.length; i++) {			
-			ezOrganAdminService.setPassword(cn[i], pw);
+		// dhlee
+		String domain = config.getProperty("config.DomainName");
+		// dhlee - end
+		
+		for (int i=0; i < cn.length; i++) {		
+			// dhlee
+			int rc = ezEmailUserAdminService.updateUserPassword(cn[i] + "@" + domain, pw);
+			
+			if (rc == 0) { // updateUserPassword 성공			
+				ezOrganAdminService.setPassword(cn[i], pw);
+			}
+			// dhlee - end
 		}
 	}
 	
@@ -459,8 +469,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public void retireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		String cn[] = request.getParameter("cn").split(",");
 		
+		// dhlee
+		String domain = config.getProperty("config.DomainName");
+		// dhlee - end
+		
 		for (int i=0; i < cn.length; i++) {			
-			ezOrganAdminService.retireEntry(cn[i]);
+			// dhlee
+			int rc = ezEmailUserAdminService.retireUser(cn[i] + "@" + domain);
+			
+			if (rc == 0) { // retireUser 성공
+				
+				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], config.getProperty("config.primary"));
+				String groupAddr = userVO.getDepartment() + "@" + domain;
+				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, cn[i] + "@" + domain);
+				
+				if (rc == 0) { // updateGroupDel 성공
+					ezOrganAdminService.retireEntry(cn[i]);
+				}
+				
+			}
+			// dhlee - end
 		}
 	}
 	
@@ -1029,8 +1057,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		String[] cn = request.getParameter("cn").split(",");
 		
+		// dhlee
+		String domain = config.getProperty("config.DomainName");
+		// dhlee - end
+		
 		for (int i = 0; i < cn.length; i++) {
-			ezOrganAdminService.restoreRetireEntry(cn[0], deptID);
+			// dhlee
+			String mailAddr = cn[i] + "@" + domain;
+			int rc = ezEmailUserAdminService.restoreUser(mailAddr);
+			
+			if (rc == 0) { // restoreUser 성공
+								
+				String groupAddr = deptID + "@" + domain;
+				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				
+				if (rc == 0) { // updateGroupAdd 성공
+					ezOrganAdminService.restoreRetireEntry(cn[i], deptID);
+				}				
+				
+			}
+			// dhlee - end			
 		}		
 	}
 	

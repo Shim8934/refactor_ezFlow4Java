@@ -60,8 +60,36 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 
 	@Override
 	public int updateUserPassword(String userEmailAddress, String newPassword) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.debug("updateUserPassword started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String passwordParam = "password=" + URLEncoder.encode(newPassword, "UTF-8");
+		String inputParams = userIdParam + "&" + passwordParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateUserPassword";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("updateUserPassword ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
 	}
 
 	@Override
@@ -103,6 +131,72 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;		
 	}
 
+	@Override
+	public int retireUser(String userEmailAddress) throws Exception {
+		logger.debug("retireUser started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/retireUser";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("retireUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
+	}
+	
+	@Override
+	public int restoreUser(String userEmailAddress) throws Exception {
+		logger.debug("restoreUser started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/restoreUser";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("restoreUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
+	}
+	
 	@Override
 	public int addGroup(String groupEmailAddress) throws Exception {
 		logger.debug("addGroup started. groupEmailAddress=" + groupEmailAddress);

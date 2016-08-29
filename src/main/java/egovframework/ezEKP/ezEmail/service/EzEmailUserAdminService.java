@@ -39,6 +39,20 @@ public interface EzEmailUserAdminService {
 	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
 	 */
 	public int removeUser(String userEmailAddress) throws Exception;
+
+	/**
+	 * Email Server에서 지정한 User Account를 퇴직자 처리한다.
+	 * @param userEmailAddress Retire 하고자 하는 User Account의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int retireUser(String userEmailAddress) throws Exception;
+
+	/**
+	 * Email Server에서 지정한 퇴직자를 복구 처리한다.
+	 * @param userEmailAddress Retire 하고자 하는 User Account의 Email 주소
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 */
+	public int restoreUser(String userEmailAddress) throws Exception;
 	
 	/**
 	 * Email Server에 Group(Company or Department) Account를 생성한다. 
