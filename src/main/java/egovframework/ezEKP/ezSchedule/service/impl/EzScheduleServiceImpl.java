@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
+import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -42,5 +46,49 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		return ezScheduleDAO.getScheduleConfig(map);
 	}
 
+	@Override
+	public List<PubScheHqVO> getPublicScheduleHq(String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		return ezScheduleDAO.getPublicScheduleHq(map);
+	}
+
+	@Override
+	public List<PubScheSecVO> getPublicScheduleSec(String userID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_LANG", lang);
+		return ezScheduleDAO.getPublicScheduleSec(map);
+	}
+
+	@Override
+	public List<PubScheDeptVO> getPublicScheduleDept(String userID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_LANG", lang);
+		return ezScheduleDAO.getPublicScheduleDept(map);
+	}
+
+	@Override
+	public List<PubScheCumulerVO> getPublicScheduleCumuler(String userID, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_LANG", lang);
+		return ezScheduleDAO.getPublicScheduleCumuler(map);
+	}
+
+	@Override
+	public int getReceiveCount(String pUserId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", pUserId);
+		return ezScheduleDAO.getReceiveCount(map);
+	}
+
+	@Override
+	public int getInviteScheduleGroupCnt(String pUserId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", pUserId);
+		return ezScheduleDAO.getInviteScheduleGroupCnt(map);
+	}
 }
 

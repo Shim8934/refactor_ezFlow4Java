@@ -353,7 +353,7 @@ function getCalendarMiniDataSource_after() {
         tempData = null;
     }
     catch (e) {
-        alert("getCalendarMiniDataSource_after : " + e.description);
+        alert("getCalendarMiniDataSource_after 2: " + e.description);
     }
 }
 

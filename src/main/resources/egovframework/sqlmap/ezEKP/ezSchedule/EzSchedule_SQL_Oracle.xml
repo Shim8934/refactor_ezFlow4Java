@@ -4,6 +4,13 @@
 <sqlMap namespace="ezSchedule">
 	<typeAlias  alias="ScheGetHolidayVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO"/>
 	<typeAlias  alias="ScheduleConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO"/>
+	<typeAlias  alias="PubScheHqVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheHqVO"/>
+	<typeAlias  alias="PubScheSecVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheSecVO"/>
+	<typeAlias  alias="PubScheDeptVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO"/>
+	<typeAlias  alias="PubScheCumulerVO" 	type="egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO"/>
+	<typeAlias  alias="UserLocalInfoVO" 	type="egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO"/>
+	<typeAlias  alias="ScheduleGroupListVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO"/>
+	<typeAlias  alias="ScheduleGmailInfoVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -24,6 +31,44 @@
 		<result property="endTime"			column="ENDTIME"			columnIndex="4"/>
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
 	</resultMap>
+	
+	<resultMap class="PubScheHqVO" id="pubScheHqVO">
+		<result property="hqId"				column="HQID"				columnIndex="1"/>
+		<result property="hqName"			column="HQNAME"				columnIndex="2"/>
+		<result property="hqName2"			column="HQNAME2"			columnIndex="3"/>
+	</resultMap>
+
+	<resultMap class="PubScheSecVO" id="pubScheSecVO">
+		<result property="secId"			column="USERID"				columnIndex="1"/>
+		<result property="secName"			column="USERNAME"			columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="PubScheDeptVO" id="pubScheDeptVO">
+		<result property="deptId"			column="DEPTID"				columnIndex="1"/>
+		<result property="deptName"			column="DEPTNAME"			columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="PubScheCumulerVO" id="pubScheCumulerVO">
+		<result property="deptId"			column="DEPTID"				columnIndex="1"/>
+		<result property="titleName"		column="TITLE"				columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="UserLocalInfoVO" id="userLocalInfoVO">
+		<result property="timeZone"			column="TIMEZONE"			columnIndex="1"/>
+		<result property="lang"				column="LANG"				columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupListVO">
+		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
+		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="ScheduleGmailInfoVO" id="scheduleGmailInfoVO">
+		<result property="userId"			column="USERID"				columnIndex="1"/>
+		<result property="flag"				column="FLAG"				columnIndex="2"/>
+		<result property="gmailId"			column="GMAILID"			columnIndex="3"/>
+		<result property="gmailPwd"			column="GMAILPWD"			columnIndex="4"/>
+	</resultMap>
 
 	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
 		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -33,5 +78,45 @@
 		{CALL EZPIMS.EZSP_GETCONFIGINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzScheduleDAO.getPublicScheduleHq" parameterClass="Map" resultMap="pubScheHqVO" >
+		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getPublicScheduleSec" parameterClass="Map" resultMap="pubScheSecVO" >
+		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_SEC(#v_USERID#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getPublicScheduleDept" parameterClass="Map" resultMap="pubScheDeptVO" >
+		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_DEPT(#v_USERID#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzScheduleDAO.getPublicScheduleCumuler" parameterClass="Map" resultMap="pubScheCumulerVO" >
+		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_CUMULER(#v_USERID#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzScheduleDAO.getReceiveCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPIMS.EZSP_GETRECEIVECOUNT(#v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>	
+
+	<procedure id="EzScheduleDAO.getInviteScheduleGroupCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPIMS.EZSP_GETINVITESCHEDULEGROUPCNT(#v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>	
+	
+	<procedure id="EzScheduleDAO.getUserLocalInfo" parameterClass="Map" resultMap="userLocalInfoVO" >
+		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getScheduleGroupList" parameterClass="Map" resultMap="scheduleGroupListVO" >
+		{CALL EZPIMS.EZSP_GETSCHEDULEGROUPLIST(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getScheduleGmailInfo" parameterClass="Map" resultMap="scheduleGmailInfoVO" >
+		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
 </sqlMap>
 

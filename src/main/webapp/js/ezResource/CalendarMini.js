@@ -33,7 +33,7 @@ function CalendarMiniView(pTagetID) {
         var mSpan = document.createElement("SPAN");
         mSpan.style.marginLeft = "6px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_prev.gif");
+        mImg.setAttribute("src", "/images/calendar/btn_calendar_prev.gif");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
@@ -92,7 +92,7 @@ function CalendarMiniView(pTagetID) {
         var mSpan = document.createElement("SPAN");
         mSpan.style.marginRight = "6px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "Calendar/images/calendar/btn_calendar_next.gif");
+        mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);

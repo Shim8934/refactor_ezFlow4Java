@@ -321,9 +321,9 @@ function CalendarMiniDataSource() {
     createNodeAndInsertText(xmlpara, objNode, "APP", idtype);
     createNodeAndInsertText(xmlpara, objNode, "GROUPID", groupid);
     createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);
-    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
-    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
-    MiniHttp.send(xmlpara);
+//    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
+//    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
+//    MiniHttp.send(xmlpara);
     //getCalendarMiniDataSource_after(xmlhttp);
 }
 

@@ -43,6 +43,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -231,6 +232,41 @@ public class CommonUtil {
 		}else{
 			stb.append("");
 		}		
+		return stb.toString();
+	}
+	
+	/*
+	 * 행이 여러 개일 때 여러 행이 포함된 XML String 생성
+	 * xmlTag: "<DATA>" 또는 다름 Tag
+	 */
+	public String getQueryResult(List<Object> vo, String xmlTag) throws Exception{
+		StringBuilder stb = new StringBuilder();		
+		
+		if (vo == null) {
+			stb.append("");
+			return stb.toString();
+		}
+		
+	    stb.append("<DATA>");
+	    
+	    for (int i = 0; i < vo.size(); i++) {
+			stb.append("<ROW>");
+			
+			for(Field field : vo.get(i).getClass().getDeclaredFields()){
+		        field.setAccessible(true);
+				String data = String.valueOf(field.get(vo.get(i)));
+	
+				if(data == null || data.equals(null) || data.equals("null")){
+					data = "";
+				}				
+		        stb.append("<" + field.getName().toUpperCase() + ">");
+		        stb.append(cleanValue(data));
+		        stb.append("</" + field.getName().toUpperCase() + ">");		        
+		    }
+			stb.append("</ROW>");
+		}
+		stb.append("</DATA>");
+		
 		return stb.toString();
 	}
 	
