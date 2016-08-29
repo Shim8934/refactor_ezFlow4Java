@@ -334,11 +334,11 @@ public class EzCommonController extends EgovFileMngUtil{
         	}
         }
         
-        if (!id.equals("")) {
+        if (id != null && !id.equals("")) {
         	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getLang());
         	
         	Document xmldom = commonUtil.convertStringToDocument(infoXML);
-        	if (xmldom.getElementsByTagName(email) == null) {
+        	if (xmldom.getElementsByTagName("EMAIL") == null) {
         		literalEmail = email;
         		literalDisplayName = email;
         		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
