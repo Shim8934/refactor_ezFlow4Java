@@ -1445,7 +1445,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 						} else {
 							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 							sb.append(", \"" + menuitemLinkLocation + "\"");
-	                        sb.append(", \"" + menuitemWindowOption + "\")'>" + menuitemDisplayName + "</span></li>\n");
+	                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
 						}
                           
 					} else {
@@ -1494,7 +1494,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 					if (!menuitemLinkURL.trim().equals("")) {
                         sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
-						sb.append(", \"" + menuitemWindowOption + "\")'");
+						sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
 					}
 					
 					sb.append(">" + menuitemDisplayName + "</li>");
@@ -2639,6 +2639,22 @@ public class EzPortalServiceImpl implements EzPortalService {
 			map.put("v_pUID", pUID);
 			
 			ezPortalDAO.setUseMyStartPage2(map);
+			return "OK";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public String setUseMyPortalPage (String pUID, String pUserID, String pCompanyID, String pGubunFlag) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pUID", pUID);
+			map.put("v_pUSERID", pUserID);
+			map.put("v_pCOMPANYID", pCompanyID);
+			map.put("v_pGUBUNFLAG", pGubunFlag);
+			map.put("v_pUSEFLAG", "Y");
+			
+			ezPortalDAO.setUseMyPortalPage(map);
 			return "OK";
 		} catch (Exception e) {
 			return "";
