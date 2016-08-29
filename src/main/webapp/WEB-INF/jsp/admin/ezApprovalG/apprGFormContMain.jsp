@@ -121,7 +121,7 @@
 			}
 			
 			function InsFContTotal() {
-			    if (document.getElementById("tbFormContName").value == "" || document.getElementById("tbManage").value == "") {
+			    if (document.getElementById("tbFormContName").value == "") {
 			        RtnState = false;
 			        return;
 			    }
