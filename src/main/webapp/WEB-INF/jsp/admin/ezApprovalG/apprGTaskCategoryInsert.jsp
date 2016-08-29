@@ -235,6 +235,11 @@
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t725' />");
 		            return;
 		        }
+		        
+		        if (trim(tbCateName2.value) == "") {
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.lhj06' />");
+		            return;
+		        }
 
 		        if (trim(tbCateDesc.value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t726' />");
