@@ -286,6 +286,12 @@ public interface EzApprovalGService {
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID) throws Exception;
 	
+	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang) throws Exception;
+	
+	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception;
+	
+	public String getApprovalPWD2(String dUserID) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;

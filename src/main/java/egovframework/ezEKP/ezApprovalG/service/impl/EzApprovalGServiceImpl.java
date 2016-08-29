@@ -985,6 +985,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getApprovalPWD2(String dUserID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", dUserID);
+		
+		return ezApprovalGDAO.getApprovalPWD2(map);
+	}
+
+	@Override
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3051,11 +3059,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID) throws Exception {
 		String deptInfos = ezOrganService.getPropertyValue(deptID, "extensionAttribute4");
-		String[] deptList = deptInfos.split(";");
-		String deptInfo = "'" + deptID.trim() + "'";
+		String deptInfo = deptID.trim();
 		
-		for (int k = 0; k < deptList.length; k++) {
-			deptInfo += ", '" + deptList[k].trim() + "'";
+		if (deptInfos != null) {
+			String[] deptList = deptInfos.split(";");
+			
+			for (int k = 0; k < deptList.length; k++) {
+				deptInfo += ", " + deptList[k].trim();
+			}
 		}
 		
 		if (confirmYN.trim().equals("")) {
@@ -3284,6 +3295,115 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		return rtnVal;
+	}
+
+	@Override
+	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang)
+			throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		boolean rtn = true;
+		String gFlag = getCode2Name("A35", "002", companyID, lang).toUpperCase().trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_ORGDOCID", orgDocID);
+		map.put("v_GFLAG", gFlag);
+		map.put("v_USERID", userID);
+		
+		try {
+			ezApprovalGDAO.doSendOfferApprove1(map);
+		} catch (Exception e) {
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		strSQL.append(doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang));
+		
+		if (!strSQL.toString().toUpperCase().equals("FALSE")) {
+			strSQL.append("UPDATE TBENDAPRDOCINFO SET DocState = '014' WHERE DocID = '" + docID + "';\n");
+			strSQL.append("UPDATE TBENDAPRDOCINFO SET DocState = '014' WHERE DocID = '" + orgDocID + "';\n");
+            //2011.04.05 문서 발송된문서 다시 발송의뢰시 원문서정보가 삭제됨. 원래 원문서docid로 변경되도록 추가
+            strSQL.append("UPDATE TBAPRDOCINFO SET ORGDOCID = '" + orgDocID + "' WHERE ORGDOCID = '" + docID + "';\n");
+             
+     		Map<String, Object> map1 = new HashMap<String, Object>();
+    		map1.put("companyID", companyID);
+    		map1.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+    		
+    		try {
+    			ezApprovalGDAO.transactionSQL(map1);
+    			
+    			rtn = true;
+    		} catch (Exception e) {
+    			rtn = false;
+    		}
+		} else {
+			rtn = false;
+		}
+		
+		if (rtn) {
+			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID);
+			
+			return "<RESULT>TRUE</RESULT>";
+		} else {
+			ezApprovalGDAO.doSendOfferApprove2(map);
+			
+			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID);
+			
+			return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	@Override
+	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+
+		int receivedSN = 1;
+		
+		strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET ProcessDate = ");
+        strSQL.append("SYSDATE, AprState = '");
+        strSQL.append(staASBanSong + "', ProcessYN = 'Y' WHERE DocID = '" + docID);
+        strSQL.append("' AND ProcessorID = '" + userID + "' AND AprState = '" + staASJinHang + "';\n");
+        
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		ApprGDocListVO signList = ezApprovalGDAO.doSendOfferRejectAprDoc(map);
+		
+		if (signList == null) {
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		ApprGReceiveDocVO signList2 = ezApprovalGDAO.doSendOfferRejectReceipt(map);
+        
+		if (signList2 != null) {
+			receivedSN = Integer.parseInt(signList2.getReceiveSN() + 1);
+		}
+		
+		strSQL.append("INSERT INTO TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
+        strSQL.append("SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ");
+        strSQL.append("ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID) ");
+		strSQL.append("VALUES (" + receivedSN + ", '" + docID + "', '" + signList2.getSendDeptID() + "', N'");
+        strSQL.append(signList2.getSentDeptName() + "', N'" + signList2.getSentDeptName2() + "', '" + signList2.getReceivedDeptID() + "', N'" + signList2.getReceivedDeptName() + "', N'" + signList2.getReceivedDeptName2() + "', '" + staDSSimSa);
+		strSQL.append("', '" + staASBanSong + "', SYSDATE");
+        strSQL.append(", 'N', NULL, '" + signList.getWriterID() + "', N'" + signList.getWriterName() + "', N'" + signList.getWriterName2() + "', N'" + signList.getWriterJobTitle() + "', N'" + signList.getWriterJobTitle2());
+		strSQL.append("', '" + signList.getOrgDocID() + "');\n");
+		
+		String retValue = "";
+		
+ 		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("companyID", companyID);
+		map1.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+		
+		try {
+			ezApprovalGDAO.transactionSQL(map1);
+			
+			retValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			retValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return retValue;
 	}
 
 	public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,

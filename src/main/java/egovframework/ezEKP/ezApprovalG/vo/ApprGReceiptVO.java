@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezApprovalG.vo;
 public class ApprGReceiptVO {
 
 	/** 문서아이디*/
-	private String docid;
+	private String docID;
 	/** 수신처아이디*/
 	private String receiptPointID;
 	/** 수신처이름*/
@@ -47,11 +47,11 @@ public class ApprGReceiptVO {
 	/** */
 	private String companyID;
 	
-	public String getDocid() {
-		return docid;
+	public String getDocID() {
+		return docID;
 	}
-	public void setDocid(String docid) {
-		this.docid = docid;
+	public void setDocID(String docID) {
+		this.docID = docID;
 	}
 	public String getReceiptPointID() {
 		return receiptPointID;

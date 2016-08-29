@@ -978,8 +978,8 @@
 		        }
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var heigth = heigth - 10;
-		        var width = width - 10;
+		        var heigth = heigth - 50;
+		        var width = width/2;
 		        var left = 0;
 		        var top = 0;
 		        var pDocID = tr.getAttribute("DATA1");
@@ -998,7 +998,7 @@
 		        else {
 		
 		            if (CrossYN() || NonActiveX == "YES") {
-		                openLocation = "/myoffice/ezApprovalG/enforce/ezSimsaG_Cross.aspx";
+		                openLocation = "/ezApprovalG/ezSimsaG.do";
 		            }
 		            else {
 		                if (pUse_Editor == "") {
@@ -1009,7 +1009,7 @@
 		                }
 		            }
 		        }
-		        openLocation = openLocation + "?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pHref) + "&orgDocid=" + encodeURI(pOrgDocID);
+		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }

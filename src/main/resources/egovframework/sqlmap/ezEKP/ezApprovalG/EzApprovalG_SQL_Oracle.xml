@@ -376,6 +376,14 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETAPRLINEINFO_ID(#v_PDOCID#, #v_PUSERID#, #v_PAPRSTATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.doSendOfferRejectAprDoc" parameterClass="Map" resultClass="ApprGDocListVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFERREJECT_APRDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.doSendOfferRejectReceipt" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFERREJECT_RECEIPT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -640,6 +648,14 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_CREATENEWDOC(#v_DOCID#, #v_FORMID#, #v_COMPANYID#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.doSendOfferApprove1" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFERAPPROVE1(#v_DOCID#, #v_ORGDOCID#, #v_GFLAG#, #v_USERID#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.doSendOfferApprove2" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFERAPPROVE2(#v_DOCID#, #v_ORGDOCID#, #v_USERID#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.confirmClassify" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.EZSP_CONFRIMCLASSIFY(#v_DEPTCODE#)}
 	</procedure>
@@ -867,6 +883,17 @@
 		<![CDATA[
 			SELECT 
 				pwd 
+      		FROM 
+      			EZCOMMON.TBPWDINFO
+      		WHERE  
+      			userid = #v_PUSERID#
+        ]]>
+	</select>
+	
+	<select id="EzApprovalG.getApprovalPWD2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				pwdtype 
       		FROM 
       			EZCOMMON.TBPWDINFO
       		WHERE  

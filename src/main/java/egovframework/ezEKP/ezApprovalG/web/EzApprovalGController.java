@@ -2450,10 +2450,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		if (flag != null) {
 			if (flag.equals("Y")) {
-				String dbPassword = ezApprovalGService.getApprovalPWD1(dUserID);
+				String pwdType = ezApprovalGService.getApprovalPWD2(dUserID);
 				
-				if (dbPassword.trim().equals(password)) {
-					result = "1";
+				if (pwdType.equals("L")) {
+					orgPassword = ezOrganService.getEncPassword(dUserID);
+					
+					if (orgPassword.trim().equals(password)) {
+						result = "1";
+					}
+				} else {
+					String dbPassword = ezApprovalGService.getApprovalPWD1(dUserID);
+					
+					if (dbPassword.trim().equals(password)) {
+						result = "1";
+					}
 				}
 			} else {
 				orgPassword = ezOrganService.getEncPassword(dUserID);
@@ -4679,6 +4689,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재 일괄결재 표출 Method
 	 */
+	//보류중
 	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do")
 	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		String rtnVal = "OK/0/0/0";
@@ -4730,6 +4741,157 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String flag = request.getParameter("flag");
 		
 		String result = ezApprovalGService.reqDelayCabEndY(cabClassList, flag, companyID);
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 발송의뢰문서 발송 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG.do")
+	public String ezSimsaG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		String orgDocID = request.getParameter("orgDocID");
+		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+		String useEditor = config.getProperty("config.EDITOR");
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
+		
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+		
+		if (docID != null && docID.equals("")) {
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID());
+			
+			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+				return "main/warning";
+			}
+			
+			if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
+				if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
+					return "main/warning";
+				}
+				
+				if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("")) {
+					return "main/warning";
+				}
+			}
+		}
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("orgDocID", orgDocID);
+		model.addAttribute("accessInfo", accessInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("pass", pass);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		return "ezApprovalG/apprGezSimsaG";
+	}
+	
+	/**
+	 * 전자결재G 발송의뢰문서 발송컨텐츠 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/enforceContent.do")
+	public String enforceContent(Model model) throws Exception{
+		String editor = config.getProperty("config.EDITOR");
+		
+		model.addAttribute("editor", editor);
+		
+		return "ezApprovalG/apprGenforceContent";
+	}
+	
+	/**
+	 * 전자결재G 발송의뢰문서 발송 수신자 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezReceiptInfo.do")
+	public String ezReceiptInfo(HttpServletRequest request, Model model) throws Exception{
+		String docID = request.getParameter("docID");
+		
+		model.addAttribute("docID", docID);
+		
+		return "ezApprovalG/apprGezReceiptInfo";
+	}
+
+	/**
+	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/saveEndFile.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String formText = request.getParameter("html");
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID());
+		String path = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		
+		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht";
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			
+			bos = new FileOutputStream(saveFileName);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+		} catch (Exception e) {
+		} finally {
+			bos.close();
+			stream.close();
+		}
+		
+		return "SUCCESS";
+	}
+
+	/**
+	 * 전자결재G 발송의뢰문서 발송 발송 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/sendOfferAprove.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendOfferAprove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String orgDocID = request.getParameter("orgDocID");
+		String userID = request.getParameter("userID");
+		String userName = request.getParameter("userName");
+		String userName2 = request.getParameter("userName2");
+		String deptID = request.getParameter("deptID");
+		
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.doSendOfferApprove(docID, orgDocID, userID, userName, userName2, deptID, dirPath, "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+
+	/**
+	 * 전자결재G 발송의뢰문서 발송 반송 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/sendOfferReject.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendOfferReject(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		String result = ezApprovalGService.doSendOfferReject(docID, userID, userInfo.getCompanyID());
 		
 		return result;
 	}

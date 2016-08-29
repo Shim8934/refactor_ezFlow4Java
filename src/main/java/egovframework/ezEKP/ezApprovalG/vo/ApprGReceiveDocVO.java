@@ -21,6 +21,8 @@ public class ApprGReceiveDocVO {
 	private String docState;
 	/** 결재상태*/
 	private String aprState;
+	/** 보낸부서아이디*/
+	private String sendDeptID;
 	/** 보낸부서이름*/
 	private String sentDeptName;
 	/** 보낸부서이름(다국어)*/
@@ -201,6 +203,12 @@ public class ApprGReceiveDocVO {
 	}
 	public void setAprCount(String aprCount) {
 		this.aprCount = aprCount;
+	}
+	public String getSendDeptID() {
+		return sendDeptID;
+	}
+	public void setSendDeptID(String sendDeptID) {
+		this.sendDeptID = sendDeptID;
 	}
 	
 }
