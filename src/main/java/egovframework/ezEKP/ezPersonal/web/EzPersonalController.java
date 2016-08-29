@@ -1,9 +1,6 @@
 package egovframework.ezEKP.ezPersonal.web;
 
-import java.net.HttpCookie;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +26,8 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -648,5 +647,20 @@ System.out.println("searchString:"+searchString);
 		model.addAttribute("SSL", SSL);
 		
 		return "/ezPersonal/persLeftEnvirionment";
+	}
+	
+	/**
+	 * 포탈 환경설정 userManageWebPart 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/userManageWebPart.do")
+	public String userManageWebPart(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+	
+		List<PersonalGetWebPartGroupVO> listGroup = ezPersonalService.getWebPartGroup(userInfo.getCompanyID(), "U");
+		List<PersonalGetWebPartVO> list = ezPersonalService.getUserWebPart(userInfo.getId(), userInfo.getCompanyID(), userInfo.getDeptPathCode());
+		
+		model.addAttribute("listGroup", listGroup);
+		model.addAttribute("list", list);
+		return "/ezPersonal/persUserManageWebPart";
 	}
 }

@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
@@ -1662,6 +1663,116 @@ System.out.println("resultHTML:"+resultHTML);
 		return "/ezPortal/portalMyPortalPageList";
 	}
 	
+	
+	/**
+	 * 포탈 - 환경설정 초기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/startPageUser.do")
+	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		String pUserThemeUID = "";
+		String homeUID = "";
+        String parentUID = "";
+        String imageUID = "";
+        String linkURL = "";
+        String myTopUID = "";
+        String useStartPage = "";
+        String deptPathOrgan = "";
+		
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID());
+		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
+		
+		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+			pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
+		} else {
+			String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
+			
+			if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
+				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+					if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
+						pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
+						break;
+					}
+				}
+			} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
+				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
+			}
+		}
+		
+		String useTopMenuIDXml = ezPortalService.useTopMenuID2(userInfo.getCompanyID(), "Y", userInfo.getLang(), pUserThemeUID);
+		
+		if (useTopMenuIDXml.equals("<DATA></DATA>")) {
+			useTopMenuIDXml = ezPortalService.useTopMenuID(userInfo.getCompanyID(), "Y", pUserThemeUID);
+		}
+		
+		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
+		
+		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+
+		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {
+			myTopUID = xmlDomTop.getElementsByTagName("UID").item(0).getTextContent().trim();
+		}
+
+		for (int i=0; i<xmlDom1.getElementsByTagName("UID").getLength(); i++) {
+			if (xmlDom1.getElementsByTagName("PARENTUID").item(i).getTextContent() != null && xmlDom.getElementsByTagName("PARENTUID").item(i).getTextContent().trim().equals(myTopUID)) {
+				homeUID = xmlDom1.getElementsByTagName("UID").item(i).getTextContent().trim();
+				parentUID = xmlDom1.getElementsByTagName("PARENTUID").item(i).getTextContent().trim();
+				imageUID = xmlDom1.getElementsByTagName("IMAGEUID").item(i).getTextContent().trim();
+				linkURL = xmlDom1.getElementsByTagName("LINKURL").item(i).getTextContent().trim();
+			}
+		}
+		
+		if (homeUID == null || homeUID.equals("")) {
+			homeUID = xmlDom1.getElementsByTagName("UID").item(0).getTextContent().trim();
+			parentUID = xmlDom1.getElementsByTagName("PARENTUID").item(0).getTextContent().trim();
+			imageUID = xmlDom1.getElementsByTagName("IMAGEUID").item(0).getTextContent().trim();
+			linkURL = xmlDom1.getElementsByTagName("LINKURL").item(0).getTextContent().trim();
+		}
+		
+		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL).trim();
+		
+		String deptPath = userInfo.getDeptPathCode();
+		for (int ch = 0; ch < deptPath.split("\\,").length; ch++) {
+			if (ch ==0) {
+				deptPathOrgan += deptPath.split("\\,")[ch].trim();
+			} else {
+				deptPathOrgan += "," + deptPath.split("\\,")[deptPath.split("\\,").length - (ch)].trim();
+			}
+		}
+		
+		String userDeptPath = deptPathOrgan + ",everyone";
+		
+		List<PortalFirstMainListVO> list = ezPortalService.firstMainList(parentUID, userDeptPath);
+		
+		model.addAttribute("useStartPage", useStartPage);
+		model.addAttribute("list", list);
+		return "/ezPortal/portalStartPageUser";
+	}
+	
+	/**
+	 * 포탈 - 환경설정 초기 화면 저장 실행 함수
+	 */
+	@RequestMapping(value = "/ezPortal/useMyStartPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String useMyStartPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String uID = "";
+		String oldUID = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		if (req.getParameter("oldUID") != null && !req.getParameter("oldUID").equals("")) {
+			oldUID = req.getParameter("oldUID");
+		}
+		
+		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
 	
 	
 }

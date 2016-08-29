@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
@@ -64,6 +65,8 @@ public interface EzPortalService {
 	public List<PortalTBLPortalPageGeneralVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception;
 	
 	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (String pUserID, String pGubunFlag) throws Exception;
+	
+	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath) throws Exception;
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
 	
@@ -174,6 +177,14 @@ public interface EzPortalService {
 	public String ezCkAdminACL (String pOwnerPageID) throws Exception;
 	
 	public String searchMyPortal (String pDisplayName, String pGubunFlag, int pStartRow, int pEndRow, String pCompanyID) throws Exception;
+	
+	public String useTopMenuID2 (String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID) throws Exception;
+	
+	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID) throws Exception;
+	
+	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL) throws Exception;
+	
+	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr) throws Exception;
 	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	

@@ -24,10 +24,10 @@
 				        window.parent.frames.right.document.location.href = "/ezBoard/boardConfig.do";
 				        break;
 					case "Portal":
-					    window.parent.frames.right.document.location.href="/ezPortal/portalMyPortalPageList";//다중포탈페이지 사용으로 인해 변경
+					    window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
 						break;
 					case "Portal_sub1":
-					    window.parent.frames.right.document.location.href="/ezPortal/portalMyPortalPageList";//다중포탈페이지 사용으로 인해 변경
+					    window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
 						break;
 					case "Portal_sub2":
 						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserSkin.aspx?";
@@ -36,16 +36,16 @@
 						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserImage.aspx";				
 						break;
 					case "Portal_sub4": // 환경설정시 로그인 첫 화면을 특정 페이지로 선택 할수 있다. 2007-09-19
-					    window.parent.frames.right.document.location.href = "/myoffice/ezPortal/environ/StartPageUser.aspx"	
+					    window.parent.frames.right.document.location.href = "/ezPortal/startPageUser.do";	
 						break;
 					case "Personal":
-						window.parent.frames.right.document.location.href="/myoffice/ezPersonal/WebPart/UserManageWebPart.aspx";
+						window.parent.frames.right.document.location.href="/ezPersonal/userManageWebPart.do";
 						break;
 					case "UserInfo":
 						<%
 						String ezInfoSSL = (String)request.getAttribute("ezInfoSSL");
 						%>
-					    <% if (ezInfoSSL == "1") { %>
+					    <% if (ezInfoSSL.equals("1")) { %>
 						    window.parent.frames.right.document.location.href="${SSL}"+"/myoffice/ezPersonal/PersonInfo/ChangePersonInfo_cross.aspx";
 					    <% } else { %>
 						    window.parent.frames.right.document.location.href="/myoffice/ezPersonal/PersonInfo/ChangePersonInfo_cross.aspx";
@@ -170,7 +170,7 @@
 			<%
 				String usePortal = (String)request.getAttribute("usePortal");
 			%>
-			<% if (usePortal == "YES") { %>
+			<% if (usePortal.equals("YES")) { %>
 				<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
 				<ul>
 					<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>

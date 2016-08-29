@@ -9,6 +9,8 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 
 public interface EzPersonalService {
 	public List<PersonalGetSliderListVO> getSilderList(String companyID, String mode, String sliderID) throws Exception;
@@ -20,6 +22,10 @@ public interface EzPersonalService {
 	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) throws Exception;
 	
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) throws Exception;
+	
+	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode) throws Exception;
+	
+	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL) throws Exception;
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	

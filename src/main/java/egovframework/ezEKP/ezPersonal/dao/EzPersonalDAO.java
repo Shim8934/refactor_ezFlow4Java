@@ -13,6 +13,8 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
@@ -46,6 +48,16 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) {
 		return (List<PersonalGetPopUpListUserVO>) list("EzPersonalDAO.getPopUpListUser", pComapnyID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetWebPartGroupVO> getWebPartGroup (Map<String, Object> map) {
+		return (List<PersonalGetWebPartGroupVO>) list("EzPersonalDAO.getWebPartGroup", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetWebPartVO> getUserWebPart (Map<String, Object> map) {
+		return (List<PersonalGetWebPartVO>) list("EzPersonalDAO.getUserWebPart", map);
 	}
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
@@ -126,6 +127,21 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalSearchMyPortalPage3VO> searchMyPortalPage3 (Map<String, Object> map) {
 		return (List<PortalSearchMyPortalPage3VO>) list("EzPortalDAO.searchMyPortalPage3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalMenuItemItemsMenuItemsVO> useTopMenuID2 (Map<String, Object> map) {
+		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalDAO.useTopMenuID2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalMenuItemItemsMenuItemsVO> useTopMenuID (Map<String, Object> map) {
+		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalDAO.useTopMenuID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalFirstMainListVO> firstMainList (Map<String, Object> map) {
+		return (List<PortalFirstMainListVO>) list("EzPortalDAO.firstMainList", map);
 	}
 	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
@@ -264,6 +280,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.selectTBLPortalACL", map);
 	}
 	
+	public String searchStartPage2 (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.searchStartPage2", map);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		select("EzPortalDAO.getMenuItemHtml", map);
 		return (int) map.get("v_pCount");
@@ -306,6 +326,14 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void insertTBLPortalACL(Map<String, Object> map) {
 		insert("EzPortalDAO.insertTBLPortalACL", map);
+	}
+	
+	public void searchStartPage(Map<String, Object> map) {
+		insert("EzPortalDAO.searchStartPage", map);
+	}
+	
+	public void setUseMyStartPage2(Map<String, Object> map) {
+		insert("EzPortalDAO.setUseMyStartPage2", map);
 	}
 	
 	public void newMyPortalPageCreate3(Map<String, Object> map) {

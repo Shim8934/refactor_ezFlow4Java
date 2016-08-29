@@ -10,6 +10,8 @@
 	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
 	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
 	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
+	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
+	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
 	
 	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
@@ -56,6 +58,18 @@
 	<procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalGetCurrentPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETCURRENTPOLL(#v_pUserID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getWebPartGroup" parameterClass="Map"  resultClass="PersonalGetWebPartGroupVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETWEBPARTGROUP(#v_pCompanyID#, #v_pMode#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalDAO.getUserWebPart" parameterClass="Map"  resultClass="PersonalGetWebPartVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETUSERWEBPART(#v_pUserID#, #v_pCompanyID#, #v_pACL#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

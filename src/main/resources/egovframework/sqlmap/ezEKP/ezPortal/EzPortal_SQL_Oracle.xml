@@ -25,6 +25,8 @@
 	<typeAlias  alias="PortalTBLPortletImageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortletImageVO"/>
 	<typeAlias  alias="PortalGetPortletParametersVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
 	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
+	<typeAlias  alias="PortalFirstMainListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
+	
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -617,6 +619,42 @@
 	<procedure id="EzPortalDAO.searchMyPortalPage3" parameterClass="Map" resultClass="PortalSearchMyPortalPage3VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SEARCHMYPORTALPAGE3(#v_pCOMPANYID#, #v_pENDROW#, #v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_USE_TOPMENUID2(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pLANG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_USE_TOPMENUID(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.searchStartPage2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHSTARTPAGE2(#v_pPARENTUID#, #v_pUSERID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.searchStartPage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHSTARTPAGE(#v_pPARENTUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pHOMEUID#, #v_pIMAGEUID#, #v_pLINKURL#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_FIRSTMAIN_LIST(#v_PUSETOPMENUID#, #v_DEPTPATH#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.setUseMyStartPage2" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SETUSEMYSTARTPAGE2(#v_pOLDUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pLANGSTR#, #v_pUID#)}
 		]]>
 	</procedure>
 	

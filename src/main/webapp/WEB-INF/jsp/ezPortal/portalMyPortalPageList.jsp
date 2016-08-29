@@ -121,7 +121,7 @@
         	}
 	        
         	function pageChange(p_intPage) {
-            	window.location.href = "./MyPortalPageList.aspx?&intPage=" + p_intPage;
+            	window.location.href = "/ezPortal/myPortalPageList.do?&intPage=" + p_intPage;
         	}
         	function usepage() {
 	            if (g_UID == "") {
@@ -156,7 +156,7 @@
     	</div>
 		<%
 			int intPage = (request.getParameter("intPage") != null && !request.getParameter("intPage").equals(""))?Integer.parseInt(request.getParameter("intPage")) : 0;
-			int totalPage = (request.getParameter("intPage") != null && !request.getParameter("totalPage").equals(""))?Integer.parseInt(request.getParameter("totalPage")) : 0;
+			int totalPage = (request.getParameter("totalPage") != null && !request.getParameter("totalPage").equals(""))?Integer.parseInt(request.getParameter("totalPage")) : 0;
 		%>
     	<div class="page">
         	<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onclick="goToPage('front')" <% if (intPage != 1){ %>style="cursor:pointer"<% } %>>

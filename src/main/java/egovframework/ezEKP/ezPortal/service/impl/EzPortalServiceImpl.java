@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
@@ -571,6 +572,14 @@ public class EzPortalServiceImpl implements EzPortalService {
 		map.put("v_pDISPLAYNAME", pUserID);
 		map.put("v_pGUBUNFLAG", pGubunFlag);
 		return ezPortalDAO.newMyPortalList(map);
+	}
+	
+	@Override
+	public List<PortalFirstMainListVO> firstMainList(String pUseTopMenuID, String deptPath) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSETOPMENUID", pUseTopMenuID);
+		map.put("v_DEPTPATH", deptPath);
+		return ezPortalDAO.firstMainList(map);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
@@ -2566,6 +2575,74 @@ public class EzPortalServiceImpl implements EzPortalService {
 		}
 		sb.append("</DATA>");
 		return sb.toString();
+	}
+	
+	public String useTopMenuID2( String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pUSEFLAG", pUseFlag);
+		map.put("v_pLANG", pLang);
+		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalDAO.useTopMenuID2(map);
+		
+		String useTopMenuIDXml = "";
+		useTopMenuIDXml += "<DATA>";
+		for (PortalMenuItemItemsMenuItemsVO result : list) {
+			useTopMenuIDXml += commonUtil.getQueryResult(result);
+		}
+		useTopMenuIDXml += "</DATA>";
+		return useTopMenuIDXml;
+	}
+	
+	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pUSEFLAG", pUseFlag);
+		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalDAO.useTopMenuID(map);
+		
+		String useTopMenuIDXml = "";
+		useTopMenuIDXml += "<DATA>";
+		for (PortalMenuItemItemsMenuItemsVO result : list) {
+			useTopMenuIDXml += commonUtil.getQueryResult(result);
+		}
+		useTopMenuIDXml += "</DATA>";
+		return useTopMenuIDXml;
+	}
+	
+	
+	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pPARENTUID", pParentUID);
+		map.put("v_pUSERID", pUserID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pHOMEUID", pHomeUID);
+		map.put("v_pIMAGEUID", pImageUID);
+		map.put("v_pLINKURL", pLinkURL);
+		ezPortalDAO.searchStartPage(map);
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_pPARENTUID", pParentUID);
+		map1.put("v_pUSERID", pUserID);
+		map1.put("v_pCOMPANYID", pCompanyID);
+		
+		return ezPortalDAO.searchStartPage2(map1);
+	}
+	
+	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr) throws Exception {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pOLDUID", pOldUID);
+			map.put("v_pUSERID", pUserID);
+			map.put("v_pCOMPANYID", pCompanyID);
+			map.put("v_pLANGSTR", langStr);
+			map.put("v_pUID", pUID);
+			
+			ezPortalDAO.setUseMyStartPage2(map);
+			return "OK";
+		} catch (Exception e) {
+			return "";
+		}
 	}
 	
 }

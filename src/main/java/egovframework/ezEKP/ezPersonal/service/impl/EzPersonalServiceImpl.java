@@ -24,6 +24,8 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPersonalService")
@@ -174,6 +176,23 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	@Override
 	public PersonalGetQuickLinkMenuVO getQuickLinkMenu(String accessID) throws Exception {
 		return ezPersonalDAO.getQuickLinkMenu(accessID);
+	}
+	
+	@Override
+	public List<PersonalGetWebPartGroupVO> getWebPartGroup(String pCompanyID, String pMode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_pMode", pMode);
+		return ezPersonalDAO.getWebPartGroup(map);
+	}
+	
+	@Override
+	public List<PersonalGetWebPartVO> getUserWebPart(String pUserID, String pCompanyID, String pACL) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUserID", pUserID);
+		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_pACL", pACL.replace(",", "','"));
+		return ezPersonalDAO.getUserWebPart(map);
 	}
 
 	public String getBirthUserList(String companyID, String curMon) throws Exception {
