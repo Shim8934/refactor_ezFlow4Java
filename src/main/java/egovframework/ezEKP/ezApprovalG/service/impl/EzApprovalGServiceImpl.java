@@ -7413,7 +7413,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(rtnVal.trim() != ""){
 						rtnVal += ",";
 					}
-					if(pCodes[i].substring(0,1).toUpperCase() == "C"){
+					if(pCodes[i].substring(0,1).toUpperCase().equals("C")){
 						rtnVal += getCabinetCode2Name("009", pCodes[i].toString(), companyID, LangType);
 					}
 					else{
@@ -7458,14 +7458,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         strSQL.append("INSERT INTO TBSPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, ");
 		strSQL.append("SC2, SC3) VALUES ('" + makeRightField(cabinetClassNO) + "', '000', N'");
 		strSQL.append(makeRightField(sc1) + "', N'" + makeRightField(sc2) + "', N'" + makeRightField(sc3) + "');\n");
-		if (specialFlag.equals("1")) {
+		NodeList nodeList=xmlDom.getElementsByTagName("SCDATA");
+ 		if (specialFlag.equals("1")) {
 			for (int k = 0; k < xmlDom.getElementsByTagName("SCDATA").getLength(); k++) {
 				strSQL.append("INSERT INTO TBSPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3) Values ('");
 				strSQL.append(makeRightField(cabinetClassNO) + "', '");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("SN").item(k).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST1").item(k).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST2").item(k).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST3").item(k).getTextContent().trim()) + "');\n");
+				strSQL.append(makeRightField(nodeList.item(k).getChildNodes().item(0).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodeList.item(k).getChildNodes().item(1).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodeList.item(k).getChildNodes().item(2).getTextContent().trim()) + "', N'");
+                strSQL.append(makeRightField(nodeList.item(k).getChildNodes().item(3).getTextContent().trim()) + "');\n");
 			}
 		}
 		
@@ -14727,7 +14728,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (xmlDom.getElementsByTagName("CHARGER").item(0) != null && xmlDom.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0){
 			constraint += " AND TBCABINETCLASS.CabinetClassNo IN (select CabinetClassNo " +
-                    "From TBCABROLEINFO WHERE User_ID IN (" + xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().trim() + ") ) ";		
+                    "From TBCABROLEINFO WHERE User_ID IN (" + xmlDom.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";		
 		}
 		
 		if (xmlDom.getElementsByTagName("TRANSEXPIRE").item(0) != null && xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0){
