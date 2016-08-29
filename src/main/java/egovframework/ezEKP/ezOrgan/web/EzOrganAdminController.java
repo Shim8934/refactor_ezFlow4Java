@@ -590,6 +590,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 							throw e;
 						}
 					} else {
+						ezEmailUserAdminService.removeUser(mailAddr);
 						result = "EMAIL_ERROR";
 					}
 				} else {
