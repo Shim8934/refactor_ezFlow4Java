@@ -208,6 +208,11 @@
      					cn
      				FROM
      					ezHrmaster.TBLDEPTMASTER
+     				UNION
+     				SELECT 
+     					cn
+     				FROM
+     					ezHrmaster.TBLUSERMASTER_RETIRE
      			 )
       		WHERE  
       			cn = #cn#
