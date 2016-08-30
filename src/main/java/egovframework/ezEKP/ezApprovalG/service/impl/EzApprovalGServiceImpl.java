@@ -993,6 +993,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_RecID", recID);
+		map.put("v_SepAttNo", sepAttNo);
+		map.put("v_UserID", userID);
+		
+		int result = ezApprovalGDAO.getUserRecRight(map);
+		
+		return "<RESULT>" + result + "</RESULT>";
+	}
+
+	@Override
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2977,7 +2990,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String gongRamUpdate(String docID, String userID, String companyID, String lang) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
@@ -3098,7 +3110,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String confirmClassify(String deptID, String companyID) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DEPTCODE", deptID);

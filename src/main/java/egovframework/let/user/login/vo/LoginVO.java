@@ -100,6 +100,9 @@ public class LoginVO implements Serializable{
 	private String phone;
 	/** 직책(extensionattribute10)*/
 	private String jikChek;
+	/** 다국어설정*/
+	private String locale;
+	
 	public String getId() {
 		return id;
 	}
@@ -315,6 +318,12 @@ public class LoginVO implements Serializable{
 	}
 	public void setJikChek(String jikChek) {
 		this.jikChek = jikChek;
+	}
+	public String getLocale() {
+		return locale;
+	}
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}	
 	
 }

@@ -943,19 +943,20 @@
 		        }
 		    }
 		    function ChangeCookies() {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", arr_userinfo[4]);
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTNAME", arr_userinfo[5]);
-		        createNodeAndInsertText(xmlpara, objNode, "POSITION", arr_userinfo[3]);
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTNAME1", arr_userinfo[15]);
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTNAME2", arr_userinfo[16]);
-		        createNodeAndInsertText(xmlpara, objNode, "POSITION1", arr_userinfo[13]);
-		        createNodeAndInsertText(xmlpara, objNode, "POSITION2", arr_userinfo[14]);
-		        xmlhttp.open("POST", "Include/ChangeUserInfo.aspx", false);
-		        xmlhttp.send(xmlpara);
+	            $.ajax({
+	        		type : "POST",
+	        		async : false,
+	        		url : "/ezApprovalG/ChangeUserInfo.do",
+	        		data : {
+	        				deptID : arr_userinfo[4],
+	        				deptName  : arr_userinfo[5],
+	        				deptName2 : arr_userinfo[14],
+	        				position  : arr_userinfo[3],
+	        				position2 : arr_userinfo[16]
+	        				},
+	        		success: function(xml){
+	        		}        			
+	        	});
 		    }
 		    function btnSimsa_onclick() {
 		        var DocList = new ListView();

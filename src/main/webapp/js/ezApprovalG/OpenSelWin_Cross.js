@@ -109,9 +109,12 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+
+        var OpenWin = window.open(url, "_blank" , GetOpenWindowfeature(330, 205));
         
-        var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
         try { OpenWin.focus(); } catch (e) { }
+        
+        return OpenWin;
     }
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";

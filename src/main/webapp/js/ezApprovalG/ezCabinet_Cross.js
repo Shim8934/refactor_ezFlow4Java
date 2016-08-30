@@ -1315,19 +1315,25 @@ function HasRecReadRight(pRecID, pSepAttNo, pUserID) {
 }
 
 function GetUserRecRight(pRecID, pSepAttNo, pUserID) {
-    var xmlpara = createXmlDom();	
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "RECID", pRecID);
-    createNodeAndInsertText(xmlpara, objNode, "SEPATTNO", pSepAttNo);
-    createNodeAndInsertText(xmlpara, objNode, "USERID", pUserID);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetUserRecRight.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getUserRecRight.do",
+		data : {
+			companyID : CompanyID,
+			recID     : pRecID,
+			sepAttNo  : pSepAttNo,
+			userID    : pUserID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(result);
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {

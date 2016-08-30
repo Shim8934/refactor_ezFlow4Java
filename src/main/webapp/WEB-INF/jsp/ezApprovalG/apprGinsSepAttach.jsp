@@ -299,7 +299,7 @@
 		            para[3] = GetSelAttachInfoXml(selnode);
 		            para[4] = g_CabinetID;	
 		
-		            var url = "/myoffice/ezApprovalG/ezCabinet/RegSepAttach_Cross.aspx";
+		            var url = "/ezApprovalG/regSepAttach.do";
 		
 		            if (CrossYN() || NonActiveX == "YES") {
 		                regsepattach_cross_dialogArguments[0] = para;

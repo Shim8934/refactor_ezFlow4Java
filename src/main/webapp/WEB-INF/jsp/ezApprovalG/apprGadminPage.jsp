@@ -71,6 +71,7 @@
 	        var UserLang = "${userInfo.lang}";
 	        var isPeriodYear = true;
 	        var NonActiveX = "YES";   
+	        var OpenWin;
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -392,7 +393,8 @@
 	        OpenAlertUI("<spring:message code='ezApprovalG.t480'/>");
 	        return;
 	    }
-	    bCon = OpenInformationUI("<spring:message code='ezApprovalG.t481'/>", btnConfirmList_onclick_Complete);
+	    OpenWin = OpenInformationUI("<spring:message code='ezApprovalG.t481'/>", btnConfirmList_onclick_Complete);
+	    
 	}
 	function btnConfirmList_onclick_Complete(bCon) {
 	    if (bCon) {
@@ -452,17 +454,17 @@
 	    if (rtnTxt == "FALSE") {
 	        OpenAlertUI("<spring:message code='ezApprovalG.t486'/>");
 	            return false;
-	        }
-	        else {
-	            if (parseInt(rtnTxt) > 0) {
-	                var pInformationContent = "<spring:message code='ezApprovalG.t487'/>" +
-	                                          "(<spring:message code='ezApprovalG.t488'/>" + "<spring:message code='ezApprovalG.t489'/>" + "<spring:message code='ezApprovalG.t490'/>";
-	                OpenInformationUI(pInformationContent, chkIfNotArrangedCabExist_Complete);
-	            }
-	            else {
-	                chkIfNotArrangedCabExist_Complete(true);
-	            }
-	        }
+	    } else {
+            if (parseInt(rtnTxt) > 0) {
+                var pInformationContent = "<spring:message code='ezApprovalG.t487'/>" +
+                                          "(<spring:message code='ezApprovalG.t488'/>" + "<spring:message code='ezApprovalG.t489'/>" + "<spring:message code='ezApprovalG.t490'/>";
+                bCon = OpenInformationUI(pInformationContent, chkIfNotArrangedCabExist_Complete);
+
+            }
+            else {
+                chkIfNotArrangedCabExist_Complete(true);
+            }
+        }
 	}
     function chkIfNotArrangedCabExist_Complete(bCon) {
         if (bCon) {
@@ -1338,6 +1340,10 @@
         		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 	        }
 	    </script>
-	
+	    
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

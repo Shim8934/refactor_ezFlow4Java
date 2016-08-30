@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,6 +40,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -89,6 +93,7 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 			String userID = decData.split("///")[1];
+			String locale = decData.split("///")[5];
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
@@ -98,6 +103,55 @@ public class CommonUtil {
 	
 			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 			user.setLang(config.getProperty("config.primary"));
+			user.setLocale(locale);
+			
+			return user;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public LoginVO aprUserInfo(String loginCookie){
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+			String userID = decData.split("///")[1];
+			String locale = decData.split("///")[5];
+			
+			LoginVO login = new LoginVO();
+			login.setId(userID);
+			login.setDn("NOPASSWORD");
+			
+			LoginVO user = loginService.selectUser(login);
+			
+			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
+			user.setLang(config.getProperty("config.primary"));
+			user.setLocale(locale);
+			
+			ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			
+			HttpServletRequest request = sra.getRequest();
+			
+			Cookie[] cookie = request.getCookies();
+			
+			for (int k = 0; k < cookie.length; k++) {
+				switch (cookie[k].getName()) {
+				case "APRUI0":
+					user.setDeptID(cookie[k].getValue());
+					break;
+				case "APRUI1":
+					user.setDeptName1(cookie[k].getValue());
+					break;
+				case "APRUI2":
+					user.setTitle1(cookie[k].getValue());
+					break;
+				case "APRUI4":
+					user.setDeptName2(cookie[k].getValue());
+					break;
+				case "APRUI6":
+					user.setTitle2(cookie[k].getValue());
+					break;
+				}
+			}
 			
 			return user;
 		}catch(Exception e){

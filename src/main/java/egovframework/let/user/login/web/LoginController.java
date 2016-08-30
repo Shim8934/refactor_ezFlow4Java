@@ -91,9 +91,8 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogin.do")
     public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-    	
     	logger.debug("=========================================== 로그인 ============================================");
-    	
+    
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	
@@ -136,7 +135,7 @@ public class LoginController {
 				}
 				loginService.insertLog(resultVO);
 				
-				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd;
+				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);

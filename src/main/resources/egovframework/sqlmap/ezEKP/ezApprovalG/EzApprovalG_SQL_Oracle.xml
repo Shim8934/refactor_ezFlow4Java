@@ -628,6 +628,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETUSERRIGHT(#v_RECORDID#, #v_SEPATTNO#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getUserRecRight" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.SPHASRECVIEWRIGHT(#v_RecID#, #v_SepAttNo#, #v_UserID#, #v_RtnVal,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
 	</procedure>
