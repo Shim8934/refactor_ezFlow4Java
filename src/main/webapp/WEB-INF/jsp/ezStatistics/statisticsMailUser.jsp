@@ -87,7 +87,7 @@
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
-        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName");
+        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 
 
         xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
