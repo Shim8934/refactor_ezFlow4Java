@@ -18,7 +18,6 @@
 	    <script type="text/javascript" src="/js/ezPersonal/controls/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/NameControl.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };

@@ -17,7 +17,6 @@
 		<script type="text/javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript">	
 		    var g_paramURL = "${url}";
 			var g_expath = "exchange";

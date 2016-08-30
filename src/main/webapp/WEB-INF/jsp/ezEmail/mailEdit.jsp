@@ -595,10 +595,6 @@
 		</script>
 	</head>
 	<body id="parentBody" class="popup" onload="javascript:window_onload()">
-		<object id="behave1" height="0" width="0" classid="clsid:D2BCC8B5-4187-48DA-AC06-073CE127304F" VIEWASTEXT style="DISPLAY: none">
-		</object>
-		<object id="oPoster" style="DISPLAY: none" tabIndex="-1" classid="CLSID:19E224CA-6992-425C-8006-8FA6FD2BD9E5" VIEWASTEXT>
-		</object>
 		<div id="main_body">
 		  <table id="normalScreen" class="layout">
 		    <tr>

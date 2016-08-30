@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
 		<script>
@@ -272,8 +271,7 @@
 					</HEADER>
 			</HEADERS>
 		</LISTVIEWDATA>
-		</xml>
-	<object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT></object> 
+		</xml> 
 	<h1><spring:message code='ezEmail.t331' /></h1>
 	<div class="txt"><spring:message code='ezEmail.t335' /><br>
 	      <spring:message code='ezEmail.t336' />

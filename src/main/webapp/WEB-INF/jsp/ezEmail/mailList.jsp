@@ -14,8 +14,7 @@
 		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>		
+		<script type="text/javascript" src="/js/Common.js"></script>		
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "${url}";
