@@ -113,8 +113,8 @@
 		{CALL EZADDRESS.EZSP_MOVEFOLDER(#v_PFOLDERID#, #v_PNEWPARENTID#, #v_PNEWOWNERID#, #v_PNEWFOLDERTYPE#)}
 	</procedure>
 	
-	<procedure id="EzAddressDAO.copyFolder" parameterClass="Map" resultClass="String">
-		{CALL EZADDRESS.EZSP_COPYFOLDER(#v_PFOLDERID#, #v_PNEWPARENTID#, #v_PNEWOWNERID#, #v_PNEWFOLDERTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<procedure id="EzAddressDAO.copyFolder" parameterClass="Map">
+		{CALL EZADDRESS.EZSP_COPYFOLDER(#v_PFOLDERID#, #v_PNEWPARENTID#, #v_PNEWOWNERID#, #v_PNEWFOLDERTYPE#)}
 	</procedure>
 	
 	<procedure id="EzAddressDAO.getSearchList" parameterClass="Map" resultClass="AddressInfoVO">

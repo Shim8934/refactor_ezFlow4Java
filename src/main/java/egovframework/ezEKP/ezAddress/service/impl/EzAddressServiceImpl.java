@@ -443,7 +443,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 
 	@Override
-	public String copyFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType)
+	public void copyFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType)
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
@@ -451,7 +451,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		map.put("v_PNEWOWNERID", pNewOwnerId);
 		map.put("v_PNEWFOLDERTYPE", pNewFolderType);
 		
-		return ezAddressDAO.copyFolder(map);
+		ezAddressDAO.copyFolder(map);
 	}
 
 	@Override

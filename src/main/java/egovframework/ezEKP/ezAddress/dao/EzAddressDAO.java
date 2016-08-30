@@ -102,8 +102,8 @@ public class EzAddressDAO extends EgovAbstractDAO {
 		update("EzAddressDAO.moveFolder", map);
 	}
 	
-	public String copyFolder(Map<String, Object> map) throws Exception{
-		return (String) select("EzAddressDAO.copyFolder", map);
+	public void copyFolder(Map<String, Object> map) throws Exception{
+		insert("EzAddressDAO.copyFolder", map);
 	}
 	
 	@SuppressWarnings("unchecked")
