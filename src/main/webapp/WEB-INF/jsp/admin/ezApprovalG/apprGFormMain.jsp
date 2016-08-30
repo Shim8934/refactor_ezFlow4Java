@@ -56,10 +56,10 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        document.getElementById("1tab1").setAttribute("class", "tabon");
-		        document.getElementById("1tab1").setAttribute("class", "tabon");
-		        Tab1_SelectID = "1tab1";
-// 		        ChangeTab(document.getElementById("1tab1"));
+		        document.getElementById("1tab2").setAttribute("class", "tabon");
+		        document.getElementById("1tab2").setAttribute("class", "tabon");
+		        Tab1_SelectID = "1tab2";
+		        ChangeTab(document.getElementById("1tab2"));
 
 		        if (formID != "") {
 		            get_FormInfo();
@@ -598,8 +598,8 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
+	        	<p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code = 'ezApprovalG.t1456' /></span></p><!-- 양식작성기 -->
                 <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code = 'ezApprovalG.t00004' /></span></p><!-- 양식정보 -->
-                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code = 'ezApprovalG.t1456' /></span></p><!-- 양식작성기 -->
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code = 'ezApprovalG.t00005' /></span></p><!-- 연동정보 -->
                 <%--<p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab3">Workflow</span></p>--%>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code = 'ezApprovalG.t1629' /></span></p><!-- 고정수신처 -->
