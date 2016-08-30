@@ -438,8 +438,7 @@ function func_addaddr_Complete(ret) {
             	alert(strLang133 + xmlHTTP.statusText);
             }
             else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-            	//TODO: strLang 적절한 메시지 추가하기
-            	alert("NO_AUTHORITY");
+            	alert(strLang355);
             }
             else {
             	alert(strLang135);

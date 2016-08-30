@@ -342,6 +342,7 @@ var strLang353 = "The same domain or e-mail address exists.";
 // ### 수신거부 추가
 
 var strLang354 = "Please enter a domain name.";
+var strLang354 = "No admin.";
 
 function GetLocalTime(Offset , pDateTime)
 {

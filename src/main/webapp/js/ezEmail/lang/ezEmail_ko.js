@@ -343,6 +343,7 @@ var strLang353 = "동일한 도메인 또는 메일 주소가 존재합니다.";
 // ### 수신거부 추가
 
 var strLang354 = "도메인명을 입력해 주세요.";
+var strLang355 = "관리자 권한이 없습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {
