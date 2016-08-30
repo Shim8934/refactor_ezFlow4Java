@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezPersonalAdmin">
+	<!-- <typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
+	<typeAlias  alias="PersonalApprovMailVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
+	<typeAlias  alias="PersonalGetEmpOfMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalGetPollListUserVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/>
+	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
+	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
+	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
+	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
+	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
+	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/> -->
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETNOTICECOUNT"			parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETNOTICECOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
+</sqlMap>

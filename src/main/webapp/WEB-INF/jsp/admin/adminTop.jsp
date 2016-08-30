@@ -26,7 +26,7 @@
 
 			    switch (menuname){
 					case "menu01":		
-					    parent.frames["bottom"].location.href = "index_personal.aspx";
+					    parent.frames["bottom"].location.href = "/admin/ezPersonal/personalMain.do";
 						break;
 					case "menu02":						
 					    parent.frames["bottom"].location.href = "/admin/ezOrgan/organMain.do";				
@@ -41,7 +41,7 @@
 					    parent.frames["bottom"].location.href = "/admin/ezBoard/boardMain.do";
 						break;
 					case "menu07":		
-					    parent.frames["bottom"].location.href = "/admin/ezCommunity/main.do";
+					    parent.frames["bottom"].location.href = "/admin/ezCommunity/communityMain.do";
 						break;
 					case "menu08":		
 					    parent.frames["bottom"].location.href = "index_schedule.aspx";

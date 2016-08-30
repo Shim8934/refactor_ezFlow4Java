@@ -59,7 +59,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 메인화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/main.do")
+	@RequestMapping(value = "/admin/ezCommunity/communityMain.do")
 	public String main() throws Exception {
 		return "/admin/ezCommunity/communityMain";
 	}
