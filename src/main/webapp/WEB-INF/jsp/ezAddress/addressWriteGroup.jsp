@@ -16,7 +16,6 @@
 	    <script type="text/javascript" src="/js/ezAddress/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/ListView_list.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/NameControl.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 	    <script type="text/javascript">

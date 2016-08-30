@@ -16,7 +16,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/composeappt.js"></script>
 		<style>

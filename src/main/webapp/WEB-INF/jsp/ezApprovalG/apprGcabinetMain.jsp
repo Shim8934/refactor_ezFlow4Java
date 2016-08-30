@@ -38,7 +38,6 @@
 <script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 <script type="text/javascript" src="/js/Common.js"></script>
-<script type="text/javascript" src="/js/NameControl.js"></script> 
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 <link rel="stylesheet" href="/js/jquery/jquery-ui.css">

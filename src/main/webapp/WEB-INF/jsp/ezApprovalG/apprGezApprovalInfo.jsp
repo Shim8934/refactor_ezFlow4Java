@@ -35,7 +35,6 @@
 	    <script src="/js/ezApprovalG/composeappt.js" type="text/javascript" ></script>
 	    <script src="/js/ezApprovalG/datepicker.htc.js" type="text/javascript" ></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
-	    <script src="/js/NameControl.js" type="text/javascript"></script>
 	    <script type="text/javascript">
 	        var OrderCell = "";
 	        var arr_userinfo = new Array();

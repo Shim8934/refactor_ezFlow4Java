@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/ezResource/control/TreeViewCtrl.js"></script>
 		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
 		<script type="text/javascript">
 			var pListType = "TXT";

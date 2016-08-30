@@ -16,7 +16,6 @@
 		<script type="text/javascript" src="/js/ezResource/control/TreeView.js"></script> 
 		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript">
 			var bSearch = false;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
