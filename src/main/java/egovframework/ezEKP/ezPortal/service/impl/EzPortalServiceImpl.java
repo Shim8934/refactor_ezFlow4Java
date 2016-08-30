@@ -2568,7 +2568,11 @@ public class EzPortalServiceImpl implements EzPortalService {
                 sb.append("<DISPLAYNAME>" +  list.get(i).getDisplayName() + "</DISPLAYNAME>");
                 sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
                 sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
-                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
+                if (list.get(i).getUseFlag() != null && !list.get(i).getUseFlag().trim().equals("")) {
+                	sb.append("<USEFLAG>" + list.get(i).getUseFlag().trim() + "</USEFLAG>");
+                } else {
+                	sb.append("<USEFLAG>" + list.get(i).getUseFlag()+ "</USEFLAG>");
+                }
                 sb.append("<IMAGEURL>" + list.get(i).getImageUrl() + "</IMAGEURL>");      
                 sb.append("</ROW>");
 			}
@@ -2653,10 +2657,58 @@ public class EzPortalServiceImpl implements EzPortalService {
 			map.put("v_pCOMPANYID", pCompanyID);
 			map.put("v_pGUBUNFLAG", pGubunFlag);
 			map.put("v_pUSEFLAG", "Y");
+			/*map.put("pDisplayName", pUserID);
+			map.put("pCompanyID", pCompanyID);
+			map.put("pGubunFlag", pGubunFlag);*/
+			
+			List<String> list = ezPortalDAO.selectUseFlag(map);
+			
+			String[] arrays = list.toArray(new String[list.size()]);
+			
+			
+/*			for (int i=0; i<arrays.length; i++) {
+System.out.println("pUID:"+pUID);
+				if (arrays[i].equals(pUID)) {
+					Map<String, Object> map1 = new HashMap<String, Object>();
+					map1.put("pUID", pUID);
+					map1.put("pUserID", pUserID);
+					map1.put("pCompanyID", pCompanyID);
+					map1.put("pGubunFlag", pGubunFlag);
+					map1.put("useFlag", "Y");
+					ezPortalDAO.updateUseFlag(map1);
+				} else {
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("pUID", pUID);
+					map2.put("pUserID", pUserID);
+					map2.put("pCompanyID", pCompanyID);
+					map2.put("pGubunFlag", pGubunFlag);
+					map2.put("useFlag", "");
+					ezPortalDAO.updateUseFlagDefault(map2);
+				}
+			}*/
+		/*	Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("pUID", pUID);
+			map1.put("pUserID", pUserID);
+			map1.put("pCompanyID", pCompanyID);
+			map1.put("pGubunFlag", pGubunFlag);
+			map1.put("useFlag", "Y");
+			ezPortalDAO.updateUseFlag(map1);
+			
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("pUID", pUID);
+			map2.put("pUserID", pUserID);
+			map2.put("pCompanyID", pCompanyID);
+			map2.put("pGubunFlag", pGubunFlag);
+			map2.put("useFlag", "");
+			ezPortalDAO.updateUseFlagDefault(map2);*/
+			
+			
+			
 			
 			ezPortalDAO.setUseMyPortalPage(map);
 			return "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}

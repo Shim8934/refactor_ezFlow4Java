@@ -186,6 +186,8 @@ public interface EzPortalService {
 	
 	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr) throws Exception;
 	
+	public String setUseMyPortalPage (String pUID, String pUserID, String pCompanyID, String pGubunFlag) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;

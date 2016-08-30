@@ -128,18 +128,21 @@
     	            alert("<spring:message code='ezPortal.t240'/>");
         	        return;
 	            }
+alert("useFlag:"+g_UseFlag);
             	if (g_UseFlag == "Y") {
                 	alert("<spring:message code='ezPortal.t241'/>");
                 	return;
             	}
             	if (confirm("<spring:message code='ezPortal.t242'/>")) {
                 	var xmlhttp = createXMLHttpRequest();
-                	xmlhttp.open("POST", "/myoffice/ezPortal/environ/UseMyPortalPage.aspx?uid_=" + g_UID, false);
+                	xmlhttp.open("POST", "/ezPortal/useMyPortalPage.do?uID=" + g_UID, false);
                 	xmlhttp.send();
-                	if (xmlhttp.responseText == "OK")
+                	if (xmlhttp.responseText == "OK") {
+alert("href:"+window.parent.parent.location.href);
                     	window.parent.parent.location = window.parent.parent.location.href;
-                	else
+                	} else {
                     	alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+                	}
 
                 	xmlhttp = null;
             	}

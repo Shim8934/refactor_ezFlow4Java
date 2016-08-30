@@ -229,7 +229,7 @@
 		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
 		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
-		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
 		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
 		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
 		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
@@ -658,6 +658,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SETUSEMYPOTALPAGE(#v_pUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -812,6 +818,21 @@
 		]]>
 	</select>
 	
+	<select id="EzPortalDAO.selectUseFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UID_
+      		FROM
+      			EZPORTAL.TBL_PortalPage_General
+      		WHERE
+      			DISPLAYNAME = #pDisplayName#
+      		AND
+      			COMPANYID = #pCompanyID#
+      		AND
+      			GUBUNFLAG = #pGubunFlag#		
+		]]>
+	</select>
+	
 	<delete id="EzPortalDAO.deleteTBLPortalACL" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -845,6 +866,40 @@
 				UID_ = #pResult#
 			AND
 				ACCESSID = #pAccessID#	   
+		]]>
+	</update>
+	
+	 <update id="EzPortalDAO.updateUseFlag" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZPORTAL.TBL_PortalPage_General
+			SET 
+				UseFlag = #useFlag#
+			WHERE
+				UID_ = #pUID#
+			AND
+				DISPLAYNAME = #pUserID#
+			AND	
+				COMPANYID = #pCompanyID#
+			AND	
+				GUBUNFLAG = #pGubunFlag#
+		]]>
+	</update>
+	
+		 <update id="EzPortalDAO.updateUseFlagDefault" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZPORTAL.TBL_PortalPage_General
+			SET 
+				UseFlag = #useFlag#
+			WHERE
+				UID_  != #pUID#
+			AND
+				DISPLAYNAME = #pUserID#
+			AND	
+				COMPANYID = #pCompanyID#
+			AND	
+				GUBUNFLAG = #pGubunFlag#
 		]]>
 	</update>
 	

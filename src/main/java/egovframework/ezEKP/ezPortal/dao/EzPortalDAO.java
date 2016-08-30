@@ -144,6 +144,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalFirstMainListVO>) list("EzPortalDAO.firstMainList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> selectUseFlag (Map<String, Object> map) {
+		return (List<String>) list("EzPortalDAO.selectUseFlag", map);
+	}
+	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
@@ -340,10 +345,22 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		update("EzPortalDAO.newMyPortalPageCreate3", map);
 	}
 	
+	public void setUseMyPortalPage(Map<String, Object> map) {
+		update("EzPortalDAO.setUseMyPortalPage", map);
+	}
+	
 	public void updateTBLPortalACL(Map<String, Object> map) {
-System.out.println("pResult1:"+map.get("pResult"));
 		update("EzPortalDAO.updateTBLPortalACL", map);
 	}
+	
+	public void updateUseFlag(Map<String, Object> map) {
+		update("EzPortalDAO.updateUseFlag", map);
+	}
+	
+	public void updateUseFlagDefault(Map<String, Object> map) {
+		update("EzPortalDAO.updateUseFlagDefault", map);
+	}
+	
 	
 }
 

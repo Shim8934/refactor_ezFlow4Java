@@ -448,7 +448,7 @@ System.out.println("???");
 				
 				//권한체크
 				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
-	
+
 				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID);
 
 				if (result.equals("3")) {
@@ -1613,7 +1613,7 @@ System.out.println("usePortal:"+usePortal);
 				if (portalGubun == null || portalGubun.equals("")) {
 					portalGubun = "'" + temp.getCategory() + "'";
 				} else {
-					portalGubun = ",'" + temp.getCategory() + "'";
+					portalGubun += ",'" + temp.getCategory() + "'";
 				}
  			}
 		}
@@ -1632,10 +1632,11 @@ System.out.println("usePortal:"+usePortal);
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
 		String resultHTML = "";
-		
+System.out.println("searchNewMyPortalPageList:"+searchNewMyPortalPageList);
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
-			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().equals("Y")) {
-				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick='setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)' ondblclick='selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)'>";
+			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent() != null && xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
+				resultHTML += "<script>var SelectedItems ="+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"</script>";
+				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div class='onimg'></div>";
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
@@ -1643,7 +1644,7 @@ System.out.println("usePortal:"+usePortal);
 				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
         		resultHTML += "</dl>";
 			} else {
-				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick='setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)' ondblclick='selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)'>";
+				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div>";
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
@@ -1774,5 +1775,25 @@ System.out.println("resultHTML:"+resultHTML);
 		return result;
 	}
 	
+	/**
+	 * 포탈 - 환경설정 마이포탈페이지 저장 실행 함수
+	 */
+	@RequestMapping(value = "/ezPortal/useMyPortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String useMyPortalPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String uID = "";
+		String gubunFlag = "1c";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		String result = ezPortalService.setUseMyPortalPage(uID, userInfo.getId(), userInfo.getCompanyID(), gubunFlag);
+System.out.println("uID:"+uID);
+System.out.println("result1:"+result);
+		return result;
+	}
 	
 }
