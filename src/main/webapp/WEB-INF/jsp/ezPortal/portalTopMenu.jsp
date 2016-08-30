@@ -1517,10 +1517,6 @@
 			
 		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>> 
 	
-		<% if (request.getHeader("User-Agent").indexOf("Trident") > -1 || request.getHeader("User-Agent").indexOf("MSIE") > -1) { %>
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
-		<% } %>	
-		
 		<%if (!mode.equals("view")) { %>	      
 		<!-- 메뉴 -->
 		<h1><spring:message code='ezPortal.t363' /></h1>
