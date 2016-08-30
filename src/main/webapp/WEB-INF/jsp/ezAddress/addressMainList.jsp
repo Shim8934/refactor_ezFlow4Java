@@ -16,6 +16,8 @@
 	        var pFolderType = "${pFolderType}";
 	        var pOwerID = "${pOwerId}";
 	        var admin = "${pAdmin}";
+	        var deptAdmin = "${deptAdmin}";
+	        var compAdmin = "${compAdmin}";
 	        var pCurrentPage = "1";
 	        var pOrderOption = "SNAME:0";
 	        var pFilter = "";
@@ -67,11 +69,11 @@
 	
 	        }
 	        function new_address() {
-	            if (admin != "Y" && pFolderType == "D") {
+	            if (deptAdmin != "Y" && pFolderType == "D") {
 	                alert("<spring:message code='ezAddress.t999900003' />");
 	                return;
 	            }
-	            else if (admin != "Y" && pFolderType == "C") {
+	            else if (compAdmin != "Y" && pFolderType == "C") {
 	                alert("<spring:message code='ezAddress.t999900004' />");
 	                return;
 	            }
@@ -85,6 +87,14 @@
 	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
+	        	if (deptAdmin != "Y" && pFolderType == "D") {
+	                alert("<spring:message code='ezAddress.t999900003' />");
+	                return;
+	            }
+	            else if (compAdmin != "Y" && pFolderType == "C") {
+	                alert("<spring:message code='ezAddress.t999900004' />");
+	                return;
+	            }
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var conHeight = 655;
@@ -220,23 +230,27 @@
 	                            if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")) {
 	                                alert("<spring:message code='ezAddress.t170' />");
 	                            return;
-	                        }
-	                    }
-	                }
-	                else {
-	                    if (moveUrl["folderid"] == pFolderID && moveUrl["ownerid"] == pOwerID) {
-	                        alert("<spring:message code='ezAddress.t170' />");
-	                        return;
-	                    }
-	                }
+	                        	}
+	                    	}
+		                }
+		                else {
+		                    if (moveUrl["folderid"] == pFolderID && moveUrl["ownerid"] == pOwerID) {
+		                        alert("<spring:message code='ezAddress.t170' />");
+		                        return;
+		                    }
+		                }
 	                    if (moveUrl["cmd"] == "MOVE") {
 	                        for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                            var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                            if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                                if (pFolderType != "P" && admin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-	                                    alert("<spring:message code='ezAddress.t217' />");
+	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t217' />");
 	                                    return;
-	                                }
+	                            	}
+	                            	else if (pFolderType == "D" && deptAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t217' />");
+	                                    return;
+	                            	}
 	                            }
 	                        }
 	                    }
@@ -287,9 +301,15 @@
 	                    for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                        if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                            if (pFolderType != "P" && admin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-	                                alert("<spring:message code='ezAddress.t217' />");
-	                                return;
+	                        	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t217' />");
+	                                    return;
+	                            	}
+	                            	else if (pFolderType == "D" && deptAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t217' />");
+	                                    return;
+	                            	}
 	                            }
 	                        }
 	                    }
@@ -324,10 +344,16 @@
 	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
 	                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                        if (pFolderType != "P" && admin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-	                            alert("<spring:message code='ezAddress.t211' />");
-	                            return;
-	                        }
+	                    	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+                            		alert("<spring:message code='ezAddress.t211' />");
+                                    return;
+                            	}
+                            	else if (pFolderType == "D" && deptAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+                            		alert("<spring:message code='ezAddress.t211' />");
+                                    return;
+                            	}
+                            }
 	                    }
 	                }
 	                var DeleteItemID = "";

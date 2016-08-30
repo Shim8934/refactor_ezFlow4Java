@@ -119,7 +119,8 @@ public class EzAddressController{
 	public String addressMainList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String pAdmin = "";
+		String compAdmin = "";
+		String deptAdmin = "";
 		String useEditor = config.getProperty("config.EDITOR");
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
@@ -133,9 +134,12 @@ public class EzAddressController{
 		String pOwerId = request.getParameter("ownerid") == null ? "" : request.getParameter("ownerid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
-			pAdmin = "Y";
-		}
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+        	compAdmin = "Y";
+        	deptAdmin = "Y";
+        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+        	deptAdmin = "Y";
+        }
 		
 		String pListType = ezAddressService.getListType(userInfo.getId());
 		if (pListType == null) {
@@ -146,7 +150,8 @@ public class EzAddressController{
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("pOwerId", pOwerId);
-		model.addAttribute("pAdmin", pAdmin);
+		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -320,6 +325,7 @@ public class EzAddressController{
 			
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
+			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			String photoPath = xmldom.getElementsByTagName("PHOTOPATH").item(0).getTextContent();
@@ -341,16 +347,46 @@ public class EzAddressController{
 			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
 			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
 			
+			System.out.println("folderType : " + folderType);
+			
+			// ownerId가 없으면 디비에서 구하기.
+			if (ownerId.trim().equals("")) {
+				if (folderId.equals("0")) {
+					if (folderType.equals("C")) {
+						ownerId = userInfo.getCompanyID();
+					} else if (folderType.equals("D")) {
+						ownerId = userInfo.getDeptID();
+					} else {
+						ownerId = userInfo.getId();
+					}
+				}
+				else {
+					SubTreeInfoVO folderInfo = ezAddressService.getFolderInfo(folderId);
+					ownerId = folderInfo.getOwnerId();
+				}
+			}
+			
+			// 주소록을 추가/수정 할 권한이 있는지 체크.
+			if (folderType.equals("C")) {
+				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
+					return "NO_AUTHORITY";
+				}
+			} else if (folderType.equals("D")) {
+				if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
+					return "NO_AUTHORITY";
+				}
+			}
+			
 			if (addressId.equals("")) {
 				//주소록 추가
 				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
-				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), sUserNM, sUserNM2, photoPath, sName,
+				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), photoPath, sName,
 						sCompany, sDept, sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip,
 						sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, "");
 			} else {
 				//주소록 수정
 				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
-				ezAddressService.updateAddress(addressId, userInfo.getId(), sUserNM, sUserNM2, photoPath, sName, sCompany, sDept,
+				ezAddressService.updateAddress(addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), photoPath, sName, sCompany, sDept,
 						sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr,
 						sMemo, "");
 			}
@@ -372,6 +408,8 @@ public class EzAddressController{
 		String useEditor = config.getProperty("config.EDITOR");
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
+		String compAdmin = "";
+		String deptAdmin = "";
 		
 		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
         	useIE11Browser = "CK";
@@ -383,13 +421,11 @@ public class EzAddressController{
 		
 		AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
 		
-		String pAdmin = "";
-		if (addressInfo.getOwnerId().equals("TOP") && (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-			pAdmin = "Y";
-		} else {
-            if (!addressInfo.getOwnerId().equals(addressInfo.getCreatorId()) && (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-            	pAdmin = "Y";
-            }
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+        	compAdmin = "Y";
+        	deptAdmin = "Y";
+        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+        	deptAdmin = "Y";
         }
 		
 		model.addAttribute("useEditor", useEditor);
@@ -397,7 +433,8 @@ public class EzAddressController{
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("addressInfo", addressInfo);
-		model.addAttribute("pAdmin", pAdmin);
+		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
@@ -501,7 +538,8 @@ public class EzAddressController{
 		
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
-		String pAdmin = "";
+		String compAdmin = "";
+		String deptAdmin = "";
 		String useEditor = config.getProperty("config.EDITOR");
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
@@ -510,12 +548,11 @@ public class EzAddressController{
         	useIE11Browser = "CK";
         }
 		
-		if (pFolderType.equals("D") && (userInfo.getRollInfo().indexOf("c=1") > -1 ||
-				userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-			pAdmin = "Y";
-		}
-        if (pFolderType.equals("C") && (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-        	pAdmin = "Y";
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+        	compAdmin = "Y";
+        	deptAdmin = "Y";
+        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+        	deptAdmin = "Y";
         }
 		
         AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
@@ -539,7 +576,8 @@ public class EzAddressController{
 		model.addAttribute("addressInfo", addressInfo);
 		model.addAttribute("listMember", listMember.toString());
 		model.addAttribute("listMemberSize", listMemberSize);
-		model.addAttribute("pAdmin", pAdmin);
+		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -1107,16 +1145,24 @@ public class EzAddressController{
 				strCurrentPage = xmldom.getElementsByTagName("PAGE").item(0).getTextContent().trim();
 			}
 			
-			pFolderFilter = pFolderFilter.split(",")[0] + " Like '%" + pFolderFilter.split(",")[1] + "%'";
-			
+			if (pFolderFilter.indexOf(",") > -1) {
+				pFolderFilter = pFolderFilter.split(",")[0] + " Like '%" + pFolderFilter.split(",")[1] + "%'";
+			}
 			int pListPageSize = Integer.parseInt(strListPageSize);
 			int pCurrentPage = Integer.parseInt(strCurrentPage);
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
-			int pFolderMaxCount = ezAddressService.getSearchCount(pIdList, pFolderFilter);
+			int pFolderMaxCount = 0;
+			List<AddressInfoVO> addressList = null;
 			
-			List<AddressInfoVO> addressList = ezAddressService.getSearchList(pIdList, pOrderOption, pFolderFilter, "", pFolderMaxCount, pListPageSize, start);
+			if (!pIdList.trim().equals("")) {
+				pFolderMaxCount = ezAddressService.getSearchCount(pIdList, pFolderFilter);
+				addressList = ezAddressService.getSearchList(pIdList, pOrderOption, pFolderFilter, "", pFolderMaxCount, pListPageSize, start);
+			}
+			else {
+				addressList = new ArrayList<AddressInfoVO>();
+			}
 			
 			for (AddressInfoVO vo : addressList) {
 				System.out.println(vo);

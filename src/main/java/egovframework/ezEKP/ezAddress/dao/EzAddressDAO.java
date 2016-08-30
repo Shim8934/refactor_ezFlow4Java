@@ -111,4 +111,7 @@ public class EzAddressDAO extends EgovAbstractDAO {
 		return (List<AddressInfoVO>) list("EzAddressDAO.getSearchList", map);
 	}
 	
+	public SubTreeInfoVO getFolderInfo(Map<String, Object> map) throws Exception{
+		return (SubTreeInfoVO) select("EzAddressDAO.getFolderInfo", map);
+	}
 }

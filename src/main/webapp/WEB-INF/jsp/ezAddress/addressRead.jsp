@@ -15,7 +15,8 @@
 			var userid = "${userInfo.id}";
 			var foldertype = "${pFolderType}";
 			var addressid = "${pAddressId}";
-			var admin = "${pAdmin}";
+			var deptAdmin = "${deptAdmin}";
+			var compAdmin = "${compAdmin}";
 		    var pFolderID = "${pFolderId}";
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
@@ -74,11 +75,16 @@
 			}
 			function modify_address()
 			{
-				if (admin != "Y" && creatorid != userid && modifierid != userid)
-				{
-					alert("<spring:message code='ezAddress.t278' />");
-					return;
+				if (creatorid != userid && modifierid != userid) {
+					if (deptAdmin != "Y" && foldertype == "D") {
+						alert("<spring:message code='ezAddress.t278' />");
+						return;
+					} else if (compAdmin != "Y" && foldertype == "C") {
+						alert("<spring:message code='ezAddress.t278' />");
+						return;
+					}
 				}
+				
 				location.replace("/ezAddress/addressWrite.do?addressid=" + encodeURIComponent(addressid) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + foldertype, "",
 					"height = 420px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 						

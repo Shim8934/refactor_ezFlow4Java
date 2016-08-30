@@ -159,7 +159,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 		
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1");
-		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName() : mailGeneralVO.getMailSenderNm();
+		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
 
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		for (int i=0; i<senderList.length; i++) {

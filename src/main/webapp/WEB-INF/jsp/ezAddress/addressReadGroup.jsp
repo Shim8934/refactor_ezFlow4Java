@@ -15,7 +15,8 @@
 			var userid = "${userInfo.id}";
 			var foldertype = "${pFolderType}";
 			var addressid = "${pAddressId}";
-			var admin = "${pAdmin}";
+			var deptAdmin = "${deptAdmin}";
+			var compAdmin = "${compAdmin}";
 			var useWebMail = "NO";
 			var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
@@ -33,10 +34,16 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
 			function modify_address() {
-			    if (foldertype != "P" && admin != "Y" && creatorid != userid && modifierid != userid) {
-			        alert("<spring:message code='ezAddress.t278' />");
-			        return;
-			    }
+				if (creatorid != userid && modifierid != userid) {
+					if (deptAdmin != "Y" && foldertype == "D") {
+						alert("<spring:message code='ezAddress.t278' />");
+						return;
+					} else if (compAdmin != "Y" && foldertype == "C") {
+						alert("<spring:message code='ezAddress.t278' />");
+						return;
+					}
+				}
+				
 			    location.replace("/ezAddress/addressWriteGroup.do?addressid=" + encodeURIComponent(addressid) + "&foldertype=" + foldertype, "",
 		        "height = 655px, width = 970px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 		

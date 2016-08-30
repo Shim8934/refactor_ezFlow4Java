@@ -172,4 +172,19 @@
 		]]>
 	</select>
 	
+	<select id="EzAddressDAO.getFolderInfo" parameterClass="Map" resultClass="SubTreeInfoVO">
+		<![CDATA[
+			SELECT 
+				folderid, 
+				parentId,
+				ownerid, 
+				foldertype, 
+				foldername
+			FROM 
+				ezAddress.tblfoldertree
+			WHERE 
+				folderid = #v_PFOLDERID#
+		]]>
+	</select>
+	
 </sqlMap>

@@ -533,4 +533,12 @@ public class EzAddressServiceImpl implements EzAddressService {
 		
 	}
 
+	@Override
+	public SubTreeInfoVO getFolderInfo(String pFolderId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
+		
+		return ezAddressDAO.getFolderInfo(map);
+	}
+
 }

@@ -36,5 +36,5 @@ public interface EzAddressService {
 	public void moveFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType) throws Exception;
 	public String copyFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType) throws Exception;
 	public List<AddressInfoVO> getSearchList(String pIdList, String pOrderOption, String pFilter, String pFieldList, int pFolderMaxCount, int pListPageSize, int pStart) throws Exception;
-	
+	public SubTreeInfoVO getFolderInfo(String pFolderId) throws Exception;
 }

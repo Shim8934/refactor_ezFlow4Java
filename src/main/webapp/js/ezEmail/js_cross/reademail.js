@@ -373,7 +373,7 @@ function func_addaddr(stype) {
     var ret;
     address_foldermanage_dialogArguments[1] = func_addaddr_Complete;
     address_foldermanage_dialogArguments[3] = stype;
-    DivPopUpShow(450, 500, "/myoffice/ezAddress/address_foldermanage.aspx?mode=Show");
+    DivPopUpShow(450, 500, "/ezAddress/addressFolderManage.do?mode=Show");
 }
 function func_addaddr_Complete(ret) {
     try {
@@ -389,9 +389,39 @@ function func_addaddr_Complete(ret) {
         try {
             senderName = TrimText(ConvertCharToEntityReference(LabelFromName.textContent));
             senderEmail = TrimText(ConvertCharToEntityReference(g_fromEmail));
-
-            xmlHTTP.open("POST", "/myoffice/ezAddress/RemoteEWS/address_add_email.aspx", false);
-            xmlHTTP.send("<DATA><TYPE>" + type + "</TYPE><FOLDERID>" + folderID + "</FOLDERID><SNAME>" + senderName + "</SNAME><SEMAIL>" + senderEmail + "</SEMAIL><CONFIRM>" + address_foldermanage_dialogArguments[3] + "</CONFIRM></DATA>");
+            
+            var xmlDom = createXmlDom();
+            
+            var objNode, objRow;
+            objNode = createNodeInsert(xmlDom, objNode, "DATA");
+            createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderID);
+            createNodeAndInsertText(xmlDom, objNode, "TYPE", type);
+            createNodeAndInsertText(xmlDom, objNode, "OWNERID", "");
+            createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", "");
+            createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", "");
+            createNodeAndInsertText(xmlDom, objNode, "PHOTOPATH", "");
+            createNodeAndInsertText(xmlDom, objNode, "SNAME", senderName);
+            createNodeAndInsertText(xmlDom, objNode, "SCOMPANY", "");
+            createNodeAndInsertText(xmlDom, objNode, "SDEPT", "");
+            createNodeAndInsertText(xmlDom, objNode, "STITLE", "");
+            createNodeAndInsertText(xmlDom, objNode, "SCOMPANYPHONE", "");
+            createNodeAndInsertText(xmlDom, objNode, "SMOBILE", "");
+            createNodeAndInsertText(xmlDom, objNode, "SFAX", "");
+            createNodeAndInsertText(xmlDom, objNode, "SEMAIL", senderEmail);
+            createNodeAndInsertText(xmlDom, objNode, "SHOMEPAGE", "");
+            createNodeAndInsertText(xmlDom, objNode, "SCOMPANYZIP", "");
+            createNodeAndInsertText(xmlDom, objNode, "SCOMPANYADDR", "");
+            createNodeAndInsertText(xmlDom, objNode, "SCOMPANYADDR", "");
+            createNodeAndInsertText(xmlDom, objNode, "SHOMEZIP", "");
+            createNodeAndInsertText(xmlDom, objNode, "SHOMEADDR", "");
+            createNodeAndInsertText(xmlDom, objNode, "SMEMO", "");
+            createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
+            createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
+            createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+            objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
+            
+            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
+            xmlHTTP.send(xmlDom);
         }
         catch (e) {
             xmlHTTP = null;
@@ -404,10 +434,16 @@ function func_addaddr_Complete(ret) {
 
         }
         if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-            if (xmlHTTP.status != 200)
-                alert(strLang133 + xmlHTTP.statusText);
-            else
-                alert(strLang135);
+            if (xmlHTTP.status != 200) {
+            	alert(strLang133 + xmlHTTP.statusText);
+            }
+            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+            	//TODO: strLang 적절한 메시지 추가하기
+            	alert("NO_AUTHORITY");
+            }
+            else {
+            	alert(strLang135);
+            }
         }
         else
             alert(strLang136);
