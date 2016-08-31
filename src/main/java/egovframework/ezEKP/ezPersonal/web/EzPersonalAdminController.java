@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPersonal.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +21,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -116,23 +119,144 @@ public class EzPersonalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		boolean auth = commonUtil.checkAdmin(loginCookie);
-		
 		String companyID = request.getParameter("id");
 		int currentPage = Integer.parseInt(request.getParameter("page"));
-
-		int pageSize = 12;
-		
-		int totalCount = ezPersonalAdminService.getNoticeCount(companyID);
-		String noticeXML = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, (currentPage-1) * pageSize);
-		
-		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		
 		if (!auth) {
 			return "cmm/error/adminDenied";
 		}
-		return "";
+		
+		StringBuilder result = new StringBuilder();
+		int pageSize = 12;
+		int cnt = 0;
+		
+		int totalCount = ezPersonalAdminService.getNoticeCount(companyID);
+		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
+		int iSn = totalCount - ((currentPage -1 ) * 12);
+		
+		result.append("<LISTVIEWDATA>");
+		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
+		result.append("<CNT>" + cnt + "</CNT>");
+		
+		List<PersonalNoticeVO> list = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, (currentPage-1) * pageSize);
+		
+		result.append("<ROWS>");
+		
+		for (PersonalNoticeVO vo : list) {
+			result.append("<ROW><CELL><VALUE>" + iSn + "</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1></CELL>");
+			
+			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + vo.getPostDate().substring(0, 10) + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", locale) + "</VALUE>");
+			result.append("<TYPE>BTN</TYPE>");
+			result.append("<FUNC>mod_notice</FUNC>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1></CELL>");
+			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", locale) + "</VALUE>");
+			result.append("<TYPE>BTN</TYPE>");
+			result.append("<FUNC>del_notice</FUNC>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<DATA2>" + iSn + "</DATA2></CELL></ROW>");
+			
+			iSn--;
+		}
+		
+		result.append("</ROWS></LISTVIEWDATA>");
+		
+		return result.toString();
 	}
 	
+	/**
+	 * 초기화면 공지사항 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/delNotice.do", produces = "text/xml; charset=utf-8") 
+	@ResponseBody
+	public String delNotice(HttpServletRequest request) throws Exception {
+		String itemSeq = request.getParameter("itemSeq");
+		
+		String result = ezPersonalAdminService.deleteNotice(itemSeq);
+		
+		return result;
+	}
+	
+	/**
+	 * 초기화면 공지사항 등록,수정화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addNoticeCK.do")
+	public String addNoticeCK(@CookieValue("loginCookie") String loginCookie, PersonalNoticeVO vo, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String itemSeq = "";
+		
+		if (request.getParameter("itemSeq") != null) {
+			itemSeq = request.getParameter("itemSeq");
+			
+			vo = ezPersonalAdminService.getNoticeInfo(itemSeq);
+			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
+		}
+		
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("personalNoticeVO", vo);
+		
+		return "admin/ezPersonal/personalAddNoticeCK";
+	}
+	
+	/**
+	 * 초기화면 공지사항 등록,수정 본문화면 CK에디터 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addNoticeCKContent.do")
+	public String addNoticeCKContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+				
+		return "admin/ezPersonal/personalAddNoticeCKContent";
+	}
+	
+	/**
+	 * 초기화면 공지사항 등록,수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveNotice(@ModelAttribute PersonalNoticeVO vo) throws Exception {
+		if (vo.getTitle2() == null) {
+			vo.setTitle2(vo.getTitle());
+		}
+		
+		if (vo.getItemSeq() == null) {
+			String result = ezPersonalAdminService.insertNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent());
+			return result;
+		} else {
+			String result = ezPersonalAdminService.updateNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), vo.getItemSeq());
+			return result;
+		}
+	}
+	
+	/**
+	 * 초기화면 공지사항 본문화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/showNotice.do")
+	public String showNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemSeq = request.getParameter("itemSeq");
+		
+		PersonalNoticeVO vo = ezPersonalAdminService.getNoticeInfo(itemSeq);
+
+		if (vo.getTitle2() == null) {
+			vo.setTitle2(vo.getTitle());
+		}
+		vo.setContent(vo.getContent().replace("<a ", "<a target='_blank'").replace("<A ", "<A target='_blank'"));
+		vo.setPostDate(vo.getPostDate().substring(0, 10));
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("personalNoticeVO", vo);
+		
+		return "admin/ezPersonal/personalShowNotice";
+	}
 }

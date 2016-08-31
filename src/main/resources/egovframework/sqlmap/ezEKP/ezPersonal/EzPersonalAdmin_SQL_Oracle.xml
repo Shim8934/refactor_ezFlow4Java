@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezPersonalAdmin">
 	<!-- <typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
@@ -12,11 +12,52 @@
 	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/> -->
+	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETNOTICECOUNT"			parameterClass="Map" resultClass="Integer">
+	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
+		<result property="title"						column="Title"					columnIndex="1"/>
+		<result property="title2"						column="Title2"					columnIndex="2"/>
+		<result property="postDate"						column="PostDate"				columnIndex="3"/>
+		<result property="content"						column="CONTENT"				columnIndex="4"		javaType="String"	jdbcType="CLOB"/>
+		<result property="itemSeq"						column="ItemSeq"				columnIndex="5"/>
+		
+	</resultMap>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETNOTICELIST(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETNOTICECOUNT"			parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETNOTICECOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_INSERTNOTICE"			parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_INSERTNOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_UPDATENOTICE"			parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_UPDATENOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #v_pItemSeq#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_DELETENOTICE"			parameterClass="String">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_DELETENOTICE(#v_pItemSeq#)}
+		]]>	
+	</procedure>
+	
 	
 </sqlMap>

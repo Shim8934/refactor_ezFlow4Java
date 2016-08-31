@@ -35,17 +35,9 @@
 		            document.getElementById("ListCompany").selectedIndex = 0;
 		            company_change();
 		        }
-	
-// 	       		makelist();
 	        });
 	        
-	        function makelist() {
-// 	            xmlhttp = null;
-// 	            xmlhttp = createXMLHttpRequest();
-// 	            xmlhttp.open("POST", "/admin/ezPersonal/manageNoticeList.do?id=" + escape(document.getElementById("ListCompany").value) + "&page=" + pageNum, true);
-// 	            xmlhttp.onreadystatechange = event_NoticeList;
-// 	            xmlhttp.send();
-	            
+	        function makelist() {            
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezPersonal/manageNoticeList.do",
@@ -60,7 +52,7 @@
 	        function eventNoticeList(result) {
 	            try {
 	                document.getElementById("AccessList").innerHTML = "";
-	                var xmldom = loadXMLString(result);
+	                var xmldom = result;
 
 	                var headerData = createXmlDom();
 	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
@@ -120,7 +112,7 @@
 	                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
 	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("AddNotice_CK.aspx", "AddNotice_CK", GetOpenWindowfeature(800, 510));
+	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNoticeCK", GetOpenWindowfeature(800, 510));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                }
 	            } else {
@@ -129,7 +121,7 @@
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                } else {
 	                    if (p_Use_IE11Browser == "CK") {
-	                        rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.all("ListCompany").value,
+	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                    } else {
 	                        rtnValue = window.showModalDialog("AddNotice.aspx", document.all("ListCompany").value,
@@ -153,28 +145,47 @@
 	            if (!confirm(pnumber + " <spring:message code = 'ezPersonal.t159' />")) {
 	                return;
 	            }
-
-	            var xmlHTTP = createXMLHttpRequest();
-	            var xmlDom = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATAlist");
-	            createNodeAndInsertText(xmlDom, objNode, "DATA", popup_number);
-	            xmlHTTP.open("POST", "DelNotice.aspx", false);
-	            xmlHTTP.send(xmlDom);
 	            
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                alert("<spring:message code = 'ezPersonal.t160' />");
-	            } else {
-	                alert("<spring:message code = 'ezPersonal.t161' />");
-	                makelist();
-	            }
+	            $.ajax({
+	            	type : "POST",
+	            	url : "/admin/ezPersonal/delNotice.do",
+	            	async : false,
+	            	data : { itemSeq : popup_number},
+	            	dataType : "text",
+	            	success : function (result) {
+	            		if ( result == "OK" ) {
+	            			alert("<spring:message code = 'ezPersonal.t161' />");
+	            			makelist();
+	            		} else {
+	            			alert("<spring:message code = 'ezPersonal.t160' />");
+	            		}
+	            	}
+	            });
 	        }
 
 	        function mod_notice(notice_number) {
-	            if (pUse_Editor == "TAGFREE") {
-	                rtnValue = window.showModalDialog("AddNotice_TFX.aspx?itemseq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
+	        	if (CrossYN()) {
+	                if (pUse_Editor == "TAGFREE") {
+	                    //rtnValue = window.showModalDialog("AddNotice_TFX.aspx", document.getElementById("ListCompany").value,
+	                    //    "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
+	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
+	                    AddNotice_dialogArguments[1] = add_notice_Complete;
+	                    var OpenWin = window.open("AddNotice_TFX.aspx", "AddNotice_TFX?itemSeq=" + notice_number, GetOpenWindowfeature(800, 510));
+	                    try { OpenWin.focus(); } catch (e) { }
+	                } else {
+	                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
+	                    //"dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
+	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
+	                    AddNotice_dialogArguments[1] = add_notice_Complete;
+	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, "AddNoticeCK", GetOpenWindowfeature(800, 510));
+	                    try { OpenWin.focus(); } catch (e) { }
+	                }
 	            } else {
-	                rtnValue = window.showModalDialog("AddNotice_ck.aspx?itemseq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
+		            if (pUse_Editor == "TAGFREE") {
+		                rtnValue = window.showModalDialog("AddNotice_TFX.aspx?itemseq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
+		            } else {
+		                rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do?itemSeq=" + notice_number, escape(document.getElementById("ListCompany").value), "dialogHeight:500px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 500));
+		            }
 	            }
 	            
 	            if (typeof (rtnValue) != "undefined") {
@@ -189,7 +200,7 @@
 	                return;
 	            }
 	            
-	            window.open("/myoffice/ezpersonal/Notice/ShowNotice_Cross.aspx?itemseq=" + itemseq, "", "height=550px,width=550px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(550, 550));
+	            window.open("/admin/ezPersonal/showNotice.do?itemSeq=" + itemseq, "", "height=550px,width=550px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(550, 550));
 	        }
 	        
 	        function td_Create1(strtext) {
@@ -205,23 +216,23 @@
 	            PagingHTML += strtext;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -248,24 +259,24 @@
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                } else {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
