@@ -104,7 +104,7 @@ public class EzEmailMailListController {
 				
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String userLang = "1";
+		String userLang = config.getProperty("config.primary") != null ? config.getProperty("config.primary") : "1";
 		String domainName = config.getProperty("config.DomainName");
 		String useEditor = config.getProperty("config.EDITOR");
 		String useOcs = config.getProperty("config.USE_OCS");
