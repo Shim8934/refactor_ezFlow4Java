@@ -26,7 +26,7 @@
 	<typeAlias  alias="PortalGetPortletParametersVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO"/>
 	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
 	<typeAlias  alias="PortalFirstMainListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
-	
+	<typeAlias  alias="PortalSearchPortalPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -558,7 +558,7 @@
 	
 	<procedure id="EzPortalDAO.getThemeList" parameterClass="Map" resultMap="portalGetThemeListVO">
 		<![CDATA[
-			{CALL EZPORTAL.EZSP_GET_THEME_LIST(#v_pUID#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZPORTAL.EZSP_GET_THEME_LIST(#v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -661,6 +661,12 @@
 	<procedure id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SETUSEMYPOTALPAGE(#v_pUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.searchPortalPage" parameterClass="Map" resultClass="PortalSearchPortalPageVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHPORTALPAGE(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

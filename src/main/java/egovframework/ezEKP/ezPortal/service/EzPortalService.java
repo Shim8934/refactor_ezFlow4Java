@@ -142,8 +142,6 @@ public interface EzPortalService {
 	
 	public String portalPageBaseType (String uID, String pCompanyID) throws Exception;
 	
-	public String getThemeInfo(String pCompanyID, LoginVO userInfo) throws Exception;
-	
 	public String newMyPortalPageCreate2 (String pUserFlag, String pUserID, String pCompanyID) throws Exception;
 	
 	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID) throws Exception;
@@ -187,6 +185,10 @@ public interface EzPortalService {
 	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr) throws Exception;
 	
 	public String setUseMyPortalPage (String pUID, String pUserID, String pCompanyID, String pGubunFlag) throws Exception;
+	
+	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) throws Exception;
+	
+	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList) throws Exception;
 	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	

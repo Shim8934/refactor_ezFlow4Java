@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -2207,7 +2208,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 		}
 	}
 	
-	public String getThemeInfo(String pCompanyID, LoginVO userInfo) {
+	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) {
 		try {
 			List<PortalGetThemeListVO> list = getThemeList(pCompanyID);
 			
@@ -2711,6 +2712,35 @@ System.out.println("pUID:"+pUID);
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ENDROW", pEndRow);
+		map.put("v_DISPLAYNAME", pDisplayName);
+		map.put("v_USERFLAG", pUseFlag);
+		map.put("v_GUBUNFLAG", pGubunFlag);
+		map.put("v_ARRPARAM", pGubunFlag);
+		List<PortalSearchPortalPageVO> list = ezPortalDAO.searchPortalPage(map); 
+System.out.println("listSize:"+list.size());
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (int i=0; i<list.size(); i++) {
+			if (i >= pStartRow - 1) {
+				sb.append("<ROW>");
+                sb.append("<UID>" + list.get(i).getuID() + "</UID>");
+                sb.append("<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>");
+                sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
+                sb.append("<CREATEDATE>" + list.get(i).getCreateDate() + "</CREATEDATE>");
+                sb.append("<GUBUNFLAG>" + list.get(i).getGubunFlag() + "</GUBUNFLAG>");
+                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
+                sb.append("</ROW>");
+			}
+		}
+		
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 	
 }
