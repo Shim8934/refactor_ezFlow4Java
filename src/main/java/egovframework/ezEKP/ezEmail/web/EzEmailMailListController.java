@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -102,9 +103,10 @@ public class EzEmailMailListController {
 		
 		logger.debug("dispname=" + dispname + ",url=" + url);
 				
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String userLang = config.getProperty("config.primary") != null ? config.getProperty("config.primary") : "1";
+		String userLang = userInfo.getLang();
 		String domainName = config.getProperty("config.DomainName");
 		String useEditor = config.getProperty("config.EDITOR");
 		String useOcs = config.getProperty("config.USE_OCS");
