@@ -161,7 +161,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			int rc = ezEmailUserAdminService.updateGroupMove(oldGroupAddr, newGroupAddr, mailAddr);
 			
 			if (rc == 0) { // 성공
-				moveDBData(parentCn, cn, type);
+				try {
+					moveDBData(parentCn, cn, type);
+				} catch (Exception e) {
+					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
+					throw e;
+				}
+				
 				result = "OK";
 			} else {
 				result = "EMAIL_ERROR";

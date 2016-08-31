@@ -166,6 +166,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					}
 								
 				} else {
+					ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 					result = "EMAIL_ERROR";
 				}
 			} else {
@@ -296,6 +297,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 									
 					}
 					else {
+						ezEmailUserAdminService.removeGroup(mailAddr);
 						result = "EMAIL_ERROR";
 					}
 				} else {
