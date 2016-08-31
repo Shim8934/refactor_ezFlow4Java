@@ -55,7 +55,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>差出人</heading>
+    <heading>受信人</heading>
     <type>string</type>
     <propname>sender</propname>
     <prop>urn:schemas:httpmail:displayto</prop>
