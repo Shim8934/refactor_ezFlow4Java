@@ -75,6 +75,9 @@ public class CommonUtil {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private Properties globals;
+	
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
@@ -100,7 +103,16 @@ public class CommonUtil {
 			LoginVO user = loginService.selectUser(login);
 	
 			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
-			user.setLang(config.getProperty("config.primary"));
+			
+			String userLang = getLang();
+			user.setLang(userLang);
+			
+			if (config.getProperty("config.primary").equals(userLang)) {
+				user.setPrimary("1");
+			} else {
+				user.setPrimary("2");
+			}
+			
 			user.setLocale(locale);
 			
 			return user;
@@ -386,6 +398,24 @@ public class CommonUtil {
 			return false;
 		}
 	}
+	
+	public String getLang() {
+		String returnValue = "1";
+		String lang = globals.getProperty("Globals.language");
+		
+		if (lang.equals("ko")) {
+			returnValue = "1";
+		} else if (lang.equals("en")) {
+			returnValue = "2";
+		} else if (lang.equals("ja")) {
+			returnValue = "3";
+		} else if (lang.equals("zh")) {
+			returnValue = "4";
+		}
+		
+		return returnValue;
+	}
+	
 }
 
 
