@@ -15,12 +15,25 @@
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var OrderCell = "";
 		    var rtnVal = new Array();
+		    var RetValue;
+		    var ReturnFunction;
 		    window.onbeforeunload = onunload;
 		    window.onload = function () {
-		        var szSCListXml = dialogArguments[0];
-		        g_arrSCInfo[0] = dialogArguments[1];
-		        g_arrSCInfo[1] = dialogArguments[2];
-		        g_arrSCInfo[2] = dialogArguments[3];
+		        try {
+		            RetValue = parent.AddSpecialCatalog_Cross_dialogArguments[0];
+		            ReturnFunction = parent.AddSpecialCatalog_Cross_dialogArguments[1];
+		        } catch (e) {
+		            try {
+		                RetValue = opener.AddSpecialCatalog_Cross_dialogArguments[0];
+		                ReturnFunction = opener.AddSpecialCatalog_Cross_dialogArguments[1];
+		            } catch (e) {
+		                RetValue = window.dialogArguments;
+		            }
+		        }
+		        var szSCListXml = RetValue[0];
+		        g_arrSCInfo[0] = RetValue[1];
+		        g_arrSCInfo[1] = RetValue[2];
+		        g_arrSCInfo[2] = RetValue[3];
 		        InitSCInputBox();
 		        InitSCList(szSCListXml);
 		        rtnVal[0] = "FALSE";
@@ -71,14 +84,18 @@
 		        else {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = szRtnVal;
-		            window.returnValue = rtnVal;
+		            ReturnFunction(rtnVal);
 		            window.close();
 		        }
 		    }
 		    function btnClose_onclick() {
 		        rtnVal[0] = "FALSE";
-		        window.returnValue = rtnVal;
-		        window.close();
+		        if (ReturnFunction != null) {
+		            ReturnFunction(rtnVal);
+		            window.close();
+		        }
+		        else
+		            window.close();
 		    }
 		    function onunload() {
 		        window.returnValue = rtnVal;

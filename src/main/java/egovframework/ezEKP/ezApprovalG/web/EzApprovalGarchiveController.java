@@ -58,7 +58,7 @@ public class EzApprovalGarchiveController {
 	 */
 	@RequestMapping(value = "/ezApprovalG/cabinetMain.do"  ,produces="text/xml;charset=utf-8")
 	public String cabinetmain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String sFlag = (request.getParameter("sFlag") != null ? request.getParameter("sFlag") : "");
 		String contType = "END";
@@ -106,7 +106,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/sendOfferCheck.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String sendOfferCheck(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String pDocID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
         String pUserID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -116,7 +116,7 @@ public class EzApprovalGarchiveController {
 	
 	@RequestMapping(value = "/ezApprovalG/contDocView_NoDoc.do"  ,produces="text/xml;charset=utf-8")
 	public String contDocView_NoDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID=request.getParameter("docID");
 		String docHref=request.getParameter("docHref");
 		String docType=request.getParameter("docType");
@@ -173,7 +173,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecordInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getLang());
 		return result;
@@ -181,7 +181,7 @@ public class EzApprovalGarchiveController {
 	
 	@RequestMapping(value = "/ezApprovalG/regRecord.do"  ,produces="text/xml;charset=utf-8")
 	public String regRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String useEditor=config.getProperty("config.EDITOR");
 		String useIE11Browser=config.getProperty("config.IE11EDITOR");
 		String nonActiveX="YES";
@@ -207,7 +207,7 @@ public class EzApprovalGarchiveController {
 	 
 	@RequestMapping(value = "/ezApprovalG/setRecUserRole.do"  ,produces="text/xml;charset=utf-8")
 	public String setRecUserRole(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		  model.addAttribute("userInfo", userInfo);
 		return "ezApprovalG/apprGsetRecUserRole";
 	}
@@ -215,7 +215,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecViewerInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecViewerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		System.out.println(xmlPara);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.getRecViewer(xmlDom,userInfo.getLang());
@@ -225,7 +225,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/saveRecUserRole.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveRecUserRole(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.saveRecUserRoleInfo(xmlDom,userInfo.getLang());
 		return result;
@@ -233,7 +233,7 @@ public class EzApprovalGarchiveController {
 	
 	@RequestMapping(value = "/ezApprovalG/viewRecReadHistory.do"  ,produces="text/xml;charset=utf-8")
 	public String viewRecReadHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "ezApprovalG/apprGviewRecReadHistory";
 	}
@@ -241,7 +241,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecReadHistory.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecReadHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID= xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String result=ezApprovalGService.getRecReadHistory(xmlDom);
@@ -252,7 +252,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/viewRecInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String viewRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 	    String Use_IE11Browser = "";
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		   if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && Use_IE11Browser.equals("CK")) {
 			   Use_IE11Browser ="CK";
 	        }
@@ -264,7 +264,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecClassInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecClassInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.getRecordClassInfo(xmlDom,userInfo.getLang());
 		return result;
@@ -274,7 +274,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/viewRecHistory.do"  ,produces="text/xml;charset=utf-8")
 	public String viewRecHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 	    String Use_IE11Browser = "";
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		   if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && Use_IE11Browser.equals("CK")) {
 			   Use_IE11Browser ="CK";
 	        }
@@ -286,7 +286,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecordHistory.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecordHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,Locale locale, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String result=ezApprovalGService.getRecordHistory(xmlDom,userInfo.getLang());
@@ -306,7 +306,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/moveRecord.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String moveRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,Locale locale, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.moveRecord(xmlDom,userInfo.getLang());
 		Document xmlResult = commonUtil.convertStringToDocument(result);
@@ -317,7 +317,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장 수정 */
 	@RequestMapping(value = "/ezApprovalG/changeRecordInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String changeRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "ezApprovalG/apprGchangeRecordInfo";
 	}
@@ -326,7 +326,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecordSimpleInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecordSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang());
 		return result;
@@ -336,7 +336,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/changeRecInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String changeRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String result = ezApprovalGService.changeRecordInfo(xmlDom,userInfo.getLang());
 		return result;
@@ -345,7 +345,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장  문서출력 화면 호출*/
 	@RequestMapping(value = "/ezApprovalG/docListView.do"  ,produces="text/xml;charset=utf-8")
 	public String docListView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "ezApprovalG/apprGdocListView";
 	}
@@ -354,7 +354,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getDeliveryList.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeliveryList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String p_DeptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
         String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -390,7 +390,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/createNewDocId.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String createNewDocId(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.getNewID(userInfo.getCompanyID());
 			return result;
@@ -400,7 +400,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/registerRecord.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String registerRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.registerRecord(xmlDom);
 		return result;
@@ -409,7 +409,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장  첨부 추가*/
 	@RequestMapping(value = "/ezApprovalG/regRecordAttach.do"  ,produces="text/xml;charset=utf-8")
 	public String regRecordAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
         String susinAdmin = "";
         String serverName = request.getServerName();
         String poptExt = "";
@@ -450,7 +450,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장  등록정보 인쇄*/
 	@RequestMapping(value = "/ezApprovalG/printMetaInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String printMetaInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGprintMetaInfo";
 	}
@@ -458,7 +458,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장  등록정보 인쇄 상세화면*/
 	@RequestMapping(value = "/ezApprovalG/printMetaInfoContent.do"  ,produces="text/xml;charset=utf-8")
 	public String printMetaInfoContent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGprintMetaInfoContent";
 	}
@@ -466,7 +466,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장  등록정보 인쇄 상세화면*/
 	@RequestMapping(value = "/ezApprovalG/printFormRecInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String printFormRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String STRGet_t106 = "";
 		String STRGet_t109 = "";
 		String STRGet_t445 = "";
@@ -694,55 +694,55 @@ public class EzApprovalGarchiveController {
 		return "/ezApprovalG/apprGprintFormRecInfo";
 	}
 	
-//	/** 기록물등록대장 재발송*/
-//	@RequestMapping(value = "/ezApprovalG/ezSelectSusin.do"  ,produces="text/xml;charset=utf-8")
-//	
-//	public String ezSelectSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-//		userInfo = commonUtil.userInfo(loginCookie);
-//		String susinAdmin ="";
-//		String serverName = request.getServerName();
-//		String susinXML="";
-//		
-//    	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
-//    		susinAdmin = "YES";
-//		} else {
-//			susinAdmin = "NO";
-//		}
-//    	if(userInfo.getLang().equals("1")){
-//    		susinXML="TreeViewEndAddDept.xml";
-//    	}
-//    	else{
-//    		susinXML="TreeViewEndAddDept" + userInfo.getLang() + ".xml";
-//    	}
-//		model.addAttribute("userInfo", userInfo);
-//		model.addAttribute("susinAdmin", susinAdmin);
-//		model.addAttribute("serverName", serverName);
-//		model.addAttribute("susinXML", susinXML);
-//		
-//		return "/ezApprovalG/apprGezSelectSusin";
-//	}
+	/** 기록물등록대장 재발송*/
+	@RequestMapping(value = "/ezApprovalG/ezSelectSusin.do"  ,produces="text/xml;charset=utf-8")
+	public String ezSelectSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String susinAdmin ="";
+		String serverName = request.getServerName();
+		String susinXML="";
+		
+    	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+    		susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+    	if(userInfo.getLang().equals("1")){
+    		susinXML="/xml/ezApprovalG/TreeViewEndAddDept.xml";
+    	}
+    	else{
+    		susinXML="/xml/ezApprovalG/TreeViewEndAddDept" + userInfo.getLang() + ".xml";
+    	}
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("susinXML", susinXML);
+		
+		return "/ezApprovalG/apprGezSelectSusin";
+	}
 	
 	/** 기록물등록대장 발송의뢰*/
 	@RequestMapping(value = "/ezApprovalG/ezSelectOne.do"  ,produces="text/xml;charset=utf-8")
 	public String ezSelectOne(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String susinAdmin ="";
 		String serverName = request.getServerName();
 		String susinXML="";
 		String mDeptInfo="";
+		
     	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
     		susinAdmin = "YES";
 		} else {
 			susinAdmin = "NO";
 		}
     	
-//    	String searchList ="extensionAttribute4::" + userInfo.getCompanyID().trim();
-//    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang());
-//    	
-//    	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
-//    	if(xmlResult.getElementsByTagName("DATA2").getLength() > 0){
-//    		mDeptInfo = xmlResult.getElementsByTagName("DATA2").item(0).getTextContent();
-//    	}
+    	String searchList ="extensionAttribute4::" + userInfo.getCompanyID().trim();
+    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang());
+    	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
+    	
+    	if(xmlResult.getElementsByTagName("DATA2").getLength() > 0){
+    		mDeptInfo = xmlResult.getElementsByTagName("DATA2").item(0).getTextContent();
+    	}
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("susinAdmin", susinAdmin);
     	model.addAttribute("serverName", serverName);
@@ -755,7 +755,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/updateReceiptOffer.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String updateReceiptOffer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String orgDocID = xmlDom.getElementsByTagName("OrgDocID").item(0).getTextContent();
@@ -767,7 +767,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/sendOfferG.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String sendOfferG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
    		String realPath = request.getServletContext().getRealPath("");
 		String dirPath =  realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
@@ -780,7 +780,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCabinetList.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.getCabinetList(xmlDom,userInfo.getLang());
 		return result;
@@ -789,7 +789,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 철등록*/
 	@RequestMapping(value = "/ezApprovalG/regCabinet.do"  ,produces="text/xml;charset=utf-8")
 	public String regCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGregCabinet";
 	}
@@ -797,7 +797,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 상세보기*/
 	@RequestMapping(value = "/ezApprovalG/viewCabInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String viewCabInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String IE11="";
 		  if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0)) {
 	        	IE11 ="YES";
@@ -811,7 +811,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCabinetDetailInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetDetailInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getCabinetDetailInfo(xmlDom);
 		return result;
@@ -821,7 +821,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCabSCInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabSCInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getCabScInfo(xmlDom);
 		return result;
@@ -872,7 +872,7 @@ public class EzApprovalGarchiveController {
           String STRGet_t854 = "";
           String STRGet_t855 = "";
           String STRGet_t856 = "";
-		  userInfo = commonUtil.userInfo(loginCookie);
+		  userInfo = commonUtil.aprUserInfo(loginCookie);
 		  if(!userInfo.getLang().equals("1")){
 			  STRGet_t106 = "Subject(Title)";
               STRGet_t117 = "Keeping period";
@@ -1097,7 +1097,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 수정버튼*/
 	@RequestMapping(value = "/ezApprovalG/changeCabinetInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String changeCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGchangeCabinetInfo";
 	}
@@ -1106,7 +1106,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCabinetSimpleInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getCabinetSimpleInfo(xmlDom);
 		return result ;
@@ -1116,7 +1116,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/changeCabInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String changeCabInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.changeCabinetInfo(xmlDom);
 		return result ;
@@ -1125,7 +1125,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 이력보기 화면*/
 	@RequestMapping(value = "/ezApprovalG/viewCabHistory.do"  ,produces="text/xml;charset=utf-8")
 	public String viewCabHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGviewCabHistory";
 	}
@@ -1134,7 +1134,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCabinetHistory.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getCabinetHistory(xmlDom);
 		return result;
@@ -1143,7 +1143,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 검색 화면 */
 	@RequestMapping(value = "/ezApprovalG/searchCab.do"  ,produces="text/xml;charset=utf-8")
 	public String searchCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		StringBuilder yearOption = new StringBuilder("");
 		int curYear = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4));
 		yearOption.append("<Option Value=\"\"></Option>");
@@ -1160,7 +1160,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물철등록부 업무담당자 지정  */
 	@RequestMapping(value = "/ezApprovalG/setTaskChrger.do"  ,produces="text/xml;charset=utf-8")
 	public String setTaskChrger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezApprovalG/apprGsetTaskChrger";
 	}
@@ -1169,7 +1169,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getTaskCharger.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskCharger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getTaskCharger(xmlDom,userInfo.getLang());
 		return result;
@@ -1179,7 +1179,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/saveCabRoleInfo.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveCabRoleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.saveCabRoleInfo(xmlDom);
 		return result;
@@ -1188,7 +1188,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물배부대장 검색  */
 	@RequestMapping(value = "/ezApprovalG/searchDelivery.do"  ,produces="text/xml;charset=utf-8")
 	public String searchDelivery(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		return "ezApprovalG/apprGsearchDelivery";
 	}
 	
@@ -1196,7 +1196,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getCheckEndHref.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCheckEndHref(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String result = "FALSE";
@@ -1215,7 +1215,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/addBebu.do"  ,produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String addBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = request.getServletContext().getRealPath("");
 		String dirpath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
@@ -1226,7 +1226,7 @@ public class EzApprovalGarchiveController {
 	/** 기록물등록대장 재발송  */
 	@RequestMapping(value = "/ezApprovalG/selectReceipts.do"  ,produces="text/xml;charset=utf-8")
 	public String selectReceipts(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("pDocID");
 		String serverName = request.getServerName();
 		model.addAttribute("docID", docID);
@@ -1234,5 +1234,17 @@ public class EzApprovalGarchiveController {
 		return "ezApprovalG/apprGezSelectReceipts";
 	}
 	
-
+	/** 기록물등록대장 재발송 완료  */
+	@RequestMapping(value = "/ezApprovalG/resendEndDoc.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String resendEndDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+	    String realPath = request.getServletContext().getRealPath("");
+		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = ezApprovalGService.doReSendDoc(xmlDom,dirPath,userInfo.getLang());
+		
+		return result;
+	}
+	
 }

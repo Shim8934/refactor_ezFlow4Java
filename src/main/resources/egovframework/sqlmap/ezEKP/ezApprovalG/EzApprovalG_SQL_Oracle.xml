@@ -488,7 +488,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_CHKDOCDELETE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="String">
+	<procedure id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="ApprGDocListVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DOBANSONG_APRTYPE(#v_DOCID#, #v_APRMEMBERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -1072,7 +1072,7 @@
 	<procedure id="EzApprovalG.getRecScInfo" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECSCINFO(#v_RECORDID#)}
 	</procedure>
-		<procedure id="EzApprovalG.changeRecordInfo" parameterClass="Map">
+	<procedure id="EzApprovalG.changeRecordInfo" parameterClass="Map" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_CHANGERECBASICINFO(#v_RECORDID# , #v_SEPATTNO#, #v_RECTYPE#, #v_NUMOFPAGE# , #v_TITLE#, #v_REGDATE#, #v_APRMEMTITLE#, #v_APRMEMTITLE2#, #v_DRAFTER#, #v_DRAFTER2#, #v_EXEDATE#, #v_RECEIPTMEM# , #v_RECEIPTMEM2#, #v_ELECFLAG#, #v_CHANGEREASON#, #v_USERID#, #v_USERNAME#, #v_USERNAME2# )}
 	</procedure>
 	
@@ -1126,8 +1126,17 @@
 		<procedure id="EzApprovalG.getReceiptInfo_receivesNm" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIPTINFO_RECEIVESNM(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	
 	</procedure>
-		<procedure id="EzApprovalG.doSendOffer_receiptId" parameterClass="Map" resultClass="ApprGReceiptVO">
+	<procedure id="EzApprovalG.doSendOffer_receiptId" parameterClass="Map" resultClass="ApprGReceiptVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DOSENDOFFER_RECEIPTID(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
+	<procedure id="EzApprovalG.doResendEndDoc1" parameterClass="Map" resultClass="ApprGReceiptVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DORESENDENDDOC1(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure> 
+	<procedure id="EzApprovalG.doResendEndDoc2" parameterClass="Map" >
+		{CALL EZAPPROVALG_$companyID$.EZSP_DORESENDENDDOC2(#v_DOCID#, #v_RECEIPTPOINTID#,#v_DEPTMEMBERSN#)}
+	</procedure> 
+	<procedure id="EzApprovalG.doResendEndDoc3" parameterClass="Map"  resultClass="ApprGReceiptVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_DORESENDENDDOC3(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> 
   
 </sqlMap>

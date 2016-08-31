@@ -9,13 +9,13 @@
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
+	<script type="text/javascript" src="/js/ezApprovalG/CabCategoryInfo_Cross.js"></script>
 	<script ID="clientEventHandlersJS" type="text/javascript">
 	    var rtnVal = new Array();
-	    window.onload = window_load;
 	    window.onbeforeunload = window_onunload;
 	    var RetValue;
 	    var ReturnFunction;
-	    function window_load() {
+	    window.onload = function () {
 	        var ua = navigator.userAgent;
 	        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	            KeEventControl(document.getElementById("txtTitle"));

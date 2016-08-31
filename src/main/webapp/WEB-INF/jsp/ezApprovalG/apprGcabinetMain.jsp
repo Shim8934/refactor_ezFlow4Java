@@ -66,7 +66,6 @@
         var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
         var arr_userinfo = new Array();
         arr_userinfo[0] = "user";
-	    arr_userinfo[0]  = "user";
 	    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";
 	    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1} '/>";
 	    arr_userinfo[3]  = "<c:out value = '${userInfo.title1} '/>";
@@ -1251,7 +1250,7 @@
     // START
     var ezSelectSusin_Cross_dialogArguments = new Array();
     function btnReSend_onclick() {
-        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
+        if (UserID.toLowerCase().trim()!= WriterID.toLowerCase().trim()) {
             var InformationString = "<spring:message code='ezApprovalG.t928'/>";
             OpenAlertUI(InformationString);
             return;
@@ -1279,7 +1278,7 @@
     {
         if (rtn[0] != "CANCEL") {
             var xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("POST", "../enforce/aspx/resendEndDoc.aspx", false);
+            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", true);
             xmlhttp.send(rtn[1]);
         }
         return;

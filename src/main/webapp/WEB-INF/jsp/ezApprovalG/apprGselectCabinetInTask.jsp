@@ -446,10 +446,10 @@
 		        else {
 		            arrTask[1] = SelectSingleNodeValue(TaskInfoXml.documentElement, "TASKNAME");
 		            arrTask[2] = SelectSingleNodeValue(TaskInfoXml.documentElement, "TEMPFLAG");
-		            arrTask[3] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPPERIOD");
-		            arrTask[4] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPMETHOD");
-		            arrTask[5] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPPLACE");
-		            arrTask[6] = SelectSingleNodeValue(TaskInfoXml.documentElement, "DISPLAYFLAG");
+		            arrTask[3] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPINGPERIOD");
+		            arrTask[4] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPINGMETHOD");
+		            arrTask[5] = SelectSingleNodeValue(TaskInfoXml.documentElement, "KEEPINGPLACE");
+		            arrTask[6] = SelectSingleNodeValue(TaskInfoXml.documentElement, "DISPLAYRECFLAG");
 		            arrTask[7] = SelectSingleNodeValue(TaskInfoXml.documentElement, "SCFLAG");
 		            arrTask[8] = SelectSingleNodeValue(TaskInfoXml.documentElement, "SCINFO/LIST1");
 		            arrTask[9] = SelectSingleNodeValue(TaskInfoXml.documentElement, "SCINFO/LIST2");

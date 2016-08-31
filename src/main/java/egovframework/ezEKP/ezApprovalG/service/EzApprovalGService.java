@@ -352,4 +352,10 @@ public interface EzApprovalGService {
 
 	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang)throws Exception;
 
+	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang) throws Exception;
+
+	public String updateProcessYN(String docID, String deptID, String processYN, String string, String companyID, String lang) throws Exception;
+
+	public String doReSendDoc(Document xmlDom, String dirPath, String lang) throws Exception;
+
 }

@@ -130,7 +130,7 @@ function processRowClick(tr) {
             }
         }
 
-        if (WriterID == arr_userinfo[1]) {
+        if (WriterID.trim() == arr_userinfo[1].trim()) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     // START
@@ -155,7 +155,7 @@ function processRowClick(tr) {
                     }
                 }
             }
-            catch (e) { }
+            catch (e) {}
         }
         else {
             if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
@@ -372,18 +372,22 @@ function onreadystatechange_GetDocDeliveryList() {
 }
 
 function CheckFormConnFlag(pDocID) {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/GetFormConnFlag.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
-
-    if (getNodeText(dataNodes[0]) == "Y")
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/getFormConnFlag.do",
+		data : {
+			docID : pDocID,
+			companyID : CompanyID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+    if (getNodeText(result.documentElement) == "Y")
         return true;
     else
         return false;

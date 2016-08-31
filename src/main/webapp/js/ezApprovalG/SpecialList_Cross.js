@@ -43,7 +43,12 @@ function InsertSpecialList(pList1, pList2, pList3) {
         pSN = 1;
     }
     else {
-        pSN = oRows.length ;
+    	if(isNaN(oRows[0].cells[0].innerHTML)){
+    		pSN = oRows.length;
+    	}
+    	else{
+    		pSN = oRows.length+1;
+    	}
     }
     InsertRowToSpecialList(pSN, pList1, pList2, pList3);
 }
@@ -170,8 +175,12 @@ function GetSCListXml() {
         oList = loadXMLString(szSCListHeader);
         Rows = SelectSingleNode(oList, "LISTVIEWDATA");
         Rows = createNodeAndAppandNode(oList, SelectSingleNode(oList, "LISTVIEWDATA"), Rows, "ROWS");
-
-        for (i = 1; i < oRows.length; i++) {
+        if(isNaN(oRows[0].cells[0].innerHTML)){
+        	i=1;
+        }else{
+        	i=0;
+        }
+        for (i ; i < oRows.length; i++) {
             Row = createNodeAndAppandNode(oList, Rows, Row, "ROW");
             Cell = createNodeAndAppandNode(oList, Row, Cell, "CELL");
             Value = createNodeAndAppandNodeText(oList, Cell, Value, "VALUE", oRows[i].cells[0].innerHTML);

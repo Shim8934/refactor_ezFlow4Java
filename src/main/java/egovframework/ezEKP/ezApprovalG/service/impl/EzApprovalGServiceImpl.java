@@ -5035,7 +5035,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
 		
-		return resultXML.toString();
+ 		return resultXML.toString();
 	}
 
 	@Override
@@ -8202,9 +8202,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID);
 		map.put("v_APRMEMBERID", userID);
 		
-		String aprType = makeListField(ezApprovalGDAO.doBanSongAprType(map));
+		List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
+	
 		
-		if (aprType.equals(staATByungRyulHyubJo)) {
+		if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
 			strSQL.append(doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName"), ezOrganService.getPropertyValue(userID, "displayName2"), dirPath, ezOrganService.getPropertyValue(userID, "department"), "", companyID, lang));
 			sendMsg(docID, "", "BAN", companyID, lang);
 			
@@ -15077,7 +15078,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}		
 					resultXML.append("</VALUE>");
 					
-				
 					if (k == 0)
 					{
 						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETID").item(j).getTextContent()) + "</DATA1>");
@@ -15426,8 +15426,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb2.append("</DATA>");
 			
 			Document docXML2 = commonUtil.convertStringToDocument(sb2.toString());
-			
-			
 			
 			for(int j=0; j<docXML2.getElementsByTagName("ROW").getLength();j++){
 				String sepAttSN = makeListField(docXML2.getElementsByTagName("SERIALNO").item(j).getTextContent().trim());
@@ -16005,7 +16003,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			   strSQL.append("', AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, ");
                strSQL.append("AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach FROM ");
                strSQL.append("TBENDATTACHINFO WHERE DocID = '" + orgDocID + "';\n");
-
 			   strSQL.append("DELETE FROM TBAPRDOCATTACHINFO WHERE DocID = '" + docID + "';\n");
 			   strSQL.append("INSERT INTO TBAPRDOCATTACHINFO (DocID, AttachSN, ");
                strSQL.append("AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, ");
@@ -16022,7 +16019,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			else{
 				return "<RESULT>FALSE</RESULT>";
 			}
-		
 	}
 
 	@Override
@@ -16054,5 +16050,381 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESLUT>FALSE</RESULT>";
 		}
 	}
-	
+
+	@Override
+	public String updateProcessYN2(String docID, String deptID, String deptName, String deptName2, String processYN, String mode, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder("");
+		String gFlag = getCode2Name("A35", "002", companyID , lang);
+		
+		if(!gFlag.equals("G")){
+			strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processYN);
+            strSQL.append("', ProcessDate = SYSDATE" );
+            strSQL.append(" WHERE DocID = '" + docID.trim() + "' AND ReceiptPointID = '");
+            strSQL.append(makeRightField(deptID.trim()) + "';\n");
+            
+            Map<String , Object> map = new HashMap<String, Object>();
+        	map.put("companyID", companyID);
+            map.put("v_DOCID",docID.trim());
+            map.put("v_RECEIPTPOINTID", deptID.trim());
+            map.put("v_FLAG", "APR");
+            
+			List<ApprGReceiptVO> signList = ezApprovalGDAO.updateProcessYNReceipt(map);
+            StringBuffer sb = new StringBuffer();
+            sb.append("<DATA>");
+         
+            for (int i = 0; i < signList.size(); i++) {
+         	   sb.append(commonUtil.getQueryResult(signList.get(i)));
+ 		   }
+ 		   sb.append("</DATA>");
+ 		
+ 		   Document signXML = commonUtil.convertStringToDocument(sb.toString());
+ 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0){
+ 			   deptName = makeListField(signXML.getElementsByTagName("RECEIPTPOINTNAME").item(0).getTextContent());
+               deptName2 = makeListField(signXML.getElementsByTagName("RECEIPTPOINTNAME2").item(0).getTextContent());
+ 		   }
+ 		   if(deptName.trim().equals("")){
+ 			   map.put("v_DOCID", docID.trim());
+ 			   map.put("v_RECEIPTPOINTID", deptID.trim());
+ 			   map.put("v_FLAG", "END");
+ 	           map.put("companyID", companyID);
+ 	           
+ 				List<ApprGReceiptVO> signList2 = ezApprovalGDAO.updateProcessYNReceipt(map);
+ 	           StringBuffer sb2 = new StringBuffer();
+ 	           sb2.append("<DATA>");
+ 	         
+ 	            for (int i = 0; i < signList2.size(); i++) {
+ 	         	   sb2.append(commonUtil.getQueryResult(signList2.get(i)));
+ 	 		   }
+ 	 		   sb2.append("</DATA>");
+ 	 		
+ 	 		   Document signXML2 = commonUtil.convertStringToDocument(sb2.toString());
+ 	 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0){
+ 	 			  deptName = makeListField(signXML2.getElementsByTagName("RECEIPTPOINTNAME").item(0).getTextContent());
+ 	              deptName2 = makeListField(signXML2.getElementsByTagName("RECEIPTPOINTNAME2").item(0).getTextContent());
+ 	 		   }
+ 		   }
+		}
+		else{
+			// 수정(2006.01.10) : 발송한 유통문서인 경우 발송 플래그(S) 업데이트 하도록 수정
+		    if( deptID.equals("")){
+		                    // 2010.08.03 다국어 
+		         strSQL.append("INSERT INTO TBHISTORYRECEIPTINFO (DocID, ReceiptDeptID, ReceiptDeptName, ReceiptDeptName2, Status, StatusDate) ");
+	             strSQL.append("SELECT DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ProcessYN, ProcessDate ");
+			     strSQL.append("FROM TBENDRECEIPTPOINTINFO ");
+				 strSQL.append("WHERE DocID = '" + docID.trim() + "';\n");
+			}
+			else{
+	 			 if (deptName.trim().equals("")){
+					deptName = docID;
+	 			 }
+		            strSQL.append("INSERT INTO TBHISTORYRECEIPTINFO (DocID, ReceiptDeptID, ");
+		            strSQL.append("ReceiptDeptName, ReceiptDeptName2, Status, StatusDate) VALUES ('" + docID.trim());
+					strSQL.append("', '" + makeRightField(docID.trim()) + "', N'");
+					strSQL.append(makeRightField(deptName.trim()) + "', N'" + makeRightField(deptName2.trim()) + "', '" + processYN + "', SYSDATE");
+					strSQL.append(");\n");
+				 
+		}
+		    if (mode.toUpperCase().equals("QUERY")){
+		    	return strSQL.toString();
+		    }
+            boolean rtn = ExecuteTransactionSQL(strSQL, companyID);
+
+			if (rtn){
+				return "<RESULT>TRUE</RESULT>";
+			}
+			else{
+				return "<RESULT>FALSE</RESULT>";
+			}
+		}
+		return  "<RESULT>TRUE</RESULT>";
+    }
+
+	@Override
+	public String doReSendDoc(Document xmlDom, String dirPath, String lang)	throws Exception {
+		String strSQL="";
+		StringBuilder strSQL2 = new StringBuilder("");
+		StringBuilder tempSQL = new StringBuilder();
+
+		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
+		String deptID = xmlDom.getElementsByTagName("DEPTID").item(0).getTextContent();
+		String companyID =xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		int WCount = 0;
+		for( int i=0; i<xmlDom.getElementsByTagName("RECEIPTPOINTID").getLength(); i++ )
+		{
+			if( xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent().toUpperCase().trim().equals("W"))
+			{
+				strSQL2.append("DELETE FROM TBENDRECEIPTPOINTINFO WHERE DocID = '");
+				strSQL2.append(docID + "' AND ReceiptPointID = '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent()) + "'\n");
+				strSQL2.append("INSERT INTO TBENDRECEIPTPOINTINFO (DOCID, RECEIPTPOINTID, ");
+                strSQL2.append("RECEIPTPOINTNAME, RECEIPTPOINTNAME2, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, ");
+                strSQL2.append("EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, RECEIPTMEMBERNAME2, PROCESSDATE, ");
+                strSQL2.append("RECEIPTMEMBERJOBTITLE, RECEIPTMEMBERJOBTITLE2, DEPTMEMBERSN) VALUES ('" + docID + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent()) + "', N'");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTNAME").item(i).getTextContent()) + "', N'");
+                strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTNAME2").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("EXTRECEPTYN").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("PROCESSSN").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("CANEDITYN").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("EXTRECEPTEMAIL").item(i).getTextContent()) + "', '");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERID").item(i).getTextContent()) + "', N'");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERNAME").item(i).getTextContent()) + "', N'");
+                strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERNAME2").item(i).getTextContent()) + "', ");
+                strSQL2.append("SYSDATE, N'");
+				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(i).getTextContent()) + "',N'");
+                strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(i).getTextContent()) + "', '");
+                strSQL2.append(makeRightField(xmlDom.getElementsByTagName("DEPTMEMBERSN").item(i).getTextContent()) + "');\n");
+ 
+				WCount++;
+			}
+		}
+		
+		if( WCount <= 0 ){
+			return "<RESULT>TRUE</RESULT>";
+		}
+		boolean rtn = ExecuteTransactionSQL(strSQL2, companyID);
+		
+		if( rtn ){
+			strSQL = doReSendEndDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang);
+			tempSQL.append(strSQL);
+		}
+		else{
+			return "<RESULT>FALSE</RESULT>";
+		}
+
+		if( strSQL == "FALSE" ){
+			return "<RESULT>FALSE</RESULT>";
+		}
+		rtn = ExecuteTransactionSQL(tempSQL, companyID);
+
+		if( rtn ){
+			return "<RESULT>TRUE</RESULT>";
+		}
+		else{
+			return "<RESULT>FALSE</RESULT>";
+		}
+
+	}
+
+	// 완료문서 Table을 가지고 재발송하는 함수. 발송 부분의 쿼리만 리턴한다.
+	// pDeptID : 보내는 부서, pDocState 문서의 DocState.
+	private String doReSendEndDoc(String docID, String deptID, String dirPath, String docState, String companyID, String lang) throws Exception {
+        StringBuilder strSQL = new StringBuilder("");
+        boolean rtnVal = true;
+        Document receiptXML =null;
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+
+        List<ApprGReceiptVO> docList2 = ezApprovalGDAO.doResendEndDoc1(map);
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+       
+        for (int i = 0; i < docList2.size(); i++) {
+       	   sb.append(commonUtil.getQueryResult(docList2.get(i)));
+		}
+		   sb.append("</DATA>");
+		
+		   Document docXML2 = commonUtil.convertStringToDocument(sb.toString());
+		   
+		for(int k=0; k<docXML2.getElementsByTagName("ROW").getLength(); k++){
+			map.put("v_DOCID", docID);
+	        map.put("companyID", companyID);
+			map.put("v_RECEIPTPOINTID", docXML2.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent());
+			map.put("v_DEPTMEMBERSN", k+1 );
+			
+	        ezApprovalGDAO.doResendEndDoc2(map);
+		}
+		
+        List<ApprGReceiptVO> docList = ezApprovalGDAO.doResendEndDoc3(map);
+        StringBuffer sb2 = new StringBuffer();
+        sb2.append("<DATA>");
+       
+        for (int i = 0; i < docList.size(); i++) {
+       	   sb2.append(commonUtil.getQueryResult(docList.get(i)));
+		}
+		   sb2.append("</DATA>");
+		
+		   Document docXML = commonUtil.convertStringToDocument(sb2.toString());
+		   
+		   boolean isGroup = false;
+		   int GroupCount = 0;
+		   
+		   String strReceiptPointID = "";
+		   String strReceiptPointName = "";
+           // 2010.08.03 다국어 
+		   String strReceiptPointName2 = "";
+		   String strReceiptMemberID = "";
+		   String strReceiptMemberName = "";
+           // 2010.08.03 다국어 
+		   String strReceiptMemberName2 = "";
+		   String strReceiptMemberJobTitle = "";
+           // 2010.08.03 다국어 
+		   String strReceiptMemberJobTitle2 = "";
+		   String strReceiptCompanyID = "";
+		   String SusinGroupIcon = getCode2Name("A53", "001", companyID, lang);
+		   
+		   for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++){
+			   strReceiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
+               strReceiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
+               strReceiptPointName2 = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME2").item(j).getTextContent());
+			   strReceiptMemberID = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERID").item(j).getTextContent());
+               strReceiptMemberName = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME").item(j).getTextContent());
+               strReceiptMemberName2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERNAME2").item(j).getTextContent());
+               strReceiptMemberJobTitle = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(j).getTextContent());
+               strReceiptMemberJobTitle2 = makeListField(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(j).getTextContent());
+			   strReceiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
+			   isGroup = false;
+			   GroupCount = 1;
+				if( strReceiptPointID.substring(0, SusinGroupIcon.length()).equals(SusinGroupIcon)){
+					map.put("v_MAINID", strReceiptPointID.substring(SusinGroupIcon.length() , strReceiptPointID.length() - SusinGroupIcon.length()));
+                    List<ApprGRecordVO> rList = ezApprovalGDAO.doSendDoc_ReceiptGroupSub(map);
+
+                    StringBuffer sb3 = new StringBuffer();
+                    sb3.append("<DATA>");
+                   
+                    for (int i = 0; i < rList.size(); i++) {
+                   	   sb3.append(commonUtil.getQueryResult(rList.get(i)));
+            		}
+            		   sb3.append("</DATA>");
+            		
+            		    receiptXML = commonUtil.convertStringToDocument(sb3.toString());
+
+						if (receiptXML.getElementsByTagName("ROW").getLength() > 0)
+						{
+							isGroup = true;
+							GroupCount = receiptXML.getElementsByTagName("ROW").getLength();
+						}
+				}
+				for( int i = 0 ; i < GroupCount ; i++ )
+				{
+					if( rtnVal )
+					{
+						if( isGroup )
+						{
+							strReceiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(i).getTextContent());
+                            strReceiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(i).getTextContent());
+                            strReceiptPointName2 = makeListField(receiptXML.getElementsByTagName("DEPTNAME2").item(i).getTextContent());
+							strReceiptMemberID = "";
+                            strReceiptMemberName = "";
+                            strReceiptMemberName2 = "";
+                            strReceiptMemberJobTitle = "";
+                            strReceiptMemberJobTitle2 = "";
+							strReceiptCompanyID = makeListField(receiptXML.getElementsByTagName("COMPANYID").item(i).getTextContent());
+						}
+						
+						map.put("company", strReceiptCompanyID);
+						String newID = ezApprovalGDAO.aprGetNewID(map);
+						
+						map.put("v_DOCID",docID);
+						map.put("v_FLAG", "END");
+						
+						String fileName = ezApprovalGDAO.getDocInfoHref(map);
+						String extFileName = getExtendedFileName(fileName);
+                        
+                        // 2011.03.29 년도별 폴더 변경 
+                        String[] arry = fileName.split(extFileName, '/');
+                        String oldyear = EgovDateUtil.getTodayTime().substring(0, 4);
+                        if (arry.length >= 7 && arry[4].length() == 4)
+                        {
+                            oldyear = arry[4];
+                        }
+
+						String pUrl = "/Upload_ApprovalG/" + strReceiptCompanyID + "/Doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
+						String pDBName = "";
+						
+
+                        //2011.04.04  수신부서가 많을 경우 속도 개선을 위해 접수기에서 문서 copy되도록 수정
+                        //rtnVal = copyFile(pDirPath + companyID + "\\Doc\\" + oldyear + "\\" + getDocDir(pDocID) + "\\" + pDocID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID) + "\\" + newID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID));
+						
+						if( rtnVal )
+						{
+                            strSQL.append("INSERT INTO TBAPRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
+                            strSQL.append("DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, ");
+                            strSQL.append("EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ");
+                            strSQL.append("isPublic) SELECT '" + newID + "', FormID, '" + docID + "', DocType, '" + docState);
+                            strSQL.append("', '" + staASDoJak + "', '" + pUrl + "', DocTitle, DocNo, HasAttachYN, ");
+                            strSQL.append("'N', NULL, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
+                            strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic FROM TBENDAPRDOCINFO  WHERE DocID = '" + docID + "';");
+
+                            // 수정(2006.02.09) : 재발송 시 진행테이블 추가 쿼리에 SpecialRecordCode, PublicityCode, PageNum, SecurityApproval 항목 추가
+                            strSQL.append("INSERT INTO TBEXPAPRDOCINFO (DocID, SecurityCode, StoragePeriod, ");
+                            strSQL.append("KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, ");
+                            strSQL.append("SpecialRecordCode, PublicityCode, PageNum) ");
+                            strSQL.append("SELECT '" + newID + "', SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ");
+                            strSQL.append("ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum ");
+                            strSQL.append("FROM TBEXPENDAPRDOCINFO ");
+                            strSQL.append("WHERE DocID = '" + docID + "' ;");
+
+                            strSQL.append("INSERT INTO TBAPRATTACHINFO (DocID, AttachFileSN, ");
+                            strSQL.append("AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, ");
+                            strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, ");
+                            strSQL.append("PageNum, DisplayName, BodyAttach ) SELECT '" + newID);
+                            strSQL.append("', AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, ");
+                            strSQL.append("AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, ");
+                            strSQL.append("PageNum, DisplayName, BodyAttach FROM ");
+                            strSQL.append("TBENDATTACHINFO  WHERE DocID = '" + docID + "';");
+
+                            strSQL.append("INSERT INTO TBAPRDOCATTACHINFO (DocID, AttachSN, ");
+                            strSQL.append("AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, ");
+                            strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2) SELECT '" + newID);
+                            strSQL.append("', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, ");
+                            strSQL.append("AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2 FROM ");
+                            strSQL.append("TBENDAPRDOCATTACHINFO WHERE DocID = '" + docID + "';");
+
+                            map.put("v_DOCID", docID);
+                            map.put("v_FLAG", "END");
+                            
+                            int pSusinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map);
+
+							pSusinSN += 1;
+
+							// 사람에게 보낼때는 staASJiJung 으로 해야 한다.
+                            if (strReceiptMemberID.trim() == "")
+                            {
+                                strSQL.append("INSERT INTO " + pDBName + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
+                                strSQL.append("SentDeptName, ReceivedDeptID, ReceivedDeptName, DocState, AprState, ");
+                                strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
+                                strSQL.append("ProcessorJobTitle, ParentsDocID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);
+                                strSQL.append("', WriterDeptID, WriterDeptName, '" + strReceiptPointID + "', N'" + strReceiptPointName);
+                                strSQL.append("', '" + docState + "', '" + staASDoJak + "',  SYSDATE, 'N', '', '" + strReceiptMemberID);
+                                strSQL.append("', N'" + strReceiptMemberName + "', N'" + strReceiptMemberJobTitle + "', DocID FROM TBENDAPRDOCINFO ");
+                                strSQL.append("WHERE DocID = '" + docID + "';");
+                            }
+                            else
+                            {
+                                strSQL.append("INSERT INTO " + pDBName + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
+                                strSQL.append("SentDeptName, ReceivedDeptID, ReceivedDeptName, DocState, AprState, ");
+                                strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
+                                strSQL.append("ProcessorJobTitle, ParentsDocID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);
+                                strSQL.append("', WriterDeptID, WriterDeptName, '" + strReceiptPointID + "', N'" + strReceiptPointName);
+                                strSQL.append("', '" + docState + "', '" + staASJiJung + "', SYSDATE, 'N', '', '" + strReceiptMemberID);
+                                strSQL.append("', N'" + strReceiptMemberName + "', N'" + strReceiptMemberJobTitle + "', DocID FROM TBENDAPRDOCINFO ");
+                                strSQL.append("WHERE DocID = '" + docID + "';");
+                            }
+
+							strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = 'S' WHERE DocID = '");
+                            strSQL.append(docID + "' AND RECEIPTPOINTID = '" + makeRightField(strReceiptPointID) + "';");
+
+
+							if( strReceiptMemberID.trim() == "" ){
+								sendRecvMsg(strReceiptPointID, newID, "SUSIN", strReceiptCompanyID, lang);
+							}
+							else{
+								sendMsg(newID, strReceiptMemberID, "SUSIN", strReceiptCompanyID, lang);
+							}
+						}
+					}
+				}
+
+				if( rtnVal ){
+					return strSQL.toString();
+				}
+				else{
+					return "FALSE";
+				}
+		   }
+		 return strSQL.toString();
+	}
 }
