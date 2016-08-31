@@ -492,6 +492,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (ApprGReceiveDocVO) select("EzApprovalG.doSendOfferRejectReceipt", map);
 	}
 	
+	public ApprGDocListVO setCabinetReject1(Map<String, Object> map) throws Exception{
+		return (ApprGDocListVO) select("EzApprovalG.setCabinetReject1", map);
+	}
+	
+	public ApprGDocListVO setCabinetReject2(Map<String, Object> map) throws Exception{
+		return (ApprGDocListVO) select("EzApprovalG.setCabinetReject2", map);
+	}
+	
 	public String getCode2Name(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getCode2Name", map);
 	}
@@ -1065,5 +1073,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGReceiptVO> doSendOffer_receiptId(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doSendOffer_receiptId", map);
 	}
+
 	
 }

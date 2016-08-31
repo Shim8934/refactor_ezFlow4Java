@@ -4944,4 +4944,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/removeDocCabinetInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String removeDocCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String deptID = request.getParameter("deptID");
+		String deptName = request.getParameter("deptName");
+		String deptName2 = request.getParameter("deptName2");
+		String flag = request.getParameter("flag");
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		
+		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
 }

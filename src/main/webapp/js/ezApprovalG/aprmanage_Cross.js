@@ -2371,20 +2371,26 @@ function returnYN_after() {
 }
 
 function RemoveDocCabinet(tempDocID, FLAG) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", tempDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptName", arr_userinfo[15]);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", FLAG);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptName2", arr_userinfo[16]);
-
-    xmlhttp.open("POST", "aspx/RemoveDocCabinetInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/removeDocCabinetInfo.do",
+		data : {
+			docID : tempDocID,
+			deptID : arr_userinfo[4],
+			deptName : arr_userinfo[15],
+			flag : FLAG,
+			deptName2 : arr_userinfo[16]
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    var RtnVal = getNodeText(result.documentElement);
 
     if (RtnVal == "TRUE") {
         if (FLAG == "")

@@ -1006,6 +1006,144 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String hesongFlag, String companyID, String lang) throws Exception {
+		StringBuilder strSQL = new StringBuilder();
+		
+		String sn = "";
+		String docSN = "";
+		String newDocID = "";
+		String gFlag = getCode2Name("A35", "002", companyID, lang);
+		String docNo = "";
+		String orgDocNumCode = "";
+		String docNumCode = "";
+		String extFileName = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		ApprGDocListVO apprGDocListVO = ezApprovalGDAO.setCabinetReject1(map);
+		
+		if (apprGDocListVO != null) {
+			orgDocNumCode = apprGDocListVO.getOrgDocNumCode();
+			sn = getCabinetNum(deptID, "", companyID);
+			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
+			sn = sn.replace("<RESULT", "").replace("</RESULT>", "");
+			
+			if (!sn.trim().equals("")) {
+				newDocID = getNewID(companyID);
+				
+				extFileName = getExtendedFileName(apprGDocListVO.getHref());
+				docNumCode = deptID + getNDigitNum(sn, 6);
+				
+				if (orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
+					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+					
+					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
+							"</DOCID><SIGNTYPE>TEXT</SIGNTYPE><SIGNNAME>docnumber" + 
+							"</SIGNNAME><CONTENT>" + docNo + "</CONTENT></SIGNINFO></SIGNINFOS>";
+					
+					Document xmlDom = commonUtil.convertStringToDocument(strXML);
+					
+					strSQL.append(updateSignInfo(xmlDom, companyID, "QUERY"));
+				} else {
+					docNo = "";
+				}
+			}
+		}
+		
+		if (strSQL.toString().equals("FALSE") || newDocID.trim().equals("")) {
+			if (!sn.trim().equals("")) {
+				rollbackCabinetNum(deptID, "", sn, companyID, "", lang);
+			}
+			
+			return "<RESULT>FALSE</RESULT>";
+		}
+		
+		String oldYear = getDocHrefYear(docID, companyID);
+		String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "Doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
+				getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
+		
+		String docState = StaDSHesong;
+		
+		if (hesongFlag.trim().equals("")) {
+			docState = staDSBansong;
+		}
+		
+		String containerID = returnContainerID(deptID, docState, companyID);
+		
+		copyFile(dirPath + companyID + commonUtil.separator + "Doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+				dirPath + companyID + commonUtil.separator + "Doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName,
+				dirPath + companyID + commonUtil.separator + "Doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + getDocDir(newDocID));
+		
+        strSQL.append("APRRejectEnd ('" + newDocID + "', '" + docID + "', '");
+        strSQL.append(endURL + "', '" + docState + "', '" + docNo + "', '" + docNumCode);
+        strSQL.append("', SYSDATE, '" + containerID + "');\n");
+		
+        map.put("v_HESONGFLAG", hesongFlag.trim());
+        
+        ApprGDocListVO apprGDocListVO2 = ezApprovalGDAO.setCabinetReject2(map);
+        
+        if (apprGDocListVO2 != null) {
+        	if (!docNumCode.trim().equals("")) {
+        		docSN = docNumCode.trim();
+        	} else {
+        		docSN = apprGDocListVO2.getDocNumCode();
+        	}
+        	
+        	docSN = docSN.substring(docSN.length() - 6);
+        	
+        	String hasAttach = "0";
+        	
+        	if (apprGDocListVO2.getHasAttachYn().equals("Y")) {
+        		hasAttach = "1";
+        	}
+        	
+        	String seperateAttachXML = makeListField(apprGDocListVO2.getSeperateAttachXML().trim());
+        	String numOfPage = makeListField(apprGDocListVO2.getPageNum().trim());
+        	
+        	if (numOfPage.equals("")) {
+        		numOfPage = "1";
+        	}
+        	
+        	strSQL.append(regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
+        			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
+        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang));
+        	
+        } else {
+        	if (!sn.trim().equals("")) {
+        		rollbackCabinetNum(deptID, "", sn, companyID, "", lang);
+        	}
+        	
+        	return "<RESULT>FALSE</RESULT>";
+        }
+        
+        boolean rtn = false;
+        
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("companyID", companyID);
+		map1.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+		
+		try {
+			ezApprovalGDAO.transactionSQL(map1);
+			
+			rtn = true;
+		} catch (Exception e) {
+			rtn = false;
+		}
+		
+		if (rtn) {
+			return "<RESULT>TRUE</RESULT>";
+		} else {
+        	if (!sn.trim().equals("")) {
+        		rollbackCabinetNum(deptID, "", sn, companyID, "", lang);
+        	}
+        	
+        	return "<RESULT>FALSE</RESULT>";
+		}
+	}
+
+	@Override
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6349,6 +6487,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return "<REGNUM>" + rtnVal + "</REGNUM>";
 	}
+	
+	
+	public String getCabinetNum(String deptID, String subID, String companyID) throws Exception {
+		String strXML = "";
+		
+		strXML = "<PARAMETERS><TYPE1>002</TYPE1><TYPE2>" + deptID.trim() +
+				"</TYPE2><TYPE3>" + subID.trim() + "</TYPE3><COMPANYID>" +
+				companyID.trim() + "</COMPANYID></PARAMETERS>";
+		
+		String rtnVal = getRegSN(strXML);
+		
+		return "<REGNUM>" + rtnVal + "</REGNUM>";
+	}
 
 	@Override
 	public String rollbackCabinetNum(String deptID, String subID, String sn, String companyID, String docID, String lang) throws Exception {
@@ -7638,8 +7789,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String type2 = objParam.getElementsByTagName("TYPE2").item(0).getTextContent();
 		String type3 = objParam.getElementsByTagName("TYPE3").item(0).getTextContent();
 		String companyID = objParam.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String docID = objParam.getElementsByTagName("DOCID").item(0).getTextContent();
-		String langType = objParam.getElementsByTagName("LANGTYPE").item(0).getTextContent();
+		String docID = "";
+		
+		if (objParam.getElementsByTagName("DOCID").item(0) != null) {
+			docID = objParam.getElementsByTagName("DOCID").item(0).getTextContent();
+		}
+		String langType = "";
+		
+		if (objParam.getElementsByTagName("LANGTYPE").item(0) != null) {
+			langType = objParam.getElementsByTagName("LANGTYPE").item(0).getTextContent();
+		}
 		
 		return "<RESULT>" + getSerialNum(type1, type2, type3, companyID, docID, langType) + "</RESULT>";
 	}
