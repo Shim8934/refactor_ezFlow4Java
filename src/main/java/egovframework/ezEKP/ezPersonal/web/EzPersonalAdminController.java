@@ -259,4 +259,22 @@ public class EzPersonalAdminController {
 		
 		return "admin/ezPersonal/personalShowNotice";
 	}
+	
+	/**
+	 * 초기화면 QuickLink 화면호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
+	public String manageQuickLink() {
+		return "admin/ezPersonal/personalManageQuickLink";
+	}
+	
+	/**
+	 * 초기화면 QuickLink 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getQuickLinkList() throws Exception {
+		String result = ezPersonalAdminService.getQuickLinkList();
+		return result;
+	}
 }

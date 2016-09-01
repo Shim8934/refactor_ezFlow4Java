@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLickVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalAdminDAO")
@@ -34,6 +35,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 
 	public void updateNotice(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalQuickLickVO> getQuickLinkList() throws Exception {
+		return (List<PersonalQuickLickVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINKLIST");
 	}
 	
 }

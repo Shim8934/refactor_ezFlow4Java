@@ -17,32 +17,48 @@
 	
 			function goPage(idx) {
 				var url = "";
-				switch(idx) {
-					case 1:
-					    url = "/admin/ezPersonal/manageNotice.do";
-						break;
-					
-					case 2:
-					    url = "/myoffice/ezPersonal/Link/ManageCompanyLink.aspx";
-						break;
-						
-					case 3:
-					    url = "/myoffice/ezPersonal/Poll/ManagePoll.aspx";
-						break;
-						
-					case 4:
-					    url = "/myoffice/ezPersonal/PopUp/ManagePopUp.aspx";
-						break;
-						
-					case 5:
-					    url = "/myoffice/ezPersonal/SuperPersonal/ManageSuperPersonal.aspx";
-						break;		
-					
-					case 6:
-						url = "/myoffice/ezPersonal_Cross/WebPart/ManageWebPart.aspx";
-						break;					
-				}		
-				window.open(url,"right");
+			    switch (idx) {
+			        case 1:
+			            url = "/admin/ezPersonal/manageNotice.do";
+			            break;
+
+			        case 2:
+			            if (CrossYN())
+			                url = "/myoffice/ezPersonal/Link/ManageCompanyLink_Cross.aspx";
+			            else {
+			                url = "/myoffice/ezPersonal/Link/ManageCompanyLink.aspx";
+			            }
+			            break;
+
+			        case 3:
+			            url = "/myoffice/ezPersonal/Poll/ManagePoll_Cross.aspx";
+			            break;
+
+			        case 4:
+			            url = "/myoffice/ezPersonal/PopUp/ManagePopUp_Cross.aspx";
+			            break;
+
+			        case 5:
+			            url = "/myoffice/ezPersonal/SuperPersonal/ManageSuperPersonal.aspx";
+			            break;
+
+			        case 6:
+			            url = "/myoffice/ezPersonal/WebPart/ManageWebPart.aspx";
+			            break;
+
+			        case 7:
+			            url = "/myoffice/ezPersonal/WebPart/EmployeeofMonth.aspx";
+			            break;
+
+			        case 8:
+			            url = "/admin/ezPersonal/manageQuickLink.do";
+			            break;
+
+			        case 9:
+			            url = "/myoffice/ezPersonal/SliderImage/wp_sliderimages.aspx";
+			            break;
+			    }
+				parent.frames["right"].location.href = url;
 			}
 		</script>
 	</head>
@@ -54,8 +70,8 @@
 		    	<ul></ul>
 			</h2>
 
-			<c:if test="${usePortal == 'YES' }">
-				<h2><span onClick="goPage(6)"><spring:message code = 'main.t66' /></span>
+			<c:if test="${usePortal != 'YES' }">
+				<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'main.t66' /></span>
 					<ul></ul>
 				</h2>
 			</c:if>
@@ -66,20 +82,32 @@
 			  </ul>
 			</h2>
 			</span>--%>
+			
+			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">Quick Link</span>
+				<ul></ul>
+			</h2>
 		  
-		  	<h2><span onClick="goPage(3)">Quick Poll</span>
+		  	<h2><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span>
 		    	<ul></ul>
 			</h2>
 			
-		  	<h2><span onClick="goPage(4)"><spring:message code = 'main.t67' /></span>
+		  	<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'main.t67' /></span>
 		    	<ul></ul>
 		  	</h2>
 		  	
-		  	<c:if test="${useKMS }">
-		  		<h2><span onClick="goPage(5)"><spring:message code = 'main.t68' /></span>
-		  			<ul></ul>
-		  		</h2>
-		  	</c:if>
+		  	<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code = 'main.t68' /></span>
+		  		<ul></ul>
+		  	</h2>
+		  	
+		  	<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code = 'main.t10000' /></span>
+		  		<ul></ul>
+		  	</h2>
+		  	
+		  	<%-- <c:if test="${useKMS == 'YES' }">
+				<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'main.t68' /></span>
+					<ul></ul>
+				</h2>
+			</c:if> --%>
 		</div>
 		
 		<script type="text/javascript">

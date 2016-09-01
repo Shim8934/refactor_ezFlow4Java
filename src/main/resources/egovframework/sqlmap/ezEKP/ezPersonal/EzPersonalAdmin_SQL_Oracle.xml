@@ -9,10 +9,11 @@
 	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
 	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
 	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
-	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/> -->
+	
 	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
+	<typeAlias  alias="PersonalQuickLickVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLickVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="Title"					columnIndex="1"/>
@@ -20,7 +21,6 @@
 		<result property="postDate"						column="PostDate"				columnIndex="3"/>
 		<result property="content"						column="CONTENT"				columnIndex="4"		javaType="String"	jdbcType="CLOB"/>
 		<result property="itemSeq"						column="ItemSeq"				columnIndex="5"/>
-		
 	</resultMap>
 	
 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
@@ -32,6 +32,12 @@
 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" 									resultClass="PersonalQuickLickVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETQUICKLINKLIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

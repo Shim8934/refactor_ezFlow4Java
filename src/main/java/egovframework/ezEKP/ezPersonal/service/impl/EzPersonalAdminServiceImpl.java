@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLickVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPersonalAdminService")
@@ -99,6 +100,41 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 			return "Error" + e.getMessage();
 		}
 	}
-	
+
+	@Override
+	public String getQuickLinkList() throws Exception {
+		StringBuilder result = new StringBuilder();
+		List<PersonalQuickLickVO> list = ezPersonalAdminDAO.getQuickLinkList();
+		
+		result.append("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		
+		for(PersonalQuickLickVO vo : list) {
+			result.append("<ROW>");
+			result.append("<CELL><VALUE>" + vo.getQuickLinkName() + "</VALUE>");
+			result.append("<DATA1>" + vo.getQuickLinkID() + "</DATA1></CELL>");
+			
+			result.append("<CELL><VALUE>" + vo.getQuickLinkName2() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + vo.getQuickLinkName3() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
+			result.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			
+			if (vo.getModiDate() == null) {
+				result.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
+			} else {
+				result.append("<CELL><VALUE>" + vo.getModiDate() + "</VALUE></CELL>");
+			}
+			
+			result.append("<CELL><VALUE>" + vo.getDisplayName() + "</VALUE></CELL>");
+			result.append("</ROW>");
+		}
+		
+		result.append("</ROWS>");
+		result.append("</LISTVIEWDATA>");
+		
+		return result.toString();
+	}
 	
 }

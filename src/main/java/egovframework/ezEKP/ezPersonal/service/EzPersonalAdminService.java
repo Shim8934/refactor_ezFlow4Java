@@ -16,16 +16,8 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq) throws Exception;
 	
+	String getQuickLinkList() throws Exception;
+	
 	int getNoticeCount(String companyID) throws Exception;
-
-	
-
-	
-
-	
-
-	
-
-	
 
 }
