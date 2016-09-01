@@ -155,6 +155,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalSearchPortalPageVO>) list("EzPortalDAO.searchPortalPage", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalPortletGeneralVO> searchPortletCheckRight2 (Map<String, Object> map) {
+		return (List<PortalPortletGeneralVO>) list("EzPortalDAO.searchPortletCheckRight2", map);
+	}
+	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
@@ -271,6 +276,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.checkViewRight", map);
 	}
 	
+	public String checkEditRight(Map<String, Object> map) {
+		return (String) select("EzPortalDAO.checkEditRight", map);
+	}
+	
 	public String getParentUID (String parentTopMenuID) {
 		return (String) select("EzPortalDAO.getParentUID", parentTopMenuID);
 	}
@@ -279,8 +288,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getPortalParentUID", temp);
 	}
 	
-	public String ezCkAdminACL (String pOwnerPageID) {
-		return (String) select("EzPortalDAO.ezCkAdminACL", pOwnerPageID);
+	public String ezCkAdminACL (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.ezCkAdminACL", map);
 	}
 	
 	public String ezAclCheck (Map<String, Object> map) {
@@ -303,10 +312,6 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	public int newMyPortalPageCreate(Map<String, Object> map) {
 		select("EzPortalDAO.newMyPortalPageCreate", map);
 		return (int) map.get("v_pCount");
-	}
-	
-	public int checkEditRight(Map<String, Object> map) {
-		return (int) select("EzPortalDAO.checkEditRight", map);
 	}
 	
 	public int getUserInfo4(Map<String, Object> map) {

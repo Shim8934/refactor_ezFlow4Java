@@ -211,7 +211,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 	}
 	
 	@Override
-	public int checkEditRight(String uID, String accessIDList) throws Exception {
+	public String checkEditRight(String uID, String accessIDList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_ACCESSIDLIST", accessIDList);
@@ -563,8 +563,11 @@ public class EzPortalServiceImpl implements EzPortalService {
 	}
 	
 	@Override
-	public String ezCkAdminACL(String pOwnerPageID) throws Exception {
-		return ezPortalDAO.ezCkAdminACL(pOwnerPageID);
+	public String ezCkAdminACL(String pOwnerPageID, String userLang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pOWNERPAGEID", pOwnerPageID);
+		map.put("v_pLANG", userLang);
+		return ezPortalDAO.ezCkAdminACL(map);
 	}
 	
 	@Override
@@ -974,11 +977,11 @@ public class EzPortalServiceImpl implements EzPortalService {
 	public boolean checkEditRightBln (String pUID, String pAccessIDList) {
 		try {
 			for (int i=0; i<pAccessIDList.split(",").length; i++) {
-				int right = checkEditRight(pUID, pAccessIDList.split(",")[i].trim());
-				if (right == 2) {
+				String right = checkEditRight(pUID, pAccessIDList.split(",")[i].trim());
+				if (right != null && right.equals("2")) {
 					return true;
 				}
-				if (right == 1) {
+				if (right != null && right.equals("1")) {
 					return false;
 				}
 			}
@@ -2722,7 +2725,7 @@ System.out.println("pUID:"+pUID);
 		map.put("v_GUBUNFLAG", pGubunFlag);
 		map.put("v_ARRPARAM", pGubunFlag);
 		List<PortalSearchPortalPageVO> list = ezPortalDAO.searchPortalPage(map); 
-System.out.println("listSize:"+list.size());
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		for (int i=0; i<list.size(); i++) {
@@ -2741,6 +2744,85 @@ System.out.println("listSize:"+list.size());
 		sb.append("</DATA>");
 		
 		return sb.toString();
+	}
+	
+	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID) throws Exception {
+		String retXML = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (pGubunFlag != null && !pGubunFlag.equals("")) {
+			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
+		} else {
+			map.put("v_pGUBUNFLAG", 100);
+		}
+		map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
+		map.put("v_pDISPLAYNAME", makeSearchField(pDisplayName));
+		map.put("v_pENDROW", pEndRow);
+		map.put("v_pCOMPANYID", pCompanyID);
+		
+		List<PortalPortletGeneralVO> list = ezPortalDAO.searchPortletCheckRight2(map);
+System.out.println("listSize:"+list.size());
+System.out.println("uID:"+list.get(0).getuID());
+		retXML += "<DATA>";
+		for (int i=0; i<list.size(); i++) {
+			if (i >= pStartRow -1) {
+				if (pMode.equals("view")) {
+					if (checkViewRightBln(list.get(i).getuID(), getAccessList(userInfo)) == true) {
+						retXML += "<ROW>";
+                        retXML += "<UID_>" + list.get(i).getuID().trim() + "</UID_>";
+                        retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
+                        retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
+                        if (list.get(i).getPortletType() == 1) {
+                        	retXML += "<TYPE>URL 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 2) {
+                        	retXML += "<TYPE>HTML 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 3) {
+                        	retXML += "<TYPE>이미지 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 4) {
+                        	retXML += "<TYPE>게시판 포틀릿</TYPE>";
+                        }
+
+                        retXML += "<URL>" + list.get(i).getUrl() + "</URL>";
+                        retXML += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
+                        retXML += "</ROW>";
+					}
+				} else if (pMode.equals("edit")) {
+					if (checkEditRightBln(list.get(i).getuID(), getAccessList(userInfo)) == true) {
+						retXML += "<ROW>";
+                        retXML += "<UID_>" + list.get(i).getuID().trim() + "</UID_>";
+                        retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
+                        retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
+                        if (list.get(i).getPortletType() == 1) {
+                        	retXML += "<TYPE>URL 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 2) {
+                        	retXML += "<TYPE>HTML 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 3) {
+                        	retXML += "<TYPE>이미지 포틀릿</TYPE>";
+                        }
+                        if (list.get(i).getPortletType() == 4) {
+                        	retXML += "<TYPE>게시판 포틀릿</TYPE>";
+                        }
+
+                        retXML += "<URL>" + list.get(i).getUrl() + "</URL>";
+                        retXML += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
+                        retXML += "</ROW>";
+					}
+				}
+			}
+		}
+		
+		retXML += "</DATA>";
+System.out.println("retXML:"+retXML);
+		return retXML;
+	}
+	
+	public String makeSearchField(String orgStr) {
+		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
 	}
 	
 }

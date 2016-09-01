@@ -327,7 +327,7 @@ System.out.println("???");
 		
 		try {
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
-			langSecondary = config.getProperty("config.lang_Secondary1" + userInfo.getLang());
+			langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 			mode = "edit";
 			
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
@@ -450,8 +450,9 @@ System.out.println("???");
 				//권한체크
 				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
 
-				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID);
-
+				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
+System.out.println("pageID:"+pageID);
+System.out.println("ezCKAdminACL:"+ezCKAdminACL);
 				if (result.equals("3")) {
 					//삭제 쿼리 실행
 					if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
@@ -1997,7 +1998,7 @@ System.out.println("resultHTML:"+resultHTML);
 		}
 		
 		String strXML = ezPortalService.searchPortalPage("", "", portalGubun, 1, 100, "");
-System.out.println("strXML:"+strXML);
+
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
@@ -2014,6 +2015,58 @@ System.out.println("strXML:"+strXML);
 		model.addAttribute("mode", mode);
 		
 		return "/ezPortal/portalPortalPageSearch";
+	}
+	
+	/**
+	 * 포탈 - 환경설정 마이포탈페이지 portalPortletSearch 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/portletSearch.do")
+	public String portletSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		StringBuilder sb = new StringBuilder();
+		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+		
+		sb.append("<DATA>");
+		for (int i=0; i<list.size(); i++) {
+			sb.append(commonUtil.getQueryResult(list.get(i)));
+		}
+		sb.append("</DATA>");
+
+		model.addAttribute("portletCategoryXML", sb.toString());
+		if (userInfo.getLang() != null && userInfo.getLang().equals("1")) {
+			model.addAttribute("userLang", "");
+		} else {
+			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getLang()));
+		}
+		
+		return "/ezPortal/portalPortletSearch";
+	}
+	
+	/**
+	 * 포탈 - 환경설정 마이포탈페이지 portalPortletSearchList 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/portletSearchList.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String portletSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pPageType = "";
+		String pType = "";
+		String mode = "";
+		
+		if (req.getParameter("pPageType") != null && !req.getParameter("pPageType").equals("")) {
+			pPageType = req.getParameter("pPageType");
+		}
+		if (req.getParameter("pType") != null && !req.getParameter("pType").equals("")) {
+			pType = req.getParameter("pType");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID());
+
+		return strXML;
 	}
 	
 	

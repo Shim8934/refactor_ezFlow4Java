@@ -412,17 +412,11 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="Integer">
+	<procedure id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CHECKEDITRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
-	
-	<!-- <procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_CHECKVIEWRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -670,15 +664,21 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.searchPortletCheckRight2" parameterClass="Map" resultMap="portalPortletGeneralVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHPORTLETCHECKRIGHT2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pENDROW#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="String"  resultClass="String" >
+	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String" >
 		<![CDATA[
-			{CALL EZPORTAL.EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZPORTAL.EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

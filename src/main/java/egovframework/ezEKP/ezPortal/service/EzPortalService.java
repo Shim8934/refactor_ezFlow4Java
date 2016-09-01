@@ -158,6 +158,8 @@ public interface EzPortalService {
 	
 	public String checkViewRight (String uID, String accessIDList) throws Exception;
 	
+	public String checkEditRight (String uID, String accessIDList) throws Exception;
+	
 	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception;
 	
 	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) throws Exception;
@@ -172,7 +174,7 @@ public interface EzPortalService {
 	
 	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm) throws Exception;
 	
-	public String ezCkAdminACL (String pOwnerPageID) throws Exception;
+	public String ezCkAdminACL (String pOwnerPageID, String userLang) throws Exception;
 	
 	public String searchMyPortal (String pDisplayName, String pGubunFlag, int pStartRow, int pEndRow, String pCompanyID) throws Exception;
 	
@@ -190,11 +192,11 @@ public interface EzPortalService {
 	
 	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList) throws Exception;
 	
+	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;
-	
-	public int checkEditRight (String uID, String accessIDList) throws Exception;
 	
 	public int newMyPortalPageCreate (String pParentPageID, String pPageID, String pUserID, String pGubunFlag, String pNewPageID, int pDepth, String pCompanyID, String pAccessID, String pAccessName, int pViewRight, int pEditRight, String pMode) throws Exception;
 	
