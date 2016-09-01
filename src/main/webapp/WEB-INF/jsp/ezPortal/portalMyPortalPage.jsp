@@ -945,11 +945,11 @@
 		    if (CrossYN()) {
 		        portlet_search_dialogArguments[0] = pGubunFlag;
 		        portlet_search_dialogArguments[1] = insertrow_Complete;
-		        var OpenWin = window.open("portlet_search.aspx", "portlet_search", GetOpenWindowfeature(350, 410));
+		        var OpenWin = window.open("/ezPortal/portletSearch.do", "portlet_search", GetOpenWindowfeature(350, 410));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    else {
-		        var ret = window.showModalDialog("portlet_search.aspx", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken" + GetShowModalPosition(350, 410));
+		        var ret = window.showModalDialog("/ezPortal/portletSearch.do", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken" + GetShowModalPosition(350, 410));
 		        if (typeof (ret) == "undefined") return;
 
 		        if (CheckDuplicate(ret[0])) {

@@ -5,17 +5,17 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezHome.t1006' /></title>
+		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='ezHome.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="더보기"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="더보기"></span></div>
   				<div class="pollcont">
  	 				<c:choose>
   						<c:when test="${not empty pPollItemSeq}">
   							<p class="qusetion">
-   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='ezHome.t2001' /></span></span><span style="margin-left:3px">${pPollTitle }</span>
+   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span style="margin-left:3px">${pPollTitle }</span>
     						</p>
       						${pPollResultContent}
   						</c:when>
@@ -24,7 +24,7 @@
     						<br />
     						<div class="nodata_portlet">
 	    						<p	><img src="/images/kr/main/nodata_white.gif" width="107" height="70"></p>
-    							<p><spring:message code='ezHome.t260' /></p>
+    							<p><spring:message code='main.t260' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>

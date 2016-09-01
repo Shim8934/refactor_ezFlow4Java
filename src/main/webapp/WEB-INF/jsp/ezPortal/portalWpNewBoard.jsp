@@ -8,7 +8,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<section  class="body_bg1">
       		<article class="portlet_notice">
-        		<p class="title"><img src="/images/<spring:message code='ezHome.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='ezHome.t00025' />/main/btn_more01.gif" alt="more"></span></p>
+        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
         		<dl class="notice_tab">
           			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on"><span>${pCompanyBDNM}</span></dt>
           			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)"><span>${pDeptBDNM}</span></dt>
@@ -21,7 +21,7 @@
         			<%if(pExist == "true") { %>
             			<dl onclick="openDoc('${pItemID}')" class='nt_pic' style='cursor:pointer'>
             				<dt class='tit'><strong>${pDocTitle}</strong></dt>
-            				<dd class='photo'><img src='/images/<spring:message code='ezHome.t00025' />/main/notice_pic.gif' width='83' height='54' alt=''></dd>
+            				<dd class='photo'><img src='/images/<spring:message code='main.t00025' />/main/notice_pic.gif' width='83' height='54' alt=''></dd>
             				<dd id='content_NewBoard' class='txt'>${pDocContent}</dd>
             			</dl>
 			            <ul class="mainlist">
@@ -35,8 +35,8 @@
     	        		</ul>
 	        	    <%} else {%>
                			<div class='nodata_portlet '>
-                			<p><img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_gray.gif' width='107' height='70'></p>
-                			<p><spring:message code='ezHome.t00026' /></p>
+                			<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_gray.gif' width='107' height='70'></p>
+                			<p><spring:message code='main.t00026' /></p>
                 		</div>
             		<%} %>
         		</div>
@@ -49,8 +49,8 @@
     		var pBoardID_NewBoard = "${pCompanyBoard}";
     		var pBoardType_NewBoard = "";
     		var BoardCnt_NewBoard = 0;
-    		var strLang1_NewBoard = "<spring:message code='ezHome.t00025'/>";
-    		var strLang2_NewBoard = "<spring:message code='ezHome.t00026'/>";
+    		var strLang1_NewBoard = "<spring:message code='main.t00025'/>";
+    		var strLang2_NewBoard = "<spring:message code='main.t00026'/>";
 
         	document.onselectstart = function () { return false; };
         

@@ -14,15 +14,15 @@
 			<article id="appr_article" class="appr_mail">
 				<div class="tab">
     				<ul>
-    					<li><img src="/images/<spring:message code='ezHome.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
-     					<li><img src="/images/<spring:message code='ezHome.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
+    					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li>
+     					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
     				</ul>
     			</div>
     			<!-- graph -->
     			<section class="apprgraph">
     				<div class="apprgraph_area">
     					<dl>
-    						<dt><spring:message code='ezHome.t00006' /></dt>
+    						<dt><spring:message code='main.t00006' /></dt>
     							<dd>
     								<div class="nomal_count">
         								<span id="SIXHGAP" runat="server">0</span>
@@ -30,7 +30,7 @@
      							</dd>
     					</dl>
     					<dl>
-    						<dt><spring:message code='ezHome.t00007' /></dt>
+    						<dt><spring:message code='main.t00007' /></dt>
     						<dd>
     							<div class="nomal_count">
         							<span id="ONEDGAP" runat="server">0</span>
@@ -38,7 +38,7 @@
         					</dd>
     					</dl>
     					<dl>
-    						<dt><spring:message code='ezHome.t00008' /></dt>
+    						<dt><spring:message code='main.t00008' /></dt>
     						<dd>
     							<div class="nomal_count">
         							<span id="SEVENDGAP" runat="server">0</span>
@@ -46,7 +46,7 @@
         					</dd>
     					</dl>
     					<dl>
-    						<dt><spring:message code='ezHome.t00009' /></dt>
+    						<dt><spring:message code='main.t00009' /></dt>
     						<dd>
     							<div class="nomal_count">
         							<span id="ONEMGAP" runat="server">0</span>
@@ -55,9 +55,9 @@
     					</dl>
     					<dl>
     						<%if(userLang != "3"){ %>
-    							<dt><spring:message code='ezHome.t00010' /></dt>
+    							<dt><spring:message code='main.t00010' /></dt>
     						<%}else{%>
-    							<dt style="font-size:8pt"><spring:message code='ezHome.t00010' /></dt>
+    							<dt style="font-size:8pt"><spring:message code='main.t00010' /></dt>
     						<%} %>
     						<dd>
     							<div class="point_count">
@@ -74,12 +74,12 @@
           				<span class="tr"></span>
             			<!-- tab -->
             			<dl class="portlet_tab">
-              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='ezHome.t00003' /><span id="doingCNT" class="tab_num" runat="server">(0)</span></span></dt>
-              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='ezHome.t00004' /><span id="rejectCNT" class="tab_num" runat="server">(0)</span></span></dt>
-              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='ezHome.t00005' /><span id="draftCNT" class="tab_num" runat="server">(0)</span></span></dt>
+              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num" runat="server">(0)</span></span></dt>
+              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num" runat="server">(0)</span></span></dt>
+              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num" runat="server">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
-            			<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='ezHome.t00025' />/main/btn_more02.gif" width="35" height="20" alt="더보기"></span>
+            			<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="더보기"></span>
             		</div>
           			<div id ="ApprList" class="appr_mailcont">            
               			<ul class="listtype_txt">
@@ -104,8 +104,8 @@
             					</asp:Repeater>
             				<%} else {%>
                 				<div class='nodata_portlet '>
-                					<p><img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_white.gif' width='107' height='70'></p>
-                					<p><spring:message code='ezHome.t00026' /></p>
+                					<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>
+                					<p><spring:message code='main.t00026' /></p>
                 				</div>
             				<%} %> --%>
             			</ul>
@@ -118,18 +118,18 @@
     		<article id="mail_article" style="display:none;" class="appr_mail">
 				<div class="tab">
     				<ul>
-     					<li><img src="/images/<spring:message code='ezHome.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
-     					<li><img src="/images/<spring:message code='ezHome.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>    
+     					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="change_article('appr')" width="50" height="115"></li>
+     					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>    
     				</ul>
     			</div>
     			<!-- graph -->
     			<section class="apprgraph">
     				<div class="mailgraph_area">
-    					<p class="title"><img src="/images/<spring:message code='ezHome.t00025' />/main/mail_graphtitle.gif" alt="<spring:message code='ezHome.t00011' />" width="146" height="28"></p>
-    					<p class="graphimg"><img id="mailquateimg" src="/images/<spring:message code='ezHome.t00025' />/main/mailgraph/g000.gif" width="146" height="114"></p>
+    					<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/mail_graphtitle.gif" alt="<spring:message code='main.t00011' />" width="146" height="28"></p>
+    					<p class="graphimg"><img id="mailquateimg" src="/images/<spring:message code='main.t00025' />/main/mailgraph/g000.gif" width="146" height="114"></p>
     					<ul>
-    						<li><spring:message code='ezHome.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
-    						<li><spring:message code='ezHome.t00013' /><strong id="MailBoxSize"></strong></li>
+    						<li><spring:message code='main.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
+    						<li><spring:message code='main.t00013' /><strong id="MailBoxSize"></strong></li>
     					</ul>
   					</div>
     			</section>
@@ -140,10 +140,10 @@
           				<span class="tr"></span>
             				<!-- tab -->
             				<dl class="portlet_tab">
-              					<dt  class="on"><span><spring:message code='ezHome.t00014' /><span id="InBoxCNT" class="tab_num">(0)</span></span></dt>
+              					<dt  class="on"><span><spring:message code='main.t00014' /><span id="InBoxCNT" class="tab_num">(0)</span></span></dt>
 				            </dl>
             				<!-- /tab -->
-            				<span class="btn_more"><img onclick="Mailmore_btnClick()" src="/images/<spring:message code='ezHome.t00025' />/main/btn_more02.gif" width="35" height="20" alt="more"></span>
+            				<span class="btn_more"><img onclick="Mailmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="more"></span>
             		</div>
           			<div id="MailList" class="appr_mailcont"></div>
         		</section>
@@ -168,7 +168,7 @@
 	    var pUserID = arr_userinfo[1];
 	    var companyID = "${userInfo.companyID}";
 	    var pListTypeValue = "1";
-	    var strLang1_NewApprMail = "<spring:message code='ezHome.t00026' />";
+	    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
 	    var pUse_Editor = "${useEditor}";
 	    var pUse_IE11Browser = "${useIE11Browser}";
 	    var pNoneActiveX = "${noneActiveX}";
@@ -326,7 +326,7 @@
 	                else
 	                {
 	                    listHTML = "<div class='nodata_portlet '>";
-	                    listHTML += "<p><img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+	                    listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
 	                    listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 	                }
 	                document.getElementById("ApprList").innerHTML = listHTML;
@@ -388,7 +388,7 @@
 	                    }
 	                    else if (pDocState == strDocState11) {
 	                        if (arr_userinfo[4] != pAprMemberDeptID) {
-	                            var pAlertContent = "<spring:message code='ezHome.t2200' />";
+	                            var pAlertContent = "<spring:message code='main.t2200' />";
 	                            alert(pAlertContent);
 	                            return;
 	                        }
@@ -421,7 +421,7 @@
 	                    }
 	                    else {
 	                        if (arr_userinfo[4] != pAprMemberDeptID) {
-	                            var pAlertContent = "<spring:message code='ezHome.t2200' />";
+	                            var pAlertContent = "<spring:message code='main.t2200' />";
 	                            alert(pAlertContent);
 	                            return;
 	                        }
@@ -475,7 +475,7 @@
 	                }
 	                else {
 	                    if (arr_userinfo[4] != pAprMemberDeptID) {
-	                        var pAlertContent = "<spring:message code='ezHome.t2200' />";
+	                        var pAlertContent = "<spring:message code='main.t2200' />";
 	                        alert(pAlertContent);
 	                        return;
 	                    }
@@ -844,7 +844,7 @@
 	            else if (MailPercent.length == 2)
 	                MailPercent = "0" + MailPercent;
 
-	            document.getElementById("mailquateimg").src = "/images/<spring:message code='ezHome.t00025' />/main/mailgraph/g" + MailPercent + ".gif";
+	            document.getElementById("mailquateimg").src = "/images/<spring:message code='main.t00025' />/main/mailgraph/g" + MailPercent + ".gif";
 	            document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
 
 	            var listHTML = "";
@@ -862,7 +862,7 @@
 	            }
 	            else {
 	                listHTML = "<div class='nodata_portlet '>";
-	                listHTML += "<p><img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
+	                listHTML += "<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>";
 	                listHTML += "<p>" + strLang1_NewApprMail + "</p></div>";
 	            }
 

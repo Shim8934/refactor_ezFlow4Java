@@ -46,9 +46,9 @@
 						String ezInfoSSL = (String)request.getAttribute("ezInfoSSL");
 						%>
 					    <% if (ezInfoSSL.equals("1")) { %>
-						    window.parent.frames.right.document.location.href="${SSL}"+"/myoffice/ezPersonal/PersonInfo/ChangePersonInfo_cross.aspx";
+						    window.parent.frames.right.document.location.href="${SSL}"+"/ezPersonal/changePersonInfo.do";
 					    <% } else { %>
-						    window.parent.frames.right.document.location.href="/myoffice/ezPersonal/PersonInfo/ChangePersonInfo_cross.aspx";
+						    window.parent.frames.right.document.location.href="/ezPersonal/changePersonInfo.do";
 					    <% } %>
 						break;
 					case "MailEnv":

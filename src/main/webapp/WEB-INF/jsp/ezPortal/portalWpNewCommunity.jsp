@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezHome.t1006' /></title>
+		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link href="/css/main.css" rel="stylesheet" type="text/css">
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
@@ -38,7 +38,7 @@
 	            xmlhttp.send(xmldom);
 
 	            if (xmlhttp.responseText == "ERR" || clubgubun == "1") {
-	                OpenAlertUI("<spring:message code='ezHome.t1004' /><br><spring:message code='ezHome.t1005' />", null, "wp_NewCommunity.aspx.OpenAlertUI");
+	                OpenAlertUI("<spring:message code='main.t1004' /><br><spring:message code='main.t1005' />", null, "wp_NewCommunity.aspx.OpenAlertUI");
 	            } else {
 	                var wWeight = "1300";
 	                var wHeight = "900";
@@ -62,7 +62,7 @@
 					},
 					success: function(result){
 						if (result == "ERR" || clubgubun == "1") {
-							OpenAlertUI("<spring:message code='ezHome.t1004'/><br><spring:message code='ezHome.t1005'/>", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
+							OpenAlertUI("<spring:message code='main.t1004'/><br><spring:message code='main.t1005'/>", null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
 						} else {
 							var wWeight = "1300";
 			                var wHeight = "900";
@@ -112,9 +112,9 @@
 	        <div class="title">
     	        <span class="tl"></span>
         	    <span class="tr"></span>
-            	<span class="title_txt"><spring:message code='ezHome.t1006' /></span>
+            	<span class="title_txt"><spring:message code='main.t1006' /></span>
             	<span class="btn_more" onclick="Copmore_btnClick()">
-                	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='ezHome.t1008' />" >
+                	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
         	<div id="tblBest" class="communitycont" runat="server">${strHTML}</div>

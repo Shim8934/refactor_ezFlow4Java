@@ -14,11 +14,11 @@
 					<span class="title_txt">
 						<img src="/images/kr/main/btn_prev1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('PREV')">
 							<span id="kordisplay">
-								<span id="curMon"></span><spring:message code='ezHome.t1002' />
+								<span id="curMon"></span><spring:message code='main.t1002' />
 							</span>
 							<span id="curMontxt"></span>
 							<img src="/images/kr/main/btn_next1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('NEXT')">
-								<span class="t11"><spring:message code='ezHome.t1003' /></span> 
+								<span class="t11"><spring:message code='main.t1003' /></span> 
 					</span>
         		</div>
         		<div class="birthcont" id="birthcont">
@@ -42,7 +42,7 @@
                     		<img src="/images/kr/main/nodata_white.gif" width="107" height="70" />
                 		</p>
                 		<p>
-                    		<spring:message code='ezHome.t00026' />
+                    		<spring:message code='main.t00026' />
                 		</p>
             		</div>
         		</div>
@@ -65,7 +65,7 @@
 	    	var timer;
 	    	var xmlhttp;
 	    	window.onload = window_onload_NewBirth;
-	    	var strLang1_NewBirth = "<spring:message code='ezHome.t00026' />";
+	    	var strLang1_NewBirth = "<spring:message code='main.t00026' />";
 	    	document.onselectstart = function () { return false; };
 	    	function window_onload_NewBirth(){
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {

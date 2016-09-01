@@ -42,9 +42,9 @@
             		<%} else {%>
             			<div class='nodata_portlet '>
                 			<p>
-                    			<img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_gray.gif' width='107' height='70'>
+                    			<img src='/images/<spring:message code='main.t00025' />/main/nodata_gray.gif' width='107' height='70'>
                     		</p>
-                			<p><spring:message code='ezHome.t00026' /></p>
+                			<p><spring:message code='main.t00026' /></p>
             			</div>
             		<%} %> 
         		</div>
@@ -58,7 +58,7 @@
 		 	var pBoardID_NewBoardSTD = "${pBoardID}";
 		    var pBoardType_NewBoardSTD = "${pBoardGubun}";
 		    var BoardCnt_NewBoardSTD = parseInt("${pHeaderCount}");
-		    var strLang1_NewBoardSTD = "<spring:message code='ezHome.t00026' />";
+		    var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
 		    var pNoneActiveX = "${pNoneActiveX}";
 		    document.onselectstart = function () { return false; };
 		    function window_onload_NewBoardSTD() {

@@ -16,7 +16,7 @@
 			<article  class="personal">
 				<p>
 					<span class="btn_green">
-						<span id="ModInfo" onClick="btnSumming_click(this)"><spring:message code="ezHome.t00015" />
+						<span id="ModInfo" onClick="btnSumming_click(this)"><spring:message code="main.t00015" />
 						</span>
 					</span>
 				 	<strong style="position:absolute;">${displayName} ${mailAddress } </strong>
@@ -26,68 +26,68 @@
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd><strong>${department} ${title}</strong></dd>
-						<dd><spring:message code="ezHome.t00016" />  ${lastLogin }</dd>
+						<dd><spring:message code="main.t00016" />  ${lastLogin }</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>
     			<div class="personal_content">
 					<a id="NewMail" onClick="btnSumming_click(this)" href="#">
 						<ul>
-							<li class="icon"><img src="/images/<spring:message code="ezHome.t00025" />/main/icon_personal01.gif" alt="<spring:message code="ezHome.t00017" />" /></li>
+							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal01.gif" alt="<spring:message code="main.t00017" />" /></li>
 							<li class="count">
 								<div>
 									<span id="mailnum" runat="server">0</span>
 								</div>
 							</li>
                     		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="ezHome.t00017" /></li>
+								<li class="title"><spring:message code="main.t00017" /></li>
                     		<%}else{ %>
-                    			<li class="title1"><spring:message code="ezHome.t00017" /></li>
+                    			<li class="title1"><spring:message code="main.t00017" /></li>
                     		<%} %>
 						</ul>
 					</a>
 					<a id="AprSign" onClick="btnSumming_click(this)" href="#">
 						<ul>
-							<li class="icon"><img src="/images/<spring:message code="ezHome.t00025" />/main/icon_personal02.gif" alt="<spring:message code="ezHome.t00018" />" /></li>
+							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal02.gif" alt="<spring:message code="main.t00018" />" /></li>
 								<li class="count">
 									<div>
 										<span id="aprnum" runat="server">0</span>
 									</div>
 								</li>
                     			<%if(userLang != "3"){ %>
-									<li class="title"><spring:message code="ezHome.t00018" /></li>
+									<li class="title"><spring:message code="main.t00018" /></li>
                     			<%}else{ %>
-                    				<li class="title1"><spring:message code="ezHome.t00018" /></li>
+                    				<li class="title1"><spring:message code="main.t00018" /></li>
                     			<%} %>
 						</ul>
 					</a>
 					<a id="Schedule" onClick="btnSumming_click(this)" href="#">
 						<ul>
-							<li class="icon"><img src="/images/<spring:message code="ezHome.t00025" />/main/icon_personal03.gif" alt="<spring:message code="ezHome.t00019" />" /></li>
+							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal03.gif" alt="<spring:message code="main.t00019" />" /></li>
 							<li class="count">
 								<div>
 									<span id="schedulenum" runat="server">0</span>
 								</div>
 							</li>
                     		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="ezHome.t00019" /></li>
+								<li class="title"><spring:message code="main.t00019" /></li>
                     		<%}else{ %>
-                    			<li class="title1"><spring:message code="ezHome.t00019" /></li>
+                    			<li class="title1"><spring:message code="main.t00019" /></li>
                     		<%} %>
 						</ul>
 					</a>
 					<a id="Poll" onClick="btnSumming_click(this)" href="#">
 						<ul class="last">
-							<li class="icon"><img src="/images/<spring:message code="ezHome.t00025" />/main/icon_personal04.gif" alt="<spring:message code="ezHome.t00020" />" /></li>
+							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal04.gif" alt="<spring:message code="main.t00020" />" /></li>
 							<li class="count">
 								<div>
 									<span>${pollNum }</span>
 								</div>
 							</li>
                     		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="ezHome.t00020" /></li>
+								<li class="title"><spring:message code="main.t00020" /></li>
                     		<%}else{ %>
-                    		<li class="title1"><spring:message code="ezHome.t00020" /></li>
+                    		<li class="title1"><spring:message code="main.t00020" /></li>
                     		<%} %>
 						</ul>
 					</a>			
@@ -97,8 +97,8 @@
          	<div class="schedule">
 	  			<article class="list"> 
    			 		<div class="maintab01">
-             			<p id="Psch" class="left_on" onclick="scheduleChangeTab(this)"><spring:message code="ezHome.t00021" /></p>
-             			<p id="Allsch" class="right" onclick="scheduleChangeTab(this)"><spring:message code="ezHome.t00022" /></p>
+             			<p id="Psch" class="left_on" onclick="scheduleChangeTab(this)"><spring:message code="main.t00021" /></p>
+             			<p id="Allsch" class="right" onclick="scheduleChangeTab(this)"><spring:message code="main.t00022" /></p>
              		</div>
           			<div class="scrollbox-play-light" style="position:relative; width:260px;height:105px;  "> 
 						<div class="scrollbox" id="best-scrbox" style="width:260px; height:105px;overflow:hidden;"> 
@@ -125,16 +125,16 @@
     									</ul>
 								<%}else{ %>        
 									<div class='nodata_schedule '>
-    									<p><img src='/images/<spring:message code='ezHome.t00025' />/main/nodata_plan.gif' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>
-    									<p><spring:message code='ezHome.t00026' /></p>
+    									<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_plan.gif' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>
+    									<p><spring:message code='main.t00026' /></p>
 									</div>
 								<%} %> --%>      
   							</div>
 					    </div> 
 					    <div class="scrollbar-v"> 
-    						<img src="/images/<spring:message code='ezHome.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
-    						<img src="/images/<spring:message code='ezHome.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
-    						<img src="/images/<spring:message code='ezHome.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
+    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
+    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
+    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
     					</div> 
 					</div> 
 				</div> 
@@ -148,14 +148,14 @@
     			<div class="blue_bar"></div>
 			    <div class="bannerlink_area">
     				<article class="writebanner">
-        				<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
-        				<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='ezHome.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
+        				<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
+        				<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
         				<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
     				</article>
     			</div>
         		<div class="blue_bar"></div>
     			<article class="time">
-    				<p class="title"><spring:message code='ezHome.t00023' /></p>
+    				<p class="title"><spring:message code='main.t00023' /></p>
     				<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
     				<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:1px solid #205f61; background:url(/images/WebPartSliderCI/digitaltime_bg.gif);font-weight:bold; color:#FFF; letter-spacing:4px; font-size:15px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>
    				 </article>
@@ -178,15 +178,15 @@
     		<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
     	<%} %>
 		
-		<script type="text/javascript" src="<spring:message code='ezHome.t00024'/>"></script>
+		<script type="text/javascript" src="<spring:message code='main.t00024'/>"></script>
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>   
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pMode = "P";
 		    var date = "";
-		    var strLang1_total = "<spring:message code='ezHome.t00025' />";
-		    var strLang2_total = "<spring:message code='ezHome.t00026' />";
+		    var strLang1_total = "<spring:message code='main.t00025' />";
+		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
@@ -750,7 +750,7 @@
 		            var openLocation = "";
 		            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    alert("<spring:message code='ezHome.t3000' />");
+		                    alert("<spring:message code='main.t3000' />");
 		                    return;
 		                }
 		                else {

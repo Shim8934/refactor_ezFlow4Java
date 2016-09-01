@@ -19,7 +19,7 @@
 	</head>	
 	<body  class="body_bg1">
     	<article class="gw_banner">
-    		<img src="/images/<spring:message code='ezHome.t00025' />/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
+    		<img src="/images/<spring:message code='main.t00025' />/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
     			<map name="Map_gwb">
       				<area alt="" shape="rect" coords="252,8,344,47" href="#">
     			</map>

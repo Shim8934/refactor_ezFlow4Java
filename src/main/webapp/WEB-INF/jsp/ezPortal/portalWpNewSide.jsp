@@ -9,8 +9,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<section  class="body_bg1">
     		<article class="portlet_side">
-        		<p class="title"><img src="/images/<spring:message code='ezHome.t00025' />/main/side_title.gif" alt=""></p>
-        		<div class="event"><img src="/images/<spring:message code='ezHome.t00025' />/main/event.gif" width="155" height="179"></div>
+        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/side_title.gif" alt=""></p>
+        		<div class="event"><img src="/images/<spring:message code='main.t00025' />/main/event.gif" width="155" height="179"></div>
         		<%
         		PersonalGetEmpOfMonthVO result = (PersonalGetEmpOfMonthVO)request.getAttribute("result");
         		%>
@@ -18,7 +18,7 @@
         		
         			<div class="best">
         				<dl>
-        					<dt><span class="icon"><img src="/images/<spring:message code='ezHome.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='ezHome.t68' /></dt>
+        					<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
         					<dd class="photo"><img src="${filePath}" width="75" height="77"></dd>
         					<dd class="txt_name">
             					<span style="cursor:pointer" onclick="OpenUserInfo('${result.cn}')">
@@ -31,8 +31,8 @@
         		<% } else{ %>
         			<div class="best">
         				<dl>
-        					<dt><span class="icon"><img src="/images/<spring:message code='ezHome.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='ezHome.t68' /></dt>
-        					<dd class="nodata_portlet"><img src="/images/kr/main/nodata_white.gif" width="107" height="70"><br /> <span><spring:message code='ezHome.t00026' /></span></dd>
+        					<dt><span class="icon"><img src="/images/<spring:message code='main.t00025' />/main/icon_best1.gif" width="26" height="28"></span><spring:message code='main.t68' /></dt>
+        					<dd class="nodata_portlet"><img src="/images/kr/main/nodata_white.gif" width="107" height="70"><br /> <span><spring:message code='main.t00026' /></span></dd>
         				</dl>
         			</div>
         		<%} %>

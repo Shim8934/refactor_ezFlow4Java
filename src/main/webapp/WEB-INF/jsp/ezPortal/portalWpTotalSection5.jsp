@@ -18,14 +18,14 @@
         	var EndCnt = 10;
         	var timer;
         	var xmlhttp = createXMLHttpRequest();
-        	var strLang1 = "<spring:message code='ezHome.t00026'/>";
+        	var strLang1 = "<spring:message code='main.t00026'/>";
         	document.onselectstart = function () { return false; };
         	//생일
 
         	//포토
         	var pBoardType = "4";
         	var pBoardID = "${pPhotoGalleryID}";
-        	var strLang1 = "<spring:message code='ezHome.t00026'/>";
+        	var strLang1 = "<spring:message code='main.t00026'/>";
 	        var OrderCell = "";
         	var OrderOption = "";
         	var totalPage = "";
@@ -379,7 +379,7 @@
 	<body class="body_bg1">
     	<%--  배너 --%>
     	<article class="gw_banner">
-    		<img src="/images/<spring:message code='ezHome.t00025'/>/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
+    		<img src="/images/<spring:message code='main.t00025'/>/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
     			<map name="Map_gwb">
       				<area alt="" shape="rect" coords="252,8,344,47" href="#">
     			</map>
@@ -389,9 +389,9 @@
     	<%--포토--%>
     	<article class="portletbox photobox ">
 	        <div class="title_nb">
-    	        <span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='ezHome.t1007'/></span>
+    	        <span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='main.t1007'/></span>
         	    <span class="btn_more" onclick="Boardmore_btnClick()">
-            	    <img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='ezHome.t1008'/>">
+            	    <img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008'/>">
             	</span>
         	</div>
         	<div class="photocont">
@@ -410,11 +410,11 @@
 	            <span class="title_txt">
     	            <img src="/images/kr/main/btn_prev1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('PREV')">
         		        <span id="kordisplay">
-                    		<span id="curMon"></span><spring:message code='ezHome.t1002'/>
+                    		<span id="curMon"></span><spring:message code='main.t1002'/>
                 		</span>
                 		<span id="curMontxt"></span>
                 		<img src="/images/kr/main/btn_next1.gif" width="21" height="17" class="btn_img" onclick="moveBirth('NEXT')">
-                			<span class="t11"><spring:message code='ezHome.t1003'/></span>
+                			<span class="t11"><spring:message code='main.t1003'/></span>
             	</span>
         	</div>
         	<div class="birthcont" id="birthcont">
@@ -426,7 +426,7 @@
     	                <img src="/images/kr/main/nodata_white.gif" width="107" height="70" />
         	        </p>
             	    <p>
-                	   <spring:message code='ezHome.t00026'/>
+                	   <spring:message code='main.t00026'/>
                 	</p>
             	</div>
         	</div>
