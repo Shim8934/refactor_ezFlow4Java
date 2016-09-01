@@ -16,8 +16,22 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (List<PersonalNoticeVO>) list("EzPersonalAdmin.EZSP_GETNOTICELIST", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalQuickLickVO> getQuickLinkList() throws Exception {
+		return (List<PersonalQuickLickVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINKLIST");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalQuickLickVO> getQuickLinkACL(String v_QUICKLINKID) throws Exception {
+		return (List<PersonalQuickLickVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINK_ACL", v_QUICKLINKID);
+	}
+	
 	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
 		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", v_pItemSeq);
+	}
+	
+	public PersonalQuickLickVO getQuickLink(String v_QUICKLINKID) throws Exception {
+		return (PersonalQuickLickVO) select("EzPersonalAdmin.EZSP_GETQUICKLINK", v_QUICKLINKID);
 	}
 
 	public Integer getNoticeCount(Map<String, Object> map) throws Exception {
@@ -37,9 +51,9 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PersonalQuickLickVO> getQuickLinkList() throws Exception {
-		return (List<PersonalQuickLickVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINKLIST");
-	}
+
+	
+
+	
 	
 }

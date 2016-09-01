@@ -70,11 +70,11 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = "";
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("AddQuickLink.aspx?Mode=new", "AddQuickLink", GetOpenWindowfeature(405, 625));
+	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(405, 625));
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {
-	                var rtnValue = window.showModalDialog("AddQuickLink.aspx?Mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(405, 625));
+	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(405, 625));
 	                window.location.reload();
 	            }
 	        }
@@ -95,11 +95,11 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("AddQuickLink.aspx?Mode=modify", "AddQuickLink", GetOpenWindowfeature(405, 625));
+	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(405, 625));
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {
-	                var rtnValue = window.showModalDialog("AddQuickLink.aspx?Mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(405, 625));
+	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(405, 625));
 	                window.location.reload();
 	            }
 	        }

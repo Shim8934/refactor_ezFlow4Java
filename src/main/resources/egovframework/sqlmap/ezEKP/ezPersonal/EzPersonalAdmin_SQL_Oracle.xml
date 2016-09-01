@@ -35,6 +35,18 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLickVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETQUICKLINK(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLickVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETQUICKLINK_ACL(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" 									resultClass="PersonalQuickLickVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINKLIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

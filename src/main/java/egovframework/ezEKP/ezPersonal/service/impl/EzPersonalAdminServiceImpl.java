@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,5 +137,40 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 		
 		return result.toString();
 	}
+
+	@Override
+	public String getQuickLink(String quickLinkID) throws Exception {
+		PersonalQuickLickVO vo = ezPersonalAdminDAO.getQuickLink(quickLinkID);
+		
+		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
+		
+		return result;
+	}
+
+	@Override
+	public String getQuickLinkACL(String quickLinkID) throws Exception {
+		StringBuilder result = new StringBuilder();
+		List<PersonalQuickLickVO> list = ezPersonalAdminDAO.getQuickLinkACL(quickLinkID);
+		
+		result.append("<NODES>");
+		for (PersonalQuickLickVO vo : list) {
+			result.append("<NODE>");
+			
+			for (Field field : vo.getClass().getDeclaredFields()) {
+		        field.setAccessible(true);
+									
+				if (field.getName().toUpperCase().equals("VIEW_FLAG")) {
+					result.append("<PERMISSIONS>" + String.valueOf(field.get(vo)) + "</PERMISSIONS>");
+				} else {
+					result.append("<" + field.getName().toUpperCase() + ">" + String.valueOf(field.get(vo)) + "</" + field.getName().toUpperCase() + ">");
+				}
+		    }
+			result.append("</NODE>");
+		}
+		result.append("</NODES>");
+		
+		return result.toString();
+	}
+	
 	
 }

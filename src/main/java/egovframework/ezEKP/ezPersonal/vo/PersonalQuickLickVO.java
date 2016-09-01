@@ -24,10 +24,15 @@ public class PersonalQuickLickVO {
 	/** 수정 사용자 */
 	private String regUserID;
 	/** 사이즈 */
-	private String size;
-	
-	
-	
+	private String size_;
+	/** 사용자ID*/
+	private String accessID;
+	/** 사용자이름*/
+	private String accessName;
+	/** 사용자이름(다국어)*/
+	private String accessName2;
+	/** 사용여부*/
+	private String view_Flag;
 	/** 사용자명(JOIN)*/
 	private String displayName;
 	/** 사용자명(다국어)(JOIN)*/
@@ -98,18 +103,36 @@ public class PersonalQuickLickVO {
 	public void setRegUserID(String regUserID) {
 		this.regUserID = regUserID;
 	}
-	public String getSize() {
-		return size;
+	public String getSize_() {
+		return size_;
 	}
-	public void setSize(String size) {
-		this.size = size;
+	public void setSize_(String size_) {
+		this.size_ = size_;
 	}
-	
-	
-	
-	
-	
-	
+	public String getAccessID() {
+		return accessID;
+	}
+	public void setAccessID(String accessID) {
+		this.accessID = accessID;
+	}
+	public String getAccessName() {
+		return accessName;
+	}
+	public void setAccessName(String accessName) {
+		this.accessName = accessName;
+	}
+	public String getAccessName2() {
+		return accessName2;
+	}
+	public void setAccessName2(String accessName2) {
+		this.accessName2 = accessName2;
+	}
+	public String getView_Flag() {
+		return view_Flag;
+	}
+	public void setView_Flag(String view_Flag) {
+		this.view_Flag = view_Flag;
+	}
 	public String getDisplayName() {
 		return displayName;
 	}

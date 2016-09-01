@@ -18,6 +18,14 @@ public interface EzPersonalAdminService {
 	
 	String getQuickLinkList() throws Exception;
 	
+	String getQuickLink(String quickLinkID) throws Exception;
+	
+	String getQuickLinkACL(String quickLinkID) throws Exception;
+	
 	int getNoticeCount(String companyID) throws Exception;
+
+	
+
+	
 
 }

@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
@@ -45,24 +43,20 @@ public class EzPersonalAdminController {
 	@Autowired
 	private Properties config;
 	
-	@Autowired
-	private EgovFileScrty egovFileScrty;
+	/*@Autowired
+	private EgovFileScrty egovFileScrty;*/
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
-	private EzCommonService ezCommonService;
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
 	
-	@Autowired
-	private EzOrganService ezOrganService;
-	
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
-
+	/*@Autowired
+	private EzOrganService ezOrganService;*/
 	
 	/**
 	 * 초기화면 메인화면 호출 함수
@@ -261,7 +255,7 @@ public class EzPersonalAdminController {
 	}
 	
 	/**
-	 * 초기화면 QuickLink 화면호출 함수
+	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
 	public String manageQuickLink() {
@@ -276,5 +270,57 @@ public class EzPersonalAdminController {
 	public String getQuickLinkList() throws Exception {
 		String result = ezPersonalAdminService.getQuickLinkList();
 		return result;
+	}
+	
+	/**
+	 * 초기화면 QuickLink 등록,수정화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
+	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String mode = "new";
+		
+		if (request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
+		
+		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("mode", mode);
+		
+		return "admin/ezPersonal/personalAddQuickLink";
+	}
+	
+	/**
+	 * 초기화면 QuickLink 수정화면 내용 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getQuickLink(HttpServletRequest request) throws Exception {
+		String quickLinkID = request.getParameter("pQuickLinkID");
+		
+		String result = ezPersonalAdminService.getQuickLink(quickLinkID);
+		
+		return result;
+	}
+	
+	/**
+	 * 초기화면 QuickLink 권한목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkACL.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getQuickLinkACL(HttpServletRequest request) throws Exception {
+		String quickLinkID = request.getParameter("pQuickLinkID");
+		
+		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID);
+		
+		return result;
+	}
+	
+	/**
+	 * 초기화면 QuickLink 권한등록화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do")
+	public String selectTarget() throws Exception {
+		return "";
 	}
 }
