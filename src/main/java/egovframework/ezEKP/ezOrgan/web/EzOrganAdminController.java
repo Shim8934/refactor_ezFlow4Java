@@ -455,10 +455,28 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		for (int i=0; i < cn.length; i++) {		
 			// dhlee
-			int rc = ezEmailUserAdminService.updateUserPassword(cn[i] + "@" + domain, pw);
+			String mailAddr = cn[i] + "@" + domain;
+			// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
+			String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
 			
-			if (rc == 0) { // updateUserPassword 성공			
-				ezOrganAdminService.setPassword(cn[i], pw);
+			if (existingEncryptedPassword != null) {
+				// 이메일 계정의 암호를 새 암호로 설정한다.
+				int rc = ezEmailUserAdminService.updateUserPassword(mailAddr, pw);
+				
+				if (rc == 0) { // updateUserPassword 성공													
+					try {
+						// 로컬 시스템에서 해당 User의 암호를 변경한다.
+						ezOrganAdminService.setPassword(cn[i], pw);
+					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+						ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
+						
+						throw e;
+					}										
+				} else {
+					throw new Exception("setting the user '" + mailAddr + "' password failed.");
+				}
+			} else {
+				throw new Exception("getting the user '" + mailAddr + "' encrypted password failed.");
 			}
 			// dhlee - end
 		}
@@ -468,7 +486,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원퇴직 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/retireUser.do")
-	public void retireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+	public void retireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{		
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
@@ -477,18 +495,32 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		for (int i=0; i < cn.length; i++) {			
 			// dhlee
-			int rc = ezEmailUserAdminService.retireUser(cn[i] + "@" + domain);
+			String mailAddr = cn[i] + "@" + domain;
+			int rc = ezEmailUserAdminService.retireUser(mailAddr);
 			
-			if (rc == 0) { // retireUser 성공
-				
-				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], config.getProperty("config.primary"));
+			if (rc == 0) { // retireUser 성공				
+				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary());
 				String groupAddr = userVO.getDepartment() + "@" + domain;
-				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, cn[i] + "@" + domain);
+				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
 				if (rc == 0) { // updateGroupDel 성공
-					ezOrganAdminService.retireEntry(cn[i]);
-				}
-				
+					try {
+						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
+						ezOrganAdminService.retireEntry(cn[i]);
+					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
+						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+						ezEmailUserAdminService.restoreUser(mailAddr);
+						
+						throw e;
+					}					
+				} else { // updateGroupDel 실패
+					// Group Email 주소에서 제거하는 것이 실패하면 해당 User를 복원시키고, Exception을 발생시킨다.
+					ezEmailUserAdminService.restoreUser(mailAddr);
+					
+					throw new Exception("removing the user '" + mailAddr + "' from its group email failed.");
+				}				
 			}
 			// dhlee - end
 		}
@@ -518,7 +550,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
-	public void delUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void delUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
@@ -527,18 +559,60 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				
 		for (int i=0; i < cn.length; i++) {
 			// dhlee
-			int rc = ezEmailUserAdminService.removeUser(cn[i] + "@" + domain);
+			String mailAddr = cn[i] + "@" + domain;
+			// 이메일 계정이 있는 지 확인한다.
+			int userExists = ezEmailUserAdminService.checkUserExists(mailAddr);
+			int rc = 0;
 			
-			if (rc == 0) { // removeUser 성공
+			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
+				// 로컬 시스템 계정을 삭제한다.
+				ezOrganAdminService.deleteDBData(cn[i], "user");
+			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정.
+				String groupAddr = null;
 				
-				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], config.getProperty("config.primary"));
-				String groupAddr = userVO.getDepartment() + "@" + domain;
-				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, cn[i] + "@" + domain);
-				
-				if (rc == 0) { // updateGroupDel 성공
+				if (userExists == 1) { // 유효한 이메일 계정이 존재함.	
+					// 먼저 퇴직자 처리를 수행한다. 로컬 계정 삭제가 실패할 경우 복구를 위해.
+					rc = ezEmailUserAdminService.retireUser(mailAddr);
+
+					if (rc == 0) {
+						// 사용자가 속한 부서의 Group Email 주소를 구한다.
+						LoginVO userInfo = commonUtil.userInfo(loginCookie);
+						OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary());
+						groupAddr = userVO.getDepartment() + "@" + domain;				
+						
+						// 부서의 Group Email 주소로부터 해당 User를 제거한다.
+						rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+						
+						if (rc != 0) { // Group Email 주소에서 제거 실패함.
+							ezEmailUserAdminService.restoreUser(mailAddr);
+							
+							throw new Exception("removing the user '" + mailAddr + "' from its group email failed.");
+						}
+					} else {
+						throw new Exception("retiring the user '" + mailAddr + "' failed.");
+					}
+				} 
+												
+				try {
+					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user");
+				} catch (Exception e) {
+					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
+						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+						ezEmailUserAdminService.restoreUser(mailAddr);							
+					}
+					
+					throw e;
 				}
 				
+				// 아래 과정에서 에러가 발생하면 복구할 수는 없지만, 이미 유효한 계정이 아니므로
+				// 저장 공간은 차지하지만 해당 계정이 사용되지는 않는다. 
+				
+				// 퇴직자 계정을 삭제한다.
+				ezEmailUserAdminService.removeUser(mailAddr);
+				
+				// 해당 사용자의 메일박스들을 모두 제거한다.
+				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
 			}
 			// dhlee - end
 		}		
@@ -567,12 +641,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				String mailAddr = cn + "@" + domain;
 
 				// dhlee
+				// 이메일 시스템에 계정을 생성한다.
 				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
 				
 				if (rc == 0) { // addUser 성공
-					
-					String groupAddr = vo.getParentCn() + "@" + domain;
-					
+					// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.					
+					String groupAddr = vo.getParentCn() + "@" + domain;					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
 					if (rc == 0) { // updateGroup 성공
@@ -584,15 +658,19 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						
 						//insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
+							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo);
 							result = "OK";
-						} catch (Exception e) {
+						} catch (Exception e) { // Exception이 발생하면 취소 처리를 하고 Exception을 발생시킨다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
+							
 							throw e;
 						}
 					} else {
+						// 부서의 Group Email 주소로의 등록에 실패하면 해당 User를 삭제하고 에러를 반환한다.
 						ezEmailUserAdminService.removeUser(mailAddr);
+						
 						result = "EMAIL_ERROR";
 					}
 				} else {
@@ -1069,15 +1147,27 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			String mailAddr = cn[i] + "@" + domain;
 			int rc = ezEmailUserAdminService.restoreUser(mailAddr);
 			
-			if (rc == 0) { // restoreUser 성공
-								
+			if (rc == 0) { // restoreUser 성공				
+				// 지정된 부서의 Group Email 주소에 해당 User를 추가한다.
 				String groupAddr = deptID + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				
 				if (rc == 0) { // updateGroupAdd 성공
-					ezOrganAdminService.restoreRetireEntry(cn[i], deptID);
-				}				
-				
+					try {
+						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
+						ezOrganAdminService.restoreRetireEntry(cn[i], deptID);
+					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+						ezEmailUserAdminService.retireUser(mailAddr);
+						
+						throw e;
+					}										
+				} else {
+					// Group Email 주소로의 추가가 실패하면 해당 User를 다시 퇴직처리하고 Exception을 발생시킨다.
+					ezEmailUserAdminService.retireUser(mailAddr);
+					
+					throw new Exception("Adding the user '" + mailAddr + "' to the specified group email '" + groupAddr + "' failed.");
+				}
 			}
 			// dhlee - end			
 		}		

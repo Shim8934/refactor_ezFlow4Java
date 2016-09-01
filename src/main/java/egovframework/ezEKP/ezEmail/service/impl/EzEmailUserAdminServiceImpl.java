@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.util.Properties;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -59,6 +60,39 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 
 	@Override
+	public int checkUserExists(String userEmailAddress) throws Exception {
+		logger.debug("checkUserExists started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkUserExists";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("checkUserExists ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+	
+	@Override
 	public int updateUserPassword(String userEmailAddress, String newPassword) throws Exception {
 		logger.debug("updateUserPassword started. userEmailAddress=" + userEmailAddress);
 
@@ -92,6 +126,82 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;		
 	}
 
+	@Override
+	public String getEncryptedUserPassword(String userEmailAddress) throws Exception {
+		logger.debug("getEncryptedUserPassword started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getEncryptedUserPassword";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		String password = null;
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+					
+					if (result != null) {
+						password = (String)result.get("password");
+					}					
+				}
+			}
+		}						
+		
+		logger.debug("getEncryptedUserPassword ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return password;		
+	}
+	
+	@Override
+	public int updateUserPasswordWithEncryptedPassword(String userEmailAddress, String encryptedPassword) throws Exception {
+		logger.debug("updateUserPasswordWithEncryptedPassword started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String passwordParam = "encryptedPassword=" + URLEncoder.encode(encryptedPassword, "UTF-8");
+		String inputParams = userIdParam + "&" + passwordParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateUserPasswordWithEncryptedPassword";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("updateUserPasswordWithEncryptedPassword ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
+	}
+	
 	@Override
 	public boolean testUserPassword(String userEmailAddress, String password) throws Exception {
 		// TODO Auto-generated method stub
@@ -131,6 +241,39 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;		
 	}
 
+	@Override
+	public int removeUserAllMailboxes(String userEmailAddress) throws Exception {
+		logger.debug("removeUserAllMailboxes started. userEmailAddress=" + userEmailAddress);
+
+		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		String inputParams = userIdParam;
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/removeUserAllMailboxes";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("removeUserAllMailboxes ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;		
+	}
+	
 	@Override
 	public int retireUser(String userEmailAddress) throws Exception {
 		logger.debug("retireUser started. userEmailAddress=" + userEmailAddress);
