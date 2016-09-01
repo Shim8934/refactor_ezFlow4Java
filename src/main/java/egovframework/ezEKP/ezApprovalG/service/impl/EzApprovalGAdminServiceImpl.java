@@ -254,8 +254,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
 			} else {
 				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
-			}			
-			sb.append("<DATA1>" + vo.getContainerTypeID().trim() + "</DATA1></CELL>");
+			}
+			
+			if (vo.getContainerTypeID() != null) {
+				sb.append("<DATA1>" + vo.getContainerTypeID() + "</DATA1></CELL>");
+			} else {
+				sb.append("<DATA1>" + " " + "</DATA1></CELL>");
+			}
+			
 			sb.append("</ROW>");
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
