@@ -399,7 +399,7 @@ public class CommonUtil {
 		}
 	}
 	
-	public String getLang() {
+	private String getLang() {
 		String returnValue = "1";
 		String lang = globals.getProperty("Globals.language");
 		
