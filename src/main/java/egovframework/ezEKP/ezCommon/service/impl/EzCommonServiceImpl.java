@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommonService")
@@ -899,4 +900,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	    
         return strMhtData.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
     }
+	
+	/**
+	 * 환경설정 저장 Method
+	 */
+	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", pUserID);
+		ezCommonDAO.deleteUserLLocalInfo(map);
+	System.out.println("offset:"+userInfo.getOffset());
+	System.out.println("lang:"+userInfo.getLang());
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("userID", pUserID);
+		map1.put("timeZone", userInfo.getOffset());
+		map1.put("lang", userInfo.getLang());
+		ezCommonDAO.insertTblUserLocalInfo(map1);
+		return "OK";
+	}
+	
 }

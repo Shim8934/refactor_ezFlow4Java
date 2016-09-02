@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommonService {
 
@@ -19,6 +20,8 @@ public interface EzCommonService {
 	public String loadMHTFile(String path) throws Exception;
 	
 	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, HttpServletRequest request) throws Exception;
+	
+	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	

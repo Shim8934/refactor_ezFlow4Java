@@ -33,6 +33,17 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.selectUserGetTimeZone" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				timeZone
+			FROM 
+				EZCOMMON.TBLUSERLOCALINFO
+			WHERE
+				userID = #userID#
+		]]>
+	</select>
+	
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMON.TBLUSERLOCALINFO (
@@ -43,6 +54,13 @@
 			)
 		]]>
 	</insert>
+	
+	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE EZCOMMON.TBLUSERLOCALINFO
+			WHERE userID = #userID# 
+		]]>
+	</delete>
 	
 	
 </sqlMap>

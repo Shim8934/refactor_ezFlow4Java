@@ -7,7 +7,9 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,13 +17,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.LocaleResolver;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
@@ -47,7 +52,6 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPersonalController {
-	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -69,11 +73,21 @@ public class EzPersonalController {
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+    private LocaleResolver localeResolver;
+	
+	public void setLocaleResolver(LocaleResolver localeResolver) {
+    	this.localeResolver = localeResolver;
+    }
 	
 	/**
 	 * 전자결재 부재자설정 끄기 Method
@@ -662,5 +676,186 @@ System.out.println("searchString:"+searchString);
 		model.addAttribute("listGroup", listGroup);
 		model.addAttribute("list", list);
 		return "/ezPersonal/persUserManageWebPart";
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/changePersonInfo.do")
+	public String changePersonInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String noneActiveX = "YES";
+		// 모바일 설정
+		String useMobileMgmt = "";
+		String radBirthType1 = "";
+		String radBirthType2 = "";
+		String literalPhoto = "";
+		
+		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
+		
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
+		Document xmlDom = commonUtil.convertStringToDocument(result);
+		
+		String labelCompany = xmlDom.getElementsByTagName("COMPANY").item(0).getTextContent();
+		String labelDepartment = xmlDom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+		String labelDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		String labelTitle = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String labelJikChek = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent();
+		String labelMail = xmlDom.getElementsByTagName("MAIL").item(0).getTextContent();
+		String txtTelePhone = xmlDom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
+		String txtMobilePhone = xmlDom.getElementsByTagName("MOBILE").item(0).getTextContent();
+		String txtHomePhone = xmlDom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
+		String txtFax = xmlDom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
+		String txtZipCode = xmlDom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
+		String txtAddress = xmlDom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
+		String birthDay = xmlDom.getElementsByTagName("BIRTH").item(0).getTextContent();
+		String birthType = xmlDom.getElementsByTagName("BIRTHTYPE").item(0).getTextContent();
+		String password = xmlDom.getElementsByTagName("PASSWORD").item(0).getTextContent();
+		
+		if (userInfo.getLang().equals("1") || userInfo.getLang().equals("4")) {
+			radBirthType1 = messageSource.getMessage("ezPersonal.t2001", locale);
+			radBirthType2 = messageSource.getMessage("ezPersonal.t2002", locale);
+		}
+		
+		String pInfo = xmlDom.getElementsByTagName("INFO").item(0).getTextContent();
+		pInfo = pInfo.replace("&quot;", "\"");
+		pInfo = pInfo.replace("&gt;", ">");
+		pInfo = pInfo.replace("&lt;", "<");
+		pInfo = pInfo.replace("&amp;", "&");
+		
+		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
+			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";
+		} else {
+			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=/files/upload_personal/photo/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+		}
+		
+		String publicModulus = egovFileScrty.getPbm();
+		
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("txtInfo", pInfo);
+		model.addAttribute("labelCompany", labelCompany);
+		model.addAttribute("labelDepartment", labelDepartment);
+		model.addAttribute("labelDisplayName", labelDisplayName);
+		model.addAttribute("labelTitle", labelTitle);
+		model.addAttribute("labelJikChek", labelJikChek);
+		model.addAttribute("labelMail", labelMail);
+		model.addAttribute("txtTelePhone", txtTelePhone);
+		model.addAttribute("txtMobilePhone", txtMobilePhone);
+		model.addAttribute("txtHomePhone", txtHomePhone);
+		model.addAttribute("txtFax", txtFax);
+		model.addAttribute("txtZipCode", txtZipCode);
+		model.addAttribute("txtAddress", txtAddress);
+		model.addAttribute("birthDay", birthDay);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("literalPhoto", literalPhoto);
+		model.addAttribute("birthType", birthType);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("txtOldPassword", password);
+		
+		return "/ezPersonal/persChangePersonInfo";
+	}
+	
+	/**
+	 * 포탈 환경설정 사진삭제 실행 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/deletePicture.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deletePicture(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user");
+		return result;
+	}
+	
+	/**
+	 * 포탈 환경설정 저장 실행 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/saveUserInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		ezOrganAdminService.updateDBData_user(vo);
+		return "OK";
+	}
+	
+	/**
+	 * 포탈 환경설정 비밀번호 저장 실행 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/changePassword.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		
+		return "OK";
+	}
+	
+	/**
+	 * 포탈 환경설정 언어및표준시간대설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/timeZone.do")
+	public String timeZone(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("strTimeZone", userInfo.getOffset());
+		model.addAttribute("strLang", userInfo.getLang());
+		return "/ezPersonal/persTimeZone";
+	}
+	
+	/**
+	 * 포탈 환경설정 언어및표준시간대설정 저장 실행 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/saveUserTimeZone.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveUserTimeZone(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, HttpServletResponse resp,Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String timeZone = "";
+		String lang = "";
+		String returnValue = "";
+		
+		if (req.getParameter("timeZone") != null && !req.getParameter("timeZone").equals("")) {
+			timeZone = req.getParameter("timeZone");
+		}
+		if (req.getParameter("lang") != null && !req.getParameter("lang").equals("")) {
+			lang = req.getParameter("lang");
+		}
+		
+		userInfo.setOffset(timeZone);
+		userInfo.setLang(lang);
+		
+		String result = ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
+		
+		
+		if (result != null && result.equals("OK")) {
+			if (lang != null &&lang.equals("1")) {
+				returnValue = "ko";
+			} else if (lang != null && lang.equals("2")) {
+				returnValue = "en";
+			} else if (lang != null && lang.equals("3")) {
+				returnValue = "ja";
+			} else if (lang != null && lang.equals("4")) {
+				returnValue = "zh";
+			}
+			//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
+			locale = new Locale(returnValue);
+			localeResolver.setLocale(req, resp, locale);
+			
+			String cookieValue1 = "";
+			Cookie[] cookies = req.getCookies();
+			if (cookies != null) {
+				//loginCookie에 lang값, locale값 설정
+				cookieValue1 = egovFileScrty.decryptAES(cookies[2].getValue());
+				String cInfo = config.getProperty("config.ServerName")+ "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone;
+			
+				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
+	        	cookieID.setPath("/");
+	        	resp.addCookie(cookieID);
+			}
+			
+		}
+
+		return "OK";
 	}
 }

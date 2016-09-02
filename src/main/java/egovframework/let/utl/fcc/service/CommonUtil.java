@@ -102,6 +102,7 @@ public class CommonUtil {
 			String userID = decData.split("///")[1];
 			String locale = decData.split("///")[5];
 			String lang = decData.split("///")[6];
+			String timeZone = decData.split("///")[7];
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
@@ -120,7 +121,7 @@ public class CommonUtil {
 			}
 			
 			user.setLocale(new Locale(locale));
-			
+			user.setOffset(timeZone);
 			return user;
 		}catch(Exception e){
 			return null;

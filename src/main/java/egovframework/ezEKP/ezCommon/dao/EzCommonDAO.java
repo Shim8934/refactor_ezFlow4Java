@@ -31,8 +31,15 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return (String) select("EzCommonDAO.selectUserGetLang", userID);
 	}
 	
+	public String selectUserGetTimeZone(String userID) throws Exception{
+		return (String) select("EzCommonDAO.selectUserGetTimeZone", userID);
+	}
+	
 	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommonDAO.insertTblUserLocalInfo",map);
 	}
 	
+	public void deleteUserLLocalInfo(Map<String, Object> map) throws Exception {
+		delete("EzCommonDAO.deleteUserLLocalInfo",map);
+	}
 }

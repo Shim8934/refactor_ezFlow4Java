@@ -119,6 +119,8 @@ public class LoginController {
 		
 		//DB에서 lang 값 가져옴
 		String lang = ezCommonDAO.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
+		String timeZone = ezCommonDAO.selectUserGetTimeZone(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
+
 		String acceptLanguage = request.getHeader("Accept-Language");
 		String returnValue = "";
 		
@@ -187,7 +189,7 @@ public class LoginController {
 				}
 				loginService.insertLog(resultVO);
 				
-				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang;
+				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
