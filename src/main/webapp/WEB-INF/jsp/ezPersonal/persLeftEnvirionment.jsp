@@ -143,7 +143,7 @@
 						window.parent.frames.right.document.location.href="/myoffice/ezNotification/NotiEnviron.aspx";
 						break;
 					case "TimeZone":
-						window.parent.frames.right.document.location.href="/myoffice/ezPersonal/PersonInfo/TimeZone_cross.aspx";
+						window.parent.frames.right.document.location.href="/ezPersonal/timeZone.do";
 						break;
 					case "MailEnv_sub100":
 						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_InboxRule_Cross.aspx";
