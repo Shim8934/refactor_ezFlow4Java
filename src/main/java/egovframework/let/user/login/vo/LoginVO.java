@@ -2,6 +2,7 @@ package egovframework.let.user.login.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @Class Name : LoginVO.java
@@ -100,8 +101,10 @@ public class LoginVO implements Serializable{
 	private String phone;
 	/** 직책(extensionattribute10)*/
 	private String jikChek;
+	/** 표준시간대*/
+	private String offset;
 	/** 다국어설정*/
-	private String locale;
+	private Locale locale;
 	
 	public String getId() {
 		return id;
@@ -319,11 +322,16 @@ public class LoginVO implements Serializable{
 	public void setJikChek(String jikChek) {
 		this.jikChek = jikChek;
 	}
-	public String getLocale() {
+	public Locale getLocale() {
 		return locale;
 	}
-	public void setLocale(String locale) {
+	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
 	}	
-	
 }
