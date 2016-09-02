@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -46,6 +47,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -84,6 +86,9 @@ public class CommonUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="EzCommonDAO")
+	private EzCommonDAO ezCommonDAO;
+	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
@@ -93,8 +98,10 @@ public class CommonUtil {
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
+
 			String userID = decData.split("///")[1];
 			String locale = decData.split("///")[5];
+			String lang = decData.split("///")[6];
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
@@ -104,16 +111,15 @@ public class CommonUtil {
 	
 			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 			
-			String userLang = getLang();
-			user.setLang(userLang);
-			
-			if (config.getProperty("config.primary").equals(userLang)) {
+			user.setLang(lang);
+
+			if (config.getProperty("config.primary").equals(lang)) {
 				user.setPrimary("1");
 			} else {
 				user.setPrimary("2");
 			}
 			
-			user.setLocale(locale);
+			user.setLocale(new Locale(locale));
 			
 			return user;
 		}catch(Exception e){
@@ -135,7 +141,7 @@ public class CommonUtil {
 			
 			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 			user.setLang(config.getProperty("config.primary"));
-			user.setLocale(locale);
+			user.setLocale(new Locale(locale));
 			
 			ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 			
@@ -398,24 +404,6 @@ public class CommonUtil {
 			return false;
 		}
 	}
-	
-	private String getLang() {
-		String returnValue = "1";
-		String lang = globals.getProperty("Globals.language");
-		
-		if (lang.equals("ko")) {
-			returnValue = "1";
-		} else if (lang.equals("en")) {
-			returnValue = "2";
-		} else if (lang.equals("ja")) {
-			returnValue = "3";
-		} else if (lang.equals("zh")) {
-			returnValue = "4";
-		}
-		
-		return returnValue;
-	}
-	
 }
 
 

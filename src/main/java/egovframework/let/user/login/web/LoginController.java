@@ -3,15 +3,10 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
-
-import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -25,8 +20,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.LocaleResolver;
 
 import com.ibm.icu.util.Calendar;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 /**
  * 일반 로그인을 처리하는 컨트롤러 클래스
  * @author 공통서비스 개발팀 박지욱
@@ -57,6 +61,9 @@ public class LoginController {
 	/** EgovMessageSource */
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
+    
+    @Resource(name="EzCommonDAO")
+	private EzCommonDAO ezCommonDAO;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -64,6 +71,9 @@ public class LoginController {
     
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    
+    @Autowired
+    private LocaleResolver localeResolver;
     
 	/**
 	 * 로그인 화면으로 들어간다
@@ -81,6 +91,11 @@ public class LoginController {
     	
     	return "user/login/login";
 	}
+    
+    
+    public void setLocaleResolver(LocaleResolver localeResolver) {
+    	this.localeResolver = localeResolver;
+    }
 	
     /**
 	 * 일반 로그인을 처리한다
@@ -92,7 +107,7 @@ public class LoginController {
     @RequestMapping(value="/user/login/actionLogin.do")
     public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	logger.debug("=========================================== 로그인 ============================================");
-    
+    	
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	
@@ -101,7 +116,44 @@ public class LoginController {
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-
+		
+		//DB에서 lang 값 가져옴
+		String lang = ezCommonDAO.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
+		String acceptLanguage = request.getHeader("Accept-Language");
+		String returnValue = "";
+		
+		if (lang != null &&lang.equals("1")) {
+			returnValue = "ko";
+		} else if (lang != null && lang.equals("2")) {
+			returnValue = "en";
+		} else if (lang != null && lang.equals("3")) {
+			returnValue = "ja";
+		} else if (lang != null && lang.equals("4")) {
+			returnValue = "zh";
+		} else {
+			// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)
+			returnValue = acceptLanguage.substring(0, 2);
+			
+			if (acceptLanguage.substring(0, 2).equals("ko")) {
+				lang = "1";
+			} else if (acceptLanguage.substring(0, 2).equals("en")) {
+				lang = "2";
+			} else if (acceptLanguage.substring(0, 2).equals("ja")) {
+				lang = "3";
+			} else {
+				lang = "4";
+			}
+			
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("userID", _uid);
+			map.put("timeZone", "235|+09:00");
+			map.put("lang", lang);
+			ezCommonDAO.insertTblUserLocalInfo(map);
+		}
+		//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
+		locale = new Locale(returnValue);
+		localeResolver.setLocale(request, response, locale);
+		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
     	// 1. 일반 로그인 처리
@@ -135,7 +187,7 @@ public class LoginController {
 				}
 				loginService.insertLog(resultVO);
 				
-				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale;
+				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
