@@ -2,9 +2,6 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -17,14 +14,8 @@ import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeUtility;
-import javax.mail.search.SearchTerm;
 import javax.servlet.http.HttpServletRequest;
-
-import com.sun.mail.imap.IMAPFolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +29,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -78,7 +70,7 @@ public class EzEmailMailSearchController {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-    
+	
     /**
 	 * 메일 검색 화면 표시 함수
 	 */
@@ -89,13 +81,15 @@ public class EzEmailMailSearchController {
 			Model model) throws Exception {
 		logger.debug("mailSearchView started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);	
 		
 		String serverName = config.getProperty("config.ServerName");
-		String userLang = "1";
+		String userLang = userInfo.getLang();
 		String useEditor = config.getProperty("config.EDITOR");
 		
 		long[] timeOffset = ezEmailUtil.getTimeOffsetInHourAndMinute();

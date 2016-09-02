@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -291,12 +292,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			inMailColor = "black";
 			outMailColor = "black";
 		}
-
-		userPrimary = config.getProperty("config.primary");
-		
-		//TODO: userLang, userTimeset(offset)값 DB에서 가져와서 제대로 넣기
-		userLang = "1";
-		//userTimeset = userInfo.getOffset(); //"235|+09:00"
 		
 		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		
@@ -312,7 +307,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), day, "yyyy-MM-dd");
 		
 		//TODO:lang(두번째 파라미터) 수정
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1");
+		
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		userPrimary = loginInfo.getPrimary();
+		userLang = loginInfo.getLang();
+		//userTimeset = userInfo.getOffset(); //"235|+09:00"
+		
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		displayNamePrintable = userInfo.getDisplayName();
 		

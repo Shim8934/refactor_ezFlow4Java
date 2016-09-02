@@ -201,7 +201,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String password  = userIdnPw.get(1);
 				
 		// retrieve user info from db.
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		userPrimary = loginInfo.getPrimary();
+		userLang = loginInfo.getLang();
+		//userTimeset = userInfo.getOffset();
+		
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
+		
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		
 		useEditor = config.getProperty("config.EDITOR");
@@ -241,7 +248,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			return "정상적인 값을 전달 받지 못했습니다.";
 		}
 
-
         //DB에서 importance color 가져오기
 		MailColorVO vo = ezEmailService.getMailColor();
 		if (vo != null) {
@@ -252,9 +258,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			outMailColor = "black";
 		}
 		
-		userPrimary = config.getProperty("config.primary");
-		userLang = "1"; // 추후 수정(DB에서 가져와야함.)
-		//userTimeset = userInfo.getOffset();
 		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		mailAttachLimit = config.getProperty("config.MailAttachLimit");
 		bigSizeMailAttachLimit = config.getProperty("config.BigSizeMailAttachLimit");
@@ -1391,7 +1394,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		// TODO : MailUserVO 만들어지면 수정(jsp단도 수정)
 		String userId = "";
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
 		if (userIdnPw !=null && userIdnPw.get(0) != null) {
@@ -2470,6 +2472,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezEmail/letterOption.do")
 	public String mailLetterOption(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		//TODO: 변수들 setting
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String userTimeSet = "";
 		String setLocalTime = "";
 		String nonActiveX = "YES";
@@ -2479,6 +2483,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("setLocalTime", setLocalTime);
 		model.addAttribute("nonActiveX", nonActiveX);
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
+		model.addAttribute("userInfo", userInfo);
 		
 		return "ezEmail/mailLetterOption";
 	}
@@ -2853,7 +2858,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	 */
 	private void doDelaySend(Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
 		String messageId = "";
-		
+		System.out.println("isReserve : ." + isReserve + ".");
+		System.out.println("subject : " + subject);
+		System.out.println("sendDate : " + sendDate);
+		System.out.println("reservedId : ." + reservedId + ".");
 		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
 			messageId = reservedId;
 			ezEmailService.updateReservedMail(messageId, subject, sendDate);

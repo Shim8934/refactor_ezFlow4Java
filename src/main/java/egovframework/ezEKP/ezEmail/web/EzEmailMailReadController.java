@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,6 +56,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -419,9 +419,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String rejectKeyWord = "";
 		
 		// get user credentials
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
-		String password = userInfo.get(1);
+		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userCookieInfo.get(0);
+		String password = userCookieInfo.get(1);
 
 		// retrieve the passed in parameters
 		long uid = Long.parseLong(request.getParameter("iptURL"));
@@ -460,7 +460,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("MDNSentFlag isn't set");
 							
 							// retrieve user info from db.
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
+							LoginVO userInfo = commonUtil.userInfo(loginCookie);
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 																	myEmailAddress, password);
@@ -995,9 +996,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
 	public String previewContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		// get user credentials
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
-		String password  = userInfo.get(1);
+		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userCookieInfo.get(0);
+		String password  = userCookieInfo.get(1);
 		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
@@ -1040,7 +1041,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("MDNSentFlag isn't set");
 							
 							// retrieve user info from db.
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, "1"); //추후 lang(두번째 파라미터) 수정
+							LoginVO userInfo = commonUtil.userInfo(loginCookie);
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 																	myEmailAddress, password);
