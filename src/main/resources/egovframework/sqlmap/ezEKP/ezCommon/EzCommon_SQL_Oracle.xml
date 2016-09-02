@@ -22,4 +22,27 @@
 		{CALL ezCommon.EZSP_WPCONT_LOGINTIME(#v_pUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<select id="EzCommonDAO.selectUserGetLang" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				lang
+			FROM 
+				EZCOMMON.TBLUSERLOCALINFO
+			WHERE
+				userID = #userID#
+		]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMON.TBLUSERLOCALINFO (
+				USERID,TIMEZONE,LANG
+			)
+			VALUES (
+				#userID#,#timeZone#,#lang#
+			)
+		]]>
+	</insert>
+	
+	
 </sqlMap>

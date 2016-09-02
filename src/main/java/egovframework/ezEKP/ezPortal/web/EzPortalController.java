@@ -133,7 +133,6 @@ public class EzPortalController extends EgovFileMngUtil {
 					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 				} else {
 					if (pUserThemeUID == null || pUserThemeUID.equals("")) {
-System.out.println("???");
 						String commentHtml = "<!DOCTYPE html><HTML>" +
 								"<HEAD>" +
                                 "<link href=\"/css/" + egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
@@ -673,6 +672,8 @@ System.out.println("ezCKAdminACL:"+ezCKAdminACL);
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		try {
 			userInfo = commonUtil.userInfo(loginCookie);
+System.out.println("portalLocale:"+locale);
+System.out.println("portalLocale1:"+userInfo.getLocale());
 			String pageID = "";
 			String mode = "view";
 			String gubunFlag = "1";

@@ -2356,6 +2356,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 	}
 	
 	public String addBestTable (LoginVO userInfo) throws Exception {
+System.out.println("getLocale:"+userInfo.getLocale());
 		StringBuilder strData = new StringBuilder();
 		
 		boolean firstFlag = true;
@@ -2431,7 +2432,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			} else {
 				strData.append("<div class='nodata_portlet '>");
 				strData.append("<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>");
-				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", new Locale(globals.getProperty("Globals.language"))) + "</p></div>");
+				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", new Locale(userInfo.getLocale())) + "</p></div>");
 				break;
 			}
 			readTF = true;
@@ -2440,7 +2441,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			if (list == null) {
 				strData.append("<div class='nodata_portlet '>");
 				strData.append("<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>");
-				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", new Locale(globals.getProperty("Globals.language"))) + "</p></div>");
+				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", new Locale(userInfo.getLocale())) + "</p></div>");
 			}
 		}
 		
