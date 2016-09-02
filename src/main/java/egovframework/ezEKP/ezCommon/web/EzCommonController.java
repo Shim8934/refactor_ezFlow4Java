@@ -341,7 +341,7 @@ public class EzCommonController extends EgovFileMngUtil{
         	if (xmldom.getElementsByTagName("MAIL") == null) {
         		literalEmail = email;
         		literalDisplayName = email;
-        		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
         	} else {
         		
 //        		if (xmldom.getElementsByTagName(email) == null) {
@@ -368,7 +368,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		}
         		
         		if (xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") || xmldom.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
-        			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
         		} else {
         			literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
         		}
@@ -387,7 +387,7 @@ public class EzCommonController extends EgovFileMngUtil{
         } else {
         	literalEmail = email;
         	literalDisplayName = email;
-        	literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("ezHome.e14", locale) + "' width=119 height=128>";
+        	literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
         }
         
         
