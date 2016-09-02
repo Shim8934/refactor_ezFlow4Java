@@ -318,7 +318,7 @@
 		                }
 		                else if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
 		                	if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
-		    	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+		    	        		alert(strLang241);
 		                	}
 		                	else {
 		                    	alert("<spring:message code='ezEmail.t478' />");
@@ -404,7 +404,7 @@
 		        		return false;
 		        	}
 		        	else if (xmlHTTP.responseText.indexOf("NO COPY processing failed.") > -1) {
-    	        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+    	        		alert(strLang241);
 		        		return false;
 		        	}
 		            return true;

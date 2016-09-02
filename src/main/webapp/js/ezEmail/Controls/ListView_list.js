@@ -243,7 +243,7 @@ function ListView() {
     }
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang356);
             return;
         }
         if (_dataSource == null) {
@@ -314,7 +314,7 @@ function ListView() {
     }
     function RowDataBind() {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang356);
             return;
         }
         if (_dataSource == null) {

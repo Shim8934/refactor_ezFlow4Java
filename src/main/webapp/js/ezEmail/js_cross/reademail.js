@@ -311,7 +311,7 @@ function event_CopyOrMoveMail() {
         }
         else {
             if (event_CopyOrMoveMail.cmd == "MOVE") {
-                alert("이동하였습니다.");
+                alert(strLang359);
                 window.close();
                 try {
                     window.opener.MailListRefresh();

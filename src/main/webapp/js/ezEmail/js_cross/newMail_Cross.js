@@ -77,7 +77,7 @@ function btn_AttachAdd_onclick() {
         frm.submit();
     }
     else {
-        alert("업로드 할 파일을 선택하시오");
+        alert(strLang360);
     }
 }
 
@@ -717,7 +717,7 @@ function event_SaveonClick() {
         }
         
         if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
-            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+            alert(strLang241);
             MailSend_Hidden_Progress();
             g_saveHttp = null;
             MailStatus = "NO";
@@ -734,14 +734,14 @@ function event_SaveonClick() {
                 g_saveHttp = null;
                 if (event_SaveonClick.savemode == "sendsave") {
                     //alert(strLang106 + "\r\n" + result);
-                    if (result.lastIndexOf("초과합니다.") > 0) {
-                        alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                    if (result.lastIndexOf(strLang361) > 0) {
+                        alert(strLang241);
                     }
-                    else if (result.lastIndexOf("초과했습니다.") > 0) {
-                        alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                    else if (result.lastIndexOf(strLang362) > 0) {
+                        alert(strLang241);
                     }
                     else if (result.lastIndexOf("not be created.") > 0) {
-                        alert("메일 용량이 초과되어 메일 발송이 금지되었습니다.");
+                        alert(strLang363);
                     }
                     else {
                         if (pRtnMessage == "XSS")
@@ -758,14 +758,14 @@ function event_SaveonClick() {
                 }
                 else {
                     if (result.indexOf("ERROR") == 0) {
-                        if (result.lastIndexOf("초과합니다.") > 0) {
-                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                        if (result.lastIndexOf(strLang361) > 0) {
+                            alert(strLang241);
                         }
-                        else if (result.lastIndexOf("초과했습니다.") > 0) {
-                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                        else if (result.lastIndexOf(strLang362) > 0) {
+                            alert(strLang241);
                         }
                         else if (result.lastIndexOf("not be created.") > 0) {
-                            alert("메일 용량이 초과되어 메일 발송이 금지되었습니다.");
+                            alert(strLang363);
                         }
                         else
                             alert(result.substr(6, result.length));
@@ -806,14 +806,14 @@ function event_SaveonClick() {
                         } catch (e) { }
                     }
                     else {
-                    	if (result.lastIndexOf("초과합니다.") > 0) {
-                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                    	if (result.lastIndexOf(strLang361) > 0) {
+                            alert(strLang241);
                         }
-                        else if (result.lastIndexOf("초과했습니다.") > 0) {
-                            alert("사서함이 최대 사서함 크기를 초과했습니다.");
+                        else if (result.lastIndexOf(strLang362) > 0) {
+                            alert(strLang241);
                         }
                         else if (result.lastIndexOf("not be created.") > 0) {
-                            alert("메일 용량이 초과되어 메일 발송이 금지되었습니다.");
+                            alert(strLang363);
                         }
                         else {
 
@@ -877,7 +877,7 @@ function event_SaveonClick() {
             }
         }
         else {
-            alert("외부로 발송되는 메일은 10MB를 넘을 수 없습니다.");
+            alert(strLang364);
             MailSend_Hidden_Progress();
             g_saveHttp = null;
             MailStatus = "NO";

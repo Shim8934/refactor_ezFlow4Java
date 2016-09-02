@@ -84,7 +84,7 @@ function btn_AttachDel_onclick() {
             }
         }
         if (j) {
-            var pInformationContent = "파일을 삭제 하시겠습니까?";
+            var pInformationContent = strLang358;
             var Ans = confirm(pInformationContent);
             if (Ans) {
                 var pAttachDelSN;

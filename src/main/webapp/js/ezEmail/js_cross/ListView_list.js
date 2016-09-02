@@ -297,12 +297,12 @@ function ListView() {
     //리스트뷰 DataSource를 이용하여 DataBind 하기
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang356);
             return;
         }
 
         if (_dataSource == null) {
-            //alert("데이터가 지정되지 않았습니다.");
+            //alert(strLang357);
             return;
         }
         var objElm = document.getElementById(pTagetID);
@@ -385,13 +385,13 @@ function ListView() {
     {
         if (_thisID == "")
         {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang356);
             return;
         }
 
         if (_dataSource == null)
         {
-            alert("데이터가 지정되지 않았습니다.");
+            alert(strLang357);
             return;
         }
         var oList = document.getElementById(_thisID);
@@ -420,7 +420,7 @@ function ListView() {
 
     function RowDataBind() {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang356);
             return;
         }
 

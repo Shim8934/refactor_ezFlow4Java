@@ -361,7 +361,7 @@ function event_Mail_CopyPostSend() {
         	pRtnMessage = xmlhttp_mailCopy.responseText;
         	
         	if (pRtnMessage.indexOf("NO COPY processing failed.") > -1) {
-        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+        		alert(strLang241);
         	} else {
 	        	MailListRefresh();
 	            refreshUnreadCount();
@@ -393,7 +393,7 @@ function Mail_MoveDeletePostSend(Mode, Url, szItemID) {
 function event_xmlhttp_mailMoveDelete_Complete() {
     if (xmlhttp_mailMoveDelete != null && xmlhttp_mailMoveDelete.readyState == 4) {
     	if (xmlhttp_mailMoveDelete.responseText.indexOf("NO COPY processing failed.") > -1) {
-    		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+    		alert(strLang241);
     	}
     	else if (xmlhttp_mailMoveDelete.status >= 200 && xmlhttp_mailMoveDelete.status < 300) {
             MailListRefresh();

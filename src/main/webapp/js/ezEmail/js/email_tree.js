@@ -64,13 +64,13 @@ function get_childXML(url, broot, bcount)
 		{
 		    if(lang != "3")
 		    {
-			    var FolderNameKo = new Array( "받은 편지함" ,  "보낸 편지함" ,  "임시 보관함" ,  "지운 편지함" ,  "개인편지함" );
+			    var FolderNameKo = new Array( strLang63 ,  strLang64 ,  strLang65 ,  strLang66 ,  strLang67 );
 			    var FolderNameEn = new Array("Inbox", "Sent Items", "Drafts", "Deleted Items", "PERSONAL");
 			    var DispName = new Array(strLang68, strLang69, strLang70, strLang4, strLang71);
 			}
 			else
 			{
-			    var FolderNameKo = new Array( "받은 편지함", "임시 보관함",  "보낸 편지함" ,  "지운 편지함" ,  "개인편지함" );
+			    var FolderNameKo = new Array( strLang63, strLang65,  strLang64 ,  strLang66 ,  strLang67 );
 			    var FolderNameEn = new Array("Inbox", "Drafts", "Sent Items", "Deleted Items", "PERSONAL");
 			    var DispName = new Array(strLang68, strLang70, strLang69, strLang4, strLang71);
 			}

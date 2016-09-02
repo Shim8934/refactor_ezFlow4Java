@@ -554,7 +554,7 @@
 		        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
 		        if (xmlhttp.status == "200") {
 		        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
-		        		alert("사서함이 최대 사서함 크기를 초과했습니다.");
+		        		alert(strLang241);
 		        	}
 		        	else {
 			            xmlDoc = loadXMLString(xmlhttp.responseText);
