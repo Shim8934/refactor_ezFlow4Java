@@ -1247,4 +1247,14 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 기록물등록대장 등록정보 특수목록 탭  */
+	@RequestMapping(value = "/ezApprovalG/getRecSCInfo.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getRecSCInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang());
+		
+		return result;
+	}
 }

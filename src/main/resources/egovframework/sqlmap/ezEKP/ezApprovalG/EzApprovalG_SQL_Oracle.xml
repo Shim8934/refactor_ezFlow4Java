@@ -1069,9 +1069,7 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECORDSIMPLEINFO(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getRecScInfo" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
-		{CALL EZAPPROVALG_$companyID$.EZSP_GETRECSCINFO(#v_RECORDID#)}
-	</procedure>
+	
 	<procedure id="EzApprovalG.changeRecordInfo" parameterClass="Map" remapResults="true">
 		{CALL EZAPPROVALG_$companyID$.EZSP_CHANGERECBASICINFO(#v_RECORDID# , #v_SEPATTNO#, #v_RECTYPE#, #v_NUMOFPAGE# , #v_TITLE#, #v_REGDATE#, #v_APRMEMTITLE#, #v_APRMEMTITLE2#, #v_DRAFTER#, #v_DRAFTER2#, #v_EXEDATE#, #v_RECEIPTMEM# , #v_RECEIPTMEM2#, #v_ELECFLAG#, #v_CHANGEREASON#, #v_USERID#, #v_USERNAME#, #v_USERNAME2# )}
 	</procedure>
@@ -1138,5 +1136,18 @@
 	<procedure id="EzApprovalG.doResendEndDoc3" parameterClass="Map"  resultClass="ApprGReceiptVO">
 		{CALL EZAPPROVALG_$companyID$.EZSP_DORESENDENDDOC3(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> 
-  
+  <select id="EzApprovalG.getRecScInfo" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
+	<![CDATA[
+	SELECT SERIALNO ,
+           SC1 ,
+           SC2 ,
+           SC3 
+        FROM EZAPPROVALG_$companyID$.TBSPECIALCATALOGINFO_REC 
+       WHERE  RECORDID = ( SELECT DISTINCT RECORDID 
+                                 FROM EZAPPROVALG_$companyID$.TBRECORD 
+                                  WHERE  RECORDID = #v_RECORDID# )                          
+
+        ORDER BY SERIALNO
+        ]]> 
+   </select>
 </sqlMap>

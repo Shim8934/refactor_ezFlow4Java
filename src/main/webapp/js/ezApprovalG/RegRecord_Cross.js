@@ -9,24 +9,32 @@ var g_TaskCode;
 function InitCabinetInfo() {
     var CabXml = createXmlDom();
     CabXml = loadXMLString(g_CabListXml);
+ 
     g_CabID = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETID");
-
     g_TaskCode = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "TASKCODE");
     tdCabinetName.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETNAME");
-    tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
     tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
-    
+    tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
     tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
     InitCabClassInfo(GetCabinetClassInfo(g_CabID));
 }
 
 function InitCabClassInfo(objCabInfoXml) {
-    bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
+	bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
+    if (bSpecialFlag == "1")
+    {
+        tdSpecialFlag.innerHTML = "Y";
+//        InitSCInfo_Mod(SelectSingleNodeNew(objCabInfoXml, "RESULT/SCINFO"));
+    }
+    else {
+        tdSpecialFlag.innerHTML = "N";
+        btnAddSC.style.display = "none";
+    }
+    
     g_RecTypeCode = objCabInfoXml.getElementsByTagName("RECTYPE")[0].textContent;
     g_arrSCName[0] = objCabInfoXml.getElementsByTagName("LIST1")[0].textContent;
     g_arrSCName[1] = objCabInfoXml.getElementsByTagName("LIST2")[0].textContent;
     g_arrSCName[2] = objCabInfoXml.getElementsByTagName("LIST3")[0].textContent;
-
     InitRegisterType();
 
     InitSCInputBox();
@@ -86,14 +94,13 @@ function InitRegisterType() {
 
             break;
     }
-
     InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
 
     selRegisterType_onchange();
 }
 
 function InitSCInputBox() {
-    if (bSpecialFlag == "2")
+    if (bSpecialFlag == "1")
     {
         btnAddSC.style.display = "";
         tdSpecialFlag.innerHTML = strLang652;
@@ -146,7 +153,7 @@ function RegisterRecord() {
 
     var objRoot = createNodeInsert(xmlpara, objRoot, "DATA");   
 
-    var objNode;
+    var objNode, catalognode, cataloginfo, objSC, objSCNode;
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "MANUALFLAG", "1");
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", arr_userinfo[4]);   
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTNAME", arr_userinfo[15]);
@@ -200,52 +207,38 @@ function RegisterRecord() {
         objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "VISUALAUDIOTYPE", GetAVTypeCode());
     }
 
-    var objSI, objSC, objData;
+    var objSI, objSC, objData,cataloginfo;
     objSI = createNodeAndAppandNode(xmlpara, objRoot, objSI, "SPECIALCATALOGINFO");
-
-    if (bSpecialFlag == "2")
+    if (bSpecialFlag == "1")
     {
-        objSC = createNodeAndAppandNode(xmlpara, objSI, objSC, "SCNAME");
-        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST1", g_arrSCName[0]);
-        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST2", g_arrSCName[1]);
-        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST3", g_arrSCName[2]);
-
+    	cataloginfo = createNodeAndAppandNode(xmlpara, objSI, objSC, "SCNAME");
+        objData = createNodeAndAppandNodeText(xmlpara, cataloginfo, objData, "LIST1", g_arrSCName[0]);
+        objData = createNodeAndAppandNodeText(xmlpara, cataloginfo, objData, "LIST2", g_arrSCName[1]);
+        objData = createNodeAndAppandNodeText(xmlpara, cataloginfo, objData, "LIST3", g_arrSCName[2]);
         if (g_szSCListXml != "")
         {
             var i;
             var objSCXml = createXmlDom();
             objSCXml = loadXMLString(g_szSCListXml);
-
-            var oRows = SelectSingleNode(objSCXml, "LISTVIEWDATA/ROWS/ROW");
+            var oRows = SelectNodes(objSCXml, "LISTVIEWDATA/ROWS/ROW");
             if (oRows.length > 0) {
                 for (i = 0; i < oRows.length; i++) {
-                    objData = createNodeAndAppandNode(xmlpara, objSC, objData, "SCDATA");
-                    objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "SN", oRows.item(i).childNodes(0).childNodes(0).text);
-                    if (oRows.item(i).childNodes(1))
-                    {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST1", oRows.item(i).childNodes(1).childNodes(0).text);
-                    }
-                    else {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST1", "");
-                    }
-
-                    if (oRows.item(i).childNodes(2))
-                    {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST2", oRows.item(i).childNodes(2).childNodes(0).text);
-                    }
-                    else {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST2", "");
-                    }
-
-                    if (oRows.item(i).childNodes(3))
-                    {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST3", oRows.item(i).childNodes(3).childNodes(0).text);
-                    }
-                    else {
-                        objData = createNodeAndAppandNodeText(xmlpara, objSC, objData, "LIST3", "");
-                    }
-                }
-            }
+                	objSC = createNodeAndAppandNode(xmlpara, objSI, objSC, "SCDATA");
+                    var objSN = createNodeAndAppandNodeText(xmlpara, objSC, objSN, "SN", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[0])[0]));
+                    if (GetChildNodes(oRows[i])[1])
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST1", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[1])[0]));
+                    else
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST1", "");
+                    if (GetChildNodes(oRows[i])[2])
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST2", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[2])[0]));
+                    else
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST2", "");
+                    if (GetChildNodes(oRows[i])[3])
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST3", getNodeText(GetChildNodes(GetChildNodes(oRows[i])[3])[0]));
+                    else
+                        createNodeAndAppandNodeText(xmlpara, objSC, objSN, "LIST3", "");
+        }
+    }
         }
     }
     var SepXml = GetSepAttParamXml();
@@ -289,6 +282,7 @@ function btnChangeCabinet_onclick_Complete(rtn) {
     DivPopUpHidden();
     if (rtn[0] == "TRUE") {
         g_CabListXml = rtn[1];
+        alert(g_CabListXml);
         InitCabinetInfo();
     }
 }

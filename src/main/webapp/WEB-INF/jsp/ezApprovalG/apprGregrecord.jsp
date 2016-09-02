@@ -27,6 +27,7 @@
     var g_NodesRcdgAVType=null;
     var g_NodesPhotoAVType=null;
     var rtnVal = new Array();
+   	var g_SCFlag;
     var xmlhttp = createXMLHttpRequest();
     var pUserID = "<c:out value = '${userInfo.id}' />";
     var CompanyID = "<c:out value = '${userInfo.companyID}' />";
@@ -248,7 +249,8 @@
 
             if (RegisterRecord()) {
                 rtnVal[0] = "TRUE";
-                rtnVal[1] = g_CabListXml;
+                
+                rtnVal[1] = g_szSCListXml;
                 window.opener.GetRecordList();
                 window.close();
             }
@@ -548,11 +550,11 @@
                 </td>
               </tr>
               <tr>
-                <th ><spring:message code='ezApprovalG.t94'/></th>
+                <th><spring:message code='ezApprovalG.t94'/></th>
                 <td><table border="0" style="width:98%;border-collapse:collapse; border-spacing:0;padding:0px;" >
                     <tr>
                       <td id="tdSpecialFlag">&nbsp;</td>
-                      <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle"id="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
+                      <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle"id="btnAddSC"name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
                     </tr>
                   </table></td>
               </tr>

@@ -71,18 +71,17 @@
         listview.SetSelectFlag(false);
     }
     function SwapRoleList() {
-
-        if (document.getElementsByName("rdoRecRole")[0].checked) {
+    
+         if (document.getElementsByName("rdoRecRole")[0].checked) {
             document.getElementById("DataLayout").disabled = true;
             document.getElementById("OrganListView").disabled = true;
-            document.getElementById("OrganListView_TR_1").disabled = true;
+//          document.getElementByNames("OrganListView_TR_").disabled = true;
             document.getElementById("RecvDel").style.display = "";
-//             document.getElementById("listview").disabled = "true";
-                    }
+            document.getElementById("listview").disabled = "true";
+        }
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
             document.getElementById("DataLayout").style.display = "";
-            document.getElementById("DataLayout").disabled = "";
-
+//          document.getElementById("DataLayout").disabled = "";
         }
     }
     function InitRecViewerInfo() {

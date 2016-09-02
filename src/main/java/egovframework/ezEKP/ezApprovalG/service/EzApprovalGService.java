@@ -358,4 +358,6 @@ public interface EzApprovalGService {
 
 	public String doReSendDoc(Document xmlDom, String dirPath, String lang) throws Exception;
 
+	public String getRecSCInfo(Document xmlDom, String lang)throws Exception;
+
 }

@@ -102,7 +102,21 @@ public class ApprGCabinetVO{
 	private String modifyDate;
 	private String modifierName2;
 	
+	private String recordID;
+	private String serialNO;
 	
+	public String getSerialNO() {
+		return serialNO;
+	}
+	public void setSerialNO(String serialNO) {
+		this.serialNO = serialNO;
+	}
+	public String getRecordID() {
+		return recordID;
+	}
+	public void setRecordID(String recordID) {
+		this.recordID = recordID;
+	}
 	public String getModifierName2() {
 		return modifierName2;
 	}

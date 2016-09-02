@@ -123,7 +123,7 @@ function InitializeTab(strTabNum) {
                 break;
 
             case "2":
-                if (g_SCFlag == "2")	
+                if (g_SCFlag == "1")	
                 {
                     InitSCInfo();	
                 }
@@ -230,7 +230,7 @@ function GetRecSCInfo() {
     createNodeAndInsertText(xmlpara, objNode, "RECORDID", g_RecID);
     createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
 
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_GetRecSCInfo.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/getRecSCInfo.do", false);
     xmlhttp.send(xmlpara);
 
     return xmlhttp.responseXML;
