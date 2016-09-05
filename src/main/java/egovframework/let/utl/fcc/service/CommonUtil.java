@@ -130,19 +130,7 @@ public class CommonUtil {
 	
 	public LoginVO aprUserInfo(String loginCookie){
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
-			String userID = decData.split("///")[1];
-			String locale = decData.split("///")[5];
-			
-			LoginVO login = new LoginVO();
-			login.setId(userID);
-			login.setDn("NOPASSWORD");
-			
-			LoginVO user = loginService.selectUser(login);
-			
-			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
-			user.setLang(config.getProperty("config.primary"));
-			user.setLocale(new Locale(locale));
+			LoginVO user = userInfo(loginCookie);
 			
 			ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 			

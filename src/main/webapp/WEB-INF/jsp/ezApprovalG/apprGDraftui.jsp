@@ -1115,6 +1115,7 @@
 		
 		                if (ret[1] != false) {
 		                    savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                    savexmlhttp.send(ret[1]);
 		
 		                    var dataNodes = GetChildNodes(savexmlhttp.responseXML);
@@ -1142,12 +1143,13 @@
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
-		
-		                var g_SelCabXml = ret[4];
-		                var xmlCab = createXmlDom();
-		                xmlCab = loadXMLString(g_SelCabXml);
-		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                if (ret[4] != undefined) {
+			                var g_SelCabXml = ret[4];
+			                var xmlCab = createXmlDom();
+			                xmlCab = loadXMLString(g_SelCabXml);
+			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                }
 		
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
@@ -1157,6 +1159,10 @@
 		                pLimitRange = ret[12];
 		                pPageNum = ret[13];
 		                tempSecurityDate = ret[14];
+		                
+		                if (ret[11].substring(0,1) == 3) {
+		                	tempPublic = "N";
+		                }
 		                setPublicFlag();
 		                SummaryFlag = true;
 		

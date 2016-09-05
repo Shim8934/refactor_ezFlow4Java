@@ -1165,6 +1165,7 @@
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
 		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                        savexmlhttp.send(ret[1]);
 		
 		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
@@ -1181,17 +1182,20 @@
 		
 		                if (pGubun != "11" && pGubun != "12") {
 		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
+		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                    savexmlhttp.send(ret[2]);
 		
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                }
 		
-		                var g_SelCabXml = ret[4];
-		                var xmlCab = createXmlDom();
-		                xmlCab = loadXMLString(g_SelCabXml);
-		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                if (ret[4] != undefined) {
+			                var g_SelCabXml = ret[4];
+			                var xmlCab = createXmlDom();
+			                xmlCab = loadXMLString(g_SelCabXml);
+			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                }
 		
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];

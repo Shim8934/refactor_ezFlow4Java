@@ -433,6 +433,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		
 		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
+		
 		File file = new File(realFilePath);
 		
 		BufferedImage inputImage = ImageIO.read(file);

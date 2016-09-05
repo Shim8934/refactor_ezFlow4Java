@@ -78,7 +78,6 @@ function putBansongSign() {
     return signInfo;
 }
 function AprrovMappingSign(ret) {
-
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
@@ -131,7 +130,7 @@ function AprrovMappingSign(ret) {
                 signHeight = 28;
 
                 var strimg;
-                strimg = "<img src='" + "/ezApprovalG/downloadAttach.do?filePath=" + encodeURI(ret) + "' border=0 embedding='1' ";
+                strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
@@ -289,7 +288,7 @@ function AprrovMappingSign(ret) {
 
                     var strimg;
 
-                    var FilePath = RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret);
+                    var FilePath = encodeURI(ret);
 
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
@@ -297,7 +296,7 @@ function AprrovMappingSign(ret) {
                         strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
                     strimg = OpinionText + strimg;
                     strimg = strLang7 + strimg;
@@ -382,7 +381,7 @@ function AprrovMappingSign(ret) {
 
                     var strimg;
 
-                    var FilePath = RootURL + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret);
+                    var FilePath = encodeURI(ret);
 
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
@@ -390,7 +389,7 @@ function AprrovMappingSign(ret) {
                         strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
                     strimg = OpinionText + strimg;
 
@@ -2177,9 +2176,9 @@ function putSignXML(SignXML) {
                         var strimg;
                         if (img.length >= 1) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
-                            strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=APPROVALGSIGN&FILENAME=" + filename + "' border=0 embedding='1' ";
+                            strimg = "<img src='" + "/ezApprovalG/approvalGSign.do?fileName=" + filename + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
+                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             //message.BodySetAttribute(SignName, img[0]);
                         }
 
@@ -2715,7 +2714,7 @@ function EmbedContentIntoXML(bodyhtml) {
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
-        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0) {
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 && !imgColl.item(i).src.toLowerCase().indexOf(".tmp")) {
             var OrgSrc = imgColl.item(i).src;
             var ImgHeight = "0";
             var ImgWidth = "0";
@@ -2745,7 +2744,7 @@ function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 		type : "POST",
 		async : false,
 		data : {
-			"url" : encodeURIComponent(pUrl),
+			"url" : encodeURI(pUrl),
 			"height" : pImgHeight,
 			"width" : pImgWidth,
 			"type" : 2

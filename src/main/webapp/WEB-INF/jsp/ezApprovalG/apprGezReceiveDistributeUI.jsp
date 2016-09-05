@@ -973,7 +973,6 @@
 	        }
 	    }
 	    function APRDeptXMLParsing(APRDEPT, pDocID) {
-	
 	        try {
 	            var listview = new ListView();
 	            listview.LoadFromID("listAPRLINE1");

@@ -111,9 +111,9 @@
 		        GetExchInfo();
 		        if ((attachxml.length > 0) && (attachxsl.length > 0)) {
 		            btnXMLEdit.style.display = "";
-		            attachxmlPath = "/upload_ApprovalG/" + companyID + "/sendXML/" + attachxml;
+		            attachxmlPath = "/files/upload_approvalG/" + companyID + "/sendXML/" + attachxml;
 		            attachxmlName = attachxml.replace(PackDocID, "");
-		            attachxslPath = "/upload_ApprovalG/" + companyID + "/sendXML/" + attachxsl;
+		            attachxslPath = "/files/upload_approvalG/" + companyID + "/sendXML/" + attachxsl;
 		            attachxslName = attachxsl.replace(PackDocID, "");
 		        }
 		        var fields = message.GetFieldsList();

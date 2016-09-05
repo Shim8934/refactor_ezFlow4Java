@@ -1143,6 +1143,7 @@
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
 		                    if (ret[1] != false) {
 		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                        savexmlhttp.send(ret[1]);
 		
 		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
@@ -1159,8 +1160,8 @@
 		                if (pSuSinFlag == "Y") {
 		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
 		                        savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
+		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                        savexmlhttp.send(ret[2]);
-		
 		                        //수신자 저장 후
 		                        btnReceivLineEnable = false;
 		                        setRecevInfo(ret[3]);
@@ -1171,11 +1172,13 @@
 		                    }
 		                }
 		                //기록물철 매핑
-		                var g_SelCabXml = ret[4];
-		                var xmlCab = createXmlDom();
-		                xmlCab = loadXMLString(g_SelCabXml);
-		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                if (ret[4] != undefined) {
+			                var g_SelCabXml = ret[4];
+			                var xmlCab = createXmlDom();
+			                xmlCab = loadXMLString(g_SelCabXml);
+			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                }
 		
 		                //문서 정보
 		                tempSecurity = ret[7];

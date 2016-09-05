@@ -66,21 +66,22 @@
         var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
         var arr_userinfo = new Array();
         arr_userinfo[0] = "user";
-	    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";
-	    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1} '/>";
-	    arr_userinfo[3]  = "<c:out value = '${userInfo.title1} '/>";
-	    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-	    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1} '/>";
-	    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-	    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
+	    arr_userinfo[0]  = "user";
+	    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+	    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1}'/>";
+	    arr_userinfo[3]  = "<c:out value = '${userInfo.title1}'/>";
+	    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+	    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}'/>";
+	    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+	    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
         arr_userinfo[9] = CompanyID;
 	    arr_userinfo[10] = "${susinAdmin}";
-	    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-	    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-	    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-	    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-	    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
+	    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+	    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+	    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+	    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+	    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 	    var CompanyID = "${userInfo.companyID}";
         var g_DeptInfo = "${deptInfo}";
 	    var USE_OCS = "${useOcs}";
@@ -1230,7 +1231,7 @@
         if (selRow.length != 0) {
             var para = new Array();
             para[0] = DocID;
-            var url = "/myoffice/ezApprovalG/ReceivUI/AprGongRamLine_Cross.aspx?type=END";
+            var url = "/ezApprovalG/aprGongRamLine.do?type=END";
 
             aprgongramline_cross_dialogArguments[0] = para;
             aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
@@ -1250,7 +1251,7 @@
     // START
     var ezSelectSusin_Cross_dialogArguments = new Array();
     function btnReSend_onclick() {
-        if (UserID.toLowerCase().trim()!= WriterID.toLowerCase().trim()) {
+        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
             var InformationString = "<spring:message code='ezApprovalG.t928'/>";
             OpenAlertUI(InformationString);
             return;
@@ -1278,7 +1279,7 @@
     {
         if (rtn[0] != "CANCEL") {
             var xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", true);
+            xmlhttp.open("POST", "../enforce/aspx/resendEndDoc.aspx", false);
             xmlhttp.send(rtn[1]);
         }
         return;

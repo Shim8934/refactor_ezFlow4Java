@@ -1813,7 +1813,7 @@ function SendDraftMappingSign(ret) {
             if (field) {
 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
@@ -1870,9 +1870,9 @@ function SendDraftMappingSign(ret) {
             if (field) {
 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
                     if (CurAprType == strAprType4)
                         OpinionText = strLangAprType4 + OpinionText;

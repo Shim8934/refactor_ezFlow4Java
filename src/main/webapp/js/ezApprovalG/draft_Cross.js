@@ -727,16 +727,14 @@ function SendDraftMappingSign(ret) {
         if (field) {
             field.textContent = field.textContent + PositionText;
         }
-
         if (CurAprType == strAprType16)  
         {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
-                
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
                     field.innerHTML = strLang7 + OpinionText + strimg;
 
@@ -786,10 +784,9 @@ function SendDraftMappingSign(ret) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
-
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     if (CurAprType == strAprType4)
                         OpinionText = strLangAprType4 + OpinionText;
 
@@ -824,6 +821,7 @@ function SendDraftMappingSign(ret) {
                 }
             }
         }
+        
         return signInfo;
     } catch (e) {
         alert("SendDraftMappingSign(ret)" + e.description);
@@ -2420,9 +2418,9 @@ function putSignXML(SignXML) {
 
                         var strimg;
                         if (img.length >= 1) {
-                            strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]) + "' border=0 embedding='1' "; //20110209 exchange2010 적용후 결재문서 메일 발송시 이미지깨짐
+                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' "; //20110209 exchange2010 적용후 결재문서 메일 발송시 이미지깨짐
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
+                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             message.DocumentBodySetAttribute(SignName, img[0]);
                         }
 
@@ -2854,7 +2852,7 @@ function EmbedContentIntoXML(bodyhtml) {
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
     for (var i = 0; i < imgColl.length; i++) {
-        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0) {
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 && !imgColl.item(i).src.toLowerCase().indexOf(".tmp")) {
             var OrgSrc = imgColl.item(i).src;
             var ImgHeight = "0";
             var ImgWidth = "0";
@@ -2884,7 +2882,7 @@ function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 		type : "POST",
 		async : false,
 		data : {
-			"url" : encodeURIComponent(pUrl),
+			"url" : encodeURI(pUrl),
 			"height" : pImgHeight,
 			"width" : pImgWidth,
 			"type" : 2

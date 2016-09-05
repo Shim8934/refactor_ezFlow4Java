@@ -123,10 +123,11 @@ function processRowClick(tr) {
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
                 /* 2015-07-06 표준모듈:수정 - KSK */
-                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1] == vWriterID || WriterID == ""))
-                    document.getElementById("tdGongRam").style.display = "";
-                else
-                    document.getElementById("tdGongRam").style.display = "none";
+                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1] == WriterID || WriterID == "")) {
+                	document.getElementById("tdGongRam").style.display = "";
+                } else {
+                	document.getElementById("tdGongRam").style.display = "none";
+                }
             }
         }
 

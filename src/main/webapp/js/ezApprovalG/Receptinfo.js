@@ -688,7 +688,7 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
         GetXml = GetXml + "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA9")) + "</DATA>";
         GetXml = GetXml + "<DATA name='AprMemberDeptName'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA10")) + "</DATA>";
         GetXml = GetXml + "<DATA name='AprMemberDeptName2'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA11")) + "</DATA>";
-
+        
         if (AprDeptRow[i].getAttribute("DATA12") == null)
             GetXml = GetXml + "<DATA name='ReceiptMemberName2'></DATA>";
         else

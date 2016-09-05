@@ -846,7 +846,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String aprDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String ret2) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
+System.out.println(ret2);		
 		String result = ezApprovalGService.updateReceiptInfo(ret2, userInfo.getCompanyID(), userInfo.getLang());
 		
 		return result;
@@ -4945,6 +4945,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	response.addCookie(cookieID6);
 	}
 	
+	/**
+	 * 전자결재G 회송후 대장등록  Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/removeDocCabinetInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String removeDocCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
@@ -4958,6 +4961,55 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		
 		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang());
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기록물등록대장 공람발송 호출  Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprGongRamLine.do")
+	public String aprGongRamLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String type = "APR";
+		String serverName = request.getServerName();
+		
+		if (request.getParameter("type") != null) {
+			type = request.getParameter("type");
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("type", type);
+		model.addAttribute("serverName", serverName);
+		
+		return "ezApprovalG/apprGaprGongRamLine";
+	}
+	
+	/**
+	 * 전자결재G 기록물등록대장 공람발송 등록  Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/gongRamSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String gongRamSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String type = "APR";
+		
+		if (request.getParameter("type") != null) {
+			type = request.getParameter("type");
+		}
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String result = "";
+		
+		if (type.equals("APR")) {
+			result = ezApprovalGService.gongRamSave(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang());
+		} else {
+			result = ezApprovalGService.gongRamSaveEnd(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang());
+		}
 		
 		return result;
 	}

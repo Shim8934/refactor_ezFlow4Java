@@ -41,9 +41,9 @@
 		        }
 		        GetImageXml(pUserID, pDeptID);
 		        if ("${userInfoApprovalG}" == "BOTH")
-		            BaseURL = "/upload_Approval/signimgs/" + "${userInfo.id}/";
+		            BaseURL = "/files/upload_approval/signImgs/" + "${userInfo.id}/";
 		        else
-		            BaseURL = "/upload_ApprovalG/signimgs/" + "${userInfo.id}/";
+		            BaseURL = "/files/upload_approvalG/signImgs/" + "${userInfo.id}/";
 		        var listview = new ListView();
 		        listview.LoadFromID("listSIGNLIST");
 		        var pCurSelRow = listview.GetDataRows();

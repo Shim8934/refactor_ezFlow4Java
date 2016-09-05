@@ -296,6 +296,10 @@ public interface EzApprovalGService {
 	
 	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang) throws Exception;
 	
+	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang) throws Exception;
+	
+	public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;
