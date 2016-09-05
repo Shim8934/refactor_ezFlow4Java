@@ -48,6 +48,10 @@
 	                }
 	                if (pMailAddress != "")
 	                    createNodeAndInsertText(xmlDom, objNode, "EMAILADDRESS", encodeURIComponent(pMailAddress));
+	                else {
+	                    alert(strLang366);
+	                    return;
+	                }
 	            }
 	            g_xmlHttp.open("POST", "/ezEmail/mailCancelSend.do", false);
 	            g_xmlHttp.onreadystatechange = mail_cancelsend_after;
