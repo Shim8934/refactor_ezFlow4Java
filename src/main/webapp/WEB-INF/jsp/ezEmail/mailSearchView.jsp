@@ -168,6 +168,12 @@
 	{
 	    var selcheck;
 	    var count = 0;
+	    
+	    if (GetChildNodes(resultTD).length == 0) {
+	    	alert('<spring:message code="ezEmail.t622" />');
+	        return;
+	    }
+	    
 		var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 		for (var i = 0; i < Rows.length; i++) {
 		    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
@@ -179,7 +185,7 @@
 		{
 			alert('<spring:message code="ezEmail.t622" />');
 			return;
-		}	
+		}			
 		else if (count > 1) 
 		{
 			alert('<spring:message code="ezEmail.t623" />');
@@ -201,6 +207,12 @@
 	{
 	    var selcheck;
 	    var count = 0;
+	    
+	    if (GetChildNodes(resultTD).length == 0) {
+	    	alert('<spring:message code="ezEmail.t625" />');
+	        return;
+	    }
+	    
 	    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 	    for (var i = 0; i < Rows.length; i++) {
 	        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
@@ -235,6 +247,12 @@
 	{
 	    var selcheck;
 	    var count = 0;
+	    
+	    if (GetChildNodes(resultTD).length == 0) {
+	    	alert('<spring:message code="ezEmail.t628" />');
+	        return;
+	    }
+	    
 	    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 	    for (var i = 0; i < Rows.length; i++) {
 	        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
@@ -269,6 +287,12 @@
 	{
 	    selcheck = new Array();
 	    var count = 0;
+	    
+	    if (GetChildNodes(resultTD).length == 0) {
+	    	alert('<spring:message code="ezEmail.t631" />');
+	        return;
+	    }
+	    
 	    if (resultTD.childNodes.item(0).childNodes.length > 0) {
 	        var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 	        for (var i = 0; i < Rows.length; i++) {
@@ -421,6 +445,12 @@
 	{
 	    var selcheck = new Array();
 	    var count = 0;
+	    
+	    if (GetChildNodes(resultTD).length == 0) {
+	    	alert('<spring:message code="ezEmail.t637" />');
+	        return;
+	    }
+	    
 	    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 	    for (var i = 0; i < Rows.length; i++) {
 	        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
