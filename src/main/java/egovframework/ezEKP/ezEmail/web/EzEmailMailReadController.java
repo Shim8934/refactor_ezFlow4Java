@@ -556,6 +556,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttach.do")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttach started.");
+		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
@@ -566,9 +568,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String strUid = request.getParameter("uid");
 		long uid = strUid != null ? Long.parseLong(strUid) : 0;
 		String filename = request.getParameter("filename");
-		if(filename != null){
-			filename = URLDecoder.decode(filename, "UTF-8");
+		logger.debug("folderPath=" + folderPath + ",strUid=" + strUid + ",filename=" + filename);
+		
+		if (folderPath == null || strUid == null || filename == null) {
+			logger.debug("downloadAttach illegal arguments.");
+			
+			return;
 		}
+		
 		String strIndex = request.getParameter("index");
 		logger.debug("strIndex=" + strIndex);
 		int index = -1;
@@ -637,6 +644,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		logger.debug("downloadAttach ended.");
 	}
 	
 	/**
