@@ -141,7 +141,7 @@
 	            }
 	            var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
 	            var Subject = getNodeText(SelectNodes(MailReceiverListXML, "DATA/SUBJECT")[0]);
-	            document.title = "<spring:message code='ezEmail.t566' />" + "( " + decodeURIComponent(Subject) + " )";
+	            document.title = "<spring:message code='ezEmail.t566' />" + "( " + Subject + " )";
 	
 	            for (var i = 0; i < XmlRows.length; i++) {
 	                var ReadDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
