@@ -6,7 +6,7 @@ var g_CodeInfoXml;
 var g_RecTypeCode;
 var g_CabID = "";
 var g_TaskCode;
-function InitCabinetInfo() {
+function InitCabinetInfo(g_CabListXml) {
     var CabXml = createXmlDom();
     CabXml = loadXMLString(g_CabListXml);
  
@@ -16,8 +16,12 @@ function InitCabinetInfo() {
     tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
     tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
     tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
+    
     InitCabClassInfo(GetCabinetClassInfo(g_CabID));
+    InitRegisterType();
+    InitSCInputBox();
 }
+
 
 function InitCabClassInfo(objCabInfoXml) {
 	bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
@@ -35,62 +39,66 @@ function InitCabClassInfo(objCabInfoXml) {
     g_arrSCName[0] = objCabInfoXml.getElementsByTagName("LIST1")[0].textContent;
     g_arrSCName[1] = objCabInfoXml.getElementsByTagName("LIST2")[0].textContent;
     g_arrSCName[2] = objCabInfoXml.getElementsByTagName("LIST3")[0].textContent;
-    InitRegisterType();
-
-    InitSCInputBox();
+  
 }
 
 function InitRegisterType() {
     selRegisterType.innerHTML = "";
 
     var RegTypeCodeXml = createXmlDom();
-    var objRoot, objNode;
-    objRoot = createNodeInsert(RegTypeCodeXml, objRoot, "REGISTERTYPE");
+    var Root, objNode;
+    var objCodeInfo = createXmlDom();
+    objCodeInfo = loadXMLString(g_CodeInfoXml);
+    Root = createNodeInsert(RegTypeCodeXml, Root, "REGISTERTYPE");
+    
     switch (g_RecTypeCode) {
  
         case "1":
             if (ListTypeFlag == "10") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
             }
             else if (ListTypeFlag == "11") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+                
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[0]);
             }
             break;
 
         case "2":
             if (ListTypeFlag == "10") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[3]);
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[3]);
             }
             else if (ListTypeFlag == "11") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);;
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);;
             }
             else {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[2]);
             }
             break;
 
         case "3":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[4]);
             break;
 
         case "4":
-        	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[5]);
             break;
 
         case "5":
 
             if (ListTypeFlag == "10" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
 
             if (ListTypeFlag == "11" || ListTypeFlag == "0") {
-            	objRoot.appendChild(g_CodeInfoXml.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+            	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
 
             break;
     }
@@ -126,21 +134,16 @@ function InitCode() {
 		}        			
 	});
     
-    g_CodeInfoXml = result;
-    
+    g_CodeInfoXml = getXmlString(result);
     if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
         alert(strLang615);
     }
     else {
         var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
-        var nodesRegType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE");
         InitCodeSelectBox(nodesRegType, selRegisterType);
 
-//        g_NodesRcdgAVType = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
-        g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
         g_NodesRcdgAVType = SelectNodes(result, "CODELIST/RECORDINGAVTYPE/CODE");
-        
-        InitCodeSelectBox(nodesRegType, selRegisterType);
+        g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
     }
 }
 
@@ -282,8 +285,7 @@ function btnChangeCabinet_onclick_Complete(rtn) {
     DivPopUpHidden();
     if (rtn[0] == "TRUE") {
         g_CabListXml = rtn[1];
-        alert(g_CabListXml);
-        InitCabinetInfo();
+        InitCabinetInfo(g_CabListXml);
     }
 }
 
