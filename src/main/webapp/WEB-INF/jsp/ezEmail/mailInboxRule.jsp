@@ -431,17 +431,16 @@
 		        }
 		        XmlhttpDelete = createXMLHttpRequest();
 		        XmlhttpDelete.open("POST", "/ezEmail/mailDeleteInboxRule.do", true);
-		        XmlhttpDelete.onreadystatechange = event_DeleteRuleComplite;
+		        XmlhttpDelete.onreadystatechange = event_DeleteRuleComplete;
 		        XmlhttpDelete.send("<DATA><RULEID>" + _RowObject.getAttribute("_itemid") + "</RULEID></DATA>");
 		        
 		    }
-		    function event_DeleteRuleComplite() {
+		    function event_DeleteRuleComplete() {
 		        if (XmlhttpDelete == null || XmlhttpDelete.readyState != 4)
 		            return;
 		        if (XmlhttpDelete.status >= 200 && XmlhttpDelete.status < 300) {
 		            if (XmlhttpDelete.responseXML.getElementsByTagName("DATA")[0].textContent == "OK") {
 		                alert(strLang215);
-		                _RowObject.removeNode(true);
 		                document.getElementById("ContentDescription").innerHTML = "";
 		                _RowObject = null;
 		                Rule_Reload();
