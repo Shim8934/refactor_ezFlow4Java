@@ -1320,6 +1320,14 @@ function PopUpNextMail() {
         }
     }
 }
+
+function event_flag(obj) {
+    var temp_listContentArry = listContentArry;
+    listContentArry = [GetAttribute(obj.parentElement, "id")];
+    toggle_flag();
+    listContentArry = temp_listContentArry;
+}
+
 var flagXmlHttp;
 function toggle_flag() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {

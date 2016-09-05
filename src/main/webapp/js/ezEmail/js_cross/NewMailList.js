@@ -245,7 +245,16 @@ function MakeListInfoHTML(ConentObject) {
                         case "flag":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            _TDColum.style.cursor = "default";
                             _TDColum.innerHTML = p_Flag == "0" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/view-flag.gif'/>" : "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-flag.gif'/>";
+                            _TDColum.onclick = function (event) { 
+                            						event_flag(this);
+                            						
+                            					    event.cancelBubble = true;
+                            					    if (event.stopPropagation) {
+                            					        event.stopPropagation();
+                            					    }                            						
+                            					};
                             break;
                         case "attach":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
