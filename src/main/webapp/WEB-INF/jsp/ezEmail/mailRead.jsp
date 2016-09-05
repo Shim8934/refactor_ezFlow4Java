@@ -194,11 +194,11 @@
 		    	
 			    if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK")
 			    {
-				    alert(mtgid + "하였습니다.");
+				    alert(mtgid + "<spring:message code='ezEmail.t99000099' />");
 				    OnBtnClose();
 				}
 			    else 
-				    alert(mtgid + " 처리가 실패하였습니다.");
+				    alert(mtgid + " <spring:message code='ezEmail.t99000100' />");
 		
 			    xmlHTTP = null;
 			}

@@ -354,6 +354,7 @@ var strLang361 = "초과합니다.";
 var strLang362 = "초과했습니다.";
 var strLang363 = "메일 용량이 초과되어 메일 발송이 금지되었습니다.";
 var strLang364 = "외부로 발송되는 메일은 10MB를 넘을 수 없습니다.";
+var strLang365 = "대용량";
 
 
 function GetLocalTime(Offset , pDateTime)

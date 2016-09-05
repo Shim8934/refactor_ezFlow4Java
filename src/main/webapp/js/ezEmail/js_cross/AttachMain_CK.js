@@ -224,7 +224,10 @@ function AppendFileAttachInfo(ret) {
                     objTr.appendChild(objTd);
 
                     var objTd2 = document.createElement("TD");
-                    objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                    if(is_big == "Y")
+                        objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
+                    else
+                        objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                     objTr.appendChild(objTd2);
 
                     if (fileSize != strLang116) {
@@ -269,7 +272,10 @@ function AppendFileAttachInfo(ret) {
                         objTr.appendChild(objTd);
 
                         var objTd2 = document.createElement("TD");
-                        objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                        if (is_big == "Y")
+                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
+                        else
+                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                         objTr.appendChild(objTd2);
 
                         if (fileSize != strLang116) {

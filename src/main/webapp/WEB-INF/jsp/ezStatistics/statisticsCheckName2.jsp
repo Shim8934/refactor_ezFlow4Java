@@ -31,11 +31,11 @@
 		        var selecteditemcount = listview.GetSelectedRows().length;
 		        var selrow;
 		        if (selecteditemcount == 0) {
-		            alert("선택된 부서가 없습니다.");
+		            alert("<spring:message code='ezOrgan.t106' />");
 		            return;
 		        }
 		        else if (selecteditemcount > 1) {
-		            alert("부서를 하나만 선택해주세요.");
+		            alert("<spring:message code='ezOrgan.t107' />");
 		            return;
 		        }
 		        if (browserIE)

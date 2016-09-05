@@ -2853,7 +2853,7 @@
                 var InitTr = listview.GetDataRows();
                 for (var z = 0; z < InitTr.length; z++) {
                     if (InitTr[z].getAttribute("data2") == strEmail) {
-                        alert("추가 되어있습니다.");
+                        alert("<spring:message code='ezEmail.t99000098' />");
                         return;
                     }
                 }

@@ -268,7 +268,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		//넘어온 folderPath가 보낸편지함이 아닐경우
 		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-			return "메일 회수는 보낸편지함의 메일만 가능합니다.";
+			return egovMessageSource.getMessage("ezEmail.t99000108", locale);
 		}
 		
 		String pEachCancel = "NO";
@@ -289,18 +289,18 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
 			if (message == null) {
-				return "삭제 하려는 원본 메일이 보낸 편지함에 없습니다.\r\n직전발송한 메일 회수인 경우 잠시 후 다시 시도 하여 주십시오.";
+				return egovMessageSource.getMessage("ezEmail.t99000109", locale);
 			}
 			
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			if (!from.equals(emailAddress)) {
-				return "메일 회수는 자신이 보낸메일만 가능합니다.";
+				return egovMessageSource.getMessage("ezEmail.t99000110", locale);
 			}
 			
 			int maxRecAllCount = 500;
 			Address[] addresses = message.getAllRecipients();
 			if (addresses.length > maxRecAllCount) {
-				return "메일 회수는 수신자 수가 " + maxRecAllCount + " 명 이상인 메일은 회수 할 수 없습니다.";
+				return egovMessageSource.getMessage("ezEmail.t99000111", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.t99000112", locale);
 			}
 			
 			String internetMessageId = ((MimeMessage)message).getMessageID();
@@ -339,7 +339,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 				
 				if (innerAddresses.size() == 0) {
-					return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+					return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 				}
 				
 				for (String address : innerAddresses) {
@@ -371,7 +371,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 				
 				if (innerAddresses.size() == 0) {
-					return "메일회수신청 하였으나 내부 사용자가 포함되어 있지 않습니다.";
+					return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 				}
 				
 				for (String address : innerAddresses) {

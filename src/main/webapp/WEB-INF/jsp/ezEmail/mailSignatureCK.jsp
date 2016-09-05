@@ -171,7 +171,7 @@
 		    }
 		    function insert_image(obj) {
 		        if (navigator.userAgent.indexOf("MSIE") == -1) {
-		            alert("이미지 삽입은 인터넷 익스플로러에서 가능 합니다.");
+		            alert("<spring:message code='ezEmail.t99000101' />");
 		            return;
 		        }
 		        alert("<spring:message code='ezEmail.t280' />");
@@ -212,7 +212,7 @@
 		        for (var i = 1 ; i < 3; i++) {
 		            document.getElementById("SigState" + i).checked = false;
 		        }
-		        if (confirm("저장하시겠습니까 ? ")) {
+		        if (confirm("<spring:message code='ezEmail.t99000102' />")) {
 		            SetSig();
 		        }
 		    }
