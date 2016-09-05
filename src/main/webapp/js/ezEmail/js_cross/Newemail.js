@@ -226,7 +226,7 @@ function GetNewGuid() {
 
 function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang43);
+        alert(strLang45);
     }
     else {
         var pSelectItem;
