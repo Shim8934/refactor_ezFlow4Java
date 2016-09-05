@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -662,8 +663,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             		File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
             		in = new FileInputStream(file);
 				} catch (Exception e) {
-					File file = new File(m_ImageList[i].replace("&amp;", "&"));
-					in = new FileInputStream(file);
+					try {
+						File file = new File(m_ImageList[i].replace("&amp;", "&"));
+						in = new FileInputStream(file);
+						// 이미지 못찾을떄 사진없음 이미지 보여주기
+					} catch (FileNotFoundException e2) {
+						in = new FileInputStream(realPath + "/images/default_pic.jpg");
+					}
 				}
                 int len = 0;
                 byte[] buf = new byte[1024];

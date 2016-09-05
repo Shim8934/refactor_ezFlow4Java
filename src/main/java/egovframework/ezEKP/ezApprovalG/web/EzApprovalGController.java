@@ -2298,6 +2298,7 @@ System.out.println(ret2);
 		String fileName = request.getParameter("fileName");
 		String signatureDir = config.getProperty("upload_approvalG.SIGNIMGS");
 		
+		fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 		signatureDir = signatureDir + commonUtil.separator + fileName.split("_")[0];
 		
 		String result = signatureDir + commonUtil.separator + fileName;

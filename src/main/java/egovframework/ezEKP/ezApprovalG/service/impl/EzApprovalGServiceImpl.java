@@ -4242,6 +4242,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		output.close();
 		
 		mhtSaveFlag = true;
+		
+		if (docNO.equals("") && doc.getElementById("docnumber") != null) {
+			docNO = doc.getElementById("docnumber").text();
+		}
+		
+//		String docResult = 
+		
 		return null;
 	}
 
