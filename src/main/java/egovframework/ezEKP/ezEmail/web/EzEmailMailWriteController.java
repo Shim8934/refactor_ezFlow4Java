@@ -419,9 +419,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 								
 				                attachXmlList.append("<NODE>");
 				                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
-				                attachXmlList.append("<PUPLOADSN>" + fileInfo.get("filename") + "</PUPLOADSN>");
+				                attachXmlList.append("<PUPLOADSN>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PUPLOADSN>");
 				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-				                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+				                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
 				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
 				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
 				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
@@ -511,7 +511,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				                attachXmlList.append("<NODE>");
 				                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
 				                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-				                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+				                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
 				                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
 				                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
 				                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
@@ -715,7 +715,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					                attachXmlList.append("<NODE>");
 					                attachXmlList.append("<PUPLOADSN>" + (i + 1) + "</PUPLOADSN>");
 					                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-					                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+					                attachXmlList.append("<PFILENAME>" + EgovStringUtil.getSpclStrCnvr(fileInfo.get("filename")) + "</PFILENAME>");
 					                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
 					                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
 					                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
