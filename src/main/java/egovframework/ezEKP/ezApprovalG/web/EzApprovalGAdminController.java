@@ -866,7 +866,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(doc);
-System.out.println(result);
+		
 		return result;
 	}
 	
