@@ -59,6 +59,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -941,6 +942,42 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		return "ezEmail/mailWrite";
 	}
 
+	/**
+	 * 메일 저장 여부를 묻는 확인 다이알로그 표시
+	 */
+	@RequestMapping(value="/ezEmail/mailConfirmDialog.do")
+	public String mailConfirmDialog(
+					@RequestParam("CAPTION") String caption,
+					@RequestParam("MESSAGE") String message,
+					@RequestParam("BUTTONNAMES") String buttonNames,
+					HttpServletRequest request,
+					Model model) throws Exception {
+		caption = caption != null ? caption : "";
+		message = message != null ? message : "";
+		buttonNames = buttonNames != null ? buttonNames : "";
+		
+		String buttonName0 = "";
+		String buttonName1 = "";
+		String buttonName2 = "";
+		String[] buttonNamesArray = buttonNames.split(",");
+		
+		for (int i = 0; i < buttonNamesArray.length; i++) {
+			switch (i) {
+			case 0: buttonName0 = buttonNamesArray[i]; break;
+			case 1: buttonName1 = buttonNamesArray[i]; break;
+			case 2: buttonName2 = buttonNamesArray[i]; break;
+			}
+		}
+		
+		model.addAttribute("caption", caption);
+		model.addAttribute("message", message);
+		model.addAttribute("buttonName0", buttonName0);
+		model.addAttribute("buttonName1", buttonName1);
+		model.addAttribute("buttonName2", buttonName2);
+		
+		return "ezEmail/mailConfirmDialog";
+	}
+	
 	/**
 	 * 메일 CK에디터 화면 호출 함수
 	 */

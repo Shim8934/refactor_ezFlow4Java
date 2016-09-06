@@ -222,34 +222,30 @@
 	    }
 	    var mail_message_cross_dialogArguments = new Array();
 	    function window_close() {
-	        var retVal = "";
 	        var g_filelist = "";
 	        if ((g_bDirty || g_originalHTML != message.GetEditorContent() || g_filelist != "") && g_saveHttp == null) {
 	            mail_message_cross_dialogArguments[1] = window_close_Complete;
-	            var pUrl = "mail_message_cross.aspx?CAPTION=" + encodeURI("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURI("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURI("<spring:message code='ezEmail.t671' />");
-	            DivPopUpShow(330, 205, pUrl);
+	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURI("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURI("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURI("<spring:message code='ezEmail.t671' />");
+	            DivPopUpShow(330, 205, pUrl);	            
+	        } else {
+	            window.close();
 	        }
-	        window_close_Complete("");
 	    }
 	    function window_close_Complete(retVal) {
 	        DivPopUpHidden();
+	        
 	        if (retVal == "0") {
 	            isClosedSave = true;
 	            Save_onClick("tempsave");
 	            window.close();
 	        }
+	        
 	        g_bDirty = false;
-	        var LoopCnt = 0;
-	        while (g_saveHttp != null) {
-	            JSleep(500);
-	            if (LoopCnt > 10) {
-	                break;
-	            }
-	            LoopCnt++;
-	        }
+	        
 	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
 	            delDrafts();
 	        }
+	        
 	        if (retVal != "2")
 	            window.close();
 	    }
