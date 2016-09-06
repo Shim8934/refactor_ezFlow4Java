@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -35,6 +34,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -65,7 +65,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private EgovMessageSource egovMessageSource;
 
 	@Override
-	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception {
+	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
 
@@ -76,13 +76,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				List<ApprGLeftVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 				
-				String strMultiData = commonUtil.getMultiData(lang);
+				String strMultiData = commonUtil.getMultiData(primary);
 				
 				if (type.equals("LIST")){
 					Map<String, Object> map = new HashMap<String, Object>();
 					
 					map.put("v_LISTTYPE", "106");
-					map.put("v_LANGTYPE", lang);
+					map.put("v_LANGTYPE", primary);
 					map.put("companyID", companyID);
 					
 					List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -152,15 +152,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContTypeInfo(String type, String companyID, String lang) throws Exception {
+	public String getContTypeInfo(String type, String companyID, String primary) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		String strMultiData = commonUtil.getMultiData(lang);
+		String strMultiData = commonUtil.getMultiData(primary);
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContTypeInfo(companyID);
 		
 		if (type.equals("LIST")) {
 			sb.append("<LISTVIEWDATA><HEADERS><HEADER>");
-			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, lang) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
 			
 			for (int i = 0; i < list.size(); i++) {
 				ApprGLeftVO vo = list.get(i);
@@ -214,14 +214,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerToDocStateInfo(String companyID, String lang) throws Exception {
-		String strMultiData = commonUtil.getMultiData(lang);
+	public String getContainerToDocStateInfo(String companyID, String primary) throws Exception {
+		String strMultiData = commonUtil.getMultiData(primary);
 		
 		StringBuilder sb = new StringBuilder();		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_LISTTYPE", "111");
-		map.put("v_LANGTYPE", lang);
+		map.put("v_LANGTYPE", primary);
 		map.put("companyID", companyID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -243,7 +243,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		for (int i = 0; i < listBody.size(); i++) {
 			ApprGDocStateVO vo = listBody.get(i);
 			
-			Field field = vo.getClass().getDeclaredField("documentStateName" + commonUtil.getLangData(lang));
+			Field field = vo.getClass().getDeclaredField("documentStateName" + commonUtil.getLangData(primary));
 	    	field.setAccessible(true);
 
 			sb.append("<ROW>");			
@@ -297,14 +297,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerUseDeptInfo(String contID, String companyID, String lang) throws Exception {
+	public String getContainerUseDeptInfo(String contID, String companyID, String primary) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
 		map.put("v_CONTID", contID);		
 		map.put("companyID", companyID);
 		
-		String strMultiData = commonUtil.getMultiData(lang);
+		String strMultiData = commonUtil.getMultiData(primary);
 		
 		try {
 			List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
@@ -824,7 +824,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	//TODO 다국어가 영어로 고정되어 있음.
 	@Override
-	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception {
+	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception {
 		try {
 			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID).equals("TRUE")) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -882,7 +882,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 
                 ezApprovalGAdminDAO.updateTaskCode(map1);
 			} else {
-				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), "신규생성", "New creation", "", "", "", companyID);
+				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID);
 				
                 if (subSQL == "FALSE") {
 					return "FALSE";
@@ -938,7 +938,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String removeTaskCode(String taskCode, String companyID) throws Exception {
+	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception {
 		try {
 			String tempFlag = getTaskCodeNodeExist(taskCode, "", companyID);
 			
@@ -951,7 +951,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 				
-				String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), "삭제", "Deleted", "", "", "", companyID);
+				String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj08", userInfo.getLocale()), "Deleted", "", "", "", companyID);
 				
 				if (temp.equals("FALSE")) {
 					return "FALSE";
@@ -1016,7 +1016,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception {
+	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_TASKCODE", taskCode);
@@ -1024,7 +1024,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 			
-			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), "사용부서지정", "Designates the Dept", deptCode, deptName, deptName2, companyID);
+			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj09", userInfo.getLocale()), "Designates the Dept", deptCode, deptName, deptName2, companyID);
 			
 			if (temp.equals("FALSE")) {
 				return "FALSE";
@@ -1058,7 +1058,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception {
+	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_TASKCODE", taskCode);
@@ -1066,7 +1066,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 			
-			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), "사용부서삭제", "Delete the dept", deptCode, deptName, deptName2, companyID);
+			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj10", userInfo.getLocale()), "Delete the dept", deptCode, deptName, deptName2, companyID);
 			
 			if (temp.equals("FALSE")) {
 				return "FALSE";
@@ -1403,12 +1403,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception {
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "107");
-		map.put("v_LANGTYPE", lang);
+		map.put("v_LANGTYPE", userInfo.getLang());
 		map.put("companyID", companyID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -1420,22 +1420,22 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			sb.append("<HEADER>");
 			
-			if (vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))))) {
+			if (vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
 				switch (userFlag) {
 				case "1":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
 					break;
 				case "2":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1304", new Locale(globals.getProperty("Globals.language"))));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1304", userInfo.getLocale()));
 					break;
 				case "3":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1305", new Locale(globals.getProperty("Globals.language"))));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1305", userInfo.getLocale()));
 					break;
 				case "4":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1306", new Locale(globals.getProperty("Globals.language"))));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1306", userInfo.getLocale()));
 					break;
 				default:
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", new Locale(globals.getProperty("Globals.language"))));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
 					break;
 				}
 			}
@@ -1469,14 +1469,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_APRTYPE", aprType);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
-		map1.put("v_STRLANG", commonUtil.getMultiData(lang));
+		map1.put("v_STRLANG", commonUtil.getMultiData(userInfo.getLang()));
 		map1.put("companyID", companyID);
 		
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
 		
 		for (ApprGAprLineVO vo : list) {
 			sb.append("<ROW>");
-			if (lang.equals("1")) {
+			if (userInfo.getLang().equals("1")) {
 				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName()) + "</VALUE>");
 				sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
 				sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
@@ -1872,7 +1872,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String formSave(Document doc, String realPath, String companyID) throws Exception {
+	public String formSave(Document doc, String realPath, String companyID, LoginVO userInfo) throws Exception {
 		String contID = doc.getElementsByTagName("FORMCONTID").item(0).getTextContent();
 		String formID = doc.getElementsByTagName("FORMID").item(0).getTextContent();
 		String rtnValue = "";
@@ -1901,7 +1901,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					formMht = doc.getElementsByTagName("FORMMHT").item(0).getTextContent();
 				}
 			}
-			rtnValue = saveFormInfo(contID, formID, formInfo, formConn, formWorkFlow, formRecevGroup, formMht, companyID, realPath);
+			rtnValue = saveFormInfo(contID, formID, formInfo, formConn, formWorkFlow, formRecevGroup, formMht, companyID, realPath, userInfo);
 		}
 		
 		if (rtnValue.indexOf("ERROR") > 0) {
@@ -1961,7 +1961,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 	
-	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath) throws Exception {
+	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo) throws Exception {
 		String strBeforMHT = "";
 		String path = config.getProperty("upload_approvalG.ROOT");
 		Document doc = commonUtil.convertStringToDocument(formInfo);
@@ -1971,13 +1971,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
 		String formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 
-		//TODO 연동정보
+		//TODO 확인후삭제
 		String connXML = "";
 		if (!formConnInfo.equals("")) {
 			doc = commonUtil.convertStringToDocument(formConnInfo);
 			connXML = doc.getElementsByTagName("CONNXML").item(0).getTextContent();
 		}
 
+		//TODO 확인후삭제
 		String validationsXML = "";
 		String statusXML = "";
 		if (!formWorkFlow.equals("")) {
@@ -2020,7 +2021,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				fw.append(formMhtInfo);
 				fw.close();
 			} catch (Exception e) {
-				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", new Locale(globals.getProperty("Globals.language"))) + e.getMessage();
+				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
 		}
 
@@ -2071,4 +2072,37 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			return "";
 		}
 	}
+
+	@Override
+	public String setContainerIDForDoc1(String deptID, String containerType, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CONTTYPEID", containerType);
+		map.put("v_DEPTID", deptID);
+		map.put("companyID", companyID);
+		
+		return ezApprovalGAdminDAO.setContainerIDForDoc1(map);
+	}
+
+	@Override
+	public String makeContainer(String deptID, String containerID, String companyID) throws Exception {
+		
+		return null;
+	}
+
+	@Override
+	public String setContainerIDForDoc2(String docID, String containerID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_CONTID", containerID);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGAdminDAO.setContainerIDForDoc2(map);
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR" + e.getMessage();
+		}
+	}
+
+	
 }

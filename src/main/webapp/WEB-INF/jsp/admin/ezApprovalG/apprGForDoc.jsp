@@ -611,7 +611,7 @@
 				}
 			}
 			
-			/* function DisuseItem_onclick() {
+			function DisuseItem_onclick() {
 				var SelList = new ListView();
 				SelList.LoadFromID("DocList");
 				var oArrRows = SelList.GetSelectedRows();
@@ -624,26 +624,23 @@
 				    if (!confirm("<spring:message code = 'ezApprovalG.t1317' />")) {
 				        return;
 				    }
-				
-				    var xmlpara = createXmlDom();
-				    var xmlresult = createXmlDom();
-				    var xmlhttp = createXMLHttpRequest();
-				
-				    var objNode;
-				    createNodeInsert(xmlpara, objNode, "PARAMETER");
-				    createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-				    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DocID);
-				    createNodeAndInsertText(xmlpara, objNode, "CONTAINERTYPE", "999");
-				    xmlhttp.open("POST", "aspx/SetContainerIDForDoc.aspx", false);
-				    xmlhttp.send(xmlpara);
-				
-			        if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "OK") {
-			            alert("<spring:message code = 'ezApprovalG.t1318' />");
-			        } else {
-			            alert("<spring:message code = 'ezApprovalG.t1319' />" + xmlresult.documentElement.text);
-			        }
+
+				    $.ajax({
+				    	type : "POST",
+				    	url : "/admin/ezApprovalG/setContainerIDForDoc.do",
+				    	async : false,
+				    	data : {docID : DocID, deptID : tr.getAttribute("DATA4"), containerType : '999', companyID : pCompanyID},
+				    	dataType : 'text',
+				    	success : function (result) {
+				    		if (result == 'OK') {
+					            alert("<spring:message code = 'ezApprovalG.t1318' />");
+					        } else {
+					            alert("<spring:message code = 'ezApprovalG.t1319' />" + result);
+					        } 
+				    	}
+				    });
 				}
-			} */
+			}
 			
 			function SendEDM_onclick() {
 				var tr = lvtDoclist.multiselects(0);
@@ -747,7 +744,7 @@
 	            	</c:forEach>
 		        </SELECT><br /><br />
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <%-- <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>
+	            <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
 	            <img src="/images/i_bar.gif" align="absmiddle">
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
 	        </ul>

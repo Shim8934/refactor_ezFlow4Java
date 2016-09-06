@@ -151,6 +151,13 @@
 		]]>	
 	</procedure>
 	
+	
+	<procedure id="EzApprovalGAdmin.setContainerIDForDoc1" 			parameterClass="Map" resultClass="String">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SETCONTAINERIDFORDOC1(#v_CONTTYPEID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -280,6 +287,12 @@
 	<procedure id="EzApprovalGAdmin.deleteForm" 					parameterClass="Map">
 		<![CDATA[
 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETEFORM(#v_FORMID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzApprovalGAdmin.setContainerIDForDoc2" 			parameterClass="Map">
+		<![CDATA[
+			{CALL EZAPPROVALG_$companyID$.EZSP_SETCONTAINERIDFORDOC2(#v_DOCID#, #v_CONTID#)}
 		]]>
 	</procedure>
 	
@@ -564,7 +577,7 @@
 	    ]]>
 	</update>
 	
-		<update id="EzApprovalGAdmin.updateFormContainer"				parameterClass="Map">
+		<update id="EzApprovalGAdmin.updateFormContainer"			parameterClass="Map">
 		<![CDATA[
 			UPDATE EZAPPROVALG_$companyID$.TBFORMCONTAINER
 			SET
@@ -577,6 +590,7 @@
 				formcontid = #contID#					
 	    ]]>
 	</update>
+	
 	<delete id="EzApprovalGAdmin.deleteContainerUseDep" 			parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -584,6 +598,15 @@
         	WHERE
         		containerid = #contID#	
 	    ]]> 
+	</delete>
+	
+		<delete id="EzApprovalGAdmin.deleteFormContUserGroup" 		parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+        		EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
+        	WHERE
+        		formcontid = #contID#
+	    ]]>
 	</delete>
 	
 	<delete id="EzApprovalGAdmin.deleteContainerDocState" 			parameterClass="String">
@@ -599,13 +622,6 @@
 
 	
 	
-	<delete id="EzApprovalGAdmin.deleteFormContUserGroup" 			parameterClass="Map">
-		<![CDATA[
-			DELETE FROM
-        		EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
-        	WHERE
-        		formcontid = #contID#
-	    ]]>
-	</delete>
+
 	
 </sqlMap>

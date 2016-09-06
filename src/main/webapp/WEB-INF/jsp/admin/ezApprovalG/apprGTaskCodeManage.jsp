@@ -25,7 +25,7 @@
 		    
 		    $(document).ready(function(){
 		        document.getElementById("SCompID").value = companyID;
-		        Tree_setconfig();        
+		        Tree_setconfig();
 		        getGroupTree(1, 1, 0, true);
 		        InitListView();
 		        getGroupItem("");

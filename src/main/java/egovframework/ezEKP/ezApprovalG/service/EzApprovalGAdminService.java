@@ -3,20 +3,21 @@ package egovframework.ezEKP.ezApprovalG.service;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGAdminService {
 
-	public String getContainerInfoManage(String deptID, String type, String companyID, String lang) throws Exception;
+	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception;
 
-	public String getContTypeInfo(String type, String companyID, String lang) throws Exception;
+	public String getContTypeInfo(String type, String companyID, String primary) throws Exception;
 	
 	public String deleteContainerType(String docTypeID, String companyID) throws Exception;
 	
-	public String getContainerToDocStateInfo(String companyID, String lang) throws Exception;
+	public String getContainerToDocStateInfo(String companyID, String primary) throws Exception;
 	
 	public String updateContainerToDocStateInfo(Document xmlData, String companyID) throws Exception;
 	
-	public String getContainerUseDeptInfo(String contID, String companyID, String lang) throws Exception;
+	public String getContainerUseDeptInfo(String contID, String companyID, String primary) throws Exception;
 	
 	public String insertContainer(Document xmlData, String companyID) throws Exception;
 	
@@ -52,17 +53,17 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception;
 
-	public String setTaskCode(ApprGTaskVO vo, String companyID) throws Exception;
+	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception;
 
 	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception;
 	
-	public String removeTaskCode(String taskCode, String companyID) throws Exception;
+	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception;
 	
 	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang) throws Exception;
 
-	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
+	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception;
 	
-	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID) throws Exception;
+	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception;
 	
 	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception;
 	
@@ -84,7 +85,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception;
 	
-	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, String lang) throws Exception;
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception;
 
 	public String searchManageAprDocList(String docNumber, String docTitle,
 			String drafter, String drafter2, String draftFromYear,
@@ -110,15 +111,26 @@ public interface EzApprovalGAdminService {
 	
 	public String delForm(String formID, String companyID, String realPath) throws Exception;
 	
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
-
-	
-	
-	
-
 	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception;
 
-	public String formSave(Document doc, String realPath, String companyID) throws Exception;
+	public String formSave(Document doc, String realPath, String companyID, LoginVO userInfo) throws Exception;
+
+	public String setContainerIDForDoc1(String deptID, String containerType, String companyID) throws Exception;
+	
+	public String setContainerIDForDoc2(String docID, String containerID, String companyID) throws Exception;
+	
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+
+	public String makeContainer(String deptID, String containerID, String companyID) throws Exception;
+
+	
+
+	
+	
+	
+
+
+
 
 	
 

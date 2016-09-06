@@ -183,7 +183,7 @@ function fnValueClick() {
         }
         else {
             g_ctlEditInput.disabled = true;
-            g_ctlEditInput.parentElement.parentElement.firstChild.innerText = strLang366;
+            g_ctlEditInput.parentElement.parentElement.firstChild.innerText = strLang783;
 
             if (parentTR.cells(0).innerText == "EXTDOC") {
                 var isExtDoc = "";
@@ -411,7 +411,7 @@ function showHideSubTable() {
     }
 }
 
-var BottomValue = new Array("ClassName", "ID", strLang107, strLang370);
+var BottomValue = new Array("ClassName", "ID", strLang107, strLang783);
 var BottonTDValue = new Array();
 var rootBottom;
 
@@ -492,13 +492,13 @@ function BottomPropertyTable(parentTD) {
     var newEditTd2 = document.createElement("td");
     var newEditInput = document.createElement("input");
 
-    newEditInput.style.width = "100%";
+    newEditInput.style.width = "97%";
     g_ctlEditInput = newEditInput;
 
     newTBody.appendChild(newEditTr);
     newEditTr.appendChild(newEditTd1);
     newEditTr.appendChild(newEditTd2);
-    newEditTd1.innerText = strLang366;
+    newEditTd1.innerText = strLang779;
     newEditTd2.appendChild(newEditInput);
 
     newEditTd1.align = "center";
@@ -520,14 +520,14 @@ function BottomPropertyTable(parentTD) {
     newTd.colSpan = 2;
     newTd.align = "center";
 
-    var btnStyle = "background-color:DFDFDF; font-size:9pt;width:45px;height:20px; border-color:#ffffff;border-width:1px";
+    var btnStyle = "background-color:DFDFDF; font-size:9pt;width:68px;height:20px; border-color:#ffffff;border-width:1px";
 
-    newApplyBtn.innerText = strLang373;
+    newApplyBtn.innerText = strLang786;
     newApplyBtn.onclick = btnApply_click;
     g_okBtn = newApplyBtn;
     g_okBtn.style.cssText = btnStyle;
 
-    newCancelBtn.innerText = strLang374;
+    newCancelBtn.innerText = strLang787;
     newCancelBtn.onclick = btnCancel_click;
     g_cancelBtn = newCancelBtn;
     g_cancelBtn.style.cssText = btnStyle;
