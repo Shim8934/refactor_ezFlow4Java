@@ -793,8 +793,7 @@
 	                                ime-mode: active;">
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
-	                            <select id="SelectToAddress" style="width: 100px" onchange="simple_select('TO',this)"
-	                                runat="server">
+	                            <select id="SelectToAddress" style="width: 100px" onchange="simple_select('TO',this)">
 	                            </select>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">

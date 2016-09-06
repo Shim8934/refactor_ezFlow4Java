@@ -2569,14 +2569,15 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     newElem.setAttribute("name", name);//newElem.getAttribute("name") = name;	
     newElem.setAttribute("email", email);// newElem.getAttribute("email") = email;
 
-    //if (InnerDomain.toLowerCase() != email.split('@')[1].toLowerCase()) {
-    if (type == "mailgroup")
+    if (type == "mailgroup") {
         newElem.style.color = inMailColor;
-    else
-        newElem.style.color = outMailColor;
-    //}
-    //else
-    //    newElem.style.color = inMailColor;
+    }
+    else {
+        if (InnerDomain.toLowerCase().indexOf(email.split('@')[1].toLowerCase()) == -1) 
+            newElem.style.color = outMailColor;
+        else
+            newElem.style.color = inMailColor;
+    }
 
     newElem.setAttribute("href", href);//newElem.getAttribute("href") = href;
 

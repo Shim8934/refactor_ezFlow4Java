@@ -46,6 +46,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -132,8 +133,16 @@ public class EzEmailMailListController {
 		List<MailGeneralVO> mailGeneralList = ezEmailService.getMailGeneral(userId);
 		
 		mailGeneral = mailGeneralList.get(0);
+				
+		// 컬러 관련 설정 정보를 DB로부터 읽어인다.
+		String importanceColor = "#ff0000";
+		MailColorVO mailColor = ezEmailService.getMailColor();
 		
-		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral);		
+		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral + ",mailColor=" + mailColor);		
+		
+		if (mailColor.getImportanceColor() != null) {
+			importanceColor = mailColor.getImportanceColor();
+		}
 		
 		// set model
 		model.addAttribute("folderName", folderName);
@@ -146,6 +155,7 @@ public class EzEmailMailListController {
 		model.addAttribute("mailGeneral", mailGeneral);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("importanceColor", importanceColor);
 		
 		logger.debug("showMailList ended");
 		
