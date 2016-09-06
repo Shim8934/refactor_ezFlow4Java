@@ -8,3 +8,4 @@ var strLang43 = "グループ構成員にはグループを追加することが
 var strLang258 = "以前";
 var strLang259 = "次";
 var strLang91001 = "人";
+var strLang100 = "没有找到的结果。";

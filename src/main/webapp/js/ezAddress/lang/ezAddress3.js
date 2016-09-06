@@ -8,3 +8,4 @@ var strLang43 = "集团成员不能被添加到该组。"
 var strLang258 = "上一页";
 var strLang259 = "下一页";
 var strLang91001 = "人";
+var strLang100 = "検索結果がないです.";

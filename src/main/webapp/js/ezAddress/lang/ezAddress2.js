@@ -8,3 +8,4 @@ var strLang43 = "Group members can not be added to the group."
 var strLang258 = "Prev";
 var strLang259 = "Next";
 var strLang91001 = "PEOPLE";
+var strLang100 = "There is no result found.";

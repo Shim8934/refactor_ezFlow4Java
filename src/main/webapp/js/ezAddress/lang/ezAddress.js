@@ -8,6 +8,7 @@ var strLang43 = "그룹구성원에 그룹을 추가할 수 없습니다."
 var strLang258 = "이전";
 var strLang259 = "다음";
 var strLang91001 = "명";
+var strLang100 = "검색 결과가 없습니다.";
 
 //추가
 var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";
