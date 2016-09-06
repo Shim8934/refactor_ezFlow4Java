@@ -2573,7 +2573,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
         newElem.style.color = inMailColor;
     }
     else {
-        if (InnerDomain.toLowerCase().indexOf(email.split('@')[1].toLowerCase()) == -1) 
+    	var InnerDomainList = InnerDomain.toLowerCase().split(',');
+    	
+    	for (var i = 0; i < InnerDomainList.length; i++) {
+    		InnerDomainList[i] = InnerDomainList[i].trim();
+    	}
+    	
+        if (InnerDomainList.indexOf(email.split('@')[1].toLowerCase()) == -1) 
             newElem.style.color = outMailColor;
         else
             newElem.style.color = inMailColor;
