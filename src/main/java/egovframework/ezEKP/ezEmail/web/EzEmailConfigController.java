@@ -1345,13 +1345,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			out.write("<BR> " + egovMessageSource.getMessage("ezEmail.t504", locale)
 					+ "<BR>" + egovMessageSource.getMessage("ezEmail.t505", locale) + " > "
 					+ egovMessageSource.getMessage("ezEmail.t506", locale));
+			out.write("<BR><BR> " + egovMessageSource.getMessage("ezEmail.t507", locale));
 			
 			out.write("<span id='forscroll'></span>"
 					+ "</div>"
 					+ "<script type='text/javascript'>"
 					+ "forscroll.scrollIntoView(false);"
 					+ "</script></body>");
-			out.write("<BR><BR> " + egovMessageSource.getMessage("ezEmail.t507", locale));
 			out.flush();
 
 			out.close();

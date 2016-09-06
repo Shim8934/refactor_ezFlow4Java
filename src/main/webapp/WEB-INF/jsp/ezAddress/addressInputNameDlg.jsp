@@ -101,7 +101,7 @@
 	                <table width="100%">
 	                    <tr class="primary">
 	                        <td>
-	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%" maxlength="8">
+	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;box-sizing: border-box;" maxlength="8">
 	                        </td>
 	                    </tr>
 	                </table>

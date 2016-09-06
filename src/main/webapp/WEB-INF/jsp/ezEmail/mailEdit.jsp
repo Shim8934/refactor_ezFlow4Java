@@ -643,9 +643,9 @@
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" onKeyPress="return on_keydown()" TABINDEX="1" style="WIDTH:100%;ime-mode:active;"></td>
+		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" onKeyPress="return on_keydown()" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
-		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)" runat="server">
+		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
 		            </td>
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
@@ -659,9 +659,9 @@
 		                	<img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
 		                </div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" TABINDEX="2" style="WIDTH:100%"></td>
+		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
-		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)" runat="server">
+		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
 		            </td>
 		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
@@ -671,7 +671,7 @@
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
-		            <td colspan="3"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" TABINDEX="3" style="WIDTH:100%"></td>
+		            <td colspan="3"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" TABINDEX="3" style="WIDTH:99%"></td>
 		            
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
@@ -679,7 +679,7 @@
 		          </tr>
 		          <tr>
 		            <th style="text-align:center"><spring:message code='ezEmail.t98' /></th>
-		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${subject}" TABINDEX="4" style="WIDTH:100%"></td>
+		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${subject}" TABINDEX="4" style="WIDTH:99%"></td>
 		          </tr>
 		        </table>
 		        <div id="messageBody" mbody="${body}" style="DISPLAY:none"></div>
