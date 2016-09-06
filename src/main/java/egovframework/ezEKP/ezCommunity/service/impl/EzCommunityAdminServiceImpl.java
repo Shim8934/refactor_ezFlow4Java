@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezCommunity.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +15,7 @@ import egovframework.ezEKP.ezCommunity.dao.EzCommunityAdminDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommunityAdminService")
@@ -57,7 +57,7 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 	}
 
 	@Override
-	public String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage) throws Exception {
+	public String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		int iOutputCount = 1, iList = 0;
 		
@@ -72,8 +72,8 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 			sb.append("<td>" + (iOutputCount + (curPage - 1) * comNoPerPage) + "</td>");
 			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
 			
-			String[] compare = egovMessageSource.getMessage("ezCommunity.st1", new Locale(globals.getProperty("Globals.language"))).split(";");
-			String process = egovMessageSource.getMessage("ezCommunity.t38", new Locale(globals.getProperty("Globals.language")));
+			String[] compare = egovMessageSource.getMessage("ezCommunity.st1", userInfo.getLocale()).split(";");
+			String process = egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale());
 			String temp = "NO";
 			
 			for (int c = 1; c <= Integer.parseInt(compare[0]); c++) {
@@ -84,12 +84,12 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 			
 			if (temp.equals("OK")) {
 				sb.append(commonUtil.cleanValue(cComClose.getC_ClubName().trim()));
-				process = egovMessageSource.getMessage("ezCommunity.t38", new Locale(globals.getProperty("Globals.language")));
+				process = egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale());
 			} else {
 				sb.append("<a href=\"javascript:open_info('" + cComClose.getC_ClubNo().trim() + "')\">");
 				sb.append(commonUtil.cleanValue(cComClose.getC_ClubName().trim()));
 				sb.append("</a>");
-				process = egovMessageSource.getMessage("ezCommunity.t483", new Locale(globals.getProperty("Globals.language")));
+				process = egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale());
 			}
 			
 			sb.append("</nobr></td>");
@@ -116,9 +116,9 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 	}
 
 	@Override
-	public void commCloseAll(String code) throws Exception {
+	public void commCloseAll(String code, LoginVO userInfo) throws Exception {
 		aspCommCloseAllDel(code);
-		aspCommCloseAllUpdate(code);
+		aspCommCloseAllUpdate(code, userInfo);
 	}
 
 	@Override
@@ -199,11 +199,11 @@ public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
 		ezCommunityAdminDAO.aspCommCloseAllDel(code);
 	}
 	
-	private void aspCommCloseAllUpdate(String code) throws Exception {
+	private void aspCommCloseAllUpdate(String code, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CODE", code);
-		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", new Locale(globals.getProperty("Globals.language"))));
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale()));
 		
 		ezCommunityAdminDAO.aspCommCloseAllUpdate(map);
 	}

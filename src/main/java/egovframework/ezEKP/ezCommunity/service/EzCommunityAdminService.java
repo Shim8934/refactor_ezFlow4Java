@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 
 public interface EzCommunityAdminService {
@@ -18,7 +19,7 @@ public interface EzCommunityAdminService {
 	
 	String aspCloseComGet2(String keyword, String sRadio) throws Exception;
 
-	String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage) throws Exception;
+	String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception;
 
 	String aspCommInfoGet3(String code) throws Exception;
 	
@@ -32,7 +33,7 @@ public interface EzCommunityAdminService {
 
 	Integer aspSearchKeyGet2(String lang, String select, String query) throws Exception ;
 	
-	void commCloseAll(String code) throws Exception;
+	void commCloseAll(String code, LoginVO userInfo) throws Exception;
 
 	void aspCommAdmitOkSet1(String code, String lang) throws Exception;
 

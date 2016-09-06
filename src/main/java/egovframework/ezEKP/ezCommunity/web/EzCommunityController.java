@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.security.PrivateKey;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -222,7 +221,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
 //		model.addAttribute("flag", flag);		
-		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", ""));
+		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
 		
 		return "/ezCommunity/communityCommMake";
 	}
@@ -297,7 +296,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = request.getParameter("userLevel");
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
 		
 		String strVisit = ezCommunityService.commHomeGet1(userInfo.getId(), code);
 		
@@ -396,7 +395,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardName = request.getParameter("boardName");
 		String userLevel = "";
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(pBoardID, userInfo.getId());
@@ -460,7 +459,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		// 20100119 보안처리 관련 추가작업(권한체크)
-        ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+        ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
         
         int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
         int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
@@ -570,7 +569,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pDocID = request.getParameter("docID");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, hasAttach, model);
@@ -599,11 +598,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/saveItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveItem (@RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
+	public String saveItem (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr, CommunityBoardItemVO item, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
 
-		String ret = ezCommunityService.newItem(xmlData, pMode, request.getServletContext().getRealPath(""));
+		String ret = ezCommunityService.newItem(xmlData, pMode, request.getServletContext().getRealPath(""), userInfo);
 		
 		return ret;
 	}
@@ -643,7 +643,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pReservedItem = request.getParameter("pReservedItem");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
@@ -821,7 +821,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pSortBy = request.getParameter("sortBy");
 		}
 		
-		String boardName = egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language")));
+		String boardName = egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale());
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, "");
 		
 		boardInfo.setSs_Board_MaxRows(10);
@@ -961,7 +961,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판 복사 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
-	public String copyItem(Model model, HttpServletRequest request) throws Exception {
+	public String copyItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pOrgItemIDList = request.getParameter("orgItemIDList");
 		String pOrgBoardID = request.getParameter("orgBoardID");
 		String pDestItemIDList = request.getParameter("destItemIDList");
@@ -971,7 +972,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int i = 0;
 		for(String pOrgItemID : pOrgItemIDList.split(";")) {
-			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, realPath);
+			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, realPath, userInfo);
 		}
 		
 		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
@@ -1360,7 +1361,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
 		
 		int keywordCount = Integer.parseInt(ezCommunityService.guestOneGet1(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang())));
 		totalPage = keywordCount / comNoPerPage;
@@ -1454,7 +1455,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
 		userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code);
 		
 		if (userLevel == null) {
@@ -1517,7 +1518,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pEndDate = EgovDateUtil.getToday("-");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("expireDays", expireDays);
@@ -1537,7 +1538,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 등록 화면2 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
-	public String pollAddOk (Model model, HttpServletRequest request) throws Exception {
+	public String pollAddOk (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selRes = "", answerViewType = "", selRes1="0";
 		int sel = 0, answerCount = 0, selectedNo = 0;
 		
@@ -1565,7 +1567,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		String strXML = ezCommunityService.pollAddOk(sel, selType, selRes, selectedNo, answerCount, model);
+		String strXML = ezCommunityService.pollAddOk(sel, selType, selRes, selectedNo, answerCount, model, userInfo);
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("code", code);
@@ -1619,7 +1621,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			userLevel = "0";
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
 		
 		model.addAttribute("code", code);
@@ -1747,7 +1749,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			block = request.getParameter("block");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
 		String keywordCount = ezCommunityService.commViewMemberGet2(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
 		
 		int comNoPerPage = 10;
@@ -1788,14 +1790,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String sysopName = member.getUserName();
 		
 		if (sysopName.equals("")) {
-			sysopName = egovMessageSource.getMessage("ezCommunity.t398", new Locale(globals.getProperty("Globals.language")));
+			sysopName = egovMessageSource.getMessage("ezCommunity.t398", userInfo.getLocale());
 		}
 		
 		if(commonUtil.getMultiData(userInfo.getLang()).equals("2")) {
 			club.setC_ClubName(club.getC_ClubName2());
 		}
 		
-		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim());
+		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim(), userInfo);
 	
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
@@ -1934,8 +1936,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
 		model.addAttribute("pPermitCount", pPermitCount);
-		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, new Locale(globals.getProperty("Globals.language"))));
-		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, new Locale(globals.getProperty("Globals.language"))));
+		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, userInfo.getLocale()));
+		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
@@ -2018,9 +2020,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
-		String listHeader = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t1168", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
-		String listHeader2 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2015", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
-		String listHeader3 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2016", new Locale(globals.getProperty("Globals.language"))) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		String listHeader = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t1168", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		String listHeader2 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2015", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
+		String listHeader3 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2016", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
 		
 		String returnVal = ezCommunityService.adminHomeBoard1(userInfo, code);
 		String returnVal2 = ezCommunityService.adminHomeBoard2(userInfo, code);
@@ -2625,9 +2627,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			if (clubUser != null) {
 				if (clubUser.getC_birth() != 0 && !memberInfoVO.getBirthDay().trim().equals("")) {
 					if (memberInfoVO.getBirthDay().trim().substring(0, 1).equals("-")) {
-						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t538", new Locale(globals.getProperty("Globals.language"))) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
+						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t538", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
 					} else {
-						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t539", new Locale(globals.getProperty("Globals.language"))) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
+						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t539", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
 					}
 				}
 			} else {
@@ -2708,10 +2710,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (sysopName.equals("")) {
-			sysopName = egovMessageSource.getMessage("ezCommunity.t398", new Locale(globals.getProperty("Globals.language")));
+			sysopName = egovMessageSource.getMessage("ezCommunity.t398", userInfo.getLocale());
 		}
 		
-		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim());
+		String strCategoryPrint = ezCommunityService.categoryPrint(club.getC_Cate_A().trim(), club.getC_Cate_B().trim(), club.getC_Cate_C().trim(), userInfo);
 				
 		model.addAttribute("code", code);
 		model.addAttribute("sysopName", sysopName);
@@ -2757,7 +2759,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                  String sysopID = clubVO.getC_SysopID().trim();
                  String companyName = userInfo.getCompanyName1();
                  
-                 ezCommunityService.adminCommCloseOkInser(code, commName, commName2, sysopID, companyName, EgovDateUtil.getTodayTime(), reason, egovMessageSource.getMessage("ezCommunity.t483", new Locale(globals.getProperty("Globals.language"))));
+                 ezCommunityService.adminCommCloseOkInser(code, commName, commName2, sysopID, companyName, EgovDateUtil.getTodayTime(), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()));
                  
                  strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
 			}
@@ -3253,7 +3255,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo);
 		
 		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID);
 		
@@ -3345,7 +3347,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo);
 		
 		String strNow = EgovDateUtil.getTodayTime();
 		
@@ -3372,7 +3374,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 				
 				if (mode.equals("reply")) {
-					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", new Locale(globals.getProperty("Globals.language"))) + item.getTitle());
+					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", userInfo.getLocale()) + item.getTitle());
 					item.setItemLevel(item.getItemLevel() + 1);
 				} else {
 					strAbstract = item.getAbsTract();
@@ -3421,7 +3423,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do")
 	@ResponseBody
-	public String saveItemPhoto (@RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
+	public String saveItemPhoto (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 		String mode = request.getParameter("mode");
 		
@@ -3455,7 +3458,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.getTodayTime());
         		}
         		
-        		ret = ezCommunityService.newItem(xmlDom, mode, request.getServletContext().getRealPath(""));
+        		ret = ezCommunityService.newItem(xmlDom, mode, request.getServletContext().getRealPath(""), userInfo);
         	}
         }
         
@@ -3494,11 +3497,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			showAdjacent = request.getParameter("showAdjacent");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response);
+		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
 		if (!boardInfo.getRead_FG().equals("true")) {
-			response.getWriter().print("<html><head><title>" + egovMessageSource.getMessage("ezCommunity.t175", new Locale(globals.getProperty("Globals.language"))) + "</title></head><body><table border=0 width=100% height=100%><tr><td align=center valign=center>" + egovMessageSource.getMessage("ezCommunity.t980", new Locale(globals.getProperty("Globals.language"))) + "</td></tr></table></body></html>");
+			response.getWriter().print("<html><head><title>" + egovMessageSource.getMessage("ezCommunity.t175", userInfo.getLocale()) + "</title></head><body><table border=0 width=100% height=100%><tr><td align=center valign=center>" + egovMessageSource.getMessage("ezCommunity.t980", userInfo.getLocale()) + "</td></tr></table></body></html>");
 			response.getWriter().flush();
 		}
 		
@@ -3518,7 +3521,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (item.getEndDate().substring(0, 4).equals("9999")) {
-			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", new Locale(globals.getProperty("Globals.language"))));
+			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", userInfo.getLocale()));
 		}
 		
 		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
@@ -3530,11 +3533,11 @@ public class EzCommunityController extends EgovFileMngUtil{
             nextTitle = map.get("nextTitle");
 
 			if (previousTitle.equals("")) {
-				previousTitle = egovMessageSource.getMessage("ezCommunity.t193", new Locale(globals.getProperty("Globals.language")));
+				previousTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
 			}
 			
 			if (nextTitle.equals("")) {
-				nextTitle = egovMessageSource.getMessage("ezCommunity.t191", new Locale(globals.getProperty("Globals.language")));
+				nextTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
 			}
 		}
 		
@@ -3606,7 +3609,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (item.getEndDate().substring(0, 4).equals("9999")) {
-			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", new Locale(globals.getProperty("Globals.language"))));
+			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", userInfo.getLocale()));
 		}
 		
 		model.addAttribute("userInfo", userInfo);

@@ -126,7 +126,7 @@ public interface EzCommunityService {
 	
 	public String pollMain(LoginVO userInfo, String code) throws Exception;
 	
-	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model) throws Exception;
+	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model, LoginVO userInfo) throws Exception;
 	
 	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception;
 	
@@ -164,7 +164,7 @@ public interface EzCommunityService {
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID) throws Exception;
 
-	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception;
+	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, LoginVO userInfo) throws Exception;
 	
 	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang) throws Exception;
 	
@@ -172,7 +172,7 @@ public interface EzCommunityService {
 	
 	public String checkIfHasReply(String itemList) throws Exception;
 
-	public String newItem(Document xmlData, String pMode, String realPath) throws Exception;
+	public String newItem(Document xmlData, String pMode, String realPath, LoginVO userInfo) throws Exception;
 	
 	public String getItemAttachmentXML(String itemID) throws Exception;
 	
@@ -184,7 +184,7 @@ public interface EzCommunityService {
 
 	public String getACL(String id, String pComID) throws Exception;
 
-	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath) throws Exception;
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception;
 
 	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
 	
@@ -198,7 +198,7 @@ public interface EzCommunityService {
 
 	public String adminMemberListGet2(String code) throws Exception;
 	
-	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception;
+	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception;
 
 	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception;
 	
@@ -296,7 +296,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender) throws Exception;
 
-	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception;
+	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id) throws Exception;
 

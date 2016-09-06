@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCommunity.web;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -208,7 +207,7 @@ public class EzCommunityAdminController {
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang()), code);
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim()));
 		
-		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C());
+		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
@@ -325,7 +324,7 @@ public class EzCommunityAdminController {
         }
         
         curPage = Math.min(curPage, totalPage);
-        String idSpanValue = ezCommunityAdminService.communityCloseCom(clubList, curPage, comNoPerPage);
+        String idSpanValue = ezCommunityAdminService.communityCloseCom(clubList, curPage, comNoPerPage, userInfo);
         
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
@@ -362,7 +361,7 @@ public class EzCommunityAdminController {
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code);
 		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim());
 		
-		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim());
+		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
 		String delReason = ezCommunityAdminService.aspCommInfoGet3(code);
 		String newInfo = ezCommunityAdminService.aspCommInfoGet4(code);
@@ -392,7 +391,7 @@ public class EzCommunityAdminController {
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
-		ezCommunityAdminService.commCloseAll(code);
+		ezCommunityAdminService.commCloseAll(code, userInfo);
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		
@@ -514,11 +513,11 @@ public class EzCommunityAdminController {
 		//TODO 2016-06-27 Exchange YES 일땐 값 받아서 doAction 메소드 실행
 		
 		if (pDivi.equals("AdmitCancel")) {
-			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", new Locale(globals.getProperty("Globals.language")));
+			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
 			ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()));
 		} else if (pDivi.equals("AdmitOK")) {
-			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", new Locale(globals.getProperty("Globals.language")));
+			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
 			
 			if (config.getProperty("config.Use_ezKMS").toUpperCase().equals("YES")) {
 				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName);
@@ -526,7 +525,7 @@ public class EzCommunityAdminController {
 				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "");
 			}
 		} else {
-			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", new Locale(globals.getProperty("Globals.language")));
+			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", userInfo.getLocale());
 			
 		}
 		

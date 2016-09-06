@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -185,8 +184,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			clubName2 = clubName;
 		}
 		
-		String[] bBoardName = egovMessageSource.getMessage("ezCommunity.t1492", new Locale(globals.getProperty("Globals.language"))).split(";");
-		String[] bNotiName = egovMessageSource.getMessage("ezCommunity.t1493", new Locale(globals.getProperty("Globals.language"))).split(";");
+		String[] bBoardName = egovMessageSource.getMessage("ezCommunity.t1492", userInfo.getLocale()).split(";");
+		String[] bNotiName = egovMessageSource.getMessage("ezCommunity.t1493", userInfo.getLocale()).split(";");
 		//10MB 제한
 		String comatt = "10";
 		
@@ -207,7 +206,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (clubVO != null) {
 			response.getWriter().write("<script language='javascript'>");
-			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", new Locale(globals.getProperty("Globals.language"))) + "');");
+			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1029", userInfo.getLocale()) + "');");
 			response.getWriter().write("history.back();");			
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -371,7 +370,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", new Locale(globals.getProperty("Globals.language"))) + "');\n");
+			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -804,7 +803,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		if (item.getEndDate().substring(0, 4).equals("9999")) {
-			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", new Locale(globals.getProperty("Globals.language"))));
+			item.setEndDate(egovMessageSource.getMessage("ezCommunity.t930", userInfo.getLocale()));
 		}
 		
 		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
@@ -816,11 +815,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             nextTitle = map.get("nextTitle");
 
             if (previousTitle.equals("")) {
-            	previousTitle = egovMessageSource.getMessage("ezCommunity.t191", new Locale(globals.getProperty("Globals.language")));
+            	previousTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
             }
             
             if (nextTitle.equals("")) {
-            	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", new Locale(globals.getProperty("Globals.language")));
+            	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
             if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
@@ -883,15 +882,15 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		for (CommunityCPollManagerVO item : list) {
 
 			if (EgovDateUtil.getToday("-").compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
-				pollState = egovMessageSource.getMessage("ezCommunity.t677", new Locale(globals.getProperty("Globals.language")));
-				pollManager = egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language")));
+				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
+				pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 			} else {
 				if (EgovDateUtil.getToday("-").compareTo(item.getPollStartDate().substring(0, 10)) >= 0 && EgovDateUtil.getToday("-").compareTo(item.getPollEndDate().substring(0,10)) <= 0) {
-					pollState = egovMessageSource.getMessage("ezCommunity.t679", new Locale(globals.getProperty("Globals.language")));
-					pollManager = egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language")));
+					pollState = egovMessageSource.getMessage("ezCommunity.t679", userInfo.getLocale());
+					pollManager = egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale());
 				} else {
-					pollState= egovMessageSource.getMessage("ezCommunity.t680", new Locale(globals.getProperty("Globals.language")));
-					pollManager = egovMessageSource.getMessage("ezCommunity.t208", new Locale(globals.getProperty("Globals.language")));
+					pollState= egovMessageSource.getMessage("ezCommunity.t680", userInfo.getLocale());
+					pollManager = egovMessageSource.getMessage("ezCommunity.t208", userInfo.getLocale());
 				}
 			}
 			
@@ -903,14 +902,14 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			sb.append("<td>" + item.getPollStartDate().substring(0, 10) + " ~ " + item.getPollEndDate().substring(0, 10) + "</td>");
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + item.getPollSubject() + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" + item.getPollSubject() + "</a></td>");
-			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", new Locale(globals.getProperty("Globals.language"))) + "</td>");
+			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
 			sb.append("<td>" + pollState + "</td>");
 			sb.append("<td>");
 			
 			if (item.getPollRegUser().equals(userInfo.getId())) {
-				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", new Locale(globals.getProperty("Globals.language"))))) {
+				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale()))) {
 					sb.append("<a class=\"imgbtn\" onclick=poll_edit(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
-				} else if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t208", new Locale(globals.getProperty("Globals.language"))))) {
+				} else if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t208", userInfo.getLocale()))) {
 					sb.append("<a class=\"imgbtn\" onclick=poll_Delete(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
 				}
 			}
@@ -923,7 +922,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model) throws Exception {
+	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		if (sel == 0 && !selType.equals("3")) {
@@ -931,33 +930,33 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			switch (selRes) {
 				case "1" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t617", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t618", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t619", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t620", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t621", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t622", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t623", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t624", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t625", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t626", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t617", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t618", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t619", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t620", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t621", userInfo.getLocale()) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t622", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t623", userInfo.getLocale()) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t624", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t625", userInfo.getLocale()) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t626", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 1;
 					answerCount = 5;
 					
 					break;
 				case "2" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t628", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t629", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t636", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t637", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t628", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t629", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t630", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t631", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", userInfo.getLocale()) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t634", userInfo.getLocale()) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t635", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t636", userInfo.getLocale()) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t637", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 2;
 					answerCount = 5;
 					
 					break;
 				case "3" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t638", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t639", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t640", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t641", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", new Locale(globals.getProperty("Globals.language"))) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t642", new Locale(globals.getProperty("Globals.language"))) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t643", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t644", new Locale(globals.getProperty("Globals.language"))) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t645", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t638", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t639", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t640", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t641", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"3. " + egovMessageSource.getMessage("ezCommunity.t632", userInfo.getLocale()) + "\">3. " + egovMessageSource.getMessage("ezCommunity.t633", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"4. " + egovMessageSource.getMessage("ezCommunity.t642", userInfo.getLocale()) + "\">4. " + egovMessageSource.getMessage("ezCommunity.t643", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"5. " + egovMessageSource.getMessage("ezCommunity.t644", userInfo.getLocale()) + "\">5. " + egovMessageSource.getMessage("ezCommunity.t645", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 3;
 					answerCount = 5;
@@ -972,24 +971,24 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					
 					break;
 				case "12" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t646", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t647", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t648", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t649", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t646", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t647", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t648", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t649", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 5;
 					answerCount = 2;
 					
 					break;
 				case "13" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t650", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t651", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t652", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t653", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t650", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t651", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t652", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t653", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 6;
 					answerCount = 2;
 					
 					break;
 				case "14" :
-					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t630", new Locale(globals.getProperty("Globals.language"))) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language"))) + "</option>");
-					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t634", new Locale(globals.getProperty("Globals.language"))) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t630", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t631", userInfo.getLocale()) + "</option>");
+					sb.append("<option value = \"2. " + egovMessageSource.getMessage("ezCommunity.t634", userInfo.getLocale()) + "\">2. " + egovMessageSource.getMessage("ezCommunity.t635", userInfo.getLocale()) + "</option>");
 					
 					selectedNo = 7;
 					answerCount = 2;
@@ -998,7 +997,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			if (selType.equals("2")) {
 				answerCount++;
-				sb.append("<option value = \"3\">3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "</option>");
+				sb.append("<option value = \"3\">3. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale()) + "</option>");
 			}
 			
 			sb.append("</select>");
@@ -1020,13 +1019,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					}
 					
 					answerCount = Integer.parseInt(selRes);
-					sb.append(selRes + ". " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))));
+					sb.append(selRes + ". " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale()));
 				}
 			} else {
 				if (selType.equals("3")) {
 					answerCount = 1;
 					selectedNo = 10;
-					sb.append(egovMessageSource.getMessage("ezCommunity.t654", new Locale(globals.getProperty("Globals.language"))) + "<input type = \"text\" name = \"selJU\">");
+					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input type = \"text\" name = \"selJU\">");
 				}
 			}
 		}
@@ -1069,40 +1068,40 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				
 				switch (selectedNo) {
 					case "1":
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t618", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t620", new Locale(globals.getProperty("Globals.language")));
-						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t622", new Locale(globals.getProperty("Globals.language")));
-						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t624", new Locale(globals.getProperty("Globals.language")));
-						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t655", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t618", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t620", userInfo.getLocale());
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t622", userInfo.getLocale());
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t624", userInfo.getLocale());
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t655", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
 						
 					case "2" :
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t629", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language")));
-						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language")));
-						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language")));
-						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t637", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t629", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t631", userInfo.getLocale());
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", userInfo.getLocale());
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t635", userInfo.getLocale());
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t637", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
 						
 					case "3" :
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t639", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t641", new Locale(globals.getProperty("Globals.language")));
-						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", new Locale(globals.getProperty("Globals.language")));
-						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t643", new Locale(globals.getProperty("Globals.language")));
-						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t645", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t639", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t641", userInfo.getLocale());
+						answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t633", userInfo.getLocale());
+						answerContent[4] = "4. " + egovMessageSource.getMessage("ezCommunity.t643", userInfo.getLocale());
+						answerContent[5] = "5. " + egovMessageSource.getMessage("ezCommunity.t645", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[6] = "6. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
@@ -1112,37 +1111,37 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 						answerContent[2] = "2. No.";
 						
 						if (selType.equals("2")) {
-							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
 						
 					case "5" :
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t647", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t649", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t647", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t649", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
 						
 					case "6" :
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t651", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t653", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t651", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t653", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
 						
 					case "7" :
-						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t631", new Locale(globals.getProperty("Globals.language")));
-						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t635", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = "1. " + egovMessageSource.getMessage("ezCommunity.t631", userInfo.getLocale());
+						answerContent[2] = "2. " + egovMessageSource.getMessage("ezCommunity.t635", userInfo.getLocale());
 						
 						if (selType.equals("2")) {
-							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+							answerContent[3] = "3. " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 						}
 						
 						break;
@@ -1159,7 +1158,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 					case "9" :
 						for (int i = 1; i <= Integer.parseInt(answerCount); i++) {
 							if (i == Integer.parseInt(answerCount) && selType.equals("2")) {
-								answerContent[i] = i + ". " + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language")));
+								answerContent[i] = i + ". " + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale());
 							} else {
 								if (request.getParameter("selNo_" + i) != null) {
 									answerContent[i] = request.getParameter("selNo_" + i);
@@ -1170,7 +1169,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 						break;
 						
 					case "10" :
-						answerContent[1] = egovMessageSource.getMessage("ezCommunity.t603", new Locale(globals.getProperty("Globals.language")));
+						answerContent[1] = egovMessageSource.getMessage("ezCommunity.t603", userInfo.getLocale());
 						
 						break;
 				}
@@ -1307,7 +1306,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 						sb.append("></td><td class=\"t2\">");
 						
 						if (answerVO.getAnswerNo().equals(Integer.toString(questionVO.getAnswerCount()))) {
-							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", userInfo.getLocale()) + "</a>");
 						} else {
 							sb.append(commonUtil.cleanValue(answerVO.getAnswerContent()));
 						}
@@ -1338,7 +1337,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 						break;
 					case 3 :
 						sb.append("<tr><td colspan=\"5\" style=\"padding-left:10px\"><b>" + commonUtil.cleanValue(answerVO.getAnswerContent()) + ": </b> <input type=\"text\" name=\"answerETC\" style=\"width:550px\">");
-						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", new Locale(globals.getProperty("Globals.language"))) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", new Locale(globals.getProperty("Globals.language"))) + "</span></a>");
+						sb.append("<input type=hidden name=pollSelect_" + questionVO.getQuestionNo() + ">&nbsp;<a href=\"javascript:etcview('" + egovMessageSource.getMessage("ezCommunity.t207", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\" class=\"imgbtn\" ><span>" + egovMessageSource.getMessage("ezCommunity.t689", userInfo.getLocale()) + "</span></a>");
 						sb.append("</td>");
 						sb.append("</tr>");
 						
@@ -1353,11 +1352,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
 		
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
-			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
-			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
 		} else {
-			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", new Locale(globals.getProperty("Globals.language"))) + managerVO.getPollSubject() + "</th>");
-			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", new Locale(globals.getProperty("Globals.language"))) + name + "</th>");
+			strHTML.append("<th title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;width:80%;white-space:normal;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + managerVO.getPollSubject() + "</th>");
+			strHTML.append("<th width=\"\" align=\"right\" >" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
 		}
 		
 		strHTML.append("</tr>");
@@ -1417,13 +1416,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		} else {
 			if (notResponse == 1) {
 				response.getWriter().write("<script language='javascript'>\n");
-				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t691", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t691", userInfo.getLocale()) + "\');\n");
 				response.getWriter().write("window.history.back();");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
 			} else {
 				response.getWriter().write("<script language='javascript'>\n");
-				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t692", new Locale(globals.getProperty("Globals.language"))) + "\');\n");
+				response.getWriter().write("alert(\'" + egovMessageSource.getMessage("ezCommunity.t692", userInfo.getLocale()) + "\');\n");
 				response.getWriter().write("window.history.back();");
 				response.getWriter().write("</script>");
 				response.getWriter().flush();
@@ -1472,7 +1471,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			sb.append("<td>");
 			
 			if (user.getC_ID().trim().equals(strSysopID)) {
-				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
+				sb.append("<img src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
@@ -1486,7 +1485,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			}
 			
 			sb.append("</td>");
-			sb.append("<td style=\"width:55; align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", new Locale(globals.getProperty("Globals.language"))) + "</td></tr>");
+			sb.append("<td style=\"width:55; align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
 		}
 		
 		return sb.toString();
@@ -1615,11 +1614,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "</td>");
             sb.append("<td align=\"center\">" + outApplication.getOutDate().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</span></a><a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</span></a>");
+            sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"  ><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a><a href=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             sb.append("<tr>");
-            sb.append("<td width='60' align='center' >" + egovMessageSource.getMessage("ezCommunity.t564", new Locale(globals.getProperty("Globals.language"))) + "</td>");
+            sb.append("<td width='60' align='center' >" + egovMessageSource.getMessage("ezCommunity.t564", userInfo.getLocale()) + "</td>");
             sb.append("<td align='left' colspan='4'>");
             sb.append("<textarea id='reason' style='width: 100%;height:60px;box-sizing:border-box;-moz-box-sizing:border-box;' readonly>" + commonUtil.cleanValue(outApplication.getOutReason().trim()) + "</textarea>");
             sb.append("</td>");
@@ -1643,7 +1642,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			sb.append("<td class=\"white\">");
 			
 			if (clubUser.getC_ID().trim().equals(strSysopID.trim())) {
-				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", new Locale(globals.getProperty("Globals.language"))) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
+				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
 			}
 			
 			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=encodeURIComponent(" + clubUser.getUserName() + ")&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
@@ -1892,7 +1891,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response) throws Exception {
+	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
 		String rtnValue = "";
 		boolean result = false;
 
@@ -1917,7 +1916,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (result != true) {
 			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", new Locale(globals.getProperty("Globals.language"))));
+			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", userInfo.getLocale()));
 			response.getWriter().flush();
 		}
 	}
@@ -2019,8 +2018,8 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		CommunityBoardPropertyVO boardInfo = new CommunityBoardPropertyVO();
 
 		if (pBoardID.equals("")) {
-			boardInfo.setBoardName(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
-			boardInfo.setBoardName2(egovMessageSource.getMessage("ezCommunity.t91", new Locale(globals.getProperty("Globals.language"))));
+			boardInfo.setBoardName(egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale()));
+			boardInfo.setBoardName2(egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale()));
 			return boardInfo;
 		}
 		
@@ -2140,20 +2139,20 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}	
 	
 	@Override
-	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC) throws Exception {
+	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, LoginVO userInfo) throws Exception {
 		StringBuilder strHTML = new StringBuilder();
 		
 		strHTML.append("<Select name=\"cCateA\">");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
-		strHTML.append(getCategoryValueA(strSelCateA));
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", userInfo.getLocale()) + "</Option>");
+		strHTML.append(getCategoryValueA(strSelCateA, userInfo));
 		strHTML.append("</Select>");
 		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
-		strHTML.append(getCategoryValueB(strSelCateB));
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", userInfo.getLocale()) + "</Option>");
+		strHTML.append(getCategoryValueB(strSelCateB, userInfo));
 		strHTML.append("</Select>");
 		strHTML.append("<Select name=\"cCateC\" class=\"text\" style='display:none'>");
-		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", new Locale(globals.getProperty("Globals.language"))) + "</Option>");
-		strHTML.append(getCategoryValueC(strSelCateC));
+		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t82", userInfo.getLocale()) + "</Option>");
+		strHTML.append(getCategoryValueC(strSelCateC, userInfo));
 		strHTML.append("</Select>");
 		
 		return strHTML.toString();
@@ -2314,7 +2313,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String newItem(Document xmlData, String pMode, String realPath) throws Exception {
+	public String newItem(Document xmlData, String pMode, String realPath, LoginVO userInfo) throws Exception {
 		String pUploadFilePath = "", pContentLocation = "", pHasAttach = "", pContent = "";
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
@@ -2406,7 +2405,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			saveMHTResult = saveMHT(pContent, item.getItemID(), item.getBoardID(), pUploadFilePath, realPath);
 			
 			if (saveMHTResult == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj04", new Locale(globals.getProperty("Globals.language")));
+				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
 			}
 		}
 		
@@ -2457,7 +2456,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		
 		if (item.getAttachments().length() > 0) {
 			if (saveAttachmentsInfo(item, pUploadFilePath, realPath) == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj05", new Locale(globals.getProperty("Globals.language")));
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			pHasAttach = "1";
 		} else {
@@ -2575,7 +2574,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		String rpwd = EgovFileScrty.decryptRsa(pk, pPassword);
 		pPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
 		
-		String[] u_Name = egovMessageSource.getMessage("ezCommunity.t115", new Locale(globals.getProperty("Globals.language"))).split(";");
+		String[] u_Name = egovMessageSource.getMessage("ezCommunity.t115", userInfo.getLocale()).split(";");
 		
 		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID);
 		
@@ -2649,16 +2648,16 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		strHTML.append("<tr>");
-		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", new Locale(globals.getProperty("Globals.language"))) + "</th>");
-		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", new Locale(globals.getProperty("Globals.language"))) + "</th>");
-		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", new Locale(globals.getProperty("Globals.language"))) + "</th>");
-		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", userInfo.getLocale()) + "</th>");
 		
 		if (iColSpan == 6) {
-			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", userInfo.getLocale()) + "</th>");
 		}
 		
-		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", new Locale(globals.getProperty("Globals.language"))) + "</th>");
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", userInfo.getLocale()) + "</th>");
 		strHTML.append("</tr>");
 		
 		int iOutputCount = 1;
@@ -3067,7 +3066,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath) throws Exception {
+	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
@@ -3178,7 +3177,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
         sb.append("</NODE>");
         sb.append("</NODES>");
 
-        String ret = newItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath);
+        String ret = newItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
         
         if(ret.equals("OK")) {
         	ezCommunityDAO.copyUpdate(pDestItemID);
@@ -3274,7 +3273,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 
 	@Override
-	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C) throws Exception {
+	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		StringBuilder sb = new StringBuilder();
 		String cateA = "0";
@@ -3307,7 +3306,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 		}
 		
 		if (!cateA.equals("0")) {
-			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, userInfo.getLocale()));
 			caca = 1;
 		}
 		
@@ -3316,7 +3315,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				sb.append(", ");
 			}
 			
-			sb.append(egovMessageSource.getMessage("ezCommunity."+cateB, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateB, userInfo.getLocale()));
 			caca = 1;
 		}
 		
@@ -3325,7 +3324,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 				sb.append(",&nbsp");
 			}
 			
-			sb.append(egovMessageSource.getMessage("ezCommunity."+cateC, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage("ezCommunity."+cateC, userInfo.getLocale()));
 		}
 		
 		return sb.toString();
@@ -3898,11 +3897,11 @@ public class EzCommunityServiceImpl implements EzCommunityService{
             sb.append("<td class=\"white\" align=\"center\">");
             
             if (userInfo.getLang().equals("2")) {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
+                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
             } else {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", new Locale(globals.getProperty("Globals.language"))) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", new Locale(globals.getProperty("Globals.language"))) + "</a>");
+            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
+                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
             }
             
             sb.append("</td>");
@@ -4387,7 +4386,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 	}
 	
 
-	public String getCategoryValueA(String strSelCateA) throws Exception {
+	public String getCategoryValueA(String strSelCateA, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueA();
 		
@@ -4402,13 +4401,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage(code, userInfo.getLocale()));
 			sb.append("</Option>");
 		}
 		return sb.toString();
 	}
 
-	public String getCategoryValueB(String strSelCateB) throws Exception {
+	public String getCategoryValueB(String strSelCateB, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueB();
 		
@@ -4423,13 +4422,13 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage(code, userInfo.getLocale()));
 			sb.append("</Option>");
 		}
 		return sb.toString();
 	}
 
-	public String getCategoryValueC(String strSelCateC) throws Exception {
+	public String getCategoryValueC(String strSelCateC, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		List<CommunityCCategoryVO> categoryList = ezCommunityDAO.getCategoryValueC();
 		
@@ -4444,7 +4443,7 @@ public class EzCommunityServiceImpl implements EzCommunityService{
 			
 			sb.append(">");
 			String code = "ezCommunity."+category.getC_Name();
-			sb.append(egovMessageSource.getMessage(code, new Locale(globals.getProperty("Globals.language"))));
+			sb.append(egovMessageSource.getMessage(code, userInfo.getLocale()));
 			sb.append("</Option>");
 		}
 		return sb.toString();
