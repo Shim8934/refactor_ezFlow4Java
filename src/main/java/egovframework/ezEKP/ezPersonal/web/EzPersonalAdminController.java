@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezPersonal.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 관리자 - 초기화면
@@ -92,7 +90,7 @@ public class EzPersonalAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getLang());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -113,7 +111,8 @@ public class EzPersonalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		String companyID = request.getParameter("id");
 		int currentPage = Integer.parseInt(request.getParameter("page"));
@@ -146,11 +145,11 @@ public class EzPersonalAdminController {
 			
 			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE></CELL>");
 			result.append("<CELL><VALUE>" + vo.getPostDate().substring(0, 10) + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", locale) + "</VALUE>");
+			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
 			result.append("<TYPE>BTN</TYPE>");
 			result.append("<FUNC>mod_notice</FUNC>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1></CELL>");
-			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", locale) + "</VALUE>");
+			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
 			result.append("<TYPE>BTN</TYPE>");
 			result.append("<FUNC>del_notice</FUNC>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
@@ -285,6 +284,7 @@ public class EzPersonalAdminController {
 		}
 		
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
 		
 		return "admin/ezPersonal/personalAddQuickLink";
@@ -320,7 +320,20 @@ public class EzPersonalAdminController {
 	 * 초기화면 QuickLink 권한등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do")
-	public String selectTarget() throws Exception {
-		return "";
+	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String topID = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("topID", topID);
+		
+		return "admin/ezPersonal/personalSelectTarget";
 	}
 }

@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var userLang = "<c:out value = '${strUserLan}' />";
+			var userLang = "<c:out value = '${strUserLang}' />";
 	        var mode = "<c:out value = '${mode}' />";
 	        var g_attendant = "";
 	        var xmlhttp;
@@ -22,6 +22,7 @@
 	        var ArgQuickID;
 	        var checkValue = "A";
 	        var LinkTypeURL;
+	        var primary = "<c:out value = '${primary}' />";
 	        var ReturnFunction;
 	        var RetValue;
 	        
@@ -170,6 +171,7 @@
 	            if (CrossYN()) {
 	                selecttarget_dialogArguments[0] = g_attendant;
 	                selecttarget_dialogArguments[1] = regit_Complete;
+	                
 	                var SelectTarget = window.open("/admin/ezPersonal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(800, 480));
 	                
 	                try { SelectTarget.focus(); } catch (e) {
@@ -405,7 +407,7 @@
 	            <td colspan="2">
 	                <table width="100%">
 	                    <tr class="primary">
-	                        <th><spring:message code = 'ezPersonal.t1028' /></th>
+	                        <th><spring:message code = 'ezPersonal.s81' /></th>
 	                        <td>
 	                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""></td>
 	                    </tr>
