@@ -169,45 +169,6 @@
 		            }
 		        }
 		    }
-		    function insert_image(obj) {
-		        if (navigator.userAgent.indexOf("MSIE") == -1) {
-		            alert("<spring:message code='ezEmail.t99000101' />");
-		            return;
-		        }
-		        alert("<spring:message code='ezEmail.t280' />");
-		        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-		        var imgName = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "")
-		        var ezUtil = null;
-		        if (imgName == "")
-		            return;
-		
-		        var fileName = "";
-		
-		        try {
-		            EzHTTPTrans.AddUploadFile("", "");
-		            EzHTTPTrans.AddUploadFile(imgName, "N");
-		            var RemotePath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/environ/mail_save_image.aspx";
-		            var nCount = EzHTTPTrans.StartUpload(RemotePath, "/Upload_Personal", "Personal", "", "");
-		            var newFileName = new Array();
-		            for (var i = 0; i < nCount; i++) {
-		                fileName = EzHTTPTrans.GetReturn(i);
-		                fileName = fileName.split("/")[1] + "/" + fileName.split("/")[2] + "/" + fileName.split("/")[3];
-		                if (fileName.length > 1000) {
-		                    alert(imgName + "<spring:message code='ezEmail.t281' />");
-		                    return;
-		                }
-		            }
-		        }
-		        catch (e) {
-		            alert(imgName + "<spring:message code='ezEmail.t282' />" + "\n\n" + e.number + " - " + e.description);
-		            return;
-		        }
-		        var selPosObj = document.getElementById(obj).editor.DOM.selection;
-		        if (selPosObj.type.toUpperCase() == "TEXT" || selPosObj.type.toUpperCase() == "NONE") {
-		            var rgElem = selPosObj.createRange();
-		            rgElem.pasteHTML('<img src="http://' + '${serverName}' + '/' + fileName + '" embedding="1">');
-		        }
-		    }
 		    function NoSign() {
 		        for (var i = 1 ; i < 3; i++) {
 		            document.getElementById("SigState" + i).checked = false;

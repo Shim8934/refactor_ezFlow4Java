@@ -733,14 +733,7 @@ function event_SaveonClick() {
                 }
                 g_saveHttp = null;
                 if (event_SaveonClick.savemode == "sendsave") {
-                    //alert(strLang106 + "\r\n" + result);
-                    if (result.lastIndexOf(strLang361) > 0) {
-                        alert(strLang241);
-                    }
-                    else if (result.lastIndexOf(strLang362) > 0) {
-                        alert(strLang241);
-                    }
-                    else if (result.lastIndexOf("not be created.") > 0) {
+                    if (result.lastIndexOf("not be created.") > 0) {
                         alert(strLang363);
                     }
                     else {
@@ -758,13 +751,7 @@ function event_SaveonClick() {
                 }
                 else {
                     if (result.indexOf("ERROR") == 0) {
-                        if (result.lastIndexOf(strLang361) > 0) {
-                            alert(strLang241);
-                        }
-                        else if (result.lastIndexOf(strLang362) > 0) {
-                            alert(strLang241);
-                        }
-                        else if (result.lastIndexOf("not be created.") > 0) {
+                        if (result.lastIndexOf("not be created.") > 0) {
                             alert(strLang363);
                         }
                         else
@@ -806,13 +793,7 @@ function event_SaveonClick() {
                         } catch (e) { }
                     }
                     else {
-                    	if (result.lastIndexOf(strLang361) > 0) {
-                            alert(strLang241);
-                        }
-                        else if (result.lastIndexOf(strLang362) > 0) {
-                            alert(strLang241);
-                        }
-                        else if (result.lastIndexOf("not be created.") > 0) {
+                    	if (result.lastIndexOf("not be created.") > 0) {
                             alert(strLang363);
                         }
                         else {

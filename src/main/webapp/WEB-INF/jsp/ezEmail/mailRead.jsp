@@ -172,37 +172,6 @@
 			
 			}
 			
-			function mtg_onClick(mtgid)
-			{
-			    var xmlDom = new ActiveXObject("Microsoft.xmlDom");
-				var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-				
-				var objRoot = xmlDom.createNode(1,"DATA","");	
-				xmlDom.appendChild(objRoot);
-		
-				var objNode = xmlDom.createNode(1,"ITEMID","");	
-				objNode.text = g_paramURL;
-				xmlDom.documentElement.appendChild(objNode);
-		
-				var objNode = xmlDom.createNode(1,"REQUEST","");	
-				objNode.text = mtgid;
-				xmlDom.documentElement.appendChild(objNode);
-		    	
-			    xmlHTTP.open("POST", "remote/mail_response_meeting.aspx", false);
-			    xmlHTTP.setRequestHeader("Content-Type", "text/xml");
-			    xmlHTTP.send(xmlDom);
-		    	
-			    if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK")
-			    {
-				    alert(mtgid + "<spring:message code='ezEmail.t99000099' />");
-				    OnBtnClose();
-				}
-			    else 
-				    alert(mtgid + " <spring:message code='ezEmail.t99000100' />");
-		
-			    xmlHTTP = null;
-			}
-			
 			function ITSM_send()
 			{
 			    try 
