@@ -26,7 +26,7 @@
 		    
 		    $(document).ready(function(){
 		        SCompID.value = pCompanyID;
-	
+		        
 		        InitListView();
 		        getSealList();
 		    });
@@ -34,7 +34,6 @@
 		    function InitListView() {
 		        var xmlTree = createXmlDom();
 		        xmlTree = loadXMLString(LISTHEADER.innerHTML.toUpperCase());
-	
 		        document.getElementById("lvtForm").innerText = "";
 		        listview.SetID("lvtDocForm");
 		        listview.SetMulSelectable(false);

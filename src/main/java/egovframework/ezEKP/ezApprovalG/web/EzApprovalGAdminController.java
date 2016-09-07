@@ -1159,7 +1159,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
-System.out.println(userInfo.getPrimary());
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -1414,7 +1414,7 @@ System.out.println(userInfo.getPrimary());
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealDeptlList(listFlag, deptID, companyID, userInfo.getLang());
+		String result = ezApprovalGAdminService.getSealDeptlList(listFlag, deptID, companyID, userInfo.getPrimary());
 		
 		return result;
 	}
@@ -1765,6 +1765,7 @@ System.out.println(userInfo.getPrimary());
 	@ResponseBody
 	public String getStatSearchAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String docNumber = request.getParameter("docNumber");
         String docTitle = request.getParameter("docTitle");
         String drafter = request.getParameter("drafter");
@@ -1801,7 +1802,7 @@ System.out.println(userInfo.getPrimary());
 		
         String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, draftDeptName, 
-				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getLang(), approvUser);
+				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getPrimary(), approvUser);
 		
 		return result; 
 	}

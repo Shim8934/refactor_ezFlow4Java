@@ -1254,7 +1254,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getSealDeptlList(String listFlag, String deptID, String companyID, String lang) throws Exception {
+	public String getSealDeptlList(String listFlag, String deptID, String companyID, String primary) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1282,9 +1282,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
 			}
 
-			if (lang.equals("1")) {
+			if (primary.equals("1")) {
 				sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
-			} else if (lang.equals("2")) {
+			} else {
 				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
 			}
 			
@@ -1510,7 +1510,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String lang, String approvUser)
+			String orderCell, String orderOption, String companyID, String primary, String approvUser)
 			throws Exception {
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -1518,7 +1518,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "081");
-		map.put("v_LANGTYPE", lang);
+		map.put("v_LANGTYPE", primary);
 		map.put("companyID", companyID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -1560,7 +1560,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
 		map1.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map1.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
-		map1.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map1.put("v_LANGTYPE", commonUtil.getMultiData(primary));
 		map1.put("v_APPROVUSER", approvUser);
 		map1.put("companyID", companyID);
 		
@@ -1591,7 +1591,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map2.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
 		map2.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
 		map2.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
-		map2.put("v_LANGTYPE", commonUtil.getMultiData(lang));
+		map2.put("v_LANGTYPE", commonUtil.getMultiData(primary));
 		map2.put("v_APPROVUSER", approvUser);
 		map2.put("companyID", companyID);
 		
@@ -1607,7 +1607,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				String fieldValue = "";
 
 				if (fieldName.toUpperCase().equals("WRITERNAME") || fieldName.toUpperCase().equals("WRITERDEPTNAME") || fieldName.toUpperCase().equals("FORMNAME")){
-					fieldName = fieldName + commonUtil.getMultiData(lang);
+					fieldName = fieldName + commonUtil.getMultiData(primary);
 				}
 				
 				for (Field field : bodyVo.getClass().getDeclaredFields()) {
@@ -1618,7 +1618,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					}
 			    }
 
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang)) + "</VALUE>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, primary)) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");

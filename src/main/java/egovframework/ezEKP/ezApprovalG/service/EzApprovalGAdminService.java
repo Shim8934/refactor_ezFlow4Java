@@ -77,7 +77,7 @@ public interface EzApprovalGAdminService {
 	
 	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID) throws Exception;
 
-	public String getSealDeptlList(String listFlag, String deptID, String companyID, String lang) throws Exception;
+	public String getSealDeptlList(String listFlag, String deptID, String companyID, String primary) throws Exception;
 	
 	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception;
 
@@ -95,7 +95,7 @@ public interface EzApprovalGAdminService {
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String lang, String approvUser) throws Exception;
+			String orderCell, String orderOption, String companyID, String primary, String approvUser) throws Exception;
 
 	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
 	
