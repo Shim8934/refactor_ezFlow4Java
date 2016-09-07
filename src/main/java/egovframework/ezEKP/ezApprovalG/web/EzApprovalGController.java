@@ -529,7 +529,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String id = request.getParameter("id");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID());
+		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID(), userInfo.getPrimary());
 		
 		return result;
 	}

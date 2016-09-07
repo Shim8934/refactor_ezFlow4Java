@@ -72,7 +72,7 @@
 			        	data : {categoryType : pLevel, parentID : pGroupID, companyID : companyID},
 			        	success : function(result){
 			        		xmlTree = loadXMLString(result);
-							
+			        		
 			        		if (pFirst) {
 				                var xmlDom2 = createXmlDom();
 				                

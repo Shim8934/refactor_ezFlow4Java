@@ -121,13 +121,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getFormContInfo(HttpServletRequest request) throws Exception{
+	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String id = request.getParameter("id");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID);
-		
-		System.out.println(result);
+		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID, userInfo.getPrimary());
 		
 		return result;
 	}
@@ -440,7 +439,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			while ((line = br.readLine()) != null) {
 				result.append(line);
 			}
-			System.out.println(result);
+			
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -848,11 +847,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getTaskCategoryTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("categoryType");
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID);
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getPrimary());
 
 		return result;
 	}
@@ -1989,13 +1989,5 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		return result;
-	}
-	
-	/**
-	 * 연동정보 테스트
-	 */
-	@RequestMapping(value = "/admin/ezApprovalG/test.do")
-	public void test() {
-		System.out.println("success");
 	}
 }

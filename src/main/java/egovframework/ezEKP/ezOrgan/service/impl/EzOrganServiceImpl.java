@@ -61,9 +61,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String pLangCode) throws Exception {		
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary) throws Exception {		
 		if (!pUserID.equals("") && pDeptID.equals("")){
-			OrganDeptVO organVo = getDeptInfo(pUserID, pLangCode);
+			OrganDeptVO organVo = getDeptInfo(pUserID, primary);
 			pDeptID = organVo.getDeptID();
         }		
 		if (pDeptID.equals("")){
@@ -78,7 +78,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         do{
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_CN", deptID);
-			map.put("v_LANGDATA", pLangCode);
+			map.put("v_LANGDATA", primary);
 			
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
 			
@@ -92,7 +92,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				if(obj.getType().toLowerCase().equals("dept")){					
 					Map<String, Object> map1 = new HashMap<String, Object>();				
 					map1.put("v_CN", obj.getCn());
-					map1.put("v_LANGDATA", pLangCode);
+					map1.put("v_LANGDATA", primary);
 					
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
@@ -111,7 +111,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        
 	        Map<String, Object> map2 = new HashMap<String, Object>();				
 			map2.put("v_CN", deptID);
-			map2.put("v_LANGDATA", pLangCode);
+			map2.put("v_LANGDATA", primary);
 			
 	        vo = ezOrganDAO.getTBLDeptMaster(map2);
 	        
@@ -127,11 +127,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String pLangCode) throws Exception {
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CN", pDeptID);
-		map.put("v_LANGDATA", pLangCode);
+		map.put("v_LANGDATA", primary);
 		
 		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
 				
@@ -144,7 +144,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			if(obj.getType().toLowerCase().equals("dept")){
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CN", obj.getCn());
-				map1.put("v_LANGDATA", pLangCode);
+				map1.put("v_LANGDATA", primary);
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
                 

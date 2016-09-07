@@ -51,16 +51,16 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getDeptTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = "";
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
-        String lang = config.getProperty("config.primary");
         
-        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, lang);
+        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary());
         
 		return deptInfo;
 	}
@@ -70,14 +70,14 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getDeptSubTreeInfo(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptSubTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 				
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
-        String lang = config.getProperty("config.primary");
         
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, lang);
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary());
 		
 		return deptInfo;
 	}

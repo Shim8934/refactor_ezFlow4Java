@@ -882,7 +882,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormContainerInfo(String id, String deptID, String companyID) throws Exception {
+	public String getFormContainerInfo(String id, String deptID, String companyID, String primary) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTID", deptID);
@@ -917,7 +917,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             	ISLEAF = "TRUE";
             }
             rtnXML.append("<EXPANDED>FALSE</EXPANDED><ISLEAF>" + ISLEAF + "</ISLEAF>");
-            rtnXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTNAME").item(k).getTextContent())) + "</VALUE>");
+            
+            if (primary.equals("1")) {
+            	rtnXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTNAME").item(k).getTextContent())) + "</VALUE>");
+            } else {
+            	rtnXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTNAME2").item(k).getTextContent())) + "</VALUE>");
+            }
 
             if (deptID.trim().equals("")) {
 				rtnXML.append("<DATA1>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent())) + "</DATA1>");

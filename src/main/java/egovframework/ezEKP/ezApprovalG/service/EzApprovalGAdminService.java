@@ -37,7 +37,7 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception;
 	
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception;
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, String primary) throws Exception;
 	
 	public String getTaskInSubCategoryForManage(Document doc) throws Exception;
 

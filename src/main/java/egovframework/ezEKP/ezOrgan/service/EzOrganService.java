@@ -12,7 +12,7 @@ public interface EzOrganService {
 	
 	public String getDeptFullPath(String deptID) throws Exception;
 	
-	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String lang) throws Exception;
+	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String primary) throws Exception;
 
 	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang) throws Exception;
 	
@@ -20,7 +20,7 @@ public interface EzOrganService {
 	
 	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang) throws Exception;
 
-	public String getDeptSubTreeInfo(String deptID, String propList, String lang) throws Exception;
+	public String getDeptSubTreeInfo(String deptID, String propList, String primary) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
