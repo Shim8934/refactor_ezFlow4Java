@@ -332,7 +332,7 @@ function ListView() {
     //리스트뷰 DataSource를 이용하여 DataBind 하기
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang1111);
             return;
         }
 
@@ -422,7 +422,7 @@ function ListView() {
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
     function RowDataBind() {
         if (_thisID == "") {
-            alert("리스트의 ID가 지정되지 않았습니다.");
+            alert(strLang1111);
             return;
         }
 

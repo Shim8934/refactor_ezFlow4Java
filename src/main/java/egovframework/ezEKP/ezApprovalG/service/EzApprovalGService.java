@@ -109,7 +109,7 @@ public interface EzApprovalGService {
 	
 	public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception;
 	
-	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception;
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType) throws Exception;
 	
 	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType) throws Exception;
 	
@@ -314,7 +314,7 @@ public interface EzApprovalGService {
 
 	public String getRecReadHistory(Document xmlDom) throws Exception;
 
-	public String getRecordClassInfo(Document xmlDom, String lang) throws Exception;
+	public String getRecordClassInfo(Document xmlDom) throws Exception;
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception;
 

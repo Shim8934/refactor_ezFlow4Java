@@ -629,7 +629,7 @@
         var OpenWin;
 
         if (UserLang == "1")
-            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(835, 435));
+            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(855, 445));
         else
             OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(905, 435));
 
@@ -1302,7 +1302,7 @@
         xmlhttp.send(xmlpara);
 
         if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "TRUE") {
-            var pAlertContent = "수신완료처리된 문서입니다.<BR>추가이송 할수 없습니다.";
+            var pAlertContent = "<spring:message code='ezApprovalG.pjj06'/>";
             OpenAlertUI(pAlertContent);
             return;
         }

@@ -83,7 +83,7 @@ public class EzApprovalGarchiveController {
 			susinAdmin = "NO";
 		}
     	
-		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getLang());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary());
 		Document doc = commonUtil.convertStringToDocument(result);
 		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
@@ -175,7 +175,7 @@ public class EzApprovalGarchiveController {
 	public String getRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getLang());
+		String result = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getPrimary());
 		return result;
 	}
 	
@@ -266,7 +266,7 @@ public class EzApprovalGarchiveController {
 	public String getRecClassInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.getRecordClassInfo(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.getRecordClassInfo(xmlDom);
 		return result;
 	}
 	
@@ -539,43 +539,7 @@ public class EzApprovalGarchiveController {
              STRGet_t875 = "Special<br>documentary.";
              STRGet_t876 = "Part of a public limited";
 		}
-		else{
-			 STRGet_t106 = "제목";
-			 STRGet_t109 = "공개여부";
-			 STRGet_t445 = "기안자";
-			 STRGet_t819 = "분류번호";
-			 STRGet_t825 = "기본정보";
-			 STRGet_t827 = "처리과";
-			 STRGet_t831 = "등록일자";
-			 STRGet_t832 = "부가정보";
-			 STRGet_t836 = "수정여부";
-			 STRGet_t837 = "구기록물여부";
-			 STRGet_t840 = "분류정보";
-			 STRGet_t845 = "편철확정여부";
-			 STRGet_t846 = "목록이관여부";
-			 STRGet_t847 = "목록이관연도";
-			 STRGet_t848 = "파일이관여부";
-			 STRGet_t849 = "파일이관연도";
-			 STRGet_t858 = "기록물 등록정보";
-			 STRGet_t859 = "등록구분";
-			 STRGet_t860 = "등록번호";
-			 STRGet_t861 = "분리첨부번호";
-			 STRGet_t862 = "결재권자";
-             STRGet_t863 = "시행일자";
-             STRGet_t864 = "수신자(발신자)";
-             STRGet_t865 = "배부번호";
-             STRGet_t866 = "생산기관등록번호";
-             STRGet_t867 = "반려여부";
-             STRGet_t868 = "전자기록물여부";
-             STRGet_t869 = "구기록물생산기관";
-             STRGet_t870 = "구기록물등록번호";
-             STRGet_t871 = "구기록물보존기간";
-             STRGet_t872 = "시청각 내용요약";
-             STRGet_t873 = "시청각기록물형태";
-             STRGet_t874 = "기록물철명";
-             STRGet_t875 = "특수기록물";
-             STRGet_t876 = "공개제한부분";
-		}
+
 		String RecID= request.getParameter("ID1");
 		String SepAttNo =request.getParameter("ID2");
 		String pXml = "<PARAMETERS><RECORDID>" + makeXMLString(RecID.trim()) +
@@ -585,7 +549,7 @@ public class EzApprovalGarchiveController {
                 "</COMPANYID><STRLANG>" + makeXMLString(userInfo.getLang()) + "</STRLANG></PARAMETERS>";
 		Document xmlDom = commonUtil.convertStringToDocument(pXml);
 		String resultXML = ezApprovalGService.GetRecordInfo(xmlDom, userInfo.getLang());
-		String resultXML2 = ezApprovalGService.getRecordClassInfo(xmlDom , userInfo.getLang());
+		String resultXML2 = ezApprovalGService.getRecordClassInfo(xmlDom);
 		
 		Document oBXml = commonUtil.convertStringToDocument(resultXML);
 		String title = oBXml.getElementsByTagName("TITLE").item(0).getTextContent().trim();
@@ -611,6 +575,7 @@ public class EzApprovalGarchiveController {
 		String avType = oBXml.getElementsByTagName("AVTYPE").item(0).getTextContent().trim();
 		
 		Document oCXml = commonUtil.convertStringToDocument(resultXML2);
+		String cabClassID = oCXml.getElementsByTagName("CABCLASSID").item(0).getTextContent().trim(); 
 		String cabTitle = oCXml.getElementsByTagName("CABTITLE").item(0).getTextContent().trim();
 		String specialRecCode = oCXml.getElementsByTagName("SPECIALRECCODE").item(0).getTextContent().trim();
 		String publicCode = oCXml.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();
@@ -644,7 +609,7 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("oldRecKp", oldRecKp);
 		model.addAttribute("avSummary", avSummary);
 		model.addAttribute("avType", avType);
-		
+		model.addAttribute("cabClassID", cabClassID);
 		model.addAttribute("cabTitle", cabTitle);
 		model.addAttribute("specialRecCode", specialRecCode);
 		model.addAttribute("publicCode", publicCode);
@@ -655,41 +620,6 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("docTransFlag", docTransFlag);
 		model.addAttribute("docTransYear", docTransYear);
 		
-		model.addAttribute("STRGet_t106", STRGet_t106);
-		model.addAttribute("STRGet_t109", STRGet_t109);
-		model.addAttribute("STRGet_t445", STRGet_t445);
-		model.addAttribute("STRGet_t819", STRGet_t819);
-		model.addAttribute("STRGet_t825", STRGet_t825);
-		model.addAttribute("STRGet_t827", STRGet_t827);
-		model.addAttribute("STRGet_t831", STRGet_t831);
-		model.addAttribute("STRGet_t832", STRGet_t832);
-		model.addAttribute("STRGet_t836", STRGet_t836);
-		model.addAttribute("STRGet_t837", STRGet_t837);
-		model.addAttribute("STRGet_t840", STRGet_t840);
-		model.addAttribute("STRGet_t845", STRGet_t845);
-		model.addAttribute("STRGet_t846", STRGet_t846);
-		model.addAttribute("STRGet_t847", STRGet_t847);
-		model.addAttribute("STRGet_t848", STRGet_t848);
-		model.addAttribute("STRGet_t849", STRGet_t849);
-		model.addAttribute("STRGet_t858", STRGet_t858);
-		model.addAttribute("STRGet_t859", STRGet_t859);
-		model.addAttribute("STRGet_t860", STRGet_t860);
-		model.addAttribute("STRGet_t861", STRGet_t861);
-		model.addAttribute("STRGet_t862", STRGet_t862);
-		model.addAttribute("STRGet_t863", STRGet_t863);
-		model.addAttribute("STRGet_t864", STRGet_t864);
-		model.addAttribute("STRGet_t865", STRGet_t865);
-		model.addAttribute("STRGet_t866", STRGet_t866);
-		model.addAttribute("STRGet_t867", STRGet_t867);
-		model.addAttribute("STRGet_t868", STRGet_t868);
-		model.addAttribute("STRGet_t869", STRGet_t869);
-		model.addAttribute("STRGet_t870", STRGet_t870);
-		model.addAttribute("STRGet_t871", STRGet_t871);
-		model.addAttribute("STRGet_t872", STRGet_t872);
-		model.addAttribute("STRGet_t873", STRGet_t873);
-		model.addAttribute("STRGet_t874", STRGet_t874);
-		model.addAttribute("STRGet_t875", STRGet_t875);
-		model.addAttribute("STRGet_t876", STRGet_t876);
 		
 		return "/ezApprovalG/apprGprintFormRecInfo";
 	}

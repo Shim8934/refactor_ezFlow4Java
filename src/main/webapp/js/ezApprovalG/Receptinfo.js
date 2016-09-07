@@ -2222,13 +2222,13 @@ function InsertRecAll_Complete(_RESPONSE) {
 
         //2015-07-06 표준모듈:추가(값이 없을 경우 알려주고 return 처리) - KSK
         if (treeNode.GetNodeData("CN") == "") {
-            alert("부서아이디가 없습니다.");
+            alert(strLang1119);
             return;
         }
 
         //2015-07-06 표준모듈:추가(값이 없을 경우 알려주고 return 처리) - KSK
         if (treeNode.GetNodeData("VALUE") == "") {
-            alert("부서명이 없습니다.");
+            alert(strLang1118);
             return;
         }
 

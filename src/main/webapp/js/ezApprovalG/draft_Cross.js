@@ -1263,7 +1263,7 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "seal":
-                        field.textContent = getNodeText(GetElementsByTagName(objNodes, "COMPANY")[0]) + "대표이사";// + strLang148;
+                        field.textContent = getNodeText(GetElementsByTagName(objNodes, "COMPANY")[0]) + strLang157;// + strLang148;
                         break;
 
                     case "username":         
@@ -1289,7 +1289,7 @@ function SetAutoPropertyValue() {
 
                     case "chief":
                         if (SendName != "")
-                            field.textContent = SendName + "장";
+                            field.textContent = SendName + strLang93;
                         break;
                 }
             } else {
@@ -2670,7 +2670,7 @@ function SaveTMPDocInfo(AutoSave) {
             createNodeAndInsertText(xmlpara, objNode, "doctitle", message.GetDocTitle());
         }
         else {
-            createNodeAndInsertText(xmlpara, objNode, "doctitle", "자동임시저장문서");
+            createNodeAndInsertText(xmlpara, objNode, "doctitle", strLang1114);
         }
 
         field = message.GetListItem(fields, "docnumber");
@@ -2764,7 +2764,7 @@ function RemoveTmpDoc(pDocID) {
 	
     var RtnVal = result;
     if (RtnVal.indexOf("TRUE") == -1) {
-        var pAlertContent = "임시 문서 삭제에 실패하였습니다.!";
+        var pAlertContent = strLang1115;
         OpenAlertUI(pAlertContent);
     }
 }

@@ -1196,7 +1196,7 @@
 		
 		            }
 		            catch (e) {
-		                alert("저장시 오류 발생");
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        }
 		    }

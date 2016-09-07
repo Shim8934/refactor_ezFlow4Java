@@ -123,7 +123,7 @@ function processRowClick(tr) {
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
                 /* 2015-07-06 표준모듈:수정 - KSK */
-                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1] == WriterID || WriterID == "")) {
+                if (tr.getAttribute("DATA15") == "011" && (arr_userinfo[1].trim() == WriterID.trim() || WriterID.trim() == "")) {
                 	document.getElementById("tdGongRam").style.display = "";
                 } else {
                 	document.getElementById("tdGongRam").style.display = "none";
@@ -131,7 +131,7 @@ function processRowClick(tr) {
             }
         }
 
-        if (WriterID == arr_userinfo[1]) {
+        if (WriterID.trim() == arr_userinfo[1].trim()) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     // START
@@ -355,12 +355,12 @@ function onreadystatechange_GetDocDeliveryList() {
                         }
                     }
                     else {
-                        OpenAlertUI("목록 조회에 실패하였습니다!");
+                        OpenAlertUI(strLang548);
                         return null;
                     }
                     break;
                 default:
-                    OpenAlertUI("목록 조회에 실패하였습니다!");
+                    OpenAlertUI(strLang548);
                     return null;
                     break;
 

@@ -57,22 +57,30 @@ public class LoginVO implements Serializable{
 	private String id;
 	/** 사용자 IP정보 */
 	private String ip;
+	/** 사용자 이름 */
+	private String displayNmae;
 	/** 사용자 이름1 */
 	private String displayName1;
 	/** 사용자 이름2 */
 	private String displayName2;
 	/** 사용자 부서ID */
 	private String deptID;
+	/** 사용자 부서이름 */
+	private String deptName;
 	/** 사용자 부서이름1 */
 	private String deptName1;
 	/** 사용자 부서이름2 */
 	private String deptName2;
+	/** 사용자 직급 */
+	private String title;
 	/** 사용자 직급1 */
 	private String title1;
 	/** 사용자 직급2 */
 	private String title2;
 	/** 사용자 회사ID */
 	private String companyID;
+	/** 사용자 회사이름 */
+	private String companyName;
 	/** 사용자 회사이름1 */
 	private String companyName1;
 	/** 사용자 회사이름2 */
@@ -184,6 +192,33 @@ public class LoginVO implements Serializable{
 	public void setDn(String dn) {
 		this.dn = dn;
 	}	
+	public String getDisplayNmae() {
+		return displayNmae;
+	}
+	public void setDisplayNmae(String displayNmae) {
+		this.displayNmae = displayNmae;
+	}
+	public String getDeptName() {
+		return deptName;
+	}
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	public String getOrgnztNm() {
 		return orgnztNm;
 	}	

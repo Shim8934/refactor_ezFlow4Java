@@ -167,7 +167,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
 		String propList = "extensionAttribute4;department;description;title;title2;description2";
-		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
+		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary());
 		String myDept = "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
@@ -258,7 +258,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			susinAdmin = "NO";
 		}
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getLang());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary());
 		Document doc = commonUtil.convertStringToDocument(result);
 		
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
@@ -433,7 +433,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			} else if (mode.toUpperCase().equals("END")) {
 				String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary());
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 					return "NOTPERMISSION";
@@ -1241,7 +1241,7 @@ System.out.println(ret2);
 		String companyID = request.getParameter("companyID");
 		String cateCode = request.getParameter("cateCode");
 		String strType = request.getParameter("strType");
-		String result = ezApprovalGService.getTaskInSubCategory(deptCode, companyID, cateCode, strType);
+		String result = ezApprovalGService.getTaskInSubCategory(deptCode, companyID, cateCode, strType, userInfo.getPrimary());
 		
 		return result;
 	}
@@ -1378,8 +1378,8 @@ System.out.println(ret2);
 		String poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
 		String maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		String isBody = "";
-		
-		if (formList.replace(formID, "").equals(formList)) {
+
+		if (!formList.replace(formID, "").equals(formList)) {
 			isBody = "YES";
 		}
 		
@@ -3985,7 +3985,7 @@ System.out.println(ret2);
 		String type = request.getParameter("type");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		

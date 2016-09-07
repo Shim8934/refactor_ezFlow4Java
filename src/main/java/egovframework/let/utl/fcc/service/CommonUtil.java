@@ -158,6 +158,16 @@ public class CommonUtil {
 				}
 			}
 			
+//			 20091119 : 겸직 사용자 선택된 부서 표시 기능
+			if(user.getPrimary().equals("1")){
+				user.setTitle(user.getTitle1());
+				user.setDeptName(user.getDeptName1());
+			}
+			else{
+				user.setTitle(user.getTitle2());
+				user.setDeptName(user.getDeptName2());
+			}
+			
 			return user;
 		}catch(Exception e){
 			return null;

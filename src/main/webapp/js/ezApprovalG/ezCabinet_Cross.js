@@ -1132,7 +1132,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 
         if (trim_Cross(pURL) == "") {
             if (trim_Cross(DocID) == "") {
-                OpenAlertUI("내용이 존재하지 않는 문서입니다.");
+                OpenAlertUI(strLang260);
             }
             else {
                 var para2 = new Array();

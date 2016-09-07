@@ -509,7 +509,7 @@ function DisplayAprLineStat(NodeListLen) {
     }
     else if (pListTypeValue == 10)
     {
-        document.getElementById("AprManageStat").innerHTML = "공람한 문서 : " + "<b><span class='point'>" + NodeListLen + "</span></b> " + strLang445;
+        document.getElementById("AprManageStat").innerHTML = strLang1112 + "<b><span class='point'>" + NodeListLen + "</span></b> " + strLang445;
     }
 }
 
@@ -555,7 +555,7 @@ function DisplayWaitStat() {
     }
     else if (pListTypeValue == 10) 
     {
-        document.getElementById("AprManageStat").innerHTML = "공람한 문서를 준비중 입니다..";
+        document.getElementById("AprManageStat").innerHTML = strLang1110;
     }
 }
 

@@ -3627,7 +3627,7 @@ function CheckProcessXML(AprLineRow)
  	    }
      	
  	    if(CheckNodes.length > 0 && CheckNodes.length < aprCount)
- 	        rtnVal = rtnVal + "프로세스에서 디자인된 결재자보다 많습니다.";
+ 	        rtnVal = rtnVal + " "+strLang1109;
      		
     }
 	return rtnVal;

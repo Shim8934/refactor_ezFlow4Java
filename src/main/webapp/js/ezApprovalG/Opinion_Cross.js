@@ -353,7 +353,7 @@ function AddOpinionContent(Opstate, OpContent) {
                         for (var i = count ; i >= 0 ; i--) {
                             var tmpKyljeaUserID = getNodeText(GetChildNodes(cellzero[4]));
 
-                            if (tmpKyljeaUserID == pUserID && getNodeText(GetChildNodes(cellzero[5])) == "진행") {
+                            if (tmpKyljeaUserID == pUserID && getNodeText(GetChildNodes(cellzero[5])) == strLang18) {
                                 tmpKyljeaDeptID = getNodeText(GetChildNodes(cellzero[6]));
                                 tmpKyljeaDeptName = getNodeText(GetChildNodes(cellzero[15]));
                                 tmpKyljeaJobtitle = getNodeText(GetChildNodes(cellzero[17]));

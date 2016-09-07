@@ -1,28 +1,6 @@
 ﻿﻿var g_szSCListXml = "";
 var g_arrSCName = new Array();
 
-var AddSpecialCatalog_Cross_dialogArguments = new Array();
-function btnAddSpecialCatalog_onclick() {
-    var para = new Array();
-    para[0] = g_szSCListXml;
-    para[1] = g_arrSCName[0];
-    para[2] = g_arrSCName[1];
-    para[3] = g_arrSCName[2];
-
-    AddSpecialCatalog_Cross_dialogArguments[0] = para;
-    AddSpecialCatalog_Cross_dialogArguments[1] = btnAddSpecialCatalog_onclick_Complete;
-    var url = "/ezApprovalG/insSpecialList.do";
-    
-    DivPopUpShow(350, 242, url);
-}
-function btnAddSpecialCatalog_onclick_Complete(rtn) {
-	   DivPopUpHidden();
-
-	   if (rtn[0] == "TRUE") {
-	        g_szSCListXml = rtn[1];
-	    }
-}
-
 function InitSCInfo_Mod(oSCNode) {
     g_arrSCName[0] = SelectSingleNodeValue(SelectSingleNode(oSCNode, "NAME"), "LIST1");
     g_arrSCName[1] = SelectSingleNodeValue(SelectSingleNode(oSCNode, "NAME"), "LIST2");

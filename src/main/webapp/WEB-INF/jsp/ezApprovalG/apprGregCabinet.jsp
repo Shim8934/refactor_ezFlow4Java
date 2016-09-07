@@ -26,20 +26,20 @@
     var CompanyID = "${userInfo.companyID}";
     var arr_userinfo = new Array();
     arr_userinfo[0]  = "user";
-    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";
-    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1} '/>";
-    arr_userinfo[3]  = "<c:out value = '${userInfo.title1} '/>";
-    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1} '/>";
-    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
+    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1}'/>";
+    arr_userinfo[3]  = "<c:out value = '${userInfo.title1}'/>";
+    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}'/>";
+    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
     arr_userinfo[9]  = CompanyID;
-    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
+    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
     var UserLang = "${userInfo.lang}";
     var rtnVal = new Array();
      window.onload = function (){
@@ -85,7 +85,30 @@
         InitCategorySelection();
         selTaskCategory_onchange();
     }
+     
+     var AddSpecialCatalog_Cross_dialogArguments = new Array();
+     function btnAddSpecialCatalog_onclick() {
+         var para = new Array();
+         para[0] = g_szSCListXml;
+         para[1] = g_arrSCName[0];
+         para[2] = g_arrSCName[1];
+         para[3] = g_arrSCName[2];
+         var url = "/ezApprovalG/insSpecialList.do";
+         var rtn;
+         AddSpecialCatalog_Cross_dialogArguments[0] = para;
+         AddSpecialCatalog_Cross_dialogArguments[1] = btnAddSpecialCatalog_onclick_Complete;
+         var OpenWin;
+         
+             OpenWin = window.open(url, "AddSpecialCatalog_Cross", GetOpenWindowfeature(500, 435));
 
+         try { OpenWin.focus(); } catch (e) { }
+     }
+     function btnAddSpecialCatalog_onclick_Complete(rtn) {
+     	   DivPopUpHidden();
+     	   if (rtn[0] == "TRUE") {
+     	        g_szSCListXml = rtn[1];
+     	    }
+     }
     function TaskList_rowclick() {
         var oList = new ListView();
         oList.LoadFromID("DivTaskList");

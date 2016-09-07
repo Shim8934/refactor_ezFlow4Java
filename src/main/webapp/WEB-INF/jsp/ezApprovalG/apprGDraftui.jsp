@@ -408,7 +408,7 @@
 		            var rtnAttachXML = createXmlDom();
 		            rtnAttachXML = loadXMLString(result);
 		            if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG")[0]) == "Y") {
-		                OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
+		                OpenAlertUI("<spring:message code='ezApprovalG.pjj04'/>" + "<br>" + "<spring:message code='ezApprovalG.pjj05'/>");
 		                return;
 		            }
 		            bAttachProcess = false;
@@ -1170,7 +1170,7 @@
 		
 		            }
 		            catch (e) {
-		                alert("저장시 오류 발생");
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        }
 		    }

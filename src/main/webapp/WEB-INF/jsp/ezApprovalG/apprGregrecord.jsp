@@ -408,6 +408,29 @@
             g_SepAttachLVXml = rtn[1];
         }
     }
+    var AddSpecialCatalog_Cross_dialogArguments = new Array();
+    function btnAddSpecialCatalog_onclick() {
+        var para = new Array();
+        para[0] = g_szSCListXml;
+        para[1] = g_arrSCName[0];
+        para[2] = g_arrSCName[1];
+        para[3] = g_arrSCName[2];
+        var url = "/ezApprovalG/insSpecialList.do";
+        var rtn;
+        AddSpecialCatalog_Cross_dialogArguments[0] = para;
+        AddSpecialCatalog_Cross_dialogArguments[1] = btnAddSpecialCatalog_onclick_Complete;
+        var OpenWin;
+        
+            OpenWin = window.open(url, "AddSpecialCatalog_Cross", GetOpenWindowfeature(500, 435));
+
+        try { OpenWin.focus(); } catch (e) { }
+    }
+    function btnAddSpecialCatalog_onclick_Complete(rtn) {
+    	   DivPopUpHidden();
+    	   if (rtn[0] == "TRUE") {
+    	        g_szSCListXml = rtn[1];
+    	    }
+    }
     function GetSepAttParamXml() {
         var rtnXml = createXmlDom();
 

@@ -2845,7 +2845,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType) throws Exception {
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_SUBCATECODE", cateCode.trim());
@@ -2862,7 +2862,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String resultXML = makeTaskListXml(docXML, companyID, strType);
+		String resultXML = makeTaskListXml(docXML, companyID, langType);
 		
 		return resultXML;
 	}
@@ -14217,14 +14217,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecordClassInfo(Document xmlDom ,	String lang) throws Exception {
+	public String getRecordClassInfo(Document xmlDom ) throws Exception {
 		try{
 		StringBuilder resultXML = new StringBuilder();
 		String rtnVal = "<RESULT>NORECORD</RESULT>";
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
-		
+		String lang = xmlDom.getElementsByTagName("STRLANG").item(0).getTextContent().trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_RECORDID", RecID);

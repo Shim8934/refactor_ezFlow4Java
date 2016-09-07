@@ -184,7 +184,7 @@ function InitListView() {
 
         var LVData = null;
         if (result == "NOTPERMISSTION") {
-            alert("권한이 없습니다.");
+            alert(strLang1113);
             window.close();
         } else {
             LVData = createXmlDom();

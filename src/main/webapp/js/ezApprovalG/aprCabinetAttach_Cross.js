@@ -299,14 +299,14 @@ function onreadystatechange_RecList_lv() {
                 case 204:
                 case 207:
                     if (Resultxml.xml == "" || Resultxml.text == "FALSE") {
-                        OpenAlertUI("기록물 대장 조회에 실패하였습니다!");
+                        OpenAlertUI(strLang555);
                         return null;
                     }
 
                     if (iStatus == 207) {
                         var nodeStatus = Resultxml.selectSingleNode("a:multistatus/a:response[a:status $ge$ 'HTTP/1.1 4']");
                         if (nodeStatus != null) {
-                            OpenAlertUI("기록물 대장 조회에 실패하였습니다!");
+                            OpenAlertUI(strLang555);
                             return null;
                         }
                     }
@@ -315,7 +315,7 @@ function onreadystatechange_RecList_lv() {
                     break;
 
                 default:
-                    OpenAlertUI("기록물 대장 조회에 실패하였습니다!");
+                    OpenAlertUI(strLang555);
                     return null;
             }
             hideProgress();

@@ -167,7 +167,7 @@
             frm.submit();
         }
         else {
-            alert("업로드 할 파일을 선택하시오");
+            alert("<spring:message code='ezApprovalG.pjj01'/>");
         }
     }
     function replace(str, s, d) {
@@ -461,19 +461,19 @@
     function returnvalue(result, filename, filelocation, filesize) {
         if (result == "true") {
             if (filesize == 0) {
-                alert("빈 파일은 첨부할 수 없습니다.");
+                alert("<spring:message code='ezApprovalG.t270'/>");
                 return;
             }
             AttachFileInfo(filename, filesize, filelocation, "")
         }
         else if (result == "overflow") {
-            alert("첨부파일은 크기가" + pBoardFileSize + "MB를 넘을 수 없습니다.");
+            alert("<spring:message code='ezApprovalG.t271'/>" + pBoardFileSize + "MB"+ "<spring:message code='ezApprovalG.t272'/>");
         }
         else if (result == "denied") {
             alert(strLang1026);
         }
         else {
-            alert(filename + "을 업로드 중 에러가 발생했습니다." + "\n\n" + result);
+            alert(filename + "<spring:message code='ezApprovalG.t276'/>" + "\n\n" + result);
         }
     }
 </script>
