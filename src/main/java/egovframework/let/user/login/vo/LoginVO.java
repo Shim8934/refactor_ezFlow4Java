@@ -58,7 +58,7 @@ public class LoginVO implements Serializable{
 	/** 사용자 IP정보 */
 	private String ip;
 	/** 사용자 이름 */
-	private String displayNmae;
+	private String displayName;
 	/** 사용자 이름1 */
 	private String displayName1;
 	/** 사용자 이름2 */
@@ -193,10 +193,10 @@ public class LoginVO implements Serializable{
 		this.dn = dn;
 	}	
 	public String getDisplayNmae() {
-		return displayNmae;
+		return displayName;
 	}
 	public void setDisplayNmae(String displayNmae) {
-		this.displayNmae = displayNmae;
+		this.displayName = displayNmae;
 	}
 	public String getDeptName() {
 		return deptName;
