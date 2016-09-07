@@ -340,7 +340,7 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195' /> :
-        <select id="SCompID" name="SCompID" onchange="return getmailstatistics()"><option value="S907000">가온아이</option></select>
+        <select id="SCompID" name="SCompID" onchange="return getmailstatistics()">${listCompany}</select>
                     &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002' /> : 
             <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' /></span>

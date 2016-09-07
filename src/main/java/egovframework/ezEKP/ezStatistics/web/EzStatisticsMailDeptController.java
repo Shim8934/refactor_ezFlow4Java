@@ -54,8 +54,15 @@ public class EzStatisticsMailDeptController {
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsMailDept.do")
 	public String statisticsMailDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		//관리자 권한체크
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("deptID", userInfo.getDeptID());
+		
 		return "ezStatistics/statisticsMailDept";
 	}
 
@@ -70,6 +77,8 @@ public class EzStatisticsMailDeptController {
 		logger.debug("getMailDept started");		
 		logger.debug("bodyData=" + bodyData);
 		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
@@ -79,7 +88,7 @@ public class EzStatisticsMailDeptController {
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + deptId;
 		String typeParam = "type=1";
-		String userLangParam = "userLang=1";
+		String userLangParam = "userLang=" + user.getPrimary();
 		
 		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
 								+ "&" + typeParam + "&" + userLangParam;

@@ -53,9 +53,16 @@ public class EzStatisticsMailUserController {
 	 * 개인별 통계 현황 표시 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
-	public String statisticsMailUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{	
+	public String statisticsMailUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		//관리자 권한체크
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("deptID", userInfo.getDeptID());
+		
 		return "ezStatistics/statisticsMailUser";
 	}
 
@@ -70,6 +77,8 @@ public class EzStatisticsMailUserController {
 		logger.debug("getMailUser started");		
 		logger.debug("bodyData=" + bodyData);
 		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
@@ -79,7 +88,7 @@ public class EzStatisticsMailUserController {
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + userId;
 		String typeParam = "type=3";
-		String userLangParam = "userLang=1";
+		String userLangParam = "userLang=" + user.getPrimary();
 		
 		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
 								+ "&" + typeParam + "&" + userLangParam;

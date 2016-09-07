@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -48,11 +52,36 @@ public class EzStatisticsMailMainController {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	/**
 	 * 통계 메일 메인 화면 표시 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsMailMain.do")
-	public String statisticsMailMain() throws Exception{		
+	public String statisticsMailMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		//관리자 권한체크
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);		
+				
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary());
+		
+		StringBuilder listCompany = new StringBuilder();
+		for (OrganDeptVO vo : list) {
+			if ((user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID()))
+					&& !vo.getCn().equals("Top")) {
+				listCompany.append("<option value='" + vo.getCn() + "'>");
+				listCompany.append(vo.getDisplayName());
+				listCompany.append("</option>");
+			}
+		}
+		
+		model.addAttribute("listCompany", listCompany.toString());
+		
 		return "ezStatistics/statisticsMailMain";
 	}
 
@@ -67,6 +96,8 @@ public class EzStatisticsMailMainController {
 		logger.debug("getMailMain started");		
 		logger.debug("bodyData=" + bodyData);
 		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
@@ -76,7 +107,7 @@ public class EzStatisticsMailMainController {
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + company;
 		String typeParam = "type=0";
-		String userLangParam = "userLang=1";
+		String userLangParam = "userLang=" + user.getPrimary();
 		
 		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
 								+ "&" + typeParam + "&" + userLangParam;
