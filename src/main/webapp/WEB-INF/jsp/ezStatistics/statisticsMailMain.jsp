@@ -243,7 +243,7 @@
                         else
                             maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[2]).text;
 
-                        if (maildata != "")
+                        if (maildata != "") {
                             if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
                                 _Td.innerHTML = getmailsize(maildata);
                                 data.push(parseInt(maildata) / 1024 / 1024);
@@ -252,15 +252,18 @@
                                 _Td.innerHTML = maildata;
                                 data.push(parseInt(maildata));
                             }
-                        else
+                        }
+                        else {
                             _Td.innerHTML = "0";
+                            data.push(0);
+                        }
 
                         if (CrossYN())
                             maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).textContent;
                         else
                             maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).text;
 
-                        if (maildata != "")
+                        if (maildata != "") {
                             if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
                                 _Td2.innerHTML = getmailsize(maildata);
                                 data2.push(parseInt(maildata) / 1024 / 1024);
@@ -269,8 +272,11 @@
                                 _Td2.innerHTML = maildata;
                                 data2.push(parseInt(maildata));
                             }
-                        else
+                        }
+                        else {
                             _Td2.innerHTML = "0";
+                            data2.push(0);
+                        }
 
                         j++;
                     }

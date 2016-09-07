@@ -298,8 +298,10 @@
                                 _Td.innerHTML = getmailsize(maildata);
                                 tempdata.push(parseInt(maildata) / 1024 / 1024);
                             }
-                            else
+                            else {
                                 _Td.innerHTML = "0";
+                                tempdata.push(0);
+                            }
 
                             j++;
                         }

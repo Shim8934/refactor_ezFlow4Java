@@ -411,7 +411,7 @@
                             else
                                 maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[2]).text;
 
-                            if (maildata != "0")
+                            if (maildata != "0") {
                                 if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
                                     _Td.innerHTML = getmailsize(maildata);
                                     tempdata.push(parseInt(maildata) / 1024 / 1024);
@@ -420,15 +420,18 @@
                                     _Td.innerHTML = maildata;
                                     tempdata.push(parseInt(maildata));
                                 }
-                            else
+                            }
+                            else {
                                 _Td.innerHTML = "0";
+                                tempdata.push(0);
+                            }
 
                             if (CrossYN())
                                 maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).textContent;
                             else
                                 maildata = SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[j], tabledata[3]).text;
 
-                            if (maildata != "0")
+                            if (maildata != "0") {
                                 if (tabledata[2] == "RECEIVEINSIZE" || tabledata[2] == "RECEIVEOUTSIZE") {
                                     _Td2.innerHTML = getmailsize(maildata);
                                     tempdata2.push(parseInt(maildata) / 1024 / 1024);
@@ -437,8 +440,11 @@
                                     _Td2.innerHTML = maildata;
                                     tempdata2.push(parseInt(maildata));
                                 }
-                            else
+                            }
+                            else {
                                 _Td2.innerHTML = "0";
+                                tempdata2.push(0);
+                            }
 
                             j++;
                         }
