@@ -604,7 +604,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, String primary) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
 			String isLeaf = "FALSE";
@@ -633,9 +633,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 				sb.append("<NODE><EXPANDED>FALSE</EXPANDED>");
 				sb.append("<ISLEAF>" + isLeaf + "</ISLEAF>");
-				
 				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
-//				sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
+				sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
 				sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");
 				
 				switch (categoryType) {

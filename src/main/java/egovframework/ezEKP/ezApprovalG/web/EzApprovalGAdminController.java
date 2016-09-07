@@ -846,13 +846,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskCategoryTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	public String getTaskCategoryTree(HttpServletRequest request) throws Exception {
 		String categoryType = request.getParameter("categoryType");
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getPrimary());
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID);
 
 		return result;
 	}
@@ -1160,7 +1159,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
-
+System.out.println(userInfo.getPrimary());
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		

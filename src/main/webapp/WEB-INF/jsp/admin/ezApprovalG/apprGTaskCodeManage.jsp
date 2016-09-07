@@ -21,6 +21,7 @@
 		    var OrderCell = "";
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
 		    var langType = "<c:out value = '${userInfo.lang}' />";
+		    var primary = "<c:out value = '${userInfo.primary}' />";
 		    var listview = new ListView();
 		    
 		    $(document).ready(function(){

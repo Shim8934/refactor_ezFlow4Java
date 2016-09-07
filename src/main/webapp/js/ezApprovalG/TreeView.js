@@ -453,10 +453,19 @@ function TreeView() {
                 //노드ID 및 노드 이름 지정						
                 var strNodeID = pNode.id + "_" + i;
                 //값이 없을경우 트리뷰 에러나는 것을 막음
-                if(SelectSingleNodeValue(arrNodes[i], "VALUE").replace(/ /gi, "") != "\n")
-                    var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE");
-                else
-                    var strNodeNM = "　　　";
+                //TODO 2016-09-07 이효진 다국어 처리 관련 소스 추가
+                if (typeof(primary) != 'undefined' && primary != '1') {
+                	if(SelectSingleNodeValue(arrNodes[i], "VALUE2").replace(/ /gi, "") != "\n")
+                        var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE2");
+                    else
+                        var strNodeNM = "　　　";
+                } else {
+                	if(SelectSingleNodeValue(arrNodes[i], "VALUE").replace(/ /gi, "") != "\n")
+                        var strNodeNM = SelectSingleNodeValue(arrNodes[i], "VALUE");
+                    else
+                        var strNodeNM = "　　　";
+                }
+                
 
                 //TreeNode 객체 생성하여 프로퍼티 지정
                 var organNode = new TreeNode();
