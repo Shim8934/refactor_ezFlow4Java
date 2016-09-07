@@ -9,3 +9,8 @@ var strLang258 = "Prev";
 var strLang259 = "Next";
 var strLang91001 = "PEOPLE";
 var strLang100 = "There is no result found.";
+
+//추가
+var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";
+var strLang91003 = "데이터가 지정되지 않았습니다.";
+var strLang91004 = "트리뷰의 ID가 지정되지 않았습니다.";

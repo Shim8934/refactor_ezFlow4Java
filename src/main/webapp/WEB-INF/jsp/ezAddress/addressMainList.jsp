@@ -53,13 +53,12 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            if (uLang != "1") {
-	                if (uLang == "2") {
-	                    document.getElementById("address_wordmenu_korea").style.display = "none";
-	                }
-	                else {
-	                    document.getElementById("address_wordmenu").style.display = "none";
-	                }
+	            	document.getElementById("address_wordmenu_korea").style.display = "none";
 	            }
+	            if (uLang != "3") {
+	            	document.getElementById("address_wordmenu_japan").style.display = "none";
+	            }
+	            
 	            if (CrossYN() || (pNoneActiveX == "YES")) {
 	                document.getElementById("importaddress").style.display = "none";
 	                document.getElementById("exportaddress").style.display = "none";
@@ -604,50 +603,79 @@
 			</ul>
 		</div>
 		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
-			<li><span onClick="pFilter='';pFilterDB='';pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+			<li><span onClick="pFilterDB='';pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 			<span id="address_wordmenu_korea">
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t244' />,<spring:message code='ezAddress.t245' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t244' />' AND sname<'<spring:message code='ezAddress.t245' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t244' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t245' />,<spring:message code='ezAddress.t246' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t245' />' AND sname<'<spring:message code='ezAddress.t246' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t245' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t246' />,<spring:message code='ezAddress.t247' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t246' />' AND sname<'<spring:message code='ezAddress.t247' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t246' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t247' />,<spring:message code='ezAddress.t248' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t247' />' AND sname<'<spring:message code='ezAddress.t248' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t247' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t248' />,<spring:message code='ezAddress.t249' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t248' />' AND sname<'<spring:message code='ezAddress.t249' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t248' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t249' />,<spring:message code='ezAddress.t250' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t249' />' AND sname<'<spring:message code='ezAddress.t250' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t249' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t250' />,<spring:message code='ezAddress.t251' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t250' />' AND sname<'<spring:message code='ezAddress.t251' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t250' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t251' />,<spring:message code='ezAddress.t252' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t251' />' AND sname<'<spring:message code='ezAddress.t252' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t251' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t252' />,<spring:message code='ezAddress.t253' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t252' />' AND sname<'<spring:message code='ezAddress.t253' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t252' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t253' />,<spring:message code='ezAddress.t254' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t253' />' AND sname<'<spring:message code='ezAddress.t254' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t253' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t254' />,<spring:message code='ezAddress.t255' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t254' />' AND sname<'<spring:message code='ezAddress.t255' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t254' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t255' />,<spring:message code='ezAddress.t256' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t255' />' AND sname<'<spring:message code='ezAddress.t256' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t255' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t256' />,<spring:message code='ezAddress.t257' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t256' />' AND sname<'<spring:message code='ezAddress.t257' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t256' /></span></li>
-				<li><span onClick="pFilter=&quot;AND,<spring:message code='ezAddress.t257' />,<spring:message code='ezAddress.t258' />&quot;;pFilterDB=&quot;sname>='<spring:message code='ezAddress.t257' />' AND sname<'<spring:message code='ezAddress.t258' />'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t257' /></span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄱ'OR(SNAME>='가' AND SNAME<'나'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄴ'OR(SNAME>='나' AND SNAME<'다'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄷ'OR(SNAME>='다' AND SNAME<'라'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄷ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄹ'OR(SNAME>='라' AND SNAME<'마'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄹ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅁ'OR(SNAME>='마' AND SNAME<'바'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅁ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅂ'OR(SNAME>='바' AND SNAME<'사'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅂ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅅ'OR(SNAME>='사' AND SNAME<'아'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅅ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅇ'OR(SNAME>='아' AND SNAME<'자'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅇ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅈ'OR(SNAME>='자' AND SNAME<'차'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅈ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅊ'OR(SNAME>='차' AND SNAME<'카'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅊ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅋ'OR(SNAME>='카' AND SNAME<'타'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅋ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅌ'OR(SNAME>='타' AND SNAME<'파'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅌ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅍ'OR(SNAME>='파' AND SNAME<'하'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅍ</span></li>
+				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅎ'OR(SNAME>='하' AND substr(SNAME,1,1)<='힣'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅎ</span></li>
 			</span>
-			<li><span onClick="pFilter=&quot;AND,A,B&quot;;pFilterDB=&quot;sname>='a' AND sname<'b'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
-			<li><span onClick="pFilter=&quot;AND,B,C&quot;;pFilterDB=&quot;sname>='b' AND sname<'c'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
-			<li><span onClick="pFilter=&quot;AND,C,D&quot;;pFilterDB=&quot;sname>='c' AND sname<'d'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
-			<li><span onClick="pFilter=&quot;AND,D,E&quot;;pFilterDB=&quot;sname>='d' AND sname<'e'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
-			<li><span onClick="pFilter=&quot;AND,E,F&quot;;pFilterDB=&quot;sname>='e' AND sname<'f'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
-			<li><span onClick="pFilter=&quot;AND,F,G&quot;;pFilterDB=&quot;sname>='f' AND sname<'g'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
-			<li><span onClick="pFilter=&quot;AND,G,H&quot;;pFilterDB=&quot;sname>='g' AND sname<'h'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
-			<li><span onClick="pFilter=&quot;AND,H,I&quot;;pFilterDB=&quot;sname>='h' AND sname<'i'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
-			<li><span onClick="pFilter=&quot;AND,I,J&quot;;pFilterDB=&quot;sname>='i' AND sname<'j'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
-			<li><span onClick="pFilter=&quot;AND,J,K&quot;;pFilterDB=&quot;sname>='j' AND sname<'k'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
-			<li><span onClick="pFilter=&quot;AND,K,L&quot;;pFilterDB=&quot;sname>='k' AND sname<'l'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
-			<li><span onClick="pFilter=&quot;AND,L,M&quot;;pFilterDB=&quot;sname>='l' AND sname<'m'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
-			<li><span onClick="pFilter=&quot;AND,M,N&quot;;pFilterDB=&quot;sname>='m' AND sname<'n'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
-			<li><span onClick="pFilter=&quot;AND,N,O&quot;;pFilterDB=&quot;sname>='n' AND sname<'o'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
-			<li><span onClick="pFilter=&quot;AND,O,P&quot;;pFilterDB=&quot;sname>='o' AND sname<'p'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
-			<li><span onClick="pFilter=&quot;AND,P,Q&quot;;pFilterDB=&quot;sname>='p' AND sname<'q'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
-			<li><span onClick="pFilter=&quot;AND,Q,R&quot;;pFilterDB=&quot;sname>='q' AND sname<'r'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
-			<li><span onClick="pFilter=&quot;AND,R,S&quot;;pFilterDB=&quot;sname>='r' AND sname<'s'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
-			<li><span onClick="pFilter=&quot;AND,S,T&quot;;pFilterDB=&quot;sname>='s' AND sname<'t'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
-			<li><span onClick="pFilter=&quot;AND,T,U&quot;;pFilterDB=&quot;sname>='t' AND sname<'u'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
-			<li><span onClick="pFilter=&quot;AND,U,V&quot;;pFilterDB=&quot;sname>='u' AND sname<'v'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
-			<li><span onClick="pFilter=&quot;AND,V,W&quot;;pFilterDB=&quot;sname>='v' AND sname<'w'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
-			<li><span onClick="pFilter=&quot;AND,W,X&quot;;pFilterDB=&quot;sname>='w' AND sname<'x'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
-			<li><span onClick="pFilter=&quot;AND,X,Y&quot;;pFilterDB=&quot;sname>='x' AND sname<'y'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
-			<li><span onClick="pFilter=&quot;AND,Y,Z&quot;;pFilterDB=&quot;sname>='y' AND sname<'z'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
-			<li><span onClick="pFilter=&quot;AND,Z,ZZZZZ&quot;;pFilterDB=&quot;sname>='z' AND sname<'zzzzz'&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
-			<li><span onClick="pFilter=&quot;OR_AND,ㄱ,힉,A,ZZZZZ&quot;;pFilterDB=&quot;(sname<'ㄱ' OR sname>'힉') AND (sname<'a' OR sname>'zzzzz') &quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t259' /></span></li>     
+			<span id="address_wordmenu_japan">
+				<li><span onClick="pFilterDB=&quot;((SNAME>='あ' AND SNAME<'か')OR(SNAME>='ア' AND SNAME<'カ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">あ</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='か' AND SNAME<'さ')OR(SNAME>='カ' AND SNAME<'サ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">か</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='さ' AND SNAME<'た')OR(SNAME>='サ' AND SNAME<'タ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">さ</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='た' AND SNAME<'な')OR(SNAME>='タ' AND SNAME<'ナ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">た</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='な' AND SNAME<'は')OR(SNAME>='ナ' AND SNAME<'ハ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">な</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='は' AND SNAME<'ほ')OR(SNAME>='ハ' AND SNAME<'マ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">は</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='ほ' AND SNAME<'や')OR(SNAME>='マ' AND SNAME<'ヤ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ま</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='や' AND SNAME<'ら')OR(SNAME>='ヤ' AND SNAME<'ラ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">や</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='ら' AND SNAME<'わ')OR(SNAME>='ラ' AND SNAME<'ワ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ら</span></li>
+				<li><span onClick="pFilterDB=&quot;((SNAME>='わ' AND substr(SNAME,1,1)<='ん')OR(SNAME>='ワ' AND substr(SNAME,1,1)<='ン'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">わ</span></li>
+			</span>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='A' OR substr(SNAME,1,1)='a')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='B' OR substr(SNAME,1,1)='b')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='C' OR substr(SNAME,1,1)='c')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='D' OR substr(SNAME,1,1)='d')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='E' OR substr(SNAME,1,1)='e')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='F' OR substr(SNAME,1,1)='f')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='G' OR substr(SNAME,1,1)='g')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='H' OR substr(SNAME,1,1)='h')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='I' OR substr(SNAME,1,1)='i')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='J' OR substr(SNAME,1,1)='j')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='K' OR substr(SNAME,1,1)='k')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='L' OR substr(SNAME,1,1)='l')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='M' OR substr(SNAME,1,1)='m')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='N' OR substr(SNAME,1,1)='n')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='O' OR substr(SNAME,1,1)='o')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='P' OR substr(SNAME,1,1)='p')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Q' OR substr(SNAME,1,1)='q')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='R' OR substr(SNAME,1,1)='r')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='S' OR substr(SNAME,1,1)='s')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='T' OR substr(SNAME,1,1)='t')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='U' OR substr(SNAME,1,1)='u')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='V' OR substr(SNAME,1,1)='v')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='W' OR substr(SNAME,1,1)='w')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='X' OR substr(SNAME,1,1)='x')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Y' OR substr(SNAME,1,1)='y')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
+			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Z' OR substr(SNAME,1,1)='z')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
+			<c:choose>
+				<c:when test="${userInfo.lang eq '1'}">
+					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z')AND(substr(SNAME,1,1)<'ㄱ' OR substr(SNAME,1,1)>'ㅎ')AND(substr(SNAME,1,1)<'가' OR substr(SNAME,1,1)>'힣'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+						<spring:message code='ezAddress.t259' /></span>
+					</li>
+				</c:when>
+				<c:when test="${userInfo.lang eq '3'}">
+					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z')AND(substr(SNAME,1,1)<'あ' OR substr(SNAME,1,1)>'ん')AND(substr(SNAME,1,1)<'ア' OR substr(SNAME,1,1)>'ン'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+						<spring:message code='ezAddress.t259' /></span>
+					</li>
+				</c:when>
+				<c:otherwise>
+					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+						<spring:message code='ezAddress.t259' /></span>
+					</li>
+				</c:otherwise>
+			</c:choose>
+			
 			<%--개인주소록, 부서주소록 소팅 기능임 삭제 하지 마시오--%>
 			<%--
 			<li><span onClick="pFilter=&quot;KIND,IPM.Contact&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Person</span></li>

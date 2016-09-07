@@ -92,41 +92,6 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 	@Override
 	public String getAddressCount(String pFolderID, String pOwnerID, String pFilter) throws Exception {
-		
-        // 2004.05.24 이호익
-        // 오라클은 자음단위로 검색이 안된다. 따라서, 다음과 같은 방식으로 검색을 하도록 한다.
-        if (pFilter.equals("sname>='ㄱ' AND sname<'ㄴ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄱ' OR ( SNAME >= '가' AND SNAME < '나' ) )";
-        } else if (pFilter.equals("sname>='ㄴ' AND sname<'ㄷ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄴ' OR ( SNAME >= '나' AND SNAME < '다' ) )";
-        } else if (pFilter.equals("sname>='ㄷ' AND sname<'ㄹ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄷ' OR ( SNAME >= '다' AND SNAME < '라' ) )";
-        } else if (pFilter.equals("sname>='ㄹ' AND sname<'ㅁ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄹ' OR ( SNAME >= '라' AND SNAME < '마' ) )";
-        } else if (pFilter.equals("sname>='ㅁ' AND sname<'ㅂ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅁ' OR ( SNAME >= '마' AND SNAME < '바' ) )";
-        } else if (pFilter.equals("sname>='ㅂ' AND sname<'ㅅ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅂ' OR ( SNAME >= '바' AND SNAME < '사' ) )";
-        } else if (pFilter.equals("sname>='ㅅ' AND sname<'ㅇ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅅ' OR ( SNAME >= '사' AND SNAME < '아' ) )";
-        } else if (pFilter.equals("sname>='ㅇ' AND sname<'ㅈ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅇ' OR ( SNAME >= '아' AND SNAME < '자' ) )";
-        } else if (pFilter.equals("sname>='ㅈ' AND sname<'ㅊ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅈ' OR ( SNAME >= '자' AND SNAME < '차' ) )";
-        } else if (pFilter.equals("sname>='ㅊ' AND sname<'ㅋ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅊ' OR ( SNAME >= '차' AND SNAME < '카' ) )";
-        } else if (pFilter.equals("sname>='ㅋ' AND sname<'ㅌ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅋ' OR ( SNAME >= '카' AND SNAME < '타' ) )";
-        } else if (pFilter.equals("sname>='ㅌ' AND sname<'ㅍ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅌ' OR ( SNAME >= '타' AND SNAME < '파' ) )";
-        } else if (pFilter.equals("sname>='ㅍ' AND sname<'ㅎ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅍ' OR ( SNAME >= '파' AND SNAME < '하' ) )";
-        } else if (pFilter.equals("sname>='ㅎ' AND sname<'힉'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅎ' OR ( SNAME >= '하' AND SNAME < '힉' ) )";
-        } else if (pFilter.equals("(sname<'ㄱ' OR sname>'힉')")) {
-            pFilter = "( substr(SNAME,1,1) < 'ㄱ' Or substr(SNAME,1,1) > 'ㅎ') And (substr(SNAME,1,1) < '가' Or substr(SNAME,1,1) > '하')";
-        }
-        
         Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", pOwnerID);
 		map.put("v_PFOLDERID", pFolderID);
@@ -162,40 +127,6 @@ public class EzAddressServiceImpl implements EzAddressService {
         } else {
             order1 = " DESC, AddressID DESC";
             order2 = " ASC, AddressID ASC";
-        }
-        
-        // 2004.05.24 이호익
-        // 오라클은 자음단위로 검색이 안된다. 따라서, 다음과 같은 방식으로 검색을 하도록 한다.
-        if (pFilter.equals(" AND sname>='ㄱ' AND sname<'ㄴ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄱ' OR ( SNAME >= '가' AND SNAME < '나' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄴ' AND sname<'ㄷ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄴ' OR ( SNAME >= '나' AND SNAME < '다' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄷ' AND sname<'ㄹ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄷ' OR ( SNAME >= '다' AND SNAME < '라' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄹ' AND sname<'ㅁ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄹ' OR ( SNAME >= '라' AND SNAME < '마' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅁ' AND sname<'ㅂ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅁ' OR ( SNAME >= '마' AND SNAME < '바' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅂ' AND sname<'ㅅ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅂ' OR ( SNAME >= '바' AND SNAME < '사' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅅ' AND sname<'ㅇ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅅ' OR ( SNAME >= '사' AND SNAME < '아' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅇ' AND sname<'ㅈ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅇ' OR ( SNAME >= '아' AND SNAME < '자' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅈ' AND sname<'ㅊ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅈ' OR ( SNAME >= '자' AND SNAME < '차' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅊ' AND sname<'ㅋ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅊ' OR ( SNAME >= '차' AND SNAME < '카' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅋ' AND sname<'ㅌ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅋ' OR ( SNAME >= '카' AND SNAME < '타' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅌ' AND sname<'ㅍ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅌ' OR ( SNAME >= '타' AND SNAME < '파' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅍ' AND sname<'ㅎ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅍ' OR ( SNAME >= '파' AND SNAME < '하' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅎ' AND sname<'힉'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅎ' OR ( SNAME >= '하' AND SNAME < '힉' ) )";
-        } else if (pFilter.equals(" AND (sname<'ㄱ' OR sname>'힉')")) {
-            pFilter = " AND ( substr(SNAME,1,1) < 'ㄱ' Or substr(SNAME,1,1) > 'ㅎ') And (substr(SNAME,1,1) < '가' Or substr(SNAME,1,1) > '하')";
         }
         
         if (pFolderID == null || pFolderID.equals("")) {
@@ -237,40 +168,6 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 	@Override
 	public int getSearchCount(String pIdList, String pFilter) throws Exception {
-		// 2004.05.24 이호익
-        // 오라클은 자음단위로 검색이 안된다. 따라서, 다음과 같은 방식으로 검색을 하도록 한다.
-        if (pFilter.equals("sname>='ㄱ' AND sname<'ㄴ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄱ' OR ( SNAME >= '가' AND SNAME < '나' ) )";
-        } else if (pFilter.equals("sname>='ㄴ' AND sname<'ㄷ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄴ' OR ( SNAME >= '나' AND SNAME < '다' ) )";
-        } else if (pFilter.equals("sname>='ㄷ' AND sname<'ㄹ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄷ' OR ( SNAME >= '다' AND SNAME < '라' ) )";
-        } else if (pFilter.equals("sname>='ㄹ' AND sname<'ㅁ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㄹ' OR ( SNAME >= '라' AND SNAME < '마' ) )";
-        } else if (pFilter.equals("sname>='ㅁ' AND sname<'ㅂ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅁ' OR ( SNAME >= '마' AND SNAME < '바' ) )";
-        } else if (pFilter.equals("sname>='ㅂ' AND sname<'ㅅ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅂ' OR ( SNAME >= '바' AND SNAME < '사' ) )";
-        } else if (pFilter.equals("sname>='ㅅ' AND sname<'ㅇ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅅ' OR ( SNAME >= '사' AND SNAME < '아' ) )";
-        } else if (pFilter.equals("sname>='ㅇ' AND sname<'ㅈ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅇ' OR ( SNAME >= '아' AND SNAME < '자' ) )";
-        } else if (pFilter.equals("sname>='ㅈ' AND sname<'ㅊ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅈ' OR ( SNAME >= '자' AND SNAME < '차' ) )";
-        } else if (pFilter.equals("sname>='ㅊ' AND sname<'ㅋ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅊ' OR ( SNAME >= '차' AND SNAME < '카' ) )";
-        } else if (pFilter.equals("sname>='ㅋ' AND sname<'ㅌ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅋ' OR ( SNAME >= '카' AND SNAME < '타' ) )";
-        } else if (pFilter.equals("sname>='ㅌ' AND sname<'ㅍ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅌ' OR ( SNAME >= '타' AND SNAME < '파' ) )";
-        } else if (pFilter.equals("sname>='ㅍ' AND sname<'ㅎ'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅍ' OR ( SNAME >= '파' AND SNAME < '하' ) )";
-        } else if (pFilter.equals("sname>='ㅎ' AND sname<'힉'")) {
-            pFilter = "( substr(SNAME,1,1) = 'ㅎ' OR ( SNAME >= '하' AND SNAME < '힉' ) )";
-        } else if (pFilter.equals("(sname<'ㄱ' OR sname>'힉')")) {
-            pFilter = "( substr(SNAME,1,1) < 'ㄱ' Or substr(SNAME,1,1) > 'ㅎ') And (substr(SNAME,1,1) < '가' Or substr(SNAME,1,1) > '하')";
-        }
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pIdList);
 		map.put("v_PFILTER", pFilter);
@@ -479,40 +376,6 @@ public class EzAddressServiceImpl implements EzAddressService {
         } else {
             order1 = " DESC, AddressID DESC";
             order2 = " ASC, AddressID ASC";
-        }
-        
-        // 2004.05.24 이호익
-        // 오라클은 자음단위로 검색이 안된다. 따라서, 다음과 같은 방식으로 검색을 하도록 한다.
-        if (pFilter.equals(" AND sname>='ㄱ' AND sname<'ㄴ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄱ' OR ( SNAME >= '가' AND SNAME < '나' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄴ' AND sname<'ㄷ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄴ' OR ( SNAME >= '나' AND SNAME < '다' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄷ' AND sname<'ㄹ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄷ' OR ( SNAME >= '다' AND SNAME < '라' ) )";
-        } else if (pFilter.equals(" AND sname>='ㄹ' AND sname<'ㅁ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㄹ' OR ( SNAME >= '라' AND SNAME < '마' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅁ' AND sname<'ㅂ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅁ' OR ( SNAME >= '마' AND SNAME < '바' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅂ' AND sname<'ㅅ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅂ' OR ( SNAME >= '바' AND SNAME < '사' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅅ' AND sname<'ㅇ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅅ' OR ( SNAME >= '사' AND SNAME < '아' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅇ' AND sname<'ㅈ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅇ' OR ( SNAME >= '아' AND SNAME < '자' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅈ' AND sname<'ㅊ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅈ' OR ( SNAME >= '자' AND SNAME < '차' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅊ' AND sname<'ㅋ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅊ' OR ( SNAME >= '차' AND SNAME < '카' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅋ' AND sname<'ㅌ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅋ' OR ( SNAME >= '카' AND SNAME < '타' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅌ' AND sname<'ㅍ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅌ' OR ( SNAME >= '타' AND SNAME < '파' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅍ' AND sname<'ㅎ'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅍ' OR ( SNAME >= '파' AND SNAME < '하' ) )";
-        } else if (pFilter.equals(" AND sname>='ㅎ' AND sname<'힉'")) {
-            pFilter = " AND ( substr(SNAME,1,1) = 'ㅎ' OR ( SNAME >= '하' AND SNAME < '힉' ) )";
-        } else if (pFilter.equals(" AND (sname<'ㄱ' OR sname>'힉')")) {
-            pFilter = " AND ( substr(SNAME,1,1) < 'ㄱ' Or substr(SNAME,1,1) > 'ㅎ') And (substr(SNAME,1,1) < '가' Or substr(SNAME,1,1) > '하')";
         }
         
         logger.debug("pIdList : " + pIdList);

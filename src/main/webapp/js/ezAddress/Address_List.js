@@ -1,7 +1,6 @@
 ﻿var xmlHTTPAddressList = null;
 var ListXML = null;
 function View_Change() {
-	alert('1');
     listContentArry = new Array();
     if (document.getElementById("ListViewType").value == "list") {
         document.getElementById("MailList").style.display = "";

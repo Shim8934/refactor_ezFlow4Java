@@ -9,3 +9,8 @@ var strLang258 = "以前";
 var strLang259 = "次";
 var strLang91001 = "人";
 var strLang100 = "没有找到的结果。";
+
+//추가
+var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";
+var strLang91003 = "데이터가 지정되지 않았습니다.";
+var strLang91004 = "트리뷰의 ID가 지정되지 않았습니다.";
