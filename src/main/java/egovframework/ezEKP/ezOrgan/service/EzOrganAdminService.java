@@ -14,8 +14,10 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception;
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow) throws Exception;
-	
+		
 	public List<OrganUserVO> getRetireList(int pPage, int pPageRow) throws Exception;
+	
+	public List<OrganUserVO> getUserCnList() throws Exception;
 	
 	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
 	

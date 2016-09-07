@@ -306,7 +306,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			}
 		
 		} catch (Exception e) {
-			
+			logger.debug(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();

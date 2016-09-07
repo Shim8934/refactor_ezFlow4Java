@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +38,8 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -59,6 +62,9 @@ public class EzEmailScheduler {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
@@ -196,11 +202,69 @@ public class EzEmailScheduler {
 	@Scheduled(cron = "30 01 00 * * *")
 	public void processMailStatLogs() throws Exception{
 		logger.debug("오전 00:01:30에 호출이 됩니다.");
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
-		String response = ezEmailUtil.getWebServiceResult(requestURL, null);
 
+		// 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
+		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, null);		
 		logger.debug("response=" + response);		
+
+		Calendar calendar = Calendar.getInstance();
+		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);		
+		logger.debug("dayOfMonth=" + dayOfMonth);
+		
+		// 메일박스 사용량 통계는 매월 초 1일에 한 번 처리한다.
+		if (dayOfMonth == 1) {	
+			List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList();
+			IMAPAccess ia = null;
+			Locale locale = Locale.getDefault();
+			String password = config.getProperty("config.JMochaSuperPassword");
+			String userId = null;
+			String email = null;
+			
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+			String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+			
+			for (OrganUserVO organUser : userCnList) {
+				userId = organUser.getCn();
+				logger.debug("userId=" + userId);
+				
+				try {
+					email = userId + "@" + config.getProperty("config.DomainName");
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+										email, password, egovMessageSource, locale);
+							
+					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+					
+					long mailboxUsage = storageUsageAndLimit[0]; // in KBs
+					long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+					
+					logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);		
+					
+					// 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 API를 호출한다.
+					requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
+					
+					String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+					String emailParam = "email=" + URLEncoder.encode(email, "UTF-8");
+					String usageParam = "usage=" + mailboxUsage*1024;
+					String quotaParam = "quota=" + mailboxQuota*1024;
+					String yearMonthParam = "yearMonth=" + yearMonth;
+					
+					String inputParams = userIdParam + "&" + emailParam + "&" + usageParam + "&" + quotaParam + "&" + yearMonthParam;
+
+					logger.debug("inputParams=" + inputParams);
+					
+					response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
+					logger.debug("response=" + response);							
+				} catch (Exception e) {
+					logger.debug(e.getMessage());
+					e.printStackTrace();
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+			}
+		}
 	}
 	
 	/**

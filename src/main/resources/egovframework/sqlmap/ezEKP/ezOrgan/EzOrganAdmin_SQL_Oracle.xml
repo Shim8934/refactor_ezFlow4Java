@@ -44,6 +44,10 @@
 		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
 	</resultMap>
 	
+	<resultMap id="userCnList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>	
+	</resultMap>
+	
 	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -161,6 +165,19 @@
 		]]>
 	</procedure>
 
+	<select id="EzOrganAdminDAO.userCnList" resultMap="userCnList">
+		<![CDATA[
+			SELECT 
+				a.cn
+			FROM 
+	    		ezHrmaster.TBLUSERMASTER a 
+	    	INNER JOIN 
+	    		ezHrmaster.TBLDEPTMASTER b
+	    	ON a.department=b.cn
+	    	ORDER BY cn
+	    ]]>    		 				
+	</select>
+	
 	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
 		<![CDATA[
 			SELECT 

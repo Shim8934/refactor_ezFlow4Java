@@ -99,6 +99,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
+	public List<OrganUserVO> getUserCnList() throws Exception {		
+		return ezOrganAdminDao.getUserCnList();
+	}
+	
+	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode) throws Exception {
 		String propvalue = "";
 		String DataType = "user";

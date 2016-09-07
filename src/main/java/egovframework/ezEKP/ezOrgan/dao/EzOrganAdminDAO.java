@@ -37,6 +37,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getRetireList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getUserCnList() throws Exception {
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList");
+	}
+	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
 		return (OrganUserVO) select("EzOrganAdminDAO.getUserInfo", map);
 	}
