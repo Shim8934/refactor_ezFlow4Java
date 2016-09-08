@@ -126,13 +126,13 @@
 	            		prevText: '이전달',
 	            		nextText: '다음달',
 	            		currentText: '오늘',
-	            		monthNames: ['1월', '2월', '3월', '4월', '5월', '6월',
-	            		'7월', '8월', '9월', '10월', '11월', '12월'],
-	            		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월',
-	            		'7월', '8월', '9월', '10월', '11월', '12월'],
-	            		dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-	            		dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-	            		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+	            		monthNames: ['1<spring:message code="main.t00049"/>', '2<spring:message code="main.t00049"/>', '3<spring:message code="main.t00049"/>', '4<spring:message code="main.t00049"/>', '5<spring:message code="main.t00049"/>', '6<spring:message code="main.t00049"/>',
+	            		'7<spring:message code="main.t00049"/>', '8<spring:message code="main.t00049"/>', '9<spring:message code="main.t00049"/>', '10<spring:message code="main.t00049"/>', '11<spring:message code="main.t00049"/>', '12<spring:message code="main.t00049"/>'],
+	            		monthNamesShort: ['1<spring:message code="main.t00049"/>', '2<spring:message code="main.t00049"/>', '3<spring:message code="main.t00049"/>', '4<spring:message code="main.t00049"/>', '5<spring:message code="main.t00049"/>', '6<spring:message code="main.t00049"/>',
+	            		'7<spring:message code="main.t00049"/>', '8<spring:message code="main.t00049"/>', '9<spring:message code="main.t00049"/>', '10<spring:message code="main.t00049"/>', '11<spring:message code="main.t00049"/>', '12<spring:message code="main.t00049"/>'],
+	            		dayNames: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
+	            		dayNamesShort: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
+	            		dayNamesMin: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
 	            		weekHeader: 'Wk',
 	            		dateFormat: 'yy-mm-dd',
 	            		firstDay: 0,
@@ -252,18 +252,18 @@
     			<td  style="padding:10px;height:85px"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked>
             		<label for="optY1" accesskey="A"><spring:message code="ezResource.t297"/><u>A</u>)&nbsp;</label>
             		<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
-              			<option value="1">1월</option>
-              			<option value="2">2월</option>
-              			<option value="3">3월</option>
-              			<option value="4">4월</option>
-              			<option value="5">5월</option>
-              			<option value="6">6월</option>
-              			<option value="7">7월</option>
-              			<option value="8">8월</option>
-              			<option value="9">9월</option>
-              			<option value="10">10월</option>
-              			<option value="11">11월</option>
-              			<option value="12">12월</option>
+              			<option value="1">1<spring:message code="main.t00049"/></option>
+              			<option value="2">2<spring:message code="main.t00049"/></option>
+              			<option value="3">3<spring:message code="main.t00049"/></option>
+              			<option value="4">4<spring:message code="main.t00049"/></option>
+              			<option value="5">5<spring:message code="main.t00049"/></option>
+              			<option value="6">6<spring:message code="main.t00049"/></option>
+              			<option value="7">7<spring:message code="main.t00049"/></option>
+              			<option value="8">8<spring:message code="main.t00049"/></option>
+              			<option value="9">9<spring:message code="main.t00049"/></option>
+              			<option value="10">10<spring:message code="main.t00049"/></option>
+              			<option value="11">11<spring:message code="main.t00049"/></option>
+              			<option value="12">12<spring:message code="main.t00049"/></option>
             		</select>
             		
             		<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
@@ -271,18 +271,18 @@
 					<input id="optY2" type="radio" name="optYearly" value="radiobutton">          <label for="optY2" accesskey="E"><spring:message code="ezResource.t300"/><u>E</u>)&nbsp;</label>
 					
             		<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
-              			<option value="1">1월</option>
-              			<option value="2">2월</option>
-              			<option value="3">3월</option>
-              			<option value="4">4월</option>
-              			<option value="5">5월</option>
-              			<option value="6">6월</option>
-              			<option value="7">7월</option>
-              			<option value="8">8월</option>
-              			<option value="9">9월</option>
-              			<option value="10">10월</option>
-              			<option value="11">11월</option>
-              			<option value="12">12월</option>
+              			<option value="1">1<spring:message code="main.t00049"/></option>
+              			<option value="2">2<spring:message code="main.t00049"/></option>
+              			<option value="3">3<spring:message code="main.t00049"/></option>
+              			<option value="4">4<spring:message code="main.t00049"/></option>
+              			<option value="5">5<spring:message code="main.t00049"/></option>
+              			<option value="6">6<spring:message code="main.t00049"/></option>
+              			<option value="7">7<spring:message code="main.t00049"/></option>
+              			<option value="8">8<spring:message code="main.t00049"/></option>
+              			<option value="9">9<spring:message code="main.t00049"/></option>
+              			<option value="10">10<spring:message code="main.t00049"/></option>
+              			<option value="11">11<spring:message code="main.t00049"/></option>
+              			<option value="12">12<spring:message code="main.t00049"/></option>
             		</select>
             		<select name="select" id="list_YearlyEach" onFocus='window.document.all["optYearly"][1].checked=true;'>
               			<option value="1"><spring:message code="ezResource.t301"/></option>
