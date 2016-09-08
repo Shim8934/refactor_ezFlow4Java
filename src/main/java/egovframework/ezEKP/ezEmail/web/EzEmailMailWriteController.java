@@ -2848,7 +2848,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			mat.appendReplacement(result, "src=\"cid:" + cid + "\"");
+			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
 		}
 		mat.appendTail(result);
 		
