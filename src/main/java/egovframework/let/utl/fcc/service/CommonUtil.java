@@ -406,6 +406,36 @@ public class CommonUtil {
 			return false;
 		}
 	}
+	
+	public String isoUTFDate(String dateTimeStr) throws Exception {
+        String timeSetStr = "";
+        String resultStr = "";
+
+        if (dateTimeStr != null && !dateTimeStr.trim().equals("")){
+            if (dateTimeStr.indexOf(" ") != -1){
+                if ((dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213")) || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                    timeSetStr = (dateTimeStr.split(" ")[2].split(":")[0]) + 12;
+                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                } else if (dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212")) || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))){
+                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
+                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    } else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
+                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
+                    } else{
+                        timeSetStr = dateTimeStr.split(" ")[2];
+                    }
+                } else{
+                    timeSetStr = dateTimeStr.split(" ")[2];
+                }
+                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
+            } else{
+                resultStr = dateTimeStr + "T00:00:00.000Z";
+            }
+        } else{
+            resultStr = "";
+        }
+        return resultStr;
+    }
 }
 
 
