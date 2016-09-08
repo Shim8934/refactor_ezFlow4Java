@@ -845,8 +845,12 @@ System.out.println("searchString:"+searchString);
 			String cookieValue1 = "";
 			Cookie[] cookies = req.getCookies();
 			if (cookies != null) {
+				for (int i=0; i<cookies.length; i++) {
+					if (cookies[i].getName().equals("loginCookie")) {
+						cookieValue1 = egovFileScrty.decryptAES(cookies[i].getValue());
+					}
+				}
 				//loginCookie에 lang값, locale값 설정
-				cookieValue1 = egovFileScrty.decryptAES(cookies[2].getValue());
 				String cInfo = config.getProperty("config.ServerName")+ "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone;
 			
 				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
