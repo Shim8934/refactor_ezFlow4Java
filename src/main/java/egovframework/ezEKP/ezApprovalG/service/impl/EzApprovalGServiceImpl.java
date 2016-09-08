@@ -12308,17 +12308,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
 					if (k == 0) {
 						cabWhere += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-					}
-					else {
+					} else {
 						cabWhere += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
 					}
 				}
 				cabWhere += ")";
-			}
-			else {
+			} else {
 				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
 			}
-			
 			break;
 
 		case "1" :		// 편철확정대상 기록물
@@ -12353,7 +12350,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
         	cabWhere += "AND TBCABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
-        			"From TBCABROLEINFO WITH (NOLOCK) Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
+        			"From TBCABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
         }
 
 		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
