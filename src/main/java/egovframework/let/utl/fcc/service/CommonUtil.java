@@ -124,8 +124,7 @@ public class CommonUtil {
 				user.setTitle(user.getTitle1());
 				user.setDeptName(user.getDeptName1());
 				user.setDisplayName(user.getDisplayName1());
-			}
-			else{
+			} else{
 				user.setTitle(user.getTitle2());
 				user.setDeptName(user.getDeptName2());
 				user.setDisplayName(user.getDisplayName2());
