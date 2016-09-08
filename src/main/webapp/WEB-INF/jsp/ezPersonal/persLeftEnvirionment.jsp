@@ -125,7 +125,7 @@
 						break;
 					case "ApprovalPass":
 					case "ApprovalEnv":
-					    window.parent.frames.right.document.location.href = "/MyOffice/ezPersonal/PersonInfo/ezApproval_config_Cross.aspx";
+					    window.parent.frames.right.document.location.href = "/ezPersonal/ezApprovalConfig.do";
 						break;
 		            case "ApprovNoti":
 		                window.parent.frames.right.document.location.href="/MyOffice/ezPersonal/PersonInfo/SetApprovNoticeMail_cross.aspx";
@@ -159,7 +159,7 @@
 		        parent.frames["right"].location.href = "/myoffice/ezSchedule/PIMS_config.aspx";
 		    }
 		    function Approval_Config() {
-		        parent.frames["right"].location.href = "/MyOffice/ezPersonal/PersonInfo/ezApproval_config_Cross.aspx";
+		        parent.frames["right"].location.href = "/ezPersonal/ezApprovalConfig.do";
 		    }
 		</script>
 	</head>
