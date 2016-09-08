@@ -28,7 +28,7 @@
 	        var g_xmlHTTP = null;
 	        var bSearch = false;
 	        var strInitList = "";
-	        var topid = "<c:out value = '${topId}' />";
+	        var topid = "<c:out value = '${topID}' />";
 	        var userLang = "<c:out value = '${userLang}' />";
 	        var ReturnFunction;
 	        var RetValue;
@@ -66,13 +66,13 @@
 	            listview5.DataBind("OrganListView");
 	
 // 	            applyCurrentData();
-	alert(1);
+	
 	            g_xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><DEPTID>${userInfo.deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
-	            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	            g_xmlHTTP.send(strQuery);
-	alert(2);
+	            
 	            m_selectedTree = TreeView;
 	            SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	        });
@@ -86,7 +86,7 @@
 		                    } catch (e) { }
 		                }
 		
-		                var xmlDom = loadXMLFile("/xml/organtree_config3.xml");
+		                var xmlDom = loadXMLFile("/xml/common/organtree_config3.xml");
 		                document.getElementById('TreeView').innerHTML = "";
 		
 		                var treeView = new TreeView();
@@ -128,7 +128,6 @@
 	                    pparsingXML = pparsingXML + "<DATA2>" + ACCESSNAME + "</DATA2>";
 	                    pparsingXML = pparsingXML + "<DATA3>" + ACCESSNAME2 + "</DATA3>";
 	                    pparsingXML = pparsingXML + "<DATA5>" + PERMISSIONS + "</DATA5>";
-	
 	
 	                    if (userLang == "") {
 	                        pparsingXML = pparsingXML + "<VALUE>" + ACCESSNAME + "</VALUE>";
@@ -241,8 +240,8 @@
 		        var xmlRtn = createXmlDom();
 		        var xmlpara = createXmlDom();
 		
-		        var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>mail;DisplayName</PROP></DATA>";
-		        xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+		        var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>mail;displayName</PROP></DATA>";
+		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(strQuery);
 		
 		        xmlRtn = loadXMLString(xmlHTTP.responseText);
@@ -455,7 +454,6 @@
 		                admin_NO.checked = true;
 		                admin_OK.checked = false;
 		            }
-		
 		        }
 		
 		        for (var count = 0; count < m_receiverTitleList.length; count++) {
@@ -482,26 +480,16 @@
 		    }
 		
 		    function displayUserList(DeptID) {
-		        var xmlpara = createXmlDom();
-		
-		        var objNode;
-		
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-		        createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;description;title;telephonenumber");
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayname;description;title");
-		        createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-		
-		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", true);
-		        g_xmlHTTP.onreadystatechange = event_displayUserList;
-		        g_xmlHTTP.send(xmlpara);
-		    }
-		
-		    function event_displayUserList() {
-		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
-		                document.getElementById("OrganListView").innerHTML = "";
+		    	$.ajax({
+		    		type : 'POST',
+		    		url : '/ezOrgan/getDeptMemberList.do',
+		    		async : true,
+		    		data : {deptID : DeptID,
+		    				cell : 'displayName;description;title;telephoneNumber',
+		    				prop : 'mail;displayName;description;title',
+		    				type : 'user'},
+		    		success : function (result) {
+		    			document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
 		                listview.SetSelectFlag(false);
@@ -509,13 +497,13 @@
 		                listview.SetRowOnDblClick("ListViewNodeDblClick");
 		                listview.DataSource(loadXMLString(listviewheader2.innerHTML.toUpperCase()));
 		                listview.DataBind("OrganListView");
-		                listview.DataSource(g_xmlHTTP.responseXML);
+		                listview.DataSource(result);
 		                listview.RowDataBind();
-		            } else
-		                alert("<spring:message code = 'ezPersonal.t22' />" + g_xmlHTTP.statusText);
-		
-		            g_xmlHTTP = null;
-		        }
+		    		},
+		    		error : function(jqXHR, textStatus, errorThrown) {
+		    			alert("<spring:message code = 'ezPersonal.t22' />" + textStatus);
+		    		}
+		    	});
 		    }
 		
 		    function ListViewNodeDblClick() {
@@ -527,6 +515,7 @@
 		        var children;
 		        var child;
 		        children = TreeViewNode.childNodes;
+		        
 		        for (var count = 0; count < children.length; count++) {
 		            child = children.item(count);
 		            child.iconItem.ondblclick = fire_dblClickEvent;

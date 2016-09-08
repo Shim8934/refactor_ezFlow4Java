@@ -2,7 +2,10 @@ package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
 
@@ -23,6 +26,8 @@ public interface EzPersonalAdminService {
 	String getQuickLinkACL(String quickLinkID) throws Exception;
 	
 	int getNoticeCount(String companyID) throws Exception;
+
+	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
 
 	
 

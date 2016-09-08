@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezPersonal.vo;
 
-public class PersonalQuickLickVO {
+public class PersonalQuickLinkVO {
 	/** 퀵링크ID*/
 	private String quickLinkID;
 	/** 이름(한국어)*/

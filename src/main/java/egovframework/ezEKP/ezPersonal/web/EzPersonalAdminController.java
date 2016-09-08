@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -312,7 +314,7 @@ public class EzPersonalAdminController {
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
 		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID);
-		
+		System.out.println(result);
 		return result;
 	}
 	
@@ -335,5 +337,17 @@ public class EzPersonalAdminController {
 		model.addAttribute("topID", topID);
 		
 		return "admin/ezPersonal/personalSelectTarget";
+	}
+	
+	/**
+	 * 초기화면 QuickLink 등록,수정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/saveQuickLink.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void  saveQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		ezPersonalAdminService.saveQuickLink(userInfo, doc);
 	}
 }

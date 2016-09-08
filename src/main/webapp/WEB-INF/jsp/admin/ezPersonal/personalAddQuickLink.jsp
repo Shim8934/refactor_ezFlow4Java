@@ -318,7 +318,7 @@
 	            var objNode;
 	            var objNode2;
 	            var objNode3;
-	            objNode = createNodeInsert(xmlpara, objNode, "PARAMETER");
+	            objNode = createNodeInsert(xmlpara, objNode, "parameter");
 	            
 	            if(mode == "new") {
 	                createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", guid);
@@ -347,27 +347,27 @@
 	            
 	            if (listviewSelected != undefined) {
 	                for (var nCnt1 = 0; nCnt1 < listviewSelected.length; nCnt1++) {
-	                    objNode2 = createNodeAndAppandNode(xmlpara, objNode, objNode2, "NODE");
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA", listviewSelected[nCnt1].childNodes[0].getAttribute("data"));
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA1", listviewSelected[nCnt1].childNodes[0].getAttribute("data1"));
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA2", listviewSelected[nCnt1].childNodes[0].getAttribute("data2"));
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA5", listviewSelected[nCnt1].childNodes[0].getAttribute("data5"));
+	                    objNode2 = createNodeAndAppandNode(xmlpara, objNode, objNode2, "node");
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data", listviewSelected[nCnt1].childNodes[0].getAttribute("data"));
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data1", listviewSelected[nCnt1].childNodes[0].getAttribute("data1"));
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data2", listviewSelected[nCnt1].childNodes[0].getAttribute("data2"));
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data5", listviewSelected[nCnt1].childNodes[0].getAttribute("data5"));
 	                    
 	                    if (mode == "new") {
-	                        createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA6", guid);
+	                        createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data6", guid);
 	                    } else {
-	                        createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "DATA6", ArgQuickID);
+	                        createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data6", ArgQuickID);
 	                    }
 	                    
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "VALUE", getNodeText(listviewSelected[nCnt1].childNodes[0]));
-	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "MODE", mode);
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "value", getNodeText(listviewSelected[nCnt1].childNodes[0]));
+	                    createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "mode", mode);
 	
 	                }
 	            }
 	
 	            xmlhttp = null;
 	            xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "aspx/SaveQuickLink.aspx", false);
+	            xmlhttp.open("POST", "/admin/ezPersonal/saveQuickLink.do", false);
 	            xmlhttp.send(xmlpara);
 	
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {

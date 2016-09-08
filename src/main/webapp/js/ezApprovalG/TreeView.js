@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 //트리의 설정값을 가지고 있는 변수
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -421,7 +421,7 @@ function TreeView() {
                 treeDiv.setAttribute("SELECTNODEID", _selectedNodeID);
 
                 //this.DisplaySelectNode();
-//TODO 트리출력시 에러
+                
                 var oFunc = new Function("node_select(\"" + _selectedNodeID + "\", \"" + _selectedNodeNM + "\", \"" + _thisID + "\", " + _nodeClick + ");");
                 oFunc.call();
             }

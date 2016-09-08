@@ -9,14 +9,17 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLickVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzPersonalAdminService")
 public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
@@ -105,12 +108,12 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 	@Override
 	public String getQuickLinkList() throws Exception {
 		StringBuilder result = new StringBuilder();
-		List<PersonalQuickLickVO> list = ezPersonalAdminDAO.getQuickLinkList();
+		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList();
 		
 		result.append("<LISTVIEWDATA>");
 		result.append("<ROWS>");
 		
-		for(PersonalQuickLickVO vo : list) {
+		for(PersonalQuickLinkVO vo : list) {
 			result.append("<ROW>");
 			result.append("<CELL><VALUE>" + vo.getQuickLinkName() + "</VALUE>");
 			result.append("<DATA1>" + vo.getQuickLinkID() + "</DATA1></CELL>");
@@ -140,7 +143,7 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 
 	@Override
 	public String getQuickLink(String quickLinkID) throws Exception {
-		PersonalQuickLickVO vo = ezPersonalAdminDAO.getQuickLink(quickLinkID);
+		PersonalQuickLinkVO vo = ezPersonalAdminDAO.getQuickLink(quickLinkID);
 		
 		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
 		
@@ -150,10 +153,10 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 	@Override
 	public String getQuickLinkACL(String quickLinkID) throws Exception {
 		StringBuilder result = new StringBuilder();
-		List<PersonalQuickLickVO> list = ezPersonalAdminDAO.getQuickLinkACL(quickLinkID);
+		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkACL(quickLinkID);
 		
 		result.append("<NODES>");
-		for (PersonalQuickLickVO vo : list) {
+		for (PersonalQuickLinkVO vo : list) {
 			result.append("<NODE>");
 			
 			for (Field field : vo.getClass().getDeclaredFields()) {
@@ -171,6 +174,65 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 		
 		return result.toString();
 	}
+
+	@Override
+	public void saveQuickLink(LoginVO userInfo, Document doc) throws Exception {
+		String pQuickLinkID = doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent();
+		String pQuickLinkName = doc.getElementsByTagName("pQuickLinkName").item(0).getTextContent();
+		String pQuickLinkName2 = doc.getElementsByTagName("pQuickLinkName2").item(0).getTextContent();
+		String pQuickLinkName3 = doc.getElementsByTagName("pQuickLinkName3").item(0).getTextContent();
+		String pQuickLinkName4 = doc.getElementsByTagName("pQuickLinkName4").item(0).getTextContent();
+		String pLinkType= doc.getElementsByTagName("pLinkType").item(0).getTextContent();
+		String pLinkTypeURL = doc.getElementsByTagName("pLinkTypeURL").item(0).getTextContent();
+		String pMode = doc.getElementsByTagName("pMode").item(0).getTextContent();
+		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
+		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
+		
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pQuickLinkName4, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId());
+		
+		if (doc.getElementsByTagName("node").getLength() == 0) {
+			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL"); 
+		}
+		
+		for (int i = 0; i < doc.getElementsByTagName("node").getLength(); i++) {
+			String accessName = doc.getElementsByTagName("node").item(i).getChildNodes().item(0).getTextContent();
+			String accessID = doc.getElementsByTagName("node").item(i).getChildNodes().item(1).getTextContent();
+			String accessName2 = doc.getElementsByTagName("node").item(i).getChildNodes().item(2).getTextContent();
+			String viewFlag = doc.getElementsByTagName("node").item(i).getChildNodes().item(3).getTextContent();
+			String quickLinkID = doc.getElementsByTagName("node").item(i).getChildNodes().item(4).getTextContent();
+			String mode = doc.getElementsByTagName("node").item(i).getChildNodes().item(6).getTextContent();
+			
+			setQuickLinkACL(quickLinkID, accessID, accessName, accessName2, viewFlag, mode);
+		}
+	}
+
+	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMODE", mode);
+		map.put("v_QUICKLINKID", quickLinkID);
+		map.put("v_QUICKLINKNAME", quickLinkName);
+		map.put("v_QUICKLINKNAME2", quickLinkName2);
+		map.put("v_QUICKLINKNAME3", quickLinkName3);
+		map.put("v_QUICKLINKNAME4", quickLinkName4);
+		map.put("v_LINKTYPE", linkType);
+		map.put("v_LINKTYPEURL", linkTypeURL);
+		map.put("v_URL", url);
+		map.put("v_NOWDATE", EgovDateUtil.getToday("-"));
+		map.put("v_REGUSERID", userID);
+		map.put("v_SIZE", size);
+
+		ezPersonalAdminDAO.setQuickLinkItem(map);
+	}
 	
-	
+	private void setQuickLinkACL(String quickLinkID, String accessID, String accessName, String accessName2, String viewFlag, String mode) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMODE", mode);
+		map.put("v_QUICKLINKID", quickLinkID);
+		map.put("v_ACCESSID", accessID);
+		map.put("v_ACCESSNAME", accessName);
+		map.put("v_ACCESSNAME2", accessName2);
+		map.put("v_VIEW_FLAG", viewFlag);
+		
+		ezPersonalAdminDAO.setQuickLinkACL(map);
+	}
 }

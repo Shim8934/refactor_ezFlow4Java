@@ -13,7 +13,7 @@
 	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/> -->
 	
 	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
-	<typeAlias  alias="PersonalQuickLickVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLickVO"/>
+	<typeAlias  alias="PersonalQuickLinkVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="Title"					columnIndex="1"/>
@@ -35,19 +35,19 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLickVO" >
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLickVO" >
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK_ACL(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" 									resultClass="PersonalQuickLickVO" >
+	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" 									resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINKLIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -62,6 +62,18 @@
 	<procedure id="EzPersonalAdmin.EZSP_INSERTNOTICE"			parameterClass="Map">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_INSERTNOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM"		parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_SETQUICKLINKITEM(#v_PMODE#, #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, #v_QUICKLINKNAME4#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL"		parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_SETQUICKLINK_ACL(#v_PMODE#, #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#)}
 		]]>	
 	</procedure>
 	
