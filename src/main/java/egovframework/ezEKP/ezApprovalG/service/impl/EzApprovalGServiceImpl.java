@@ -203,7 +203,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGLeftVOList.get(0).setName(doc.getElementsByTagName("NAME").item(0).getTextContent());
 			apprGLeftVOList.get(0).setWidth(Integer.parseInt(doc.getElementsByTagName("WIDTH").item(0).getTextContent()));
 		} else {
-			apprGLeftVOList.get(0).setName("문서함리스트");
+			apprGLeftVOList.get(0).setName(messageSource.getMessage("ezApprovalG.t1548", userInfo.getLocale()));
 			apprGLeftVOList.get(0).setWidth(250);
 		}
 		
@@ -1658,7 +1658,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String updateLineInfo(String ret, String companyID, String lang) throws Exception {
+	public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		Document docXML = commonUtil.convertStringToDocument(ret);
 		NodeList nList = docXML.getElementsByTagName("ROW");
@@ -1675,10 +1675,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (nList.item(k).getChildNodes().item(7).getTextContent().trim().equals("")) {
 				recDate = "NULL";
 			} else {
-				if (nList.item(k).getChildNodes().item(7).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
-					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace("오전", "").trim() + "AM'";
-				} else if (nList.item(k).getChildNodes().item(7).getTextContent().replace("오후", "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
-					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace("오후", "").trim() + "PM'";
+				if (nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() + "AM'";
+				} else if (nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() + "PM'";
 				} else {
 					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().trim() + "'";
 				}
@@ -1687,10 +1687,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (nList.item(k).getChildNodes().item(6).getTextContent().trim().equals("")) {
 				procDate = "NULL";
 			} else {
-				if (nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
-					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() + "AM'";
-				} else if (nList.item(k).getChildNodes().item(6).getTextContent().replace("오전", "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
-					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace("오후", "").trim() + "PM'";
+				if (nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() + "AM'";
+				} else if (nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() + "PM'";
 				} else {
 					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().trim() + "'";
 				}
@@ -12308,14 +12308,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
 					if (k == 0) {
 						cabWhere += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-					} else {
+					}
+					else {
 						cabWhere += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
 					}
 				}
 				cabWhere += ")";
-			} else {
+			}
+			else {
 				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
 			}
+			
 			break;
 
 		case "1" :		// 편철확정대상 기록물
@@ -12350,7 +12353,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
         	cabWhere += "AND TBCABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
-        			"From TBCABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
+        			"From TBCABROLEINFO WITH (NOLOCK) Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
         }
 
 		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
@@ -12363,7 +12366,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		strSQL.append(cabWhere + ") TBCABINET On TBSEPERATEATTACH.CabinetID=TBCABINET.CabinetID ");
 
-		if (transFlag == "1") {
+		if (transFlag.equals("1")) {
 			strSQL.append("OR TBSEPERATEATTACH.CabinetID=TBCABINET.TCabinetID ");
 		}
 
@@ -14193,7 +14196,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if(tempUserID.trim().equals("")){
 				rtnVal.append("<RESULT>NOUSER</RESULT>");
 			}
-			else if(!tempUserID.toUpperCase().equals(userID.toUpperCase()) && string.equals("")){
+			else if(!tempUserID.trim().toUpperCase().equals(userID.trim().toUpperCase()) && string.equals("MUST")){
 				rtnVal.append("<RESULT>OTHERUSER</RESULT>");
 			}
 			else if(!staDTDraftDoc.equals(tempDocType)){

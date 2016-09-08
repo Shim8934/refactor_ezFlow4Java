@@ -63,7 +63,7 @@ public interface EzApprovalGService {
 	
 	public String getTempList(String userID, String formID, String companyID, String lang) throws Exception;
 	
-	public String updateLineInfo(String ret, String companyID, String lang) throws Exception;
+	public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
 	public String updateReceiptInfo(String ret2, String companyID, String lang) throws Exception;
 	

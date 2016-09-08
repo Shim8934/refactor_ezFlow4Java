@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -184,7 +183,6 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String useEditor=config.getProperty("config.EDITOR");
 		String useIE11Browser=config.getProperty("config.IE11EDITOR");
-		String nonActiveX="YES";
 	     if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
 	    	 useIE11Browser ="CK";
 	     }
@@ -243,7 +241,6 @@ public class EzApprovalGarchiveController {
 	public String getRecReadHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String docID= xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String result=ezApprovalGService.getRecReadHistory(xmlDom);
 		return result;
 	}
@@ -416,10 +413,8 @@ public class EzApprovalGarchiveController {
         String maxSize = "";
         String isBody = "";
         
-        String attachFileName = "";
         String hasattach = "NO";
         String docID = "NO";
-        String nonActiveX = "YES";
         String realPath = request.getServletContext().getRealPath("");
         docID=request.getParameter("docID") != null ? request.getParameter("docID") : "";
         
@@ -428,7 +423,6 @@ public class EzApprovalGarchiveController {
 		} else {
 			susinAdmin = "NO";
 		}
-        String formList = ezApprovalGService.getOptionInfo("A36", "007", userInfo, "CODE");
 		poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
 		maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		
@@ -467,78 +461,6 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/printFormRecInfo.do"  ,produces="text/xml;charset=utf-8")
 	public String printFormRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String STRGet_t106 = "";
-		String STRGet_t109 = "";
-		String STRGet_t445 = "";
-		String STRGet_t819 = "";
-		String STRGet_t825 = "";
-		String STRGet_t827 = "";
-		String STRGet_t831 = "";
-		String STRGet_t832 = "";
-		String STRGet_t836 = "";
-		String STRGet_t837 = "";
-		String STRGet_t840 = "";
-		String STRGet_t845 = "";
-		String STRGet_t846 = "";
-		String STRGet_t847 = "";
-		String STRGet_t848 = "";
-		String STRGet_t849 = "";
-		String STRGet_t858 = "";
-		String STRGet_t859 = "";
-		String STRGet_t860 = "";
-		String STRGet_t861 = "";
-		String STRGet_t862 = "";
-        String STRGet_t863 = "";
-        String STRGet_t864 = "";
-        String STRGet_t865 = "";
-        String STRGet_t866 = "";
-        String STRGet_t867 = "";
-        String STRGet_t868 = "";
-        String STRGet_t869 = "";
-        String STRGet_t870 = "";
-        String STRGet_t871 = "";
-        String STRGet_t872 = "";
-        String STRGet_t873 = "";
-        String STRGet_t874 = "";
-        String STRGet_t875 = "";
-        String STRGet_t876 = "";
-		if(userInfo.getLang().equals("2")){
-			 STRGet_t106 = "Subject(Title)";
-			 STRGet_t109 = "Public";
-			 STRGet_t445 = "Drafter";
-			 STRGet_t819 = "Category number";
-			 STRGet_t825 = "Default information";
-			 STRGet_t827 = "Processing department";
-			 STRGet_t831 = "Registration date";
-			 STRGet_t832 = "Addtional information";
-			 STRGet_t836 = "Modification or not";
-			 STRGet_t837 = "Old documentary availability";
-			 STRGet_t840 = "Information of class";
-			 STRGet_t845 = "Filed";
-			 STRGet_t846 = "List transfer year";
-			 STRGet_t847 = "List transfer year";
-			 STRGet_t848 = "File transfer availability";
-			 STRGet_t849 = "File transfer year";
-			 STRGet_t858 = "Registry class of documentary";
-			 STRGet_t859 = "Registry class";
-			 STRGet_t860 = "Registration Number";
-			 STRGet_t861 = "Attach separate numbers";
-             STRGet_t862 = "Approver";
-             STRGet_t863 = "Date of implementation";
-             STRGet_t864 = "Receipted user(Sending user)";
-             STRGet_t865 = "Distribution number";
-             STRGet_t866 = "Production organ registry No.";
-             STRGet_t867 = "Return availability";
-             STRGet_t868 = "Electronic documentary<br>availability";
-             STRGet_t869 = "Production organ of old<br>documentary";
-             STRGet_t870 = "Registry number of old documentary";
-             STRGet_t871 = "Retention period of old<br>documentary";
-             STRGet_t872 = "Summary of audio-visual";
-             STRGet_t873 = "Form of audio-visual documentary.";
-             STRGet_t874 = "Filed documentary name";
-             STRGet_t875 = "Special<br>documentary.";
-             STRGet_t876 = "Part of a public limited";
-		}
 
 		String RecID= request.getParameter("ID1");
 		String SepAttNo =request.getParameter("ID2");
@@ -701,7 +623,6 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
    		String realPath = request.getServletContext().getRealPath("");
 		String dirPath =  realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
-        String serverName = request.getServerName();
 		String result=ezApprovalGService.doSendOffer(xmlDom,dirPath , userInfo.getCompanyID(), userInfo.getLang());
 		return result;
 	}

@@ -834,7 +834,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String aprLineSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String ret) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String result = ezApprovalGService.updateLineInfo(ret, userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezApprovalGService.updateLineInfo(ret, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		return result;
 	}
