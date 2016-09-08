@@ -2215,7 +2215,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang());
+		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
 		
 		return result;
 	}
@@ -2229,7 +2229,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		return result;
 	}

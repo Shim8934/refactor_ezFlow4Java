@@ -724,94 +724,6 @@ public class EzApprovalGarchiveController {
           String STRGet_t855 = "";
           String STRGet_t856 = "";
 		  userInfo = commonUtil.aprUserInfo(loginCookie);
-		  if(!userInfo.getLang().equals("1")){
-			  STRGet_t106 = "Subject(Title)";
-              STRGet_t117 = "Keeping period";
-              STRGet_t573 = "No.";
-              STRGet_t574 = "Transfer";
-              STRGet_t576 = "Unit business code";
-              STRGet_t577 = "Unit business name";
-              STRGet_t599 = "Preservation methods";
-              STRGet_t600 = "Store locations";
-              STRGet_t816 = "The registration information of the recordable document binder";
-              STRGet_t819 = "Category number";
-              STRGet_t825 = "Default information";
-              STRGet_t826 = "Type of recordable Doc.&nbsp;&nbsp;&nbsp;&nbsp;";
-              STRGet_t827 = "Processing department";
-              STRGet_t828 = "Business of unit";
-              STRGet_t829 = "Producation year";
-              STRGet_t830 = "Year of registration numbers";
-              STRGet_t831 = "Registration date";
-              STRGet_t832 = "Addtional information";
-              STRGet_t833 = "The registered number of the recordable document";
-              STRGet_t834 = "Number of recordable document page.";
-              STRGet_t835 = "Number of e-file";
-              STRGet_t836 = "Modification or not";
-              STRGet_t837 = "Old documentary availability";
-              STRGet_t838 = "Production organ of old filed documentary";
-              STRGet_t839 = "Class number of old filed documentary";
-              STRGet_t840 = "Information of class";
-              STRGet_t841 = "Year of end";
-              STRGet_t842 = "End day of funishing";
-              STRGet_t843 = "Reason of funishing";
-              STRGet_t844 = "Business manager";
-              STRGet_t845 = "Filed";
-              STRGet_t846 = "List transfer year";
-              STRGet_t847 = "List transfer year";
-              STRGet_t848 = "File transfer availability";
-              STRGet_t849 = "File transfer year";
-              STRGet_t850 = "Receipt/Transfer information";
-              STRGet_t851 = "Receipt/Transfer class";
-              STRGet_t852 = "NA";
-              STRGet_t853 = "Receipt";
-              STRGet_t854 = "Receipt/Transfer day.";
-              STRGet_t855 = "Processed dept name.";
-              STRGet_t856 = "Processed dept code.";
-		  }
-		  else{
-			  STRGet_t106 = "제목";
-              STRGet_t117 = "보존기간";
-              STRGet_t573 = "권호수";
-              STRGet_t574 = "인계";
-              STRGet_t576 = "단위업무코드";
-              STRGet_t577 = "단위업무명";
-              STRGet_t599 = "보존방법";
-              STRGet_t600 = "보존장소";
-              STRGet_t816 = "기록물철 등록정보";
-              STRGet_t819 = "분류번호";
-              STRGet_t825 = "기본정보";
-              STRGet_t826 = "기록물형태";
-              STRGet_t827 = "처리과";
-              STRGet_t828 = "단위업무";
-              STRGet_t829 = "생산연도";
-              STRGet_t830 = "등록연번";
-              STRGet_t831 = "등록일자";
-              STRGet_t832 = "부가정보";
-              STRGet_t833 = "기록물 등록건수";
-              STRGet_t834 = "기록물쪽수";
-              STRGet_t835 = "전자파일갯수";
-              STRGet_t836 = "수정여부";
-              STRGet_t837 = "구기록물여부";
-              STRGet_t838 = "구기록물철생산기관";
-              STRGet_t839 = "구기록물철분류번호";
-              STRGet_t840 = "분류정보";
-              STRGet_t841 = "종료연도";
-              STRGet_t842 = "비치종결일자";
-              STRGet_t843 = "비치사유";
-              STRGet_t844 = "업무담당자";
-              STRGet_t845 = "편철확정여부";
-              STRGet_t846 = "목록이관여부";
-              STRGet_t847 = "목록이관연도";
-              STRGet_t848 = "파일이관여부";
-              STRGet_t849 = "파일이관연도";
-              STRGet_t850 = "인수인계정보";
-              STRGet_t851 = "인수/인계구분";
-              STRGet_t852 = "해당없음";
-              STRGet_t853 = "인수";
-              STRGet_t854 = "인수/인계일자";
-              STRGet_t855 = "처리과명";
-              STRGet_t856 = "처리과코드";
-		  }
 			String cabinetID= request.getParameter("ID1");
 			String pXml = "<PARAMETERS><CABINETID>" + makeXMLString(cabinetID.trim()) +
                     "</CABINETID><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
@@ -987,7 +899,7 @@ public class EzApprovalGarchiveController {
 	public String getCabinetHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.getCabinetHistory(xmlDom);
+		String result = ezApprovalGService.getCabinetHistory(xmlDom, userInfo);
 		return result;
 	}
 	
@@ -1104,7 +1016,7 @@ public class EzApprovalGarchiveController {
 	public String getRecSCInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang());
+		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang(),userInfo);
 		
 		return result;
 	}

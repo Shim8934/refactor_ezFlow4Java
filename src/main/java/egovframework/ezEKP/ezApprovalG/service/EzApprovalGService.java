@@ -177,9 +177,9 @@ public interface EzApprovalGService {
 	
 	public String getTotalAttachSize(String docID, String companyID) throws Exception;
 	
-	public String chkAprLines(Document doc, String lang) throws Exception;
+	public String chkAprLines(Document doc, String lang, LoginVO userInfo) throws Exception;
 	
-	public String chkDeptLines(Document doc, String companyID, String lang) throws Exception;
+	public String chkDeptLines(Document doc, String companyID, String lang, LoginVO userInfo) throws Exception;
 
 	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang) throws Exception;
 	
@@ -344,7 +344,7 @@ public interface EzApprovalGService {
 
 	public String changeCabinetInfo(Document xmlDom) throws Exception;
 
-	public String getCabinetHistory(Document xmlDom) throws Exception;
+	public String getCabinetHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
 	public String getTaskCharger(Document xmlDom, String lang) throws Exception;
 
@@ -362,6 +362,6 @@ public interface EzApprovalGService {
 
 	public String doReSendDoc(Document xmlDom, String dirPath, String lang) throws Exception;
 
-	public String getRecSCInfo(Document xmlDom, String lang)throws Exception;
+	public String getRecSCInfo(Document xmlDom, String lang, LoginVO userInfo)throws Exception;
 
 }

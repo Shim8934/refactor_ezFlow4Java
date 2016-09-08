@@ -6941,14 +6941,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String chkAprLines(Document resultXML, String lang) throws Exception {
+	public String chkAprLines(Document resultXML, String lang, LoginVO userInfo) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<RESULT>");
 		for (int k = 0; k < resultXML.getElementsByTagName("ROW").getLength(); k++) {
 			rtnVal.append(chkAprLine(resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(18).getTextContent().trim(), 
 					resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(19).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(22).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(23).getTextContent().trim(), 
-					resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(21).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent().trim(), lang));
+					resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(21).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent().trim(), lang, userInfo));
 		}
 		
 		rtnVal.append("</RESULT>");
@@ -6957,7 +6957,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String chkDeptLines(Document resultXML, String companyID, String lang) throws Exception {
+	public String chkDeptLines(Document resultXML, String companyID, String lang, LoginVO userInfo) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang);
 		
@@ -6968,7 +6968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(3).getTextContent().trim().equals("N")) {
 					rtnVal.append(chkAprLine(resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", 
 							resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent().trim(), resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent().trim(), "", 
-							resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim(), lang));
+							resultXML.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim(), lang, userInfo));
 				}
 			}
 		}
@@ -8629,7 +8629,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return rtnVal;
 	}
 
-	public String chkAprLine(String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String userCompanyID, String strLang) throws Exception{
+	public String chkAprLine(String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String userCompanyID, String strLang, LoginVO userInfo) throws Exception{
 		//TODO: 한글 코드화 
 		Document resultXML = null;
 		StringBuilder rtnVal = new StringBuilder();
@@ -8650,19 +8650,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) != null) {
 						
 					} else {
-						rtnVal.append("- " + tempDeptName + "의 이름 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0) != null) {
 						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tempDeptName + "의 회사 아이디는 [" + userCompanyID);
-							rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "] 입니다.<br>");
+							rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
+							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tempDeptName + "의 회사 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
 					}
 				} else {
-					rtnVal.append("- " + tempDeptName + " 부서에 대한 정보가 없습니다. 부서가 삭제되었는지 확인하시기 바랍니다.<br>");
+					rtnVal.append("- " + tempDeptName +  messageSource.getMessage("ezApprovalG.pjj13", userInfo.getLocale()));
 				}
 			}
 		} else {
@@ -8678,30 +8678,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (resultXML.getDocumentElement().getChildNodes().getLength() > 0) {
 				if (resultXML.getElementsByTagName("DISPLAYNAME1").item(0) != null) {
 					if (!userName.trim().equals(resultXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent().trim())) {
-						rtnVal.append("- " + userName + "의 이름은 [" + userName);
-						rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent());
-						rtnVal.append("] 입니다.<br>");
+						rtnVal.append("- " + userName + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale())+ userName);
+						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale())+ resultXML.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent());
+						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 					} else if (resultXML.getElementsByTagName("DISPLAYNAME2").item(0) != null) {
 						if (!userName2.trim().equals(resultXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + userName2 + "의 이름은 [" + userName2);
-                            rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
-                            rtnVal.append("] 입니다.<br>");
+							rtnVal.append("- " + userName2 + messageSource.getMessage("ezApprovalG.pjj14", userInfo.getLocale()) + userName2);
+                            rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
+                            rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + "의 이름 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 					}
 				} else {
-					rtnVal.append("- " + tmpUserName + "의 이름 정보를 찾을 수 없습니다.<br>");
+					rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 				}
 				
 				if (resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0) != null) {
 					if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent().trim())) {
-						rtnVal.append("- " + tmpUserName + "의 회사 아이디는 [" + userCompanyID);
-						rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent());
-						rtnVal.append("] 입니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
+						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent());
+						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 					}
 				} else {
-					rtnVal.append("- " + tmpUserName + "의 회사 정보를 찾을 수 없습니다.<br>");
+					rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
 				}
 				
 				boolean subTitleFlag = false;
@@ -8752,9 +8752,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (!subTitleFlag) {
-							rtnVal.append("- " + tmpUserName + "의 직위, 부서 정보는 [");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()));
                             rtnVal.append(userDeptID + ", " + userDeptName + "(" + userDeptName2 + "), ");
-                            rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")]이(가) 아닌 [");
+                            rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")"+ messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
                             
                             for (int k = 0; k < userDIDs.length; k++) {
                             	if (!userDIDs[k].trim().equals("")) {
@@ -8766,55 +8766,55 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             	}
                             }
                             
-                            rtnVal.append("] 중 하나여야 합니다.<br>");
+                            rtnVal.append(messageSource.getMessage("ezApprovalG.pjj16", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + "의 직위, 부서 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj17", userInfo.getLocale()));
 					}
 				} else {
 					if (resultXML.getElementsByTagName("DEPARTMENT").item(0) != null) {
 						if (!userDeptID.trim().equals(resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + "의 부서아이디는 [" + userDeptID);
-							rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() + "] 입니다.<br>");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()) + userDeptID);
+							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + "의 부서 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("DESCRIPTION1").item(0) != null) {
 						if (!userDeptName.trim().equals(resultXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + "의 부서명은 [" + userDeptName);
-							rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent() + "] 입니다.<br>");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName);
+							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale())+ resultXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						} else if (resultXML.getElementsByTagName("DESCRIPTION2").item(0) != null) {
 							if (!userDeptName2.trim().equals(resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent().trim())) {
-								rtnVal.append("- " + tmpUserName + "의 부서명은 [" + userDeptName2);
-                                rtnVal.append("]이(가) 아닌 [" + resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent() + "] 입니다.<br>");
+								rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj19", userInfo.getLocale()) + userDeptName2);
+                                rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 							}
 						} else {
-							rtnVal.append("- " + tmpUserName + "의 부서 정보를 찾을 수 없습니다.<br>");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + "의 부서 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj18", userInfo.getLocale()));
 					}
 					
 					if (resultXML.getElementsByTagName("TITLE1").item(0) != null) {
 						if (!userJobTitle.trim().equals(resultXML.getElementsByTagName("TITLE1").item(0).getTextContent().trim())) {
-							rtnVal.append("- " + tmpUserName + "의 직위는 [" + userJobTitle + "]이(가) 아닌 [");
-							rtnVal.append(resultXML.getElementsByTagName("TITLE1").item(0).getTextContent() + "] 입니다.<br>");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
+							rtnVal.append(resultXML.getElementsByTagName("TITLE1").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 						} else if (resultXML.getElementsByTagName("TITLE2").item(0) != null) {
 							if (!userJobTitle2.trim().equals(resultXML.getElementsByTagName("TITLE2").item(0).getTextContent().trim())) {
-								rtnVal.append("- " + tmpUserName + "의 직위는 [" + userJobTitle2 + "]이(가) 아닌 [");
-                                rtnVal.append(resultXML.getElementsByTagName("TITLE2").item(0).getTextContent() + "] 입니다.<br>");
+								rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj20", userInfo.getLocale()) + userJobTitle2 + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
+                                rtnVal.append(resultXML.getElementsByTagName("TITLE2").item(0).getTextContent() + messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
 							}
 						} else {
-							rtnVal.append("- " + tmpUserName + "의 직위 정보를 찾을 수 없습니다.<br>");
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
 						}
 					} else {
-						rtnVal.append("- " + tmpUserName + "의 직위 정보를 찾을 수 없습니다.<br>");
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj21", userInfo.getLocale()));
 					}
 				}
 			} else {
-				rtnVal.append("- " + tmpUserName + "에 대한 정보가 없습니다. 조직도에 존재하는지 확인하시기 바랍니다. <br>");
+				rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj22", userInfo.getLocale()));
 			}
 		}
 		
@@ -16344,7 +16344,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCabinetHistory(Document xmlDom) throws Exception {
+	public String getCabinetHistory(Document xmlDom, LoginVO userInfo) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
@@ -16399,10 +16399,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>"); 
 			if(makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")){
-				strSQL.append(langType.equals("1")? "기본등록사항" : "BasicRegItems");
+				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj23", userInfo.getLocale()) : "BasicRegItems");
 			}
 			else{
-				strSQL.append(langType.equals("1")? "보존분류사항" : "PreClassitems");
+				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj24", userInfo.getLocale()) : "PreClassitems");
 			}
 			strSQL.append("</VALUE>") ;
 			strSQL.append("</CELL>");
@@ -17144,7 +17144,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 return strSQL.toString();
 	}
 	@Override
-	public String getRecSCInfo(Document xmlDom,String langType) throws Exception {
+	public String getRecSCInfo(Document xmlDom,String langType,LoginVO userInfo) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String recID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
@@ -17173,7 +17173,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 			if(SepAttSN.equals("000")){ // 리스트뷰 헤더 부분이다.
 				resultXML.append("<HEADER>");
-				resultXML.append("<NAME>" + (langType.equals("1") ? "일련번호" : "SN") + "</NAME>");
+				resultXML.append("<NAME>" + (langType.equals("1") ? messageSource.getMessage("ezApprovalG.pjj25", userInfo.getLocale()) : "SN") + "</NAME>");
 				resultXML.append("<WIDTH>" + 100 + "</WIDTH>");
 				resultXML.append("</HEADER>");
 				
