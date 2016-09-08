@@ -120,11 +120,11 @@ public class CommonUtil {
 				user.setPrimary("2");
 			}
 			
-			if(user.getPrimary().equals("1")){
+			if (user.getPrimary().equals("1")) {
 				user.setTitle(user.getTitle1());
 				user.setDeptName(user.getDeptName1());
 				user.setDisplayName(user.getDisplayName1());
-			} else{
+			} else {
 				user.setTitle(user.getTitle2());
 				user.setDeptName(user.getDeptName2());
 				user.setDisplayName(user.getDisplayName2());
