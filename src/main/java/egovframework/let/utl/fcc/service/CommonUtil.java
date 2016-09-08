@@ -120,6 +120,17 @@ public class CommonUtil {
 				user.setPrimary("2");
 			}
 			
+			if(user.getPrimary().equals("1")){
+				user.setTitle(user.getTitle1());
+				user.setDeptName(user.getDeptName1());
+				user.setDisplayName(user.getDisplayName1());
+			}
+			else{
+				user.setTitle(user.getTitle2());
+				user.setDeptName(user.getDeptName2());
+				user.setDisplayName(user.getDisplayName2());
+			}
+			
 			user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);
 			return user;
@@ -156,16 +167,6 @@ public class CommonUtil {
 					user.setTitle2(cookie[k].getValue());
 					break;
 				}
-			}
-			
-//			 20091119 : 겸직 사용자 선택된 부서 표시 기능
-			if(user.getPrimary().equals("1")){
-				user.setTitle(user.getTitle1());
-				user.setDeptName(user.getDeptName1());
-			}
-			else{
-				user.setTitle(user.getTitle2());
-				user.setDeptName(user.getDeptName2());
 			}
 			
 			return user;

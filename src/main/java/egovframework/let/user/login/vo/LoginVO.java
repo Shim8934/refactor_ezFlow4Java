@@ -192,11 +192,11 @@ public class LoginVO implements Serializable{
 	public void setDn(String dn) {
 		this.dn = dn;
 	}	
-	public String getDisplayNmae() {
+	public String getDisplayName() {
 		return displayName;
 	}
-	public void setDisplayNmae(String displayNmae) {
-		this.displayName = displayNmae;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	public String getDeptName() {
 		return deptName;
