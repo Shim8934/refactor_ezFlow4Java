@@ -180,7 +180,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String deptName2 = doc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
         String title2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
         
-        myDept = userInfo.getLang().equals("1") ? deptName : deptName2;
+        myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
         
         if (userInfo.getDeptID().equals(deptID)) {
         	if (title.equals("")){
@@ -198,7 +198,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         String lang = "";
         
-        if (!userInfo.getLang().equals("1")) {
+        if (!userInfo.getPrimary().equals("1")) {
         	lang = "2";
         }
         
@@ -208,12 +208,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	
         	for (int k = 0; k < deptList.length; k++) {
         		String[] subList = deptList[k].split(":");
-        		String pTitle_ = userInfo.getLang().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
+        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
                 String pTitle1_ = commonUtil.cleanValue(subList[1]);
                 String pTitle2_ = commonUtil.cleanValue(subList[2]);
                 String pDeptNM1_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME"));
                 String pDeptNM2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME2"));
-                String pDeptNM_ = userInfo.getLang().equals("1") ? pDeptNM1_ : pDeptNM2_;
+                String pDeptNM_ = userInfo.getPrimary().equals("1") ? pDeptNM1_ : pDeptNM2_;
                 
                 if (userInfo.getDeptID().equals(subList[0])) {
                     if (pTitle_.equals("")) {
@@ -295,7 +295,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 		Document domSub = null;
 		
 		if (searchQuery != null && searchQuery.length() > 10) {
@@ -846,7 +846,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String aprDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String ret2) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-System.out.println(ret2);		
+	
 		String result = ezApprovalGService.updateReceiptInfo(ret2, userInfo.getCompanyID(), userInfo.getLang());
 		
 		return result;
@@ -1128,7 +1128,7 @@ System.out.println(ret2);
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
-		String tempList = ezApprovalGService.getTempList2(groupID, userInfo.getCompanyID(), userInfo.getLang());
+		String tempList = ezApprovalGService.getTempList2(groupID, userInfo.getCompanyID(), userInfo.getPrimary());
 		String headerXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t950", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
 		
 		return headerXml;
@@ -1896,7 +1896,7 @@ System.out.println(ret2);
 		Document xmlDoc = commonUtil.convertStringToDocument(ezApprovalGService.getEA5Value(msg));
 		String ex5 = "", langType = "", name = "";
 		
-		if (!userInfo.getLang().equals("1")) {
+		if (!userInfo.getPrimary().equals("1")) {
 			langType = "2";
 		}
 		
@@ -2983,7 +2983,7 @@ System.out.println(ret2);
                 returnQuery += " AND DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
                     returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
@@ -2993,7 +2993,7 @@ System.out.println(ret2);
                 }
             }
 
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
                     returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
@@ -3792,7 +3792,7 @@ System.out.println(ret2);
             }
 
             //2012.05.23 작성자언어설정
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
                     returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
@@ -3803,7 +3803,7 @@ System.out.println(ret2);
             }
 
             //2012.05.23 부서언어설정
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
                     returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
@@ -4483,7 +4483,7 @@ System.out.println(ret2);
 		String deptCode = userInfo.getDeptID();
 		String deptName = "";
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			deptName = userInfo.getDeptName1();
 		} else {
 			deptName = userInfo.getDeptName2();

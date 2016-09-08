@@ -32,14 +32,14 @@
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName1}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
 		    arr_userinfo[3]  = "${userInfo.title1}";
 		    arr_userinfo[4]  = "${userInfo.deptID}";
 		    arr_userinfo[5]  = "${userInfo.deptName1}";
 		    arr_userinfo[6]  = "${userInfo.jikChek}";
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = companyID;
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
+		    arr_userinfo[11]  = "${userInfo.displayName}";
 		    arr_userinfo[12]  = "${userInfo.displayName2}";
 		    arr_userinfo[13]  = "${userInfo.title1}";
 		    arr_userinfo[14]  = "${userInfo.title2}";

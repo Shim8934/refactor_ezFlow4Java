@@ -28,10 +28,10 @@ var OrderCell = "";
 var arr_userinfo = new Array();
 arr_userinfo[0]  = "user";								// 사용자-부서구분
 arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";              // 사용자ID
-arr_userinfo[2]  = "<c:out value ='${userInfo.displayName1}'/>";         // 사용자명
-arr_userinfo[3]  = "<c:out value ='${userInfo.title1}'/>";             // 사용자 직위
+arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";         // 사용자명
+arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";             // 사용자 직위
 arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";              // 사용자 부서 ID    
-arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1}'/>";            // 사용자 부서 이름
+arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";            // 사용자 부서 이름
 arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";            // 사용자 직책            
 arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             // E-Mail Address 
 arr_userinfo[9]  = " ";

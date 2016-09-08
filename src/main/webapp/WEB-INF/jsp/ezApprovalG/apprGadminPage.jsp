@@ -54,8 +54,8 @@
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
 	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName1}";
-	        arr_userinfo[3] = "${userInfo.title1}";
+	        arr_userinfo[2] = "${userInfo.displayName}";
+	        arr_userinfo[3] = "${userInfo.title}";
 	        arr_userinfo[4] = "${deptCode}";
 	        arr_userinfo[5] = "${deptName}";
 	        arr_userinfo[6] = "${userInfo.jikChek}";

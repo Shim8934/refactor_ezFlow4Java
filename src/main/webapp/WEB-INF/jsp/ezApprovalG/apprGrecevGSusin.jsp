@@ -71,10 +71,10 @@
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName1}";
-		    arr_userinfo[3]  = "${userInfo.title1}";
+		    arr_userinfo[2]  = "${userInfo.displayName}";
+		    arr_userinfo[3]  = "${userInfo.title}";
 		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName1}";
+		    arr_userinfo[5]  = "${userInfo.deptName}";
 		    arr_userinfo[6]  = "${userInfo.jikChek}";
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = sCompanyID;
@@ -898,10 +898,10 @@
 		        var Resultxml;
 		
 		        var UserID = '${userInfo.id}';
-		        var DisplayName = '${userInfo.displayName1}';
+		        var DisplayName = '${userInfo.displayName}';
 		        var DepID = '${userInfo.deptID}';
-		        var DeptName = '${userInfo.deptName1}';
-		        var Position = '${userInfo.title1}';
+		        var DeptName = '${userInfo.deptName}';
+		        var Position = '${userInfo.title}';
 		        var CompanyID = '${userInfo.companyID}';
 		        var d = new Date();
 		        var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();

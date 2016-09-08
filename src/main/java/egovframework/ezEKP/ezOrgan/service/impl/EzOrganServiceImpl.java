@@ -494,7 +494,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-System.out.println(strSQL + strSize);
+
         Map<String, Object> map = new HashMap<String, Object>();
         
         map.put("strSQL", strSQL + strSize);

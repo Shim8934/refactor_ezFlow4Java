@@ -40,10 +40,10 @@
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user"; 							// 사용자-부서구분
 	        arr_userinfo[1] = "${userInfo.id}";           // 사용자ID
-	        arr_userinfo[2] = "${userInfo.displayName1}";      // 사용자명
-	        arr_userinfo[3] = "${userInfo.title1}";            // 사용자 직위
+	        arr_userinfo[2] = "${userInfo.displayName}";      // 사용자명
+	        arr_userinfo[3] = "${userInfo.title}";            // 사용자 직위
 	        arr_userinfo[4] = "${userInfo.deptID}";           // 사용자 부서 ID
-	        arr_userinfo[5] = "${userInfo.deptName1}";         // 사용자 부서 이름
+	        arr_userinfo[5] = "${userInfo.deptName}";         // 사용자 부서 이름
 	        arr_userinfo[6] = "${userInfo.jikChek}";          // 사용자 직책            
 	        arr_userinfo[7] = "N";                                        // 부재중 설정
 	        arr_userinfo[8] = "${userInfo.email}";            // E-Mail Address 
