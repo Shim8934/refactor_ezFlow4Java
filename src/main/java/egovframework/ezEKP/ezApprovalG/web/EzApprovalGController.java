@@ -4691,8 +4691,8 @@ System.out.println(ret2);
 	/**
 	 * 전자결재G 결재 일괄결재 표출 Method
 	 */
-	//보류중
-	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do")
+	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
 	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		String rtnVal = "OK/0/0/0";
 		int totCnt = 0, trueCnt = 0, falseCnt = 0;
@@ -4700,11 +4700,6 @@ System.out.println(ret2);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
-		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent().trim();
-		String deptID = xmlDom.getElementsByTagName("DEPTID").item(0).getTextContent().trim();
-		String deptName = xmlDom.getElementsByTagName("DEPTNAME").item(0).getTextContent().trim();
-		String jikChek = xmlDom.getElementsByTagName("JIKCHEK").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String pw = xmlDom.getElementsByTagName("PASSWD").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
@@ -4713,7 +4708,6 @@ System.out.println(ret2);
 		
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength();
-			String aprType_aprState = "";
 			
 			for (int k = 0; k < xmlDom.getElementsByTagName("DOCID").getLength(); k++) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();

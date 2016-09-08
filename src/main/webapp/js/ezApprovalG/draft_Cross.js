@@ -1550,73 +1550,73 @@ function SaveDraftDocInfo_ilban(pState) {
 
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
+        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pDocID);
-            createNodeAndInsertText(xmlpara, objNode, "DocType", pDocType);
-            createNodeAndInsertText(xmlpara, objNode, "DocState", pDocState);
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pDocID);
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
         }
         else {
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", "");
-            createNodeAndInsertText(xmlpara, objNode, "DocType", "");
-            createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
         }
 
-        createNodeAndInsertText(xmlpara, objNode, "FunctionType", pState);
-        createNodeAndInsertText(xmlpara, objNode, "Href", "/document/doc/" + pDocID + ".htm");
+        createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", pState);
+        createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
         //field = message.GetListItem(fields, "doctitle");
-        createNodeAndInsertText(xmlpara, objNode, "DocTitle", message.GetDocTitle());
+        createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
 
         var field = message.GetListItem(fields, "docnumber");
         var deptfield = message.GetListItem(fields, "deptshortedname");
         if (deptfield) {
-            createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(deptfield));
+            createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(deptfield));
         }
         else if (field) {
-            createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
+            createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
         }
         else {
             var field = message.GetListItem(fields, "bedocnumber");
             if (field)
-                createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
             else
-                createNodeAndInsertText(xmlpara, objNode, "DocNo", "");
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
         }
 
-        createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
-        createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
+        createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+        createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
         var startdate;
         if (pState == strAprState0)
             startdate = "DRAFTSAVE";
         else
             startdate = "DRAFT";
-        createNodeAndInsertText(xmlpara, objNode, "StartDate", startdate);
-        createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-        createNodeAndInsertText(xmlpara, objNode, "WriterID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterName", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", arr_userinfo[3]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", arr_userinfo[5]);
-        createNodeAndInsertText(xmlpara, objNode, "Html", "");
-        createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startdate);
+        createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+        createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", arr_userinfo[2]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", arr_userinfo[3]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", arr_userinfo[5]);
+        createNodeAndInsertText(xmlpara, objNode, "HTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[2]);
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
 
-        createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-        createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-        createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+        createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
 
-        createNodeAndInsertText(xmlpara, objNode, "public", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-        createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
-        createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-        createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-        createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+        createNodeAndInsertText(xmlpara, objNode, "PUBLIC", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
+        createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+        createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+        createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
 
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
@@ -2645,44 +2645,44 @@ function SaveTMPDocInfo(AutoSave) {
         var objNode;
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "FormID", pFormID);
+        createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+        createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", pOrgDocID);
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
         else
-            createNodeAndInsertText(xmlpara, objNode, "OrgDocID", "");
-
-        if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "DocType", pDocType);
-        else
-            createNodeAndInsertText(xmlpara, objNode, "DocType", "");
+            createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
 
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
-            createNodeAndInsertText(xmlpara, objNode, "DocState", pDocState);
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
+        else
+            createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
+
+        if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI")
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
 
         else
-            createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+            createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
 
-        createNodeAndInsertText(xmlpara, objNode, "FunctionType", strAprState1);
-        createNodeAndInsertText(xmlpara, objNode, "Href", "/document/doc/" + pDocID + ".htm");
+        createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState1);
+        createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
 
         if (AutoSave != "") {
-            createNodeAndInsertText(xmlpara, objNode, "doctitle", message.GetDocTitle());
+            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
         }
         else {
-            createNodeAndInsertText(xmlpara, objNode, "doctitle", strLang1114);
+            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1114);
         }
 
         field = message.GetListItem(fields, "docnumber");
         if (field)
-            createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
+            createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
 
         else {
             field = message.GetListItem(fields, "be_docnumber");
             if (field)
-                createNodeAndInsertText(xmlpara, objNode, "DocNo", getfieldValue(field));
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
             else
-                createNodeAndInsertText(xmlpara, objNode, "DocNo", "");
+                createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
         }
 
         //var field = fields("deptshortedname")
@@ -2690,29 +2690,29 @@ function SaveTMPDocInfo(AutoSave) {
         //    objNode.text = getfieldValue(field);
         //xmlpara.documentElement.appendChild(objNode);
 
-        createNodeAndInsertText(xmlpara, objNode, "HasAttachYN", pHasAttachYN);
-        createNodeAndInsertText(xmlpara, objNode, "HasOpinionYN", pHasOpinionYN);
-        createNodeAndInsertText(xmlpara, objNode, "StartDate", "DRAFTSAVE");
-        createNodeAndInsertText(xmlpara, objNode, "EndDate", "DRAFT");
-        createNodeAndInsertText(xmlpara, objNode, "WriterID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterJobTitle", arr_userinfo[13]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "WriterDeptName", arr_userinfo[15]);
-        createNodeAndInsertText(xmlpara, objNode, "Html", "");
-        createNodeAndInsertText(xmlpara, objNode, "OrgHtml", "");
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "security", tempSecurity);
-        createNodeAndInsertText(xmlpara, objNode, "keepperiod", tempKeep);
-        createNodeAndInsertText(xmlpara, objNode, "publication", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "public", tempPublic);
-        createNodeAndInsertText(xmlpara, objNode, "ItemCode", tempItemCode);
-        createNodeAndInsertText(xmlpara, objNode, "ItemName", tempItemName);
-        createNodeAndInsertText(xmlpara, objNode, "UrgentApproval", tempUrgent);
-        createNodeAndInsertText(xmlpara, objNode, "KeyWord", tempKeyword);
-        createNodeAndInsertText(xmlpara, objNode, "Xdocid", "");
+        createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+        createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
+        createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "DRAFTSAVE");
+        createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
+        createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", arr_userinfo[11]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", arr_userinfo[13]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "HTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "ORGHTML", "");
+        createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
+        createNodeAndInsertText(xmlpara, objNode, "PUSERNAME", arr_userinfo[11]);
+        createNodeAndInsertText(xmlpara, objNode, "PDEPTID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
+        createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "PUBLIC", tempPublic);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
+        createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
+        createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
+        createNodeAndInsertText(xmlpara, objNode, "KEYWORD", tempKeyword);
+        createNodeAndInsertText(xmlpara, objNode, "XDOCID", "");
         createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
         createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);

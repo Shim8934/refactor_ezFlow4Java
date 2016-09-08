@@ -521,47 +521,55 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         //<table 태그의 Background갯수를 알아낸다.
         npos = 0;
         while (true) {
-            npos = strTempHtml.indexOf("<table", npos);
-            if (npos > 0) {
-                nposStart = strTempHtml.indexOf(" background=", npos + 6);
-                if (nposStart > 0) {
-                    nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
-                        L_BackImage.add(strImgsrc);
-                        npos = nposEnd;
-                    } else {
-                        npos = npos + 6;
-                    }
-                } else {
-                    npos = npos + 6;
-                }
-            } else {
-            	break;
-            }
+        	if (strTempHtml.indexOf("background", npos) > 0) {
+        		npos = strTempHtml.indexOf("<table", npos);
+        		if (npos > 0) {
+        			nposStart = strTempHtml.indexOf(" background=", npos + 6);
+        			if (nposStart > 0) {
+        				nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
+        				if ((nposEnd - nposStart - 13) > 0) {
+        					strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
+        					L_BackImage.add(strImgsrc);
+        					npos = nposEnd;
+        				} else {
+        					npos = npos + 6;
+        				}
+        			} else {
+        				npos = npos + 6;
+        			}
+        		} else {
+        			break;
+        		}
+        	} else {
+        		break;
+        	}
         }
 
         //<td 태그의 Background갯수를 알아낸다.
         npos = 0;
         while (true) {
-            npos = strTempHtml.indexOf("<td", npos);
-            if (npos > 0) {
-                nposStart = strTempHtml.indexOf(" background=", npos + 3);
-                if (nposStart > 0) {
-                    nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
-                        L_BackImage.add(strImgsrc);
-                        npos = nposEnd;
-                    } else {
-                        npos = npos + 3;
-                    }
-                } else {
-                    npos = npos + 3;
-                }
-            } else {
-            	break;
-            }
+        	if (strTempHtml.indexOf("background", npos) > 0) {
+        		npos = strTempHtml.indexOf("<td", npos);
+        		if (npos > 0) {
+        			nposStart = strTempHtml.indexOf(" background=", npos + 3);
+        			if (nposStart > 0) {
+        				nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
+        				if ((nposEnd - nposStart - 13) > 0) {
+        					strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
+        					L_BackImage.add(strImgsrc);
+        					npos = nposEnd;
+        				} else {
+        					npos = npos + 3;
+        				}
+        			} else {
+        				npos = npos + 3;
+        			}
+        		} else {
+        			break;
+        		}
+        	} else {
+        		break;
+        	}
         }
 
         if (L_BackImage.size() > 1) {

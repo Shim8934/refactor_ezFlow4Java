@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
@@ -578,6 +579,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doSendOffer_receiptId(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doSendOffer_receiptId", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocInfoWebSrvVO> getDocInfoSP(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocInfoWebSrvVO>) list("EzApprovalG.getDocInfoSP", map);
 	}
 	
 	public ApprGLineTempletVO gongRamActivateLineInfo(Map<String, Object> map) throws Exception{

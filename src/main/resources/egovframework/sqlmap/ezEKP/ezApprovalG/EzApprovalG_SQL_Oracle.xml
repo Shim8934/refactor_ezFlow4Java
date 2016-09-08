@@ -29,6 +29,7 @@
 	<typeAlias  alias="ApprGAdminReceiveVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO"/>
 	<typeAlias  alias="ApprGHistoryAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO"/>
 	<typeAlias  alias="ApprGDocAttachInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO"/>
+	<typeAlias  alias="ApprGDocInfoWebSrvVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO"/>
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
 	
@@ -392,6 +393,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_SETCABINETREJECT2(#v_DOCID#, #v_HESONGFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getDocInfoSP" parameterClass="Map" resultClass="ApprGDocInfoWebSrvVO">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCINFO_WEBSRV(#v_PDOCID#, #v_PDOCNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
 		{CALL EZAPPROVALG_$companyID$.EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -638,6 +643,10 @@
 	
 	<procedure id="EzApprovalG.getUserRecRight" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.SPHASRECVIEWRIGHT(#v_RecID#, #v_SepAttNo#, #v_UserID#, #v_RtnVal,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.SPROLLBACKSN(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_CurSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
