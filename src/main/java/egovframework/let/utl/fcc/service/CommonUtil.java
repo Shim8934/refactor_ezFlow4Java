@@ -124,14 +124,17 @@ public class CommonUtil {
 				user.setTitle(user.getTitle1());
 				user.setDeptName(user.getDeptName1());
 				user.setDisplayName(user.getDisplayName1());
+				user.setCompanyName(user.getCompanyName1());
 			} else {
 				user.setTitle(user.getTitle2());
 				user.setDeptName(user.getDeptName2());
 				user.setDisplayName(user.getDisplayName2());
+				user.setCompanyName(user.getCompanyName2());
 			}
 			
 			user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);
+			
 			return user;
 		}catch(Exception e){
 			return null;
