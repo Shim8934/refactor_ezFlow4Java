@@ -31,7 +31,7 @@
 			            break;
 
 			        case 3:
-			            url = "/myoffice/ezPersonal/Poll/ManagePoll_Cross.aspx";
+			            url = "/admin/ezPersonal/managePoll.do";
 			            break;
 
 			        case 4:
@@ -66,7 +66,7 @@
 		<div id="left">
 			<div class="left_admin" title="<spring:message code = 'main.t7' />"><spring:message code = 'main.t7' /></div>   
 		  	<h2>
-		  		<span onClick="goPage(1)"><spring:message code = 'main.t65' /></span>
+		  		<span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
 		    	<ul></ul>
 			</h2>
 

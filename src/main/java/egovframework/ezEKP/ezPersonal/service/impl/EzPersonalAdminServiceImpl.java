@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -40,7 +41,6 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pMode", "A");
-		map.put("v_pCount", 0);
 		
 		return ezPersonalAdminDAO.getNoticeCount(map);
 	}
@@ -203,6 +203,70 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 			String mode = doc.getElementsByTagName("node").item(i).getChildNodes().item(6).getTextContent();
 			
 			setQuickLinkACL(quickLinkID, accessID, accessName, accessName2, viewFlag, mode);
+		}
+	}
+
+	@Override
+	public int getPollCount(String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pMode", "A");
+		
+		return ezPersonalAdminDAO.getPollCount(map);
+	}
+
+	@Override
+	public List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pTotal", totalCount);
+		map.put("v_pCount", pageSize);
+		map.put("v_pStart", start);
+		
+		return ezPersonalAdminDAO.getPollList(map);
+	}
+
+	@Override
+	public String insertPoll(Document doc) throws Exception {
+		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
+		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
+		
+		if (pollTitle2.equals("")) {
+			pollTitle2 = pollTitle;
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pSelectionCount", selectCount);
+		map.put("v_pPollTitle", pollTitle);
+		map.put("v_pPollTitle2", pollTitle2);
+		
+		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
+		}
+		
+		for (int i = Integer.parseInt(selectCount); i < 10; i++) {
+			map.put("v_pAnswer" + (i + 1), " ");
+		}
+		
+		try {
+			ezPersonalAdminDAO.insertPoll(map);
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR : " + e.getMessage();
+		}
+	}
+
+	@Override
+	public String deletePoll(String itemSeq) throws Exception {
+		try {
+			ezPersonalAdminDAO.deletePoll(itemSeq);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR : " + e.getMessage();
 		}
 	}
 

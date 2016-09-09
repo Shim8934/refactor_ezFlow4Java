@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -314,7 +315,7 @@ public class EzPersonalAdminController {
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
 		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID);
-		System.out.println(result);
+		
 		return result;
 	}
 	
@@ -349,5 +350,134 @@ public class EzPersonalAdminController {
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		ezPersonalAdminService.saveQuickLink(userInfo, doc);
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/managePoll.do")
+	public String managePoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		
+		return "admin/ezPersonal/personalManagePoll";
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/managePollList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String managePollList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int currentPage = 1, pageSize = 12;
+		String progressPollFlag = "false";
+		StringBuilder result = new StringBuilder();
+		
+		String companyID = request.getParameter("companyID");
+		
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		int totalCount = ezPersonalAdminService.getPollCount(companyID);
+		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
+		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize);
+		
+		result.append("<LISTVIEWDATA>");
+		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
+		result.append("<ROWS>");
+		
+		for (PersonalLightPollVO vo : list) {
+			result.append("<ROW>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("</CELL>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getPollTitle() + "</VALUE>");
+			result.append("</CELL>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
+			result.append("</CELL>");
+			result.append("<CELL>");
+			
+			if (vo.getEndDate().indexOf("1900-01-01") > -1) {
+				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");
+				progressPollFlag = "true";
+			} else {
+				result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
+			}
+			
+			result.append("</CELL>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
+			result.append("<TYPE>" + "BTN" + "</TYPE>");
+			result.append("<FUNC>" + "del_poll" + "</FUNC>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("</CELL>");
+			result.append("</ROW>");
+		}
+
+		result.append("</ROWS>");
+		result.append("<PROFLAG>" + progressPollFlag + "</PROFLAG>");
+		result.append("</LISTVIEWDATA>");
+		
+		return result.toString();
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 등록화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
+	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		
+		return "admin/ezPersonal/personalAddPoll";
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/savePoll.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String savePoll(@RequestBody String data) throws Exception {
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		String result = ezPersonalAdminService.insertPoll(doc);
+		
+		return result;
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/delPoll.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String delPoll(HttpServletRequest request) throws Exception {
+		String itemSeq = request.getParameter("itemSeq");
+		
+		String result = ezPersonalAdminService.deletePoll(itemSeq);
+		
+		return result;
 	}
 }

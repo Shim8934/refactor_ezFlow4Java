@@ -2,18 +2,9 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezPersonalAdmin">
-	<!-- <typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
-	<typeAlias  alias="PersonalApprovMailVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
-	<typeAlias  alias="PersonalGetEmpOfMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
-	<typeAlias  alias="PersonalGetPollListUserVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/>
-	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
-	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
-	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
-	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
-	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/> -->
-	
 	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
 	<typeAlias  alias="PersonalQuickLinkVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO"/>
+	<typeAlias  alias="PersonalLightPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="Title"					columnIndex="1"/>
@@ -26,6 +17,12 @@
 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETNOTICELIST(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOLLLIST" 			parameterClass="Map"		resultClass="PersonalLightPollVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLLIST(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -59,6 +56,12 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOLLCOUNT"			parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLCOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzPersonalAdmin.EZSP_INSERTNOTICE"			parameterClass="Map">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_INSERTNOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
@@ -82,12 +85,26 @@
 			{CALL EZPERSONAL.EZSP_UPDATENOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #v_pItemSeq#)}
 		]]>	
 	</procedure>
+
+	<procedure id="EzPersonalAdmin.EZSP_INSERTPOLL"				parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_INSERTPOLL(#v_pCompanyID#, #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#)}
+		]]>	
+	</procedure>
 	
 	<procedure id="EzPersonalAdmin.EZSP_DELETENOTICE"			parameterClass="String">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_DELETENOTICE(#v_pItemSeq#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_DELETEPOLL"				parameterClass="String">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_DELETEPOLL(#v_pItemSeq#)}
+		]]>	
+	</procedure>
+	
+	
 	
 	
 </sqlMap>
