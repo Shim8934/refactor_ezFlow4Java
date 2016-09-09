@@ -5414,6 +5414,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strWhereClause = "";
 		String listType = "001";
 		boolean usePublicFlag = false;
+		String multiLang = commonUtil.getMultiData(lang);
 		
 		switch (listFlag) {
 		case "0" :	// 기록물 대장
@@ -5454,14 +5455,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			listType = "001";
 
 			String DFlag = getCode2Name("A35", "003", companyID, lang).toUpperCase().trim();
-			if (DFlag == "Y")
-			{
+			
+			if (DFlag == "Y") {
 				// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
 				strWhereClause = " AND TBCABINET.TerminateFlag = '1' AND " + 
 					EgovDateUtil.getTodayTime().substring(0, 4) + " - TBCABINET.ExpirationYear > TBCABINET.KeepingPeriod ";
-			}
-			else
-			{
+			} else {
 				// 일반 G버전. 폐기 대상은 이관된 기록물.
 				strWhereClause = " And DocTransferFlag='1' ";
 			}
@@ -5497,7 +5496,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (orderBy.equals("")) {
 			orderBy = " Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ";
 		}
-		
+		//다국어 추가 소스 수정
 		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
                 " SELECT TBRECORD.RecordID, TBRECORD.DocID, TBRECORD.RegisterNo, TBSEPERATEATTACH.CreateDate, " +
                 "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
@@ -5505,8 +5504,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				"TBENDAPRDOCINFO.Href, TBENDAPRDOCINFO.ContainerID, TBENDAPRDOCINFO.FormID, " + 
 				"TBENDAPRDOCINFO.WriterID, TBCABINET.ConfirmFlag, TBCABINET.CabinetClassNo, " + 
 				"TBCABINET.ProcessDeptCode AS CabDeptCode, TBCABINET.OwnerDeptID, " + 
-                "TBRECORD.RegisterDate, TBRECORD.AprMemberTitle, TBRECORD.DrafterName, TBRECORD.AttachFlag, " +
-				"TBCABINET.OwnerTask, TBRECORD.RejectFlag ";
+                "TBRECORD.RegisterDate, TBRECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBRECORD.DrafterName" + multiLang + " as DrafterName, TBRECORD.AttachFlag, " +
+				"TBCABINET.OwnerTask, TBRECORD.RejectFlag , TBRECORD.ReceiptMemberName" + multiLang + " as ReceiptName ";
 
         fromClause = " FROM TBRECORD Left Join TBENDAPRDOCINFO " + 
 			"On TBRECORD.DocID=TBENDAPRDOCINFO.DocID Inner Join TBSEPERATEATTACH " +
@@ -5683,7 +5682,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					break;
 
 				case "dtRegisterType" :						// 등록구분
-					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), companyID, lang));
+					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), companyID, commonUtil.getPrimaryData(lang)));
 					break;
 
 				case "dtBool" :								// Y/N 형식의 데이터 타입

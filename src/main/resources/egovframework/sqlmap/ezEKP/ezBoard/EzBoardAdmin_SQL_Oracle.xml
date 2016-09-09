@@ -83,15 +83,15 @@
 		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="20"/>			
 	</resultMap>
 	
-	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String">
+	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String" remapResults="true">
 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET1(#v_STRLANG#,#v_PQUERY#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2">
+	<procedure id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true">
 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET2(#v_PACCESSID#, #v_PROOTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3">
+	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3" remapResults="true">
 		{CALL EZBOARDSTD.EZSP_GETMYBOARDTREE_GET3(#v_PUSERID#, #v_PTREEUPPER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 		

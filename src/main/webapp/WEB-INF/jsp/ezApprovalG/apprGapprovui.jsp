@@ -220,7 +220,7 @@
 		            OrgAprUserName = NextDocUserName;
 		            OrgAprUserName2 = NextDocUserName2;
 		            OrgAprUserDeptID = NextDocDeptID;
-		            pEndDocHref = "/upload_approvalG/" + pCompanyID + "/doc/"+CurrYear+"/" + (pDocID % 1000) + "/" + pDocID + ".mht";
+		            pEndDocHref = "/files/upload_approvalG/" + pCompanyID + "/doc/"+CurrYear+"/" + (pDocID % 1000) + "/" + pDocID + ".mht";
 		            getApprovInfo();
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();  
@@ -514,7 +514,7 @@
 		
 		        try {
 		            if (OrgAprUserID != arr_userinfo[1]) {
-		                if (!confirm(OrgAprUserName + "님의 결재 문서입니다.\n대결을 진행하시겠습니까?")) {
+		                if (!confirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>")) {
 		                    window.returnValue = "CLOSE";
 		                    btnClose_onclick();
 		                    return;
