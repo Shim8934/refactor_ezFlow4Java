@@ -450,8 +450,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
 
 				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
-System.out.println("pageID:"+pageID);
-System.out.println("ezCKAdminACL:"+ezCKAdminACL);
+
 				if (result.equals("3")) {
 					//삭제 쿼리 실행
 					if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
@@ -672,8 +671,7 @@ System.out.println("ezCKAdminACL:"+ezCKAdminACL);
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		try {
 			userInfo = commonUtil.userInfo(loginCookie);
-System.out.println("portalLocale:"+locale);
-System.out.println("portalLocale1:"+userInfo.getLocale());
+
 			String pageID = "";
 			String mode = "view";
 			String gubunFlag = "1";
@@ -1530,7 +1528,7 @@ System.out.println("portalLocale1:"+userInfo.getLocale());
 		} else {
 			url = "/ezPersonal/leftEnvironment.do";
 		}
-System.out.println("usePortal:"+usePortal);
+
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
 		
@@ -1635,7 +1633,6 @@ System.out.println("usePortal:"+usePortal);
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
 		String resultHTML = "";
-System.out.println("searchNewMyPortalPageList:"+searchNewMyPortalPageList);
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent() != null && xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
 				resultHTML += "<script>var SelectedItems ="+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"</script>";
@@ -1657,7 +1654,6 @@ System.out.println("searchNewMyPortalPageList:"+searchNewMyPortalPageList);
 			}
 		}
 		
-System.out.println("resultHTML:"+resultHTML);
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);

@@ -2356,7 +2356,6 @@ public class EzPortalServiceImpl implements EzPortalService {
 	}
 	
 	public String addBestTable (LoginVO userInfo) throws Exception {
-System.out.println("getLocale:"+userInfo.getLocale());
 		StringBuilder strData = new StringBuilder();
 		
 		boolean firstFlag = true;
@@ -2672,7 +2671,6 @@ System.out.println("getLocale:"+userInfo.getLocale());
 			
 			
 /*			for (int i=0; i<arrays.length; i++) {
-System.out.println("pUID:"+pUID);
 				if (arrays[i].equals(pUID)) {
 					Map<String, Object> map1 = new HashMap<String, Object>();
 					map1.put("pUID", pUID);
@@ -2762,8 +2760,7 @@ System.out.println("pUID:"+pUID);
 		map.put("v_pCOMPANYID", pCompanyID);
 		
 		List<PortalPortletGeneralVO> list = ezPortalDAO.searchPortletCheckRight2(map);
-System.out.println("listSize:"+list.size());
-System.out.println("uID:"+list.get(0).getuID());
+
 		retXML += "<DATA>";
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow -1) {
@@ -2818,7 +2815,7 @@ System.out.println("uID:"+list.get(0).getuID());
 		}
 		
 		retXML += "</DATA>";
-System.out.println("retXML:"+retXML);
+
 		return retXML;
 	}
 	
