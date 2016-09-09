@@ -35,7 +35,7 @@ function GetDeptSubTreeInfo(deptID, TreeIdx) {
     var xmlHTTP = createXMLHttpRequest();
     var xmlRtn = createXmlDom();
         
-    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName</PROP></DATA>";
+    var strQuery = "<DATA><DEPTID>" + deptID + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP></DATA>";
     
     xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(strQuery);
