@@ -3154,7 +3154,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         
         //권한
         //int responseNo = ezQuestionService.getQstResponse(Integer.parseInt(req.getParameter("brdId")), Integer.parseInt(req.getParameter("itemNo")));
-//System.out.println(responseNo+"!!");
+
        /* if(responseNo == 2) {
         		resultYN = true;
         } else {
