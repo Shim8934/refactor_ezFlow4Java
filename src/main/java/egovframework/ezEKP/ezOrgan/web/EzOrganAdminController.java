@@ -371,16 +371,17 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/userInfo.do")	
-	public String userInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String userInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		boolean auth = commonUtil.checkAdmin(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (!auth) {
 			return "cmm/error/adminDenied";
 		}
 		
-		String lang = config.getProperty("config.primary");		
-		String primary = config.getProperty("config.lang_Primary" + lang);
-		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		String lang = userInfo.getPrimary();		
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		
 		model.addAttribute("primary", primary);
