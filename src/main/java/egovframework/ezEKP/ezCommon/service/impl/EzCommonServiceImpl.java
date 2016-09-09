@@ -922,8 +922,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", pUserID);
 		ezCommonDAO.deleteUserLLocalInfo(map);
-	System.out.println("offset:"+userInfo.getOffset());
-	System.out.println("lang:"+userInfo.getLang());
+	
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("userID", pUserID);
 		map1.put("timeZone", userInfo.getOffset());
