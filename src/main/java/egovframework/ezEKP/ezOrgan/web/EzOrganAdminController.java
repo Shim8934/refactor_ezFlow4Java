@@ -113,10 +113,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 회사추가 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/companyInfo.do")
-	public String companyInfo(Model model) throws Exception{
-		String lang = config.getProperty("config.primary");		
-		String primary = config.getProperty("config.lang_Primary" + lang);
-		String secondary = config.getProperty("config.lang_Secondary" + lang);
+	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -229,10 +230,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 부서정보 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/deptInfo.do")	
-	public String deptInfo(Model model) throws Exception{
-		String lang = config.getProperty("config.primary");		
-		String primary = config.getProperty("config.lang_Primary" + lang);
-		String secondary = config.getProperty("config.lang_Secondary" + lang);
+	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -919,9 +921,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String topID = "";        
         String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
-        String lang = config.getProperty("config.primary");		
-		String primary = config.getProperty("config.lang_Primary" + lang);
-		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		String primary = config.getProperty("config.lang_Primary" + user.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + user.getLang());
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
@@ -1186,9 +1187,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}
 		
 		String id = (request.getParameter("id") == null ? "" : request.getParameter("id"));
-		String lang = config.getProperty("config.primary");		
-		String primary = config.getProperty("config.lang_Primary" + lang);
-		String secondary = config.getProperty("config.lang_Secondary" + lang);
+		String primary = config.getProperty("config.lang_Primary" + user.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + user.getLang());
 				
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);		
