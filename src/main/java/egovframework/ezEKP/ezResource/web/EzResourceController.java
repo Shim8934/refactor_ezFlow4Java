@@ -359,7 +359,6 @@ public class EzResourceController extends EgovFileMngUtil {
 						resultXML += "<root>";
 						for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
 							if (orderXML.getElementsByTagName("approveFlag").item(i).getTextContent().equals(approveFlag)) {
-System.out.println("temp["+i+"]:"+orderXML.getElementsByTagName("appointment").item(i).getTextContent());
 								resultXML += "<appointment>";
 								resultXML += "<number>"+orderXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
 								resultXML += "<pnumber>"+orderXML.getElementsByTagName("pnumber").item(i).getTextContent()+"</pnumber>";
@@ -392,7 +391,6 @@ System.out.println("temp["+i+"]:"+orderXML.getElementsByTagName("appointment").i
 						}
 						resultXML += "</root>";
 						
-System.out.println("resultXML:"+resultXML);
 					// 전체 보기
 					} else {
 						resultXML = commonUtil.convertDocumentToString(orderXML);
@@ -414,8 +412,7 @@ System.out.println("resultXML:"+resultXML);
 //								String endTemp = tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(0,4)+tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(5,7)+tempXML.getElementsByTagName("dtstart").item(j).getTextContent().substring(8,10);
 //								int countArray[] = null;
 //								String temp;
-//	System.out.println("startTemp["+j+"]:"+startTemp);
-//	System.out.println("endTemp["+j+"]:"+endTemp);
+//	
 //								if (Integer.parseInt(startTemp) > Integer.parseInt(endTemp)) {
 									//tempXML.getElementsByTagName("appointment").item(j).appendChild(count);
 //									temp = tempXML.getElementsByTagName("appointment").item(j).getTextContent();
@@ -444,8 +441,7 @@ System.out.println("resultXML:"+resultXML);
 					for (int i=0; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
 						int startCount = (page -1) * 20;
 						int endCount = page * 20;
-System.out.println("startCount:"+startCount);
-System.out.println("endCount:"+endCount);
+
 						if (Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent()) >= startCount && Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent())< endCount) {
 							resultXML1 += "<appointment>";
 							resultXML1 += "<number>"+tempXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
@@ -1730,7 +1726,6 @@ System.out.println("endCount:"+endCount);
 			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (cmd.equals("get")) {
-System.out.println("xmlStr:"+xmlStr);
 				String ret = ezResourceService.getRepetition(xmlStr);
 				Document xmlRet = commonUtil.convertStringToDocument(ret);
 				String startDate = xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent();
@@ -2183,7 +2178,6 @@ System.out.println("xmlStr:"+xmlStr);
 			List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
 			//반복예약 데이터가 있을 때
 			if (isRep) {
-System.out.println("111");
 				try {
 					if (cmd.equals("add")) {
 						num = null;
@@ -2196,7 +2190,6 @@ System.out.println("111");
 			
 			//반복예약 데이터가 없을 때
 			if (!isRep) {
-System.out.println("222");
 				try {
 					if (cmd.equals("add")) {
 						num = null;

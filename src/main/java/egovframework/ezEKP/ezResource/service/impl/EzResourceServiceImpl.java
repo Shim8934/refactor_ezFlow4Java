@@ -2999,8 +2999,6 @@ public class EzResourceServiceImpl implements EzResourceService{
 	//일반예약일때
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult) throws Exception {
 		try {
-System.out.println("strStartDateTime:"+strStartDateTime);
-System.out.println("strEndDateTime:"+strEndDateTime);
 			String startDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
 			String endDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
 			String pOwnerID = strPownerID.equals("") ? null : strPownerID;
@@ -3071,13 +3069,12 @@ System.out.println("strEndDateTime:"+strEndDateTime);
 			
 			String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-System.out.println("firstStartDateTime:"+firstStartDateTime);
-System.out.println("lastEndDateTime:"+lastEndDateTime);
+
 			/*String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
 				" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
 				" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
 				"~"+String.valueOf(date.parse(lastEndDateTime).getHours())+String.valueOf(date.parse(lastEndDateTime).getMinutes())+" "+"동안";*/
-System.out.println("dtSSize:"+dtS.size());
+
 			// 일정관리에서 예약한 시간이 필요함
 			if (dtS != null || dtS.size() != 0) {
 				//result.setStartDateTime(dtS.get(0).getStartDateTime());
@@ -3090,7 +3087,6 @@ System.out.println("dtSSize:"+dtS.size());
 				String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 
 				for (ResGetRepResourceVO drT : dtT) {
-System.out.println("drTStartDate:"+drT.getStartDate());
 					String tStartDate = EgovDateUtil.convertDate(drT.getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					String tEndDate = EgovDateUtil.convertDate(drT.getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					int tAllDay = Integer.parseInt(drT.getAllDay());
@@ -3111,10 +3107,10 @@ System.out.println("drTStartDate:"+drT.getStartDate());
 					//
 					String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 					String compare2 = tStartDate; 
-System.out.println("ㅡㅡ"+EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""));
+
 					Date day1 = date.parse(compare1);
 					Date day2 = date.parse(compare2);
-System.out.println("!?!:"+sStartDate);
+
 					String compare3 = tEndDate;
 					String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
 					
@@ -3122,10 +3118,7 @@ System.out.println("!?!:"+sStartDate);
 					Date day4 = date.parse(compare4);
 					int compare = day1.compareTo(day2);
 					int secondCompare = day3.compareTo(day4);
-System.out.println("1:"+sEndDate);
-System.out.println("2:"+tStartDate);
-System.out.println("3:"+tEndDate);
-System.out.println("4:"+getYearMonthDay(sStartDate));
+					
 					if (!(compare <= 0 || secondCompare <= 0)) {
 
 						isDup = true;
@@ -3246,7 +3239,7 @@ System.out.println("4:"+getYearMonthDay(sStartDate));
 			s1.setStartDateTime(EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 			s1.setEndDateTime(EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 			dtOnce.add(0, s1);
-System.out.println("startDateTimeDT:"+dtOnce.get(0).getStartDateTime());
+
 			/*StringBuilder sb = new StringBuilder();
 			for (ResMakeDupResultVO dr : dtOnce) {
 				String startDt = dr.getStartDateTime();
@@ -3348,8 +3341,7 @@ System.out.println("startDateTimeDT:"+dtOnce.get(0).getStartDateTime());
 			
 			String interStartDateTime = compare > 0 ? recDuration.getFirstStartDateTime() : getYearMonthDay(EgovDateUtil.convertDate(destParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
 			String interEndDateTime = recDuration.getLastStartDateTime();
-System.out.println("interStartDateTime:"+interStartDateTime);
-System.out.println("interEndDateTime:"+interEndDateTime);
+
 			ResObjArrayDestVO objArrayDest = new ResObjArrayDestVO();
 			objArrayDest.setInterStartDateTime(interStartDateTime);
 			objArrayDest.setInterEndDateTime(interEndDateTime);
@@ -3816,8 +3808,6 @@ System.out.println("interEndDateTime:"+interEndDateTime);
 			
 			if (recParam.getRecReOrd() == -1) {
 				dt = chkDupReway61_2(recParam, dt);
-System.out.println("dt1:"+dt.get(0).getStartDateTime());
-System.out.println("dt2:"+dt.get(0).getEndDateTime());
 				return dt;
 			}
 

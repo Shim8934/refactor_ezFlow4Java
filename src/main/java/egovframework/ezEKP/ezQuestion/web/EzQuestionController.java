@@ -3309,7 +3309,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callTempLoad(@RequestBody String xmlDoc,HttpServletRequest req,Model model) throws Exception {
 		Document objXML = commonUtil.convertStringToDocument(xmlDoc);
-System.out.println("xmlDoc:"+xmlDoc);
 		String itemId = "";
 		int itemNo = 0;
 		String strQstNo = "";
@@ -3352,7 +3351,6 @@ System.out.println("xmlDoc:"+xmlDoc);
 			}
 
 			temp = strResult;
-System.out.println("temp:"+temp);
 			str.append(temp);
 			str.append("</QUESTION>");
 			for(int i=0; i<arrQuestion.length; i++) {
@@ -3426,7 +3424,7 @@ System.out.println("temp:"+temp);
 			str.append("</DATA>");
 			
 		}
-System.out.println(str.toString());
+
 		
 		return str.toString();
 	}*/
