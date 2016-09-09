@@ -295,7 +295,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String userLang = userInfo.getPrimary();
+		String userLang = userInfo.getLang();
 		Document domSub = null;
 		
 		if (searchQuery != null && searchQuery.length() > 10) {
@@ -313,7 +313,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
                     returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
@@ -323,7 +323,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 }
             }
 
-            if (userLang.equals("2")) {
+            if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
                     returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }

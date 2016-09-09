@@ -24,7 +24,7 @@
 		    var pListTypeValue = "${listType}";
 		    var PresentOpen = "APPROVAL";
 		    var CompanyID = '${userInfo.companyID}';
-		    var CompanyName = '${userInfo.companyName1}';
+		    var CompanyName = '${userInfo.companyName}';
 		    var gMenuFlag = 1;
 		    var pDeptID = "${userInfo.deptID}";
 		    var contFlag = "END";

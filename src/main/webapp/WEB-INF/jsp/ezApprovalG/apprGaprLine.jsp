@@ -68,7 +68,7 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var companyID = "${userInfo.companyID}";
-		    var GCompanyName = "${userInfo.companyName1}";
+		    var GCompanyName = "${userInfo.companyName}";
 		    var tempAprTypeXML = "${aprTypeXML}";
 		    var AprTypeXML = createXmlDom();
 		    var Resultxml = createXmlDom();

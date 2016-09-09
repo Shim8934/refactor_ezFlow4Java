@@ -29,7 +29,7 @@
 		    arr_userinfo[0] = "user";
 		    arr_userinfo[1] = "${userInfo.id}";
 		    arr_userinfo[2] = "${userInfo.displayName}";
-		    arr_userinfo[3] = "${userInfo.title1}";
+		    arr_userinfo[3] = "${userInfo.title}";
 		    arr_userinfo[4] = "${userInfo.deptID}";
 		    arr_userinfo[5] = "${userInfo.deptName}";
 		    arr_userinfo[6] = "${userInfo.jikChek}";

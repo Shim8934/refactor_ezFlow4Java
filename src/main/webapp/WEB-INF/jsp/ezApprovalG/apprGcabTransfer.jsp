@@ -24,7 +24,7 @@
 	        var g_DTaskCode = "";
 	        var g_DTaskName = "";
 	        var g_SDeptCode = "${userInfo.deptID}";
-	    	var g_SDeptName = "${userInfo.deptName1}";
+	    	var g_SDeptName = "${userInfo.deptName}";
 	        var CompanyID = "${userInfo.companyID}";
 	        var UserLang = "${userInfo.lang}";
 	        document.onselectstart = function () { return false; };

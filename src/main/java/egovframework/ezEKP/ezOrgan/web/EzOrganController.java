@@ -100,12 +100,14 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getDeptMemberList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptMemberList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String deptid = request.getParameter("deptID");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");		
-		String lang = config.getProperty("config.primary");
+		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String infoXML = "";
 
@@ -170,12 +172,14 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getSearchList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getSearchList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String searchlist = request.getParameter("search").trim();
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");
-		String lang = config.getProperty("config.primary");
+		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
