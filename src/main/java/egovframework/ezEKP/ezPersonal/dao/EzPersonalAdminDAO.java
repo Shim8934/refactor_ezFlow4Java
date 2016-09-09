@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -30,6 +31,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<PersonalLightPollVO> getPollList(Map<String, Object> map) throws Exception {
 		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLLIST", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalPopupVO> getPopupList(String v_pCompnayID) throws Exception {
+		return (List<PersonalPopupVO>) list("EzPersonalAdmin.EZSP_GETPOPUPLIST", v_pCompnayID);
 	}
 	
 	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
@@ -76,6 +82,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 
 	public void deletePoll(String v_pItemSeq) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELETEPOLL", v_pItemSeq);
+	}
+
+	public PersonalPopupVO getPopupInfo(String v_pItemSeq) throws Exception {
+		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", v_pItemSeq);
 	}
 
 

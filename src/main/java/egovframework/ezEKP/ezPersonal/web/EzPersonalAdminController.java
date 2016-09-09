@@ -22,8 +22,11 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 관리자 - 초기화면
@@ -44,20 +47,18 @@ public class EzPersonalAdminController {
 	@Autowired
 	private Properties config;
 	
-	/*@Autowired
-	private EgovFileScrty egovFileScrty;*/
-	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	//TODO getLocalTime, 추후 commonUtil 로 이동시 삭제
+	@Autowired
+	private EzResourceService ezResourceService;
+	
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
-	
-	/*@Autowired
-	private EzOrganService ezOrganService;*/
 	
 	/**
 	 * 초기화면 메인화면 호출 함수
@@ -207,7 +208,7 @@ public class EzPersonalAdminController {
 	 * 초기화면 공지사항 등록,수정 본문화면 CK에디터 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addNoticeCKContent.do")
-	public String addNoticeCKContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String addNoticeCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
@@ -260,7 +261,13 @@ public class EzPersonalAdminController {
 	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
-	public String manageQuickLink() {
+	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie) {
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
 	
@@ -353,11 +360,16 @@ public class EzPersonalAdminController {
 	}
 	
 	/**
-	 * 초기화면 QuickPoll 메뉴 호출 함수
+	 * 초기화면 QuickPoll메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/managePoll.do")
 	public String managePoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -479,5 +491,162 @@ public class EzPersonalAdminController {
 		String result = ezPersonalAdminService.deletePoll(itemSeq);
 		
 		return result;
+	}
+	
+	/**
+	 * 초기화면 팝업공지메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/managePopup.do")
+	public String managePopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String noneActiveX = config.getProperty("NONEACTIVEX");
+		String useEditor = config.getProperty("EDITOR");
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useEditor", useEditor);
+		
+		return "admin/ezPersonal/personalManagePopup";
+	}
+	
+	/**
+	 * 초기화면 팝업공지 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/managePopupList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String managePopupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		
+
+		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID);
+		
+		StringBuilder result = new StringBuilder();
+		
+		result.append("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		
+		for (PersonalPopupVO vo : list) {
+			result.append("<ROW>");
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
+			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
+			result.append("<DATA4>" + vo.getPosition() + "</DATA4>");
+			result.append("</CELL>");
+			
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getTitle() + "</VALUE>");
+			result.append("</CELL>");
+			
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
+			result.append("</CELL>");
+			
+			result.append("<CELL>");
+			result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
+			result.append("</CELL>");
+			
+			result.append("<CELL>");
+			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
+			result.append("<TYPE>" + "BTN" + "</TYPE>");
+			result.append("<FUNC>" + "mod_popup" + "</FUNC>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("</CELL>");
+			
+			result.append("<CELL>");
+			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
+			result.append("<TYPE>" + "BTN" + "</TYPE>");
+			result.append("<FUNC>" + "del_popup" + "</FUNC>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("</CELL>");
+			result.append("</ROW>");
+		}
+
+		result.append("</ROWS>");
+		result.append("</LISTVIEWDATA>");
+		
+		return result.toString();
+	}
+	
+	/**
+	 * 팝업공지 공지사항등록,수정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addPopupCK.do")
+	public String addPopupCK(@CookieValue("loginCookie") String loginCookie, PersonalPopupVO vo, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemSeq = "";
+		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String companyID = request.getParameter("companyID");
+		
+		String initDate = ezResourceService.getLocalTime(EgovDateUtil.getTodayTime());
+		
+		if (request.getParameter("itemSeq") != null) {
+			itemSeq = request.getParameter("itemSeq");
+			
+			vo = ezPersonalAdminService.getPopupInfo(itemSeq);
+			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
+		} else {
+			vo.setWidth(300);
+			vo.setHeight(350);
+		}
+		
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("initDate", initDate);
+		model.addAttribute("personalPopupVO", vo);
+		
+		return "admin/ezPersonal/personalAddPopupCK";
+	}
+	
+	/**
+	 * 팝업공지 공지사항 수정 본문화면 CK에디터 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/addPopupCKContent.do")
+	public String addPopupCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		return "admin/ezPersonal/personalAddPopupCKContent";
+	}
+	
+	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String savePopup(PersonalPopupVO vo) throws Exception {
+		if (vo.getTitle2().equals("")) {
+			vo.setTitle2(vo.getTitle());
+		}
+		
+		try {
+			if (vo.getItemSeq().equals("")) {
+				ezPersonalAdminService.insertPopup(vo);
+			} else {
+				ezPersonalAdminService.updatePopup(vo);
+			}
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR : " + e.getMessage();
+		}
 	}
 }

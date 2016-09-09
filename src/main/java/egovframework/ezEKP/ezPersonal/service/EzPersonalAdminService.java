@@ -6,15 +6,20 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
 
 	List<PersonalNoticeVO> getNoticeList(String companyID, int totalCount, int pageSize, int pStart) throws Exception;
 	
+	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start) throws Exception;
+	
+	List<PersonalPopupVO> getPopupList(String companyID) throws Exception;
+	
 	PersonalNoticeVO getNoticeInfo(String itemSeq) throws Exception;
 	
-	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start) throws Exception;
+	PersonalPopupVO getPopupInfo(String itemSeq) throws Exception;
 	
 	String deleteNotice(String itemSeq) throws Exception;
 	
@@ -37,5 +42,13 @@ public interface EzPersonalAdminService {
 	int getPollCount(String companyID) throws Exception;
 
 	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
+
+	
+
+	
+
+	void insertPopup(PersonalPopupVO vo) throws Exception;
+
+	void updatePopup(PersonalPopupVO vo) throws Exception;
 
 }

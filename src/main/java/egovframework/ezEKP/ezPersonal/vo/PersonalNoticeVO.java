@@ -3,17 +3,17 @@ package egovframework.ezEKP.ezPersonal.vo;
 public class PersonalNoticeVO {
 
 	/** 일련번호 */
-	Integer itemSeq;
+	private Integer itemSeq;
 	/** 회사ID */
-	String companyID;
+	private String companyID;
 	/** 게시일 */
-	String postDate;
+	private String postDate;
 	/** 공지사항 제목 */
-	String title;
+	private String title;
 	/** 공지사항 제목(다국어) */
-	String title2;
+	private String title2;
 	/** 공지사항 본문  CLOB*/
-	String content;
+	private String content;
 	public Integer getItemSeq() {
 		return itemSeq;
 	}

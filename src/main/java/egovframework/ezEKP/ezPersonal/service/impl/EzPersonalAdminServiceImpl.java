@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -268,6 +269,26 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 		} catch (Exception e) {
 			return "ERROR : " + e.getMessage();
 		}
+	}
+
+	@Override
+	public List<PersonalPopupVO> getPopupList(String companyID) throws Exception {
+		return ezPersonalAdminDAO.getPopupList(companyID);
+	}
+
+	@Override
+	public PersonalPopupVO getPopupInfo(String itemSeq) throws Exception {
+		return ezPersonalAdminDAO.getPopupInfo(itemSeq);
+	}
+
+	@Override
+	public void insertPopup(PersonalPopupVO vo) throws Exception {
+		
+	}
+
+	@Override
+	public void updatePopup(PersonalPopupVO vo) throws Exception {
+				
 	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {

@@ -35,7 +35,7 @@
 			            break;
 
 			        case 4:
-			            url = "/myoffice/ezPersonal/PopUp/ManagePopUp_Cross.aspx";
+			            url = "/admin/ezPersonal/managePopup.do";
 			            break;
 
 			        case 5:

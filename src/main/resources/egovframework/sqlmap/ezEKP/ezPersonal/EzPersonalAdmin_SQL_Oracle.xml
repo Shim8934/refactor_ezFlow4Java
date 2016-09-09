@@ -5,14 +5,41 @@
 	<typeAlias	alias="PersonalNoticeVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
 	<typeAlias  alias="PersonalQuickLinkVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO"/>
 	<typeAlias  alias="PersonalLightPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
+	<typeAlias  alias="PersonalPopupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
-		<result property="title"						column="Title"					columnIndex="1"/>
-		<result property="title2"						column="Title2"					columnIndex="2"/>
-		<result property="postDate"						column="PostDate"				columnIndex="3"/>
+		<result property="title"						column="TITLE"					columnIndex="1"/>
+		<result property="title2"						column="TITLE2"					columnIndex="2"/>
+		<result property="postDate"						column="POSTDATE"				columnIndex="3"/>
 		<result property="content"						column="CONTENT"				columnIndex="4"		javaType="String"	jdbcType="CLOB"/>
-		<result property="itemSeq"						column="ItemSeq"				columnIndex="5"/>
+		<result property="itemSeq"						column="ITEMSEQ"				columnIndex="5"/>
 	</resultMap>
+	
+	<resultMap class="PersonalPopupVO" id="personalPopupVO">
+<!-- 		<result property="companyID"					column="COMPANYID"				columnIndex="1"/> -->
+<!-- 		<result property="itemSeq"						column="ITEMSEQ"				columnIndex="2"/> -->
+		<result property="title"						column="TITLE"					columnIndex="1"/>
+		<result property="title2"						column="TITLE2"					columnIndex="2"/>
+		<result property="content"						column="CONTENT"				columnIndex="3"		javaType="String"	jdbcType="CLOB"/>
+		<result property="startDate"					column="STARTDATE"				columnIndex="4"/>
+		<result property="endDate"						column="ENDDATE"				columnIndex="5"/>
+		<result property="width"						column="WIDTH"					columnIndex="6"/>
+		<result property="height"						column="HEIGHT"					columnIndex="7"/>
+		<result property="position"						column="POSITION"				columnIndex="8"/>		
+	</resultMap>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOPUPINFO" 			parameterClass="String"		resultMap="personalPopupVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOPUPINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	
 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
 		<![CDATA[
@@ -26,12 +53,6 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
-	
 	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -41,6 +62,12 @@
 	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK_ACL(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOPUPLIST" 			parameterClass="String"		resultClass="PersonalPopupVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOPUPLIST(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
