@@ -732,17 +732,17 @@
 	            var StartDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[3];
 	            var EndDT = getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[4];
 	            var NowDT = new Date();
-	            if (NowDT.getFullYear() >= StartDT.split('-')[0] && NowDT.getFullYear() <= EndDT.split('-')[0] && NowDT.toLocaleString().split(' ')[1].split('월')[0] >= Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] <= Number(EndDT.split('-')[1])) {
+	            if (NowDT.getFullYear() >= StartDT.split('-')[0] && NowDT.getFullYear() <= EndDT.split('-')[0] && NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] >= Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] <= Number(EndDT.split('-')[1])) {
 	                if (StartDT.split('-')[1] != EndDT.split('-')[1]) {
-	                    if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(StartDT.split('-')[1]) && NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0])) {
+	                    if (NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] == Number(StartDT.split('-')[1]) && NowDT.getDate() >= Number(StartDT.split('-')[2].split(' ')[0])) {
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
 	                    }
-	                    else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] > Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split('월')[0] < Number(EndDT.split('-')[1])) {
+	                    else if (NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] > Number(StartDT.split('-')[1]) && NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] < Number(EndDT.split('-')[1])) {
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
 	                    }
-	                    else if (NowDT.toLocaleString().split(' ')[1].split('월')[0] == Number(EndDT.split('-')[1]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
+	                    else if (NowDT.toLocaleString().split(' ')[1].split("<spring:message code='ezPersonal.t287'/>")[0] == Number(EndDT.split('-')[1]) && NowDT.getDate() <= Number(EndDT.split('-')[2].split(' ')[0])) {
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[UserLang]) + strLang324 + "";
 	                        alertMsg += getNodeText(GetChildNodes(selNodes[i])[3]).split(':')[1] + strLang325 + "";
 	                    }
@@ -1148,9 +1148,9 @@
 	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px; padding-right: 5px">
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();"><span>
-	                                                <img src="/images/ImgIcon/prev.gif" height="16" alt="결재선 위로" style="vertical-align:middle"/></span></a>
+	                                                <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
 	                                            <a class="imgbtn" onclick="AprlineDown_onclick();"><span>
-	                                                <img src="/images/ImgIcon/next.gif" height="16" alt="결재선 아래로" style="vertical-align:middle"/></span></a>
+	                                                <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
 	                                        </div>
 	                                    </h2>
 	                                    <div class="border_gray">

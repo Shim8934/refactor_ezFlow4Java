@@ -151,7 +151,7 @@
 		                return false;
 		            }
 		            div.ondrop = function (e) {
-		                alert("드래그 앤 드랍 기능을 이용할 수 없습니다.\n[첨부] 메뉴를 이용해 주시기 바랍니다.");
+		                alert("<spring:message code='ezApprovalG.pjj30'/>");
 		                return false;
 		            }
 		        }

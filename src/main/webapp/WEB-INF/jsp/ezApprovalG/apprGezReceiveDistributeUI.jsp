@@ -820,12 +820,12 @@
 	            ListViewLen = lvTest.GetDataRows();
 	
 	            if (ListViewLen.length == 0) {
-	                alert("편집하려는 즐겨찾기를\n부서목록에 적용 해야 편집 할 수 있습니다.");
+	                alert("<spring:message code='ezApprovalG.pjj31'/>");
 	                return;
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("편집하려는 즐겨찾기를\n부서목록에 적용 해야 편집 할 수 있습니다.");
+	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
 	                    return;
 	                }
 	            }

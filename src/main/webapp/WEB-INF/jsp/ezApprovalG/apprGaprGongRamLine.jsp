@@ -732,7 +732,7 @@
 	            ListViewLen = lvTest.GetDataRows();
 	
 	            if (ListViewLen.length == 0 || GetAttribute(ListViewLen[0], "id") == "pAPRLINE_TR_noItems") {
-	                alert("편집하려는 즐겨찾기를\n공람자 리스트에 적용 해야 편집 할 수 있습니다.");
+	                alert("<spring:message code='ezApprovalG.pjj27'/>");
 	                return;
 	            }
 	
@@ -1083,9 +1083,9 @@
 	                <h2 class="h2_dot"><spring:message code='ezApprovalG.t1689'/>
 	                    <div style="text-align: right; margin-top: -23px; padding-right: 5px">
 	                        <a class="imgbtn" onclick="return AprlineUpper_onclick();"><span>
-	                            <img src="/images/ImgIcon/prev.gif" height="16" alt="결재선 위로" style="vertical-align: middle" /></span></a>
+	                            <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align: middle" /></span></a>
 	                        <a class="imgbtn" onclick="return AprlineDown_onclick();"><span>
-	                            <img src="/images/ImgIcon/next.gif" height="16" alt="결재선 아래로" style="vertical-align: middle" /></span></a>
+	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                </div>
 	                </h2>
 	                <div class="listview" style="margin-top: 5px">

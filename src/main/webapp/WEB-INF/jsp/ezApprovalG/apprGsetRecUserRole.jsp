@@ -77,11 +77,10 @@
             document.getElementById("OrganListView").disabled = true;
 //          document.getElementByNames("OrganListView_TR_").disabled = true;
             document.getElementById("RecvDel").style.display = "";
-            document.getElementById("listview").disabled = "true";
         }
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
             document.getElementById("DataLayout").style.display = "";
-//          document.getElementById("DataLayout").disabled = "";
+            document.getElementById("DataLayout").disabled = "";
         }
     }
     function InitRecViewerInfo() {
@@ -520,7 +519,7 @@
 				</tr>
 				<tr> 
 					<td><div class="listview">
-					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 220px;margin:1px 1px 1px 1px; "></div>
+					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 240px;margin:1px 1px 1px 1px; "></div>
 					</div></td>
 				</tr>
 			</table>
