@@ -46,7 +46,7 @@
 		            companyID = RetValue[2];
 		            InitTreeVal = companyID;
 		            Tree_setconfig();
-		            TreeViewinitialize("", companyID, "extensionAttribute2", "<c:out value='${serverName}'/>");
+		            TreeViewinitialize("", companyID, "extensionAttribute2;displayName2", "<c:out value='${serverName}'/>");
 		            InitListView();
 	
 		            AprLineInit();
@@ -98,6 +98,7 @@
 		        var pDeptID = nodedata.GetNodeData("CN");
 		        var pDeptName = nodedata.GetNodeData("VALUE");
 		        var pDeptName2 = nodedata.GetNodeData("DISPLAYNAME2");
+alert(pDeptName2);
 	
 		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t800' />";
