@@ -626,7 +626,6 @@ public class EzPersonalController {
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
-System.out.println("searchString:"+searchString);
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
