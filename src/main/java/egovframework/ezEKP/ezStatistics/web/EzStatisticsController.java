@@ -22,7 +22,7 @@ public class EzStatisticsController {
 	 * 통계 메인화면 호출 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsMain.do")
-	public String showMain() throws Exception{		
+	public String showMain() throws Exception {		
 		return "ezStatistics/statisticsMain";
 	}
 

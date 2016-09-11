@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	</head>
 	<frameset cols="200,*" border="0" framespacing="0" frameborder="NO">
-	  <frame src="/ezStatistics/statisticsLeftMenu.do" name="stat_left" marginwidth="0" marginheight="0" scrolling="NO" frameborder="NO" name="left">
-	  <frame src="Mail/stat_mail_main.aspx" name="stat_main" marginwidth="0" marginheight="0" scrolling="AUTO" frameborder="NO" name="right">
+	  <frame src="/ezStatistics/statisticsLeftMenu.do" name="stat_left" marginwidth="0" marginheight="0" scrolling="NO" frameborder="NO">
+	  <frame src="Mail/stat_mail_main.aspx" name="stat_main" marginwidth="0" marginheight="0" scrolling="AUTO" frameborder="NO">
 	</frameset>	
 </html>
