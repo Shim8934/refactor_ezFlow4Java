@@ -219,7 +219,7 @@ function OpenReceiptHistory() {
             Url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID;
         }
         else {
-            Url = "/myoffice/ezApprovalG/ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + pDocID + "&pDeptID=" + pDeptID + "&pDocState=011";
+            Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
         }
 
         var OpenWin = window.open(Url, "OpenReceiptHistory", GetOpenWindowfeature(610, 270));
@@ -245,7 +245,7 @@ function openUserInfo() {
             var width = window.screen.availWidth;
             var left = (width - 450) / 2;
             var top = (heigth - 450) / 2;
-            window.open("/myoffice/common/showpersoninfo_cross.aspx?id=" + tr[0].getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            window.open("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
         }
     }
     else {
