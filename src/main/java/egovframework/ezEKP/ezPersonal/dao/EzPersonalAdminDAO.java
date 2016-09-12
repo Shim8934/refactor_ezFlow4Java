@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalAdminDAO")
@@ -36,6 +38,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<PersonalPopupVO> getPopupList(String v_pCompnayID) throws Exception {
 		return (List<PersonalPopupVO>) list("EzPersonalAdmin.EZSP_GETPOPUPLIST", v_pCompnayID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalEmpMonthVO> getEmployeeMonth(String v_pCompanyID) {
+		return (List<PersonalEmpMonthVO>) list("EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH", v_pCompanyID);
 	}
 	
 	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
@@ -83,6 +90,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void insertPoll(Map<String, Object> map) throws Exception {
 		insert("EzPersonalAdmin.EZSP_INSERTPOLL", map);
 	}
+	
+	public void setEmployeeMonth(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH", map);
+	}
 
 	public void updateNotice(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
@@ -96,16 +107,19 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		delete("EzPersonalAdmin.EZSP_DELETEPOLL", v_pItemSeq);
 	}
 
-
-	
-
-	
-
-	
-
-	public void deletePopup(String v_pItemSeq) {
+	public void deletePopup(String v_pItemSeq) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalSliderImageVO> getSliderList(Map<String, Object> map) throws Exception {
+		return (List<PersonalSliderImageVO>) list("EzPersonalAdmin.EZSP_GETSLIDERLIST", map);
+	}
+
+	
+	
+
+
 
 
 

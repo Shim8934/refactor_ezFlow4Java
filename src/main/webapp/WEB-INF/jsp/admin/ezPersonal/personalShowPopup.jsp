@@ -33,13 +33,14 @@
 			});
 	
 			function setCookie(name, value, expiredays) {
+				alert(name);
 				var todayDate = new Date();
 				todayDate.setDate( todayDate.getDate() + expiredays );
 				document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 			}
 	
 			function closepopup() {
-				setCookie("POPUP_<c:out value = '${itemSeq}' />", "1", 1); 
+				setCookie("POPUP_${itemSeq}", "1", 1); 
 				window.close();
 			}
 		</script>

@@ -55,7 +55,7 @@
 			            break;
 
 			        case 9:
-			            url = "/myoffice/ezPersonal/SliderImage/wp_sliderimages.aspx";
+			            url = "/admin/ezPersonal/sliderImages.do";
 			            break;
 			    }
 				parent.frames["right"].location.href = url;

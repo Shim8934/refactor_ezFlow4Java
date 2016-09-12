@@ -11,20 +11,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzPersonalAdminService")
 public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
+	@Autowired
+	private CommonUtil commonUtil;
+
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
 	@Resource(name="EzPersonalAdminDAO")
 	private EzPersonalAdminDAO ezPersonalAdminDAO;
 	
@@ -34,9 +43,6 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	@Autowired
-	private CommonUtil commonUtil;
-
 	@Override
 	public int getNoticeCount(String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -316,6 +322,74 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 	@Override
 	public void deletePopup(String itemSeq) throws Exception {
 		ezPersonalAdminDAO.deletePopup(itemSeq);
+	}
+	
+
+	@Override
+	public List<PersonalEmpMonthVO> getEmpMonth(String companyID) throws Exception {
+		return ezPersonalAdminDAO.getEmployeeMonth(companyID);
+	}
+
+	@Override
+	public void setEmpMonth(String type, String userID, String deptID, String term) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pType", type);
+		map.put("v_pUserID", userID);
+		map.put("v_pDeptID", deptID);
+		map.put("v_pTerm", term);
+		
+		ezPersonalAdminDAO.setEmployeeMonth(map);
+		
+	}
+
+	@Override
+	public String getSlider(String sliderID, LoginVO userInfo) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_COMPANYID", userInfo.getCompanyID());
+		map1.put("v_MODE", "ADMIN");
+		map1.put("v_SLIDERID", sliderID);
+		
+		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map1);
+		
+		StringBuilder result = new StringBuilder();
+		
+		if (sliderID.equals("")) {
+			result.append("<LISTVIEWDATA>");
+			result.append("<HEADERS>");
+			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t937", userInfo.getLocale()) + "</NAME><WIDTH>30</WIDTH><COLNAME>ISUSE</COLNAME></HEADER>");
+			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t9", userInfo.getLocale()) + "</NAME><WIDTH>250</WIDTH><COLNAME>SLIDERNAME</COLNAME></HEADER>");
+			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t1024", userInfo.getLocale()) + "</NAME><WIDTH>130</WIDTH><COLNAME>REGDATE</COLNAME></HEADER>");
+			result.append("</HEADERS>");
+			
+			result.append("<ROWS>");
+			for (PersonalSliderImageVO vo : list) {
+				result.append("<ROW>");
+				result.append("<CELL>");
+				result.append("<VALUE>" + vo.getIsUse() + "</VALUE>");
+				result.append("<DATA1>" + vo.getSliderID() + "</DATA1>");
+				result.append("<DATA2>" + vo.getImagePath() + "</DATA2>");
+				result.append("<DATA3>" + vo.getRegUserID() + "</DATA3>");
+				result.append("<DATA4>" + vo.getRegDate() + "</DATA4>");
+				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
+				result.append("</CELL>");
+				
+				if (userInfo.getLang().equals("1")) {
+					result.append("<CELL>");
+					result.append("<VALUE>" + vo.getSliderName() + "</VALUE>");
+					result.append("</CELL>");
+				} else {
+					result.append("<CELL>");
+					result.append("<VALUE>" + vo.getSliderName2() + "</VALUE>");
+					result.append("</CELL>");
+				}
+				
+				result.append("</ROW>");
+			}
+			result.append("</ROWS>");
+			result.append("</LISTVIEWDATA>");
+		}
+		
+		return result.toString();
 	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {

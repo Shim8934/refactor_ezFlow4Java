@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
@@ -16,6 +17,8 @@ public interface EzPersonalAdminService {
 	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start) throws Exception;
 	
 	List<PersonalPopupVO> getPopupList(String companyID) throws Exception;
+	
+	List<PersonalEmpMonthVO> getEmpMonth(String companyID) throws Exception;
 	
 	PersonalNoticeVO getNoticeInfo(String itemSeq) throws Exception;
 	
@@ -47,10 +50,18 @@ public interface EzPersonalAdminService {
 
 	void updatePopup(PersonalPopupVO vo) throws Exception;	
 
+	void deletePopup(String itemSeq) throws Exception;
+
+	void setEmpMonth(String type, String userID, String deptID, String term) throws Exception;
+
+	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
+
 	
 
+	
 
+	
 
-	void deletePopup(String itemSeq) throws Exception;
+	
 
 }

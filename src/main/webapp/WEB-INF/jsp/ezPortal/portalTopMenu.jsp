@@ -1474,7 +1474,7 @@
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
 
-		    window.open("/myoffice/ezPersonal/PopUp/ShowPopUp.aspx?itemseq=" + popup_number + 
+		    window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
 					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 		}
 	

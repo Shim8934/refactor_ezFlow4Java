@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
+import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
@@ -701,14 +702,85 @@ public class EzPersonalAdminController {
 	}
 	
 	/**
-	 * 팝업공지 이달의우수사원메뉴 호출 함수
+	 * 초기화면 이달의우수사원메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
-	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) {
+	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-//		ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID());
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID());
+		
+		for (PersonalEmpMonthVO vo : list) {
+			if (userInfo.getPrimary().equals("2")) {
+				vo.setDisplayName(vo.getDisplayName2());
+				vo.setTitle(vo.getTitle2());
+				vo.setDescription(vo.getDescription2());
+				vo.setCompany(vo.getCompany2());
+			}
+		}
+		
+		model.addAttribute("list", list);
 		
 		return "admin/ezPersonal/personalEmployeeOfMonth";
+	}
+	
+	/**
+	 * 초기화면 이달의우수사원 등록화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/selectBest.do")
+	public String selectBest() {
+		return "admin/ezPersonal/personalSelectBest";
+	}
+	
+	/**
+	 * 초기화면 이달의우수사원 등록,삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
+	@ResponseBody
+	public String setEmployeeMonth(HttpServletRequest request) throws Exception {
+		String userID = "", deptID = "";
+		String type = request.getParameter("type");
+		String term = request.getParameter("term");
+		
+		if (request.getParameter("userID") != null) {
+			userID = request.getParameter("userID");
+		}
+		if (request.getParameter("deptID") != null) {
+			deptID = request.getParameter("deptID");
+		}
+		
+		try {
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR";
+		}
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/sliderImages.do")
+	public String sliderImages() throws Exception {
+		return "admin/ezPersonal/personalSliderImages";
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지 목록 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sliderID = "";
+		
+		if (request.getParameter("item") != null) {
+			sliderID = request.getParameter("item");
+		}
+		
+		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
+		
+		return result;
 	}
 }

@@ -6,6 +6,8 @@
 	<typeAlias  alias="PersonalQuickLinkVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO"/>
 	<typeAlias  alias="PersonalLightPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
 	<typeAlias  alias="PersonalPopupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO"/>
+	<typeAlias  alias="PersonalEmpMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO"/>
+	<typeAlias  alias="PersonalSliderImageVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="TITLE"					columnIndex="1"/>
@@ -50,6 +52,13 @@
 		]]>
 	</procedure>
 	
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETSLIDERLIST" 			parameterClass="Map"		resultClass="PersonalSliderImageVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -65,6 +74,12 @@
 	<procedure id="EzPersonalAdmin.EZSP_GETPOPUPLIST" 			parameterClass="String"		resultClass="PersonalPopupVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOPUPLIST(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" 		parameterClass="String"		resultClass="PersonalEmpMonthVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETEMPLOYEEMONTH(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -125,6 +140,12 @@
 	<procedure id="EzPersonalAdmin.EZSP_UPDATEPOPUP"			parameterClass="Map">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_UPDATEPOPUP(#v_pItemSeq#, #v_pStartDate#, #v_pEndDate#, #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH"		parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_SETEMPLOYEEMONTH(#v_pType#, #v_pUserID#, #v_pDeptID#, #v_pTerm#)}
 		]]>	
 	</procedure>
 	
