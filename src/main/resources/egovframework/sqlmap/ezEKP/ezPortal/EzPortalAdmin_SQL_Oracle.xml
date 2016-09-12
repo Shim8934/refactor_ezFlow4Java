@@ -2,6 +2,94 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezPortalAdmin">
+	<typeAlias  alias="PortalUseThemeCheckVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO"/>
 	
+	<procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.deleteTheme" parameterClass="String" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_DELETE_THEME(#v_PUID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.deleteTopPage" parameterClass="String"  resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_DELETETOPPAGE(#v_pPAGEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SET_THEMEINFO(#v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, #v_TOPHEIGHT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.topSetUsePage2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_TOP_SETUSEPAGE2(#v_pUID#, #v_pCOMPANYID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.outOfSetUsePage" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_TOP_OUTOFSETUSEPAGE(#v_pUID#, #v_pCOMPANYID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.setUseLang" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SETUSELANG(#v_pUID#, #v_pCOMPANYID#, #v_pLANGSTR#)}
+		]]>
+	</procedure>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuGeneralUID" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_TOPMENU_GENERAL
+			WHERE UID_ = #pUID# 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItemsS" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S
+			WHERE OWNERPAGEID = #pUID# 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItems" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS
+			WHERE OWNERPAGEID = #pUID# 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItemsImage" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE
+			WHERE OWNERPAGEID = #pUID# 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_TOPMENU_ITEMS
+			WHERE OWNERPAGEID = #pUID# 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteSkinItemsUID" parameterClass="String">
+		<![CDATA[
+			DELETE EZPORTAL.TBL_SKIN_ITEMS
+			WHERE UID_ = #pUID# 
+		]]>
+	</delete>
+	
+	
+
 </sqlMap>
+
 

@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
@@ -323,6 +324,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		String langSecondary = "";
 		String theme = "BASIC";
 		String noneActiveX = "YES";
+		String pSelectThemeUID = "";
+		String pThemeSelectObject = "";
 		
 		try {
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
@@ -419,6 +422,24 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (!mode.equals("view")) {
 				displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID);
 				displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID);
+				pSelectThemeUID = ezPortalService.getTopMenuConfigItem("ThemeUID", pageID);
+				List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID());
+				String xmlStr = "<DATA>";
+				for (int i=0; i<list.size(); i++) {
+					xmlStr += commonUtil.getQueryResult(list.get(i));
+				}
+				xmlStr += "</DATA>";
+				Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+				
+				for (int i=0; i<list.size(); i++) {
+					if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
+						pThemeSelectObject += "<option value='" + list.get(i).getuID() + "' selected>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent() + "</option>";
+					} else {
+						pThemeSelectObject += "<option value='" + list.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
+					}
+					
+				}
+				
 			}
 				
 			//사용자 영역에서만 팝업 공지사항을 오픈한다.
@@ -473,7 +494,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 				
 			}
-
+System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 			model.addAttribute("strHTML", strHTML);
 			model.addAttribute("displayName", displayName);
 			model.addAttribute("displayName2", displayName2);
@@ -485,6 +506,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("noneActiveX", noneActiveX);
 			model.addAttribute("skinExist", skinExist);
 			model.addAttribute("script1", script1);
+			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -641,7 +663,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 	            
 			}
-					
+
 			model.addAttribute("strHTML", strHTML);
 			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 			model.addAttribute("displayName", displayName);
