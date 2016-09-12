@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>

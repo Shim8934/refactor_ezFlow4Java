@@ -25,12 +25,6 @@
 		    var OrderCell = "";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
-		    if (browserIE) {
-		        document.write('<script type="text/javascript" src="/js/NameControl.js"\></script\>');
-		    }
-		    else {
-		        document.write('<script type="text/javascript" src="/js/NameControl_Cross.js"\></script\>');
-		    }
 		</script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var InitTreeVal = "";	

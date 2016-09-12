@@ -12,7 +12,6 @@
 		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var bSearch = false;
