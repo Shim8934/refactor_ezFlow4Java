@@ -21,10 +21,11 @@
 	            KeEventControl(document.getElementById("txtTitle"));
 	            KeEventControl(document.getElementById("txtCode"));
 	        }
-	        try {
+
+	        if (parent.findtask_cross_dialogArguments[1] != undefined) {
 	            RetValue = parent.findtask_cross_dialogArguments[0];
 	            ReturnFunction = parent.findtask_cross_dialogArguments[1];
-	        } catch (e) {
+	        } else {
 	            try {
 	                RetValue = opener.findtask_cross_dialogArguments[0];
 	                ReturnFunction = opener.findtask_cross_dialogArguments[1];
@@ -33,7 +34,8 @@
 	            }
 	        }
 	        rtnVal[0] = "FALSE";
-	    }
+	    };
+	    
 	    function btnReset_onclick() {
 	        document.getElementById("txtTitle").value = "";
 	        document.getElementById("txtCode").value = "";
@@ -46,7 +48,7 @@
 	            rtnVal[0] = "TRUE";
 	            rtnVal[1] = document.getElementById("txtTitle").value;
 	            rtnVal[2] = document.getElementById("txtCode").value;
-	
+	            
 	            if (ReturnFunction != null) {
 	                ReturnFunction(rtnVal);
 	                window.close();

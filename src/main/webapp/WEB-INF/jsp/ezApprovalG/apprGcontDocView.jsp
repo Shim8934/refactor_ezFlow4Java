@@ -369,7 +369,7 @@
 		
 		                            var strimg;
 		                            if (img.length >= 1) {
-		                                strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
 		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
 		                                message.BodySetAttribute(SignName, img[0]);

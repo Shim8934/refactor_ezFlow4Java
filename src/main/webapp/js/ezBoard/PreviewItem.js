@@ -322,7 +322,7 @@ function event_ItemPreviewRead_photo() {
             var result = xmlhttp.responseXML;
             
             if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
-                alert("권한이 없습니다");
+                alert(strLang73);
                 return;
             }
             WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
@@ -384,7 +384,7 @@ function event_ItemPreviewRead() {
             var result = xmlhttp.responseXML;
      
             if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
-                alert("권한이 없습니다");
+                alert(strLang73);
                 return;
             }
             ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");

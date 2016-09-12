@@ -1195,6 +1195,7 @@ public class EzBoardServiceImpl implements EzBoardService {
 		sb.append("</ROWS>");
 		sb.append("</LISTVIEWDATA>");
 		sb.append("</DOCLIST>");
+		
 		return sb.toString();
 	}
 	

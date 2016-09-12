@@ -8,10 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
@@ -357,7 +357,7 @@
 		
 		    function ItemRead_onclick(obj) {
 		        if (Read_FG != "true") {
-		        	alert("읽기 권한이 없습니다.");
+		        	alert(strLang75);
 		            return;
 		        }
 		
@@ -393,7 +393,7 @@
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
-		        	alert("삭제 권한이 없습니다.");
+		        	alert(strLang76);
 		            return;
 		        }
 		
@@ -436,14 +436,14 @@
 		    var setReadFlag = false;
 		    function SetRead_onclick() {
 		        if (Read_FG != "true") {
-		            alert("읽기 권한이 없습니다.");
+		            alert(strLang75);
 					return;
 				}
 		        if (strListInfo == "") {
-		            alert("게시물을 선택해 주세요.");
+		            alert(strLang77);
 					return;
 				}
-		        var ret = confirm("읽음 표시 하시겠습니까?");
+		        var ret = confirm(strLang78);
 				if (ret) {
 				    var arrList = new Array();
 				    var strItemList = "";
@@ -591,11 +591,11 @@
 			<br />
 			<div id="mainmenu">
 			  <ul>
-			    <li><span onclick="SetRead_onclick()">읽음표시</span></li>
+			    <li><span onclick="SetRead_onclick()"><spring:message code="ezBoard.t204"/></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-			    <li><span onClick="refresh_onclick()">새로고침</span></li>
-			    <li><span onClick="ReservationItem_onclick()">예약게시</span></li>  
-			    <li id="right">보기설정<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>      
+			    <li><span onClick="refresh_onclick()"><spring:message code="ezBoard.t205"/></span></li>
+			    <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li>  
+			    <li id="right"><spring:message code="ezBoard.t10020"/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>      
 			  </ul>
 			</div>
 			<script type="text/javascript">
@@ -618,7 +618,7 @@
 		                        <col>
 		                    </colgroup>
 		                     <tr>
-		                        <th>리스트 개수</th>
+		                        <th><spring:message code="ezBoard.t10021"/></th>
 		                        <td>
 		                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 		                                <option value="10">10</option>
@@ -630,7 +630,7 @@
 		                        </td>
 		                    </tr>
 		                    <tr>
-		                        <th>미리보기</th>
+		                        <th><spring:message code="ezBoard.t431"/></th>
 		                        <td>
 		                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 		                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -671,7 +671,7 @@
 		                        </p>
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 		                        <dl class="mail_item">
-		                            <dt>게시자:
+		                            <dt><spring:message code="ezBoard.t425"/>
 		                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
 		                            </dt>
 		                        </dl>
@@ -698,7 +698,7 @@
 		                        </p>
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 		                        <dl class="mail_item">
-		                            <dt>게시자:</dt>
+		                            <dt><spring:message code="ezBoard.t425"/></dt>
 		                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
 		                            </dd>
 		                        </dl>

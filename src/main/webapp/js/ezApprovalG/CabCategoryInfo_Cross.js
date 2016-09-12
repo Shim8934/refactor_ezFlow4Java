@@ -314,11 +314,12 @@ function OpenTaskFindWin(opentype, CompleteFunction) {
 
     if (CrossYN() || NonActiveX == "YES") {
         findtask_cross_dialogArguments[0] = para;
-        if (CompleteFunction == undefined)
-            findtask_cross_dialogArguments[1] = OpenTaskFindWin_Complete;
-        else
-            findtask_cross_dialogArguments[1] = CompleteFunction;
-
+        if (CompleteFunction == undefined){
+        	findtask_cross_dialogArguments[1] = OpenTaskFindWin_Complete;
+        } else {
+        	findtask_cross_dialogArguments[1] = CompleteFunction;
+        }
+        
         if (opentype == undefined)
             DivPopUpShow(330, 205, url);
         else {

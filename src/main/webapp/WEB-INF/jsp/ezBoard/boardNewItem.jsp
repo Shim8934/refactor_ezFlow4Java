@@ -431,19 +431,19 @@
 		        		if(VO.colType == "radio"){
 		        			if(GetRadioVal(VO.tableCol) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.colName1+"를(을) 선택하세요.");
+	                            alert(VO.colName1 + strLang79);
 	                            return;
 		        			}
 		        		}else if(VO.colType == "text"){
 		        			if(document.getElementById(VO.tableCol).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.comName1+"를(을) 선택하세요.");
+	                            alert(VO.comName1 + strLang79);
 	                            return;
 		        			}
 		        		}else if(VO.colType == "check"){
 		        			if(GetCheckVal(VO.tableCol) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.colName1+"를(을) 선택하세요.");
+	                            alert(VO.colName1 + strLang79);
 	                            return;
 		        			}
 		        		}
@@ -771,7 +771,7 @@
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
 		                alert("<spring:message code='ezBoard.t00001' />");
 		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE")
-		                alert("권한이 없습니다.");
+		                alert(strLang73);
 		            else
 		                alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
 		        }
@@ -1266,7 +1266,7 @@
 		                    document.getElementById('txtPhotoFile').value = document.form.file1.value;
 		                }
 		                else
-		                    alert("5장이상 불가");
+		                    alert(strLang23);
 		            }
 		            document.getElementById("boardid").value = pBoardID;
 		            document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
@@ -1277,7 +1277,7 @@
 		            document.form.file1.value = "";
 		        }
 		        else {
-		            alert("업로드 할 파일을 선택하시오");
+		            alert("<spring:message code='ezCommunity.lhj07'/>");
 		        }
 		    }
 		    var fileSize = 0;
@@ -1301,7 +1301,7 @@
 		                return;
 		            }
 		            else {
-		                alert("업로드 중 에러가 발생했습니다." + "\n\n" + result);
+		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
 		            }
 		        }
 		        if (extFlag)

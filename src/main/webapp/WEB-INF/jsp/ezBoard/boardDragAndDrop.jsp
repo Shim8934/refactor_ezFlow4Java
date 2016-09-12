@@ -256,6 +256,6 @@
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple style="width:1px;height:1px"/>
-        <input type="hidden" value="업로드" onclick ="fileupload()" />
+        <input type="hidden" value="upload" onclick ="fileupload()" />
   </body>
 </html>

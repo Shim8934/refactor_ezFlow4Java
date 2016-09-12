@@ -395,7 +395,7 @@
 					window.close();
 	            } else {
 	                if (loadXMLString(xmlhttp.responseText).text == "INACCESSIBLE")
-	                    alert("권한이 없습니다.");
+	                    alert(strLang73);
 	                else
 	                    alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
 	        }

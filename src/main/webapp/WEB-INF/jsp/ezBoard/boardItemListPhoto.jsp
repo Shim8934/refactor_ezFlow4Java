@@ -8,12 +8,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ezBoardSTD.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>

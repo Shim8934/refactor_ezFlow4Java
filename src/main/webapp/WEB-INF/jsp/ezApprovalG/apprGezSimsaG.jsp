@@ -610,7 +610,7 @@
 		            if (field) {
 		                var signWidth = getPixel(SealWidth) + "px";
 		                var signHeight = getPixel(SealHeight) + "px";
-		                strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(SealHref) + "' border=0 embedding='1' ";
+		                strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
 		                strimg = strimg + " width=" + signWidth;
 		                strimg = strimg + " height=" + signHeight + ">";
 		                var field2 = message.GetListItem(fields, "chief");
@@ -660,7 +660,7 @@
 		        if (field) {
 		            var signWidth = getPixel(SealWidth) + "px";
 		            var signHeight = getPixel(SealHeight) + "px";
-		            strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(SealHref) + "' border=0 embedding='1' ";
+		            strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
 		            strimg = strimg + " width=" + signWidth;
 		            strimg = strimg + " height=" + signHeight + ">";
 		            var field2 = message.GetListItem(fields, "chief");
@@ -719,7 +719,7 @@
 		            return;
 		        }
 		        if (!NostampFlag) {
-		            var SealHref = "/files/upload_ApprovalG/SealImg/nostamp.gif";
+		            var SealHref = "/files/upload_approvalG/SealImg/nostamp.gif";
 		            var SealWidth = 30;
 		            var SealHeight = 30;
 		            field = message.GetListItem(fields, "sealsign");
@@ -727,7 +727,7 @@
 		                var signWidth = getPixel(SealWidth) + "px";
 		                var signHeight = getPixel(SealHeight) + "px";
 		
-		                strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(SealHref) + "' border=0 embedding='1' >";
+		                strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' >";
 		                //strimg = strimg + " width=" + signWidth;
 		                //strimg = strimg + " height=" + signHeight + ">";
 		

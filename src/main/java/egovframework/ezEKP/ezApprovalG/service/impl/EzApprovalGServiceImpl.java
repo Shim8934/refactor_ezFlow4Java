@@ -4845,6 +4845,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_pEndDate", pEndDate);
 		map.put("iv_pLang", pLang);
 		map.put("companyID", companyID);
+		
 		return ezApprovalGDAO.getDeptStactics(map);
 	}
 

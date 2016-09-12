@@ -133,6 +133,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		model.addAttribute("func", func);
 		model.addAttribute("subFunc", subFunc);
+		
 		return "ezBoard/boardMain";
 	}
 	
@@ -153,6 +154,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("photoType", photoType);
+		
 		return "ezBoard/boardMainRedirect";
 	}
 	
@@ -170,7 +172,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         loginVO = commonUtil.userInfo(loginCookie);
         
-        String strLang = "1";
+        String strLang = loginVO.getLang();
 		String pUserID = loginVO.getId();
 		String pDeptID = loginVO.getDeptID();
 		String pCompanyID = loginVO.getCompanyID();
@@ -468,6 +470,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String rtv = "";
         String BoardIdList = "";
         int BoardIdListCount = 0;
+        
         for (int i = 0; i < resultList.size(); i++) {
             BoardIdList += resultList.get(i).getBoardId().trim();
             if (i != resultList.size() - 1)
@@ -572,8 +575,7 @@ public class EzBoardController extends EgovFileMngUtil{
             
             if (resultList.get(i).getTreeBoardId() == null || resultList.get(i).getTreeBoardId().equals("")) {
             	sb.append("<DATA4>TREE</DATA4>");
-            }
-            else{
+            } else {
             	sb.append("<DATA4>BOARD</DATA4>");
             }
             sb.append("<DATA5></DATA5>");
@@ -581,8 +583,7 @@ public class EzBoardController extends EgovFileMngUtil{
             
             if (resultList.get(i).getChildCnt() > 0) {
             	sb.append("<ISLEAF>FALSE</ISLEAF>");
-            }
-            else{
+            } else {
             	sb.append("<ISLEAF>TRUE</ISLEAF>");
             }
 
@@ -641,8 +642,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if (boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
         	use_oneLineCount = "YES";
-        }
-        else{
+        } else {
         	use_oneLineCount = "NO";
         }
         
@@ -875,7 +875,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         userInfo = commonUtil.userInfo(loginCookie);
-        userInfo.setLang("1");
+        
         BoardPropertyVO boardInfo = getBoardInfo(boardID,userInfo);
         
         boardVO.setLang(userInfo.getLang());
@@ -1519,7 +1519,8 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA10></DATA10>");
     					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
     					resultXML.append("<TITLE>"+ commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString()) +"</TITLE>");
-    					if (boardVO.getLang().equals("1")) {
+    					
+    					if (commonUtil.getPrimaryData(boardVO.getLang()).equals("1")) {
     						resultXML.append("<WRITERNAME>"+noticeList.get(k).get("WRITERNAME")+"</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>"+noticeList.get(k).get("WRITERDEPTNAME")+"</WRITERDEPTNAME>");
     					} else {
@@ -1633,6 +1634,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption1 = "";
         String orderOption2 = "";
         String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        
         boardVO.setLang(userInfo.getLang());
         boardVO.setType(type);
 
@@ -2079,8 +2081,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue =(String)boardThumbnailList.get(j).get(fieldName);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
-                }else
-                    fieldValue = commonUtil.cleanValue(String.valueOf(boardThumbnailList.get(j).get(fieldName)));
+                } else {
+                	fieldValue = commonUtil.cleanValue(String.valueOf(boardThumbnailList.get(j).get(fieldName)));
+                }
                 
                 resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
                 
@@ -2132,8 +2135,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (boardVO.getOrderCell().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
-                }
-                else{
+                } else {
                     orderOption1 = headerList.get(i).getColName() + " DESC ";
                     orderOption2 = headerList.get(i).getColName() + " ";
                 }
@@ -2206,8 +2208,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue =(String)boardSearchList.get(j).get(fieldName);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
-                }else
-                    fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
+                } else {
+                	fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
+                }
                 
                 resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
                 
@@ -2337,8 +2340,9 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue =(String)boardList.get(j).get(fieldName);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
-                }else
-                    fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
+                } else {
+                	fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
+                }
                 
                 resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
                 
@@ -2388,8 +2392,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (boardVO.getOrderCell().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
-                }
-                else{
+                } else {
                     orderOption1 = headerList.get(i).getColName() + " DESC ";
                     orderOption2 = headerList.get(i).getColName() + " ";
                 }
@@ -2491,7 +2494,8 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
     					resultXML.append("<DATA12>"+noticeList.get(k).get("MAINCONTENT")+"</DATA12>");
     					resultXML.append("<TITLE>"+ commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString()) +"</TITLE>");
-    					if (boardVO.getLang().equals("1")) {
+    					
+    					if (commonUtil.getPrimaryData(boardVO.getLang()).equals("1")) {
     						resultXML.append("<WRITERNAME>"+noticeList.get(k).get("WRITERNAME")+"</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>"+noticeList.get(k).get("WRITERDEPTNAME")+"</WRITERDEPTNAME>");
     					} else {
@@ -2738,8 +2742,7 @@ public class EzBoardController extends EgovFileMngUtil{
             for (int ch = 0; ch < deptPath.split(",").length; ch++) {
                 if (ch == 0) {
                 	deptPathOrgan += deptPath.split(",")[ch].trim();
-                }
-                else{
+                } else {
                 	deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
                 }
             }
@@ -2755,16 +2758,14 @@ public class EzBoardController extends EgovFileMngUtil{
                     if (result > 0) {
                         rtv = false;
                         break;
-                    }
-                    else{
+                    } else {
                         rtv = true;
                     }
                 } else {
                     if (result > 0) {
                         rtv = true;
                         break;
-                    }
-                    else{
+                    } else {
                         rtv = false;
                         break;
                     }
@@ -2820,7 +2821,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	boardAttr = ezBoardAdminService.getBoardAttribute(boardID);
         	boardAttrCount = boardAttr.size();
         	
-            if (!userInfo.getLang().equals("1")) {
+            if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
             	extenLang = "2";
             }
         }
@@ -2987,7 +2988,7 @@ public class EzBoardController extends EgovFileMngUtil{
         List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
         if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
         	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID);
-        	if (userInfo.getLang().equals("1")) {
+        	if (commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
         		extenLang = "2";
         	}
         }
@@ -3208,11 +3209,11 @@ public class EzBoardController extends EgovFileMngUtil{
                         pMode = "New";
                         doc.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
                     }
-                    ret = insertNewItem(doc, pMode, realPath);
+                    ret = insertNewItem(doc, pMode, realPath, userInfo);
                 }
             }
         } else {
-            ret = insertNewItem(doc, pMode, realPath);
+            ret = insertNewItem(doc, pMode, realPath, userInfo);
         }
 
         return "<RESULT>" + ret + "</RESULT>";
@@ -3221,7 +3222,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시물저장 실행 Method
 	 */
-	public String insertNewItem(Document doc, String pMode, String realPath) throws Exception{
+	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
@@ -3329,7 +3330,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (!pMode.equals("copy")) {
 			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if (saveMHTResult == false) {
-				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
 			}
 		}
 		
@@ -3350,10 +3351,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			ezBoardService.brdNewItem(boardListVO);
 		}
-		//TODO: 한글 코드화
+		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
 			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath)) {
-				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			boardListVO.setHasAttach("1");
 		} else {
@@ -3930,7 +3931,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/copyItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String boardCopyItem(HttpServletRequest request) throws Exception{
+	public String boardCopyItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String orgItemIDList = "";
 		String orgBoardID = "";
 		String destBoardID = "";
@@ -3943,7 +3946,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		destBoardID = request.getParameter("destBoardID");
 		
 		for (int i = 0; i < orgItemIDList.split(";").length; i++) {
-			result = copyItem(orgItemIDList.split(";")[i], orgBoardID.split(";")[i], "{"+ UUID.randomUUID() +"}", destBoardID, uploadFilePath, realPath);
+			result = copyItem(orgItemIDList.split(";")[i], orgBoardID.split(";")[i], "{"+ UUID.randomUUID() +"}", destBoardID, uploadFilePath, realPath, userInfo);
 		}
 		
 		return "<RESULT>" + result + "</RESULT>";
@@ -3952,7 +3955,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시물복사 실행 Method
 	 */
-	public String copyItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath) throws Exception{
+	public String copyItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception{
 		String result = "";
 		BoardListVO boardLisitVO = ezBoardService.getCopyItem(orgItemID,orgBoardID);
 		//MHT 파일위치 변경
@@ -4028,7 +4031,7 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("</NODE>");
         sb.append("</NODES>");
 
-        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath);
+        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
         
         if (result.equals("OK")) {
         	ezBoardService.updateCopyItem(destItemID);
@@ -4127,7 +4130,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/moveItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String boardMoveItem(HttpServletRequest request) throws Exception{
+	public String boardMoveItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String orgItemIDList = "";
 		String orgBoardID = "";
 		String destBoardID = "";
@@ -4140,7 +4145,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		destBoardID = request.getParameter("destBoardID");
 		
 		for (int i = 0; i < orgItemIDList.split(";").length; i++) {
-			result = moveItem(orgItemIDList.split(";")[i], orgBoardID.split(";")[i], "{"+ UUID.randomUUID() +"}", destBoardID, uploadFilePath, realPath);
+			result = moveItem(orgItemIDList.split(";")[i], orgBoardID.split(";")[i], "{"+ UUID.randomUUID() +"}", destBoardID, uploadFilePath, realPath, userInfo);
 		}
 		
 		return "<RESULT>" + result + "</RESULT>";
@@ -4149,7 +4154,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시물이동 실행 표출 Method
 	 */
-	public String moveItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath) throws Exception{
+	public String moveItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception{
 		String result = "";
 		BoardListVO boardLisitVO = ezBoardService.getCopyItem(orgItemID,orgBoardID);
 		//MHT 파일위치 변경
@@ -4225,7 +4230,7 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("</NODE>");
         sb.append("</NODES>");
 
-        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath);
+        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
         
         if (result.equals("OK")) {
         	ezBoardService.updateMoveItem(destItemID, orgItemID);
@@ -4400,7 +4405,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID);
 			
-			if (!userInfo.getLang().equals("1")) {
+			if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
 				extenLang = "2";
 			}
 			model.addAttribute("attributeList", attributeList);
@@ -4868,7 +4873,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (userInfo.getLang().equals("1")) {
+		if (commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
 			boardInfo.setBoardName(boardInfo.getBoardName1());
 		} else {
 			boardInfo.setBoardName(boardInfo.getBoardName2());
@@ -5092,7 +5097,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID[0]);
 		
 		String result = "";
-		result = newItemPhoto(doc, mode, realPath);
+		result = newItemPhoto(doc, mode, realPath, userInfo);
 		
 		if (result.equals("OK")) {
 			ezBoardService.setMainImageID(mainImageID, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "1");
@@ -5104,7 +5109,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 포토게시물저장 실행 표출 Method
 	 */
-	public String newItemPhoto(Document doc, String mode, String realPath) throws Exception{
+	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo) throws Exception{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
@@ -5180,7 +5185,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (!mode.equals("copy")) {
 			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath);
 			if (saveMHTResult == false) {
-				return "ERROR:MHT 파일을 저장하는데 실패하였습니다.";
+				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
 			}
 		}
 		
@@ -5209,7 +5214,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
 			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath)) {
-				return "ERROR:첨부 파일 정보를 저장하는데 실패하였습니다.";
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			boardListVO.setHasAttach("1");
 		} else {
@@ -6114,6 +6119,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pOrderOption = xmlDom.getElementsByTagName("orderOption").item(0).getTextContent();
 		
 		String boardXML = ezBoardService.getThumbListXML(userInfo.getId(), pBoardType, pBoardID, pPageNum, pOrderCell, pOrderOption, userInfo.getLang());
+		
 		return boardXML;
 	}
 	

@@ -29,20 +29,20 @@ var strLang24 = "はイメージファイル形式ではありません。";
 var strLang25 = "正常的なアップロードの時、該当するファイル名を入力する。(バグ登録必要)";
 // \ezBoardSTD\js\ErrorHandler.js			
 // \ezBoardSTD\js\kaoni_ActiveX.js
-var strLang26 = "返信のある投稿には移動できません。"
-var strLang27 = "キャンセルしました。"
+var strLang26 = "返信のある投稿には移動できません。";
+var strLang27 = "キャンセルしました。";
 
-var strLang39 = "以前"
-var strLang40 = "次"
-var strLang41 = "総 "
-var strLang42 = "件"
-var strLang43 = "掲示物がありません。"
+var strLang39 = "以前";
+var strLang40 = "次";
+var strLang41 = "総 ";
+var strLang42 = "件";
+var strLang43 = "掲示物がありません。";
 
 var strLang44 = "画像を追加してください。";
 var strLang45 = "メインの写真を選択";
 var strLang46 = "写真の補完を追加";
 var strLang46 = "エラーが発生しました。";
-var strLang48 = "削除しますか。"
+var strLang48 = "削除しますか。";
 var strLang49 = "ひとつ選ぶ";
 var strLang50 = "修正しました。";
 var strLang51 = "エラーを修正";

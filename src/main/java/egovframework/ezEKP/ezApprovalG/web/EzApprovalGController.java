@@ -4626,7 +4626,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 정리대상목록 편철확인 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/endCabProduce.do")
+	@RequestMapping(value = "/ezApprovalG/endCabProduce.do", method = RequestMethod.GET)
 	public String endCabProduce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -4643,11 +4643,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 정리대상목록 편철확인 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/endCabProduce.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/endCabProduce.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String endCabProduce(HttpServletRequest request) throws Exception{
 		String companyID = request.getParameter("companyID");
-		String cabClassNo = request.getParameter("cabClassNo");
+		String cabClassNo = request.getParameter("cabClassNO");
 		String flag = request.getParameter("flag");
 		
 		String result = ezApprovalGService.endCabProduce(cabClassNo, flag, companyID);

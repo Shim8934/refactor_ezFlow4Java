@@ -155,7 +155,7 @@
 	                }
 	            }
 	            else{
-	                alert("사진추가 도중 오류 발생");
+	                alert(strLang74);
 	                return;
 	            }
 	            
