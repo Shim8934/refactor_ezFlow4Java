@@ -216,7 +216,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * 게시판 html -> mht 변환 실행 Method
 	 */
 	@Override
-	public String startHtml2Mht(String m_strHTML, String realPath, LoginVO userInfo) throws Exception{
+	public String startHtml2Mht(String m_strHTML, String realPath) throws Exception{
 		StringBuilder m_strMHT = new StringBuilder();
 		String[] strHtml = {m_strHTML};
 		String m_strBoundary = "";
@@ -245,7 +245,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             
             return m_strMHT.toString();
         } else {
-        	return egovMessageSource.getMessage("main.t0603", userInfo.getLocale());
+        	return egovMessageSource.getMessage("main.t0603",  new Locale(globals.getProperty("Globals.language")));
         }
     }
 

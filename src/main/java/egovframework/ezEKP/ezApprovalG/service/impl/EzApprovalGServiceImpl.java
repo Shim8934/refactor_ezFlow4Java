@@ -4248,7 +4248,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String tempHtml = doc.outerHtml();
 		
-		convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo);
+		convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath);
 		tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
 		FileUtils.copyFile(new File(formURL), new File(tempMht));
 		

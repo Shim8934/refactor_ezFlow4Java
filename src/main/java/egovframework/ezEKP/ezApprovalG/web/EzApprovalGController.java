@@ -600,7 +600,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String dirPath = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
+		String dirPath = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "Doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0,4) + commonUtil.separator;
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
