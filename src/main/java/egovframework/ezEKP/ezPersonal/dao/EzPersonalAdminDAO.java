@@ -45,6 +45,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public PersonalQuickLinkVO getQuickLink(String v_QUICKLINKID) throws Exception {
 		return (PersonalQuickLinkVO) select("EzPersonalAdmin.EZSP_GETQUICKLINK", v_QUICKLINKID);
 	}
+	
+	public PersonalPopupVO getPopupInfo(String v_pItemSeq) throws Exception {
+		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", v_pItemSeq);
+	}
 
 	public int getNoticeCount(Map<String, Object> map) throws Exception {
 		select("EzPersonalAdmin.EZSP_GETNOTICECOUNT", map);
@@ -84,8 +88,16 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		delete("EzPersonalAdmin.EZSP_DELETEPOLL", v_pItemSeq);
 	}
 
-	public PersonalPopupVO getPopupInfo(String v_pItemSeq) throws Exception {
-		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", v_pItemSeq);
+
+	
+
+	public void insertPopup(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_INSERTPOPUP", map);
+		
+	}
+
+	public void updatePopup(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_UPDATEPOPUP", map);
 	}
 
 

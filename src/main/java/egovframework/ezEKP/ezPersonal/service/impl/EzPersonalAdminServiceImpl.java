@@ -283,12 +283,34 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 
 	@Override
 	public void insertPopup(PersonalPopupVO vo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", vo.getCompanyID());
+		map.put("v_pStartDate", vo.getStartDate());
+		map.put("v_pEndDate", vo.getEndDate());
+		map.put("v_pWidth", vo.getWidth());
+		map.put("v_pHeight", vo.getHeight());
+		map.put("v_pPosition", vo.getPosition());
+		map.put("v_pTitle", vo.getTitle());
+		map.put("v_pTitle2", vo.getTitle2());
+		map.put("v_pContent", vo.getContent());
 		
+		ezPersonalAdminDAO.insertPopup(map);
 	}
 
 	@Override
 	public void updatePopup(PersonalPopupVO vo) throws Exception {
-				
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemSeq", vo.getItemSeq());
+		map.put("v_pStartDate", vo.getStartDate());
+		map.put("v_pEndDate", vo.getEndDate());
+		map.put("v_pWidth", vo.getWidth());
+		map.put("v_pHeight", vo.getHeight());
+		map.put("v_pPosition", vo.getPosition());
+		map.put("v_pTitle", vo.getTitle());
+		map.put("v_pTitle2", vo.getTitle2());
+		map.put("v_pContent", vo.getContent());
+		
+		ezPersonalAdminDAO.updatePopup(map);
 	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {

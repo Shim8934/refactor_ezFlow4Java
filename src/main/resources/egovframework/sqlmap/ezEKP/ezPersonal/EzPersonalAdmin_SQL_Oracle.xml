@@ -16,8 +16,6 @@
 	</resultMap>
 	
 	<resultMap class="PersonalPopupVO" id="personalPopupVO">
-<!-- 		<result property="companyID"					column="COMPANYID"				columnIndex="1"/> -->
-<!-- 		<result property="itemSeq"						column="ITEMSEQ"				columnIndex="2"/> -->
 		<result property="title"						column="TITLE"					columnIndex="1"/>
 		<result property="title2"						column="TITLE2"					columnIndex="2"/>
 		<result property="content"						column="CONTENT"				columnIndex="3"		javaType="String"	jdbcType="CLOB"/>
@@ -39,7 +37,6 @@
 			{CALL EZPERSONAL.EZSP_GETPOPUPINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
-	
 	
 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
 		<![CDATA[
@@ -116,6 +113,18 @@
 	<procedure id="EzPersonalAdmin.EZSP_INSERTPOLL"				parameterClass="Map">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_INSERTPOLL(#v_pCompanyID#, #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_INSERTPOPUP"			parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_INSERTPOPUP(#v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_UPDATEPOPUP"			parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_UPDATEPOPUP(#v_pItemSeq#, #v_pStartDate#, #v_pEndDate#, #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
 		]]>	
 	</procedure>
 	

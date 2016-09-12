@@ -26,7 +26,6 @@
 	        window.onload = window_onload;
 	        function window_onload() {
 	            //compid = window.dialogArguments;
-	
 	            initdatepicker();
 	
 	            if (startdate == "" && enddate == "") {
@@ -80,8 +79,8 @@
 			    idDatepicker.daynamesLong = "<spring:message code = 'ezPersonal.t24' />";
 			    idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
 			    idDatepicker.monthnamesLong = "<spring:message code = 'ezPersonal.t23' />";
-<%-- 			    idDatepicker.isoDateUTF = "<%=IsoUTFDate(_startdate)%>"; --%>
-<%-- 			    idDatepicker.isoEndDateUTF = "<%=IsoUTFDate(_enddate)%>"; --%>
+			    idDatepicker.isoDateUTF = "<c:out value = '${isoUTFstartDate}' />";
+			    idDatepicker.isoEndDateUTF = "<c:out value = '${isoUTFEndDate}' />";
 			
 			    idDatepicker.ready();
 			}
@@ -147,16 +146,6 @@
 					return;
 				}
 				
-	            /* var objNode, objRoot;
-	            var xmlDom = createXmlDom();
-	            var xmlHTTP = createXMLHttpRequest();
-	            
-	            objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-	            
-	            createNodeAndInsertText(xmlDom, objNode, "COMPID", compid);
-	            createNodeAndInsertText(xmlDom, objNode, "ITEMSEQ", itemseq);
-	            createNodeAndInsertText(xmlDom, objNode, "TITLE", Title.value);
-	            createNodeAndInsertText(xmlDom, objNode, "TITLE2", Title2.value); */
 	            
 				var tmpStartDateTime = idDatepicker.startFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.startMonth()) + 1)) + "-"
@@ -169,31 +158,6 @@
 								+ CheckTimeRevision(idDatepicker.endHours()) + ":"
 								+ CheckTimeRevision(idDatepicker.endMinutes()) + ":01";
 								
-	            /* createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
-	            createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
-	            createNodeAndInsertText(xmlDom, objNode, "WIDTH", wWidth.value);
-	            createNodeAndInsertText(xmlDom, objNode, "HEIGHT", wHeight.value);
-	            createNodeAndInsertText(xmlDom, objNode, "POSITION", document.getElementById("selectPos").value);
-				createNodeAndInsertText(xmlDom, objNode, "CONTENT",  message.GetEditorContent());
-				
-				xmlHTTP.open("POST", "SavePopUp.aspx", false);
-				xmlHTTP.send(xmlDom);
-				
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-					alert(xmlHTTP.responseText);
-					alert("<spring:message code = 'ezPersonal.t255' />");
-				} else {
-					if (itemseq != "") {
-						alert("<spring:message code = 'ezPersonal.t256' />");
-					} else {
-						alert("<spring:message code = 'ezPersonal.t257' />");
-					}
-					
-				    window.opener.company_change();
-					window.close();
-				} */
-				
-				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/savePopup.do",
@@ -211,7 +175,6 @@
 		        	dataType : "text",
 		        	success : function (result) {
 		        		if (result != "OK") {
-		        			alert(result);
 							alert("<spring:message code = 'ezPersonal.t255' />");
 		        		} else {
 		        			if (itemseq != "") {

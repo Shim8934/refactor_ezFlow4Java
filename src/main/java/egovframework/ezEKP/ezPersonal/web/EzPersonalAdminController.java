@@ -603,6 +603,7 @@ public class EzPersonalAdminController {
 			itemSeq = request.getParameter("itemSeq");
 			
 			vo = ezPersonalAdminService.getPopupInfo(itemSeq);
+			vo.setItemSeq(Integer.parseInt(itemSeq));
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
 		} else {
 			vo.setWidth(300);
@@ -613,6 +614,8 @@ public class EzPersonalAdminController {
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("initDate", initDate);
+		model.addAttribute("isoUTFstartDate", commonUtil.isoUTFDate(vo.getStartDate()));
+		model.addAttribute("isoUTFEndDate", commonUtil.isoUTFDate(vo.getEndDate()));
 		model.addAttribute("personalPopupVO", vo);
 		
 		return "admin/ezPersonal/personalAddPopupCK";
@@ -646,7 +649,7 @@ public class EzPersonalAdminController {
 			
 			return "OK";
 		} catch (Exception e) {
-			return "ERROR : " + e.getMessage();
+			return "ERROR";
 		}
 	}
 }

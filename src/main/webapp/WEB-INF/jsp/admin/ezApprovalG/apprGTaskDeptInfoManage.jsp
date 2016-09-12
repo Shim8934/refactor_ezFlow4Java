@@ -98,7 +98,6 @@
 		        var pDeptID = nodedata.GetNodeData("CN");
 		        var pDeptName = nodedata.GetNodeData("VALUE");
 		        var pDeptName2 = nodedata.GetNodeData("DISPLAYNAME2");
-alert(pDeptName2);
 	
 		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t800' />";
