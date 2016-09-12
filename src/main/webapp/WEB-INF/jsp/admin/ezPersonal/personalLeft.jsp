@@ -47,7 +47,7 @@
 			            break;
 
 			        case 7:
-			            url = "/myoffice/ezPersonal/WebPart/EmployeeofMonth.aspx";
+			            url = "/admin/ezPersonal/employeeOfMonth.do";
 			            break;
 
 			        case 8:

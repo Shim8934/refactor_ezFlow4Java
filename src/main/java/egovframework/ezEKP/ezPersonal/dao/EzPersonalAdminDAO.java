@@ -74,14 +74,22 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	
 	public void setQuickLinkACL(Map<String, Object> map) throws Exception {
 		insert("EzPersonalAdmin.EZSP_SETQUICKLINK_ACL", map);
-	}	
+	}
+	
+	public void insertPopup(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_INSERTPOPUP", map);
+	}
+	
+	public void insertPoll(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_INSERTPOLL", map);
+	}
 
 	public void updateNotice(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
 	}
 
-	public void insertPoll(Map<String, Object> map) throws Exception {
-		insert("EzPersonalAdmin.EZSP_INSERTPOLL", map);
+	public void updatePopup(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_UPDATEPOPUP", map);
 	}
 
 	public void deletePoll(String v_pItemSeq) throws Exception {
@@ -91,13 +99,12 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 
 	
 
-	public void insertPopup(Map<String, Object> map) throws Exception {
-		insert("EzPersonalAdmin.EZSP_INSERTPOPUP", map);
-		
-	}
+	
 
-	public void updatePopup(Map<String, Object> map) throws Exception {
-		update("EzPersonalAdmin.EZSP_UPDATEPOPUP", map);
+	
+
+	public void deletePopup(String v_pItemSeq) {
+		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
 	}
 
 

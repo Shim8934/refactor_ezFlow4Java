@@ -313,6 +313,11 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 		ezPersonalAdminDAO.updatePopup(map);
 	}
 
+	@Override
+	public void deletePopup(String itemSeq) throws Exception {
+		ezPersonalAdminDAO.deletePopup(itemSeq);
+	}
+
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PMODE", mode);

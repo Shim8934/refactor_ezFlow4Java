@@ -83,7 +83,7 @@ public class EzPersonalAdminController {
 	}
 	
 	/**
-	 * 초기화면 공지사항 메뉴 호출 함수
+	 * 초기화면 공지사항메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNotice.do")
 	public String manageNotice (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -633,6 +633,10 @@ public class EzPersonalAdminController {
 		return "admin/ezPersonal/personalAddPopupCKContent";
 	}
 	
+	/**
+	 * 팝업공지 공지사항 등록,수정 실행 함수
+	 */
+	
 	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePopup(PersonalPopupVO vo) throws Exception {
@@ -641,7 +645,7 @@ public class EzPersonalAdminController {
 		}
 		
 		try {
-			if (vo.getItemSeq().equals("")) {
+			if (vo.getItemSeq() == null) {
 				ezPersonalAdminService.insertPopup(vo);
 			} else {
 				ezPersonalAdminService.updatePopup(vo);
@@ -651,5 +655,60 @@ public class EzPersonalAdminController {
 		} catch (Exception e) {
 			return "ERROR";
 		}
+	}
+	
+	/**
+	 * 팝업공지 공지사항 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/delPopup.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String deletePopup(HttpServletRequest request) throws Exception {
+		String itemSeq = request.getParameter("itemSeq");
+		
+		try {
+			ezPersonalAdminService.deletePopup(itemSeq);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROE";
+		}
+	}
+	
+	/**
+	 * 팝업공지 공지사항 공지사항 본문화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/showPopup.do")
+	public String showPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PersonalPopupVO vo, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemSeq = request.getParameter("itemSeq");
+		String title = "";
+		
+		vo = ezPersonalAdminService.getPopupInfo(itemSeq);
+
+		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+		
+		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
+			title = vo.getTitle2();
+		} else {
+			title = vo.getTitle();
+		}
+		
+		model.addAttribute("itemSeq", itemSeq);
+		model.addAttribute("title", title);
+		model.addAttribute("content", content);
+		
+		return "admin/ezPersonal/personalShowPopup";
+	}
+	
+	/**
+	 * 팝업공지 이달의우수사원메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
+	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+//		ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID());
+		
+		return "admin/ezPersonal/personalEmployeeOfMonth";
 	}
 }

@@ -43,12 +43,14 @@ public interface EzPersonalAdminService {
 
 	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
 
-	
-
-	
-
 	void insertPopup(PersonalPopupVO vo) throws Exception;
 
-	void updatePopup(PersonalPopupVO vo) throws Exception;
+	void updatePopup(PersonalPopupVO vo) throws Exception;	
+
+	
+
+
+
+	void deletePopup(String itemSeq) throws Exception;
 
 }

@@ -140,6 +140,13 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzPersonalAdmin.EZSP_DELETEPOPUP"			parameterClass="String">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_DELETEPOPUP(#v_pItemSeq#)}
+		]]>	
+	</procedure>
+	
+	
 	
 	
 	

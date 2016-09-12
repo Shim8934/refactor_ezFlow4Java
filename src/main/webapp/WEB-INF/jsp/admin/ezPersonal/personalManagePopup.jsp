@@ -35,13 +35,7 @@
 		        }
 		    });
 		    
-		    function makelist() {
-// 		        xmlhttp = null;
-// 		        xmlhttp = createXMLHttpRequest();
-// 		        xmlhttp.open("POST", "aspx/ManagePopupList.aspx?id=" + escape(document.getElementById("ListCompany").value), true);
-// 		        xmlhttp.onreadystatechange = event_PopupList;
-// 		        xmlhttp.send();
-		        
+		    function makelist() {		        
 		        $.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/managePopupList.do",
@@ -110,8 +104,30 @@
 		                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
+		    }
+		    
+		    function mod_popup(popup_number) {
+		        var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 620) / 2;
+		        var pLeft = (pwidth - 820) / 2;
+		        var compid = document.getElementById("ListCompany").value;
+	
+		        if (CrossYN()) {
+		            if (pUse_Editor == "TAGFREE") {
+		                window.open("AddPopUp_TFX.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+		            } else {
+		                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+		            }
+		        } else {
+		            if (pUse_Editor == "TAGFREE") {
+		                window.open("AddPopUp_TFI.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+		            } else {
+		                window.open("AddPopUp.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+		            }
+		        }
 		        //if (typeof (rtnValue) != "undefined")
-		        //    company_change();
+		        //    makelist();
 		    }
 	
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
@@ -156,7 +172,7 @@
 		            wHorizontal = 0;
 		        }
 		        
-		        window.open("/myoffice/ezPersonal/PopUp/ShowPopUp.aspx?itemseq=" + popup_number +
+		        window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number +
 		            "&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 		    }
 	
@@ -165,44 +181,21 @@
 		            return;
 		        }
 		        
-		        var xmlDom = createXmlDom();
-		        var xmlHTTP = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATAlist");
-		        createNodeAndInsertText(xmlDom, objNode, "DATA", popup_number);
-		        xmlHTTP.open("POST", "DelPopUp.aspx", false);
-		        xmlHTTP.send(xmlDom);
-	
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-		            alert("<spring:message code = 'ezPersonal.t160' />");
-		        } else {
-		            alert("<spring:message code = 'ezPersonal.t161' />");
-		            makelist();
-		        }
-		    }
-	
-		    function mod_popup(popup_number) {
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 620) / 2;
-		        var pLeft = (pwidth - 820) / 2;
-		        var compid = document.getElementById("ListCompany").value;
-	
-		        if (CrossYN()) {
-		            if (pUse_Editor == "TAGFREE") {
-		                window.open("AddPopUp_TFX.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            } else {
-		                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            }
-		        } else {
-		            if (pUse_Editor == "TAGFREE") {
-		                window.open("AddPopUp_TFI.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            } else {
-		                window.open("AddPopUp.aspx?companyID=" + compid + "&itemseq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            }
-		        }
-		        //if (typeof (rtnValue) != "undefined")
-		        //    makelist();
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/delPopup.do",
+		        	async : false,
+		        	data : {itemSeq : popup_number},
+		        	dataType : "text",
+		        	success : function (result) {
+		        		if (result != "OK") {
+		        			alert("<spring:message code = 'ezPersonal.t160' />");
+		        		} else {
+		        			alert("<spring:message code = 'ezPersonal.t161' />");
+				            makelist();
+		        		}
+		        	}
+		        });
 		    }
 		</script>
 	</head>
