@@ -141,7 +141,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
 //        }
         // reform - end
-        String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath);
+        String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo);
         
         return mhtData;
 	}

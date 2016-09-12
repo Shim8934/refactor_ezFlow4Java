@@ -7,7 +7,7 @@ public class ApprGDeliveryListVO {
 	private String receiptDate;
 	private String organID;
 	private String organ;
-	private String organs2;
+	private String organ2;
 	private String docNumber;
 	private String manageDeptID;
 	private String manageDept;
@@ -55,11 +55,11 @@ public class ApprGDeliveryListVO {
 	public void setOrgan(String organ) {
 		this.organ = organ;
 	}
-	public String getOrgans2() {
-		return organs2;
+	public String getOrgan2() {
+		return organ2;
 	}
-	public void setOrgans2(String organs2) {
-		this.organs2 = organs2;
+	public void setOrgan2(String organ2) {
+		this.organ2 = organ2;
 	}
 	public String getDocNumber() {
 		return docNumber;

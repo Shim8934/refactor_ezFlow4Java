@@ -1657,7 +1657,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listFlag = request.getParameter("listFlag");
 		String listType = request.getParameter("listType");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang());
+		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang(),userInfo);
 		
 		return result;
 	}
@@ -2187,7 +2187,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String result = ezApprovalGService.doProcess(aprState, xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
-				xmlDom.getElementsByTagName("PUSERNAME2").item(0).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang()); 
+				xmlDom.getElementsByTagName("PUSERNAME2").item(0).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo); 
 		
 		return result;
 	}
@@ -2740,7 +2740,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
-				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang());
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang(),userInfo);
 		
 		return result;
 	}
@@ -2758,7 +2758,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
-				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang());
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		return result;
 	}
@@ -2776,7 +2776,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
-				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang());
+				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		return result;
 	}
@@ -4371,7 +4371,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         String result = ezApprovalGService.getGamSaSearchDocList(containerID, userID, deptID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY,
         		draftToYEAR, draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY,
-        		myApprToYEAR, myApprToMONTH, myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang());
+        		myApprToYEAR, myApprToMONTH, myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo);
         
 		return result;
 	}
@@ -4711,7 +4711,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int k = 0; k < xmlDom.getElementsByTagName("DOCID").getLength(); k++) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();
-				rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request);
+				rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
 				
 				if (rtnVal.equals("ERROR")) {
 					falseCnt++;
@@ -4872,7 +4872,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		
 		String dirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
-		String result = ezApprovalGService.doSendOfferApprove(docID, orgDocID, userID, userName, userName2, deptID, dirPath, "", userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezApprovalGService.doSendOfferApprove(docID, orgDocID, userID, userName, userName2, deptID, dirPath, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		return result;
 	}

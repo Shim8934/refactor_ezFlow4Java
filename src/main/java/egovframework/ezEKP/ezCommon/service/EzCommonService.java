@@ -13,7 +13,7 @@ public interface EzCommonService {
 	
 	public String wpCountLoginTime(String userID) throws Exception;
 	
-	public String startHtml2Mht(String strHTML, String realPath) throws Exception;
+	public String startHtml2Mht(String strHTML, String realPath, LoginVO userInfo) throws Exception;
 	
 	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request) throws Exception;
 	

@@ -286,7 +286,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
-		String result=ezApprovalGService.getRecordHistory(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.getRecordHistory(xmlDom,userInfo);
 		Document xmlResult = commonUtil.convertStringToDocument(result);
 		
 		if (xmlResult.getElementsByTagName("ROW") != null){
@@ -633,7 +633,7 @@ public class EzApprovalGarchiveController {
 	public String getCabinetList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.getCabinetList(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.getCabinetList(xmlDom,userInfo);
 		return result;
 	}
 	

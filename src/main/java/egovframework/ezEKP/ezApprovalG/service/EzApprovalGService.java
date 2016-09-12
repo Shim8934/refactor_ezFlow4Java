@@ -132,7 +132,7 @@ public interface EzApprovalGService {
 	
 	public String deleteAttachFileInfo(String docID, String companyID, String lang) throws Exception;
 	
-	public String getListInfoXml(String listFlag, String listType, String companyID, String lang) throws Exception;
+	public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
 	public String getRecordList(Document doc, String lang) throws Exception;
 	
@@ -173,7 +173,7 @@ public interface EzApprovalGService {
 	public String deleteTmpDocInfo(String userID, String sn, String path, String companyID, String lang) throws Exception;
 	
 	public String doProcess(String aprState, String docID, String userID, String userName, String userName2, String dirPath, String deptID, String html,
-			Document strXML, String proxyUserID, String companyID, String lang) throws Exception;
+			Document strXML, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
 	public String getTotalAttachSize(String docID, String companyID) throws Exception;
 	
@@ -262,7 +262,7 @@ public interface EzApprovalGService {
 	public String getGamSaSearchDocList(String containerID, String userID, String deptID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR,
 			String draftFromMONTH, String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR,
 			String apprToMONTH, String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY,
-			String draftDeptName, String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
+			String draftDeptName, String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, LoginVO userInfo) throws Exception;
 	
 	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID) throws Exception;
 	
@@ -282,11 +282,11 @@ public interface EzApprovalGService {
 	
 	public String endCabProduce(String cabClassNo, String flag, String companyID) throws Exception;
 	
-	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request) throws Exception;
+	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request, LoginVO userInfo) throws Exception;
 	
 	public String reqDelayCabEndY(String cabClassList, String flag, String companyID) throws Exception;
 	
-	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang) throws Exception;
+	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
 	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception;
 	
@@ -318,7 +318,7 @@ public interface EzApprovalGService {
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang) throws Exception;
 
-	public String getRecordHistory(Document xmlDom, String lang) throws Exception;
+	public String getRecordHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
 	public String moveRecord(Document xmlDom, String lang) throws Exception;
 
@@ -332,7 +332,7 @@ public interface EzApprovalGService {
 
 	public String registerRecord(Document xmlDom)throws Exception;
 
-	public String getCabinetList(Document xmlDom, String lang)throws Exception;
+	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 
 	public String getCabinetDetailInfo(Document xmlDom) throws Exception;
 
