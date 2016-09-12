@@ -448,17 +448,19 @@ public class EzPortalController extends EgovFileMngUtil {
 				List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID());
 				
 				String popUp = "";
+				int popUpWidth = 0;
+				int popUpHeight = 0;
+				String popUpPosition = "";
 				for (int i=0; i<infoList.size(); i++) {
 					int itemSeq = infoList.get(i).getItemSeq();
 					for (Cookie cookie : req.getCookies()) {
 						if (!cookie.getName().equals("POPUP_"+itemSeq)) {
-							int popUpWidth = infoList.get(i).getWidth();
-							int popUpHeight = infoList.get(i).getHeight();
-							String popUpPosition = infoList.get(i).getPosition();
-							
-							popUp += "openPopup(" + itemSeq + ", " + popUpWidth + ", " + popUpHeight + ", " + popUpPosition + ");";
+							popUpWidth = infoList.get(i).getWidth();
+							popUpHeight = infoList.get(i).getHeight();
+							popUpPosition = infoList.get(i).getPosition();
 						}
 					}
+					popUp += "openPopup(" + itemSeq + ", " + popUpWidth + ", " + popUpHeight + ", " + popUpPosition + ");";
 				}
 				
 				if (popUp != null && !popUp.equals("")) {
