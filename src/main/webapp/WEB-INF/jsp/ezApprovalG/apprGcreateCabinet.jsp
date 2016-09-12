@@ -205,7 +205,7 @@
 		      <table style="border:0;border-collapse:collapse; border-spacing:0;padding:0px;width:100%;">
 		        <tr> 
 		          <td id="tdSpecialFlag">&nbsp;</td> 
-		          <td style="width:70px;"><a  class="imgbtn" name="btnAddSC" id="btnAddSC"><span onClick="return btnAddSpecialCatalog_onclick()()"><spring:message code='ezApprovalG.t268'/></span></a></td>
+		          <td style="width:70px;"><a  class="imgbtn" name="btnAddSC" id="btnAddSC"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t268'/></span></a></td>
 		        </tr>
 		      </table>    </td>
 		  </tr>
