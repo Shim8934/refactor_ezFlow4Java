@@ -9,7 +9,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=9" />
     	<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-    	<script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
+    	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript">
 	 		$(document).ready(function() {	 		

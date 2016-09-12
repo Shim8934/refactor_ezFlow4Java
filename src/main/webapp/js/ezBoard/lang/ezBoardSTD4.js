@@ -54,3 +54,15 @@ var strLang54 = "的文件上传限制的扩展。";
 var strLang60 = "承认";
 var strLang61 = "气氛";
 var strLang62 = "伴侣";
+
+//2016 추가
+
+var strLang71 = "리스트의 ID가 지정되지 않았습니다.";
+var strLang72 = "데이터가 지정되지 않았습니다.";
+var strLang73 = "권한이 없습니다";
+var strLang74 = "사진추가 도중 오류 발생";
+var strLang75 = "읽기 권한이 없습니다.";
+var strLang76 = "삭제 권한이 없습니다.";
+var strLang77 = "게시물을 선택해 주세요.";
+var strLang78 = "읽음 표시 하시겠습니까?";
+var strLang79 = "를(을) 선택하세요.";

@@ -10,6 +10,7 @@
     	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
+			var strPrimary = "${userInfo.primary}";
         	var xmlhttp = null;
         	document.onselectstart = function () { return false; };
         	window.onload = window_onload();
@@ -48,7 +49,12 @@
 	                        strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
     	                else
         	                strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
-            		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
+        	            
+        	            if (strPrimary == "1") {
+	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
+        	            } else {
+	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i]) + "</td>";
+        	            }
                     	strHTML += "<td style='width:28%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + parentBoardName[i] + "</td>";
                     	strHTML += "</tr>";
                 	}

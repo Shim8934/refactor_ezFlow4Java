@@ -2314,7 +2314,7 @@ function insertOrganAll(_ParentOrganId, _ParentOrganName) {
 
             createNodeInsert(XmlDoc, objNode, "DATA");
             createNodeAndInsertText(XmlDoc, objNode, "DEPTID", _ParentOrganId);
-            createNodeAndInsertText(XmlDoc, objNode, "PROP", "EXTENSIONATTRIBUTE2");
+            createNodeAndInsertText(XmlDoc, objNode, "PROP", "extensionAttribute2");
 
             XmlHttp.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
             XmlHttp.send(XmlDoc);

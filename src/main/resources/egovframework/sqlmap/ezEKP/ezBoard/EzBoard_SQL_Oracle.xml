@@ -147,7 +147,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.get_parentBoardName" parameterClass="Map" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #v_PRIMARY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
 	<procedure id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO">
@@ -698,7 +698,7 @@
 	        WHERE  
 	        	writerid = #userID#
 	        AND 
-	        	startdate > SYSDATE
+	        	startdate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
 		]]>
 	</select>
 	

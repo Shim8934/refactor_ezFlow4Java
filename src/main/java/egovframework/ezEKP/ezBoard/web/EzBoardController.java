@@ -379,11 +379,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String get_favoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
         String mode = request.getParameter("mode");
         String userID = userInfo.getId();
 
         List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID,mode);
-        String parentName = parentBoardName(resultList);
+        String parentName = parentBoardName(resultList, userInfo);
         StringBuffer sb = new StringBuffer();
         
         sb.append("<DATA>");
@@ -459,14 +460,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정즐겨찾기 호출 Method
 	 */
 	@RequestMapping(value="/ezBoard/boardFavorite.do")
-	public String boardFavorite() throws Exception {
+	public String boardFavorite(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
 		return "ezBoard/boardFavorite";
 	}
 	
 	/**
 	 * 게시판 부모게시판명 표출 Method
 	 */
-	public String parentBoardName(List<BoardMyFavoriteVO> resultList) throws Exception{
+	public String parentBoardName(List<BoardMyFavoriteVO> resultList, LoginVO userInfo) throws Exception{
         String rtv = "";
         String BoardIdList = "";
         int BoardIdListCount = 0;
@@ -478,7 +483,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         BoardIdListCount = BoardIdList.split(";").length - 1;
         
-        rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount);
+        rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount, userInfo.getPrimary());
         
         return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
     }

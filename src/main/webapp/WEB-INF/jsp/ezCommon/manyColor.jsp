@@ -7,7 +7,7 @@
 		<title><spring:message code="ezBoard.t176" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />    
-	    <script type="text/javascript" src="/js/kaoni/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
 		    

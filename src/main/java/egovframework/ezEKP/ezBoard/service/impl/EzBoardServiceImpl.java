@@ -59,10 +59,11 @@ public class EzBoardServiceImpl implements EzBoardService {
 	}
 
 	@Override
-	public String get_parentBoardName(String boardIdList, int boardIdListCount) throws Exception{
+	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BOARDIDLIST", boardIdList);
 		map.put("v_BOARDCOUNTLIST", boardIdListCount);
+		map.put("v_PRIMARY", primary);
 		return ezBoardDAO.get_parentBoardName(map);
 	}
 

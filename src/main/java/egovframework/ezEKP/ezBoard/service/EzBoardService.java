@@ -93,7 +93,7 @@ public interface EzBoardService {
 	
 	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
-	public String get_parentBoardName(String BoardIdList, int boardIdListCount) throws Exception;
+	public String get_parentBoardName(String BoardIdList, int boardIdListCount, String primary) throws Exception;
 	
 	public String checkForm(String boardID, String mode) throws Exception;
 
