@@ -549,7 +549,7 @@
     function PC_Eml_FileDownload(href, subject) {
         if (href != null) {
             subject = subject + ".eml";
-            var fullpath = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_readattach.aspx?url=" + encodeURIComponent(href) + "&filename=" + escape(subject);
+            var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(href) + "&filename=" + encodeURIComponent(subject);
             location.href = fullpath;
             suffix++;
             PCMultiDownload();
