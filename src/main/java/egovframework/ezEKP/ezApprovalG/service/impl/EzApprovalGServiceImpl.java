@@ -17097,7 +17097,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							pSusinSN += 1;
 
 							// 사람에게 보낼때는 staASJiJung 으로 해야 한다.
-                            if (strReceiptMemberID.trim() == "")
+                            if (strReceiptMemberID.trim().equals(""))
                             {
                                 strSQL.append("INSERT INTO " + pDBName + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
                                 strSQL.append("SentDeptName, ReceivedDeptID, ReceivedDeptName, DocState, AprState, ");
@@ -17124,7 +17124,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             strSQL.append(docID + "' AND RECEIPTPOINTID = '" + makeRightField(strReceiptPointID) + "';");
 
 
-							if( strReceiptMemberID.trim() == "" ){
+							if( strReceiptMemberID.trim().equals("") ){
 								sendRecvMsg(strReceiptPointID, newID, "SUSIN", strReceiptCompanyID, lang);
 							}
 							else{

@@ -1154,19 +1154,22 @@
 	    }
 	    function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 	        try {
-	            var xmlpara = createXmlDom();
-	            var xmlhttp = createXMLHttpRequest();
-	
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "APRDEPT");
-	            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-	            createNodeAndInsertText(xmlpara, objNode, "p_AprDeptTempletIndex", p_SelAprDeptTempletSN);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/DelAprDeptTempletList.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	        	var result = "";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "xml",
+	        		async : false,
+	        		url : "/ezApprovalG/delAprDeptTempletList.do",
+	        		data : {
+	        				userID : pUserID,
+	        				formID : pFormID,
+	        				aprSN  : p_SelAprDeptTempletSN
+	        				},
+	        		success: function(xml){
+	        			result = xml;
+	        		}        			
+	        	});
+	            var dataNodes = GetChildNodes(result);
 	            var RtnVal = getNodeText(dataNodes[0]);
 	
 	            if (RtnVal == "TRUE") {
