@@ -33,7 +33,6 @@
 			});
 	
 			function setCookie(name, value, expiredays) {
-				alert(name);
 				var todayDate = new Date();
 				todayDate.setDate( todayDate.getDate() + expiredays );
 				document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"

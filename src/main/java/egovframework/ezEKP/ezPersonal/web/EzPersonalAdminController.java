@@ -1,9 +1,15 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +20,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
@@ -41,7 +50,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  */
 
 @Controller("EzPersonalAdminController")
-public class EzPersonalAdminController {
+public class EzPersonalAdminController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -782,5 +791,92 @@ public class EzPersonalAdminController {
 		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
 		
 		return result;
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지 등록화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/selectImage.do")
+	public String selectImage(HttpServletRequest request, Model model) throws Exception {
+		String sliderID = "";
+		
+		if (request.getParameter("item") != null) {
+			sliderID = request.getParameter("item");
+		}
+		
+		model.addAttribute("sliderID", sliderID);
+		
+		return "admin/ezPersonal/personalSelectImage";
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지 등혹 이미지등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String dirPath = config.getProperty("upload_portal.ROOT");
+		String resultUpload = "false";
+		String uploadSN = "{" + UUID.randomUUID() + "}";
+		String fileLocation = "";
+		MultipartFile multiFile = null;
+		
+		String mode = request.getParameter("mode");
+		
+		if (request.getFile("file1") != null) {
+			multiFile = request.getFile("file1");
+		}
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String serverPath = dirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator;
+		String uniqueName = uploadSN + multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
+		
+		File dir = new File(realPath + serverPath);
+		
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		writeUploadedFile(multiFile, uniqueName, realPath + serverPath);
+		
+		File file = new File(realPath + serverPath + uniqueName);
+		
+		if (mode.equals("sliderImage")) {
+			String saveName = UUID.randomUUID() + ".jpg";
+			BufferedImage inputImage = ImageIO.read(file);
+			BufferedImage outputImage = null;
+			Graphics2D saveImage = null;
+			
+			outputImage= new BufferedImage(467, 200, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
+			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			
+			File newFile = new File(realPath + serverPath + saveName);
+			
+			ImageIO.write(outputImage, "png" , newFile);
+			deleteFile(realPath + serverPath + uniqueName);
+			
+			fileLocation = serverPath + saveName;
+		}
+		
+		resultUpload = "true";
+		
+		StringBuilder result = new StringBuilder();
+		
+		result.append("<ROOT>");
+		result.append("<NODES>");
+		result.append("<NODE>");
+		result.append("<PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+		result.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+		result.append("<PFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></PFILENAME>");
+		result.append("<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
+		result.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+		result.append("</NODE>");
+		result.append("</NODES>");
+		result.append("</ROOT>");
+		
+		return result.toString();
 	}
 }

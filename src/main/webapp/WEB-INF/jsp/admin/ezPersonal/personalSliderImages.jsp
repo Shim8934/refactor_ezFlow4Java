@@ -41,7 +41,7 @@
 		        	success : function (result) {
 		        		MakeSliderList(result);
 		        	}
-		        })
+		        });
 		    });
 		    
 		    /* function event_Get_listComplite() {
@@ -78,7 +78,7 @@
 		    function btn_Select() {
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
-		            var SelectImage = window.open("SelectImage.aspx", "SelectImage", GetOpenWindowfeature(610, 410));
+		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(610, 410));
 		            try { SelectImage.focus(); } catch (e) {
 		            }
 		        }
