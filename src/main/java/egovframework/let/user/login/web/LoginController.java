@@ -216,12 +216,11 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogout.do")
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-    	
     	Cookie[] cookies = request.getCookies();
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			if(!cookie.getName().equals("saveid")){
+    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
