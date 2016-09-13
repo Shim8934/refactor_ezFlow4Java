@@ -167,7 +167,7 @@
 		<result property="width"						column="WIDTH"					columnIndex="10"/>
 		<result property="height"						column="HEIGHT"					columnIndex="11"/>
 		<result property="rowLength"				column="ROWLENGTH"			columnIndex="12"/>
-		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13"/>
+		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13" 	nullValue="0"/>
 		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
 		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
 		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>

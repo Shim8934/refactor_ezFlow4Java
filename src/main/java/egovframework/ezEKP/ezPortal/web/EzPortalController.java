@@ -506,6 +506,10 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 			}
 System.out.println("pThemeSelectObject:"+pThemeSelectObject);
+			model.addAttribute("pageID", pageID);
+			model.addAttribute("parentPageID", parentPageID);
+			model.addAttribute("editMode", editMode);
+			model.addAttribute("viewMode", viewMode);
 			model.addAttribute("strHTML", strHTML);
 			model.addAttribute("displayName", displayName);
 			model.addAttribute("displayName2", displayName2);

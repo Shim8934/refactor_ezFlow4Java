@@ -293,7 +293,7 @@
 			strXML += "</DATA>";
 
 			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "admin/remote/portal_SaveTopMenu.aspx?pageid=" + pPageID + "&parentpageid=" + pParentPageID, false);
+			xmlhttp.open("POST", "/admin/ezPortal/portalSaveTopMenu.do?pageID=" + pPageID + "&parentPageID=" + pParentPageID, false);
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 		}
@@ -324,7 +324,7 @@
 		function SaveSkin(pPageID)
 		{
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "admin/remote/portal_SaveSkin.aspx?pageid=" + pPageID, false);
+			xmlhttp.open("POST", "/admin/ezPortal/portalSaveSkin.do?pageID=" + pPageID, false);
 			xmlhttp.send();
 			xmlhttp = null;
 		}

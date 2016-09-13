@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -439,7 +440,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 상단메뉴영역설정 선택페이지 사용 취소 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/outOfSetUsePage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPortal/outOfUseTopMenu.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String outOfSetUsePage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -498,9 +499,47 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String skinFontColor = "";
 		String skinFontOverColor = "";
 		
+		List<PortalTBLSkinGeneralVO> list = ezPortalAdminService.selectSkinGeneral(); 
 		
+		for (int i=0; i<list.size(); i++) {
+			if (list.get(i).getSkinBgFlag() != null && !list.get(i).getSkinBgFlag().equals("")) {
+				skinName = list.get(0).getSkinName();
+				skinBgFlag = list.get(0).getSkinBgFlag();
+				skinBgColor = list.get(0).getSkinBgColor();
+				skinBgImage = list.get(0).getSkinBgImage();
+				skinFontColor = list.get(0).getSkinFontColor();
+				skinFontOverColor = list.get(0).getSkinFontOverColor();
+			}
+			
+			ezPortalAdminService.portalSaveSkin(pageID, skinName, skinBgFlag, skinBgColor, skinBgImage, skinFontColor, skinFontOverColor);
+			
+		}
 		
 		return "OK";
+	}
+	
+	/**
+	 * 관리자 포탈 상단메뉴영역설정 전체메뉴레이아웃 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portalSaveTopMenu.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String portalSaveTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pageID = "";
+		String parentPageID = "";
+System.out.println("pageID:"+req.getParameter("pageID"));
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		}
+		
+		String ret = ezPortalAdminService.saveTopMenu(pageID, parentPageID, userInfo.getId(), userInfo.getDisplayName(), xmlStr, userInfo.getCompanyID());
+		
+		return ret;
 	}
 	
 }

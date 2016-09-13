@@ -3,24 +3,8 @@
 
 <sqlMap namespace="ezPortalAdmin">
 	<typeAlias  alias="PortalUseThemeCheckVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO"/>
-	
-	<procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
-	
-	<procedure id="EzPortalAdminDAO.deleteTheme" parameterClass="String" >
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_DELETE_THEME(#v_PUID#)}
-		]]>
-	</procedure>
-	
-	<procedure id="EzPortalAdminDAO.deleteTopPage" parameterClass="String"  resultClass="String">
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_DELETETOPPAGE(#v_pPAGEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
+	<typeAlias  alias="PortalTBLSkinGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO"/>
+	<typeAlias  alias="PortalDeleteSubPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO"/>
 	
 	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
 		<![CDATA[
@@ -46,45 +30,241 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_PORTAL_SAVESKIN(#v_UID#, #v_SKINNAME#, #v_SKINBGFLAG#, #v_SKINBGCOLOR#, #v_SKINBGIMAGE#, #v_SKINFONTCOLOR#, #v_SKINFONTOVERCOLOR#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveTopMenu6" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU6(#v_pUID#, #v_pPAGEUID#, #v_pCOLUMNPOS#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveTopMenu3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU3(#v_pUID#, #v_pPAGEUID#, #v_pPARENTPAGEUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveTopMenu4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU4(#v_pUID#, #v_pPAGEUID#, #v_pCOLUMNPOS#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveTopMenu" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU(#pPageID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<procedure id="EzPortalAdminDAO.saveTopMenu2" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU2(#pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveTopMenu5" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVETOPMENU5(#pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.deleteTheme" parameterClass="String" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_DELETE_THEME(#v_PUID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.deleteTopPage" parameterClass="String"  resultClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_DELETETOPPAGE(#v_pPAGEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.topDeleteSubPage" parameterClass="String"  resultClass="PortalDeleteSubPageVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_TOP_DELETESUBPAGE(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<select id="EzPortalAdminDAO.saveTopMenu"  parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)
+			FROM
+				EZPORTAL.TBL_TOPMENU_GENERAL
+			WHERE
+				UID_ = #uID#	 
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.selectSkinGeneral" resultClass="PortalTBLSkinGeneralVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZPORTAL.TBL_SKIN_GENERAL
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.selectTblTopMenuItemsUID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UID_
+			FROM
+				EZPORTAL.TBL_TOPMENU_ITEMS
+			WHERE
+				(NOT 
+					(UID_ IN (#pArrParam#)
+					)
+				}
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#				
+		]]>
+	</select>
+	
+	<insert id="EzPortalAdminDAO.insertTblTopMenuItems" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_TOPMENU_ITEMS(
+					UID_, PAGEUID, PARENTPAGEUID, OWNERPAGEID, MENUITEMTYPE, DISPLAYNAME, WIDTH, HEIGHT, ROWPOS, COLUMNPOS, CANRESIZE, CANREPLACE
+					)
+			VALUES (
+				#uID#, #pageUID#, #parentPageID#, #ownerPageID#, #menuItemType#, #displayName#, #width#, #height#, #rowPos#, #columnPos#, #canRemove#, #canResize#, #canReplace#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.insertTblTopMenuGeneral" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_TOPMENU_GENERAL(
+					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, COMPANYID, THEMEUID
+					)
+			VALUES (
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, sysdate, #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #companyID#, #themeUID#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<update id="EzPortalAdminDAO.updateTopMenuGeneral" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZPORTAL.TBL_TOPMENU_GENERAL
+			SET 
+				DISPLAYNAME = #displayName#, DISPLAYNAME2 = #displayName2#, WIDTH = #width#, HEIGHT = #height#, ROWLENGTH = #rowLength#, COLUMNLENGTH = #columnLength#, ROWSPLIT = #rowSplit#, COLUMNSPLIT = #columnSplit#, THEMEUID = #pThemeUID#
+			WHERE
+				 UID_ = #pPageID# 
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.updateTblTopMenuItems" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZPORTAL.TBL_TOPMENU_ITEMS
+			SET 
+				MENUITEMTYPE = #menuItemType#, DISPLAYNAME = #displayName#, WIDTH = #width#, HEIGHT = #height#, ROWPOS = #rowPos#, COLUMNPOS = #columnPos#, CANREMOVE = #canRemove#, CANRESIZE = #canResize#, CANREPLACE = #canReplace#
+			WHERE 
+				UID_ = #uID#
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#		  
+		]]>
+	</update>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 EZPORTAL.TBL_TOPMENU_ITEMS
+			WHERE
+				 (NOT
+				 	(UID_
+				 		IN ( #strUIDList# )
+				 	)
+				 )
+			AND
+				PAGEUID = #pageUID#
+			AND 
+				PARENTPAGEUID = #parentPageUID#					 		 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 EZPORTAL.TBL_TOPMENU_ITEMS
+			WHERE
+				UID_ = #pUID#
+			AND 
+				PAGEUID = #pageUID#					 		 
+		]]>
+	</delete>
+	
 	<delete id="EzPortalAdminDAO.deleteTopMenuGeneralUID" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_TOPMENU_GENERAL
-			WHERE UID_ = #pUID# 
+			DELETE 
+				EZPORTAL.TBL_TOPMENU_GENERAL
+			WHERE
+				 UID_ = #pUID# 
 		]]>
 	</delete>
 	
 	<delete id="EzPortalAdminDAO.deleteTblMenuItemsS" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S
-			WHERE OWNERPAGEID = #pUID# 
+			DELETE
+				 EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S
+			WHERE
+				 OWNERPAGEID = #pUID# 
 		]]>
 	</delete>
 	
 	<delete id="EzPortalAdminDAO.deleteTblMenuItems" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS
-			WHERE OWNERPAGEID = #pUID# 
+			DELETE
+				 EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS
+			WHERE
+				 OWNERPAGEID = #pUID# 
 		]]>
 	</delete>
 	
 	<delete id="EzPortalAdminDAO.deleteTblMenuItemsImage" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE
-			WHERE OWNERPAGEID = #pUID# 
+			DELETE
+				 EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE
+			WHERE
+				 OWNERPAGEID = #pUID# 
 		]]>
 	</delete>
 	
 	<delete id="EzPortalAdminDAO.deleteTopMenuItems" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_TOPMENU_ITEMS
-			WHERE OWNERPAGEID = #pUID# 
+			DELETE
+				 EZPORTAL.TBL_TOPMENU_ITEMS
+			WHERE
+				 OWNERPAGEID = #pUID# 
 		]]>
 	</delete>
 	
 	<delete id="EzPortalAdminDAO.deleteSkinItemsUID" parameterClass="String">
 		<![CDATA[
-			DELETE EZPORTAL.TBL_SKIN_ITEMS
-			WHERE UID_ = #pUID# 
+			DELETE
+				 EZPORTAL.TBL_SKIN_ITEMS
+			WHERE
+				 UID_ = #pUID# 
 		]]>
 	</delete>
 	
