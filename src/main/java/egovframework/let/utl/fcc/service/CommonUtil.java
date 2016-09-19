@@ -220,8 +220,10 @@ public class CommonUtil {
 			// the filename needs to be UTF-8 and URL-encoded.
 			// URI class is more appropriate than URLEncoder class for this purpose.
 			if (userAgentValue.contains("Trident") || userAgentValue.contains("Edge")) {
+				filename = filename.replaceAll(":", "%3A");
 				URI uri = new URI(null, null, filename, null);
 				filename = uri.toASCIIString();
+				filename = filename.replaceAll("%253A", "%3A");
 			}
 			// in case of Chrome, Safari
 			// the filename consists of UTF-8 encoded bytes.
@@ -229,6 +231,7 @@ public class CommonUtil {
 				filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
 			}
 		} catch (Exception e) {			
+			e.printStackTrace();
 		}
 
 		return filename;
