@@ -1206,20 +1206,24 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
 						</tr>
+						<!--
 						<tr>
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
+						-->
 		                <c:if test="${useOCS == 'YES'}">
 						<tr>
 							<td><a class="imgbtn" id="usermenusipuri"><span onClick="ocssip_manage()">Lync <spring:message code='ezOrgan.t1012' /></span></a></td>
 						</tr>
-						</c:if>						
+						</c:if>			
+						<!--			
 						<tr>
 		                	<td><a class="imgbtn" id="usermenu21"><span onClick="SettingMsn()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
+		                -->
 					</table>
 				</th>
 			</tr>
