@@ -10,8 +10,8 @@
 			<div id="featured">
 				<c:choose>
 	            	<c:when test="${not empty sliderList}">
-	            		<c:forEach items="${sliderList}" varStatus="slider">
-							<img src="${sliderList.imagePath}" style="width:467px;height:200px"/>
+	            		<c:forEach items="${sliderList}" var="slider">
+							<img src="${slider.imagePath}" style="width:467px;height:200px"/>
 						</c:forEach>
 	            	</c:when>
 	            	<c:otherwise>
