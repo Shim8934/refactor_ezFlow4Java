@@ -166,7 +166,7 @@ function new_mail_onclick() {
         else
             pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
     }*/
-    var newwin = GetOpenWindow(pUrl, "", 890, 840, "no");
+    var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
     newwin.focus();
 }
 function ReSend(pURL, pEmail) {
