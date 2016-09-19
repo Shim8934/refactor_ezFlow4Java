@@ -45,6 +45,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (List<PersonalEmpMonthVO>) list("EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH", v_pCompanyID);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalSliderImageVO> getSliderList(Map<String, Object> map) throws Exception {
+		return (List<PersonalSliderImageVO>) list("EzPersonalAdmin.EZSP_GETSLIDERLIST", map);
+	}
+	
 	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
 		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", v_pItemSeq);
 	}
@@ -65,10 +70,6 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public int getPollCount(Map<String, Object> map) throws Exception {
 		select("EzPersonalAdmin.EZSP_GETPOLLCOUNT", map);
 		return (int) map.get("v_pCount");
-	}
-
-	public void deleteNotice(String v_pItemSeq) throws Exception {
-		delete("EzPersonalAdmin.EZSP_DELETENOTICE", v_pItemSeq);
 	}
 	
 	public void insertNotice(Map<String, Object> map) throws Exception {
@@ -95,6 +96,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		insert("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH", map);
 	}
 
+	public void setSliderImage(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETSLIDERIMAGE", map);
+	}
+	
 	public void updateNotice(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
 	}
@@ -102,7 +107,15 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void updatePopup(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATEPOPUP", map);
 	}
+	
+	public void statusChangeSlider(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_STATUSCHANGESLIDER", map);
+	}
 
+	public void deleteNotice(String v_pItemSeq) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELETENOTICE", v_pItemSeq);
+	}
+	
 	public void deletePoll(String v_pItemSeq) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELETEPOLL", v_pItemSeq);
 	}
@@ -110,20 +123,4 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void deletePopup(String v_pItemSeq) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
 	}
-
-	@SuppressWarnings("unchecked")
-	public List<PersonalSliderImageVO> getSliderList(Map<String, Object> map) throws Exception {
-		return (List<PersonalSliderImageVO>) list("EzPersonalAdmin.EZSP_GETSLIDERLIST", map);
-	}
-
-	
-	
-
-
-
-
-
-	
-
-
 }

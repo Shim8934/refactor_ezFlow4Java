@@ -782,7 +782,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String sliderID = "";
+		String sliderID = " ";
 		
 		if (request.getParameter("item") != null) {
 			sliderID = request.getParameter("item");
@@ -878,5 +878,54 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("</ROOT>");
 		
 		return result.toString();
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지 등록 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/saveSlider.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sliderID = request.getParameter("sliderID");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
+		String sliderPath = request.getParameter("sliderImage");
+		String fileName = request.getParameter("fileName");
+		String mode = request.getParameter("mode");
+		
+		try {
+			ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR";
+		}
+	}
+	
+	/**
+	 * 초기화면 슬라이드이미지 상태,순서 변경 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/statusChangeSlider.do")
+	@ResponseBody
+	public String statusChangeSlider(HttpServletRequest request) throws Exception {
+		String result = "";
+		String mode = request.getParameter("mode");
+		
+		if (mode.equals("U")) {
+			String sliderID = request.getParameter("sliderID");
+			String isUse = request.getParameter("isUse");
+			
+			result = ezPersonalAdminService.statusChangeSlider1(sliderID, isUse, mode);
+		} else {
+			String aRuleID = request.getParameter("aRuleID");
+			String aPriority = request.getParameter("aPriority");
+			String bRuleID = request.getParameter("bRuleID");
+			String bPriority = request.getParameter("bPriority");
+			
+			result = ezPersonalAdminService.statusChangeSlider2(aRuleID, aPriority, bRuleID, bPriority, mode);
+		}
+		
+		return result;
 	}
 }

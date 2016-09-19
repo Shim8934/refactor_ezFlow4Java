@@ -13,9 +13,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var xmlhttp;
-<%-- 		    var userlang = "<%= userinfo.lang %>"; --%>
-			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -25,14 +22,6 @@
 		    };
 			
 		    $(document).ready(function () {
-/* 		        xmlhttp = null;
-		        xmlhttp = createXMLHttpRequest();
-	
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        xmlhttp.open("POST", "aspx/GetSlider.aspx", true);
-		        xmlhttp.onreadystatechange = event_Get_listComplite;
-		        xmlhttp.send(); */
 		        
 		        $.ajax({
 		        	type : "POST",
@@ -43,14 +32,6 @@
 		        	}
 		        });
 		    });
-		    
-		    /* function event_Get_listComplite() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4)
-		            return;
-		        if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-		            MakeSliderList();
-		        }
-		    } */
 	
 		    function MakeSliderList(result) {
 		        XmlNode = result;
@@ -103,8 +84,8 @@
 		        if (!confirm("<spring:message code = 'ezPersonal.t00003' />"))
 		            return;
 	
-		        var xmlhttp2 = null;
-		        xmlhttp2 = createXMLHttpRequest();
+		        var xmlhttp = null;
+		        xmlhttp = createXMLHttpRequest();
 	
 		        var xmlDom = createXmlDom();
 		        var objNode;
@@ -112,8 +93,8 @@
 	
 		        createNodeAndInsertText(xmlDom, objNode, "SLIDERID", tempid);
 	
-		        xmlhttp2.open("POST", "aspx/DeleteSlider.aspx", false);
-		        xmlhttp2.send(xmlDom);
+		        xmlhttp.open("POST", "aspx/DeleteSlider.aspx", false);
+		        xmlhttp.send(xmlDom);
 	
 		        window.location.reload(false);
 		    }
@@ -132,6 +113,7 @@
 		                alert("<spring:message code = 'ezPersonal.t1022' />");
 		                return;
 		            }
+		            
 		            var ChangeRow = null;
 		            for (var i = 0; i < _RowObject.parentNode.childNodes.length - 1; i++) {
 		                if (_RowObject.parentNode.childNodes.item(i) == _RowObject) {
@@ -178,56 +160,36 @@
 		                    return;
 		                }
 		                ChangeRow = i + 1;
-		                if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5")))
-		                swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
+		                
+		                if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5"))) {
+		                	swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
+		                }
+		                
 		                break;
 		            }
 		        }
 		    }
 		    
 		    function event_ChangePriority(A_itemid, A_priority, B_itemid, B_priority) {
-		        var Xmldom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(Xmldom, objNode, "DATA");
-		        createNodeAndInsertText(Xmldom, objNode, "ARULEID", A_itemid);
-		        createNodeAndInsertText(Xmldom, objNode, "APRIORITY", B_priority);
-		        createNodeAndInsertText(Xmldom, objNode, "BRULEID", B_itemid);
-		        createNodeAndInsertText(Xmldom, objNode, "BPRIORITY", A_priority);
-		        createNodeAndInsertText(Xmldom, objNode, "MODE", "P");
-		        var XmlhttpPriority = createXMLHttpRequest();
-		        XmlhttpPriority.open("POST", "aspx/StatusChangeSlider.aspx", false);
-		        XmlhttpPriority.send(Xmldom);
+		        var ret = null;
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/statusChangeSlider.do",
+		        	async : false,
+		        	dataType : "text",
+		        	data : {aRuleID : A_itemid, aPriority : B_priority, bRuleID : B_itemid, bPriority : A_priority, mode : "P"},
+		        	success : function(result) {
+		        		if (result == "OK") {
+		        			ret = true;
+		        		} else {
+		        			alert(result);
+		        			
+		        			ret = false;
+		        		}
+		        	}
+		        });
 		        
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
-		            if (XmlhttpPriority.responseText == "OK") {
-		                XmlhttpPriority = null;
-		                return true;
-		            } else {
-		                alert(strLang217);
-		                XmlhttpPriority = null;
-		                return false;
-		            }
-		        } else if (navigator.userAgent.indexOf("MSIE") == -1) {
-		            var result = XmlhttpPriority.responseText;
-	
-		            if (result == "OK") {
-		                XmlhttpPriority = null;
-		                return true;
-		            } else {
-		                alert(strLang217);
-		                XmlhttpPriority = null;
-		                return false;
-		            };
-		        }
-		        
-		        if (XmlhttpPriority.responseXML.text == "OK") {
-		            XmlhttpPriority = null;
-		            return true;
-		        } else {
-		            alert(strLang217);
-		            XmlhttpPriority = null;
-		            return false;
-		        }
+		        return ret;
 		    }
 		    
 		    function swapNodes(item1, item2) {
@@ -242,30 +204,33 @@
 		    }
 	
 		    function event_statuschange(check) {
-		        var xmlhttp3 = null;
-		        xmlhttp3 = createXMLHttpRequest();
-	
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-	
-		        createNodeAndInsertText(xmlDom, objNode, "SLIDERID", check.parentElement.parentElement.getAttribute("DATA1"));
+		        var isUse = "";
+		        
 		        if(check.checked) {
-		            createNodeAndInsertText(xmlDom, objNode, "ISUSE", '1');
+		        	isUse = '1';
 		        } else {
-		            createNodeAndInsertText(xmlDom, objNode, "ISUSE", '0');
+		        	isUse = '0';
 		        }
 		        
-		        createNodeAndInsertText(xmlDom, objNode, "MODE", "U");
-		        xmlhttp3.open("POST", "aspx/StatusChangeSlider.aspx", false);
-		        xmlhttp3.send(xmlDom);
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/statusChangeSlider.do",
+		        	async : false,
+		        	dataType : "text",
+		        	data : {sliderID : check.parentElement.parentElement.getAttribute("DATA1"), isUse : isUse, mode : "U"},
+		        	success : function(result) {
+		        		if (result != "OK") {
+		        			alert(result);
+		        		}
+		        	}
+		        });
 		    }
 	
 		    function event_dbclick(clickitem) {
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            
-		            var SelectImage = window.open("SelectImage.aspx?item=" + document.getElementById(clickitem).getAttribute("DATA1"), "SelectImage", GetOpenWindowfeature(610, 410));
+		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1"), "SelectImage", GetOpenWindowfeature(610, 410));
 		            try { SelectImage.focus(); } catch (e) {
 		            }
 		        }

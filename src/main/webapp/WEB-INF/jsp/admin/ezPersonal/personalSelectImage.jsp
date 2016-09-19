@@ -13,9 +13,8 @@
 		
 		<script type="text/javascript">
 			var guid = "{" + GetGUID() + "}";
-		    var tempfilename;
-		    var g_xmlhttp;
-		    var sliderid = "<c:out value = '${sliderid}' />";
+		    /* var g_xmlhttp; */
+		    var sliderid = "<c:out value = '${sliderID}' />";
 		    var ReturnFunction;
 		    var pNoneActiveX = "YES";
 		    function SliderImage() {
@@ -45,13 +44,13 @@
 		        }
 		    }
 	
-		    function changeSliderImage_end() {
+		    /* function changeSliderImage_end() {
 		        if (g_xmlhttp.readyState != 4) {
 		        	return;
 		        }
 	
 		        UploadSliderImage.src = g_xmlhttp.responseText;
-		    }
+		    } */
 	
 		    function btn_AttachAdd_onclick() {
 		        var extension = document.getElementById("file1").value.split('.');
@@ -118,7 +117,7 @@
 		        }
 		        return check;
 		    }
-	
+		    
 		    function btnSave_click() {
 		        if (document.getElementById("txtDisplayName").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
@@ -131,46 +130,46 @@
 		            return;
 		        }
 		        
-		        var strXML = "";
-		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/Upload_Portal"));
+		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/files/upload_portal"));
+		        
+		        var item;
+		        var mode;
 		        
 		        if (sliderid == "") {
-		            strXML += "<DATA><SLIDERID>" + guid + "</SLIDERID>";
-		            strXML += "<MODE>NEW</MODE>";
+		            item = guid;
+		            mode = "NEW";
+		            fileName = getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]);
 		        } else {
-		            strXML += "<DATA><SLIDERID>" + sliderid + "</SLIDERID>";
-		            strXML += "<MODE>MOD</MODE>";
+		            item = sliderid;
+		            mode = "MOD";
+		            fileName = SliderImgPath.substr(SliderImgPath.lastIndexOf("/") + 1);
 		        }
 		        
-		        strXML += "<DISPLAYNAME>" + txtDisplayName.value + "</DISPLAYNAME>";
-		        strXML += "<DISPLAYNAME2>" + txtDisplayName2.value + "</DISPLAYNAME2>";
-		        
-		        if (CrossYN()) {
-		            strXML += "<FILENAME>" + getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]) + "</FILENAME>";
-		        } else {
-		            strXML += "<FILENAME>" + tempfilename + "</FILENAME>";
-		        }
-		        
-		        strXML += "<SLIDERIMAGE>" + SliderImgPath + "</SLIDERIMAGE></DATA>";
-	
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "aspx/SaveSlider.aspx", false);
-		        xmlhttp.send(strXML);
-		        
-		        if (xmlhttp.responseText == "OK") {
-		            alert("<spring:message code = 'ezPersonal.t191' />");
-		            
-		            if (ReturnFunction != null) {
-		                ReturnFunction();
-		            }
-		            
-		            window.close();
-		            
-		        } else {
-		            alert("<spring:message code = 'ezPersonal.t192' />");
-		        }
-		        
-		        xmlhttp = null;
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/saveSlider.do",
+		        	async : false,
+		        	data : {sliderID : item,
+		        			mode : mode,
+		        			displayName : txtDisplayName.value,
+		        			displayName2 : txtDisplayName2.value,
+		        			fileName : fileName,
+		        			sliderImage : SliderImgPath},
+		        	dataType : "text",
+		        	success : function (result) {
+		        		if (result == "OK") {
+		        			alert("<spring:message code = 'ezPersonal.t191' />");
+				            
+				            if (ReturnFunction != null) {
+				                ReturnFunction();
+				            }
+				            
+				            window.close();
+		        		} else {
+		        			alert("<spring:message code = 'ezPersonal.t192' />");
+		        		}
+		        	}
+		        });
 		    }
 	
 		    function S4() {
@@ -201,15 +200,6 @@
 		        } catch (e) { }
 		        
 		        if (sliderid != "") {
-	/* 	            g_xmlhttp = null;
-		            g_xmlhttp = createXMLHttpRequest();
-	
-		            var xmlDom = createXmlDom();
-		            var objNode;
-		            g_xmlhttp.open("POST", "aspx/GetSlider.aspx?item=" + sliderid + "", true);
-		            g_xmlhttp.onreadystatechange = event_Get_itemComplite;
-		            g_xmlhttp.send(xmlDom);
-		             */
 		            $.ajax({
 			        	type : "POST",
 			        	url : "/admin/ezPersonal/getSlider.do",
@@ -224,19 +214,13 @@
 		    });
 		    
 		    function event_Get_itemComplite(result) {
-		        /* if (g_xmlhttp == null || g_xmlhttp.readyState != 4) {
-		            return;
-		        } */
-		        
-		        /* if (g_xmlhttp.status >= 200 && g_xmlhttp.status < 300) { */
-		            var xml = result;
+		            xml = result;
 		            document.getElementById("txtDisplayName").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME"));
 		            document.getElementById("txtDisplayName2").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME2"));
 		            document.getElementById("UploadSliderImage").src = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/IMAGEPATH"));
 		            document.getElementById("UploadSliderImage").style.display = "";
-		         /*    g_xmlhttp = null;
-		        } */
 		    }
+		    
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
 		        

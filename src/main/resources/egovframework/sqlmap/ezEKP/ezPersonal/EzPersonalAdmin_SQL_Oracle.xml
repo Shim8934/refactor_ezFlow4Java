@@ -149,6 +149,18 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE"			parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_SETSLIDERIMAGE(#v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, #v_MODE#)}
+		]]>	
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_STATUSCHANGESLIDER"		parameterClass="Map">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_STATUSCHANGESLIDER(#v_SLIDERID#, #v_VALUE#, #v_MODE#)}
+		]]>	
+	</procedure>
+	
 	<procedure id="EzPersonalAdmin.EZSP_DELETENOTICE"			parameterClass="String">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_DELETENOTICE(#v_pItemSeq#)}
@@ -166,9 +178,4 @@
 			{CALL EZPERSONAL.EZSP_DELETEPOPUP(#v_pItemSeq#)}
 		]]>	
 	</procedure>
-	
-	
-	
-	
-	
 </sqlMap>

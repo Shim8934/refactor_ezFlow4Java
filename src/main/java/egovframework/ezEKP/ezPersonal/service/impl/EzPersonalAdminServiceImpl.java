@@ -344,16 +344,16 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 
 	@Override
 	public String getSlider(String sliderID, LoginVO userInfo) throws Exception {
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("v_COMPANYID", userInfo.getCompanyID());
-		map1.put("v_MODE", "ADMIN");
-		map1.put("v_SLIDERID", sliderID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_MODE", "ADMIN");
+		map.put("v_SLIDERID", sliderID);
 		
-		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map1);
+		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map);
 		
 		StringBuilder result = new StringBuilder();
 		
-		if (sliderID.equals("")) {
+		if (sliderID.equals(" ")) {
 			result.append("<LISTVIEWDATA>");
 			result.append("<HEADERS>");
 			result.append("<HEADER><NAME>" + egovMessageSource.getMessage("ezPersonal.t937", userInfo.getLocale()) + "</NAME><WIDTH>30</WIDTH><COLNAME>ISUSE</COLNAME></HEADER>");
@@ -367,7 +367,7 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 				result.append("<CELL>");
 				result.append("<VALUE>" + vo.getIsUse() + "</VALUE>");
 				result.append("<DATA1>" + vo.getSliderID() + "</DATA1>");
-				result.append("<DATA2>" + vo.getImagePath() + "</DATA2>");
+				result.append("<DATA2>" + vo.getImagePath().trim() + "</DATA2>");
 				result.append("<DATA3>" + vo.getRegUserID() + "</DATA3>");
 				result.append("<DATA4>" + vo.getRegDate() + "</DATA4>");
 				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
@@ -383,13 +383,84 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 					result.append("</CELL>");
 				}
 				
+				result.append("<CELL>");
+				result.append("<VALUE>" + vo.getRegDate() + "</VALUE>");
+				result.append("</CELL>");
+				
 				result.append("</ROW>");
 			}
 			result.append("</ROWS>");
 			result.append("</LISTVIEWDATA>");
+		} else {
+			if (list.size() == 1) {
+				list.get(0).setImagePath(list.get(0).getImagePath());
+				result.append("<DATA>");
+				result.append(commonUtil.getQueryResult(list.get(0)));
+				result.append("</DATA>");
+			}
 		}
 		
 		return result.toString();
+	}
+
+	@Override
+	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SLIDERID", sliderID);
+		map.put("v_SLIDERNAME", displayName);
+		map.put("v_SLIDERNAME2", displayName2);
+		map.put("v_FILENAME", fileName);
+		map.put("v_IMAGEPATH", sliderPath);
+		map.put("v_REGUSERID", userInfo.getId());
+		map.put("v_REGDATE", EgovDateUtil.getTodayTime());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_MODE", mode);
+		
+		ezPersonalAdminDAO.setSliderImage(map);
+	}
+
+	@Override
+	public String statusChangeSlider1(String sliderID, String isUse, String mode) throws Exception {
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SLIDERID", sliderID);
+		map.put("v_VALUE", isUse);
+		map.put("v_MODE", mode);
+		
+		try {
+			ezPersonalAdminDAO.statusChangeSlider(map);
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+		
+		return result;
+	}
+
+	@Override
+	public String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode) throws Exception {
+		String result = "";
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_SLIDERID", aRuleID);
+		map1.put("v_VALUE", aPriority);
+		map1.put("v_MODE", mode);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("v_SLIDERID", bRuleID);
+		map2.put("v_VALUE", bPriority);
+		map2.put("v_MODE", mode);
+		
+		try {
+			ezPersonalAdminDAO.statusChangeSlider(map1);
+			ezPersonalAdminDAO.statusChangeSlider(map2);
+			
+			result = "OK";
+		} catch (Exception e) {
+			result = "ERROR";
+		}
+		
+		return result;
 	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {

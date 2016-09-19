@@ -40,6 +40,8 @@ public interface EzPersonalAdminService {
 	
 	String deletePoll(String itemSeq) throws Exception;
 	
+	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
+	
 	int getNoticeCount(String companyID) throws Exception;
 
 	int getPollCount(String companyID) throws Exception;
@@ -54,7 +56,11 @@ public interface EzPersonalAdminService {
 
 	void setEmpMonth(String type, String userID, String deptID, String term) throws Exception;
 
-	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
+	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
+
+	String statusChangeSlider1(String sliderID, String isUse, String mode) throws Exception;
+
+	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode) throws Exception;
 
 	
 
