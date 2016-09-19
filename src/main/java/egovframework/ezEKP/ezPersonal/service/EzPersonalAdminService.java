@@ -24,6 +24,8 @@ public interface EzPersonalAdminService {
 	
 	PersonalPopupVO getPopupInfo(String itemSeq) throws Exception;
 	
+	PersonalLightPollVO getPollInfo(String itemSeq) throws Exception;
+	
 	String deleteNotice(String itemSeq) throws Exception;
 	
 	String insertNotice(String companyID, String title, String title2, String content) throws Exception;
@@ -42,6 +44,10 @@ public interface EzPersonalAdminService {
 	
 	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
 	
+	String statusChangeSlider1(String sliderID, String isUse, String mode) throws Exception;
+
+	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode) throws Exception;
+	
 	int getNoticeCount(String companyID) throws Exception;
 
 	int getPollCount(String companyID) throws Exception;
@@ -58,9 +64,11 @@ public interface EzPersonalAdminService {
 
 	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
 
-	String statusChangeSlider1(String sliderID, String isUse, String mode) throws Exception;
 
-	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode) throws Exception;
+
+	List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception;
+
+	
 
 	
 

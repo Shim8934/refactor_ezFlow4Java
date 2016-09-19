@@ -58,6 +58,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (PersonalQuickLinkVO) select("EzPersonalAdmin.EZSP_GETQUICKLINK", v_QUICKLINKID);
 	}
 	
+	public PersonalLightPollVO getPollInfo(String v_pItemSeq) throws Exception {
+		return (PersonalLightPollVO) select("EzPersonalAdmin.EZSP_GETPOLLINFO", v_pItemSeq);
+	}
+	
 	public PersonalPopupVO getPopupInfo(String v_pItemSeq) throws Exception {
 		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", v_pItemSeq);
 	}
@@ -122,5 +126,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 
 	public void deletePopup(String v_pItemSeq) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalLightPollVO> getPollResult(String v_pItemSeq) {
+		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", v_pItemSeq);
 	}
 }

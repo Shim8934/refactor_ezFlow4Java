@@ -52,7 +52,6 @@
 		]]>
 	</procedure>
 	
-	
 	<procedure id="EzPersonalAdmin.EZSP_GETSLIDERLIST" 			parameterClass="Map"		resultClass="PersonalSliderImageVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -68,6 +67,18 @@
 	<procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLinkVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINK_ACL(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOLLRESULT" 			parameterClass="String"		resultClass="PersonalLightPollVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_GETPOLLINFO" 			parameterClass="String"		resultClass="PersonalLightPollVO" >
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_GETPOLLINFO(#v_pItemSwq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

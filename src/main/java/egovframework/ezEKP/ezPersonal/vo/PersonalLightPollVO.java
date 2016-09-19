@@ -35,6 +35,11 @@ public class PersonalLightPollVO {
 	private String answer9;
 	/** 보기10 */
 	private String answer10;
+	/** 선택된 보기 */
+	private int result;
+	/** 선택된 보기 수 */
+	private int count;
+	
 	public int getItemSeq() {
 		return itemSeq;
 	}
@@ -136,5 +141,17 @@ public class PersonalLightPollVO {
 	}
 	public void setAnswer10(String answer10) {
 		this.answer10 = answer10;
+	}
+	public int getResult() {
+		return result;
+	}
+	public void setResult(int result) {
+		this.result = result;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

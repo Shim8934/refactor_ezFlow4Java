@@ -117,7 +117,7 @@
 		        var left = (width - 455) / 2;
 		        var top = (heigth - 400) / 2;
 		
-		        window.open("PollResult_Cross.aspx?itemseq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
+		        window.open("/admin/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 		    }
 		    
 		    function company_change() {
@@ -157,28 +157,6 @@
 	            if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
 	                return;
 	            }
-	
-	            /* var objNode;
-	            var xmlDom = createXmlDom();
-	            var xmlHTTP = createXMLHttpRequest();
-	            createNodeInsert(xmlDom, objNode, "DATAlist");
-	            createNodeAndInsertText(xmlDom, objNode, "DATA", poll_number);
-	
-	            xmlHTTP.open("POST", "delPoll_Cross.do", false);
-	            xmlHTTP.send(xmlDom);
-	
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                alert("<spring:message code = 'ezPersonal.t237' />");
-	            } else {
-	                alert("<spring:message code = 'ezPersonal.t238' />");
-	
-	                if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && page != 1) {
-	                    pagemove(-1);
-	                } else {
-	                    makelist();
-	                }
-	            } */
-	            
 	            
 	            $.ajax({
 	            	type : "POST",

@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -501,6 +502,84 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String result = ezPersonalAdminService.deletePoll(itemSeq);
 		
 		return result;
+	}
+	
+	/**
+	 * 초기화면 QuickPoll 본문화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/pollResult.do")
+	public String pollResult(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String subject = "", title = "";
+		
+		String itemSeq = request.getParameter("itemSeq");
+		
+		
+		
+		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq);
+		
+		if (userInfo.getPrimary().equals("2") && infoVO.getPollTitle2() != null) {
+			subject = infoVO.getPollTitle2();
+		} else {
+			subject = infoVO.getPollTitle();
+		}
+		
+		if (infoVO.getEndDate().indexOf("1990-01-01") > -1) {
+			title = infoVO.getStartDate() + " - " + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale());
+		} else {
+			title = infoVO.getStartDate() + " - " + infoVO.getEndDate();
+		}
+		
+		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollResult(itemSeq);
+
+		StringBuilder result = new StringBuilder();
+		int count = Integer.parseInt(infoVO.getPollSelectionCount());
+		double totalCount = 0;
+		
+		for (PersonalLightPollVO vo : list) {
+			totalCount += vo.getCount();
+		}
+		
+		result.append("<DATA>");
+		
+		for (int i = 1; i <= count; i++) {
+			result.append("<ROW>");
+			
+			String fieldName = "answer" + i;
+			String fieldValue = "";
+			
+			for (Field field : infoVO.getClass().getDeclaredFields()) {
+		        field.setAccessible(true);
+									
+				if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
+					fieldValue = String.valueOf(field.get(infoVO));
+				}
+		    }
+			
+			result.append("<TITLE>" + i + ". " + fieldValue + "</TITLE>");
+			
+			int resultCount = 0;
+			int percent = 0;
+			
+			for (PersonalLightPollVO vo : list) {
+				if (vo.getResult() == i) {
+					resultCount = vo.getCount();
+					percent = (int)(vo.getCount() / totalCount * 100);
+				}
+			}
+			
+			result.append("<COUNT>" + resultCount + "</COUNT>");
+			result.append("<PERCENT>" + percent + "</PERCENT>");
+			result.append("</ROW>");
+		}
+		
+		result.append("</DATA>");
+		
+		model.addAttribute("subject", subject);
+		model.addAttribute("title", title);
+		model.addAttribute("result", result.toString());
+		
+		return "admin/ezPersonal/personalPollResult";
 	}
 	
 	/**

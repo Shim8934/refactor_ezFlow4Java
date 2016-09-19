@@ -278,6 +278,16 @@ public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
 	}
 
 	@Override
+	public PersonalLightPollVO getPollInfo(String itemSeq) throws Exception {
+		return ezPersonalAdminDAO.getPollInfo(itemSeq);
+	}
+
+	@Override
+	public List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception {
+		return ezPersonalAdminDAO.getPollResult(itemSeq);
+	}
+
+	@Override
 	public List<PersonalPopupVO> getPopupList(String companyID) throws Exception {
 		return ezPersonalAdminDAO.getPopupList(companyID);
 	}
