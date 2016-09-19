@@ -1279,7 +1279,7 @@
     {
         if (rtn[0] != "CANCEL") {
             var xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("POST", "../enforce/aspx/resendEndDoc.aspx", false);
+            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", false);
             xmlhttp.send(rtn[1]);
         }
         return;

@@ -16870,8 +16870,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if( xmlDom.getElementsByTagName("PROCESSYN").item(i).getTextContent().toUpperCase().trim().equals("W"))
 			{
 				strSQL2.append("DELETE FROM TBENDRECEIPTPOINTINFO WHERE DocID = '");
-				strSQL2.append(docID + "' AND ReceiptPointID = '");
-				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent()) + "'\n");
+				strSQL2.append(docID + "';\n");
+//				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTPOINTID").item(i).getTextContent()) + ";'\n");
 				strSQL2.append("INSERT INTO TBENDRECEIPTPOINTINFO (DOCID, RECEIPTPOINTID, ");
                 strSQL2.append("RECEIPTPOINTNAME, RECEIPTPOINTNAME2, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, ");
                 strSQL2.append("EXTRECEPTEMAIL, RECEIPTMEMBERID, RECEIPTMEMBERNAME, RECEIPTMEMBERNAME2, PROCESSDATE, ");
@@ -17031,7 +17031,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						map.put("company", strReceiptCompanyID);
-						String newID = ezApprovalGDAO.aprGetNewID(map);
+						String newID = ezApprovalGDAO.aprGetNewID(map).trim();
 						
 						map.put("v_DOCID",docID);
 						map.put("v_FLAG", "END");
@@ -17048,9 +17048,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         }
 
 						String pUrl = "/Upload_ApprovalG/" + strReceiptCompanyID + "/Doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
-						String pDBName = "";
-						
-
+				
                         //2011.04.04  수신부서가 많을 경우 속도 개선을 위해 접수기에서 문서 copy되도록 수정
                         //rtnVal = copyFile(pDirPath + companyID + "\\Doc\\" + oldyear + "\\" + getDocDir(pDocID) + "\\" + pDocID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID) + "\\" + newID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID));
 						
@@ -17099,7 +17097,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							// 사람에게 보낼때는 staASJiJung 으로 해야 한다.
                             if (strReceiptMemberID.trim().equals(""))
                             {
-                                strSQL.append("INSERT INTO " + pDBName + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
+                                strSQL.append("INSERT INTO " + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
                                 strSQL.append("SentDeptName, ReceivedDeptID, ReceivedDeptName, DocState, AprState, ");
                                 strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
                                 strSQL.append("ProcessorJobTitle, ParentsDocID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);
@@ -17110,7 +17108,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             }
                             else
                             {
-                                strSQL.append("INSERT INTO " + pDBName + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
+                                strSQL.append("INSERT INTO "  + "TBAPRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
                                 strSQL.append("SentDeptName, ReceivedDeptID, ReceivedDeptName, DocState, AprState, ");
                                 strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
                                 strSQL.append("ProcessorJobTitle, ParentsDocID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);

@@ -6,7 +6,7 @@
 <html>
 <head>
 <title><spring:message code='ezApprovalG.t235'/></title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css"/>
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 <link rel="stylesheet" href="/css/organ_tree.css" type="text/css"/>    
@@ -18,7 +18,7 @@
 <script type="text/javascript"  src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-<script type="text/javascript" >
+<script ID="clientEventHandlersJS" type="text/javascript">
 var pDocID;       // DocID Declare Static Variable
 var SusinXML;
 var xmlhttp = createXMLHttpRequest();
@@ -37,12 +37,12 @@ arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             // E-Mail
 arr_userinfo[9]  = " ";
 arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
 // 2010.08.11 다국어
-arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1} '/>";		// 사용자명(P)
-arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2} '/>";		// 사용자명(S)
+arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
+arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
 arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";				// 사용자 직위(P)
 arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
 arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
-arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";			// 사용자 부서 이름(S)
+arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
 var p_CompanyID = "${userInfo.companyID}";
 // pUserID = arr_userinfo[1];
 var RetValue;
@@ -459,7 +459,7 @@ function initListView(){
 		xmlSusin = loadXMLString(SusinXML);
 		
 		Resultxml.async=false;
-		Resultxml = loadXMLFile("TreeViewEndAddDept.xml");
+		Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewEndAddDept.xml");
 		
 		var rows = xmlSusin.getElementsByTagName("RECEIPTPOINTNAME")
 		for(i=rows.length - 1; i>=0; i--)
@@ -566,7 +566,7 @@ function makertnVal()
 	    createNodeAndAppandNodeText(xmlpara, subNode, subNode2, "RECEIPTMEMBERNAME2", rows[i].getAttribute("DATA9"));
 	    createNodeAndAppandNodeText(xmlpara, subNode, subNode2, "RECEIPTMEMBERJOBTITLE2", rows[i].getAttribute("DATA11"));
 	}
-	return xmlpara;
+	return getXmlString(xmlpara);
 }
 
 var g_progresswin = null;	// 조직도정보 처리중 표시

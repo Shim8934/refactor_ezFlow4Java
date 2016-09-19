@@ -214,7 +214,6 @@ public class EzApprovalGarchiveController {
 	@ResponseBody
 	public String getRecViewerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		System.out.println(xmlPara);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result=ezApprovalGService.getRecViewer(xmlDom,userInfo.getLang());
 		return result;
