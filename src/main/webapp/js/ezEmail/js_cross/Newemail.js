@@ -454,6 +454,8 @@ function deleteWork(bDel) {
     Mail_MoveDeletePostSend(cmd, "", szItemID)
 }
 function delAllFile() {
+    if (!confirm(strLang333))
+        return;	
     Mail_MoveDeletePostSend("ALL", "", g_moveUrl);
 }
 function receiveCheck_onClick() {
