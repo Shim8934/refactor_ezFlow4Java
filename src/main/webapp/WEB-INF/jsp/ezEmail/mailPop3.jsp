@@ -196,7 +196,7 @@
 		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
 		                svElem = document.getElementById("popBox" + i);
 		            }
-		            if (svElem.url == "") {
+		            if (svElem.getAttribute("url") == "") {
 		            	alert(i + "<spring:message code='ezEmail.t227' />");
 		                return;
 		            }
