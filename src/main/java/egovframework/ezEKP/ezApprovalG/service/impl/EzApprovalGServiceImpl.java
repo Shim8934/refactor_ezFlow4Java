@@ -17054,6 +17054,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						map.put("company", strReceiptCompanyID);
 						String newID = ezApprovalGDAO.aprGetNewID(map).trim();
+						int tmplen=20;
+						int strlen = tmplen - newID.length();
+						for(int k = 0; k< strlen; k++){
+							newID = "0" + newID;
+						}
 						
 						map.put("v_DOCID",docID);
 						map.put("v_FLAG", "END");
@@ -17069,7 +17074,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             oldyear = arry[4];
                         }
 
-						String pUrl = "/Upload_ApprovalG/" + strReceiptCompanyID + "/Doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
+						String pUrl = "/files/upload_approvalG/" + strReceiptCompanyID + "/Doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
 				
                         //2011.04.04  수신부서가 많을 경우 속도 개선을 위해 접수기에서 문서 copy되도록 수정
                         //rtnVal = copyFile(pDirPath + companyID + "\\Doc\\" + oldyear + "\\" + getDocDir(pDocID) + "\\" + pDocID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID) + "\\" + newID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID));

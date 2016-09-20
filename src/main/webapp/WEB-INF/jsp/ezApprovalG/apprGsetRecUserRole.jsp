@@ -73,12 +73,17 @@
     function SwapRoleList() {
     
          if (document.getElementsByName("rdoRecRole")[0].checked) {
-            document.getElementById("DataLayout").disabled = true;
+        	 $('#txtKeyword').prop("disabled",true);
+        	 $('.listview').prop("disabled",true);
+        	 
+//             document.getElementById("DataLayout").disabled = true;
             document.getElementById("OrganListView").disabled = true;
-//          document.getElementByNames("OrganListView_TR_").disabled = true;
+//             document.getElementById("DataLayout").style.display = true;
+//          document.getElementByNames("txtKeyword").style.disabled = true;
             document.getElementById("RecvDel").style.display = "";
         }
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
+        	$('#txtKeyword').prop("disabled","");
             document.getElementById("DataLayout").style.display = "";
             document.getElementById("DataLayout").disabled = "";
         }

@@ -1001,8 +1001,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
     var openLocation;
     if (pCurSelRow != null) {
         if (pDraftFlag == "SUSIN") {
-            var pURL = GetAttribute(pCurSelRow, "DATA3");
-            var pDocID = GetAttribute(pCurSelRow, "DATA1");
+        	var pURL = GetAttribute(pCurSelRow, "DATA3");
+            var pDocID = GetAttribute(pCurSelRow, "DATA1").trim();
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "mht" || g_RelayG_Type.toUpperCase() == "MHT") {
                 openLocation = "";
                 if (pCurSelRow.getAttribute("DATA15") == "001") {
