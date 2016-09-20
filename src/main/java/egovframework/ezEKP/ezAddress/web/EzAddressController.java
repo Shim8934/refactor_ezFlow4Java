@@ -265,6 +265,23 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String rootAddressSelection = "";
 		
+		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
+		if (ownerId.trim().equals("")) {
+			if (folderId.equals("0")) {
+				if (folderType.equals("C")) {
+					ownerId = userInfo.getCompanyID();
+				} else if (folderType.equals("D")) {
+					ownerId = userInfo.getDeptID();
+				} else {
+					ownerId = userInfo.getId();
+				}
+			}
+			else {
+				SubTreeInfoVO folderInfo = ezAddressService.getFolderInfo(folderId);
+				ownerId = folderInfo.getOwnerId();
+			}
+		}
+		
 		if (!addressId.equals("")) {
 			AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(addressId);
 			model.addAttribute("addressInfo", addressInfo);
@@ -306,7 +323,7 @@ public class EzAddressController{
 		String idList = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent();
 		String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 		
-		filter = " SEMAIL Like '%" + filter.trim() + "%'";
+		filter = " SEMAIL='" + filter.trim() + "'";
 		idList = "'" + idList + "'" ;
 		int totalCount = ezAddressService.getSearchCount(idList, filter);
 		
@@ -379,6 +396,14 @@ public class EzAddressController{
 			
 			if (addressId.equals("")) {
 				//주소록 추가
+				//주소록 중복검사(메일읽기->주소록에추가에서 중복검사를 하지않기때문에 필요함.)
+				String filter = " SEMAIL='" + sEmail.trim() + "'";
+				String idList = "'" + ownerId + "'" ;
+				int totalCount = ezAddressService.getSearchCount(idList, filter);
+				if (totalCount > 0) {
+					return "PRE";
+				}
+				
 				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
 				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), photoPath, sName,
 						sCompany, sDept, sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip,

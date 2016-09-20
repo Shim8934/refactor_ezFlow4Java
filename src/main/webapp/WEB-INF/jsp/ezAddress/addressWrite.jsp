@@ -205,9 +205,9 @@
 		        if (!check_length(document.getElementById("TextComAddr").value, 250, "<spring:message code='ezAddress.t295' />")) return;
 		        if (!check_length(document.getElementById("TextHomeAddr").value, 250, "<spring:message code='ezAddress.t296' />")) return;
 		        if ((document.getElementById("TextEmail").value != "" && addressid == "") ||
-				     (addressid != "" && document.getElementById("TextEmail").value != textEmail)) {
-		            var AddressCnt = Get_SameAddressCnt();
-		
+				     (document.getElementById("TextEmail").value != "" && addressid != "" && document.getElementById("TextEmail").value != textEmail)) {
+		        	var AddressCnt = Get_SameAddressCnt();
+					
 		            if (parseInt(AddressCnt) > 0) {
 		                alert("<spring:message code='ezAddress.t225' />");
 		                return;

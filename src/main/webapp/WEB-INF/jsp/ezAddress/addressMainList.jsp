@@ -425,7 +425,7 @@
 	            if (!check_length(document.getElementById("qemail").value, 250, "<spring:message code='ezAddress.t224' />")) return;
 	
 	            if (document.getElementById("qemail").value != "") {
-	                var AddressCnt = "0";//Get_SameAddressCnt();
+	                var AddressCnt = Get_SameAddressCnt();
 	
 	                if (parseInt(AddressCnt) > 0) {
 	                    alert("<spring:message code='ezAddress.t225' />");
