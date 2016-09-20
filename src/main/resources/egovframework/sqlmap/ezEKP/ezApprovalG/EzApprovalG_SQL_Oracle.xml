@@ -657,6 +657,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
+		{CALL EZAPPROVALG_$companyID$.EZSP_APRMAKETMP2ING(#v_PDOCID#, #v_PUSERID#, #v_PSN#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.transferCabinet" parameterClass="Map">
 		{CALL EZAPPROVALG_$companyID$.SPTRANSCABINET1(#v_DDeptCode#, #v_DDeptName#, #v_DDeptName2#, #v_DTaskCode#, #v_DTaskName#, #v_DTaskName2#, #v_CabIDList#, #v_DeptMID#, #v_DeptMName#, #v_DeptMName2#)}
 	</procedure>

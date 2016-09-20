@@ -995,6 +995,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public void updateReceiptOffer(Map<String, Object> map)throws Exception{
 		insert("EzApprovalG.updateReceiptOffer", map);
 	}
+	
+	public void aprMakeTmp2Ing(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing", map);
+	}
 
 	public void moveRecord(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.moveRecord", map);
@@ -1094,7 +1098,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGRecordVO>) list("EzApprovalG.doSendDoc_ReceiptGroupSub", map);
 	}
 
-
-
-	
 }

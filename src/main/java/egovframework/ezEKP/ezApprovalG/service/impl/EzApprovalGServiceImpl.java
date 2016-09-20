@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -1454,6 +1453,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (gongRamActivate(gongRamDocID, companyID, lang)) {
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} else {
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang) throws Exception {
+		String docID = getNewID(companyID);
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", makeRightField(userID.trim()));
+		map.put("v_PDOCID", docID);
+		map.put("v_PSN", sn);
+		map.put("companyID", companyID);
+		
+		try {
+			ezApprovalGDAO.aprMakeTmp2Ing(map);
+			
+			rtnVal = "<RESULT>" + docID + "</RESULT>";
+		} catch (Exception e) {
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -3691,13 +3712,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (flag.equals("0")) {
 			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '1' Where ");
-			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (Select Value ");
-			strSQL.append("From TABLE(fn_StringToTable('" + cabClassNo + "', ',')));\n");
+			strSQL.append("ConfirmFlag = '0' And CabinetClassNo = ");
+			strSQL.append("'" + cabClassNo + "';\n");
         } else {
 			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '0' Where ");
-			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (Select Value ");
-            strSQL.append("From TABLE(fn_StringToTable('" + cabClassNo + "', ',')));\n");
+			strSQL.append("ConfirmFlag = '0' And CabinetClassNo = ");
+            strSQL.append("'" + cabClassNo + "';\n");
         }
+		//쿼리 이상해서 수정
+//		if (flag.equals("0")) {
+//			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '1' Where ");
+//			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (Select Value ");
+//			strSQL.append("From TABLE(fn_StringToTable('" + cabClassNo + "', ',')));\n");
+//		} else {
+//			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '0' Where ");
+//			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (Select Value ");
+//			strSQL.append("From TABLE(fn_StringToTable('" + cabClassNo + "', ',')));\n");
+//		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -8633,7 +8664,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String chkAprLine(String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String userCompanyID, String strLang, LoginVO userInfo) throws Exception{
-		//TODO: 한글 코드화 
 		Document resultXML = null;
 		StringBuilder rtnVal = new StringBuilder();
 		String strXML = "";
@@ -8990,14 +9020,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "';\n");
 		}
-		//TODO 통계부분인데 사용안하는 코드인듯
-//		if (curAprMemberSN.equals("1")) {
-//			Map<String, Object> map1 = new HashMap<String, Object>();
-//			map1.put("companyID", companyID);
-//			map1.put("v_DOCID", docID.trim());
-//			
-//			String tempDocState = ezApprovalGDAO.doApproveDocState(map1);
-//		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
 			subSQL = insertProxyUserInfo(docID, curAprMemberSN, userID, proxyUserID, companyID, lang);

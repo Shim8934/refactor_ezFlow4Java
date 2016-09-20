@@ -2553,16 +2553,22 @@ function check_presence2() {
 
 //서버저장된 문서 진행문서로 바꾸는 함수이다.
 function MakeTmp2Ing(tmpDocID) {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA"); // Root Node 생성
-    createNodeAndInsertText(xmlpara, objNode, "TMPDOCID", tmpDocID);
-
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "aspx/MakeTmp2Ing.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return getNodeText(xmlhttp.responseXML.documentElement);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/makeTmp2Ing.do",
+		data : {
+			tmpDocID : tmpDocID
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    return getNodeText(result.documentElement);
 }
 function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var pArgument = new Array();

@@ -91,7 +91,8 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var pURL = "/myoffice/ezApprovalG/aspx/SendToMailApproval.aspx?CMD=docsend&DOCID=" + DocID + "&DOCHREF=" + encodeURIComponent(DocHref);
+		        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
+// 		        var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
 		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        newwin.focus();
 		    }

@@ -217,7 +217,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         int pMode = 0;
         
-        if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
+        if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
         	pMode = 0;
         } else {
         	pMode = 1;
@@ -339,7 +339,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	result.append("</TREEVIEWDATA>");
         }
         
-        ezBoardAdminService.getBoardTree_Set(pStrLang.trim(),pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString());
+        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString());
 
         return result.toString();
 	}
@@ -5857,12 +5857,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	public void getBoardAttachInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String type = request.getParameter("type");
 		String attID = request.getParameter("attID");
-		String fileName = request.getParameter("fileName");
+		String fileName = "";
 		String filePath = "";
 		
 		BoardAttachVO result = ezCommonService.getAttachInfo(type, attID, "", 0, "");
 		
-		filePath = config.getProperty("upload_board.ROOT") + result.getFilePath();
+		filePath = result.getFilePath();
 		fileName = result.getFileName();
 		
 		if (filePath != null && !filePath.equals("")) {

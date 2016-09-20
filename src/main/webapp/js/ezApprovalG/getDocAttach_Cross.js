@@ -65,11 +65,10 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
             var Row = xmlRtn[i];
             var Cell = GetChildNodes(Row);
 
-            if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "File" || SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "strLang1117") {
+            if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "File" || SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == strLang1117) {
                 var IncodFileNM = encodeURIComponent(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));
                 var filename = encodeURIComponent(getNodeText(GetChildNodes(xmlRtn[i])[1]));
                 var filepath = IncodFileNM.replace(rep, "&#39;");
-
                 var strTarget = "target='_blank'";
                 var fileImage = "";
                 var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
