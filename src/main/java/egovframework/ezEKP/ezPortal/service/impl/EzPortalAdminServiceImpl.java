@@ -17,6 +17,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalAdminDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -92,11 +94,11 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 	}
 	
 	@Override
-	public void outOfSetUsePage(String uID, String companyID) throws Exception {
+	public void topOutOfSetUsePage(String uID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
 		map.put("v_pCOMPANYID", companyID);
-		ezPortalAdminDAO.outOfSetUsePage(map);
+		ezPortalAdminDAO.topOutOfSetUsePage(map);
 	}
 	
 	@Override
@@ -124,6 +126,16 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_SKINFONTCOLOR", skinFontColor);
 		map.put("v_SKINFONTOVERCOLOR", skinFontOverColor);
 		ezPortalAdminDAO.portalSaveSkin(map);
+	}
+	
+	@Override
+	public void setDefaultPage(String pUID, String setFlag, String pGubunFlag, String pCompanyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERFLAG", setFlag);
+		map.put("v_PUID", pUID);
+		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("v_PGUBUNFLAG", pGubunFlag);
+		ezPortalAdminDAO.setDefaultPage(map);
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
@@ -428,6 +440,546 @@ System.out.println("menuItemPageUID1:"+menuItemPageUID);
 			ezPortalAdminDAO.deleteTopMenuItems3(map);
 			ezPortalAdminDAO.deleteTopMenuGeneralUID(pUID);
 		}
+	}
+	
+	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DISPLAYNAME", pDisplayName);
+		map.put("v_GUBUNFLAG", pGubunFlag);
+		map.put("v_ARRPARAM", pGubunFlag);
+		map.put("v_COMPANYID", pCompanyID);
+		int recordCnt = ezPortalAdminDAO.searchPortalPageCount2(map);
+		return recordCnt;
+	}
+	
+	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ENDROW", pEndRow);
+		map.put("v_DISPLAYNAME", pDisplayName);
+		map.put("v_USERFLAG", pUseFlag);
+		map.put("v_GUBUNFLAG", pGubunFlag);
+		map.put("v_ARRPARAM", pGubunFlag);
+		map.put("v_COMPANYID", pCompanyID);
+		List<PortalSearchPortalPage2VO> list = ezPortalAdminDAO.searchPortalPage2(map);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (int i=0; i<list.size(); i++) {
+			if (i >= pStartRow -1) {
+				sb.append("<ROW>");
+                sb.append("<UID>" + list.get(i).getuID_() + "</UID>");
+                sb.append("<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
+                sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
+                sb.append("<CREATEDATE>" + list.get(i).getCreateDate() + "</CREATEDATE>");
+                sb.append("<GUBUNFLAG>" + list.get(i).getGubunFlag() + "</GUBUNFLAG>");
+                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
+                sb.append("<GUBUNNAME>" + list.get(i).getGubunName() + "</GUBUNNAME>");
+                sb.append("<DEFAULTPAGE>" + list.get(i).getDefaultPage() + "</DEFAULTPAGE>");
+                sb.append("<THEMENM>" + list.get(i).getThemeNm() + "</THEMENM>");
+                sb.append("<THEMENM2>" + list.get(i).getThemeNm2() + "</THEMENM2>");
+                sb.append("<THEMENM3>" + list.get(i).getThemeNm3() + "</THEMENM3>");
+                sb.append("<THEMENM4>" + list.get(i).getThemeNm4() + "</THEMENM4>");
+                sb.append("</ROW>");
+			}
+		}
+		sb.append("</DATA>");
+		return sb.toString();
+	}
+	
+	public String deletePortalPage (String pUID) {
+		List<String> list = ezPortalAdminDAO.deletePortalPage(pUID);
+		
+		for (int i=0; i<list.size(); i++) {
+			ezPortalAdminDAO.deletePortalPage2(list.get(i));
+			deletePortalPage(list.get(i));
+		}
+		ezPortalAdminDAO.deletePortalPage3(pUID);
+		return "OK";
+	}
+	
+	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType) {
+		int i=0;
+		int j=0;
+System.out.println("pXML:"+pXML);
+System.out.println("pParentPageID:"+pParentPageID);
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		String displayName = "";
+		String displayName2 = "";
+		String width = "0";
+		String height = "0";
+		String rowLength = "0";
+		String columnLength = "0";
+		String rowSplit = "";
+		String columnSplit = "";
+		String portletType = "";
+		String portletUID = "";
+		String portletPageUID = "";
+		String portletDisplayName = "";
+		String portletWidth = "";
+		String portletHeight = "";
+		String portletCanRemove = "";
+		String portletCanResize = "";
+		String portletCanReplace = "";
+		String portletOwnerPageUID = "";
+		String portletPrevPageID = "";
+		String gubunFlag = "";
+		String pUserID = "";
+		String pUserName = "";
+		int previousRowPos = 0;
+		int rowPos = 0;
+		int depth = 0;
+		int interval = 100000;
+		String strUIDList = "";
+		String[] arr;
+		String pArrParam = "";
+		String temp = "";
+		String pThemeUID = "";
+		String pTableViewOption = "";
+		
+		int result = ezPortalAdminDAO.savePortalPage(pPageID);
+		
+		if (pType.equals("MYPORTAL")) {
+			width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
+			height = xmlDom.getElementsByTagName("HEIGHT").item(0).getTextContent().trim();
+			columnLength = String.valueOf(xmlDom.getElementsByTagName("CELL").getLength());
+			displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+			displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent().trim();
+			gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent().trim();
+			pUserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+			pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+			pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
+			pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
+			
+			if (pParentPageID.toLowerCase().equals("top")) {
+				depth = 1;
+			} else {
+				result = ezPortalAdminDAO.savePortalPage7(pParentPageID);
+				depth = result + 1;
+			}
+			
+			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+				columnSplit += xmlDom.getElementsByTagName("CELL").item(i).getChildNodes().item(0).getTextContent().trim() + ";";
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("uID", pPageID);
+			map.put("parentUID", pParentPageID);
+			map.put("depth", depth);
+			map.put("displayName", displayName);
+			map.put("displayName2", displayName2);
+			map.put("creatorID", pUserID);
+			map.put("creatorName", pUserName);
+			map.put("width", width);
+			map.put("height", height);
+			map.put("rowLength", rowLength);
+			map.put("columnLength", columnLength);
+			map.put("rowSplit", rowSplit);
+			map.put("columnSplit", columnSplit);
+			map.put("gubunFlag", gubunFlag);
+			map.put("companyID", pComapnyID);
+			map.put("themeUID", pThemeUID);
+			map.put("tableViewOption", pTableViewOption);
+System.out.println("11111");
+			ezPortalAdminDAO.insertTblPortalPageGeneral(map);
+			
+			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+				for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
+					portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
+					portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
+					portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+					portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+					
+					PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
+					portletWidth = String.valueOf(widthDom2.getWidth());
+					
+					portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+					portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
+					portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
+					portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
+					portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
+					
+					if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
+						for (int k=0; k<depth; k++) {
+							interval /= 10;
+						}
+						rowPos = previousRowPos + interval * (j + 1);
+						interval = 100000;
+						
+						if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID) == 0) {
+							Map<String, Object> map2 = new HashMap<String, Object>();
+							map2.put("uID", portletUID);
+							map2.put("pageUID", pPageID);
+							map2.put("parentPageID", pParentPageID);
+							map2.put("ownerPageID", portletOwnerPageUID);
+							map2.put("portletType", portletType);
+							map2.put("displayName", portletDisplayName);
+							map2.put("width", portletWidth);
+							map2.put("height", portletHeight);
+							map2.put("rowPos", rowPos);
+							map2.put("columnPos", String.valueOf(i + 1));
+							map2.put("canRemove", portletCanRemove);
+							map2.put("canResize", portletCanResize);
+							map2.put("canReplace", portletCanReplace);
+System.out.println("22222");
+							ezPortalAdminDAO.insertTblPortalPageItems(map2);
+						}
+					} else {
+						Map<String, Object> map2 = new HashMap<String, Object>();
+						map2.put("v_pPORTLET_UID", portletUID);
+						map2.put("v_pPORTLET_PAGEUID", portletPageUID);
+						map2.put("v_pPCOLUMNPOS", String.valueOf(i+1));
+						previousRowPos = ezPortalAdminDAO.savePortalPage8(map2);
+					}
+					
+					
+				}
+			}
+		} else {
+			if (result > 0) {
+				width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
+				height = xmlDom.getElementsByTagName("HEIGHT").item(0).getTextContent().trim();
+				columnLength = String.valueOf(xmlDom.getElementsByTagName("CELL").getLength());
+				displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+				displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent().trim();
+				gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent().trim();
+				pUserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+				pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+				pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
+				pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
+				
+				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+					columnSplit += xmlDom.getElementsByTagName("CELL").item(i).getChildNodes().item(0).getTextContent().trim() + ";";
+				}
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("displayName", displayName);
+				map.put("displayName2", displayName2);
+				map.put("width", width);
+				map.put("height", height);
+				map.put("rowLength", rowLength);
+				map.put("columnLength", columnLength);
+				map.put("rowSplit", rowSplit);
+				map.put("columnSplit", columnSplit);
+				map.put("gubunFlag", gubunFlag);
+				map.put("pThemeUID", pThemeUID);
+				map.put("tableViewOption", pTableViewOption);
+				map.put("pPageID", pPageID);
+				ezPortalAdminDAO.updatePortalPageGeneral(map);
+				
+				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+					previousRowPos = 0;
+					for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
+						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
+						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
+						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+						portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+						
+						PortalPortletGeneralVO widthDom =  ezPortalAdminDAO.getPortletProperties(portletUID);
+						portletWidth = String.valueOf(widthDom.getWidth());
+						
+						portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
+						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
+						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
+						portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
+						portletPrevPageID = xmlDom.getElementsByTagName("PREVPAGEID").item(j).getTextContent().trim();
+						
+						if (portletPrevPageID != null && !portletPrevPageID.equals("")) {
+							Map<String, Object> map2 = new HashMap<String, Object>();
+							map2.put("v_pPORTLET_PREVPAGEID", portletPrevPageID);
+							map2.put("v_pCOLUMNPOS", String.valueOf(i+1));
+							ezPortalAdminDAO.savePortalPage2(map2);
+						}
+						
+						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
+							if (portletType.equals("1")) {
+								depth = ezPortalAdminDAO.savePortalPage3(portletUID);
+							} else {
+								depth = ezPortalAdminDAO.savePortalPage4(portletPageUID);
+							}
+							
+							for (int k=0; k<depth; k++) {
+								interval /= 10;
+							}
+							rowPos = previousRowPos + interval * (j+1);
+							interval = 100000;
+							
+							Map<String, Object> map3 = new HashMap<String, Object>();
+							map3.put("v_pPORTLET_UID", portletUID);
+							map3.put("v_pPPAGEID", pPageID);
+							map3.put("v_pPPARENTPAGEID", pParentPageID);
+							map3.put("v_pPORTLET_OWNERPAGEUID", portletOwnerPageUID);
+							result = ezPortalAdminDAO.savePortalPage5(map3);
+							
+							if (result > 0) {
+								Map<String, Object> map4 = new HashMap<String, Object>();
+								map4.put("portletType", portletType);
+								map4.put("displayName", portletDisplayName);
+								map4.put("width", portletWidth);
+								map4.put("height", portletHeight);
+								map4.put("rowPos", rowPos);
+								map4.put("columnPos", String.valueOf(i+1));
+								map4.put("canRemove", portletCanRemove);
+								map4.put("canResize", portletCanResize);
+								map4.put("canReplace", portletCanReplace);
+								map4.put("uID", portletUID);
+								map4.put("pageUID", pPageID);
+								map4.put("parentPageUID", pParentPageID);
+								map4.put("ownerPageUID", portletOwnerPageUID);
+								ezPortalAdminDAO.updateTblPortalPageItems(map4);
+							} else {
+								if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID) == 0) {
+									Map<String, Object> map5 = new HashMap<String, Object>();
+									map5.put("uID", portletUID);
+									map5.put("pageUID", pPageID);
+									map5.put("parentPageID", pParentPageID);
+									map5.put("ownerPageID", portletOwnerPageUID);
+									map5.put("portletType", portletType);
+									map5.put("displayName", portletDisplayName);
+									map5.put("width", portletWidth);
+									map5.put("height", portletHeight);
+									map5.put("rowPos", rowPos);
+									map5.put("columnPos", String.valueOf(i+1));
+									map5.put("canRemove", portletCanRemove);
+									map5.put("canResize", portletCanResize);
+									map5.put("canReplace", portletCanReplace);
+System.out.println("33333");
+									ezPortalAdminDAO.insertTblPortalPageItems(map5);
+								}
+							}
+							strUIDList += "'" + portletUID + "',";
+							
+						} else {
+							Map<String, Object> map6 = new HashMap<String, Object>();
+							map6.put("v_pPORTLET_UID", portletUID);
+							map6.put("v_PPORTLET_PAGEUID", portletPageUID);
+							map6.put("v_pPCOLUMNPOS", String.valueOf(i+1));
+							previousRowPos = ezPortalAdminDAO.savePortalPage6(map);
+						}
+					} 
+				}
+				
+				if (strUIDList.equals("")) {
+					strUIDList = "'',";
+				}
+				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
+				arr = strUIDList.split(",");
+				pArrParam = "";
+				for (i = 0; i<arr.length; i++) {
+					if (i==0) {
+						pArrParam += ": v_" + String.valueOf(i);
+					} else {
+						pArrParam += ", : v_" + String.valueOf(i);
+					}
+				}
+				
+				Map<String, Object> map7 = new HashMap<String, Object>();
+				map7.put("pArrParam", pArrParam);
+				map7.put("pageUID", pPageID);
+				map7.put("parentPageUID", pParentPageID);
+				List<String> resultXML = ezPortalAdminDAO.selectTblPortalPageItemsUID(map7);
+				for (i=0; i<arr.length; i++) {
+					temp = "v_" + String.valueOf(i);
+				}
+				
+				for (i=0; i<resultXML.size(); i++) {
+					deleteSubPage(resultXML.get(i));
+					ezPortalAdminDAO.deletePortalPageGeneralUID(resultXML.get(i));
+				}
+				
+				Map<String, Object> map8 = new HashMap<String, Object>();
+				map8.put("strUIDList", strUIDList);
+				map8.put("pageUID", pPageID);
+				map8.put("parentPageUID", pParentPageID);
+				map8.put("callingPageID", pCallingPageID);
+				ezPortalAdminDAO.deletePortalPageItems(map8);
+				ezPortalAdminDAO.deletePortalPageCache(pPageID);
+			} else {
+				width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
+				height = xmlDom.getElementsByTagName("HEIGHT").item(0).getTextContent().trim();
+				columnLength = String.valueOf(xmlDom.getElementsByTagName("CELL").getLength());
+				displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+				displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent().trim();
+				gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent().trim();
+				pUserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
+				pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+				pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
+				pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
+				
+				if (pParentPageID.toLowerCase().equals("top")) {
+					depth = 1;
+				} else {
+					depth = ezPortalAdminDAO.savePortalPage7(pParentPageID) + 1;
+				}
+				
+				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+					columnSplit += xmlDom.getElementsByTagName("CELL").item(i).getChildNodes().item(0).getTextContent().trim() + ";";
+				}
+				//
+				Map<String, Object> map9 = new HashMap<String, Object>();
+				map9.put("uID", pPageID);
+				map9.put("parentUID", pParentPageID);
+				map9.put("depth", depth);
+				map9.put("displayName", displayName);
+				map9.put("displayName2", displayName2);
+				map9.put("creatorID", pUserID);
+				map9.put("creatorName", pUserName);
+				map9.put("width", width);
+				map9.put("height", height);
+				map9.put("rowLength", rowLength);
+				map9.put("columnLength", columnLength);
+				map9.put("rowSplit", rowSplit);
+				map9.put("columnSplit", columnSplit);
+				map9.put("gubunFlag", gubunFlag);
+				map9.put("companyID", pComapnyID);
+				map9.put("themeUID", pThemeUID);
+				map9.put("tableViewOption", pTableViewOption);
+System.out.println("44444");
+				ezPortalAdminDAO.insertTblPortalPageGeneral(map9);
+				
+				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
+					for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
+						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
+						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
+						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+						portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+						
+						PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
+						portletWidth = String.valueOf(widthDom2.getWidth());
+						
+						portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
+						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
+						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
+						portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
+System.out.println("pPageID:"+pPageID);
+System.out.println("portletPageUID:"+portletPageUID);
+						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
+							for (int k=0; k<depth; k++) {
+								interval /= 10;
+							}
+							rowPos = previousRowPos + interval * (j + 1);
+							interval = 100000;
+System.out.println("itemCount:"+getItemsCount(pParentPageID, portletUID, portletOwnerPageUID));
+							if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID) == 0) {
+								Map<String, Object> map2 = new HashMap<String, Object>();
+								map2.put("uID", portletUID);
+								map2.put("pageUID", pPageID);
+								map2.put("parentPageID", pParentPageID);
+								map2.put("ownerPageID", portletOwnerPageUID);
+								map2.put("portletType", portletType);
+								map2.put("displayName", portletDisplayName);
+								map2.put("width", portletWidth);
+								map2.put("height", portletHeight);
+								map2.put("rowPos", rowPos);
+								map2.put("columnPos", String.valueOf(i + 1));
+								map2.put("canRemove", portletCanRemove);
+								map2.put("canResize", portletCanResize);
+								map2.put("canReplace", portletCanReplace);
+System.out.println("55555");
+								ezPortalAdminDAO.insertTblPortalPageItems(map2);
+							}
+						} else {
+							Map<String, Object> map2 = new HashMap<String, Object>();
+							map2.put("v_pPORTLET_UID", portletUID);
+							map2.put("v_pPORTLET_PAGEUID", portletPageUID);
+							map2.put("v_pPCOLUMNPOS", String.valueOf(i+1));
+							previousRowPos = ezPortalAdminDAO.savePortalPage8(map2);
+						}
+						
+						
+					}
+				}
+				//
+			}
+		}
+		
+		return "OK";
+	}
+	
+	public int getItemsCount (String pParentPageID, String portletUID, String portletOwnerPageUID) {
+		String pParentPageIDList = getParentPageIDList(pParentPageID);
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PORTLET_UID", portletUID);
+		map.put("v_PORTLET_OWNERPAGEUID", portletOwnerPageUID);
+		map.put("v_STRQUERY", pParentPageIDList);
+System.out.println("result1:"+ezPortalAdminDAO.getItemsCount(map));
+		int result = ezPortalAdminDAO.getItemsCount(map);
+		return result;
+	}
+	
+	public String getParentPageIDList (String pPortalPageID) {
+		String temp = pPortalPageID;
+		String parentPageID = "";
+		String parentPageIDList = "'" + pPortalPageID + "',";
+		int count = 0;
+		
+		while (count < 10) {
+			parentPageID = ezPortalAdminDAO.getParentPageIDList(temp);
+System.out.println(parentPageID);
+			
+			if (parentPageID == null || parentPageID.toLowerCase().trim().equals("top") || parentPageID.toLowerCase().trim().equals("")) {
+				break;
+			}
+			
+			parentPageIDList += "'" + parentPageID + "',";
+			temp = parentPageID;
+			count++;
+		}
+		parentPageIDList = parentPageIDList.substring(0, parentPageIDList.length()-1);
+		return parentPageIDList;
+	}
+	
+	public String setUsePage (String pUID, String pGubunFlag, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUSERFLAG", "Y");
+		map.put("v_pUID", pUID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		ezPortalAdminDAO.setUsePage2(map);
+		return "OK";
+	}
+	
+	public String outOfSetUsePage (String pUID, String pGubunFlag, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUSERFLAG", "");
+		map.put("v_pUID", pUID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		ezPortalAdminDAO.outOfSetUsePage(map);
+		return "OK";
+	}
+	
+	public String insertAclItem(String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+System.out.println("pXML1:"+pXML);
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String accessID = xmlDom.getElementsByTagName("ACCESSID").item(0).getTextContent();
+		String accessName = xmlDom.getElementsByTagName("ACCESSNAME").item(0).getTextContent();
+		String editRight = xmlDom.getElementsByTagName("EDIT_RIGHT").item(0).getTextContent();
+		String viewRight = xmlDom.getElementsByTagName("VIEW_RIGHT").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_ACCESSID", accessID);
+		map.put("v_ACCESSNAME", accessName);
+		map.put("v_EDIT_RIGHT", Integer.parseInt(editRight));
+		map.put("v_VIEW_RIGHT", Integer.parseInt(viewRight));
+		ezPortalAdminDAO.insertAclItem(map);
+		return "OK";
+	}
+	
+	public String deleteAclItem(String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String accessID = xmlDom.getElementsByTagName("ACCESSID").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_ACCESSID", accessID);
+		ezPortalAdminDAO.deleteAclItem(map);
+		return "OK";
 	}
 	
 }

@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -158,6 +159,11 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalPortletGeneralVO> searchPortletCheckRight2 (Map<String, Object> map) {
 		return (List<PortalPortletGeneralVO>) list("EzPortalDAO.searchPortletCheckRight2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalACLVO> getAclItems (String pUID) {
+		return (List<PortalTBLPortalACLVO>) list("EzPortalDAO.getAclItems", pUID);
 	}
 	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {

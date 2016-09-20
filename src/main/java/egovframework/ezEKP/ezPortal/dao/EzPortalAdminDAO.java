@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -15,6 +17,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> deleteTopPage (String pageUID) {
 		return  (List<String>)list("EzPortalAdminDAO.deleteTopPage", pageUID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> deletePortalPage (String pUID) {
+		return  (List<String>)list("EzPortalAdminDAO.deletePortalPage", pUID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -32,10 +39,32 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (List<String>)list("EzPortalAdminDAO.selectTblTopMenuItemsUID", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> selectTblPortalPageItemsUID (Map<String, Object> map) {
+		return (List<String>)list("EzPortalAdminDAO.selectTblPortalPageItemsUID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalSearchPortalPage2VO> searchPortalPage2(Map<String, Object> map) {
+		return (List<PortalSearchPortalPage2VO>)list("EzPortalDAO.searchPortalPage2", map);
+	}
+	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
 		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", uID);
 	}
 	
+	public PortalPortletGeneralVO getPortletProperties (String pUID) {
+		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties", pUID);
+	}
+	
+	public String getParentPageIDList (String pTemp) {
+		return (String)select("EzPortalAdminDAO.getParentPageIDList", pTemp);
+	}
+	
+	public int savePortalPage (String pageID) {
+		return (int)select("EzPortalAdminDAO.savePortalPage", pageID);
+	}
+
 	public int saveTopMenu (String uID) {
 		return (int)select("EzPortalAdminDAO.saveTopMenu", uID);
 	}
@@ -46,6 +75,34 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public int saveTopMenu5 (String pUID) {
 		return (int)select("EzPortalAdminDAO.saveTopMenu5", pUID);
+	}
+	
+	public int savePortalPage7 (String pParentPageID) {
+		return (int)select("EzPortalAdminDAO.savePortalPage7", pParentPageID);
+	}
+	
+	public int savePortalPage3 (String pPortletUID) {
+		return (int)select("EzPortalAdminDAO.savePortalPage3", pPortletUID);
+	}
+	
+	public int savePortalPage4 (String pPortletPageUID) {
+		return (int)select("EzPortalAdminDAO.savePortalPage4", pPortletPageUID);
+	}
+	
+	public int savePortalPage5 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.savePortalPage5", map);
+	}
+	
+	public int savePortalPage6 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.savePortalPage6", map);
+	}
+	
+	public int savePortalPage8 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.savePortalPage8", map);
+	}
+	
+	public int savePortalPage2 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.savePortalPage2", map);
 	}
 	
 	public int saveTopMenu3 (Map<String, Object> map) {
@@ -60,6 +117,15 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (int)select("EzPortalAdminDAO.saveTopMenu6", map);
 	}
 	
+	public int searchPortalPageCount2 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.searchPortalPageCount2", map);
+	}
+	
+	public int getItemsCount (Map<String, Object> map) {
+		select("EzPortalAdminDAO.getItemsCount", map);
+		return (int)map.get("v_pCount");
+	}
+	
 	public void portalSaveSkin (Map<String, Object> map) {
 		insert("EzPortalAdminDAO.portalSaveSkin", map);
 	}
@@ -72,12 +138,44 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.insertTblTopMenuGeneral", map);
 	}
 	
+	public void insertTblPortalPageGeneral (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.insertTblPortalPageGeneral", map);
+	}
+	
+	public void insertTblPortalPageItems (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.insertTblPortalPageItems", map);
+	}
+	
+	public void insertAclItem (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.insertAclItem", map);
+	}
+	
 	public void updateTopMenuGeneral (Map<String, Object> map) {
 		update("EzPortalAdminDAO.updateTopMenuGeneral", map);
 	}
 	
+	public void updatePortalPageGeneral (Map<String, Object> map) {
+		update("EzPortalAdminDAO.updatePortalPageGeneral", map);
+	}
+	
 	public void updateTblTopMenuItems (Map<String, Object> map) {
 		update("EzPortalAdminDAO.updateTblTopMenuItems", map);
+	}
+	
+	public void updateTblPortalPageItems (Map<String, Object> map) {
+		update("EzPortalAdminDAO.updateTblPortalPageItems", map);
+	}
+	
+	public void setUsePage2 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.setUsePage2", map);
+	}
+	
+	public void outOfSetUsePage (Map<String, Object> map) {
+		update("EzPortalAdminDAO.outOfSetUsePage", map);
+	}
+	
+	public void setDefaultPage (Map<String, Object> map) {
+		update("EzPortalAdminDAO.setDefaultPage", map);
 	}
 	
 	public void deleteTheme (String uID) {
@@ -86,6 +184,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void deleteTopMenuGeneralUID (String pUID) {
 		delete("EzPortalAdminDAO.deleteTopMenuGeneralUID", pUID);
+	}
+	
+	public void deletePortalPageGeneralUID (String pUID) {
+		delete("EzPortalAdminDAO.deletePortalPageGeneralUID", pUID);
 	}
 	
 	public void deleteTblMenuItemsS (String pUID) {
@@ -108,12 +210,32 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		delete("EzPortalAdminDAO.deleteTopMenuItems2", map);
 	}
 	
+	public void deletePortalPageItems (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPageItems", map);
+	}
+	
 	public void deleteTopMenuItems3 (Map<String, Object> map) {
 		delete("EzPortalAdminDAO.deleteTopMenuItems3", map);
 	}
 	
+	public void deleteAclItem (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteAclItem", map);
+	}
+	
 	public void deleteSkinItemsUID (String pUID) {
 		delete("EzPortalAdminDAO.deleteSkinItemsUID", pUID);
+	}
+	
+	public void deletePortalPageCache (String pPageID) {
+		delete("EzPortalAdminDAO.deletePortalPageCache", pPageID);
+	}
+	
+	public void deletePortalPage2 (String pUID) {
+		delete("EzPortalAdminDAO.deletePortalPage2", pUID);
+	}
+	
+	public void deletePortalPage3 (String pUID) {
+		delete("EzPortalAdminDAO.deletePortalPage3", pUID);
 	}
 	
 	public void setThemeInfo (Map<String, Object> map) {
@@ -124,8 +246,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		update("EzPortalAdminDAO.topSetUsePage2", map);
 	}
 	
-	public void outOfSetUsePage (Map<String, Object> map) {
-		update("EzPortalAdminDAO.outOfSetUsePage", map);
+	public void topOutOfSetUsePage (Map<String, Object> map) {
+		update("EzPortalAdminDAO.topOutOfSetUsePage", map);
 	}
 	
 	public void setUseLang (Map<String, Object> map) {

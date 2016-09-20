@@ -27,6 +27,7 @@
 	<typeAlias  alias="PortalSearchMyPortalPage3VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO"/>
 	<typeAlias  alias="PortalFirstMainListVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO"/>
 	<typeAlias  alias="PortalSearchPortalPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO"/>
+	<typeAlias  alias="PortalTBLPortalACLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -679,6 +680,12 @@
 	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.getAclItems" parameterClass="String"  resultClass="PortalTBLPortalACLVO" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETACLITEMS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

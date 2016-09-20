@@ -73,7 +73,7 @@
 						break;
 						
 					case 8:
-						url = "/myoffice/ezPortal/admin/portalpage_list.aspx";
+						url = "/admin/ezPortal/portalPageList.do";
 						break;
 						
 					case 9:

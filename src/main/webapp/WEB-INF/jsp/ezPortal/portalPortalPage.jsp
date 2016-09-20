@@ -335,7 +335,7 @@
 
 		function load()
 		{
-			var ret = window.showModalDialog("portalpage_search.aspx?mode=load");
+			var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=load");
 			if (typeof(ret) == "undefined") return;
 			
 			document.location.href = "/ezPortal/portalPage.do?pageID=" + ret[0];
@@ -344,7 +344,7 @@
 		// 상속
 		function inherit()
 		{
-			var ret = window.showModalDialog("portalpage_search.aspx?mode=inherit", "", "dialogHeight:300px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken");
+			var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=inherit", "", "dialogHeight:300px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken");
 			if (typeof(ret) == "undefined") return;
 			
 			document.location.href = "/ezPortal/portalPage.do?parentPageID=" + ret[0];
@@ -371,10 +371,11 @@
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(pDisplayName) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(pDisplayName2) + "</DISPLAYNAME2>";
 			strXML += "<THEMEINFO>" + ReplaceValidString(document.getElementById("Themeinfo").value) + "</THEMEINFO>";
+			strXML += "<TABLEVIEWOPTION>" + ReplaceValidString(document.getElementById("Optioninfo").value) + "</TABLEVIEWOPTION>";
 			strXML += "<WIDTH>" + pObject.getAttribute("width").toString().replace("px", "").replace("100%", "-1") + "</WIDTH>";
 			strXML += "<HEIGHT>" + pObject.getAttribute("height").toString().replace("px", "").replace("100%", "-1") + "</HEIGHT>";
 			strXML += "<PARENTPAGEID>" + pParentPageID + "</PARENTPAGEID>";
-			strXML += "<GUBUNFLAG>" + document.getElementById("portal_gubun").value + "</GUBUNFLAG>";
+			strXML += "<GUBUNFLAG>1</GUBUNFLAG>";
 			strXML += "<USERID>" + pUserID + "</USERID>";
 			strXML += "<USERNAME>" + pUserName + "</USERNAME>";
 
@@ -391,7 +392,12 @@
 					var td_item = pObject.children.item(0).children.item(0).children.item(i);			
 					
 					// 메인테이블이 수정되는 경우를 고려 - .replace("100%", "") 추가
-					strXML += "<WIDTH>" + td_item.style.width.toString().replace("px", "").replace("100%", "") + "</WIDTH>";
+					if (td_item.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML == "*") {
+					    strXML += "<WIDTH>9999</WIDTH>";
+					}
+					else {
+					    strXML += "<WIDTH>" + td_item.style.width.toString().replace("px", "").replace("100%", "") + "</WIDTH>";
+					}
 					
 					// 해당td내의 tr의 카운트 (TABLE/TBODY/TR)
 					for (var j=0; j<td_item.children.item(0).children.item(0).children.length; j++)
@@ -414,7 +420,7 @@
 						{
 							strXML += "<ROW>";
 							strXML += "<TYPE>0</TYPE>";
-							strXML += "<UID_>" + tdsub_item.getAttribute("UID_") + "</UID_>";
+							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
 							strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
 							strXML += "<DISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</DISPLAYNAME>";
@@ -431,7 +437,7 @@
 						{
 							strXML += "<ROW>";
 							strXML += "<TYPE>1</TYPE>";
-							strXML += "<UID_>" + tdsub_item.getAttribute("UID_") + "</UID_>";
+							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
 							strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
 							strXML += "<DISPLAYNAME>" + tdsub_item.getAttribute("pageuid") + "</DISPLAYNAME>";
@@ -455,7 +461,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			
-			xmlhttp.open("POST", "admin/remote/portal_SavePortalPage.aspx?callingpageid=" + pageid + "&pageid=" + pPageID + "&parentpageid=" + pParentPageID, false);		
+			xmlhttp.open("POST", "/admin/portalSavePortalPage.do?callingPageID=" + pageid + "&pageID=" + pPageID + "&parentPageID=" + pParentPageID, false);		
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 		}
@@ -500,7 +506,7 @@
 			
 			savesub(main_table, pageid, parentpageid, document.getElementById("txtDisplayName").value, document.getElementById("txtDisplayName2").value);	
             alert("<spring:message code='ezPortal.t59' />");
-		    document.location.href = "PortalPage.aspx?pageid=" + pageid + "&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName + "&mode=edit";
+		    document.location.href = "/ezPortal/portalPage.do?pageID=" + pageid + "&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName + "&mode=edit";
 		
 		}
 
@@ -1348,7 +1354,7 @@
 		}
 
 		function preview() {
-			window.open("PortalPage.aspx?mode=view&viewMode=preview&pageID=" + pageid + "&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName);
+			window.open("/ezPortal/portalPage.do?mode=view&viewMode=preview&pageID=" + pageid + "&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName + "&pageOption=" + document.getElementById("Optioninfo").value);
 		}
 
 		function OpenMaxURL(pURL)
@@ -1406,7 +1412,7 @@
 
 		function newpage()
 		{
-			location.href = "PortalPage.aspx";
+			location.href = "/ezPortal/portalPage.do";
 		}
 
 		function layoutmode()
@@ -1543,7 +1549,7 @@
 		  {
 		     //새로 고침 _ 현재의 PAGEID로 
 		     alert("<spring:message code='ezPortal.t408' />") ;
-		     location.href = "/myoffice/ezportal/PortalPage.aspx?mode=edit&pageid="+pageid;
+		     location.href = "/ezPortal/portalPage.do?mode=edit&pageID="+pageid;
 		  }
 		  else
 		  {
@@ -1569,7 +1575,7 @@
 				}
 				
 				var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "admin/edit/DeletePortalPage.aspx", false);
+				xmlhttp.open("POST", "/admin/ezPortal/deletePortalPage.do", false);
 				xmlhttp.send("<DATA><UID_>" + pageid + "</UID_></DATA>");
 				
 				if (xmlhttp.responseText == "OK")
@@ -1580,7 +1586,7 @@
 					if (g_ClassID != "")
 						location.href = "/myoffice/ezportal/myclassportal.aspx?mode=edit&pClassID=" + g_ClassID + "&pClassName=" + g_ClassName;
 					else
-    					location.href = "/myoffice/ezportal/myportal.aspx?mode=edit&ResetMyParentpageid="+parentpageid;
+    					location.href = "/ezPortal/myPortal.do?mode=edit&resetMyParentPageID="+parentpageid;
 					
 				}
 				else
@@ -1641,7 +1647,7 @@
   					<li><span onClick="swaprow('left')"><spring:message code="ezPortal.t72" /></span></li>
   					<li><span onClick="swaprow('right')"><spring:message code="ezPortal.t74" /></span></li>
 
-  				<% if (baseType.trim().toString().equals("1") || baseType.trim().toString().equals("2") ) { %>
+  				<% if ((baseType != null && baseType.trim().toString().equals("1")) || (baseType != null && baseType.trim().toString().equals("2"))) { %>
   					<!-- 상속페이지에서만 display -->
   					<li><span onClick="ResetPortalPage()"><spring:message code="ezPortal.t333" /></span></li>
   				<% } %>

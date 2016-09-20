@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -67,6 +68,8 @@ public interface EzPortalService {
 	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (String pUserID, String pGubunFlag) throws Exception;
 	
 	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath) throws Exception;
+	
+	public List<PortalTBLPortalACLVO> getAclItems (String pUID) throws Exception;
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) throws Exception;
 	

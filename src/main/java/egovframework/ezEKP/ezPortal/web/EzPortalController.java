@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
@@ -559,7 +560,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		try {
 			userInfo = commonUtil.userInfo(loginCookie);
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
-			langSecondary = config.getProperty("config.lang_Secondary1" + userInfo.getLang());
+			langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 			mode = "edit";
 			
 			// 페이지 ID
@@ -632,7 +633,12 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 			}
 			
 			// 새로만들기
-			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID).trim().equals("") ? "D" : ezPortalService.getPortalConfigItem("TableViewOption", pageID);
+			if (ezPortalService.getPortalConfigItem("TableViewOption", pageID) != null && !ezPortalService.getPortalConfigItem("TableViewOption", pageID).trim().equals("")) {
+				tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID);
+			} else {
+				tableViewOption = "D";
+			}
+			
 			if (mode.trim().equals("new")) {
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
@@ -661,7 +667,22 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID);
 	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
 	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
-	                    
+	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
+	        	String xmlStr = "<DATA>";
+				for (int i=0; i<themeList.size(); i++) {
+					xmlStr += commonUtil.getQueryResult(themeList.get(i));
+				}
+				xmlStr += "</DATA>";
+				Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+				
+				for (int i=0; i<themeList.size(); i++) {
+					if (pSelectThemeUID != null && pSelectThemeUID.equals(themeList.get(i).getuID())) {
+						pThemeSelectObject += "<option value='" + themeList.get(i).getuID() + "' selected>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent() + "</option>";
+					} else {
+						pThemeSelectObject += "<option value='" + themeList.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
+					}
+					
+				}        
 	            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
 	            if (editMode.equals("new_inherit")) {
 	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID);
@@ -692,6 +713,8 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 			model.addAttribute("pSelectThemeUID", pSelectThemeUID);
 			model.addAttribute("gubunFlag", gubunFlag);
 			model.addAttribute("myPortalPageID", myPortalPageID);
+			model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
+			model.addAttribute("userInfo", userInfo);
 			
 			return "/ezPortal/portalPortalPage";
 		} catch (Exception e) {
@@ -915,7 +938,6 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		userInfo = commonUtil.userInfo(loginCookie);
 		try {
 			List<PersonalGetSliderListVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
-			
 			model.addAttribute("sliderList", sliderList);
 			return "/ezPortal/portalWpNewImage";
 		} catch (Exception e) {
@@ -2103,5 +2125,19 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		return strXML;
 	}
 	
-	
+	/**
+	 * 포탈 - 포탈페이지 권한 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/portalPageACL.do")
+	public String portalPageACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID);
+		model.addAttribute("list", list);
+		model.addAttribute("uID", uID);
+		return "/ezPortal/portalPortalPageACL";
+	}
 }

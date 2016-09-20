@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
 import egovframework.let.user.login.service.LoginService;
@@ -450,7 +451,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		ezPortalAdminService.outOfSetUsePage(uID, userInfo.getCompanyID());
+		ezPortalAdminService.topOutOfSetUsePage(uID, userInfo.getCompanyID());
 		
 		return "OK";
 	}
@@ -528,7 +529,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String pageID = "";
 		String parentPageID = "";
-System.out.println("pageID:"+req.getParameter("pageID"));
+
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 			pageID = req.getParameter("pageID");
 		}
@@ -541,5 +542,274 @@ System.out.println("pageID:"+req.getParameter("pageID"));
 		
 		return ret;
 	}
+	
+	/**
+	 * 관리자 포탈  포탈페이지관리 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portalPageList.do")
+	public String portalPageList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pSearchString = "";
+		String portalGubun = "";
+		int recordCnt = 0;
+		int intPage = 1;
+		int totalPage = 1;
+		String portalPageCategoryXML = "";
+		String defaultPageUID = "";
+		
+		if (commonUtil.checkAdmin(loginCookie)) {
+			if (req.getParameter("pSearchString") != null && !req.getParameter("pSearchString").equals("")) {
+				pSearchString = req.getParameter("pSearchString");
+			}
+			if (req.getParameter("portalGubun") != null && !req.getParameter("portalGubun").equals("")) {
+				portalGubun = req.getParameter("portalGubun");
+			}
+			if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
+				if (Integer.parseInt(req.getParameter("intPage")) > 0) {
+					intPage = Integer.parseInt(req.getParameter("intPage"));
+				}
+			}
+			
+			int listPageSize = 15; // 목록갯수
+			
+			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+			
+			// 전체선택시 Root페이지만 보여지도록 설정
+			if (portalGubun == null || portalGubun.equals("")) {
+				for (int i=0; i<list.size(); i++) {
+					if (portalGubun == null || portalGubun.equals("")) {
+						portalGubun = "'" + list.get(i).getCategory() + "'";
+					} else {
+						portalGubun += ",'" + list.get(i).getCategory() + "'";
+					}
+				}
+			}
+			
+			recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID());
+			totalPage = (recordCnt - 1) / listPageSize + 1; // 총 페이지수
+			
+			int pStartRow = 0;
+			int pEndRow = 0;
+			pStartRow = intPage * listPageSize - listPageSize + 1;
+			pEndRow = intPage * listPageSize;
+			
+			String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+System.out.println("strXML:"+strXML);
+			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+				if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().trim().equals("Y")) {
+					defaultPageUID = xmlDom.getElementsByTagName("UID").item(i).getTextContent();
+					break;
+				}
+			}
+
+			String mainHtml = "";
+			for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+				mainHtml += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("GUBUNFLAG").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID").item(i).getTextContent()+"', this)\">";
+				mainHtml += "<td width=\"120\" style=\"display:none\">";
+					if (xmlDom.getElementsByTagName("GUBUNFLAG").item(i).getTextContent().indexOf("c") < 0) {
+						mainHtml += xmlDom.getElementsByTagName("GUBUNNAME").item(i).getTextContent() + "Root";
+					} else {
+						mainHtml += xmlDom.getElementsByTagName("GUBUNNAME").item(i).getTextContent();
+					}
+				mainHtml += "</td>";
+				mainHtml += "<td>" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent() +"</td>"; 
+	            mainHtml += "<td width='100'>"; 
+	            
+	            if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent() == null || xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("")) {
+	            	mainHtml += "";
+	            } else {
+	            	if (xmlDom.getElementsByTagName("DEFAULTPAGE").getLength() != 0 && xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().trim().equals("Y")) {
+	            		mainHtml += egovMessageSource.getMessage("ezPortal.t259", locale);	
+	            	} else {
+	            		mainHtml += "";
+	            	}
+	            }
+	            
+	            mainHtml += "</td>";
+	            mainHtml += "<td width='150'>"+xmlDom.getElementsByTagName("THEMENM" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>"; 
+				mainHtml += "<td width='130'>";
+				if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
+					mainHtml += egovMessageSource.getMessage("ezPortal.t259", locale);
+				}
+				mainHtml += "</td>";
+				
+				mainHtml += "<td width='170'>"+xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent()+"</td>";
+				
+				mainHtml += "</tr>";
+			}
+
+			model.addAttribute("intPage", intPage);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("pSearchString", pSearchString);
+			model.addAttribute("portalGubun", portalGubun);
+			model.addAttribute("pSearchString", pSearchString);
+			model.addAttribute("defaultPageUID", defaultPageUID);
+			model.addAttribute("mainHtml", mainHtml);
+			return "/admin/ezPortal/portalPageList";
+		} else {
+			return "";
+		}
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/deletePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String deletePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		
+		String ret = ezPortalAdminService.deletePortalPage(uID);
+		
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/portalSavePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String portalSavePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String callPageID = "";
+		String pageID = "";
+		String parentPageID = "";
+		String type = "";
+		
+		if (req.getParameter("callingPageID") != null && !req.getParameter("callingPageID").equals("")) {
+			callPageID = req.getParameter("callingPageID");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		}
+		if (req.getParameter("type") != null && !req.getParameter("type").equals("")) {
+			type = req.getParameter("type");
+		}
+		
+		String ret = ezPortalAdminService.savePortalPage(callPageID, pageID, parentPageID, xmlStr, userInfo.getCompanyID(), type);
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 선택페이지사용 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/usePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String usePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String uID = "";
+		String gubunFlag = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("gubunFlag") != null && !req.getParameter("gubunFlag").equals("")) {
+			gubunFlag = req.getParameter("gubunFlag");
+		}
+		
+		String result = ezPortalAdminService.setUsePage(uID, gubunFlag, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 선택페이지사용 취소 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/outOfUsePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String outOfUsePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String uID = "";
+		String gubunFlag = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("gubunFlag") != null && !req.getParameter("gubunFlag").equals("")) {
+			gubunFlag = req.getParameter("gubunFlag");
+		}
+		
+		String result = ezPortalAdminService.outOfSetUsePage(uID, gubunFlag, userInfo.getCompanyID());
+		
+		return result;
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 기본페이지 설정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/setDefaultPortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String setDefaultPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		String pUID = xmlDom.getElementsByTagName("PAGEUID").item(0).getTextContent();
+		String pGubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+		String pFlag = xmlDom.getElementsByTagName("FLAG").item(0).getTextContent();
+		
+		ezPortalAdminService.setDefaultPage(pUID, pFlag, pGubunFlag, userInfo.getCompanyID());
+		
+		return "OK";
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 권한설정 권한 설정 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/addRight.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String addRight(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ret = ezPortalAdminService.insertAclItem(xmlStr);
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 포탈페이지관리 권한설정 권한 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/removeACL.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String removeACL(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ret = ezPortalAdminService.deleteAclItem(xmlStr);
+		return ret;
+	}
+	
+	
+	/**
+	 * 관리자 포탈 상단메뉴영역설정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/selectTarget.do")
+	public String selectTarget(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String topID = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("defaultwin", "To");
+		model.addAttribute("strXML", "");
+		model.addAttribute("topID", topID);
+		model.addAttribute("useOCS", "");
+		model.addAttribute("pSearchString", "");
+		return "/admin/ezPortal/portalSelectTarget";
+		
+	}
+	
 	
 }

@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageItemsVO;
@@ -584,6 +585,11 @@ public class EzPortalServiceImpl implements EzPortalService {
 		map.put("v_PUSETOPMENUID", pUseTopMenuID);
 		map.put("v_DEPTPATH", deptPath);
 		return ezPortalDAO.firstMainList(map);
+	}
+	
+	@Override
+	public List<PortalTBLPortalACLVO> getAclItems(String pUID) throws Exception {
+		return ezPortalDAO.getAclItems(pUID);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
@@ -1736,9 +1742,9 @@ public class EzPortalServiceImpl implements EzPortalService {
             			String columnWidth = "*";
             			if (i == Integer.parseInt(pageColumnLength) - 1) {
             				sb.append("<TD id=td0 vAlign=top");
-            				if (!pageColumnSplit.equals("")) {
-            					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-            						columnWidth = pageColumnSplit.split(";")[i] + "px";
+            				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+            					if (pageColumnSplit.split("\\;")[i] != null && !pageColumnSplit.split("\\;")[i].equals("") && !pageColumnSplit.split("\\;")[i].equals("*")) {
+            						columnWidth = pageColumnSplit.split("\\;")[i] + "px";
             						if (columnWidth.equals("9999px")) {
             							sb.append(">\n");
             						} else {
@@ -2217,7 +2223,7 @@ public class EzPortalServiceImpl implements EzPortalService {
 			
 			StringBuilder pThemeSelectObject = new StringBuilder();
 			for (int i=0; i<list.size(); i++) {
-				if (pSelectThemeUID.equals(list.get(i).getuID())) {
+				if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
 					switch (Integer.parseInt(userInfo.getLang())) {
 					case 1:
 						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName() + "</option>");
