@@ -429,7 +429,7 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1><spring:message code='ezEmail.t357' /></h1>
+		<h1><spring:message code='ezEmail.t353' /></h1>
 		<h2><spring:message code='ezEmail.t358' /></h2>
 		<table style="width:100%;" class="content">
 		  <tr>
