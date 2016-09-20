@@ -360,12 +360,16 @@
 		    {  
 		        document.all("SelectToAddress").innerHTML = "";
 		        document.all("SelectCcAddress").innerHTML = "";
+		        document.all("SelectBCCAddress").innerHTML = "";
 		        newoption1 = new Option(strLang199, strLang199);
 		        CCnewoption1 = new Option(strLang199, strLang199);
+		        BCCnewoption1 = new Option(strLang199, strLang199);
 			    document.all("SelectToAddress").options[0] = newoption1;
 			    document.all("SelectToAddress").options[0].selected =  true;
 			    document.all("SelectCcAddress").options[0] = CCnewoption1;
 			    document.all("SelectCcAddress").options[0].selected =  true;
+			    document.all("SelectBCCAddress").options[0] = BCCnewoption1;
+			    document.all("SelectBCCAddress").options[0].selected =  true;
 			    Add_xmlhttp = createXMLHttpRequest();
 		        Add_xmlhttp.open("Post","/ezEmail/mailGetAddress.do",true);
 		        Add_xmlhttp.onreadystatechange = Simple_Choice_complete;
@@ -388,9 +392,11 @@
 				        lastindex = document.getElementById("SelectToAddress").childNodes.length;
 			            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
 			            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+			            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
 		
 				        document.getElementById("SelectToAddress").options[lastindex] = newoption;
 				        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
+				        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
 				    }  
 				}
 				}catch(e){}
@@ -452,6 +458,12 @@
 		            document.getElementById("MsgBCC_TRu").style.display = "none";
 		            document.getElementById("MsgBCC_TR").style.display = "none";
 		            obj.setAttribute("status","off");
+		        }
+		        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
+		            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+		        }
+		        else {
+		            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
 		        }
 		    }
 		    function ReserverdMail_Save()
@@ -655,9 +667,7 @@
 		          </tr>
 		          <tr id="MsgCC_TR">
 		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')"><spring:message code='ezEmail.t594' /></span></a>
-		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
-		                	<img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
-		                </div>
+		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
@@ -671,8 +681,12 @@
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
-		            <td colspan="3"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" TABINDEX="3" style="WIDTH:99%"></td>
-		            
+		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" TABINDEX="3" style="WIDTH:99%"></td>
+		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
+		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
+		                </select>
+		            </td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
 		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
