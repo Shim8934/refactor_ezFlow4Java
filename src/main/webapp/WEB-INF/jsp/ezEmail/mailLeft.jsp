@@ -348,7 +348,13 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function mail_import_Complete() {
-	            window.parent.frames["right"].MailListRefresh();
+	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
+	                window.parent.frames["right"].MailListRefresh();
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	            PostTreeView.update();
+	            if (PostTreeView.selectedIndex() == -1) {
+	                PostTreeView.select(1);
+	            }
 	        }
 	        function mail_Config() {
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
