@@ -154,7 +154,7 @@
 		
 		<link href="/css/main.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezapprovalG_KO.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
 		<script type="text/javascript">
 	    var arr_userinfo = new Array();
 	    arr_userinfo[0] = "user";
