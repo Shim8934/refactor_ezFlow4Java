@@ -164,7 +164,9 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezEmail.t270' /></h1>
-	    <table class="popuplist" id="msg" style="overflow: auto; width: 315px; height: 220px; word-break: break-all;"></table>
+	    <div style="overflow: auto; width: 315px; height: 220px;">
+	    	<table class="popuplist" id="msg" style="overflow: auto; width: 100%; height: 220px; word-break: break-all;"></table>
+	    </div>
 	    <div style="text-align: center; margin-top: 5px;">
 	        <a class="imgbtn"><span onclick="btn_click()" id="btn_close"><spring:message code='ezEmail.t38' /> </span></a>
 	        <a class="imgbtn"><span onclick="btn_cancel()" id="btn_cancel"><spring:message code='ezEmail.t39' /> </span></a>
