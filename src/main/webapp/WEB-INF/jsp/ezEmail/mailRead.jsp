@@ -402,7 +402,14 @@
 			                        </a>					
 		                        </DIV>
 		                    </td>
-		                    <th><spring:message code="ezEmail.t657" /></th>
+		                    <th>
+		                    <c:if test="${isSentItems == true}">
+		                    <spring:message code="ezEmail.t704" />
+		                    </c:if>		                    
+		                    <c:if test="${isSentItems != true}">
+		                    <spring:message code="ezEmail.t657" />
+		                    </c:if>
+		                    </th>
 		                    <td style="border-right-color:#ffffff;">
 		                        <div id="ReceiveDate" style="OVERFLOW-Y: auto;padding-top:2px;padding-left:5px;padding-right:5px; width:150px;"> 
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
