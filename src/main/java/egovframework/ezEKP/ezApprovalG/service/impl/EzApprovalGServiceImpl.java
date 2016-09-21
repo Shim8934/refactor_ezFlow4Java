@@ -15818,13 +15818,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (k == 0)
 					{
-						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETID").item(j).getTextContent()) + "</DATA1>");
-						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(j).getTextContent()) + "</DATA2>");
-						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("OWNERID").item(j).getTextContent()) + "</DATA3>");
-						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(j).getTextContent()) + "</DATA4>");
-						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(j).getTextContent()) + "</DATA5>");
-						resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("TERMINATEFLAG").item(j).getTextContent()) + "</DATA6>");
-						resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("TRANSDELAYFLAG").item(j).getTextContent()) + "</DATA7>");
+						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETID").item(j).getTextContent().trim()) + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(j).getTextContent().trim()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("OWNERID").item(j).getTextContent().trim()) + "</DATA3>");
+						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(j).getTextContent().trim()) + "</DATA4>");
+						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(j).getTextContent().trim()) + "</DATA5>");
+						resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("TERMINATEFLAG").item(j).getTextContent().trim()) + "</DATA6>");
+						resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("TRANSDELAYFLAG").item(j).getTextContent().trim()) + "</DATA7>");
 					}
 					resultXML.append("</CELL>");
 				}
