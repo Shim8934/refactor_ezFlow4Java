@@ -142,7 +142,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String cc = "";
 		String bcc = "";
 		String from = "";
-		String body = "";
+		//String body = "";
 		String subject = "";
 		String importance = "1";
 		String postType = "0";
@@ -338,10 +338,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                 mailSign3 = mailSignatureVO.getContent3();
                 mailSignSel = mailSignatureVO.getUseFlag().trim();
                 
-                mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
-                mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
-                mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
-                
                 switch (mailSignSel) {
                     case "1": resultXML = mailSign1; break;
                     case "2": resultXML = mailSign2; break;
@@ -354,7 +350,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
                 resultXML = "";
             }
             
-            body = EgovStringUtil.getSpclStrCnvr("<DIV style='font-size:12px;'><br><br><DIV id='MailSign'>" + resultXML + "</div><br></DIV>");
+            //사용안함(폼프로세스에서 사용하는것 같음)
+            //body = EgovStringUtil.getSpclStrCnvr("<DIV style='font-size:12px;'><br><br><DIV id='MailSign'>" + resultXML + "</div><br></DIV>");
         } 
         // when _url is passed in from the client
         else if (!_url.equals("")) {
@@ -439,7 +436,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                    mailSign2 = mailSignatureVO.getContent2();
 		                    mailSign3 = mailSignatureVO.getContent3();
 		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-		                } 
+		                }
+						
+						//임시보관함에서 메일 더블클릭해서 수정할 때에는 서명사용안함이 default.
 	                    mailSignSel = "0";
 						
 		        	}
@@ -548,13 +547,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                    mailSign3 = mailSignatureVO.getContent3();
 		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
 		                    
-		                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
-		                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
-		                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
-		                    
-		                } else {
-		                    mailSignSel = "0";
 		                }
+		                    
+		                //메일 재전송할 때에는 서명사용안함이 default.
+	                    mailSignSel = "0";
 		                
 		        	}
 		        	// in case of replying
@@ -753,10 +749,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		                    mailSign3 = mailSignatureVO.getContent3();
 		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
 		                    
-		                    mailSign1 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign1 + "<br /></DIV></DIV>";
-		                    mailSign2 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign2 + "<br /></DIV></DIV>";
-		                    mailSign3 = "<DIV style='font-size:12px;'><br /><br /><DIV id='MailSign'> " + mailSign3 + "<br /></DIV></DIV>";
-		                    
 		                } else {
 		                    mailSignSel = "0";
 		                }
@@ -883,7 +875,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
 		model.addAttribute("from", from);
-		model.addAttribute("body", body);
+		//model.addAttribute("body", body);
 		model.addAttribute("subject", subject);
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
 		model.addAttribute("importance", importance);
@@ -1692,8 +1684,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	                	message.setContent(textBody, "text/plain; charset=utf-8");
 	                	content.setContent(textBody, "text/plain; charset=utf-8");
 	                } else {
-	                	message.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
-	                	content.setContent(textBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/plain; charset=utf-8");
+	                	message.setContent(textBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/plain; charset=utf-8");
+	                	content.setContent(textBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/plain; charset=utf-8");
 	                }
 	            } else {
 	            	message.setContent(textBody, "text/plain; charset=utf-8");
@@ -1705,8 +1697,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	                	message.setContent(htmlBody, "text/html; charset=utf-8");
 	                	content.setContent(htmlBody, "text/html; charset=utf-8");
 	                } else {
-	                	message.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
-	                	content.setContent(htmlBody.replaceAll("<DIV id=MailSign", "<DIV id=MailSignSent"), "text/html; charset=utf-8");
+	                	message.setContent(htmlBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/html; charset=utf-8");
+	                	content.setContent(htmlBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/html; charset=utf-8");
 	                }
 	            } else {
 	            	message.setContent(htmlBody, "text/html; charset=utf-8");
