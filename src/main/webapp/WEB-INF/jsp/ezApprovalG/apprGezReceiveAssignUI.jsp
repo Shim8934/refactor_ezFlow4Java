@@ -196,19 +196,21 @@
 	                textUser.focus();
 	            }
 	            else {
-	                var xmlpara = createXmlDom();
-	                var xmlHTTP = createXMLHttpRequest();
-	                var xmlDOM = createXmlDom();
-	                var objNode;
-	                createNodeInsert(xmlDOM, objNode, "DATA");
-	                createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + "${userInfo.companyID}");
-	                createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayname;title;description;telephonenumber");
-	                createNodeAndInsertText(xmlDOM, objNode, "PROP", "Department;extensionAttribute4;displayname;title;Description");
-	                createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-	                g_xmlHTTP = createXMLHttpRequest();
-	                g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", true);
-	                g_xmlHTTP.onreadystatechange = event_displayUserList;
-	                g_xmlHTTP.send(xmlDOM);
+                	$.ajax({
+                		type : "POST",
+                		dataType : "xml",
+                		async : true,
+                		url : "/ezOrgan/getSearchList.do",
+                		data : {
+                			search : "displayname::" + strSearch + ";;physicalDeliveryOfficeName::" + "${userInfo.companyID}",
+                			cell   : "displayname;title;description;telephonenumber",
+                			prop   : "department;extensionAttribute4;displayname;title;description",
+                			type   : "user"
+                		},
+                		success: function(xml){
+                			event_displayUserList(xml);
+                		}        			
+                	});
 	            }
 	    } catch (ErrMsg) {
 	        alert(ErrMsg.description);

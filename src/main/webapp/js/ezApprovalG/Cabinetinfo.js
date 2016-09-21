@@ -386,7 +386,7 @@ function NewVolume(pCabID, pCabClassNo) {
     para[0] = pCabID;
     para[1] = pCabClassNo;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/AddVolume_Cross.aspx";
+    var url = "/ezApprovalG/addVolume.do";
     if (CrossYN() || NonActiveX == "YES") {
         addvolume_cross_dialogArguments[0] = para;
         addvolume_cross_dialogArguments[1] = NewVolume_Complete;
@@ -411,19 +411,24 @@ function NewVolume_Complete(rtn) {
 }
 
 function AddNewVolume(pCabClassNo, pNewVolNo) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-    createNodeAndInsertText(xmlpara, objNode, "CABCLASSNO", pCabClassNo);
-    createNodeAndInsertText(xmlpara, objNode, "NEWVOLNO", pNewVolNo);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezCabinet/aspx/API_AddNewVolume.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/addNewVolume.do",
+		data : {
+			cabClassNO : pCabClassNo,
+			companyID  : CompanyID,
+			newVolNO   : pNewVolNo
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    var dataNodes = GetChildNodes(result);
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {
@@ -440,21 +445,28 @@ function CabinetSearch_onclick() {
     } 
     var SearchNum = document.getElementById("selSearchOption").selectedIndex;
     if (SearchNum == "0") {
-        var XmlHttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETERS");
-        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-        createNodeAndInsertText(xmlpara, objNode, "PROCESSDEPTCODE", arr_userinfo[4]);
-
-        var date = new Date();        
-        createNodeAndInsertText(xmlpara, objNode, "PRODUCTIONYEAR", date.getFullYear());
-        createNodeAndInsertText(xmlpara, objNode, "SEARCHKEYWORD", document.getElementById("Cabinetkeyword").value);
-        createNodeAndInsertText(xmlpara, objNode, "FLAG", "1");
-        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "1");
-        XmlHttp.open("POST", "/myoffice/ezApprovalG/ezLine/aspx/GetCabinetSearch.aspx", false);
-        XmlHttp.send(xmlpara);
-        var rtnXml = XmlHttp.responseXML;
+    	var date = new Date();    
+        var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "xml",
+    		async : false,
+    		url : "/ezApprovalG/getCabinetSearchAll.do",
+    		data : {
+    			companyID : CompanyID,
+    			processDeptCode : arr_userinfo[4],
+    			productionYear  : date.getFullYear(),
+    			searchKeyword   : document.getElementById("Cabinetkeyword").value,
+    			flag : "1",
+    			langType : "1"
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
+        
+        var rtnXml = result;
         var iSeledtedIdx = 0;
         if (SelectSingleNodeValue(rtnXml, "RESULT") == "FALSE") {
             alert(linealt17);

@@ -151,16 +151,10 @@ function displayUserList(DeptID) {
 }
 //안씀
 function event_displayUserList(result) {
-        if (g_xmlHTTP.statusText == "OK") {
-            var listview = new ListView();
-            listview.LoadFromID("DivUserList");
-            listview.DataSource(result);
-            listview.RowDataBind();
-        }
-        else
-            alert(strLang821 + g_xmlHTTP.statusText);
-
-        g_xmlHTTP = null;
+        var listview = new ListView();
+        listview.LoadFromID("DivUserList");
+        listview.DataSource(result);
+        listview.RowDataBind();
 }
 
 function InitListView() {

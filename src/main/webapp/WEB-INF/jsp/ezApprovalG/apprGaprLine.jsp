@@ -499,18 +499,21 @@
 		                textUser.focus();
 		            }
 		            else {
-		                var xmlHTTP = createXMLHttpRequest();
-		                var xmlDOM = createXmlDom();
-		                var objNode;
-		                createNodeInsert(xmlDOM, objNode, "DATA");
-		                createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + "${userInfo.companyID}");
-		                createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayname;Description;Title;extensionAttribute5;telephonenumber");
-		                createNodeAndInsertText(xmlDOM, objNode, "PROP", "Department;DisplayName;Description;Title;extensionAttribute4;extensionAttribute5");
-		                createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-		                g_xmlHTTP = createXMLHttpRequest();
-		                g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", true);
-		                g_xmlHTTP.onreadystatechange = event_displayUserList;
-		                g_xmlHTTP.send(xmlDOM);
+	                	$.ajax({
+	                		type : "POST",
+	                		dataType : "xml",
+	                		async : true,
+	                		url : "/ezOrgan/getSearchList.do",
+	                		data : {
+	                			search : "displayname::" + strSearch + ";;physicalDeliveryOfficeName::" + "${userInfo.companyID}",
+	                			cell   : "displayname;Description;Title;extensionAttribute5;telephonenumber",
+	                			prop   : "department;displayName;description;title;extensionAttribute4;extensionAttribute5",
+	                			type   : "user"
+	                		},
+	                		success: function(xml){
+	                			event_displayUserList(xml);
+	                		}        			
+	                	});
 		            }
 		        } catch (ErrMsg) {
 		            alert(ErrMsg.description);

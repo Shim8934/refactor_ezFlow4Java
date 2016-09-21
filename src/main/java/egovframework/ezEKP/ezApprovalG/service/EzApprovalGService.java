@@ -288,6 +288,8 @@ public interface EzApprovalGService {
 	
 	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
+	public String getFindSimpleCabinetListAll(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType) throws Exception;
+	
 	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception;
 	
 	public String getApprovalPWD2(String dUserID) throws Exception;

@@ -3712,6 +3712,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 기록물철 검색 표출 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getCabinetSearchAll.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getCabinetSearchAll(HttpServletRequest request) throws Exception{
+		String companyID = request.getParameter("companyID");
+		String processDeptCode = request.getParameter("processDeptCode");
+		String productionYear = request.getParameter("productionYear");
+		String searchKeyword = request.getParameter("searchKeyword");
+		String flag = request.getParameter("flag");
+		String langType = request.getParameter("langType");
+		
+		String result = ezApprovalGService.getFindSimpleCabinetListAll(processDeptCode, productionYear, searchKeyword, flag, companyID, langType);
+		
+		return result;
+	}
+	
+	/**
 	 * 전자결재G 접수 배부 표출 Method
 	 */	
 	@RequestMapping(value = "/ezApprovalG/setBebu.do", produces = "text/xml;charset=utf-8")

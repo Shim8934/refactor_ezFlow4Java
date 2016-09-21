@@ -1060,7 +1060,7 @@
 		                var Ans = OpenInformationUI(pInformationContent, btnAddCabinet_onclick_Complete, "OPEN");
 		                if (Ans) {
 		                    RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
-		                    openergetDocInfo();
+// 		                    openergetDocInfo();
 		                }
 		            }
 		            else {
@@ -1068,7 +1068,7 @@
 		                var Ans = OpenInformationUI(pInformationContent, btnAddCabinet_onclick_Complete, "OPEN");
 		                if (Ans) {
 		                    RemoveDocCabinet(tr.getAttribute("DATA1"), "");
-		                    openergetDocInfo();
+// 		                    openergetDocInfo();
 		                }
 		            }
 		        }

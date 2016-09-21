@@ -734,68 +734,60 @@ function searchUserList2(search) {
             textUser.focus();
         }
         else {
-            xmlhttpUserlist = createXMLHttpRequest();
-            var xmlDOM = createXmlDom();
-
-            var objNode;
-            createNodeInsert(xmlDOM, objNode, "DATA");
-            createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID);
-            createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayname;description;title;telephonenumber");
-            //		createNodeAndInsertText(xmlDOM, objNode, "PROP","Department;DisplayName;Description;Title");    
-            createNodeAndInsertText(xmlDOM, objNode, "PROP", "Department;DisplayName;Description;Title;PhysicalDeliveryOfficeName");
-            createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-
-            xmlhttpUserlist = createXMLHttpRequest();
-            xmlhttpUserlist.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", true);
-            xmlhttpUserlist.onreadystatechange = event_displayUserList2;
-            xmlhttpUserlist.send(xmlDOM);
+    		$.ajax({
+    			type : "POST",
+    			dataType : "xml",
+    			async : true,
+    			url : "/ezOrgan/getSearchList.do",
+    			data : {
+    				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+    				cell   : "displayname;description;title;telephonenumber",
+    				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
+    				type   : "user"
+    			},
+    			success: function(xml){
+    				event_displayUserList2(xml);
+    			}
+    		});
         }
     } catch (ErrMsg) {
         alert(ErrMsg.description);
     }
 }
-function event_displayUserList2() {
-    if (xmlhttpUserlist != null && xmlhttpUserlist.readyState == 4) {
-        if (xmlhttpUserlist.statusText == "OK") {
-            var retXml = createXmlDom();
+function event_displayUserList2(xml) {
+    var retXml = createXmlDom();
 
-            if (document.getElementById("UserList2").innerHTML != "")
-                document.getElementById("UserList2").innerHTML = "";
+    if (document.getElementById("UserList2").innerHTML != "")
+        document.getElementById("UserList2").innerHTML = "";
 
-            var headerData = createXmlDom();
-            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-            if (xmlhttpUserlist.responseText != "") {
-                if (CrossYN()) {
-                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                    var Node = headerData.importNode(xmlRtn, true);
-                    headerData.documentElement.appendChild(Node);
-                }
-                else {
-                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                    headerData.documentElement.appendChild(xmlRtn);
-                }
-            }
-            var pUserList = new ListView();
-            pUserList.SetID("lvUserList2");
-            pUserList.SetSelectFlag(false);
-            pUserList.SetHeightFree(true);
-            pUserList.SetRowOnDblClick("Rlist2_onSel_DBclick");
-            pUserList.DataSource(headerData);
-            pUserList.DataBind("UserList2");
-
-            var userRows = pUserList.GetDataRows();
-
-            if (userRows.length <= 0) {
-                OpenAlertUI(linealt1);
-            }
-            else if (USE_OCS.toUpperCase() == "YES") {
-                check_presence();
-            }
+    var headerData = createXmlDom();
+    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+    if (xml != "") {
+        if (CrossYN()) {
+            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+            var Node = headerData.importNode(xmlRtn, true);
+            headerData.documentElement.appendChild(Node);
         }
-        else
-            OpenAlertUI(linealt2 + xmlhttpUserlist.statusText);
+        else {
+            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+            headerData.documentElement.appendChild(xmlRtn);
+        }
+    }
+    var pUserList = new ListView();
+    pUserList.SetID("lvUserList2");
+    pUserList.SetSelectFlag(false);
+    pUserList.SetHeightFree(true);
+    pUserList.SetRowOnDblClick("Rlist2_onSel_DBclick");
+    pUserList.DataSource(headerData);
+    pUserList.DataBind("UserList2");
 
-        xmlhttpUserlist = null;
+    var userRows = pUserList.GetDataRows();
+
+    if (userRows.length <= 0) {
+        OpenAlertUI(linealt1);
+    }
+    else if (USE_OCS.toUpperCase() == "YES") {
+        check_presence();
     }
 }
 
@@ -813,35 +805,28 @@ function btnSearchDept_onClick() {
             return;
         }
 
-        var xmlHTTP = createXMLHttpRequest();
-        var xmlDOM = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlDOM, objNode, "DATA");
-        createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "EXACT_EXTENSIONATTRIBUTE2::" + CompanyID + ";;displayname::" + tmpDeptName);
-        createNodeAndInsertText(xmlDOM, objNode, "CELL", "extensionAttribute3;displayname;extensionAttribute9;");
-        createNodeAndInsertText(xmlDOM, objNode, "PROP", "");
-        createNodeAndInsertText(xmlDOM, objNode, "TYPE", "group");
-
-        try {
-            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
-            xmlHTTP.send(xmlDOM);
-            if (xmlHTTP.statusText != "OK") {
-                document.getElementById("txtDeptName").focus();
-                alert(strLang241 + xmlHTTP.statusText);
-                xmlDOM = null;
-                xmlHTTP = null;
-            }
-            else {
-                document.getElementById("txtDeptName").focus();
-                xmlDOM = xmlHTTP.responseXML;
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : false,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "EXACT_EXTENSIONATTRIBUTE2::" + CompanyID + ";;displayname::" + tmpDeptName,
+				cell   : "extensionAttribute3;displayname;extensionAttribute9;",
+				prop   : "",
+				type   : "group"
+			},
+			success: function(xml){
+				document.getElementById("txtDeptName").focus();
+                xmlDOM = xml;
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
-            }
-        } catch (e) {
-            alert(strLang241 + e.description);
-            xmlDOM = null;
-            xmlHTTP = null;
-        }
-
+			},
+	    	error : function(error){
+	    		document.getElementById("txtDeptName").focus();
+                alert(strLang241 + error.responseText);
+	    	}
+		});
+		
         if (adCount == 0) {
             var pAlertContent = strLang242;
             OpenAlertUI(pAlertContent);

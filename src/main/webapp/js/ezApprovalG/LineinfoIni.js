@@ -384,20 +384,21 @@ function searchUserList(search)
 	}
 	else
 	{
-		xmlhttpUserlist = createXMLHttpRequest();
-		var xmlDOM = createXmlDom();
-        
-        var objNode;
-		createNodeInsert(xmlDOM, objNode, "DATA");
-		createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID);   
-		createNodeAndInsertText(xmlDOM, objNode, "CELL","displayname;description;title;telephonenumber");
-		createNodeAndInsertText(xmlDOM, objNode, "PROP","Department;DisplayName;Description;Title");      
-		createNodeAndInsertText(xmlDOM, objNode, "TYPE","user");
-		
-		xmlhttpUserlist = createXMLHttpRequest();
-		xmlhttpUserlist.open("POST","/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", true);
-		xmlhttpUserlist.onreadystatechange = event_displayUserList;
-		xmlhttpUserlist.send(xmlDOM);
+		$.ajax({
+			type : "POST",
+			dataType : "xml",
+			async : true,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+				cell   : "displayname;description;title;telephonenumber",
+				prop   : "department;displayName;description;title",
+				type   : "user"
+			},
+			success: function(xml){
+				event_displayUserList(xml);
+			}    			
+		});
 	}
   }catch(ErrMsg){
     alert(ErrMsg.description);
