@@ -1019,4 +1019,34 @@ public class EzApprovalGarchiveController {
 		
 		return result;
 	}
+	
+	/** 발송의뢰 재발송 */
+	@RequestMapping(value = "/ezApprovalG/UpdateProcessYN.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String UpdateProcessYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String deptID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String processYN = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		String deptName = "";
+		String deptName2 = "";
+		
+		if(xmlDom.getDocumentElement().getChildNodes().getLength() > 3){
+			deptName = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+			deptName2 = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+		}
+		
+		String result = "";
+		
+		if(!deptName.equals("")) {
+			result = ezApprovalGService.updateProcessYN2(docID, deptID, deptName2, deptName2, processYN, "EXECUTE", userInfo.getCompanyID(), userInfo.getLang());
+		}
+		else {
+			result = ezApprovalGService.updateProcessYN(docID, deptID, processYN, "EXECUTE", userInfo.getCompanyID(), userInfo.getLang());
+		}
+		return result;
+	}
+	
 }
