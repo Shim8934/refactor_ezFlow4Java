@@ -491,9 +491,9 @@
 
 <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm">
   <div class="btnposition">       
-        <a class="file-btn">
-          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()">
-		          <span for="file" id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span>
+        <a class="file-btn" style="vertical-align:top">
+          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" /> 
+		          <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
         </a>
         <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
         <a class="imgbtn"><span id="btn_AttachSaveSure" onclick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>

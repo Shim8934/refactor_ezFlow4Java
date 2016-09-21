@@ -1935,7 +1935,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 
 .file-btn{
   position:relative;
-/*   display:inline-block; */
+  display:inline-block;
   background:url('/images/kr/cm/btn_middle_left.gif') no-repeat left;
   padding:0px 0px 0px 12px;
   height:20px;
