@@ -179,11 +179,11 @@
     }
 </script>
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" class="popup">
-<OBJECT classid="clsid:35609FBF-EE92-472F-B72A-599B70D21F9E" id="behave1" style="HEIGHT: 0px; WIDTH: 0px;">
-</OBJECT>
-<OBJECT classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="behavelist1" style="HEIGHT: 0px; WIDTH: 0px">
-</OBJECT>
+<body class="popup">
+<!-- <OBJECT classid="clsid:35609FBF-EE92-472F-B72A-599B70D21F9E" id="behave1" style="HEIGHT: 0px; WIDTH: 0px;"> -->
+<!-- </OBJECT> -->
+<!-- <OBJECT classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="behavelist1" style="HEIGHT: 0px; WIDTH: 0px"> -->
+<!-- </OBJECT> -->
 <h1><spring:message code='ezApprovalG.t1037'/></h1>
 <table>
   <tr>
