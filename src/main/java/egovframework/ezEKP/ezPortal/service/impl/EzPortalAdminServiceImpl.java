@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -19,6 +20,9 @@ import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -136,6 +140,16 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_PCOMPANYID", pCompanyID);
 		map.put("v_PGUBUNFLAG", pGubunFlag);
 		ezPortalAdminDAO.setDefaultPage(map);
+	}
+	
+	@Override
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception {
+		return ezPortalAdminDAO.getPortletCategory();
+	}
+	
+	@Override
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit() throws Exception {
+		return ezPortalAdminDAO.menuItemEdit();
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
@@ -980,6 +994,68 @@ System.out.println("pXML1:"+pXML);
 		map.put("v_ACCESSID", accessID);
 		ezPortalAdminDAO.deleteAclItem(map);
 		return "OK";
+	}
+	
+	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (pGubunFlag != null && !pGubunFlag.equals("")) {
+			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
+		} else {
+			map.put("v_pGUBUNFLAG", 100);
+			map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
+			map.put("v_pDISPLAYNAME", pDisplayName);
+			map.put("v_pCOMPANYID", pCompanyID);
+		}
+		
+		int recordCnt = ezPortalAdminDAO.searchPortletCount2(map);
+		return recordCnt;
+	}
+	
+	public String searchPortlet (String pDisplayName, String pGubunFlag, String pPageGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (pGubunFlag != null && !pGubunFlag.equals("")) {
+			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
+		} else {
+			map.put("v_pGUBUNFLAG", 100);
+			map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
+			map.put("v_pDISPLAYNAME", pDisplayName);
+			map.put("v_pCOMPANYID", pCompanyID);
+			map.put("v_pSTARTROW", pStartRow);
+			map.put("v_pENDROW", pEndRow);
+		}
+		
+		List<PortalSearchPortlet2VO> list = ezPortalAdminDAO.searchPortlet2(map);
+		String result = "<DATA>";
+		for (int i=0; i<list.size(); i++) {
+			result += "<ROW>";
+			result += "<UID_>" + list.get(i).getuID_() + "</UID_>";
+			result += "<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>";
+			result += "<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>";
+			if (list.get(i).getPortlet_Type() == 1)
+				result += "<TYPE>t4075</TYPE>";
+			if (list.get(i).getPortlet_Type() == 2)
+				result += "<TYPE>t4076</TYPE>";
+			if (list.get(i).getPortlet_Type() == 3)
+				result += "<TYPE>t4077</TYPE>";
+			if (list.get(i).getPortlet_Type() == 4)
+				result += "<TYPE>t4078</TYPE>";
+			
+			result += "<URL>" + list.get(i).getUrl() + "</URL>";
+			result += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
+			result += "</ROW>";
+		}
+		result += "</DATA>";
+		
+		return result;
+	}
+	
+	public String createNewPortlet (String pCompanyID) {
+		String newUID = UUID.randomUUID().toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pNEWID", newUID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		ezPortalAdminDAO.createNewPortlet(map);
+		return newUID;
 	}
 	
 }

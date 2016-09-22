@@ -3,10 +3,16 @@ package egovframework.ezEKP.ezPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 
 public interface EzPortalAdminService {
 	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() throws Exception;
+	
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception;
+	
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
 	
 	public String useThemeInfo(String pUID) throws Exception;
 	
@@ -30,7 +36,13 @@ public interface EzPortalAdminService {
 	
 	public String deleteAclItem(String pXML) throws Exception;
 	
+	public String searchPortlet (String pDisplayName, String pGubunFlag, String pPageGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID) throws Exception;
+	
+	public String createNewPortlet (String pCompanyID) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
+	
+	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;
 	
 	public void deleteTheme (String uID) throws Exception;
 	

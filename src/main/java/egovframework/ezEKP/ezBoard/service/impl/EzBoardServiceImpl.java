@@ -1199,6 +1199,13 @@ public class EzBoardServiceImpl implements EzBoardService {
 		
 		return sb.toString();
 	}
+
+	@Override
+	public String portalPageItemEdit(String boardID) throws Exception {
+		return ezBoardDAO.portalPageItemEdit(boardID);
+	}
+	
+	
 	
 
 }

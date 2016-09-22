@@ -26,12 +26,18 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPortal.dao.EzPortalAdminDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
@@ -71,6 +77,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
+	
+	@Resource(name="EzPortaAdminDAO")
+	private EzPortalAdminDAO ezPortalAdminDAO;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -788,7 +800,7 @@ System.out.println("strXML:"+strXML);
 	
 	
 	/**
-	 * 관리자 포탈 상단메뉴영역설정 화면 호출 함수
+	 * 관리자 포탈 포탈페이지관리 권한 선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPortal/selectTarget.do")
 	public String selectTarget(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
@@ -811,5 +823,260 @@ System.out.println("strXML:"+strXML);
 		
 	}
 	
+	/**
+	 * 관리자 포탈 포틀릿관리 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portletList.do")
+	public String portletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String portalPageGubun = "";
+		String pSearchString = "";
+		String portalGubun = "";
+		int recordCnt = 0;
+		int intPage = 1;
+		int totalPage = 1;
+		String portalPageCategoryXML = "";
+		String portletCategoryXML = "";
+		String noneActiveX = "YES";
+		
+		if (commonUtil.checkAdmin(loginCookie)) {
+			if (req.getParameter("portalPageGubun") != null && !req.getParameter("portalPageGubun").equals("")) {
+				portalPageGubun = req.getParameter("portalPageGubun");
+			}
+			if (req.getParameter("portalGubun") != null && !req.getParameter("portalGubun").equals("")) {
+				portalGubun = req.getParameter("portalGubun");
+			}
+			if (req.getParameter("pSearchString") != null && !req.getParameter("pSearchString").equals("")) {
+				pSearchString = req.getParameter("pSearchString");
+			}
+			
+			if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
+				if (Integer.parseInt(req.getParameter("intPage")) > 0) {
+					intPage = Integer.parseInt(req.getParameter("intPage")); 
+				}
+			}
+			
+			int listPageSize = 15;
+			
+			List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory();
+			portalPageCategoryXML = "<DATA>";
+			for (int i=0; i<portalPagelist.size(); i++) {
+				portalPageCategoryXML += commonUtil.getQueryResult(portalPagelist.get(i));
+			}
+			portalPageCategoryXML += "</DATA>";
+			portalPageCategoryXML.replace("\"", "\\\"");
+			
+			List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory();
+			portletCategoryXML = "<DATA>";
+			for (int i=0; i<portletPagelist.size(); i++) {
+				portletCategoryXML += commonUtil.getQueryResult(portletPagelist.get(i));
+			}
+			portletCategoryXML += "</DATA>";
+			portletCategoryXML.replace("\"", "\\\"");
+			
+			recordCnt = ezPortalAdminService.searchPortletCount(pSearchString, portalGubun, portalPageGubun, userInfo.getCompanyID());
+			totalPage = (recordCnt - 1) / listPageSize + 1;
+			
+			int pStartRow = 0;
+			int pEndRow = 0;
+			pStartRow = intPage * listPageSize - listPageSize + 1;
+			pEndRow = intPage * listPageSize;
+			
+			String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			String strHtml = "";
+
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				strHtml += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\" onDblClick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
+				strHtml += "<td width='300'>"+xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
+				strHtml += "<td>"+egovMessageSource.getMessage("ezPortal."+xmlDom.getElementsByTagName("TYPE").item(i).getTextContent(), locale) +"</td>";
+				strHtml += "</tr>";
+			}
+			
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("intPage", intPage);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("strHtml", strHtml);
+			model.addAttribute("portletCategoryXML", portletCategoryXML);
+			model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
+			model.addAttribute("noneActiveX", noneActiveX);
+			
+			return "/admin/ezPortal/portalPortletList";
+		} else {
+			return "";
+		}
+		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 상세보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portletEdit.do")
+	public String portletEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		String uID = "";
+		String menuIndex = "1";
+		String mode = "edit";
+		String pDocPath = "";
+		String pOpenMode = "";
+        String pWindowOption = "";
+        String pImageType = "";
+        String pImagePath = "";
+        String pImageWidth = "";
+        String pImageHeight = "";
+        String pCreatorID = "";
+        String pUsertype = "";
+        String pBoardID = "";
+        String pBoardName = "";
+        String pItemCount = "";
+        String pItemFields = "";
+        String pMoveURL = "";
+        String portletCategoryXML = "";
+        String portalPageCategoryXML = "";
+        String portletFrameType = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("menuIndex") != null && !req.getParameter("menuIndex").equals("")) {
+			menuIndex = req.getParameter("menuIndex");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory();
+		portletCategoryXML = "<DATA>";
+		for (int i=0; i<portletPagelist.size(); i++) {
+			portletCategoryXML += commonUtil.getQueryResult(portletPagelist.get(i));
+		}
+		portletCategoryXML += "</DATA>";
+		portletCategoryXML.replace("\"", "\\\"");
+		
+		portletCategoryXML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
+		
+		if (mode.equals("new")) {
+			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID());
+			
+			if (uID == null || uID.equals("")) {
+				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t175", locale));
+				resp.getWriter().flush();
+			}
+		}
+		
+		PortalPortletGeneralVO prop = ezPortalAdminDAO.getPortletProperties(uID);
+		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID);
+		
+		if (prop.getFrameType() !=null && prop.getFrameType().equals("")) {
+			portletFrameType = prop.getFrameType().trim();
+		} else {
+			portletFrameType = prop.getFrameType();
+		}
+		
+		String portletType = String.valueOf(prop.getPortletType());
+		String subData = ezPortalService.getPortletSubProperties(uID, portletType);
+System.out.println("subData:"+subData);
+		Document subProp = commonUtil.convertStringToDocument(subData);
+		
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
+		
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		
+		//포탈페이지 카테고리 정보를 가져온다.
+		List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory();
+		portalPageCategoryXML = "<DATA>";
+		for (int i=0; i<portalPagelist.size(); i++) {
+			portalPageCategoryXML += commonUtil.getQueryResult(portalPagelist.get(i));
+		}
+		portalPageCategoryXML += "</DATA>";
+		portalPageCategoryXML.replace("\"", "\\\"");
+		
+		//URL포틀릿
+		if (portletType.equals("1")) {
+			// 1: 관리자지정, 2: 사용자지정
+			
+			if (pUsertype == null || pUsertype.equals("")) {
+				pUsertype = "1";
+			} else {
+				pUsertype = prop.getUserType().trim();
+			}
+			
+			if (subData != null && !subData.equals("<DATA></DATA>")) {
+				pCreatorID = subProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+				pMoveURL = subProp.getElementsByTagName("URL").item(0).getTextContent();
+			}
+		} else if (portletType.equals("2")) {
+			//HTML 포틀릿
+			pDocPath = subProp.getElementsByTagName("HTMLDATA").item(0).getTextContent();
+			
+		} else if (portletType.equals("3")) {
+			//이미지 포틀릿
+			pImagePath = subProp.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
+			pImageWidth = subProp.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
+			pImageHeight = subProp.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
+			pOpenMode = subProp.getElementsByTagName("OPENMODE").item(0).getTextContent();
+			pWindowOption = subProp.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+			pImageType = subProp.getElementsByTagName("IMAGETYPE").item(0).getTextContent();
+		} else if (portletType.equals("4")) {
+			//게시판 포틀릿
+			pUsertype = prop.getUserType().trim();
+			if (pUsertype.equals("1")) {
+				pCreatorID = subProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+				pBoardID = subProp.getElementsByTagName("BOARDID").item(0).getTextContent();
+				pItemCount = subProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+				pItemFields = subProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+				pBoardName = ezBoardService.portalPageItemEdit(pBoardID);
+			}
+			
+		}
+		
+		String paramHtml = "";
+		for (int i=0; i<param.size(); i++) {
+			if (param.get(i).getParamType() == 0) {
+				paramHtml += "<tr>";
+				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
+    			paramHtml += "<td>"+param.get(i).getParamValue()+"</td>";
+    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick='RemoveParameter('"+param.get(i).getParamName()+"')' >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+  			    paramHtml += "</tr>";
+			} else {
+				paramHtml += "<tr>";
+				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
+    			paramHtml += "<td>"+param.get(i).getDescription()+"</td>";
+    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick='RemoveParameter('"+param.get(i).getParamName()+"')' >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+  			    paramHtml += "</tr>";
+			}
+		}
+		
+		
+		model.addAttribute("pBoardID", pBoardID);
+		model.addAttribute("pBoardName", pBoardName);
+		model.addAttribute("pItemCount", pItemCount);
+		model.addAttribute("pMoveURL", pMoveURL);
+		model.addAttribute("prop", prop);
+		model.addAttribute("menuIndex", menuIndex);
+		model.addAttribute("pDocPath", pDocPath);
+		model.addAttribute("pImageType", pImageType);
+		model.addAttribute("pImagePath", pImagePath);
+		model.addAttribute("pImageWidth", pImageWidth);
+		model.addAttribute("pImageHeight", pImageHeight);
+		model.addAttribute("pCreatorID", pCreatorID);
+		model.addAttribute("pUserType", pUsertype);
+		model.addAttribute("pItemFields", pItemFields);
+		model.addAttribute("portletCategoryXML", portletCategoryXML);
+		model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
+		model.addAttribute("portletFrameType", portletFrameType);
+		model.addAttribute("pOpenMode", pOpenMode);
+		model.addAttribute("pWindowOption", pWindowOption);
+		model.addAttribute("paramType", paramType);
+		model.addAttribute("param", param);
+		model.addAttribute("aclList", aclList);
+		model.addAttribute("paramHtml", paramHtml);
+		
+		return "/admin/ezPortal/portalPortletEdit";
+		
+	}
 	
 }

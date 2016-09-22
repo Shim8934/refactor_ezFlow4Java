@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -47,6 +50,21 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalSearchPortalPage2VO> searchPortalPage2(Map<String, Object> map) {
 		return (List<PortalSearchPortalPage2VO>)list("EzPortalDAO.searchPortalPage2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory () {
+		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalAdminDAO.getPortletCategory"); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalSearchPortlet2VO> searchPortlet2 (Map<String, Object> map) {
+		return (List<PortalSearchPortlet2VO>) list("EzPortalAdminDAO.searchPortlet2", map); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit () {
+		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.menuItemEdit"); 
 	}
 	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
@@ -124,6 +142,15 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	public int getItemsCount (Map<String, Object> map) {
 		select("EzPortalAdminDAO.getItemsCount", map);
 		return (int)map.get("v_pCount");
+	}
+	
+	public int searchPortletCount2 (Map<String, Object> map) {
+		select("EzPortalAdminDAO.searchPortletCount2", map);
+		return (int)map.get("v_pCount");
+	}
+	
+	public void createNewPortlet (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewPortlet", map);
 	}
 	
 	public void portalSaveSkin (Map<String, Object> map) {

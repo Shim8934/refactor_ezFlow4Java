@@ -7,6 +7,27 @@
 	<typeAlias  alias="PortalDeleteSubPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO"/>
 	<typeAlias  alias="PortalSearchPortalPage2VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO"/>
 	<typeAlias  alias="PortalPortletGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
+	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
+	<typeAlias  alias="PortalSearchPortlet2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO"/>
+	<typeAlias  alias="PortalTBLBuiltInParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO"/>
+	
+	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
+		<result property="portletType"				column="PORTLET_TYPE"			columnIndex="4"/>
+		<result property="url"							column="URL"						columnIndex="5"/>
+		<result property="maxUrl"						column="MAXURL"					columnIndex="6"/>
+		<result property="showTitleBar"				column="SHOWTITLEBAR"		columnIndex="7"/>
+		<result property="userType"					column="USERTYPE"				columnIndex="8"/>
+		<result property="height"						column="HEIGHT"					columnIndex="9"/>
+		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="10"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="11"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="12"/>
+		<result property="usePotalGubun"			column="USEPOTALGUBUN"		columnIndex="13"/>
+		<result property="width"						column="WIDTH"					columnIndex="14"/>
+		<result property="frameType"				column="FRAMETYPE"				columnIndex="15"/>
+	</resultMap> 
 	
 	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
 		<![CDATA[
@@ -92,9 +113,27 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.searchPortletCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHPORTLETCOUNT2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SEARCHPORTALPAGE2(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SEARCHPORTLET2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pENDROW#, #v_pSTARTROW#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.createNewPortlet" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CREATENEWPORLET(#v_pNEWID#, #v_pCOMPANYID#)}
 		]]>
 	</procedure>
 	
@@ -212,9 +251,21 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalAdminDAO.getPortletProperties" parameterClass="String"  resultClass="PortalPortletGeneralVO" >
+	<procedure id="EzPortalAdminDAO.getPortletProperties" parameterClass="String"  resultMap="portalPortletGeneralVO" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.getPortletCategory"  resultClass="PortalTBLPortalPageCategoryVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETPORTLETCATETORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.menuItemEdit"  resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_MENUITEM_EDIT(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

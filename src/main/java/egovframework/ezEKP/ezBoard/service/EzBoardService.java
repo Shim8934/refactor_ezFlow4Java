@@ -123,6 +123,8 @@ public interface EzBoardService {
 	
 	public String getThumbListXML (String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang) throws Exception;
 	
+	public String portalPageItemEdit(String boardID) throws Exception;
+	
 	public int getReservedItemListCount(String userID) throws Exception;
 	
 	public int getNewItemListCount(String userID) throws Exception;

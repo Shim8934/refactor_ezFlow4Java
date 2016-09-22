@@ -429,6 +429,10 @@
 		{CALL EZBOARDSTD.EZSP_DELETETEMPITEM(#strItemID#)}
 	</procedure>
 	
+	<procedure id="EzBoardDAO.portalPageItemEdit" parameterClass="String" resultClass="String">
+		{CALL EZBOARDSTD.EZSP_PORTALPAGEITEM_EDIT(#boardID#)}
+	</procedure>
+	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
 		<![CDATA[
 			SELECT 

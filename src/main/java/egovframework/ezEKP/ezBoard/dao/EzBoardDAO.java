@@ -219,6 +219,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.deleteOneLineReply", map);
 	}
 	
+	public String portalPageItemEdit(String boardID) {
+		return (String) select("EzBoardDAO.portalPageItemEdit", boardID);
+	}
+	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
 		select("EzBoardDAO.getBrdNewItemCount",map);
 		return (int)map.get("v_pCount");
