@@ -2307,8 +2307,6 @@ public class EzPortalServiceImpl implements EzPortalService {
 	
 	public String getPortletSubProperties (String pUID, String pType) {
 		try {
-System.out.println("pUID:"+pUID);
-System.out.println("pType:"+pType);
 			String resultXML = "";
 			if (pType.equals("1")) {
 				PortalTBLPortletURLVO result = getTBLPortletURL(pUID);
