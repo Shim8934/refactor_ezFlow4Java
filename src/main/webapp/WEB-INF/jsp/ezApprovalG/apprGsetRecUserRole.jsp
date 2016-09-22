@@ -76,14 +76,15 @@
         	 $('#txtKeyword').prop("disabled",true);
         	 $('.listview').prop("disabled",true);
         	 
-//             document.getElementById("DataLayout").disabled = true;
+//          document.getElementById("DataLayout").disabled = true;
             document.getElementById("OrganListView").disabled = true;
-//             document.getElementById("DataLayout").style.display = true;
+//          document.getElementById("DataLayout").style.display = true;
 //          document.getElementByNames("txtKeyword").style.disabled = true;
             document.getElementById("RecvDel").style.display = "";
         }
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
         	$('#txtKeyword').prop("disabled","");
+        	$('.listview').prop("disabled","");
             document.getElementById("DataLayout").style.display = "";
             document.getElementById("DataLayout").disabled = "";
         }
