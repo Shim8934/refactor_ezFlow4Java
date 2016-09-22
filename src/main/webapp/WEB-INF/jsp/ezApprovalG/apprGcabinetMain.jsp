@@ -1557,7 +1557,11 @@
         </div>
 
         <div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
-            <div id="lvtDetail" style="border: 0;"></div>
+            <div id="lvtDetail" style="border: 0;" align="center">
+            <script type="text/javascript">
+            document.getElementById("lvtDetail").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+            document.getElementById("lvtDetail").style.textAlign = "center";
+            </script>
         </div>
     </div>
 
