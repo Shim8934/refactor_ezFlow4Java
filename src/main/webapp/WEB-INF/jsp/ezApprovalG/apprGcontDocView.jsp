@@ -52,10 +52,12 @@
 		    var SignCheckFlag = "${signCheck}";
 		    var pUse_Editor = "${editor}";
 		    var NonActiveX = "YES";
-		
-		    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
-		        QuitWindow();
-		    }
+		    $(function () {
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+			        QuitWindow();
+			    }
+		    });
+	
 		    var aprendopinion_dialogArgument = new Array();
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
@@ -88,7 +90,8 @@
 		        }
 		    }
 		    function QuitWindow() {
-		        OpenAlertUI("<spring:message code='ezApprovalG.t1443'/>" + "<br>" + "<spring:message code='ezApprovalG.t1444'/>");
+// 		        OpenAlertUI(strLang929);
+				alert(strLang1120);
 		        btnClose_onclick();
 		        window.close();
 		    }

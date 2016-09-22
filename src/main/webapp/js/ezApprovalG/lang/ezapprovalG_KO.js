@@ -1286,3 +1286,4 @@ var strLang1116 = "수기기록물";
 var strLang1117 = "파일";
 var strLang1118 = "부서명이 없습니다.";
 var strLang1119 = "부서아이디가 없습니다.";
+var strLang1120 = "이 문서를 열람할 권한이 없습니다.";
