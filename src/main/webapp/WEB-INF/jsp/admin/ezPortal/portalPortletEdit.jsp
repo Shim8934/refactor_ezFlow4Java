@@ -46,7 +46,6 @@
 			var portletHTML = "";
 			if (g_PortletCategoryXML != "")
 			{
-alert(g_PortletCategoryXML);
 			    xmldom = loadXMLString(g_PortletCategoryXML);
 				
 				for (var i=0; i<xmldom.getElementsByTagName("CATEGORY").length; i++)
@@ -112,10 +111,8 @@ alert(g_PortletCategoryXML);
 			xmlhttp = null;
 		}
 		
-		function toggle_menu(pIndex)
-		{
-			if (pmode == "new" && g_bSaved == false)
-			{
+		function toggle_menu(pIndex) {
+			if (pmode == "new" && g_bSaved == false) {
 				if (pIndex.toString() != "1")
 				{
 					alert("<spring:message code='ezPortal.t83'/>");
@@ -416,7 +413,7 @@ alert(g_PortletCategoryXML);
 			
 			// 기본정보 저장
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "SavePortletProperty.aspx", false);
+			xmlhttp.open("POST", "/admin/ezPortal/savePortletProperty.do", false);
 			xmlhttp.send(strXML);
 			if (xmlhttp.responseText != "OK")
 			{
@@ -425,10 +422,9 @@ alert(g_PortletCategoryXML);
 			}
 			xmlhttp = null;
 
-			if (strXML2 != "")
-			{			    
+			if (strXML2 != "") {			    
 			    xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "SavePortletSubProperty.aspx?portlet_type=" + portlet_type, false);
+				xmlhttp.open("POST", "/admin/ezPortal/savePortletSubProperty.do?portletType=" + portlet_type, false);
 				xmlhttp.send(strXML2);
 				xmlhttp = null;
 			}
@@ -436,7 +432,7 @@ alert(g_PortletCategoryXML);
 			alert("<spring:message code='ezPortal.t84'/>");
 			g_bSaved = true;
 			
-			location.href = "Portlet_Edit_Cross.aspx?mode=edit&uid=" + uid + "&menuindex=1";
+			location.href = "/admin/ezPortal/portletEdit.do?mode=edit&uID=" + uid + "&menuIndex=1";
 		}
 		
 		
@@ -445,7 +441,7 @@ alert(g_PortletCategoryXML);
 			if(!confirm("<spring:message code='ezPortal.t54'/>")) return;
 			
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "RemoveParameter.aspx?mode=1&uid=" + uid + "&paramname=" + pParamName, false);
+			xmlhttp.open("POST", "/admin/ezPortal/removeParameter.do?mode=1&uID=" + uid + "&paramName=" + pParamName, false);
 			xmlhttp.send();
 			xmlhttp = null;
 			
@@ -484,7 +480,7 @@ alert(g_PortletCategoryXML);
 			strXML += "</DATA>";
 			
 			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "AddParameter.aspx?mode=1", false);
+			xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=1", false);
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -1031,7 +1027,7 @@ alert(g_PortletCategoryXML);
 			<tr> 
 				<td>
 					<%--<SCRIPT language='JavaScript'>FormProc_ActiveX();</SCRIPT>--%>
-                    <iframe id="message" class="viewbox"  name="message" src="PortletEdit_CK_Content.aspx" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
+                    <iframe id="message" class="viewbox"  name="message" src="/admin/ezPortal/portletEditCKContent.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
 				</td>
 			</tr> 
 </table> 
@@ -1168,7 +1164,7 @@ alert(g_PortletCategoryXML);
         <tr>
           <td style="width:125px; "> <select id="SelectParamType" onChange="Param_Change()" width="100%">
               <c:forEach items="${paramType}" var="item">
-              	<option value="${item.paramType}">${item.shortName}</option>
+              	<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
               </c:forEach>
             </select>          </td>
           <td><input type="text" id="newParamValue" style="width:100%"></td>

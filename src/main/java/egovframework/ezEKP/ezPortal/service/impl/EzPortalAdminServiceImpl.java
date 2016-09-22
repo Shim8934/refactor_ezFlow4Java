@@ -151,6 +151,35 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 	public List<PortalTBLBuiltInParametersVO> menuItemEdit() throws Exception {
 		return ezPortalAdminDAO.menuItemEdit();
 	}
+	
+	@Override
+	public void savePortletSubProperty(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.savePortletSubProperty(map);
+	}
+
+	@Override
+	public void savePortletSubProperty2(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.savePortletSubProperty2(map);
+	}
+
+	@Override
+	public void savePortletSubProperty3(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.savePortletSubProperty3(map);
+	}
+
+	@Override
+	public void savePortletSubProperty4(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.savePortletSubProperty4(map);
+	}
+	
+	@Override
+	public void removeParameter(int mode, String uID, String paramName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_MODE", mode);
+		map.put("v_UID", uID);
+		map.put("v_PARAMNAVE", paramName);
+		ezPortalAdminDAO.removeParameter(map);
+	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
 		int indexOfDot = fileName.lastIndexOf(".");
@@ -1058,4 +1087,92 @@ System.out.println("pXML1:"+pXML);
 		return newUID;
 	}
 	
+	public String savePortletProperties (String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		String displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+		String portletType = xmlDom.getElementsByTagName("PORTLETTYPE").item(0).getTextContent();
+		String url = xmlDom.getElementsByTagName("URL").item(0).getTextContent();
+		String maxUrl = xmlDom.getElementsByTagName("MAXURL").item(0).getTextContent();
+		String showTitlebar = xmlDom.getElementsByTagName("SHOWTITLEBAR").item(0).getTextContent();
+		String userType = xmlDom.getElementsByTagName("USERTYPE").item(0).getTextContent();
+		String width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent();
+		String height = xmlDom.getElementsByTagName("HEIGHT").item(0).getTextContent();
+		String gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+		String frameType = xmlDom.getElementsByTagName("FRAMETYPE").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pDISPLAYNAME", displayName);
+		map.put("v_pDISPLAYNAME2", displayName2);
+		if (portletType == null || portletType.equals("")) {
+			portletType = "0";
+		}
+		map.put("v_pPORTLET_TYPE", Integer.parseInt(portletType));
+		map.put("v_pURL", url);
+		map.put("v_pMAXURL", maxUrl);
+		map.put("v_pSHOWTITLEBAR", showTitlebar);
+		map.put("v_pUSERTYPE", userType);
+		map.put("v_pWIDTH", Integer.parseInt(width));
+		if (height == null || height.equals("")) {
+			height = "0";
+		}
+		map.put("v_pHEIGHT", Integer.parseInt(height));
+		map.put("v_pGUBUNFLAG", gubunFlag);
+		map.put("v_pUID", uID);
+		map.put("v_pFRAMETYPE", frameType);
+		ezPortalAdminDAO.saveNewPortletProperties(map);
+		
+		return "OK";
+	}
+	
+	public String savePortletParameters (String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String paramName = xmlDom.getElementsByTagName("PARAMNAME").item(0).getTextContent();
+		String paramValue = xmlDom.getElementsByTagName("PARAMVALUE").item(0).getTextContent();
+		String paramType = xmlDom.getElementsByTagName("PARAMTYPE").item(0).getTextContent();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pUID", uID);
+		map.put("v_pPARAMNAME", paramName);
+		map.put("v_pPARAMVALUE", paramValue);
+		if (paramType == null || paramType.equals("")) {
+			paramType = "0";
+		}
+		map.put("v_pPARAMTYPE", Integer.parseInt(paramType));
+		ezPortalAdminDAO.savePortletParameters(map);
+		
+		return "OK";
+	}
+	
+	public String saveMenuItemParameters (String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String paramName = xmlDom.getElementsByTagName("PARAMNAME").item(0).getTextContent();
+		String paramValue = xmlDom.getElementsByTagName("PARAMVALUE").item(0).getTextContent();
+		String paramType = xmlDom.getElementsByTagName("PARAMTYPE").item(0).getTextContent();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_PARAMNAME", paramName);
+		map.put("v_PARAMVALUE", paramValue);
+		if (paramType == null || paramType.equals("")) {
+			paramType = "0";
+		}
+		map.put("v_PARAMTYPE", Integer.parseInt(paramType));
+		ezPortalAdminDAO.saveMenuItemParameters(map);
+		
+		return "OK";
+	}
+	
+	public String deletePortlet (String pUID) {
+		ezPortalAdminDAO.deletePortlet(pUID);
+		return "OK";
+	}
+	
 }
+

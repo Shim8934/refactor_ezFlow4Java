@@ -167,17 +167,59 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.saveNewPortletProperties" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVENEWPORLETPROPERTIES(#v_pDISPLAYNAME#, #v_pDISPLAYNAME2#, #v_pPORTLET_TYPE#, #v_pURL#, #v_pMAXURL#, #v_pSHOWTITLEBAR#, #v_pUSERTYPE#, #v_pWIDTH#, #v_pHEIGHT#, #v_pGUBUNFLAG#, #v_pUID#, #v_pFRAMETYPE#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePortletSubProperty" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORTLETSUBPROPERTY(#v_OLDUSERTYPE#, #v_UID#, #v_CREATORID#, #v_USERTYPE#, #v_USERID#, #v_URL#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePortletSubProperty2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORTLETSUBPROPERTY2(#v_UID#, #v_DISPLAYNAME#, #v_HTMLDATA#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePortletSubProperty3" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORTLETSUBPROPERTY3(#v_UID#, #v_IMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_IMAGETYPE#, #v_OPENMODE#, #v_WINDOWSOPTION#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePortletSubProperty4" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORTLETSUBPROPERTY4(#v_OLDUSERTYPE#, #v_UID#, #v_CREATORID#, #v_BOARDID#, #v_USERTYPE#, #v_USERID#, #v_ITEMCOUNT#, #v_ITEMFIELDS#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.removeParameter" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_REMOVEPARAMETER(#v_MODE#, #v_UID#, #v_PARAMNAVE#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePortletParameters" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORLETPARAMETERS(#v_pUID#, #v_pPARAMNAME#, #v_pPARAMVALUE#, #v_pPARAMTYPE#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveMenuItemParameters" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEMENUITEMPARAMETERS(#v_UID#, #v_PARAMNAME#, #v_PARAMVALUE#, #v_PARAMTYPE#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
-	
-	<!-- <procedure id="EzPortalAdminDAO.saveTopMenu" parameterClass="String" resultClass="Integer">
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_SAVETOPMENU(#pPageID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<procedure id="EzPortalAdminDAO.saveTopMenu2" parameterClass="String" resultClass="Integer">
 		<![CDATA[
@@ -257,6 +299,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.deletePortlet" parameterClass="String">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_DELETEPORLET(#pUID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.getPortletCategory"  resultClass="PortalTBLPortalPageCategoryVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORTLETCATETORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -318,7 +366,7 @@
 		]]>
 	</select>
 	
-		<select id="EzPortalAdminDAO.selectTblPortalPageItemsUID" parameterClass="Map" resultClass="String">
+	<select id="EzPortalAdminDAO.selectTblPortalPageItemsUID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				UID_

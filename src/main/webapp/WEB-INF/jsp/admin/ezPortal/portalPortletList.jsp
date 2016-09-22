@@ -111,14 +111,14 @@
 				return;
 			}
 			
-		    window.open("portlet_preview.aspx?uid=" + g_UID, "", "height = 400px, width = 500px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(500, 400));
+		    window.open("/admin/ezPortal/portletPreview.do?uID=" + g_UID, "", "height = 400px, width = 500px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(500, 400));
 		}
 		
 		// 검색
 		function btnSearch_onClick()
 		{
 		    var pSearchString = TrimText(ReplaceText(document.getElementById("SearchString").value, "'", ""));
-		    window.location.href = "portlet_list.aspx?pSearchString=" + escape(pSearchString) + "&PortalGubun=" + PortalGubun.value + "&PortalPageGubun=" + g_PortalPageGubun;
+		    window.location.href = "/admin/ezPortal/portletList.do?pSearchString=" + escape(pSearchString) + "&portalGubun=" + PortalGubun.value + "&portalPageGubun=" + g_PortalPageGubun;
 		}
 		
 		function entercheck()
@@ -173,7 +173,7 @@
 		// 페이지 이동
 		function pageChange(p_intPage)
 		{
-		    window.location.href = "./portlet_list.aspx?pSearchString=" + escape(g_SearchString) + "&PortalGubun=" + PortalGubun.value + "&intPage=" + p_intPage + "&PortalPageGubun=" + g_PortalPageGubun;
+		    window.location.href = "/admin/ezPortal/portletList.do?pSearchString=" + escape(g_SearchString) + "&portalGubun=" + PortalGubun.value + "&intPage=" + p_intPage + "&portalPageGubun=" + g_PortalPageGubun;
 		}
 		
 		// 삭제
@@ -188,7 +188,7 @@
 			if (confirm("<spring:message code='ezPortal.t54'/>"))
 			{
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/myoffice/ezPortal/admin/edit/DeletePorlet.aspx?uid=" + g_UID, false);
+				xmlhttp.open("POST", "/admin/ezPortal/deletePortlet.do?uID=" + g_UID, false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "OK")
@@ -202,7 +202,7 @@
 		
 		function PortalPageGubun_Change()
 		{
-			window.location.href = "portlet_list.aspx?PortalPageGubun=" + PortalPageGubun.value;
+			window.location.href = "/admin/ezPortal/portletList.do?portalPageGubun=" + PortalPageGubun.value;
 		}
 		</script>
 	</head>

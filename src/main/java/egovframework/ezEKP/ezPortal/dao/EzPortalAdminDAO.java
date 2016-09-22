@@ -177,6 +177,30 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.insertAclItem", map);
 	}
 	
+	public void savePortletSubProperty (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.savePortletSubProperty", map);
+	}
+	
+	public void savePortletSubProperty2 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.savePortletSubProperty2", map);
+	}
+	
+	public void savePortletSubProperty3 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.savePortletSubProperty3", map);
+	}
+	
+	public void savePortletSubProperty4 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.savePortletSubProperty4", map);
+	}
+	
+	public void savePortletParameters (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.savePortletParameters", map);
+	}
+	
+	public void saveMenuItemParameters (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveMenuItemParameters", map);
+	}
+	
 	public void updateTopMenuGeneral (Map<String, Object> map) {
 		update("EzPortalAdminDAO.updateTopMenuGeneral", map);
 	}
@@ -203,6 +227,26 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void setDefaultPage (Map<String, Object> map) {
 		update("EzPortalAdminDAO.setDefaultPage", map);
+	}
+	
+	public void saveNewPortletProperties (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveNewPortletProperties", map);
+	}
+	
+	public void setThemeInfo (Map<String, Object> map) {
+		update("EzPortalAdminDAO.setThemeInfo", map);
+	}
+	
+	public void topSetUsePage2 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.topSetUsePage2", map);
+	}
+	
+	public void topOutOfSetUsePage (Map<String, Object> map) {
+		update("EzPortalAdminDAO.topOutOfSetUsePage", map);
+	}
+	
+	public void setUseLang (Map<String, Object> map) {
+		update("EzPortalAdminDAO.setUseLang", map);
 	}
 	
 	public void deleteTheme (String uID) {
@@ -265,21 +309,16 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		delete("EzPortalAdminDAO.deletePortalPage3", pUID);
 	}
 	
-	public void setThemeInfo (Map<String, Object> map) {
-		update("EzPortalAdminDAO.setThemeInfo", map);
+	public void removeParameter (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeParameter", map);
 	}
 	
-	public void topSetUsePage2 (Map<String, Object> map) {
-		update("EzPortalAdminDAO.topSetUsePage2", map);
+	public void deletePortlet (String pUID) {
+		delete("EzPortalAdminDAO.deletePortlet", pUID);
 	}
 	
-	public void topOutOfSetUsePage (Map<String, Object> map) {
-		update("EzPortalAdminDAO.topOutOfSetUsePage", map);
-	}
 	
-	public void setUseLang (Map<String, Object> map) {
-		update("EzPortalAdminDAO.setUseLang", map);
-	}
+	
 	
 	
 }

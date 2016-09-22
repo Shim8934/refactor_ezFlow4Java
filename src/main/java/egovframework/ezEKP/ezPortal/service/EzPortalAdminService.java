@@ -40,6 +40,14 @@ public interface EzPortalAdminService {
 	
 	public String createNewPortlet (String pCompanyID) throws Exception;
 	
+	public String savePortletProperties (String pXML) throws Exception;
+	
+	public String savePortletParameters (String pXML) throws Exception;
+	
+	public String saveMenuItemParameters (String pXML) throws Exception;
+	
+	public String deletePortlet (String pUID) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;
@@ -57,4 +65,14 @@ public interface EzPortalAdminService {
 	public void portalSaveSkin (String uID, String skinName, String skinBgFlag, String skinBgColor, String skinBgImage, String skinFontColor, String skinFontOverColor) throws Exception;
 	
 	public void setDefaultPage (String pUID, String setFlag, String pGubunFlag, String pCompanyID) throws Exception;
+	
+	public void savePortletSubProperty (Map<String, Object> map) throws Exception;
+	
+	public void savePortletSubProperty2 (Map<String, Object> map) throws Exception;
+	
+	public void savePortletSubProperty3 (Map<String, Object> map) throws Exception;
+	
+	public void savePortletSubProperty4 (Map<String, Object> map) throws Exception;
+	
+	public void removeParameter (int mode, String uID, String paramName) throws Exception;
 }

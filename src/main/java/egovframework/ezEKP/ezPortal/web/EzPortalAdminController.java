@@ -2,8 +2,11 @@ package egovframework.ezEKP.ezPortal.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -978,7 +981,7 @@ System.out.println("strXML:"+strXML);
 		
 		String portletType = String.valueOf(prop.getPortletType());
 		String subData = ezPortalService.getPortletSubProperties(uID, portletType);
-System.out.println("subData:"+subData);
+
 		Document subProp = commonUtil.convertStringToDocument(subData);
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
@@ -1039,18 +1042,18 @@ System.out.println("subData:"+subData);
 				paramHtml += "<tr>";
 				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
     			paramHtml += "<td>"+param.get(i).getParamValue()+"</td>";
-    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick='RemoveParameter('"+param.get(i).getParamName()+"')' >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
   			    paramHtml += "</tr>";
 			} else {
 				paramHtml += "<tr>";
 				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
     			paramHtml += "<td>"+param.get(i).getDescription()+"</td>";
-    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick='RemoveParameter('"+param.get(i).getParamName()+"')' >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
   			    paramHtml += "</tr>";
 			}
 		}
 		
-		
+		model.addAttribute("uID", uID);
 		model.addAttribute("pBoardID", pBoardID);
 		model.addAttribute("pBoardName", pBoardName);
 		model.addAttribute("pItemCount", pItemCount);
@@ -1074,9 +1077,298 @@ System.out.println("subData:"+subData);
 		model.addAttribute("param", param);
 		model.addAttribute("aclList", aclList);
 		model.addAttribute("paramHtml", paramHtml);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("mode", mode);
 		
 		return "/admin/ezPortal/portalPortletEdit";
 		
 	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 포틀릿설정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/savePortletProperty.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String savePortletProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		String ret = ezPortalAdminService.savePortletProperties(xmlStr);
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 포틀릿설정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/savePortletSubProperty.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String savePortletSubProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		String portletType = "";
+		
+		if (req.getParameter("portletType") != null && !req.getParameter("portletType").equals("")) {
+			portletType = req.getParameter("portletType");
+		}
+		
+		String uID= "";
+		String displayName = "";
+		String pContent = "";
+		String mhtFilePath = "";
+		String result = "";
+		String imagePath = "";
+		String imageWidth = "";
+		String imageHeight = "";
+		String imageType = "";
+		String openMode = "";
+		String windowOption = "";
+		String userType = "";
+		String boardID = "";
+		String itemCount = "";
+		String itemFields = "";
+		String oldCreatorID = "";
+		String oldUserType = "";
+		String oldBoardID = "";
+		String moveUrl = "";
+		boolean bResult = false;
+		
+		//URL포틀릿
+		if (portletType.equals("1")) {
+			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+			oldCreatorID = xmlDom.getElementsByTagName("OLDCREATORID").item(0).getTextContent();
+			oldUserType = xmlDom.getElementsByTagName("OLDUSERTYPE").item(0).getTextContent();
+			userType = xmlDom.getElementsByTagName("USERTYPE").item(0).getTextContent();
+			moveUrl = xmlDom.getElementsByTagName("MOVEURL").item(0).getTextContent();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_OLDUSERTYPE", oldUserType);
+			map.put("v_UID", uID);
+			map.put("v_CREATORID", oldCreatorID);
+			map.put("v_USERTYPE", userType);
+			map.put("v_USERID", userInfo.getId());
+			map.put("v_URL", moveUrl);
+			ezPortalAdminService.savePortletSubProperty(map);
+		} else if (portletType.equals("2")) {
+			// html 포틀릿
+			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+			displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+			pContent = xmlDom.getElementsByTagName("CONTENT").item(0).getTextContent();
+			mhtFilePath = "/files/upload_portal/mht" + uID + ".mht";
+			bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator);
+			
+			if (bResult == true) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("v_UID", uID);
+				map.put("v_DISPLAYNAME", displayName);
+				map.put("v_HTMLDATA", mhtFilePath);
+				ezPortalAdminDAO.savePortletSubProperty2(map);
+			}
+		} else if (portletType.equals("3")) {
+			//이미지 포틀릿
+			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+			imagePath = xmlDom.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
+			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
+			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
+			imageType = xmlDom.getElementsByTagName("IMAGETYPE").item(0).getTextContent();
+			openMode = xmlDom.getElementsByTagName("OPENMODE").item(0).getTextContent();
+			windowOption = xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_UID", uID);
+			map.put("v_IMAGEPATH", imagePath);
+			map.put("v_IMAGEWIDTH", Integer.parseInt(imageWidth));
+			map.put("v_IMAGEHEIGHT", Integer.parseInt(imageHeight));
+			map.put("v_IMAGETYPE", imageType);
+			map.put("v_OPENMODE", openMode);
+			map.put("v_WINDOWSOPTION", windowOption);
+			ezPortalAdminDAO.savePortletSubProperty3(map);
+		} else if (portletType.equals("4")) {
+			//게시판 포틀릿
+			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+			userType = xmlDom.getElementsByTagName("USERTYPE").item(0).getTextContent();
+			boardID = xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent();
+			itemCount = xmlDom.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+			itemFields = xmlDom.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+			oldCreatorID = xmlDom.getElementsByTagName("OLDCREATORID").item(0).getTextContent();
+			oldUserType = xmlDom.getElementsByTagName("OLDUSERTYPE").item(0).getTextContent();
+			oldBoardID = xmlDom.getElementsByTagName("OLDBOARDID").item(0).getTextContent();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_OLDUSERTYPE", oldUserType);
+			map.put("v_UID", uID);
+			map.put("v_CREATORID", oldCreatorID);
+			map.put("v_BOARDID", boardID);
+			map.put("v_USERTYPE", userType);
+			map.put("v_USERID", userInfo.getId());
+			map.put("v_ITEMCOUNT", itemCount);
+			map.put("v_ITEMFIELDS", itemFields);
+			ezPortalAdminDAO.savePortletSubProperty4(map);
+		}
+		return "OK";
+	}
+	
+	public boolean saveMHT (String strHTML, String strMHTFileName, String strFilePath) {
+		String docPath = "";
+		String mhtFilePath = "";
+		try {
+			docPath = strFilePath + "\\Mht";
+			
+			if (!new File(docPath).exists()) {
+				File dir = new File(docPath);
+				dir.mkdirs();
+			}
+			
+			mhtFilePath = docPath + commonUtil.separator + strMHTFileName + ".mht";
+			
+			if (new File(mhtFilePath).exists()) {
+				new File(mhtFilePath).delete();
+			}
+			
+			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
+			pw.print(strHTML);
+			pw.flush();
+			pw.close();
+			
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 파라미터제거 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/removeParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	
+	public void removeParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		String uID = "";
+		String paramName = "";
+		String mode = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("paramName") != null && !req.getParameter("paramName").equals("")) {
+			paramName = req.getParameter("paramName");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		if (mode == null || mode.equals("")) {
+			mode = "0";
+		}
+		
+		ezPortalAdminService.removeParameter(Integer.parseInt(mode), uID, paramName);
+		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 파라미터 추가 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/addParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String addParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		String mode = "";
+		String ret = "";
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		if (mode.equals("1")) {
+			ret = ezPortalAdminService.savePortletParameters(xmlStr);
+		} else {
+			ret = ezPortalAdminService.saveMenuItemParameters(xmlStr);
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 CKEditor 내용 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portletEditCKContent.do")
+	public String portletEditCKContent(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pMode= "";
+		
+		if (req.getParameter("draftFlag") != null && !req.getParameter("drfatFlag").equals("")) {
+			pMode = req.getParameter("drfatFlag");
+		}
+		
+		model.addAttribute("pMode", pMode);
+		return "/admin/ezPortal/portalPortletCKContent";
+		
+		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 포틀릿 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/deletePortlet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String deletePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		String ret = ezPortalAdminService.deletePortlet(uID);
+		
+		return ret;
+		
+		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 포틀릿 미리보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/portletPreview.do")
+	public String portletPreview(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String strHTML= "";
+		String height= "";
+		String portletWidth= "";
+		String portletHeight= "";
+		String uID = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		PortalPortletGeneralVO prop = ezPortalAdminDAO.getPortletProperties(uID);
+		
+		String displayName = prop.getDisplayName();
+		String url = prop.getUrl();
+		
+		String showTitleBar = prop.getShowTitleBar();
+		height = String.valueOf(prop.getHeight());
+		portletWidth = String.valueOf(prop.getWidth());
+		portletHeight = String.valueOf(prop.getHeight());
+System.out.println("portletWidth:"+portletWidth);
+		
+		StringBuilder sb = new StringBuilder();
+		 sb.append("<table id='main_table' border=0 cellpadding=0 cellspacing=0 width=100% style='table-layout:fixed;'>");
+
+         if (showTitleBar.trim().equals("1")) {
+             sb.append("<TR>\n");
+             sb.append("<TD class='portlet' align=left><img src='/css/ezPortal/portlet_bar.gif' width=3 height=15 border=0 align=absmiddle> <span class='portletfont'>" + displayName + "</span></TD>\n");
+             sb.append("</TR>\n");
+         }
+         sb.append("<TR style='WIDTH:100%; HEIGHT:" + height + "px'>\n");
+         sb.append("<TD style='WIDTH:100%' align=middle valign=top><iframe width=100% height=" + height + " border=0 src='" + url + ezPortalService.loadGetParameters(url, uID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+         sb.append("</TR>\n");
+         sb.append("</table>\n");
+
+         strHTML = sb.toString();
+		
+		model.addAttribute("strHTML", strHTML);
+		model.addAttribute("portletWidth", portletWidth);
+		model.addAttribute("portletHeight", portletHeight);
+		
+		return "/admin/ezPortal/portalPortletPreview";
+		
+		
+	}
+	
 	
 }
