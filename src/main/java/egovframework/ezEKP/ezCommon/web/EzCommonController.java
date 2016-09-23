@@ -77,8 +77,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	@ResponseBody
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
         String strHTML = "";
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         
         if (request.getParameter("strHTML") != null) {
         	strHTML = request.getParameter("strHTML");
@@ -141,7 +142,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
 //        }
         // reform - end
-        String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath);
+        String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo.getLocale());
         
         return mhtData;
 	}
@@ -151,30 +152,30 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTMLContent(HttpServletRequest request) throws Exception{
+	public String mhtToHTMLContent(HttpServletRequest request, Locale locale) throws Exception{
 		String itemID = "";
 		String type = "";
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String strResult = "";
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		strResult = ezCommonService.getMHTtoHTML(type, itemID, realPath, request);
+		strResult = ezCommonService.getMHTtoHTML(type, itemID, realPath, request, locale);
 		
 		return strResult;
 	}
 	
 	/**
-	 * 게시판 html -> mht 변환 표출 Method
+	 * 게시판 mht -> html 변환 표출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTML(HttpServletRequest request) throws Exception{
+	public String mhtToHTML(HttpServletRequest request, Locale locale) throws Exception{
 		String filePath = "";
         String uploadModule = config.getProperty("config.LocalPath");
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
-
+        
         filePath = realPath + uploadModule;
         
         File file = new File(filePath);
@@ -190,7 +191,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
         
         String result = "";
-        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, request);
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, request, locale);
 
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
@@ -237,7 +238,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
@@ -274,7 +275,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		MultipartFile multiFile = request.getFile("upload");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 		String filePath = config.getProperty("upload_common.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
 		
@@ -425,7 +426,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/convertSaveImage.do")
 	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		
 		String pImgUrl = request.getParameter("url");
 		String width = request.getParameter("width");

@@ -30,18 +30,18 @@
 		    <c:forEach var="result" items="${strResult}" varStatus="status">
 		    	<c:set var="temp" value="${fn:split(result.extensionAttribute5, ':')}"/>
 		    	<c:choose>
-		    		<c:when test="${userInfo.lang == '1'}">
+		    		<c:when test="${userInfo.primary == '1'}">
 	                    <tr>
 	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = '${temp[0]}'> <nobr>${result.pUserName}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${temp[3] + ' ~ ' + temp[4]}</nobr></td>
+	                        <td style='width:200px;padding-left:10px;' userid = "${fn:split(result.extensionAttribute5, ':')[0]}"> <nobr>${result.pUserName}</nobr></td>
+	                        <td style='padding-left:10px;'><nobr>${fn:split(result.extensionAttribute5, ':')[3]} ~ ${fn:split(result.extensionAttribute5, ':')[4]}</nobr></td>
 	                    </tr>
 		    		</c:when>
 		    		<c:otherwise>
 	                    <tr>
 	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName2}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = '${temp[0]}'> <nobr>${result.pUserName2}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${temp[3] + ' ~ ' + temp[4]}</nobr></td>
+	                        <td style='width:200px;padding-left:10px;' userid = "${fn:split(result.extensionAttribute5, ':')[0]}"> <nobr>${result.pUserName2}</nobr></td>
+	                        <td style='padding-left:10px;'><nobr>${fn:split(result.extensionAttribute5, ':')[3]} ~ ${fn:split(result.extensionAttribute5, ':')[4]}</nobr></td>
 	                    </tr>
 		    		</c:otherwise>
 		    	</c:choose>

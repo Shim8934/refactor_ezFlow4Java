@@ -414,7 +414,7 @@ public class EzApprovalGarchiveController {
         
         String hasattach = "NO";
         String docID = "NO";
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         docID=request.getParameter("docID") != null ? request.getParameter("docID") : "";
         
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -620,7 +620,7 @@ public class EzApprovalGarchiveController {
 	public String sendOfferG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-   		String realPath = request.getServletContext().getRealPath("");
+   		String realPath = commonUtil.getRealPath(request);
 		String dirPath =  realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		String result=ezApprovalGService.doSendOffer(xmlDom,dirPath , userInfo.getCompanyID(), userInfo.getLang());
 		return result;
@@ -979,7 +979,7 @@ public class EzApprovalGarchiveController {
 	public String addBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirpath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
 		String result = ezApprovalGService.addBebu(xmlDom, dirpath , userInfo.getCompanyID(), userInfo.getLang());
 		return result;
@@ -1002,7 +1002,7 @@ public class EzApprovalGarchiveController {
 	public String resendEndDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-	    String realPath = request.getServletContext().getRealPath("");
+	    String realPath = commonUtil.getRealPath(request);
 		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
 		String result = ezApprovalGService.doReSendDoc(xmlDom,dirPath,userInfo.getLang());
 		

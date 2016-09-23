@@ -323,7 +323,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String formSave (@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
 		String result = ezApprovalGAdminService.formSave(doc, realPath, companyID, userInfo);
@@ -337,7 +337,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (HttpServletRequest request, Model model) throws Exception {
 		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String path = config.getProperty("upload_approvalG.ROOT");
 		
 		File file = new File(realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
@@ -402,7 +402,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String delForm(HttpServletRequest request) throws Exception {
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		
 		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
 		
@@ -428,7 +428,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		StringBuilder result = new StringBuilder();
-		String realPath = request.getServletContext().getRealPath(""); 
+		String realPath = commonUtil.getRealPath(request); 
 		String path = "xml" + commonUtil.separator + "ezApprovalG" + commonUtil.separator + "componentlist_admin.xml";
 		path = realPath + commonUtil.separator + path;
 		try {
@@ -1288,7 +1288,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String sealUpload(MultipartHttpServletRequest request, Model model) throws Exception {
 		MultipartFile multiFile = request.getFile("file1");
 		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
 		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
@@ -1348,7 +1348,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/sealDelete.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String sealDelete(HttpServletRequest request) throws Exception {
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = request.getParameter("dirPath");
 		String fileName = request.getParameter("fileName");
 		
@@ -1441,7 +1441,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		MultipartFile multiFile = request.getFile("file1");
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
 		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
@@ -1501,7 +1501,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/deptSealDelete.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String deptSealDelete(HttpServletRequest request) throws Exception {
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = request.getParameter("dirPath");
 		String fileName = request.getParameter("fileName");
 		
@@ -1564,7 +1564,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String optionValue2 = request.getParameter("option2");
 		String optionValue3 = request.getParameter("option3");
 		String companyID = request.getParameter("companyID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = config.getProperty("upload_approvalG.ROOT");
 		
 		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";

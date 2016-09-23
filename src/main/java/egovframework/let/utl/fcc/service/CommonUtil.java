@@ -425,6 +425,16 @@ public class CommonUtil {
         
         return resultStr;
     }
+	
+	public String getRealPath(HttpServletRequest request) {
+		String realPath = request.getServletContext().getRealPath("");
+		
+		if (realPath.substring(realPath.length() - 1).equals(separator)) {
+			realPath = realPath.substring(0, realPath.length() - 1);
+		} 
+		
+		return realPath;
+	}
 }
 
 

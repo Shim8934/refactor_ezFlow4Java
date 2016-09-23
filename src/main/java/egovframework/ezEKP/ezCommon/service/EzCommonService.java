@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCommon.service;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,13 +15,13 @@ public interface EzCommonService {
 	
 	public String wpCountLoginTime(String userID) throws Exception;
 	
-	public String startHtml2Mht(String strHTML, String realPath) throws Exception;
+	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
-	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request) throws Exception;
+	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
 	
 	public String loadMHTFile(String path) throws Exception;
 	
-	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, HttpServletRequest request) throws Exception;
+	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, HttpServletRequest request, Locale locale) throws Exception;
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	

@@ -48,9 +48,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Autowired
 	private Properties config;
 	
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -94,7 +91,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	}
         }
         
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         String filePath = pPhysicalFilePath;        
         String fileName = pFileName;
         String fileExt = "";
@@ -213,10 +210,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	/**
-	 * 게시판 html -> mht 변환 실행 Method
+	 * html -> mht 변환 실행 Method
 	 */
 	@Override
-	public String startHtml2Mht(String m_strHTML, String realPath) throws Exception{
+	public String startHtml2Mht(String m_strHTML, String realPath, Locale locale) throws Exception{
 		StringBuilder m_strMHT = new StringBuilder();
 		String[] strHtml = {m_strHTML};
 		String m_strBoundary = "";
@@ -245,12 +242,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             
             return m_strMHT.toString();
         } else {
-        	return egovMessageSource.getMessage("main.t0603",  new Locale(globals.getProperty("Globals.language")));
+        	return egovMessageSource.getMessage("main.t0603", locale);
         }
     }
 
 	/**
-	 * 게시판 html -> mht 변환 헤더설정 표출 Method
+	 * html -> mht 변환 헤더설정 표출 Method
 	 */
 	private String makeHeader(StringBuilder m_strMHT) throws Exception{
 		String m_strBoundary = createBoundary();
@@ -266,7 +263,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 boundary 생성 표출 Method
+	 * boundary 생성 표출 Method
 	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
@@ -285,7 +282,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 날짜반환 표출 Method
+	 * 날짜반환 표출 Method
 	 */
 	private String getDate() throws Exception{
         Calendar calendar = Calendar.getInstance();
@@ -374,7 +371,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 이미지추출 표출 Method
+	 * html -> mht 변환 이미지추출 표출 Method
 	 */
 	private String[] extractImageSource(String[] strHtml) throws Exception{
 		int npos = 0, nposStart = 0, nposEnd = 0, nImgCount = 0;
@@ -486,7 +483,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 배경화면추출 표출 Method
+	 * html -> mht 변환 배경화면추출 표출 Method
 	 */
 	private String[] extractBackgroundSource(String[] strHtml, String[] m_ImageList) throws Exception{
         String strTempHtml = strHtml[0].toLowerCase();
@@ -624,7 +621,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 html 인코딩 실행 Method
+	 * html -> mht 변환 html 인코딩 실행 Method
 	 */
 	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
@@ -642,7 +639,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 이미지인코딩 실행 Method
+	 * html -> mht 변환 이미지인코딩 실행 Method
 	 * @param realPath 
 	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
@@ -656,7 +653,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String strTemp = m_ImageList[i].substring(0, 4);
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             InputStream in = null;
-            
+
             if (strTemp.equals("http")) {
             	URL url = new URL(m_ImageList[i].replace("&amp;", "&"));
             	in = url.openStream();
@@ -685,13 +682,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 while ((len = in.read(buf)) != -1) {
                 	byteOutStream.write(buf, 0, len);
                 }
-                if (m_ImageList[i].length() > 1) {
-                	try {
-                		deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
-					} catch (Exception e) {
-						deleteFile(m_ImageList[i].replace("&amp;", "&"));
-					}
-                }
+//                if (m_ImageList[i].length() > 1) {
+//                	try {
+//                		deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
+//					} catch (Exception e) {
+//						deleteFile(m_ImageList[i].replace("&amp;", "&"));
+//					}
+//                }
             }
             
             in.close();
@@ -706,7 +703,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 배경화면인코딩 실행 Method
+	 * html -> mht 변환 배경화면인코딩 실행 Method
 	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++) {
@@ -752,10 +749,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	/**
-	 * 게시판 html -> mht 변환 표출 Method
+	 * html -> mht 변환 표출 Method
 	 */
 	@Override
-	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request) throws Exception{
+	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request, Locale locale) throws Exception{
         String filePath = "";
         String uploadModule = config.getProperty("config.LocalPath");
         
@@ -783,7 +780,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			m_strMHT= "";
 		}
         
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, request);
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, request, locale);
         
         if (strHTML.trim().length() > 0) {
         	return strHTML;
@@ -793,10 +790,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	/**
-	 * 게시판 html -> mht 변환 실행 표출 Method
+	 * html -> mht 변환 실행 표출 Method
 	 */
 	@Override
-	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, HttpServletRequest request) throws Exception{
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, HttpServletRequest request, Locale locale) throws Exception{
 		String m_strHTML = "";
 		String strBoundary = "";
 		String[] m_Mimechunk = null;
@@ -807,14 +804,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
-				return egovMessageSource.getMessage("main.t0600", new Locale(globals.getProperty("Globals.language")));
+				return egovMessageSource.getMessage("main.t0600", locale);
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
-
 				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator() + System.lineSeparator());
 					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
+					
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
 							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
@@ -832,20 +829,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						//절대경로에서 realPath "" 으로 대체
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(request.getServletContext().getRealPath(""), ""));
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(commonUtil.getRealPath(request), ""));
 					}
 				} else {
-					return egovMessageSource.getMessage("main.t0601", new Locale(globals.getProperty("Globals.language")));
+					return egovMessageSource.getMessage("main.t0601", locale);
 				}
 				return m_strHTML.replace("&nbsp;", "");
 			}
 		} else {
-			return egovMessageSource.getMessage("main.t0602", new Locale(globals.getProperty("Globals.language")));
+			return egovMessageSource.getMessage("main.t0602", locale);
 		}
 	}
 
 	/**
-	 * 게시판 html -> mht 변환 이미지디코딩 표출 Method
+	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
 	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
 		byte[] imageBytes = Base64.decodeBase64(strImageMht);
@@ -854,7 +851,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
         File file = new File(m_strLPath);
-        
+System.out.println("@@@#11 : " + LfilePath);
         if (!file.exists()) {
         	file.mkdir();
         }
@@ -867,7 +864,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	/**
-	 * 게시판 html -> mht 변환 mht디코딩 표출 Method
+	 * html -> mht 변환 mht디코딩 표출 Method
 	 */
 	private String doMHTDecoding(String strMht, String m_strHTML) {
 		byte[] arr = Base64.decodeBase64(strMht);
@@ -877,7 +874,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	/**
-	 * 게시판 html -> mht 변환boundary 반환 표출 Method
+	 * html -> mht 변환boundary 반환 표출 Method
 	 */
 	private String getBoundaryText(String m_strMHT) {
 		String strTemp = m_strMHT;
@@ -892,7 +889,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	/**
-	 * 게시판 mht 로드 표출 Method
+	 * mht 로드 표출 Method
 	 */
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{

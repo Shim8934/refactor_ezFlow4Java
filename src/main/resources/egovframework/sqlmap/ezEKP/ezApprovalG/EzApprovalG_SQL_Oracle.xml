@@ -861,9 +861,9 @@
 	        INNER JOIN 
 	        	EZHRMASTER.TBLUSERMASTER B  
 	        ON 
-	        	SUBSTR(A.extensionattribute5,0,INSTR(A.extensionattribute5,':')) = B.cn
+	        	SUBSTR(A.extensionattribute5,0,INSTR(A.extensionattribute5,':') - 1) = B.cn
             WHERE 
-            	NVL(A.extensionattribute5,'') != ''
+            	A.extensionattribute5 is not null
 		]]>
 	</select>
 	
