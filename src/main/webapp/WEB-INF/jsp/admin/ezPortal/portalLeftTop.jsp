@@ -21,7 +21,7 @@
 				if (confirm("<spring:message code='ezPortal.t226'/>")) {
 				    var xmlhttp = createXMLHttpRequest();
 
-					xmlhttp.open("POST", "/ezPortal/admin/portalDeleteCache.do", false);
+					xmlhttp.open("POST", "/admin/ezPortal/deleteCache.do", false);
 					xmlhttp.send("<DATA><UID>all</UID></DATA>");
 					
 					var result = xmlhttp.responseText;
@@ -43,7 +43,7 @@
 						break;
 					
 					case 2:
-						url = "/myoffice/ezPortal/admin/edit/Logo_List.aspx";
+						url = "/admin/ezPortal/logoList.do";
 						break;
 						
 					case 3:

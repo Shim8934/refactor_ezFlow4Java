@@ -38,12 +38,14 @@ import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLThemeGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1315,8 +1317,6 @@ System.out.println("strXML:"+strXML);
 		String ret = ezPortalAdminService.deletePortlet(uID);
 		
 		return ret;
-		
-		
 	}
 	
 	/**
@@ -1344,8 +1344,7 @@ System.out.println("strXML:"+strXML);
 		height = String.valueOf(prop.getHeight());
 		portletWidth = String.valueOf(prop.getWidth());
 		portletHeight = String.valueOf(prop.getHeight());
-System.out.println("portletWidth:"+portletWidth);
-		
+
 		StringBuilder sb = new StringBuilder();
 		 sb.append("<table id='main_table' border=0 cellpadding=0 cellspacing=0 width=100% style='table-layout:fixed;'>");
 
@@ -1367,7 +1366,335 @@ System.out.println("portletWidth:"+portletWidth);
 		
 		return "/admin/ezPortal/portalPortletPreview";
 		
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿관리 포틀릿 미리보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/logoList.do")
+	public String logoList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		String layoutList = "";
+		String logoAreaExist = "NO";  // layout에 로고영역이 존재하는지 여부
 		
+		if (commonUtil.checkAdmin(loginCookie)) {
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+				pageID = req.getParameter("pageID");
+			}
+			
+			if (pageID == null || pageID.equals("")) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+					break;
+				}
+			}
+			
+			String pSelected = "";
+			StringBuilder sb = new StringBuilder();
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().equals(pageID)) {
+					pSelected = "selected";
+				} else {
+					pSelected = "";
+				}
+				sb.append("<option value='" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent() + "' " + pSelected + ">" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent().trim() + "</option>");
+			}
+			layoutList = sb.toString();
+			
+			String gXmlStr = ezPortalAdminService.loadLogoItems(pageID);
+			Document gXmlDom = commonUtil.convertStringToDocument(gXmlStr);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pPUID", "201");
+			map.put("v_pPAGEID", pageID);
+			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = commonUtil.getQueryResult(result);
+			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
+			
+			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
+				logoAreaExist = "YES";
+			}
+			
+			String mainHTML = "";
+			for (int i=0; i<gXmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				mainHTML += "<tr style='cursor:pointer' imageurl='"+gXmlDom.getElementsByTagName("NORMALIMAGEPATH").item(i).getTextContent()+"' onclick=\"setValue('"+gXmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\" ondblclick=\"selectItem('"+gXmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
+				mainHTML += "<td width='60'>"+String.valueOf(i+1)+"</td>";
+				mainHTML += "<td>"+gXmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
+				mainHTML += "</tr>";
+			}
+			
+			model.addAttribute("logoAreaExist", logoAreaExist);
+			model.addAttribute("mainHTML", mainHTML);
+			model.addAttribute("pageID", pageID);
+			model.addAttribute("layoutList", layoutList);
+			return "/admin/ezPortal/portalLogoList";
+		} else {
+			return "";
+		}
+		
+	}
+	
+	/**
+	 * 관리자 포탈 로고설정 상세보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/logoEdit.do")
+	public String logoEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		String uID = "";
+		String menuIndex = "1";
+		String mode = "edit";
+        String windowOption = "";
+        String imagePath = "";
+        String imageWidth = "";
+        String imageHeight = "";
+        String displayName = "";
+        String displayName2 = "";
+        String linkURL = "";
+        String linkLocation = "";
+        String parentUID = "";
+		String pageID = "";
+        
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("menuIndex") != null && !req.getParameter("menuIndex").equals("")) {
+			menuIndex = req.getParameter("menuIndex");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		
+		if (mode.equals("new")) {
+			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+				parentUID = req.getParameter("parentUID");
+			}
+			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID);
+		}
+
+		PortalMenuItemItemsImageVO result = ezPortalAdminService.logoEdit(uID, pageID);
+		
+		if (result != null) {
+			displayName = result.getDisplayName();
+			displayName2 = result.getDisplayName2();
+			imagePath = result.getNormalImagePath();
+			linkURL = result.getLinkURL();
+			linkLocation = result.getLinkLocation();
+			windowOption = result.getWindowOption();
+			imageWidth = String.valueOf(result.getImageWidth());
+			imageHeight = String.valueOf(result.getImageHeight());
+		}
+		
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		
+		model.addAttribute("uID", uID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("parentUID", parentUID);
+		model.addAttribute("noneActiveX", "YES");
+		model.addAttribute("menuIndex", menuIndex);
+		model.addAttribute("aclList", aclList);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("mode", mode);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("imagePath", imagePath);
+		model.addAttribute("linkURL", linkURL);
+		model.addAttribute("linkLocation", linkLocation);
+		model.addAttribute("windowOption", windowOption);
+		model.addAttribute("imageWidth", imageWidth);
+		model.addAttribute("imageHeight", imageHeight);
+		
+		return "/admin/ezPortal/portalLogoEdit";
+		
+	}
+	
+	/**
+	 * 관리자 포탈 로고설정 로고 추가 및 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/saveLogoImage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveLogoImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		String pageID = "";
+		String mode = "";
+		String uID = "";
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		String pServerPath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "Logo";
+		
+		//로고저장
+		if (mode.equals("SAVE")) {
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			String oldImageName = xmlDom.getElementsByTagName("OLDFILENAME").item(0).getTextContent();
+			String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+			String displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+			String normalImage = xmlDom.getElementsByTagName("NORMALIMAGE").item(0).getTextContent();
+			String imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
+			String imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
+			String linkUrl = xmlDom.getElementsByTagName("LINKURL").item(0).getTextContent();
+			String linkLocation = xmlDom.getElementsByTagName("LINKLOCATION").item(0).getTextContent();
+			String windowOption = xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+			String skin = xmlDom.getElementsByTagName("SKIN").item(0).getTextContent();
+			
+			if (oldImageName != null && !oldImageName.equals("")) {
+				if (new File(pServerPath + commonUtil.separator + oldImageName).exists()) {
+					new File(pServerPath + commonUtil.separator + oldImageName).delete();
+				}
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_UID", uID);
+			map.put("v_OWNERPAGEID", pageID);
+			if (skin == null || skin.equals("")) {
+				skin = "0";
+			}
+			map.put("v_SKINNUM", Integer.parseInt(skin));
+			map.put("v_DISPLAYNAME", displayName);
+			map.put("v_DISPLAYNAME2", displayName2);
+			map.put("v_NORMALIMAGEPATH", normalImage);
+			if (imageWidth == null || imageWidth.equals("")) {
+				imageWidth = "0";
+			}
+			map.put("v_IMAGEWIDTH", Integer.parseInt(imageWidth));
+			if (imageHeight == null || imageHeight.equals("")) {
+				imageHeight = "0";
+			}
+			map.put("v_IMAGEHEIGHT", Integer.parseInt(imageHeight));
+			map.put("v_LINKURL", linkUrl);
+			map.put("v_LINKLOCATION", linkLocation);
+			map.put("v_WINDOWOPTION", windowOption);
+			ezPortalAdminService.saveLogoImage(map);
+		} else if (mode.equals("DEL")) {
+			//기존 저장된 파일명
+			String oldFileName = "";
+			if (req.getParameter("oldFileName") != null && !req.getParameter("oldFileName").equals("")) {
+				oldFileName = req.getParameter("oldFileName");
+			}
+			
+			if (oldFileName != null && !oldFileName.equals("")) {
+				if (new File(pServerPath + commonUtil.separator + oldFileName).exists()) {
+					new File(pServerPath + commonUtil.separator + oldFileName).delete();
+				}
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_UID", uID);
+			map.put("v_OWNERPAGEID", pageID);
+			ezPortalAdminService.saveLogoImage2(map);
+		}
+		return "OK";
+	}
+	
+	/**
+	 * 관리자 포탈 로고설정 위치설정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/menuPosition.do")
+	public String menuPosition(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+
+        String parentUID = "";
+		String pageID = "";
+		String align = "center";
+		String vAlign = "middle";
+        String leftMargin = "0";
+        String rightMargin = "0";
+        String topMargin = "0";
+        String bottomMargin = "0";
+		
+		if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+			parentUID = req.getParameter("parentUID");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pPUID", "201");
+		map.put("v_pPAGEID", pageID);
+		PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
+		String xmlStr = commonUtil.getQueryResult(result);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
+			if (xmlDom.getElementsByTagName("ALIGN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("ALIGN").item(0).getTextContent().equals("")) {
+				align = xmlDom.getElementsByTagName("ALIGN").item(0).getTextContent().trim();
+			}
+			if (xmlDom.getElementsByTagName("VALIGN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("VALIGN").item(0).getTextContent().equals("")) {
+				vAlign = xmlDom.getElementsByTagName("VALIGN").item(0).getTextContent().trim();
+			}
+			if (xmlDom.getElementsByTagName("LEFTMARGIN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("LEFTMARGIN").item(0).getTextContent().equals("")) {
+				leftMargin = xmlDom.getElementsByTagName("LEFTMARGIN").item(0).getTextContent().trim();
+			}
+			if (xmlDom.getElementsByTagName("RIGHTMARGIN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("RIGHTMARGIN").item(0).getTextContent().equals("")) {
+				rightMargin = xmlDom.getElementsByTagName("RIGHTMARGIN").item(0).getTextContent().trim();
+			}
+			if (xmlDom.getElementsByTagName("TOPMARGIN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("TOPMARGIN").item(0).getTextContent().equals("")) {
+				topMargin = xmlDom.getElementsByTagName("TOPMARGIN").item(0).getTextContent().trim();
+			}
+			if (xmlDom.getElementsByTagName("BOTTOMMARGIN").item(0).getTextContent() != null && !xmlDom.getElementsByTagName("BOTTOMMARGIN").item(0).getTextContent().equals("")) {
+				bottomMargin = xmlDom.getElementsByTagName("BOTTOMMARGIN").item(0).getTextContent().trim();
+			}
+		}
+		
+		model.addAttribute("align", align);
+		model.addAttribute("vAlign", vAlign);
+		model.addAttribute("leftMargin", leftMargin);
+		model.addAttribute("rightMargin", rightMargin);
+		model.addAttribute("topMargin", topMargin);
+		model.addAttribute("bottomMargin", bottomMargin);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("parentUID", parentUID);
+		
+		return "/admin/ezPortal/portalMenuPosition";
+		
+	}
+	
+	/**
+	 * 관리자 포탈 로고설정 위치설정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/savePositionSettings.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String savePositionSettings(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		String pageID = "";
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		String ret = ezPortalAdminService.savePositionSettings(xmlStr, pageID);
+		
+		return ret;
+	}
+	
+	/**
+	 * 관리자 포탈 서비스적용 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/deleteCache.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String deleteCache(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		String pUID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		
+		ezPortalService.deleteCacheValue(pUID, ezPortalService.getAccessList(userInfo));
+		
+		return "OK";
 	}
 	
 	

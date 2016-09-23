@@ -18,12 +18,15 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalAdminDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -179,6 +182,29 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_UID", uID);
 		map.put("v_PARAMNAVE", paramName);
 		ezPortalAdminDAO.removeParameter(map);
+	}
+	
+	@Override
+	public PortalMenuItemItemsImageVO logoEdit(String uID, String pageID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("v_OWNERPAGEID", pageID);
+		return ezPortalAdminDAO.logoEdit(map);
+	}
+	
+	@Override
+	public void saveLogoImage(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.saveLogoImage(map);
+	}
+
+	@Override
+	public void saveLogoImage2(Map<String, Object> map) throws Exception {
+		ezPortalAdminDAO.saveLogoImage2(map);
+	}
+	
+	@Override
+	public PortalTBLTopMenuItemsVO loadPositionSettings(Map<String, Object> map) throws Exception {
+		return ezPortalAdminDAO.loadPositionSettings(map);
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
@@ -1087,6 +1113,18 @@ System.out.println("pXML1:"+pXML);
 		return newUID;
 	}
 	
+	public String createNewLogoItem (String pParentUID, String pPageID) {
+		String newUID = UUID.randomUUID().toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUID", newUID);
+		map.put("v_PPAGEID", pPageID);
+		map.put("v_PSKINNUM", 1);
+		map.put("v_PDISPLAYNAME", "로고아이템");
+		map.put("v_PDISPLAYNAME2", "LogoItem");
+		ezPortalAdminDAO.createNewLogoItem(map);
+		return newUID;
+	}
+	
 	public String savePortletProperties (String pXML) {
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		
@@ -1174,5 +1212,94 @@ System.out.println("pXML1:"+pXML);
 		return "OK";
 	}
 	
+	public String loadLogoItems (String pPageID) throws Exception {
+		String rValue = "";
+		
+		List<PortalLoadLogoItemsVO> list = ezPortalAdminDAO.loadLogoItems(pPageID);
+		
+		rValue = "<DATA>";
+		for (int i=0; i<list.size(); i++) {
+			rValue += commonUtil.getQueryResult(list.get(i));
+		}
+		rValue += "</DATA>";
+		
+		return rValue;
+	}
+	
+	public String savePositionSettings (String pXML, String pPageID) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		String uID = xmlDom.getElementsByTagName("UID_").item(0).getTextContent().trim();
+		String align = xmlDom.getElementsByTagName("ALIGN").item(0).getTextContent().trim();
+		String vAlign = xmlDom.getElementsByTagName("VALIGN").item(0).getTextContent().trim();
+		String leftMargin = xmlDom.getElementsByTagName("PADDINGLEFT").item(0).getTextContent().trim();
+		String rightMargin = xmlDom.getElementsByTagName("PADDINGRIGHT").item(0).getTextContent().trim();
+		String topMargin = xmlDom.getElementsByTagName("PADDINGTOP").item(0).getTextContent().trim();
+		String bottomMargin = xmlDom.getElementsByTagName("PADDINGBOTTOM").item(0).getTextContent().trim();
+		
+		if (leftMargin == null || leftMargin.equals("")) {
+			leftMargin = "0";
+		}
+		if (rightMargin == null || rightMargin.equals("")) {
+			rightMargin = "0";
+		}
+		if (topMargin == null || topMargin.equals("")) {
+			topMargin = "0";
+		}
+		if (bottomMargin == null || bottomMargin.equals("")) {
+			bottomMargin = "0";
+		}
+		
+		if (align.equals("0")) {
+			align = "left";
+		}
+		if (align.equals("1")) {
+			align = "center";
+		}
+		if (align.equals("2")) {
+			align = "right";
+		}
+		
+		if (vAlign.equals("0")) {
+			vAlign = "top";
+		}
+		if (vAlign.equals("1")) {
+			vAlign = "middle";
+		}
+		if (vAlign.equals("2")) {
+			vAlign = "bottom";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pALIGN", align);
+		map.put("v_pVALIGN", vAlign);
+		
+		if (leftMargin == null || leftMargin.equals("")) {
+			leftMargin = "0";
+		}
+		map.put("v_pLEFTMARGIN", Integer.parseInt(leftMargin));
+		
+		if (rightMargin == null || rightMargin.equals("")) {
+			rightMargin = "0";
+		}
+		map.put("v_pRIGHTMARGIN", Integer.parseInt(rightMargin));
+		
+		if (topMargin == null || topMargin.equals("")) {
+			topMargin = "0";
+		}
+		map.put("v_pTOPMARGIN", Integer.parseInt(topMargin));
+		
+		if (bottomMargin == null || bottomMargin.equals("")) {
+			bottomMargin = "0";
+		}
+		map.put("v_pBOTTOMMARGIN", Integer.parseInt(bottomMargin));
+		map.put("v_pUID", uID);
+		map.put("v_pPAGEID", pPageID);
+		
+		ezPortalAdminDAO.savePositionSettings(map);
+		
+		return "OK";
+	}
+	
 }
+
 

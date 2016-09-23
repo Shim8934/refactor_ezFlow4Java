@@ -6,12 +6,15 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -67,12 +70,25 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.menuItemEdit"); 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalLoadLogoItemsVO> loadLogoItems (String pPageID) {
+		return (List<PortalLoadLogoItemsVO>) list("EzPortalAdminDAO.loadLogoItems", pPageID); 
+	}
+	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
 		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", uID);
 	}
 	
 	public PortalPortletGeneralVO getPortletProperties (String pUID) {
 		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties", pUID);
+	}
+	
+	public PortalMenuItemItemsImageVO logoEdit (Map<String, Object> map) {
+		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.logoEdit", map);
+	}
+	
+	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) {
+		return (PortalTBLTopMenuItemsVO)select("EzPortalAdminDAO.loadPositionSettings", map);
 	}
 	
 	public String getParentPageIDList (String pTemp) {
@@ -153,6 +169,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.createNewPortlet", map);
 	}
 	
+	public void createNewLogoItem (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewLogoItem", map);
+	}
+	
 	public void portalSaveSkin (Map<String, Object> map) {
 		insert("EzPortalAdminDAO.portalSaveSkin", map);
 	}
@@ -201,6 +221,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.saveMenuItemParameters", map);
 	}
 	
+	public void saveLogoImage (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveLogoImage", map);
+	}
+	
 	public void updateTopMenuGeneral (Map<String, Object> map) {
 		update("EzPortalAdminDAO.updateTopMenuGeneral", map);
 	}
@@ -247,6 +271,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void setUseLang (Map<String, Object> map) {
 		update("EzPortalAdminDAO.setUseLang", map);
+	}
+	
+	public void savePositionSettings (Map<String, Object> map) {
+		update("EzPortalAdminDAO.savePositionSettings", map);
 	}
 	
 	public void deleteTheme (String uID) {
@@ -315,6 +343,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void deletePortlet (String pUID) {
 		delete("EzPortalAdminDAO.deletePortlet", pUID);
+	}
+	
+	public void saveLogoImage2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveLogoImage2", map);
 	}
 	
 	

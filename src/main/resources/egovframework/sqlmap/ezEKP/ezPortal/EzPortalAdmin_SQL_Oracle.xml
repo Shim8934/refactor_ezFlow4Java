@@ -10,6 +10,9 @@
 	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
 	<typeAlias  alias="PortalSearchPortlet2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO"/>
 	<typeAlias  alias="PortalTBLBuiltInParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO"/>
+	<typeAlias  alias="PortalLoadLogoItemsVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsImageVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
+	<typeAlias  alias="PortalTBLTopMenuItemsVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO"/>
 	
 	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -137,6 +140,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.createNewLogoItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CREATENEWLOGOITEM(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.setUsePage2" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SETUSEPAGE2(#v_pUSERFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#)}
@@ -212,6 +221,36 @@
 	<procedure id="EzPortalAdminDAO.saveMenuItemParameters" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SAVEMENUITEMPARAMETERS(#v_UID#, #v_PARAMNAME#, #v_PARAMVALUE#, #v_PARAMTYPE#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveLogoImage" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVELOGOIMAGE(#v_UID#, #v_OWNERPAGEID#, #v_SKINNUM#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_NORMALIMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_LINKURL#, #v_LINKLOCATION#, #v_WINDOWOPTION#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.saveLogoImage2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVELOGOIMAGE2(#v_UID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.savePositionSettings" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPOSITIONSETTINGS(#v_pALIGN#, #v_pVALIGN#, #v_pLEFTMARGIN#, #v_pRIGHTMARGIN#, #v_pTOPMARGIN#, #v_pBOTTOMMARGIN#, #v_pUID#, #v_pPAGEID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.logoEdit" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOGO_EDIT(#v_UID#, #v_OWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadPositionSettings" parameterClass="Map" resultClass="PortalTBLTopMenuItemsVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADPOSITIONSETTINGS(#v_pPUID#, #v_pPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -302,6 +341,12 @@
 	<procedure id="EzPortalAdminDAO.deletePortlet" parameterClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_DELETEPORLET(#pUID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadLogoItems" parameterClass="String"  resultClass="PortalLoadLogoItemsVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADLOGOITEMS(#pPageID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
