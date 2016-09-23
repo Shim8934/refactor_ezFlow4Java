@@ -461,16 +461,17 @@
 			    <table>
                     <tr class="primary">
 	                    <th>${langPrimary}</th>
-	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/DISPLAYNAME").InnerText %>"></td>	
+	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="${menuItem.displayName}"></td>	
                     </tr>
                     <tr class="secondary">
 	                    <th>${langSecondary}</th>
-	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="<%= xmldom.SelectSingleNode("DATA/DISPLAYNAME2").InnerText %>"></td>	
+	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${menuItem.displayName2}"></td>	
                     </tr>
                 </table>
 			</td>
 		</tr>
-		<% if (xmldom.GetElementsByTagName("IMAGEWIDTH").Count > 0)
+		<%String imageWidth = (String)request.getParameter("imageWidth"); %>
+		<% if (imageWidth != null && !imageWidth.equals(""))
 	 { %>
 		<tr>
 			<th>
@@ -479,13 +480,11 @@
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<% if (xmldom.SelectSingleNode("DATA/IMAGEDATA/NORMALIMAGEPATH").InnerText.Trim() != "")
-		 { %>
-						<td id="tdNormalImage">
-							&nbsp;<img id="txtNormalImage" src="<%= xmldom.SelectSingleNode("DATA/IMAGEDATA/NORMALIMAGEPATH").InnerText %>"></td>
-						<% }
-		 else
-		 { %>
+					<%String normalImagePath = (String)request.getParameter("normalImagePath"); %>
+						<% if (normalImagePath != null && !normalImagePath.trim().equals("")) { %>
+							<td id="tdNormalImage">
+							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath %>"></td>
+						<% } else { %>
 						<td id="tdNormalImage">
 							&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
 						<% } %>
@@ -507,13 +506,11 @@
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<% if (xmldom.SelectSingleNode("DATA/IMAGEDATA/OVERIMAGEPATH").InnerText.Trim() != "")
-		 { %>
+					<%String overImagePath = (String)request.getParameter("overImagePath"); %>
+						<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
 						<td>
-							&nbsp;<img id="txtOverImage" src="<%= xmldom.SelectSingleNode("DATA/IMAGEDATA/OVERIMAGEPATH").InnerText %>"></td>
-						<% }
-		 else
-		 { %>
+							&nbsp;<img id="txtOverImage" src="<%= overImagePath %>"></td>
+						<% } else { %>
 						<td id="tdOverImage">
 							&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
 						<% } %>
@@ -533,25 +530,23 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/IMAGEDATA/LINKURL").InnerText %>"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${menuItem.linkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/IMAGEDATA/LINKLOCATION").InnerText %>"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${menuItem.linkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/IMAGEDATA/WINDOWOPTION").InnerText %>"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${menuItem.windowOption}"></td>
 		</tr>
-		<% }
-	 else
-	 { %>
+		<% } else { %>
 		<tr>
 			<th>
 				Normal image
@@ -597,21 +592,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/LINKURL").InnerText %>"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${menuItem.linkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/LINKLOCATION").InnerText %>"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${menuItem.linkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="<%= xmldom.SelectSingleNode("DATA/WINDOWOPTION").InnerText %>"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${menuItem.windowOption}"></td>
 		</tr>
 		<% } %>
 	</table>
@@ -626,7 +621,7 @@
 			<th width="70">
 			</th>
 		</tr>
-		<% for (int i = 0; i < xmldom_param.GetElementsByTagName("UID_").Count; i++)
+		<%-- <% for (int i = 0; i < xmldom_param.GetElementsByTagName("UID_").Count; i++)
 	 { %>
 		<% if (xmldom_param.GetElementsByTagName("PARAMTYPE").Item(i).InnerText == "0")
 	 { %>
@@ -662,7 +657,8 @@
 			</td>
 		</tr>
 		<% } %>
-		<% } %>
+		<% } %> --%>
+		${paramHtml}
 	</table>
     <br id ="idbr" />
 	<table id="toggle_tbl2_2" width="500" class="popuplist" style="display: none;">
@@ -682,12 +678,7 @@
 					<tr>
 						<td width="125">
 							<select id="SelectParamType" onchange="Param_Change()">
-								<% for (int j = 0; j < xmldom_paramtype.GetElementsByTagName("PARAMTYPE").Count; j++)
-		  { %>
-								<option value="<%=xmldom_paramtype.GetElementsByTagName("PARAMTYPE").Item(j).InnerText %>">
-									<%=xmldom_paramtype.GetElementsByTagName("SHORTNAME").Item(j).InnerText %>
-								</option>
-								<% } %>
+							${paramHtml}
 							</select>
 						</td>
 						<td>
@@ -779,37 +770,37 @@
 		</tr>
 		<tr>
 			<th>
-				<%=RM.GetString("t92")%>
+				<spring:message code='ezPortal.t92'/>
 			</th>
 			<td>
 				<input type="text" id="newAccessName" style="width: 100%" readonly></td>
 		</tr>
 		<tr>
 			<th>
-				<%=RM.GetString("t93")%>
+				<spring:message code='ezPortal.t93'/>
 			</th>
 			<td>
 				<input type="radio" name="SelectEditRight" value="1" checked>
-				<%=RM.GetString("t97")%>
+					<spring:message code='ezPortal.t97'/>
 				<input type="radio" name="SelectEditRight" value="2">
-				<%=RM.GetString("t95")%>
+					<spring:message code='ezPortal.t95'/>
 			</td>
 		</tr>
 		<tr>
 			<th>
-				<%=RM.GetString("t94")%>
+				<spring:message code='ezPortal.t94'/>
 			</th>
 			<td>
 				<input type="radio" name="SelectViewRight" value="1" checked>
-				<%=RM.GetString("t97")%>
+					<spring:message code='ezPortal.t97'/>
 				<input type="radio" name="SelectViewRight" value="2">
-				<%=RM.GetString("t95")%>
+					<spring:message code='ezPortal.t95'/>
 			</td>
 		</tr>
 	</table>
 	<div class="btnposition" id="toggle_tbl3_3" style="display: none">
-        <a class="imgbtn"><span onclick="AddRight()"><%=RM.GetString("t62")%></span></a>
-        <input onclick="window.close();" style ="display:none" type="button" value="<%=RM.GetString("t12")%>">
+        <a class="imgbtn"><span onclick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
+        <input onclick="window.close();" style ="display:none" type="button" value="<spring:message code='ezPortal.t12'/>">
 	</div>
     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
                     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=Menu" target="ifrm" style ="display:none">
