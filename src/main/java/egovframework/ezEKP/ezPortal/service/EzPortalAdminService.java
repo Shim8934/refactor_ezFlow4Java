@@ -3,9 +3,12 @@ package egovframework.ezEKP.ezPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 
 public interface EzPortalAdminService {
 	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() throws Exception;
@@ -13,6 +16,12 @@ public interface EzPortalAdminService {
 	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception;
 	
 	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
+	
+	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (String pUID, String pPageID) throws Exception;
+	
+	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID) throws Exception;
+	
+	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) throws Exception;
 	
 	public String useThemeInfo(String pUID) throws Exception;
 	
@@ -48,6 +57,12 @@ public interface EzPortalAdminService {
 	
 	public String deletePortlet (String pUID) throws Exception;
 	
+	public String loadLogoItems (String pPageID) throws Exception;
+	
+	public String createNewLogoItem (String pParentUID, String pPageID) throws Exception;
+	
+	public String savePositionSettings (String pXML, String pPageID) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;
@@ -75,4 +90,8 @@ public interface EzPortalAdminService {
 	public void savePortletSubProperty4 (Map<String, Object> map) throws Exception;
 	
 	public void removeParameter (int mode, String uID, String paramName) throws Exception;
+	
+	public void saveLogoImage (Map<String, Object> map) throws Exception;
+	
+	public void saveLogoImage2 (Map<String, Object> map) throws Exception;
 }

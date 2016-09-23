@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
@@ -205,6 +206,14 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 	@Override
 	public PortalTBLTopMenuItemsVO loadPositionSettings(Map<String, Object> map) throws Exception {
 		return ezPortalAdminDAO.loadPositionSettings(map);
+	}
+	
+	@Override
+	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems(String pUID, String pPageID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pPARENTUID", pUID);
+		map.put("v_pOWNERPAGEID", pPageID);
+		return ezPortalAdminDAO.loadMenuItems(map);
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {

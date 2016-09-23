@@ -47,7 +47,7 @@
 						break;
 						
 					case 3:
-						url = "/myoffice/ezPortal/admin/edit/UtilMenuArea_Edit.aspx";
+						url = "/admin/ezPortal/utilMenuAreaEdit.do";
 						break;
 						
 					case 4:

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO;
@@ -73,6 +74,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalLoadLogoItemsVO> loadLogoItems (String pPageID) {
 		return (List<PortalLoadLogoItemsVO>) list("EzPortalAdminDAO.loadLogoItems", pPageID); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (Map<String, Object> map) {
+		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalAdminDAO.loadMenuItems", map); 
 	}
 	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
