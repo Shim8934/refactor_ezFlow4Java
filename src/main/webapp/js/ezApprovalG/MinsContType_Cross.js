@@ -136,7 +136,6 @@ function DocStateReg() {
 }
 
 function ContSave() {
-alert(100);
     var i, j, tXML, Flag;
     var xmlpara = createXmlDom();
     var strXML = XMLParse();
