@@ -22,7 +22,6 @@
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<script type="text/javascript" src="/js/NameControl_Cross.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();

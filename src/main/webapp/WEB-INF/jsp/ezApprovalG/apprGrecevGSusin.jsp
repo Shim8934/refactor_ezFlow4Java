@@ -320,6 +320,7 @@
 		    function btnSendDraft_onclick() {
 		        try {
 		            var RecevState = getDocRecevState();
+  
 		            if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
 		                if (RecevState == "015") {
 		                    var pAlertContent = strLang912;
@@ -342,7 +343,6 @@
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
-		
 		            if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                if (!checkLines())
 		                    return;
@@ -355,7 +355,7 @@
 		                    pSusinNextSN = parseInt(pSusinSN, 10) + 1;
 		                else
 		                    pSusinNextSN = 1;
-		
+		                
 		                var fieldname = pSusinNextSN + "sign1";
 		                if (message.GetListItem(fields, fieldname) && CheckDeptLinesXML == "") {
 		                    var pInformationContent = "<spring:message code='ezApprovalG.t1409'/>" + "<br><br>" +
@@ -392,7 +392,7 @@
 		        g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
 		        if (!g_SepAttachLVXml)
 		            g_SepAttachLVXml = "";
-		
+
 		        if (!CheckSepAttParamXmlNull(g_SepAttachLVXml)) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1411'/>";
 		            OpenAlertUI(pAlertContent);

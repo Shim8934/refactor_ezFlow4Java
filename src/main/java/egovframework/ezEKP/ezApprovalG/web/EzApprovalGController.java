@@ -3461,8 +3461,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
 			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
 			
-			orgDocFile = dirPath + orgDocFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
-			docFile = dirPath + docFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			orgDocFile = dirPath + orgDocFile.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+			docFile = dirPath + docFile.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
 			File file = new File(dir);
@@ -3482,12 +3482,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (docID != null && !docID.equals("")) {
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID());
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID());
 				
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 					return "main/warning";
 				}
-				if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
+				if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
 					if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
 						return "main/warning";
 					}

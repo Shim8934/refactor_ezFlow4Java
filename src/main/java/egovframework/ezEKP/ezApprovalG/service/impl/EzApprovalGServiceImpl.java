@@ -3517,6 +3517,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		String rtnVal = "";
+		String tempStr = "";
+		String[] tempAry = cabClassList.split(",");
+		
+		for (int k = 0; k < tempAry.length; k++) {
+			tempStr += "'" + tempAry[k] + "',";
+		}
+		
+		cabClassList = tempStr.substring(0, tempStr.length() - 1);
 
         if (flag.equals("1")) { 				// 모두 연기일 경우
 			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N', ");
@@ -3526,12 +3534,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if (flag.equals("0")) { 		// 선택된 철만 연기일 경우
 			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N', ");
 			strSQL.append("ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS char(4)) ");
-			strSQL.append("Where CabinetClassNo IN (Select Value From TABLE(fn_StringToTable('");
-			strSQL.append(cabClassList + "', ',')) );");
+			strSQL.append("Where CabinetClassNo IN (" + cabClassList + ");");
 		} else if (flag.equals("2")) {  		// 연기취소일 경우
 			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N' Where ");
-			strSQL.append("CabinetClassNo IN (Select Value From TABLE(fn_StringToTable('");
-          strSQL.append(cabClassList + "', ',')));");
+			strSQL.append("CabinetClassNo IN (" + cabClassList + ");");
 		}
         
 		try {
@@ -3710,15 +3716,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String endCabProduce(String cabClassNo, String flag, String companyID) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		String rtnVal = "";
+		String tempStr = "";
+		String[] tempAry = cabClassNo.split(",");
+		
+		for (int k = 0; k < tempAry.length; k++) {
+			tempStr += "'" + tempAry[k] + "',";
+		}
+		
+		cabClassNo = tempStr.substring(0, tempStr.length() - 1);
 		
 		if (flag.equals("0")) {
 			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '1' Where ");
-			strSQL.append("ConfirmFlag = '0' And CabinetClassNo = ");
-			strSQL.append("'" + cabClassNo + "';\n");
+			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (" + cabClassNo + ");\n");
         } else {
 			strSQL.append("Update TBCABINETCLASS Set TerminateFlag = '0' Where ");
-			strSQL.append("ConfirmFlag = '0' And CabinetClassNo = ");
-            strSQL.append("'" + cabClassNo + "';\n");
+			strSQL.append("ConfirmFlag = '0' And CabinetClassNo IN (" + cabClassNo + ");\n");
         }
 		//쿼리 이상해서 수정
 //		if (flag.equals("0")) {
@@ -8860,7 +8872,7 @@ String strMultiData = commonUtil.getMultiData(langType);
 							String[] arr2 = arr1[k].split(":");
 							userDIDs[k + 1] = arr2[0].trim();
 							userDNames[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName");
-							userDNames[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName2");
+							userDNames2[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName2");
 							
 							if (arr2[1].trim().equals("")) {
 								userTitles[k + 1] = userJobTitle;
@@ -10702,8 +10714,8 @@ String strMultiData = commonUtil.getMultiData(langType);
 		strSQL.append("', '" + makeRightField(originRegSN) + "', '" + makeRightField(electronicRecFlag));
 		strSQL.append("', '" + makeRightField(specialRec) + "', '" + makeRightField(publicCode));
 		strSQL.append("', '" + makeRightField(limitRange) + "', '" + makeRightField(oldFlag));
-		strSQL.append("', NULL, '" + makeRightField("0") + "', '" + makeRightField(specialCatalogFlag));
-		strSQL.append("', '" + makeRightField(attachFlag) + "', SYSDATE" );
+		strSQL.append("', NULL, '" + makeRightField("0") + "', " + makeRightField(specialCatalogFlag));
+		strSQL.append(", '" + makeRightField(attachFlag) + "', SYSDATE" );
 		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
         strSQL.append("', '" + makeRightField(docType) + "');\n");
         

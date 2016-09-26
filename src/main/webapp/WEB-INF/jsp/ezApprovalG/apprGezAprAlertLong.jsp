@@ -9,10 +9,14 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS" >
 		    function btn_OpinionOK_onclick() {
+		    	ReturnFunction();
 		        window.close();
 		    }
 		    window.onload = function () {
-		        document.getElementById("pMessageContent").innerHTML = dialogArguments;
+		    	RetValue = parent.ezapralertlong_cross_dialogArguments[0];
+	            ReturnFunction = parent.ezapralertlong_cross_dialogArguments[1];
+	            
+		        document.getElementById("pMessageContent").innerHTML = RetValue;
 		    }
 		</script>
 	</head>

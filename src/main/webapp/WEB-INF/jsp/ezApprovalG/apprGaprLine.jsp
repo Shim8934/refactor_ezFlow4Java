@@ -20,7 +20,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SelectSubTitles_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Aprline_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
-		<script type="text/javascript" src="/js/NameControl_Cross.js"></script>
 		<script ID="clientEventHandlersJS">
 		    var OrderCell = "";
 		    var pDocID;

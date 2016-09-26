@@ -24,7 +24,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/setLogData.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/NameControl_Cross.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
