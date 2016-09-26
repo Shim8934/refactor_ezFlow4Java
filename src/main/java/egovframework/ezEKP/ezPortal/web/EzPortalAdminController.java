@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
@@ -2055,7 +2056,7 @@ System.out.println("strXML:"+strXML);
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map);
+			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map1);
 			String xmlStr1 = commonUtil.getQueryResult(result1);
 			Document xmlDom2 = commonUtil.convertStringToDocument(xmlStr1);
 			
@@ -2082,5 +2083,145 @@ System.out.println("strXML:"+strXML);
 			return "";
 		}
 	}
+	
+	
+	/**
+	 * 관리자 포탈 서브메뉴설정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/subMenuItemsEdit.do")
+	public String subMenuItemsEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String pageID = "";
+		String parentUID = "";
+		String layoutList = "";
+		String menuList = "";
+		String mainAreaExist = "NO";
+		String subAreaExist = "NO";
+        
+		if (commonUtil.checkAdmin(loginCookie)) {
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+				pageID = req.getParameter("pageID");
+			}
+			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+				parentUID = req.getParameter("uID");
+			}
+			
+			if (pageID == null || pageID.equals("")) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+					break;
+				}
+			}
+			
+			String pSelected = "";
+			StringBuilder sb = new StringBuilder();
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().equals(pageID)) {
+					pSelected = "selected";
+				} else {
+					pSelected = "";
+				}
+				sb.append("<option value='" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent() + "' " + pSelected + ">" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent().trim() + "</option>");
+			}
+			layoutList = sb.toString();
+			sb.delete(0, sb.length());
+			
+			//메인메뉴, 서브메뉴 생성 여부
+			
+			//main
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pPUID", "203");
+			map.put("v_pPAGEID", pageID);
+			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = commonUtil.getQueryResult(result);
+			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
+			
+			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
+				mainAreaExist = "YES";
+			}
+			
+			//sub
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("v_pPUID", "204");
+			map1.put("v_pPAGEID", pageID);
+			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map1);
+			xmlStr = commonUtil.getQueryResult(result1);
+			xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			
+			if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
+				subAreaExist = "YES";
+			}
+
+			// 메인, 서브가 모두 존재하는 경우
+			if (mainAreaExist.equals("YES") && subAreaExist.equals("YES")) {
+				List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("203", pageID);
+				String listStr = "<DATA>";
+				for (int i=0; i<list.size(); i++) {
+					listStr += commonUtil.getQueryResult(list.get(i));
+				}
+				listStr += "</DATA>";
+
+				xmlDom = commonUtil.convertStringToDocument(listStr);
+				
+				if (parentUID == null) {
+					for (int i=0; i<list.size(); i++) {
+						parentUID = list.get(i).getuID();
+						break;
+					}
+				}
+				
+				// 1차메뉴 리스트
+				pSelected = "";
+
+				for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+					if (xmlDom.getElementsByTagName("UID").item(i).getTextContent().equals(parentUID)) {
+						pSelected = "selected";
+					} else {
+						pSelected = "";
+					}
+					sb.append("<option value='" + xmlDom.getElementsByTagName("UID").item(i).getTextContent() + "' " + pSelected + ">" + xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent().trim() + "</option>");
+				}
+
+				menuList = sb.toString();	
+			
+			}
+			List<PortalMenuItemItemsMenuItemsSVO> subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+			String listStr1 = "<DATA>";
+			for (int i=0; i<subList.size(); i++) {
+				listStr1 += commonUtil.getQueryResult(subList.get(i));
+			}
+			listStr1 += "</DATA>";
+
+			Document gXmlDom = commonUtil.convertStringToDocument(listStr1);
+			//서브메뉴 정보를 가져온다
+			if (parentUID != null && !parentUID.equals("")) {
+				subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+			}
+		
+			String mainHTML = "";
+			
+			for (int i=0; i<subList.size(); i++) {
+				mainHTML += "<tr style='cursor:pointer' onclick=\"setValue('"+subList.get(i).getuID()+"', this)\" ondblclick=\"selectItem('"+subList.get(i).getuID()+"', this)\">";
+				mainHTML += "<td width='60' height='23'>"+String.valueOf(i+1)+"</td>";
+				mainHTML += "<td>"+gXmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
+				mainHTML += "</tr>";
+			}
+			
+			model.addAttribute("subAreaExist", subAreaExist);
+			model.addAttribute("mainAreaExist", mainAreaExist);
+			model.addAttribute("mainHTML", mainHTML);
+			model.addAttribute("pageID", pageID);
+			model.addAttribute("parentUID", parentUID);
+			model.addAttribute("layoutList", layoutList);
+			model.addAttribute("menuList", menuList);
+			
+			return "/admin/ezPortal/portalSubMenuItemsEdit";
+		} else {
+			return "";
+		}
+	}	
 	
 }

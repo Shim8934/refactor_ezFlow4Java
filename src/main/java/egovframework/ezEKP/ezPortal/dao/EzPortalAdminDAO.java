@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO;
@@ -80,6 +81,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (Map<String, Object> map) {
 		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalAdminDAO.loadMenuItems", map); 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalMenuItemItemsMenuItemsSVO> loadSubMenuItems (Map<String, Object> map) {
+		return (List<PortalMenuItemItemsMenuItemsSVO>) list("EzPortalAdminDAO.loadSubMenuItems", map); 
 	}
 	
 	@SuppressWarnings("unchecked")

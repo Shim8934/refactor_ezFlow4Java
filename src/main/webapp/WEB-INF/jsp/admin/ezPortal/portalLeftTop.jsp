@@ -51,11 +51,11 @@
 						break;
 						
 					case 4:
-						url = "/myoffice/ezPortal/admin/edit/MainMenuArea_Edit.aspx" ;
+						url = "/admin/ezPortal/mainMenuAreaEdit.do" ;
 						break;
 						
 					case 5:
-						url = "/myoffice/ezPortal/admin/edit/SubMenuItems_Edit.aspx";
+						url = "/admin/ezPortal/subMenuItemsEdit.do";
 						break;
 						
 				    case 6:

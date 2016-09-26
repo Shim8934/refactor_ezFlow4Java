@@ -14,6 +14,7 @@
 	<typeAlias  alias="PortalMenuItemItemsImageVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
 	<typeAlias  alias="PortalTBLTopMenuItemsVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO"/>
 	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 		type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
 	
 	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -47,6 +48,19 @@
 		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
 		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
+	</resultMap>
+	
+	<resultMap class="PortalMenuItemItemsMenuItemsSVO" id="portalMenuItemItemsMenuItemsSVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="2"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="6"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="7"/>
+		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
 	</resultMap>
 	
 	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
@@ -298,6 +312,12 @@
 	<procedure id="EzPortalAdminDAO.loadMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_LOADMENUITEMS(#v_pPARENTUID#, #v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadSubMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADSUBMENUITEMS(#v_PPARENTMENUID#, #v_POWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
