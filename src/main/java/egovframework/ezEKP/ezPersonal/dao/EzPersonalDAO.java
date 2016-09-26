@@ -6,23 +6,21 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
 public class EzPersonalDAO extends EgovAbstractDAO{
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetSliderListVO> getSilderList (Map<String, Object> map) {
-		return (List<PersonalGetSliderListVO>) list("EzPersonalDAO.getSliderList", map);
+	public List<PersonalSliderImageVO> getSilderList (Map<String, Object> map) {
+		return (List<PersonalSliderImageVO>) list("EzPersonalDAO.getSliderList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -31,18 +29,18 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetPollListUserVO> getPollListUser(Map<String, Object> map) throws Exception{
-		return (List<PersonalGetPollListUserVO>) list("EzPersonalDAO.getPollListUser", map);
+	public List<PersonalLightPollVO> getPollListUser(Map<String, Object> map) throws Exception{
+		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollListUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) {
-		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResultOrderResult", pItemSeq);
+	public List<PersonalLightPollVO> getPollResultOrderResult (int pItemSeq) {
+		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResultOrderResult", pItemSeq);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) {
-		return (List<PersonalGetPollResultOrderResultVO>) list("EzPersonalDAO.getPollResult", pItemSeq);
+	public List<PersonalLightPollVO> getPollResult (int pItemSeq) {
+		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResult", pItemSeq);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -64,12 +62,12 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
 	}
 	
-	public PersonalGetCurrentPollVO getCurrentPoll (Map<String, Object> map) {
-		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getCurrentPoll", map);
+	public PersonalLightPollVO getCurrentPoll (Map<String, Object> map) {
+		return (PersonalLightPollVO) select("EzPersonalDAO.getCurrentPoll", map);
 	}
 	
-	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) {
-		return (PersonalGetCurrentPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
+	public PersonalLightPollVO getPollInfo (int pItemSeq) {
+		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
 	}
 	
 	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) {

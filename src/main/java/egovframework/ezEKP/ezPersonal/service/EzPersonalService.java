@@ -2,24 +2,22 @@ package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
 
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 
 public interface EzPersonalService {
-	public List<PersonalGetSliderListVO> getSilderList(String companyID, String mode, String sliderID) throws Exception;
+	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID) throws Exception;
 	
-	public List<PersonalGetPollListUserVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart) throws Exception;
+	public List<PersonalLightPollVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart) throws Exception;
 	
-	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult (int pItemSeq) throws Exception;
+	public List<PersonalLightPollVO> getPollResultOrderResult (int pItemSeq) throws Exception;
 	
-	public List<PersonalGetPollResultOrderResultVO> getPollResult (int pItemSeq) throws Exception;
+	public List<PersonalLightPollVO> getPollResult (int pItemSeq) throws Exception;
 	
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) throws Exception;
 	
@@ -29,9 +27,9 @@ public interface EzPersonalService {
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	
-	public PersonalGetCurrentPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
+	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
 	
-	public PersonalGetCurrentPollVO getPollInfo (int pItemSeq) throws Exception;
+	public PersonalLightPollVO getPollInfo (int pItemSeq) throws Exception;
 	
 	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) throws Exception;
 	

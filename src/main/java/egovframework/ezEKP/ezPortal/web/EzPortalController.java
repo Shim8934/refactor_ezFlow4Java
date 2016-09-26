@@ -31,16 +31,14 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
-import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
@@ -937,7 +935,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 	public String wpNewImage(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		try {
-			List<PersonalGetSliderListVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
 			model.addAttribute("sliderList", sliderList);
 			return "/ezPortal/portalWpNewImage";
 		} catch (Exception e) {
@@ -1063,7 +1061,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		String pNewsBDNM = "";
 		String pNewsType = "";
 		
-		List<PersonalGetSliderListVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
 		
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
@@ -1302,13 +1300,13 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		String pPollTitle = "";
 		String pPollResultContent = "";
 		
-		PersonalGetCurrentPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
-		if (result.getResult().length() > 0) {
-			if (!result.getResult().equals("0")) {
-				votePoll = result.getResult();
+		if (result.getResult() > 0) {
+			if (result.getResult() != 0) {
+				votePoll = Integer.toString(result.getResult());
 			}
 		} else {
 			votePoll = "";
@@ -1317,10 +1315,10 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		if (result.getItemSeq() > 0) {
 			if (result.getItemSeq() != 0) {
 				pPollItemSeq = result.getItemSeq();
-				int maxAns = result.getPollSelectionCount();
+				int maxAns = Integer.parseInt(result.getPollSelectionCount());
 				pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
 				
-				List<PersonalGetPollResultOrderResultVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq);
+				List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq);
 				
 				int pTotalCnt = 0;
 				for (int i=0; i<list.size(); i++) {

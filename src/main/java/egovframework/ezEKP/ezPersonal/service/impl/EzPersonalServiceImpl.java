@@ -17,15 +17,13 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPersonalService")
@@ -43,7 +41,7 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<PersonalGetSliderListVO> getSilderList(String companyID, String mode, String sliderID) throws Exception {
+	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyID);
 		map.put("v_MODE", mode);
@@ -127,7 +125,7 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	}
 
 	@Override
-	public List<PersonalGetPollListUserVO> getPollListUser(String pComapnyID, int pTotal, int pCount, int pStart) throws Exception {
+	public List<PersonalLightPollVO> getPollListUser(String pComapnyID, int pTotal, int pCount, int pStart) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("v_pTotal", pTotal);
@@ -137,7 +135,7 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	}
 	
 	@Override
-	public PersonalGetCurrentPollVO getCurrentPoll(String pUserID, String pCompanyID) throws Exception {
+	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);
@@ -145,8 +143,8 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	}
 
 	@Override
-	public List<PersonalGetPollResultOrderResultVO> getPollResultOrderResult(int pItemSeq) throws Exception {
-		return (List<PersonalGetPollResultOrderResultVO>) ezPersonalDAO.getPollResultOrderResult(pItemSeq);
+	public List<PersonalLightPollVO> getPollResultOrderResult(int pItemSeq) throws Exception {
+		return (List<PersonalLightPollVO>) ezPersonalDAO.getPollResultOrderResult(pItemSeq);
 	}
 
 	@Override
@@ -159,12 +157,12 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 	}
 
 	@Override
-	public PersonalGetCurrentPollVO getPollInfo(int pItemSeq) throws Exception {
+	public PersonalLightPollVO getPollInfo(int pItemSeq) throws Exception {
 		return ezPersonalDAO.getPollInfo(pItemSeq);
 	}
 	
 	@Override
-	public List<PersonalGetPollResultOrderResultVO> getPollResult(int pItemSeq) throws Exception {
+	public List<PersonalLightPollVO> getPollResult(int pItemSeq) throws Exception {
 		return ezPersonalDAO.getPollResult(pItemSeq);
 	}
 	

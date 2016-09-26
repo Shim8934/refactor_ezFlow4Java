@@ -2,18 +2,20 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezPersonal">
-	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/>
-	<typeAlias  alias="PersonalApprovMailVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
-	<typeAlias  alias="PersonalGetEmpOfMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
-	<typeAlias  alias="PersonalGetPollListUserVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/>
-	<typeAlias  alias="PersonalGetCurrentPollVO" 					type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/>
-	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/>
-	<typeAlias  alias="PersonalGetPopUpListUserVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
+	<typeAlias  alias="PersonalSliderImageVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	<typeAlias  alias="PersonalLightPollVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
+	<!-- 	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/> -->
+	<!-- 	<typeAlias  alias="PersonalGetPollListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/> -->
+	<!-- 	<typeAlias  alias="PersonalGetCurrentPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/> -->
+	<!-- 	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 	type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/> -->
+	<typeAlias  alias="PersonalApprovMailVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
+	<typeAlias  alias="PersonalGetEmpOfMonthVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalGetPopUpListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
 	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
-	<typeAlias  alias="PersonalGetWebPartGroupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
-	<typeAlias  alias="PersonalGetWebPartVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
+	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
+	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
 	
-	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalGetSliderListVO" >
+	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -49,13 +51,13 @@
 		]]>
 	</procedure>	
 	
-	<procedure id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalGetPollListUserVO"  remapResults="true">
+	<procedure id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalLightPollVO"  remapResults="true">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLLISTUSER(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalGetCurrentPollVO" >
+	<procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETCURRENTPOLL(#v_pUserID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -91,19 +93,19 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalGetPollResultOrderResultVO" >
+	<procedure id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLRESULTORDERRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPersonalDAO.getPollInfo" parameterClass="Integer"  resultClass="PersonalGetCurrentPollVO" >
+	<procedure id="EzPersonalDAO.getPollInfo" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>		
 	
-	<procedure id="EzPersonalDAO.getPollResult" parameterClass="Integer"  resultClass="PersonalGetPollResultOrderResultVO" >
+	<procedure id="EzPersonalDAO.getPollResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

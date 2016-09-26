@@ -28,11 +28,9 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -411,7 +409,7 @@ public class EzPersonalController {
 		
 		int totalCount = ezPersonalService.getPollCount(userInfo.getCompanyID());
 		
-		List<PersonalGetPollListUserVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize);
+		List<PersonalLightPollVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize);
 		
 		int pageCount = ((totalCount + pageSize - 1) / pageSize);
 		
@@ -430,10 +428,10 @@ public class EzPersonalController {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());
 				}
 				
-				PersonalGetCurrentPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+				PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
 				
 				if (result != null) {
-					if (result.getResult().equals("0")) {
+					if (result.getResult() == 0) {
 						votePoll = String.valueOf(result.getItemSeq());
 					} else {
 						votePoll = "";
@@ -462,7 +460,7 @@ public class EzPersonalController {
 		String answer = "";
 		String literalAnswer = "";
 		String pollSeq = "";
-		PersonalGetCurrentPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
@@ -476,7 +474,7 @@ public class EzPersonalController {
 			}
 			
 			pollSeq = String.valueOf(result.getItemSeq());
-			int count = result.getPollSelectionCount();
+			int count = Integer.parseInt(result.getPollSelectionCount());
 			
 			for (int i=0; i<count; i++) {
 				answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
@@ -484,7 +482,7 @@ public class EzPersonalController {
 			
 			literalAnswer = answer;
 			
-			if (result.getResult().equals("0")) {
+			if (result.getResult() == 0) {
 				
 			} else {
 				
@@ -515,9 +513,9 @@ public class EzPersonalController {
 			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")));
 		}
 		
-		PersonalGetCurrentPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq)); 
+		PersonalLightPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq)); 
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(pollInfo)+"</DATA>");
-		List<PersonalGetPollResultOrderResultVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq));
+		List<PersonalLightPollVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq));
 		
 		if (userInfo.getLang().equals("2") && pollInfo.getPollTitle2() != null && !pollInfo.getPollTitle2().equals("")) {
 			subject = pollInfo.getPollTitle2();
@@ -531,7 +529,7 @@ public class EzPersonalController {
 			title = pollInfo.getStartDate() + " - " + pollInfo.getEndDate();
 		}
 		
-		int count = pollInfo.getPollSelectionCount();
+		int count = Integer.parseInt(pollInfo.getPollSelectionCount());
 		
 		String listXML = "";
 		for (int i=1; i<=count; i++) {

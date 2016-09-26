@@ -14,18 +14,18 @@
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
-  <activex>
-    <url os="all" size="140">DOWNLOADSERVER/files/component/ezMhtFormat.ent</url>
-    <clsid>241828DA-76FC-412D-8FFC-099704F25959</clsid>
-    <version>1,0,1,19</version>
-    <compressed>dll</compressed>
-    <type>inproc</type>
-  </activex>
-  <activex>
-    <url os="all" size="67">DOWNLOADSERVER/files/component/ezLVCtrl.ent</url>
-    <clsid>4AB10C10-1861-4A7D-A6D0-2B836CCC36A7</clsid>
-    <version>1,0,0,10</version>
-    <compressed>dll</compressed>
-    <type>inproc</type>
-  </activex>
+	<activex>
+		<url os="all" size="140">DOWNLOADSERVER/files/component/ezMhtFormat.ent</url>
+		<clsid>241828DA-76FC-412D-8FFC-099704F25959</clsid>
+		<version>1,0,1,19</version>
+		<compressed>dll</compressed>
+		<type>inproc</type>
+	</activex>
+	<activex>
+		<url os="all" size="67">DOWNLOADSERVER/files/component/ezLVCtrl.ent</url>
+		<clsid>4AB10C10-1861-4A7D-A6D0-2B836CCC36A7</clsid>
+		<version>1,0,0,10</version>
+		<compressed>dll</compressed>
+		<type>inproc</type>
+	</activex>
 </components>
