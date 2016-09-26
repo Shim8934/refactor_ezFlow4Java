@@ -59,7 +59,9 @@ public class ClientUtil {
 	     if(type.equals("agent")){
 	    	 result = agent;
 	     }else if(type.equals("os")){
-	    	 if (agent.indexOf("Windows NT 6.3") > 0)
+	    	 if (agent.indexOf("Windows NT 10.0") > 0)
+	    		 result = "Windows 10";	    	 
+	    	 else if (agent.indexOf("Windows NT 6.3") > 0)
 	    		 result = "Windows 8.1";
              else if (agent.indexOf("Windows NT 6.2") > 0)
             	 result = "Windows 8";
@@ -84,7 +86,9 @@ public class ClientUtil {
 	             else if (agent.indexOf("Trident/7.0") > 0)
 	            	 result = "IE11";
 	         }else{
-	             if (agent.indexOf("Chrome") > 0)
+	             if (agent.indexOf("Edge") > 0)
+	            	 result = "Edge";	        	 
+	             else if (agent.indexOf("Chrome") > 0)
 	            	 result = "Chrome";
 	             else if (agent.indexOf("Safari") > 0)
 	            	 result = "Safari";
