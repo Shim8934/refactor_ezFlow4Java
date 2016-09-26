@@ -404,7 +404,7 @@
 		        }
 		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 		        var frm = document.getElementById('form');
-		        frm.action = "/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=SubMenu";
+		        frm.action = "/admin/ezPortal/portletImageUpload.do?mode=SubMenu";
 		        frm.submit();
 		        document.form.file1.value = "";
 		    }
@@ -422,16 +422,16 @@
 		            if (document.getElementById('mode').value == "PHOTO") {
 		                if (ImageState == "Normal") {
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
-		                        txtNormalImage.src = "../../../../Upload_Portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    else
-		                        txtNormalImage.src = "\\Upload_Portal\\" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    txtNormalImage.style.display = "";
 		                }
 		                else{
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
-		                        txtOverImage.src = "../../../../Upload_Portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    else
-		                        txtOverImage.src = "\\Upload_Portal\\" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    txtOverImage.style.display = "";
 		                }
 		            }
@@ -831,7 +831,7 @@
 		<input onclick="window.close();" type="button" value="<spring:message code='ezPortal.t12'/>">
 	</div>
     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-                    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=SubMenu" target="ifrm">
+                    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=SubMenu" target="ifrm">
                         <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
                         <input type="hidden" name="boardid" id="boardid" />
                         <input type="hidden" name="maxsize" id="maxsize" />

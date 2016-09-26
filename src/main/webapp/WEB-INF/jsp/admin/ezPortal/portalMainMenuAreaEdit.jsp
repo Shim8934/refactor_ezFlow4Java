@@ -40,25 +40,20 @@
 		}
 		
 		// layout 변경
-		function layout_change()
-		{
+		function layout_change() {
 			if (layoutList.options.selectedIndex != -1)
 				location.href = "/admin/ezPortal/mainMenuAreaEdit.do?pageID=" + layoutList.options[layoutList.options.selectedIndex].value;
 		}
 		
 		// 선택
-		function setValue(pUID, pObj)
-		{
+		function setValue(pUID, pObj) {
 			g_UID = pUID;
 			
 			// 선택된 개체가 없는 경우
-			if( g_SelectedObj == null )
-			{
+			if( g_SelectedObj == null ) {
 			    pObj.style.backgroundColor = "#DBE1E7";
 				g_SelectedObj = pObj;
-			}
-			else
-			{
+			} else {
 			    pObj.style.backgroundColor = "#DBE1E7";
 				
 				if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
@@ -67,22 +62,18 @@
 		}
 		
 		// 수정
-		function selectItem(pUID, pObj)
-		{
+		function selectItem(pUID, pObj) {
 		    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=203", "", "height = 330px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
 		}
 		
 		// 삭제
-		function Delete()
-		{
-			if (g_UID == "")
-			{
+		function Delete() {
+			if (g_UID == "") {
 				alert("<spring:message code='ezPortal.t98'/>");
 				return;
 			}
 			
-			if (confirm("<spring:message code='ezPortal.t54'/>"))
-			{
+			if (confirm("<spring:message code='ezPortal.t54'/>")) {
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/removeMenuItem.do?pageID=" + pageid + "&uID=" + g_UID + "&parentUID=203", false);
 				xmlhttp.send();
@@ -93,22 +84,18 @@
 		}
 		
 		// 위치설정
-		function SetPosition()
-		{
-			if (pageid == "")
-			{
+		function SetPosition() {
+			if (pageid == "") {
 				alert("<spring:message code='ezPortal.t52'/>");
 				return;
 			}
 			
-			if (MainAreaExist == "NO")
-			{
+			if (MainAreaExist == "NO") {
 				alert("<spring:message code='ezPortal.t105'/>");
 				return;
 			}
 			
-			if (SubAreaExist == "NO")
-			{
+			if (SubAreaExist == "NO") {
 				alert("<spring:message code='ezPortal.t106'/>");
 				return;
 			}
@@ -117,37 +104,31 @@
 		}
 		
 		// 순서조정
-		function SetOrder()
-		{
-			if (pageid == "")
-			{
+		function SetOrder() {
+			if (pageid == "") {
 				alert("<spring:message code='ezPortal.t52'/>");
 				return;
 			}
 			
-			if (MainAreaExist == "NO")
-			{
+			if (MainAreaExist == "NO") {
 				alert("<spring:message code='ezPortal.t105'/>");
 				return;
 			}
-			
-			
 			
 		    window.open("/admin/ezPortal/menuSortOrder.do?pageID=" + pageid + "&parentUID=203", "", "height = 272px, width = 520px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(520, 272));
 		}
 		
 		// 미리보기
-		function preview()
-		{
-			if (pageid == "")
-			{
+		function preview() {
+			if (pageid == "") {
 				alert("<spring:message code='ezPortal.t60'/>");
 				return;
 			}
-		    if (CrossYN()) 
+		    if (CrossYN()) {
 		        window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + pageid);
-		    else
+		    }  else {
 			    window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + pageid);
+		    }
 		}
 		</script>
 	</head>

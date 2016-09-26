@@ -887,7 +887,7 @@
 		        }
 		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 		        var frm = document.getElementById('form');
-		        frm.action = "/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=Portlet";
+		        frm.action = "/admin/ezPortal/portletImageUpload.do?mode=Portlet";
 		        frm.submit();
 		        document.form.file1.value = "";
 		    }
@@ -906,9 +906,9 @@
 		            if (document.getElementById('mode').value == "PHOTO")
 		            {
 		                if (navigator.userAgent.indexOf("Firefox") != -1)
-		                    txtImage.src = "../../../../Upload_Portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    txtImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                else
-		                    txtImage.src = "\\Upload_Portal\\" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    txtImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                txtImage.style.display = "";
 		            }
 		        }
@@ -1043,7 +1043,7 @@
         <tr>
           <td style="width:340;HEIGHT:50"><div style="OVERFLOW:auto;width:340;HEIGHT:50"> <img id="txtImage" src="">&nbsp; </div>
               <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-              <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=Portlet" target="ifrm" >
+              <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Portlet" target="ifrm" >
               <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
               <input type="hidden" name="boardid" id="boardid" />
               <input type="hidden" name="maxsize" id="maxsize" />
