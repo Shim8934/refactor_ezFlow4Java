@@ -82,4 +82,22 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		}
 	}
 
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		String compatibleValue = null;
+		
+		if (browser.equals("Edge") || browser.equals("IE11")) {
+			compatibleValue = "IE=edge";
+		} else if (browser.equals("IE10") || browser.equals("IE9")) {
+			compatibleValue = "IE=9";
+		} else if (browser.equals("IE8")) {
+			compatibleValue = "IE=8";
+		}
+		
+		if (compatibleValue != null) {
+			response.setHeader("X-UA-Compatible", compatibleValue);
+		}
+	}
+	
 }

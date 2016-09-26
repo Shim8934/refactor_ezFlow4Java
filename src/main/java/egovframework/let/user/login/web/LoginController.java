@@ -74,7 +74,7 @@ public class LoginController {
     
     @Autowired
     private LocaleResolver localeResolver;
-    
+        
 	/**
 	 * 로그인 화면으로 들어간다
 	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
@@ -88,7 +88,22 @@ public class LoginController {
  	
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
-    	
+    
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		String compatibleValue = null;
+		
+		if (browser.equals("Edge") || browser.equals("IE11")) {
+			compatibleValue = "IE=edge";
+		} else if (browser.equals("IE10") || browser.equals("IE9")) {
+			compatibleValue = "IE=9";
+		} else if (browser.equals("IE8")) {
+			compatibleValue = "IE=8";
+		}
+		
+		if (compatibleValue != null) {
+			response.setHeader("X-UA-Compatible", compatibleValue);
+		}
+		
     	return "user/login/login";
 	}
     
