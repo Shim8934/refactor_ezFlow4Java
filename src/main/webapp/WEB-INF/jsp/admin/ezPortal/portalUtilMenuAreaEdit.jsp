@@ -121,7 +121,7 @@
 				return;
 			}
 			
-		    window.open("/admin/ezPortal/menuSortOrder.do?pageID=" + pageid + "&parentuid=202", "", "height = 272px, width = 520px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(520, 272));
+		    window.open("/admin/ezPortal/menuSortOrder.do?pageID=" + pageid + "&parentUID=202", "", "height = 272px, width = 520px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(520, 272));
 		}
 		
 		// 미리보기
