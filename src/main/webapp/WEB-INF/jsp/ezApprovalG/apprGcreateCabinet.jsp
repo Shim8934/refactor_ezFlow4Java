@@ -154,12 +154,12 @@
 		</SCRIPT>
 	</head>
 	<body style="background-color:#FFFFFF;margin-left:0px;margin-top:0px;" class="popup">
-		<OBJECT classid=clsid:35609FBF-EE92-472F-B72A-599B70D21F9E 
-				id=behave1
-				style="HEIGHT: 0px; WIDTH: 0px;display:none;"></OBJECT>
-		<OBJECT classid=clsid:F8E93A35-2D04-4E2C-A04D-87947594C674 
-				id=behavelist1 style="HEIGHT: 0px; WIDTH: 0px;display:none;">
-		</OBJECT> 
+<!-- 		<OBJECT classid=clsid:35609FBF-EE92-472F-B72A-599B70D21F9E  -->
+<!-- 				id=behave1 -->
+<!-- 				style="HEIGHT: 0px; WIDTH: 0px;display:none;"></OBJECT> -->
+<!-- 		<OBJECT classid=clsid:F8E93A35-2D04-4E2C-A04D-87947594C674  -->
+<!-- 				id=behavelist1 style="HEIGHT: 0px; WIDTH: 0px;display:none;"> -->
+<!-- 		</OBJECT>  -->
 		<h1><spring:message code='ezApprovalG.t996'/></h1>
 		
 		<div id="cabinetdiv" style="height:100%;overflow:auto;">
