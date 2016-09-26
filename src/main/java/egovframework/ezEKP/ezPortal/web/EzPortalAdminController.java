@@ -573,7 +573,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
-		String portalPageCategoryXML = "";
 		String defaultPageUID = "";
 		
 		if (commonUtil.checkAdmin(loginCookie)) {
@@ -614,7 +613,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
-System.out.println("strXML:"+strXML);
+
 			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
 				if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().trim().equals("Y")) {
 					defaultPageUID = xmlDom.getElementsByTagName("UID").item(i).getTextContent();
@@ -1118,7 +1117,6 @@ System.out.println("strXML:"+strXML);
 		String displayName = "";
 		String pContent = "";
 		String mhtFilePath = "";
-		String result = "";
 		String imagePath = "";
 		String imageWidth = "";
 		String imageHeight = "";
@@ -1131,7 +1129,6 @@ System.out.println("strXML:"+strXML);
 		String itemFields = "";
 		String oldCreatorID = "";
 		String oldUserType = "";
-		String oldBoardID = "";
 		String moveUrl = "";
 		boolean bResult = false;
 		
@@ -1193,7 +1190,6 @@ System.out.println("strXML:"+strXML);
 			itemFields = xmlDom.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
 			oldCreatorID = xmlDom.getElementsByTagName("OLDCREATORID").item(0).getTextContent();
 			oldUserType = xmlDom.getElementsByTagName("OLDUSERTYPE").item(0).getTextContent();
-			oldBoardID = xmlDom.getElementsByTagName("OLDBOARDID").item(0).getTextContent();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_OLDUSERTYPE", oldUserType);
@@ -1388,7 +1384,7 @@ System.out.println("strXML:"+strXML);
 			}
 			
 			if (pageID == null || pageID.equals("")) {
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 					break;
 				}
@@ -1718,7 +1714,7 @@ System.out.println("strXML:"+strXML);
 			}
 			
 			if (pageID == null || pageID.equals("")) {
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 					break;
 				}
@@ -2036,7 +2032,7 @@ System.out.println("strXML:"+strXML);
 			}
 			
 			if (pageID == null || pageID.equals("")) {
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 					break;
 				}
@@ -2135,7 +2131,7 @@ System.out.println("strXML:"+strXML);
 			}
 			
 			if (pageID == null || pageID.equals("")) {
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 					break;
 				}
@@ -2192,7 +2188,7 @@ System.out.println("strXML:"+strXML);
 				xmlDom = commonUtil.convertStringToDocument(listStr);
 				
 				if (parentUID == null) {
-					for (int i=0; i<list.size(); i++) {
+					for (int i=0; i<list.size();) {
 						parentUID = list.get(i).getuID();
 						break;
 					}
