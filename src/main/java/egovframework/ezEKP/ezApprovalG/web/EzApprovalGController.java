@@ -427,7 +427,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID());
 						
 						if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-							return "NOTPERMISSION";
+							return "<RESULT>NOTPERMISSION</RESULT>";
 						}
 					}
 				}
@@ -436,7 +436,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary());
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
-					return "NOTPERMISSION";
+					return "<RESULT>NOTPERMISSION</RESULT>";
 				}
 			}
 		}

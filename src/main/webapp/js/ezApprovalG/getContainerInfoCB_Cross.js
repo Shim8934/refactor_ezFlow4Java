@@ -47,7 +47,7 @@ function getdoclistSub_after(xml) {
         if (document.getElementById("lvtDetail").innerHTML != "")
             document.getElementById("lvtDetail").innerHTML = "";
 
-        if (xml == "NOTPERMISSTION") {
+        if (xml.documentElement.textContent == "NOTPERMISSION") {
             document.getElementById("lvtDetail").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
             document.getElementById("lvtDetail").style.textAlign = "center";
             return;
