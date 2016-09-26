@@ -230,6 +230,15 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_OWNERPAGEID", pageID);
 		ezPortalAdminDAO.removeMenuItem(map);
 	}
+	
+	@Override
+	public void updateMenuItemSetOrder(int columnPos, String uID, String ownerPageID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("columnPos", columnPos);
+		map.put("uID", uID);
+		map.put("ownerPageID", ownerPageID);
+		ezPortalAdminDAO.updateMenuItemSetOrder(map);
+	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
 		int indexOfDot = fileName.lastIndexOf(".");

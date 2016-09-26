@@ -309,6 +309,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		update("EzPortalAdminDAO.savePositionSettings", map);
 	}
 	
+	public void updateMenuItemSetOrder (Map<String, Object> map) {
+		update("EzPortalAdminDAO.updateMenuItemSetOrder", map);
+	}
+	
 	public void deleteTheme (String uID) {
 		delete("EzPortalAdminDAO.deleteTheme", uID);
 	}

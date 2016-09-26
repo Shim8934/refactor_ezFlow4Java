@@ -1936,4 +1936,60 @@ System.out.println("strXML:"+strXML);
 		return "OK";
 	}
 	
+	/**
+	 * 관리자 포탈 메뉴순서조정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/menuSortOrder.do")
+	public String menuSortOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+
+        String parentUID = "";
+		String pageID = "";
+		String menuList = "";
+		
+		if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+			parentUID = req.getParameter("parentUID");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems(parentUID, pageID);
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<list.size(); i++) {
+			sb.append("<OPTION value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</OPTION>");
+		}
+		menuList = sb.toString();
+		
+		model.addAttribute("parentUID", parentUID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("menuList", menuList);
+		
+		return "/admin/ezPortal/portalMenuSortOrder";
+		
+	}
+	
+	/**
+	 * 관리자 포탈 순서조정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/saveMenuItemsOrder.do")
+	@ResponseBody
+	public void saveMenuItemsOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+			ezPortalAdminService.updateMenuItemSetOrder(i + 1, xmlDom.getElementsByTagName("UID").item(i).getTextContent(), pageID);
+		}
+		
+		
+	}
+	
 }

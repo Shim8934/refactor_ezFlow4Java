@@ -105,4 +105,6 @@ public interface EzPortalAdminService {
 	public void saveLogoImage2 (Map<String, Object> map) throws Exception;
 	
 	public void removeMenuItem (String uID, String parentUID, String pageID) throws Exception;
+	
+	public void updateMenuItemSetOrder (int columnPos, String uID, String ownerPageID) throws Exception;
 }
