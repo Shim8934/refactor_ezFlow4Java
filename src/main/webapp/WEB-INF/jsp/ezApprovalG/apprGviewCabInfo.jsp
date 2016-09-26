@@ -191,15 +191,15 @@
 	</tr>
 </table>
 </span>
-<!-- <span ID="divTabDis4" style="DISPLAY: none;width:100%;">  -->
-<!-- 	<table class="content" style="width:100%;"> -->
-<!-- 		<tr>       -->
-<!-- 			<td id="tdSCInfo"> -->
-<!-- 			<div class="listview" style="width:605px;overflow-x : auto"> -->
-<!-- 			<div ID="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; width:950px; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td> -->
-<!-- 		</tr> -->
-<!-- 	</table> -->
-<!-- </span> -->
+<span ID="divTabDis4" style="DISPLAY: none;width:100%;"> 
+	<table class="content" style="width:100%;">
+		<tr>      
+			<td id="tdSCInfo">
+			<div class="listview" style="width:605px;overflow-x : auto">
+			<div ID="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; width:950px; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
+		</tr>
+	</table>
+</span>
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	selToggleList(document.getElementById("close"), "ul", "li", "0");
