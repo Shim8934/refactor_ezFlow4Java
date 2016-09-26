@@ -5,6 +5,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
@@ -19,6 +20,8 @@ public interface EzPortalAdminService {
 	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
 	
 	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (String pUID, String pPageID) throws Exception;
+	
+	public List<PortalMenuItemItemsMenuItemsSVO> loadSubMenuItems (String pParentUID, String pPageID) throws Exception;
 	
 	public List<PortalGetPortletParametersVO> getMenuItemParameters (String pUID) throws Exception;
 	
@@ -72,6 +75,12 @@ public interface EzPortalAdminService {
 	
 	public String saveMenuItemConfig (String pXML, String pPageID, String pCompanyID) throws Exception;
 	
+	public String loadSubMenuItemConfig (String pUID, String pPageID) throws Exception;
+	
+	public String createNewSubMenuItem (String pParentUID, String pPageID) throws Exception;
+	
+	public String saveSubMenuItemConfig (String pXML, String pPageID) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;
@@ -107,4 +116,6 @@ public interface EzPortalAdminService {
 	public void removeMenuItem (String uID, String parentUID, String pageID) throws Exception;
 	
 	public void updateMenuItemSetOrder (int columnPos, String uID, String ownerPageID) throws Exception;
+	
+	public void removeSubMenuItem (String uID, String parentUID, String pageID) throws Exception;
 }
