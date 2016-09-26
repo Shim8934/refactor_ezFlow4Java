@@ -5,19 +5,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezPortal.t110'/></title>
+		<title><spring:message code='ezPortal.t218'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript">
-		var imageWidth = "${imageWidth}";
-		var imageHeight = "${imageHeight}";
-		var g_xmlhttp = createXMLHttpRequest();
-		var g_xmlhttp2 = createXMLHttpRequest();
+		var imageWidth = "${imgWidth}";
+		var imageHeight = "${imgHeight}";
+	    var g_xmlhttp = createXMLHttpRequest();
 		var uid = "${uID}";
-		var imguid = "${imageUID}";
+		var imguid = "${imgUID}";
 		var g_Dirty = false;
 		var pageid = "${pageID}";
 		var pmode = "${mode}";
@@ -25,14 +24,18 @@
 		var pSkin = "1";   // 기본설정에선 모두 스킨1만 설정
 		var g_bSaved = false;
 		var menuindex = "${menuIndex}";
-		var pNoneActiveX = "${noneActiveX}";
-		
-		window.onload = function() {
+	    var pNoneActiveX = "${noneActiveX}";
+		window.onload = function()
+		{
 			toggle_menu(menuindex);
 		}
 		
-	    window.onbeforeunload = function() {
-			if (g_bSaved == true)
+		window.onbeforeunload = function()
+		{
+			// 신규이면서 저장한 경우 reload
+			//if (pmode == "new" && g_bSaved == true)
+			// 20071024 수정일때도 자동 리프레쉬 되어야 함
+			if (g_bSaved == true)			
 			{
 				try{
 					window.opener.location.reload();
@@ -46,52 +49,38 @@
 		}
 		
 		// 삭제
-		function Delete() {
+		function Delete()
+		{
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "/admin/ezPortal/removeMenuItem.do?pageID=" + pageid + "&uID=" + uid + "&parentUID=" + parentuid, false);
+			xmlhttp.open("POST", "/admin/ezPortal/removeSubMenuItem.do?pageID=" + pageid + "&uID=" + uid + "&parentUID=" + parentuid, false);
 			xmlhttp.send();
 			xmlhttp = null;
 		}
 		
-		function Save() {
-		    var strXML = "<DATA>";
-
-		    if (pmode == "new") {
-		        if (txtNormalImage.src.indexOf("/Upload_Portal") == -1 && txtOverImage.src.indexOf("/Upload_Portal") > -1) {
-		            alert("<spring:message code='ezPortal.t10000'/>");
-		            return;
-		        }
-		    }
-
+		function Save()
+		{
+			var strXML = "<DATA>";
 			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/Upload_Portal"));
 			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/Upload_Portal"));
-
+			
 			if (normalImgPath.indexOf("/Upload_Portal") == -1) normalImgPath = "";
 			if (overImgPath.indexOf("/Upload_Portal") == -1) overImgPath = "";
-			
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(txtDisplayName.value) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(txtDisplayName2.value) + "</DISPLAYNAME2>";
 			strXML += "<NORMALIMAGE>" + normalImgPath + "</NORMALIMAGE>";
 			strXML += "<OVERIMAGE>" + overImgPath + "</OVERIMAGE>";
-			//if (CrossYN()) {
-			    if (imageWidth == "") {
-			        strXML += "<IMAGEWIDTH>" + document.getElementById("txtNormalImage").width + "</IMAGEWIDTH>";
-			        strXML += "<IMAGEHEIGHT>" + document.getElementById("txtNormalImage").height + "</IMAGEHEIGHT>";
-			    }
-			    else if (imageWidth != document.getElementById("txtNormalImage").width) {
-			        strXML += "<IMAGEWIDTH>" + document.getElementById("txtNormalImage").width + "</IMAGEWIDTH>";
-			        strXML += "<IMAGEHEIGHT>" + document.getElementById("txtNormalImage").height + "</IMAGEHEIGHT>";
-			    }
-			    else {
-			        strXML += "<IMAGEWIDTH>" + imageWidth + "</IMAGEWIDTH>";
-			        strXML += "<IMAGEHEIGHT>" + imageHeight + "</IMAGEHEIGHT>";
-			    }
-			/*}
+			if (imageWidth == "") {
+			    strXML += "<IMAGEWIDTH>" + document.getElementById("txtNormalImage").width + "</IMAGEWIDTH>";
+			    strXML += "<IMAGEHEIGHT>" + document.getElementById("txtNormalImage").height + "</IMAGEHEIGHT>";
+			}
+			else if (imageWidth != document.getElementById("txtNormalImage").width) {
+			    strXML += "<IMAGEWIDTH>" + document.getElementById("txtNormalImage").width + "</IMAGEWIDTH>";
+			    strXML += "<IMAGEHEIGHT>" + document.getElementById("txtNormalImage").height + "</IMAGEHEIGHT>";
+			}
 			else {
 			    strXML += "<IMAGEWIDTH>" + imageWidth + "</IMAGEWIDTH>";
 			    strXML += "<IMAGEHEIGHT>" + imageHeight + "</IMAGEHEIGHT>";
-			}*/
-			    
+			}
 			strXML += "<LINKURL>" + ReplaceValidString(txtLinkURL.value) + "</LINKURL>";
 			strXML += "<LINKLOCATION>" + ReplaceValidString(txtLinkLocation.value) + "</LINKLOCATION>";
 			strXML += "<UID>" + uid + "</UID>";
@@ -101,33 +90,37 @@
 			strXML += "</DATA>";
 
 			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "/admin/ezPortal/saveMenuItem.do?pageID=" + pageid, false);
+			xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItem.do?pageID=" + pageid, false);
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
 			alert("<spring:message code='ezPortal.t84'/>");
 			g_bSaved = true;
 			
-			location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
+			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
 		}
-	    
-		function removeNormalImage() {
+		
+		function removeNormalImage()
+		{
 			txtNormalImage.style.display = "none";
 			txtNormalImage.src = "";			
 			g_Dirty = true;
 		}
 
-		function removeOverImage() {
+		function removeOverImage()
+		{
 			txtOverImage.style.display = "none";
 			txtOverImage.src = "";			
 			g_Dirty = true;
 		}
 		
-		function SubMenus() {
+		function SubMenus()
+		{
 		    window.open("/admin/ezPortal/subMenuItemsEdit.do?uID=" + uid + "&pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 		}
 		
-		function toggle_menu(pIndex) {
+		function toggle_menu(pIndex)
+		{
 			/*
 			for (var i=0; i<document.all.tags("table").length; i++)
 			{
@@ -142,23 +135,23 @@
 			}
 			*/
 			
-			if (pmode == "new" && g_bSaved == false) {
-				if (pIndex.toString() != "1") {
+			if (pmode == "new" && g_bSaved == false)
+			{
+				if (pIndex.toString() != "1")
+				{
 					alert("<spring:message code='ezPortal.t83'/>");
 					return;
 				}
 			}
 			
 			// 이미지 변경
-			switch(pIndex.toString()) {
+			switch(pIndex.toString())
+			{
 				case "1":
 					menu_1.src = "/images/tap_portal01o.gif";
 					menu_2.src = "/images/tap_portal02.gif";
 					menu_3.src = "/images/tap_portal03.gif";
-					saevbtn.style.display = "";
 					toggle_tbl1.style.display = "";
-					idbr.style.display = "none";
-					idbr2.style.display = "none";
 					toggle_tbl2_1.style.display = "none";
 					toggle_tbl2_2.style.display = "none";
 					toggle_tbl2_3.style.display = "none";
@@ -170,9 +163,6 @@
 					menu_1.src = "/images/tap_portal01.gif";
 					menu_2.src = "/images/tap_portal02o.gif";
 					menu_3.src = "/images/tap_portal03.gif";
-					saevbtn.style.display = "none";
-					idbr.style.display = "";
-					idbr2.style.display = "none";
 					toggle_tbl1.style.display = "none";
 					toggle_tbl2_1.style.display = "";
 					toggle_tbl2_2.style.display = "";
@@ -185,9 +175,6 @@
 					menu_1.src = "/images/tap_portal01.gif";
 					menu_2.src = "/images/tap_portal02.gif";
 					menu_3.src = "/images/tap_portal03o.gif";
-					saevbtn.style.display = "none";
-					idbr.style.display = "none";
-					idbr2.style.display = "";
 					toggle_tbl1.style.display = "none";
 					toggle_tbl2_1.style.display = "none";
 					toggle_tbl2_2.style.display = "none";
@@ -199,7 +186,8 @@
 			}
 		}
 		
-		function RemoveParameter(pParamName) {
+		function RemoveParameter(pParamName)
+		{
 			if(!confirm("<spring:message code='ezPortal.t54'/>")) return;
 			
 			var tempuid = imguid;
@@ -212,10 +200,11 @@
 			
 			g_bSaved = true;
 			
-			location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
+			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
 		}
 		
-		function CheckDuplicate(paramname) {
+		function CheckDuplicate(paramname)
+		{
 			for (var i=0; i<document.all.tags("input").length; i++)
 			{
 				if (typeof(document.all.tags("input").item(i).utype) == "undefined") continue;
@@ -225,7 +214,8 @@
 		}
 		
 		
-		function AddParameter() {
+		function AddParameter()
+		{
 			var paramname = ReplaceValidString(newParamName.value);
 			var paramvalue = ReplaceValidString(newParamValue.value);
 			var paramtype = ReplaceValidString(SelectParamType.value);
@@ -234,16 +224,16 @@
 				alert("<spring:message code='ezPortal.t111'/>");
 				return;
 			}
+			
 			var tempuid = imguid;
 			if (tempuid == "") tempuid = uid;
 
 			var strXML = "<DATA>";
 			strXML += "<UID>" + tempuid + "</UID>";
-			strXML += "<PARAMNAME>" + paramname + "</PARAMNAME>";
-			strXML += "<PARAMVALUE>" + paramvalue + "</PARAMVALUE>";
+			strXML += "<PARAMNAME>" + ReplaceValidString(paramname) + "</PARAMNAME>";
+			strXML += "<PARAMVALUE>" + ReplaceValidString(paramvalue) + "</PARAMVALUE>";
 			strXML += "<PARAMTYPE>" + paramtype + "</PARAMTYPE>";
 			strXML += "</DATA>";
-			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=2", false);
 			xmlhttp.send(strXML);
@@ -251,10 +241,11 @@
 			
 			g_bSaved = true;
 			
-			location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
+			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2";
 		}
 		
-		function AddRight() {
+		function AddRight()
+		{
 			if (newAccessID.value == "")
 			{
 				alert("<spring:message code='ezPortal.t85'/>");
@@ -275,7 +266,7 @@
 			strXML += "<UID>" + uid + "</UID>";
 			strXML += "<ACCESSID>" + newAccessID.value + "</ACCESSID>";
 			// 수정(2007.07.11) : 부서명 & 처리
-			strXML += "<ACCESSNAME><![CDATA[" + newAccessName.value + "]]></ACCESSNAME>";			
+			strXML += "<ACCESSNAME><![CDATA[" + newAccessName.value + "]]></ACCESSNAME>";
 			strXML += "<EDIT_RIGHT>" + editRight + "</EDIT_RIGHT>";
 			strXML += "<VIEW_RIGHT>" + viewRight + "</VIEW_RIGHT>";
 			strXML += "</DATA>";
@@ -287,33 +278,22 @@
 			
 			g_bSaved = true;
 			
-			location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
-		}
-	    var selecttarget_dialogArguments = new Array();
-		function SelectID() {
-		    var config = "status:false;dialogWidth:690px;dialogHeight:630px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(690, 630);
-		    if (CrossYN()) {
-		        selecttarget_dialogArguments[1] = SelectID_Complete;
-		        var OpenWin = window.open("/admin/ezPortal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(690, 630));
-		        try { OpenWin.focus(); } catch (e) { }
-		    }
-		    else {
-		        var ret = window.showModalDialog("/admin/ezPortal/selectTarget.do", "", config);
-
-		        if (typeof (ret) != "undefined") {
-		            newAccessID.value = ret.split(";")[0];
-		            newAccessName.value = ret.split(";")[1];
-		        }
-		    }
+			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
 		}
 		
-		function SelectID_Complete(ret) {
-		    if (typeof (ret) != "undefined") {
-		        newAccessID.value = ret.split(";")[0];
-		        newAccessName.value = ret.split(";")[1];
-		    }
+		function SelectID()
+		{
+		    var config = "status:false;dialogWidth:690px;dialogHeight:630px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(690, 630);
+		        var ret = window.showModalDialog("/admin/ezPortal/selectTarget.do", "", config);
+			
+			if (typeof(ret) != "undefined")
+			{
+				newAccessID.value = ret.split(";")[0];
+				newAccessName.value = ret.split(";")[1];
+			}
+		
 		}
-
+		
 		function DeleteRight(pAccessID)
 		{
 			if(!confirm("<spring:message code='ezPortal.t54'/>")) return;
@@ -330,7 +310,7 @@
 			
 			g_bSaved = true;
 			
-			location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
+			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
 		}
 		
 		// 지정된 값인 경우에만 작성 가능하도록 설정
@@ -341,28 +321,75 @@
 			else
 				newParamValue.disabled = false;
 		}
+
 		var ImageState = "";
 		function changeNormalImage() {
+		    //if (CrossYN() || (pNoneActiveX=="YES")) {
 		        ImageState = "Normal";
 		        document.getElementById('mode').value = "PHOTO";
 		        document.form.file1.click();
+		   /* }
+		    else {
+		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+		        var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+		        if (filepath == "") return;
+
+		        var strBase64 = ezUtil.DownloadToBase64(filepath);
+		        ezUtil = null;
+
+		        var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+		        var temp = ezUtil.GetImageSize(filepath);
+		        ezUtil = null;
+
+		        imageWidth = temp.split("*")[0];
+		        imageHeight = temp.split("*")[1];
+
+		        var strXML = "<IMAGE><OLDFILENAME>" + txtNormalImage.src.substr(txtNormalImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+		        g_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		        g_xmlhttp.open("POST", "UploadMenuImage.aspx?mode=Menu", true);
+		        g_xmlhttp.onreadystatechange = changeNormalImage_end;
+		        g_xmlhttp.send(strXML);
+		    }*/
 		}
 		function changeNormalImage_end() {
-		    if (g_xmlhttp.readyState != 4) return;
+		    if (g_xmlhttp.readystate != 4) return;
 		    txtNormalImage.src = g_xmlhttp.responseText;
 		    txtNormalImage.style.display = "";
 		    g_Dirty = true;
 		}
 
 		function changeOverImage() {
+		    //if (CrossYN() || (pNoneActiveX == "YES")) {
 		        ImageState = "Over";
 		        document.getElementById('mode').value = "PHOTO";
 		        document.form.file1.click();
-		  
+		    /*}
+		    else {
+		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+		        var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+		        if (filepath == "") return;
+
+		        var strBase64 = ezUtil.DownloadToBase64(filepath);
+		        ezUtil = null;
+
+		        var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+		        var temp = ezUtil.GetImageSize(filepath);
+		        ezUtil = null;
+
+		        imageWidth = temp.split("*")[0];
+		        imageHeight = temp.split("*")[1];
+
+		        var strXML = "<IMAGE><OLDFILENAME>" + txtOverImage.src.substr(txtOverImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+
+		        g_xmlhttp.open("POST", "UploadMenuImage.aspx?mode=Menu", true);
+		        g_xmlhttp.onreadystatechange = changeOverImage_end;
+		        g_xmlhttp.send(strXML);
+		    }*/
 		}
+
 		function changeOverImage_end() {
-		    if (g_xmlhttp2.readyState != 4) return;
-		    txtOverImage.src = g_xmlhttp2.responseText;
+		    if (g_xmlhttp.readystate != 4) return;
+		    txtOverImage.src = g_xmlhttp.responseText;
 		    txtOverImage.style.display = "";
 		    g_Dirty = true;
 		}
@@ -377,14 +404,13 @@
 		        }
 		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 		        var frm = document.getElementById('form');
-		        frm.action = "/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=Menu";
+		        frm.action = "/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=SubMenu";
 		        frm.submit();
 		        document.form.file1.value = "";
 		    }
 
 		}
 		function returnvalue(strXML) {
-
 		    var xml = loadXMLString(strXML);
 		    var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		    for (i = 0; i < nodes.length; i++) {
@@ -401,7 +427,7 @@
 		                        txtNormalImage.src = "\\Upload_Portal\\" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    txtNormalImage.style.display = "";
 		                }
-		                else {
+		                else{
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
 		                        txtOverImage.src = "../../../../Upload_Portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    else
@@ -419,15 +445,14 @@
 		        }
 		    }
 		}
-		</script>
+    </script>
 	</head>
-	 <body class="popup" style ="overflow:auto">
+	<body class="popup">
 	<div id="menu">
 		<ul>
-			<li id ="saevbtn"><span onclick="Save()"><spring:message code='ezPortal.t62'/></span></li>
-            <c:if test="${mode == 'edit'}">
-            	<li id ="Li1"><span onclick="SubMenus()"><spring:message code='ezPortal.t216'/></span></li>
-            </c:if>
+			<li><span onclick="Save()">
+				<spring:message code='ezPortal.t62'/>
+			</span></li>
 		</ul>
 	</div>
 	<div id="close">
@@ -449,7 +474,11 @@
 				<spring:message code='ezPortal.t87'/>
 			</span></li>
 		</ul>
-	</div>	
+	</div>
+	<!-- 메인메뉴 등록시 서브메뉴 설정 -->
+	<c:if test="${mode == 'edit'}">
+		<input type="button" onclick="SubMenus()" value="<spring:message code='ezPortal.t114'/>" style="display: none">
+	</c:if>
 	<table width="500" id="toggle_tbl1" class="content">
 		<tr>
 			<th>
@@ -463,10 +492,11 @@
                     </tr>
                     <tr class="secondary">
 	                    <th>${langSecondary}</th>
-	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${displayName2}"></td>	
+	                    <td><input type="text" id="txtDisplayName2" style="width: 100%" value="${displayName2}"></td>	
                     </tr>
                 </table>
-			</td>
+				
+		    </td>
 		</tr>
 		<%String imageWidth = (String)request.getParameter("imageWidth"); %>
 		<% if (imageWidth != null && !imageWidth.equals("")) { %>
@@ -477,10 +507,10 @@
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-					<%String normalImagePath = (String)request.getParameter("normalImagePath"); %>
+						<%String normalImagePath = (String)request.getParameter("normalImagePath"); %>
 						<% if (normalImagePath != null && !normalImagePath.trim().equals("")) { %>
-							<td id="tdNormalImage">
-							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath %>"></td>
+						<td id="tdNormalImage">
+							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath%>"></td>
 						<% } else { %>
 						<td id="tdNormalImage">
 							&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
@@ -504,7 +534,7 @@
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 					<%String overImagePath = (String)request.getParameter("overImagePath"); %>
-						<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
+					<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
 						<td>
 							&nbsp;<img id="txtOverImage" src="<%= overImagePath %>"></td>
 						<% } else { %>
@@ -543,7 +573,9 @@
 			<td>
 				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
 		</tr>
-		<% } else { %>
+		<% }
+	 else
+	 { %>
 		<tr>
 			<th>
 				Normal image
@@ -607,7 +639,7 @@
 		</tr>
 		<% } %>
 	</table>
-	<table id="toggle_tbl2_1" width="500" class="popuplist" style="display: none;">
+	<table id="toggle_tbl2_1" width="500" class="popuplist" style="display: none">
 		<tr>
 			<th width="85">
 				<spring:message code='ezPortal.t115'/>
@@ -618,7 +650,7 @@
 			<th width="70">
 			</th>
 		</tr>
-		<%-- <% for (int i = 0; i < xmldom_param.GetElementsByTagName("UID_").Count; i++)
+	<%-- 	<% for (int i = 0; i < xmldom_param.GetElementsByTagName("UID_").Count; i++)
 	 { %>
 		<% if (xmldom_param.GetElementsByTagName("PARAMTYPE").Item(i).InnerText == "0")
 	 { %>
@@ -657,8 +689,7 @@
 		<% } %> --%>
 		${paramHtml}
 	</table>
-    <br id ="idbr" />
-	<table id="toggle_tbl2_2" width="500" class="popuplist" style="display: none;">
+	<table id="toggle_tbl2_2" width="500" class="popuplist" style="display: none">
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t117'/>
@@ -687,11 +718,11 @@
 			</td>
 		</tr>
 	</table>
-	<table id="toggle_tbl2_3" style="display: none; margin-top: 10px;" width="510" border="0"
+	<table id="toggle_tbl2_3" style="display: none; margin-top: 10px" width="510" border="0"
 		cellspacing="0" cellpadding="0">
 		<tr>
-			<td align="center">
-                <a class="imgbtn"><span onclick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
+			<td align="right">
+				<input type="button" value="<spring:message code='ezPortal.t62'/>" class="btn" onclick="AddParameter()">
 			</td>
 		</tr>
 	</table>
@@ -712,7 +743,6 @@
 			<th>
 				&nbsp;</th>
 		</tr>
-	
 		<c:forEach items="${aclList}" var="item">
   	  <tr>
     	<td>${item.accessID}</td>
@@ -744,9 +774,8 @@
 			</td>
   	</tr>
   </c:forEach>
-		
 	</table>
-	<br id ="idbr2">
+	<br>
 	<table id="toggle_tbl3_2" width="500" class="popuplist" style="display: none">
 		<tr>
 			<th width="70">
@@ -798,11 +827,11 @@
 		</tr>
 	</table>
 	<div class="btnposition" id="toggle_tbl3_3" style="display: none">
-        <a class="imgbtn"><span onclick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
-        <input onclick="window.close();" style ="display:none" type="button" value="<spring:message code='ezPortal.t12'/>">
+		<input type="button" value="<spring:message code='ezPortal.t62'/>" onclick="AddRight()">
+		<input onclick="window.close();" type="button" value="<spring:message code='ezPortal.t12'/>">
 	</div>
     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-                    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=Menu" target="ifrm" style ="display:none">
+                    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezPortal/admin/remote/portletImange_upload.aspx?mode=SubMenu" target="ifrm">
                         <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
                         <input type="hidden" name="boardid" id="boardid" />
                         <input type="hidden" name="maxsize" id="maxsize" />

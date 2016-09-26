@@ -1825,7 +1825,7 @@ System.out.println("strXML:"+strXML);
 		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1");
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
-			imageUID = xmlDom.getElementsByTagName("IMAGEDATE").item(0).getChildNodes().item(0).getTextContent();
+			imageUID = xmlDom.getElementsByTagName("UID_").item(0).getChildNodes().item(0).getTextContent();
 			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDHT").item(0).getTextContent();
 			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
 			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
@@ -1934,6 +1934,31 @@ System.out.println("strXML:"+strXML);
 		}
 		
 		ezPortalAdminService.removeMenuItem(uID, parentUID, pageID);
+		return "OK";
+	}
+	
+	/**
+	 * 관리자 포탈 유틸메뉴설정 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/removeSubMenuItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String removeSubMenuItem(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		String uID = "";
+		String parentUID = "";
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+			parentUID = req.getParameter("parentUID");
+		}
+		
+		ezPortalAdminService.removeSubMenuItem(uID, parentUID, pageID);
 		return "OK";
 	}
 	
@@ -2223,5 +2248,175 @@ System.out.println("strXML:"+strXML);
 			return "";
 		}
 	}	
+	
+	/**
+	 * 관리자 포탈 서브메뉴순서조정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/subMenuSortOrder.do")
+	public String subMenuSortOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+
+        String parentUID = "";
+		String pageID = "";
+		String menuList = "";
+		
+		if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+			parentUID = req.getParameter("parentUID");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		List<PortalMenuItemItemsMenuItemsSVO> list = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<list.size(); i++) {
+			sb.append("<OPTION value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</OPTION>");
+		}
+		menuList = sb.toString();
+		
+		model.addAttribute("parentUID", parentUID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("menuList", menuList);
+		
+		return "/admin/ezPortal/portalSubMenuSortOrder";
+		
+	}
+	
+	/**
+	 * 관리자 포탈 서브메뉴설정 상세보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/subMenuItemEdit.do")
+	public String subMenuItemEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
+		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		String uID = "";
+		String imageUID = "";
+		String imageWidth = "";
+		String imageHeight = "";
+		String mode = "";
+		String parentUID = "";
+		String pageID = "";
+		String menuIndex = "1";
+		String noneActiveX = "YES";
+		String normalImagePath = "";
+		String overImagePath = "";
+		String linkURL = "";
+		String linkLocation = "";
+		String windowOption = "";
+		String displayName = "";
+		String displayName2 = "";
+		
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		if (req.getParameter("menuIndex") != null && !req.getParameter("menuIndex").equals("")) {
+			menuIndex = req.getParameter("menuIndex");
+		}
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		
+		if (mode.equals("new")) {
+			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+				parentUID = req.getParameter("parentUID");
+			}
+			uID = ezPortalAdminService.createNewSubMenuItem(parentUID, pageID);
+		}
+		
+		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID);
+		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
+			imageUID = xmlDom.getElementsByTagName("UID_").item(0).getChildNodes().item(0).getTextContent();
+			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDHT").item(0).getTextContent();
+			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
+			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
+			overImagePath = xmlDom.getElementsByTagName("OVERIMAGEPATH").item(0).getTextContent();
+		}
+		linkURL = xmlDom.getElementsByTagName("LINKURL").item(0).getTextContent();
+		linkLocation = xmlDom.getElementsByTagName("LINKLOCATION").item(0).getTextContent();
+		windowOption = xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent() == null || xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent().equals("")  ? "" : xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+		displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+		
+		String tempUID = imageUID;
+		if (tempUID == null || tempUID.equals("")) {
+			tempUID = uID;
+		}
+		
+		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID);
+		
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
+		
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		
+		String paramHtml = "";
+		for (int i=0; i<param.size(); i++) {
+			if (param.get(i).getParamType() == 0) {
+				paramHtml += "<tr>";
+				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
+    			paramHtml += "<td>"+param.get(i).getParamValue()+"</td>";
+    			paramHtml += "<td align='center'><a class='imgbtn'><span style='width: 20px' onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+  			    paramHtml += "</tr>";
+			} else {
+				paramHtml += "<tr>";
+				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
+    			paramHtml += "<td>"+param.get(i).getDescription()+"</td>";
+    			paramHtml += "<td align='center'><a class='imgbtn'><span style='width: 20px' onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+  			    paramHtml += "</tr>";
+			}
+		}
+		
+		model.addAttribute("uID", uID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("parentUID", parentUID);
+		model.addAttribute("noneActiveX", "YES");
+		model.addAttribute("menuIndex", menuIndex);
+		model.addAttribute("aclList", aclList);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("mode", mode);
+		model.addAttribute("imageWidth", imageWidth);
+		model.addAttribute("imageHeight", imageHeight);
+		model.addAttribute("paramType", paramType);
+		model.addAttribute("param", param);
+		model.addAttribute("imageWidth", imageWidth);
+		model.addAttribute("imageHeight", imageHeight);
+		model.addAttribute("normalImagePath", normalImagePath);
+		model.addAttribute("overImagePath", overImagePath);
+		model.addAttribute("linkURL", linkURL);
+		model.addAttribute("linkLocation", linkLocation);
+		model.addAttribute("windowOption", windowOption);
+		model.addAttribute("paramHtml", paramHtml);
+		model.addAttribute("imageUID", imageUID);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("displayName2", displayName2);
+		
+		return "/admin/ezPortal/portalSubMenuItemEdit";
+		
+	}
+	
+	/**
+	 * 관리자 포탈 서브메뉴설정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveSubMenuItem(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		String ret = ezPortalAdminService.saveSubMenuItemConfig(xmlStr, pageID);
+		return ret;
+	}
 	
 }

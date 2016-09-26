@@ -248,6 +248,15 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_POWNERPAGEID", pPageID);
 		return ezPortalAdminDAO.loadSubMenuItems(map);
 	}
+	
+	@Override
+	public void removeSubMenuItem(String uID, String parentUID, String pageID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", pageID);
+		map.put("v_PARENTUID", uID);
+		map.put("v_OWNERPAGEID", parentUID);
+		ezPortalAdminDAO.removeSubMenuItem(map);
+	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
 		int indexOfDot = fileName.lastIndexOf(".");
@@ -1167,6 +1176,18 @@ System.out.println("pXML1:"+pXML);
 		return newUID;
 	}
 	
+	public String createNewSubMenuItem (String pParentUID, String pPageID) {
+		String newUID = UUID.randomUUID().toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_NEWUID", newUID);
+		map.put("v_PARENTUID", pParentUID);
+		map.put("v_PAGEID", pPageID);
+		map.put("v_DISPLAYNAME", "서브메뉴아이템");
+		map.put("v_DISPLAYNAME2", "SubMenuItem");
+		ezPortalAdminDAO.createNewSubMenuItem(map);
+		return newUID;
+	}
+	
 	public String savePortletProperties (String pXML) {
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		
@@ -1446,6 +1467,81 @@ System.out.println("pXML1:"+pXML);
 		map.put("v_PCOMPANYID", pCompanyID);
 		
 		ezPortalAdminDAO.saveMenuItemConfig(map);
+		
+		return "OK";
+	}
+	
+	public String loadSubMenuItemConfig (String pUID, String pPageID) throws Exception {
+		String strXML = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", pUID);
+		map.put("v_PAGEID", pPageID);
+		
+		PortalMenuItemItemsMenuItemsSVO result = ezPortalAdminDAO.loadSubMenuItemConfig(map);
+		String resultStr = commonUtil.getQueryResult(result);
+		String imageUID = result.getImageUId();
+		
+		if (imageUID != null && !imageUID.equals("")) {
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("v_UID", imageUID);
+			map1.put("v_PAGEID", pPageID);
+			PortalMenuItemItemsImageVO result1 =ezPortalAdminDAO.loadSubMenuItemConfig2(map1);
+			
+			String result1Str = commonUtil.getQueryResult(result1);
+			strXML = "<DATA>" + resultStr + "<IMAGEDATA>" + result1Str + "</IMAGEDATA></DATA>";
+		} else {
+			strXML = "<DATA>" + resultStr + "<IMAGEDATA></IMAGEDATA></DATA>";
+		}
+		return strXML;
+	}
+	
+	public String saveSubMenuItemConfig (String pXML, String pPageID) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		String imgUID = xmlDom.getElementsByTagName("IMGUID").item(0).getTextContent();
+		String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+		String displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+		String normalImage = xmlDom.getElementsByTagName("NORMALIMAGE").item(0).getTextContent();
+		String overImage = xmlDom.getElementsByTagName("OVERIMAGE").item(0).getTextContent();
+		String imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
+		String imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
+		String linkURL = xmlDom.getElementsByTagName("LINKURL").item(0).getTextContent();
+		String linkLocation = xmlDom.getElementsByTagName("LINKLOCATION").item(0).getTextContent();
+		String windowOption = xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+		String skin = xmlDom.getElementsByTagName("SKIN").item(0).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_P_SUB_UID", uID);
+		map.put("v_P_SUB_PAGEID", pPageID);
+		map.put("v_PUID", imgUID);
+		map.put("v_PDISPLAYNAME", displayName);
+		map.put("v_PDISPLAYNAME2", displayName2);
+		map.put("v_PNORMALIMAGEPATH", normalImage);
+		map.put("v_POVERIMAGEPATH", overImage);
+		
+		if (imageWidth == null || imageWidth.equals("")) {
+			imageWidth = "0";
+		}
+		map.put("v_PIMAGEWIDTH", Integer.parseInt(imageWidth));
+		
+		if (imageHeight == null || imageHeight.equals("")) {
+			imageHeight = "0";
+		}
+		map.put("v_PPIMAGEHEIGHT", Integer.parseInt(imageHeight));
+		map.put("v_PLINKURL", linkURL);
+		map.put("v_PLINKLOCATION", linkLocation);
+		map.put("v_PWINDOWOPTION", windowOption);
+		
+		if (skin == null || skin.equals("")) {
+			skin = "0";
+		}
+		map.put("v_PSKINNUM", Integer.parseInt(skin));
+		map.put("v_PNEWID", UUID.randomUUID().toString());
+		map.put("v_IMAGETYPE", "2");
+		map.put("v_EMPTYPUID", "");
+		
+		ezPortalAdminDAO.saveSubMenuItemConfig(map);
 		
 		return "OK";
 	}

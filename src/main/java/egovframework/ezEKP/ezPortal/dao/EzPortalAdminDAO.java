@@ -117,6 +117,14 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.loadMenuItemConfig2", map);
 	}
 	
+	public PortalMenuItemItemsMenuItemsSVO loadSubMenuItemConfig (Map<String, Object> map) {
+		return (PortalMenuItemItemsMenuItemsSVO)select("EzPortalAdminDAO.loadSubMenuItemConfig", map);
+	}
+	
+	public PortalMenuItemItemsImageVO loadSubMenuItemConfig2 (Map<String, Object> map) {
+		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.loadSubMenuItemConfig2", map);
+	}
+	
 	public String getParentPageIDList (String pTemp) {
 		return (String)select("EzPortalAdminDAO.getParentPageIDList", pTemp);
 	}
@@ -193,6 +201,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void createNewPortlet (Map<String, Object> map) {
 		insert("EzPortalAdminDAO.createNewPortlet", map);
+	}
+	
+	public void createNewSubMenuItem (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewSubMenuItem", map);
 	}
 	
 	public void createNewLogoItem (Map<String, Object> map) {
@@ -319,6 +331,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		update("EzPortalAdminDAO.updateMenuItemSetOrder", map);
 	}
 	
+	public void saveSubMenuItemConfig (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveSubMenuItemConfig", map);
+	}
+	
 	public void deleteTheme (String uID) {
 		delete("EzPortalAdminDAO.deleteTheme", uID);
 	}
@@ -393,6 +409,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void removeMenuItem (Map<String, Object> map) {
 		delete("EzPortalAdminDAO.removeMenuItem", map);
+	}
+	
+	public void removeSubMenuItem (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeSubMenuItem", map);
 	}
 	
 }

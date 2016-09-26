@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezPortal.t108'/></title>
+		<title><spring:message code='ezPortal.t221'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -25,7 +25,7 @@
 			strXML += "</DATA>";
 			
 			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "/admin/ezPortal/saveMenuItemsOrder.do?pageID=" + pageid, false);
+			xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItemsOrder.do?pageID=" + pageid, false);
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -83,15 +83,16 @@
 				<li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
 			</ul>
 		</div>
-		<table width="500" class="box">
+		<table class="content">
 			<tr>
 				<td>
 					<select size="10" ID="MENULIST"  style="width:100%; height:200px">
 						${menuList}
 					</select>
 				</td>
-				<td width="30" align="center"><img src="/images/arr_up.gif" style="cursor:pointer"  onClick="javascript:SetOrder(-1)"><br><img src="/images/arr_down.gif" width="16" height="16" style="cursor:pointer" onClick="javascript:SetOrder(1)">
-				</td>
+				<th width="30" align="center"> <img src="/images/arr_up.gif" vspace="2" style="cursor:pointer"  onClick="javascript:SetOrder(-1)"><br>
+      				<img src="/images/arr_down.gif" width="16" height="16" vspace="2" style="cursor:pointer" onClick="javascript:SetOrder(1)"> 
+      			</th>
 			</tr>
 		</table>
 

@@ -171,6 +171,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.createNewSubMenuItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CREATENEWSUBMENUITEM(#v_NEWUID#, #v_PARENTUID#, #v_PAGEID#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.createNewLogoItem" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CREATENEWLOGOITEM(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#)}
@@ -291,9 +297,21 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.saveSubMenuItemConfig" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVESUBMENUITEMCONFIG(#v_P_SUB_UID#, #v_P_SUB_PAGEID#, #v_PUID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #v_PNORMALIMAGEPATH#, #v_POVERIMAGEPATH#, #v_PIMAGEWIDTH#, #v_PPIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PSKIN#, #v_PNEWID#, #v_IMAGETYPE#, #v_EMPTYPUID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.removeMenuItem" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_REMOVEMENUITEM(#v_UID#, #v_PARENTUID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.removeSubMenuItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_REMOVESUBMENUITEM(#v_UID#, #v_PARENTUID#, #v_OWNERPAGEID#)}
 		]]>
 	</procedure>
 	
@@ -330,6 +348,18 @@
 	<procedure id="EzPortalAdminDAO.loadMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_LOADMENUITEMCONFIG2(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadSubMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADSUBMENUITEMCONFIG(#v_UID#, #v_PAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadSubMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADSUBMENUITEMCONFIG2(#v_UID#, #v_PAGEID#, #v_PSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
