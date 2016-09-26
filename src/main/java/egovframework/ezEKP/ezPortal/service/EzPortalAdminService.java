@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
@@ -18,6 +19,8 @@ public interface EzPortalAdminService {
 	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
 	
 	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (String pUID, String pPageID) throws Exception;
+	
+	public List<PortalGetPortletParametersVO> getMenuItemParameters (String pUID) throws Exception;
 	
 	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID) throws Exception;
 	
@@ -63,6 +66,12 @@ public interface EzPortalAdminService {
 	
 	public String savePositionSettings (String pXML, String pPageID) throws Exception;
 	
+	public String createNewMenuItem (String pParentUID, String pPageID) throws Exception;
+	
+	public String loadMenuItemConfig (String pUID, String pPageID, String pSkinNum) throws Exception;
+	
+	public String saveMenuItemConfig (String pXML, String pPageID, String pCompanyID) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;
@@ -94,4 +103,6 @@ public interface EzPortalAdminService {
 	public void saveLogoImage (Map<String, Object> map) throws Exception;
 	
 	public void saveLogoImage2 (Map<String, Object> map) throws Exception;
+	
+	public void removeMenuItem (String uID, String parentUID, String pageID) throws Exception;
 }

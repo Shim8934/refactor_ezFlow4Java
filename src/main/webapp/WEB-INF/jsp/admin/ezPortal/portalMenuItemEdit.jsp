@@ -17,6 +17,7 @@
 		var g_xmlhttp = createXMLHttpRequest();
 		var g_xmlhttp2 = createXMLHttpRequest();
 		var uid = "${uID}";
+		var imguid = "${imageUID}";
 		var g_Dirty = false;
 		var pageid = "${pageID}";
 		var pmode = "${mode}";
@@ -26,13 +27,11 @@
 		var menuindex = "${menuIndex}";
 		var pNoneActiveX = "${noneActiveX}";
 		
-		window.onload = function()
-		{
+		window.onload = function() {
 			toggle_menu(menuindex);
 		}
 		
-	    window.onbeforeunload = function()
-		{
+	    window.onbeforeunload = function() {
 			if (g_bSaved == true)
 			{
 				try{
@@ -47,8 +46,7 @@
 		}
 		
 		// 삭제
-		function Delete()
-		{
+		function Delete() {
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeMenuItem.do?pageID=" + pageid + "&uID=" + uid + "&parentUID=" + parentuid, false);
 			xmlhttp.send();
@@ -103,7 +101,7 @@
 			strXML += "</DATA>";
 
 			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "SaveMenuItem.aspx?pageid=" + pageid, false);
+			xmlhttp.open("POST", "/admin/ezPortal/saveMenuItem.do?pageID=" + pageid, false);
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -461,11 +459,11 @@
 			    <table>
                     <tr class="primary">
 	                    <th>${langPrimary}</th>
-	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="${menuItem.displayName}"></td>	
+	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="${displayName}"></td>	
                     </tr>
                     <tr class="secondary">
 	                    <th>${langSecondary}</th>
-	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${menuItem.displayName2}"></td>	
+	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${displayName2}"></td>	
                     </tr>
                 </table>
 			</td>
@@ -530,21 +528,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${menuItem.linkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${menuItem.linkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${menuItem.windowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
 		</tr>
 		<% } else { %>
 		<tr>
@@ -592,21 +590,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${menuItem.linkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${menuItem.linkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${menuItem.windowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
 		</tr>
 		<% } %>
 	</table>
@@ -678,7 +676,9 @@
 					<tr>
 						<td width="125">
 							<select id="SelectParamType" onchange="Param_Change()">
-							${paramHtml}
+								<c:forEach items="${paramType}" var="item">
+              						<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
+              					</c:forEach>
 							</select>
 						</td>
 						<td>

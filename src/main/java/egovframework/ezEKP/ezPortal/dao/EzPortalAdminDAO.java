@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO;
+import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
@@ -81,6 +82,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalAdminDAO.loadMenuItems", map); 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalGetPortletParametersVO> getMenuItemParameters (String pUID) {
+		return (List<PortalGetPortletParametersVO>) list("EzPortalAdminDAO.getMenuItemParameters", pUID); 
+	}
+	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
 		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", uID);
 	}
@@ -95,6 +101,14 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) {
 		return (PortalTBLTopMenuItemsVO)select("EzPortalAdminDAO.loadPositionSettings", map);
+	}
+	
+	public PortalMenuItemItemsMenuItemsVO loadMenuItemConfig (Map<String, Object> map) {
+		return (PortalMenuItemItemsMenuItemsVO)select("EzPortalAdminDAO.loadMenuItemConfig", map);
+	}
+	
+	public PortalMenuItemItemsImageVO loadMenuItemConfig2 (Map<String, Object> map) {
+		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.loadMenuItemConfig2", map);
 	}
 	
 	public String getParentPageIDList (String pTemp) {
@@ -231,6 +245,18 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.saveLogoImage", map);
 	}
 	
+	public void createNewMenuItem (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewMenuItem", map);
+	}
+	
+	public void createNewMenuItem2 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewMenuItem2", map);
+	}
+	
+	public void saveMenuItemConfig (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig", map);
+	}
+	
 	public void updateTopMenuGeneral (Map<String, Object> map) {
 		update("EzPortalAdminDAO.updateTopMenuGeneral", map);
 	}
@@ -355,9 +381,9 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		delete("EzPortalAdminDAO.saveLogoImage2", map);
 	}
 	
-	
-	
-	
+	public void removeMenuItem (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeMenuItem", map);
+	}
 	
 }
 

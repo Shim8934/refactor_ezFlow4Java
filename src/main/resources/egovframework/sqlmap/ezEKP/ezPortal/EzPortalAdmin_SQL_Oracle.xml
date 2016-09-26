@@ -163,6 +163,18 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.createNewMenuItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CREATENEWMENUITEM(#v_PUID#, #v_PPARENTUID#, #v_POWNERPAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.createNewMenuItem2" parameterClass="Map">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_CREATENEWMENUITEM2(#v_PUID#, #v_PPARENTUID#, #v_PPARENTMENUID#, #v_POWNERPAGEID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.setUsePage2" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SETUSEPAGE2(#v_pUSERFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#)}
@@ -259,6 +271,18 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.saveMenuItemConfig" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEMENUITEMCONFIG(#v_PPUID#, #v_PIMGUID#, #v_PPAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #v_PNORMALIMAGE#, #v_POVERIMAGE#, #v_PSKINNUM#, #v_PIMAGEWIDTH#, #v_PIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PNEWUID#, #v_PIMAGETYPE#, #v_EMPTYIMGID#, #v_PCOMPANYID#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.removeMenuItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_REMOVEMENUITEM(#v_UID#, #v_PARENTUID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.logoEdit" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_LOGO_EDIT(#v_UID#, #v_OWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -274,6 +298,18 @@
 	<procedure id="EzPortalAdminDAO.loadMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_LOADMENUITEMS(#v_pPARENTUID#, #v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADMENUITEMCONFIG(#v_PUID#, #v_PPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.loadMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_LOADMENUITEMCONFIG2(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -370,6 +406,12 @@
 	<procedure id="EzPortalAdminDAO.loadLogoItems" parameterClass="String"  resultClass="PortalLoadLogoItemsVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_LOADLOGOITEMS(#pPageID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.getMenuItemParameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETMENUITEMPARAMETERS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

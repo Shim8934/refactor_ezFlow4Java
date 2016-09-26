@@ -1162,8 +1162,9 @@
     <th ><spring:message code='ezPortal.t118'/></th>
     <td><table width="100%" >
         <tr>
-          <td style="width:125px; "> <select id="SelectParamType" onChange="Param_Change()" width="100%">
-              <c:forEach items="${paramType}" var="item">
+          <td style="width:125px; ">
+          	 <select id="SelectParamType" onChange="Param_Change()" width="100%">
+            	  <c:forEach items="${paramType}" var="item">
               	<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
               </c:forEach>
             </select>          </td>
