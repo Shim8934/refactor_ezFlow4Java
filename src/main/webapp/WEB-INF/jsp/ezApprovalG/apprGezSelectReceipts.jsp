@@ -772,7 +772,7 @@
 	</HEADERS>
 </LISTVIEWDATA>
 </XML>
-<OBJECT id="behave1" style="DISPLAY: none" height="0" width="0" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674"></OBJECT>
+<!-- <OBJECT id="behave1" style="DISPLAY: none" height="0" width="0" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674"></OBJECT> -->
 <h1><spring:message code='ezApprovalG.t1225'/></h1>
 <table>
   <tr>
