@@ -257,6 +257,13 @@ public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
 		map.put("v_OWNERPAGEID", parentUID);
 		ezPortalAdminDAO.removeSubMenuItem(map);
 	}
+	
+	@Override
+	public PortalPortletGeneralVO getPortletProperties(String pUID) throws Exception {
+		return ezPortalAdminDAO.getPortletProperties(pUID);
+	}
+	
+	
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
 		int indexOfDot = fileName.lastIndexOf(".");
