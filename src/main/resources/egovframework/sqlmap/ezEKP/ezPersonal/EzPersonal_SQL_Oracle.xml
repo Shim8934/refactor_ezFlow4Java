@@ -111,6 +111,16 @@
 		]]>
 	</procedure>
 	
+	<select id="EzPersonalDAO.getPassword" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				PASSWORD
+			FROM
+				EZHRMASTER.TBLUSERMASTER
+			WHERE
+				CN = #cn#
+		]]>
+	</select>
 	
 	
 </sqlMap>
