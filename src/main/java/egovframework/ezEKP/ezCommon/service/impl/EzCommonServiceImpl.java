@@ -912,6 +912,21 @@ System.out.println("@@@#11 : " + LfilePath);
         return strMhtData.replace("&lt;", "<").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
     }
 	
+	@Override
+	public String selectUserGetLang(String userID) throws Exception {
+		return ezCommonDAO.selectUserGetLang(userID);
+	}
+
+	@Override
+	public String selectUserGetTimeZone(String userID) throws Exception {
+		return ezCommonDAO.selectUserGetTimeZone(userID);
+	}
+	
+	@Override
+	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
+		ezCommonDAO.insertTblUserLocalInfo(map);
+	}
+
 	/**
 	 * 환경설정 저장 Method
 	 */

@@ -25,7 +25,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -62,8 +62,8 @@ public class LoginController {
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
     
-    @Resource(name="EzCommonDAO")
-	private EzCommonDAO ezCommonDAO;
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -133,8 +133,8 @@ public class LoginController {
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
 		//DB에서 lang 값 가져옴
-		String lang = ezCommonDAO.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
-		String timeZone = ezCommonDAO.selectUserGetTimeZone(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
+		String lang = ezCommonService.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
+		String timeZone = ezCommonService.selectUserGetTimeZone(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
 
 		String acceptLanguage = request.getHeader("Accept-Language");
 		String returnValue = "";
@@ -165,7 +165,7 @@ public class LoginController {
 			map.put("userID", _uid);
 			map.put("timeZone", "235|+09:00");
 			map.put("lang", lang);
-			ezCommonDAO.insertTblUserLocalInfo(map);
+			ezCommonService.insertTblUserLocalInfo(map);
 		}
 		//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
 		locale = new Locale(returnValue);

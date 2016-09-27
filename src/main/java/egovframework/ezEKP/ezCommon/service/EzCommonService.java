@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCommon.service;
 
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,11 +26,16 @@ public interface EzCommonService {
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
+	public String selectUserGetLang(String userID) throws Exception;
+	
+	public String selectUserGetTimeZone(String userID) throws Exception;
+	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	
 	public ApprovPWDVO getApprovPWD(String userID) throws Exception;
 	
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
-
+	
+	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception;
 
 }
