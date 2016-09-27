@@ -33,7 +33,6 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPortal.dao.EzPortalAdminDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
@@ -87,9 +86,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-	
-	@Resource(name="EzPortaAdminDAO")
-	private EzPortalAdminDAO ezPortalAdminDAO;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -270,8 +266,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String mode = "";
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
-			//mode = req.getParameter("mode");
-			mode = "Theme";
+			mode = req.getParameter("mode");
+			//mode = "Theme";
 		}
 		String pBoardID = mode;
 		
@@ -973,7 +969,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminDAO.getPortletProperties(uID);
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID);
 		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID);
 		
 		if (prop.getFrameType() !=null && prop.getFrameType().equals("")) {
@@ -1160,7 +1156,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				map.put("v_UID", uID);
 				map.put("v_DISPLAYNAME", displayName);
 				map.put("v_HTMLDATA", mhtFilePath);
-				ezPortalAdminDAO.savePortletSubProperty2(map);
+				ezPortalAdminService.savePortletSubProperty2(map);
 			}
 		} else if (portletType.equals("3")) {
 			//이미지 포틀릿
@@ -1180,7 +1176,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_IMAGETYPE", imageType);
 			map.put("v_OPENMODE", openMode);
 			map.put("v_WINDOWSOPTION", windowOption);
-			ezPortalAdminDAO.savePortletSubProperty3(map);
+			ezPortalAdminService.savePortletSubProperty3(map);
 		} else if (portletType.equals("4")) {
 			//게시판 포틀릿
 			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
@@ -1200,7 +1196,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_USERID", userInfo.getId());
 			map.put("v_ITEMCOUNT", itemCount);
 			map.put("v_ITEMFIELDS", itemFields);
-			ezPortalAdminDAO.savePortletSubProperty4(map);
+			ezPortalAdminService.savePortletSubProperty4(map);
 		}
 		return "OK";
 	}
@@ -1333,7 +1329,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminDAO.getPortletProperties(uID);
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID);
 		
 		String displayName = prop.getDisplayName();
 		String url = prop.getUrl();
@@ -1819,10 +1815,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1");
+System.out.println("strXML:"+strXML);
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
-			imageUID = xmlDom.getElementsByTagName("UID_").item(0).getChildNodes().item(0).getTextContent();
-			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDHT").item(0).getTextContent();
+			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
+			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
 			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
 			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
 			overImagePath = xmlDom.getElementsByTagName("OVERIMAGEPATH").item(0).getTextContent();
@@ -2328,8 +2325,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID);
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
-			imageUID = xmlDom.getElementsByTagName("UID_").item(0).getChildNodes().item(0).getTextContent();
-			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDHT").item(0).getTextContent();
+			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
+			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
 			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
 			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
 			overImagePath = xmlDom.getElementsByTagName("OVERIMAGEPATH").item(0).getTextContent();
