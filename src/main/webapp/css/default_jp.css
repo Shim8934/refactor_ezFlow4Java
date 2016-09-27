@@ -1353,7 +1353,7 @@ form{display:inline;margin:0}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
 .organwrap td {border:0px !important; padding:0px; }
 .organwrap .pictd { vertical-align:top; margin:0px; padding:3px; background:#f0f0f0;}
-.organwrap .pic { width:90px; height:90px; border:1px solid #ccc!important; overflow:hidden; background:url(/images/organtree/porson_noimg.gif) ;}
+.organwrap .pic { width:90px; height:90px; border:1px solid #ccc!important; overflow:hidden; background:url(/images/OrganTree/porson_noimg.gif) ;}
 .organwrap .pic img { border:0px !important;}
 .organinfo {border:0px !important;table-layout:fixed; width:100%;}
 .organinfo  td {border:1px solid #ccc;font-size:12px; border:0px !important; padding:2px 10px !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
