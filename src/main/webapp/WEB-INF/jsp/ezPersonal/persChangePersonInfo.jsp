@@ -1,5 +1,3 @@
-<%@page import="org.w3c.dom.Document"%>
-<%@page import="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -218,7 +216,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", Crypt_Encrytion(document.getElementById('txtOldPassword').value));
 		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", Crypt_Encrytion(document.getElementById('txtNewPassword').value));
 		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORDCONFIRM", Crypt_Encrytion(document.getElementById('txtNewPasswordConfirm').value));
-		        xmlHTTP.open("POST", "/admin/ezOrgan/changePassWord.do", false);
+		        xmlHTTP.open("POST", "/ezPersonal/changePassword.do", false);
 		        xmlHTTP.send(xmlDom);
 		        // 수정(2007.02.07) : 사용자 생성/수정 루틴 변경 (BE 서버)
 		        //var retVal = SelectSingleNodeValueNew(xmlHTTP.responseXML, "DATA");
@@ -226,7 +224,7 @@
 		        if (xmlHTTP.status == 200) {
 		            if (xmlHTTP.responseText == "OK") {
 		                alert("<spring:message code='ezPersonal.t197'/>");
-			            window.top.location.href = '/Login.aspx';
+			            window.top.location.href = '/user/login/login.do';
 			        } else {
 			            alert("<spring:message code='ezPersonal.t198'/>");
 			        }
