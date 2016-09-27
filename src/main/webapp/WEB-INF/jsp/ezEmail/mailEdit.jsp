@@ -220,7 +220,7 @@
 			function delDrafts()
 			{
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url), false);
+				xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate, false);
 				xmlhttp.send();
 				xmlhttp = null;
 			}

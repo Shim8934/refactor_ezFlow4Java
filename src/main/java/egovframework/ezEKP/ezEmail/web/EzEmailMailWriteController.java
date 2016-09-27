@@ -1050,8 +1050,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
 				}
 				pFileName[i] = _pFileName;
-				sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
-				sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+				if (pFileName[i].lastIndexOf(".") > -1) {
+					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
+					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+				} else {
+					sFileTitle[i] = pFileName[i];
+					sExt[i] = "";
+				}
+				
 				if (multiFile.get(i).getSize() == 0) {
 					isEmpty = true;
 				}
@@ -1458,6 +1464,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		String isReserve = "";
 		String reservedId = "";
 		String realPath = config.getProperty("data_root");
+		String stateName = "";
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
@@ -1596,11 +1603,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				reservedId = tempNode.getTextContent();
 			}
 		}
-		
 		if (root.getElementsByTagName("SHOW-DISPLAYNAME") != null) {
 			tempNode = root.getElementsByTagName("SHOW-DISPLAYNAME").item(0);
 			if (tempNode != null) {
 				eShowDisplayName = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("STATENAME") != null) {
+			tempNode = root.getElementsByTagName("STATENAME").item(0);
+			if (tempNode != null) {
+				stateName = tempNode.getTextContent();
 			}
 		}
 		
@@ -2102,33 +2114,34 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		            
 		            rtnStatus = "OK";
 		        }
+		        
 	        }
-	                
+	        
+	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제(스케줄러로 지우기로함.)
+//	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+//	        if (imagePathList != null && imagePathList.getLength() > 0) {
+//	            String imagePath = "";
+//	            
+//	        	for (int i=0; true; i++) {
+//	            	if (imagePathList.item(i) == null) {
+//	            		break;
+//	            	}
+//	            	
+//	            	imagePath = imagePathList.item(i).getTextContent();
+//	            	
+//	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
+//	                	imagePath = new URL(imagePath).getPath();
+//	                	String pDirPath = realPath + imagePath;
+//	            		File f = new File(pDirPath);
+//	            		if (f.exists()) {
+//	            			f.delete();
+//	            		}
+//	            	}
+//	        	}
+//	        }
+	        
 	        folder.close(true);
 	        // sendmail_2010변환 끝
-	        
-	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제
-	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-	        if (imagePathList != null && imagePathList.getLength() > 0) {
-	            String imagePath = "";
-	            
-	        	for (int i=0; true; i++) {
-	            	if (imagePathList.item(i) == null) {
-	            		break;
-	            	}
-	            	
-	            	imagePath = imagePathList.item(i).getTextContent();
-	            	
-	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
-	                	imagePath = new URL(imagePath).getPath();
-	                	String pDirPath = realPath + imagePath;
-	            		File f = new File(pDirPath);
-	            		if (f.exists()) {
-	            			f.delete();
-	            		}
-	            	}
-	        	}
-	        }
 	        
 	        pResult = "<RESULT><![CDATA[" + rtnStatus + "]]></RESULT>";
 	        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
@@ -2178,6 +2191,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 				message.setFlag(Flags.Flag.DELETED, true);
 			}
 	        folder.close(true);
+	        
+	        //file system의 templist txt파일 삭제
+	        String delId = request.getParameter("delid");
+	        String realPath = config.getProperty("data_root");
+	        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+	        pDirPath += commonUtil.separator + delId + ".txt";
+	        File f = new File(pDirPath);
+	        if (f.exists()) {
+	        	f.delete();
+	        }
 	        
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -2289,7 +2312,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 							boolean isRemoved = false;
 							if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
 								for (int j = 0; j < length; j++) {
-									if (rows.item(j).getFirstChild().getTextContent().equals(p.getFileName())) {
+									String mailFileName = MimeUtility.decodeText(p.getFileName());
+									if (rows.item(j).getFirstChild().getTextContent().equals(mailFileName)) {
 										isRemoved = true;
 										break;
 									}
@@ -2881,10 +2905,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	 */
 	private void doDelaySend(Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
 		String messageId = "";
-		System.out.println("isReserve : ." + isReserve + ".");
-		System.out.println("subject : " + subject);
-		System.out.println("sendDate : " + sendDate);
-		System.out.println("reservedId : ." + reservedId + ".");
+		logger.debug("isReserve : " + isReserve);
+		logger.debug("subject : " + subject);
+		logger.debug("sendDate : " + sendDate);
+		logger.debug("reservedId : " + reservedId);
 		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
 			messageId = reservedId;
 			ezEmailService.updateReservedMail(messageId, subject, sendDate);

@@ -252,7 +252,7 @@
 	    var isDelted = false;
 	    function delDrafts() {
 	        var xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url), false);
+	        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate, false);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
@@ -292,7 +292,40 @@
 	        return "<span><P>&nbsp;</P><P>&nbsp;</P>" + BodyHtml + "</span>"
 	    }
 	    function Rebody() {
-	        if (document.getElementById("bodyValue").innerHTML != "") { //회신,전달,재전송
+	    	if (gg_cmd == "RESEND" && document.getElementById("bodyValue").innerHTML != "") { //재전송 시
+	    		document.getElementById("bodyValue").innerHTML = document.getElementById("bodyValue").innerHTML.replace("id=\"MailSignSent\"", "id=\"MailSign\"");
+	    		var indexSignValue = document.getElementById("bodyValue").innerHTML.indexOf("id=\"MailSign\"");
+	            if (indexSignValue == -1) {
+		    		switch (mailsel) {
+		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P>&nbsp;</P><P>&nbsp;</P><DIV id='MailSign'></DIV>");
+		                    break;
+		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P>&nbsp;</P><P>&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+		                    tempvalue = "1";
+		                    break;
+		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P>&nbsp;</P><P>&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+		                    tempvalue = "1";
+		                    break;
+		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P>&nbsp;</P><P>&nbsp;</P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+		                    tempvalue = "1";
+		                    break;
+		            }
+	            } else {
+	            	switch (mailsel) {
+		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                    break;
+		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                    tempvalue = "1";
+		                    break;
+		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                    tempvalue = "1";
+		                    break;
+		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                    tempvalue = "1";
+		                    break;
+	            	}
+	            }
+	    	}
+	    	else if (document.getElementById("bodyValue").innerHTML != "") { //회신,전달 시
 	            switch (mailsel) {
 	                case "0": message.SetEditorContent("<P>&nbsp;</P><P>&nbsp;</P><DIV id='MailSign'></DIV>" + document.getElementById("bodyValue").innerHTML);
 	                    break;

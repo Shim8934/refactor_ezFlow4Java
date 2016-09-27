@@ -627,6 +627,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "SECURITYMAIL", pSecurity);
             createNodeAndInsertText(xmlDoc, rootNode, "ISRESERVE", isReserve);
             createNodeAndInsertText(xmlDoc, rootNode, "RESERVEDID", pCDOMessageId);
+            createNodeAndInsertText(xmlDoc, rootNode, "STATENAME", filedate);
             if (m_rgParams4PostOption["delaySendDate"] == "") {
                 createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", "");
             }
