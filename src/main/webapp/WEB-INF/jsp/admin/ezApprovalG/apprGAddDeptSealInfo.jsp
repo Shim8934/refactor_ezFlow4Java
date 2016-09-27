@@ -70,7 +70,7 @@
 		            return;
 		        }
 	
-		        pSealWidth = tbSealWidth.value;
+		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
 		        if (pSealWidth == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1244' />";
 		            OpenAlertUI(pInformationString);
@@ -78,7 +78,7 @@
 		            return;
 		        }
 	
-		        pSealHeight = tbSealHeight.value;
+		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
 		        if (pSealHeight == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1245' />";
 		            OpenAlertUI(pInformationString);
@@ -146,8 +146,8 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-		        pSealWidth = tbSealWidth.value;
-		        pSealHeight = tbSealHeight.value;
+		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
+		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
 	
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1248' />";
@@ -202,8 +202,8 @@
 		            	contentType : false,
 		            	success : function(result) {
 		            		fileName = result["fileName"];
-		            		tbSealWidth.value = result["width"];
-		            		tbSealHeight.value = result["height"];
+		            		document.getElementsByName("tbSealWidth")[0].value = result["width"];
+		            		document.getElementsByName("tbSealHeight")[0].value = result["height"];
 		            		dirPath = result["path"];
 		            		
 		            		try {
