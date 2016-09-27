@@ -25,7 +25,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
-import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPersonalService")
