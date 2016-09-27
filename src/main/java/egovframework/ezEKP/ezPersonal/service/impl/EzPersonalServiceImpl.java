@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -24,10 +25,11 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPersonalService")
-public class EzPersonalServiceImpl implements EzPersonalService{
+public class EzPersonalServiceImpl extends EgovFileMngUtil  implements EzPersonalService{
 	@Resource(name="EzPersonalDAO")
 	private EzPersonalDAO ezPersonalDAO;
 	
@@ -301,6 +303,18 @@ public class EzPersonalServiceImpl implements EzPersonalService{
 			days = 0; 
 		} 
 		return days;
+	}
+	
+	public int checkPassword (String pCN, String pPassword) {
+		int pResult = 0;
+		
+		if (ezPersonalDAO.getPassword(pCN).equals(pCN)) {
+			pResult = 1;
+		} else {
+			pResult = 0;
+		}
+		
+		return pResult;
 	}
 	
 }
