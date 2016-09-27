@@ -48,6 +48,7 @@
 		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
 		    		$('#btnInsForm').hide();
 			    	$('#btnUpForm').hide();
+			    	$('#btnFormListView').hide();
 		    	}
 
 		    	companyID = SCompID.value;

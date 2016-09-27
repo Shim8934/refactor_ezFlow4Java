@@ -17,9 +17,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCommunityAdminService")
-public class EzCommunityAdminServiceImpl implements EzCommunityAdminService{
+public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl implements EzCommunityAdminService{
 	@Resource(name="EzCommunityAdminDAO")
 	private EzCommunityAdminDAO ezCommunityAdminDAO;
 	
