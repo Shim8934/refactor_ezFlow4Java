@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalAdminDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
@@ -34,7 +35,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPortalAdminService")
-public class EzPortalAdminServiceImpl implements EzPortalAdminService  {
+public class EzPortalAdminServiceImpl extends EgovFileMngUtil implements EzPortalAdminService  {
 	@Resource(name="EzPortaAdminDAO")
 	private EzPortalAdminDAO ezPortalAdminDAO;
 	
