@@ -210,7 +210,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				String groupAddr = dept.getExtensionAttribute1() + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
-				if (rc == 0) { // updateGroupDel 성공
+				if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식그룹을 찾지 못해도 성공으로 봄.)
 					ezOrganAdminService.deleteDBData(cn, pClass);
 					result = "OK";
 				} else {
@@ -508,7 +508,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				String groupAddr = userVO.getDepartment() + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
-				if (rc == 0) { // updateGroupDel 성공
+				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
 						ezOrganAdminService.retireEntry(cn[i]);
@@ -586,7 +586,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						// 부서의 Group Email 주소로부터 해당 User를 제거한다.
 						rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						
-						if (rc != 0) { // Group Email 주소에서 제거 실패함.
+						if (rc == -100) { // Group Email 주소에서 제거 실패함.(부모(그룹)나 자식(유저)를 찾지 못해도 성공으로 봄.)
 							ezEmailUserAdminService.restoreUser(mailAddr);
 							
 							throw new Exception("removing the user '" + mailAddr + "' from its group email failed.");
