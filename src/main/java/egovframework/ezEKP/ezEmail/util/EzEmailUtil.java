@@ -479,7 +479,13 @@ public class EzEmailUtil {
 			}
 			htmlBody += strContent;
 			
+			// style 태그가 1536개인 메일(홈플러스 메일)의 경우 IE에서 로딩이 오래 걸리는 문제가 발생하여 추가함.
+			htmlBody = stripTooManyStyleTags(htmlBody);
+			
+			// XSS(Cross Site Scripting)을 방지하기 위한 처리
 			htmlBody = stripScriptTags(htmlBody);
+			
+			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
 			htmlBody = addTargetBlank(htmlBody);				
 		} else if(part.isMimeType("text/plain")){
 			String strContent = "";
@@ -1156,6 +1162,27 @@ public class EzEmailUtil {
 		return result.toString();		
 	}
 
+	/**
+	 * style 태그가 일정 개수 이상이면 style 태그와 그 사이의 콘텐츠를 삭제하는 기능을 수행하는 메소드
+	 */
+	private String stripTooManyStyleTags(String src) {
+		Pattern p = Pattern.compile("<style.*?>.*?</style>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		
+		int count = 0;
+		while (m.find()) {
+		    count++;		
+		}
+		
+		logger.debug("style count=" + count);
+		
+		if (count >= 20) {
+			src = m.replaceAll("");
+		}
+				
+		return src;		
+	}
+	
 	/** 
 	 * strip <object>,<applet>,<script> tags
 	 */	
