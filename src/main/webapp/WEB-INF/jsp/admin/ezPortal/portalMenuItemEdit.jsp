@@ -57,17 +57,17 @@
 		    var strXML = "<DATA>";
 
 		    if (pmode == "new") {
-		        if (txtNormalImage.src.indexOf("/Upload_Portal") == -1 && txtOverImage.src.indexOf("/Upload_Portal") > -1) {
+		        if (txtNormalImage.src.indexOf("/files/upload_portal") == -1 && txtOverImage.src.indexOf("/files/upload_porta") > -1) {
 		            alert("<spring:message code='ezPortal.t10000'/>");
 		            return;
 		        }
 		    }
 
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/Upload_Portal"));
-			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/Upload_Portal"));
-
-			if (normalImgPath.indexOf("/Upload_Portal") == -1) normalImgPath = "";
-			if (overImgPath.indexOf("/Upload_Portal") == -1) overImgPath = "";
+			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
+alert(normalImgPath);
+			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
 			
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(txtDisplayName.value) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(txtDisplayName2.value) + "</DISPLAYNAME2>";
