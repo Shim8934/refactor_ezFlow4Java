@@ -31,6 +31,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -235,6 +236,23 @@ public class CommonUtil {
 		}
 
 		return filename;
+	}
+	
+	public static void addXUACompatibleHeaderToResponse(HttpServletRequest request, HttpServletResponse response) {
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		String compatibleValue = null;
+		
+		if (browser.equals("Edge") || browser.equals("IE11")) {
+			compatibleValue = "IE=edge";
+		} else if (browser.equals("IE10") || browser.equals("IE9")) {
+			compatibleValue = "IE=9";
+		} else if (browser.equals("IE8")) {
+			compatibleValue = "IE=8";
+		}
+		
+		if (compatibleValue != null) {
+			response.setHeader("X-UA-Compatible", compatibleValue);
+		}		
 	}
 	
 	public Document convertStringToDocument(String xmlStr) {

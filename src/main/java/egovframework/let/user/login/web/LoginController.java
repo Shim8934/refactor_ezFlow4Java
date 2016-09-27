@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /**
@@ -89,20 +90,7 @@ public class LoginController {
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
     
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		String compatibleValue = null;
-		
-		if (browser.equals("Edge") || browser.equals("IE11")) {
-			compatibleValue = "IE=edge";
-		} else if (browser.equals("IE10") || browser.equals("IE9")) {
-			compatibleValue = "IE=9";
-		} else if (browser.equals("IE8")) {
-			compatibleValue = "IE=8";
-		}
-		
-		if (compatibleValue != null) {
-			response.setHeader("X-UA-Compatible", compatibleValue);
-		}
+		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		
     	return "user/login/login";
 	}
