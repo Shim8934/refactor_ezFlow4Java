@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
@@ -782,10 +783,20 @@ public class EzPersonalController {
 	 */
 	@RequestMapping(value = "/ezPersonal/changePassword.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String checkPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo) throws Exception {
+	public String changePassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
-		
+		String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+    	
+    	String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
+    	String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
+System.out.println("oldPassword:"+oldPassword);
+System.out.println("oldPasswordDec:"+EgovFileScrty.decryptRsa(pk, oldPassword));
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword));
+
 		return "OK";
 	}
 	

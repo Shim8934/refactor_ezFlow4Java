@@ -74,6 +74,10 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (PersonalGetQuickLinkMenuVO) select("EzPersonalDAO.getQuickLinkMenu", accessID);
 	}
 	
+	public String getPassword (String cn) {
+		return (String) select("EzPersonalDAO.getPassword", cn);
+	}
+	
 	public int getPollCount(Map<String, Object> map) {
 		select("EzPersonalDAO.getPollCount", map);
 		return (int) map.get("v_pCount");

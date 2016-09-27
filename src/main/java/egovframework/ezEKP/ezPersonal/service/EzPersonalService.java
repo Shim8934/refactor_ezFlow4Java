@@ -44,4 +44,6 @@ public interface EzPersonalService {
 	public int getPollCount (String pComapnyID) throws Exception;
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult) throws Exception;
+	
+	public int checkPassword (String pCN, String pPassword) throws Exception;
 }
