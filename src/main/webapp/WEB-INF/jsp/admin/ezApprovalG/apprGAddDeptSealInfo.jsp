@@ -70,7 +70,7 @@
 		            return;
 		        }
 	
-		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
+		        pSealWidth = document.getElementById("tbSealWidth").value;
 		        if (pSealWidth == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1244' />";
 		            OpenAlertUI(pInformationString);
@@ -78,7 +78,7 @@
 		            return;
 		        }
 	
-		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
+		        pSealHeight = document.getElementById("tbSealHeight").value;
 		        if (pSealHeight == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1245' />";
 		            OpenAlertUI(pInformationString);
@@ -146,8 +146,8 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
-		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
+		        pSealWidth = document.getElementById("tbSealWidth").value;
+		        pSealHeight = document.getElementById("tbSealHeight").value;
 	
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1248' />";
@@ -202,8 +202,8 @@
 		            	contentType : false,
 		            	success : function(result) {
 		            		fileName = result["fileName"];
-		            		document.getElementsByName("tbSealWidth")[0].value = result["width"];
-		            		document.getElementsByName("tbSealHeight")[0].value = result["height"];
+		            		document.getElementById("tbSealWidth").value = result["width"];
+		            		document.getElementById("tbSealHeight").value = result["height"];
 		            		dirPath = result["path"];
 		            		
 		            		try {
@@ -263,8 +263,8 @@
 		  	<tr> 
 		    	<th><spring:message code = 'ezApprovalG.t1253' /></th>
 		    	<td id="SealSize"> 
-			    	<input type="text" name="tbSealWidth" style="width:40px">mm&nbsp;*
-			      	<input type="text" name="tbSealHeight" style="width:40px">mm
+			    	<input type="text" id = "tbSealWidth" name="tbSealWidth" style="width:40px">mm&nbsp;*
+			      	<input type="text" id = "tbSealHeight" name="tbSealHeight" style="width:40px">mm
 			    </td>
 		  	</tr>
 		  	<tr> 
