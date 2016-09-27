@@ -1007,4 +1007,18 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/admin/ezPersonal/deleteSlider.do")
+	@ResponseBody
+	public String deleteSlider(HttpServletRequest request) throws Exception {
+		String sliderID = request.getParameter("sliderID");
+		
+		try {
+			ezPersonalAdminService.deleteSlider(sliderID);
+			
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR";
+		}
+	}
 }

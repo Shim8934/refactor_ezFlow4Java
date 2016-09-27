@@ -83,20 +83,21 @@
 		        }
 		        if (!confirm("<spring:message code = 'ezPersonal.t00003' />"))
 		            return;
-	
-		        var xmlhttp = null;
-		        xmlhttp = createXMLHttpRequest();
-	
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-	
-		        createNodeAndInsertText(xmlDom, objNode, "SLIDERID", tempid);
-	
-		        xmlhttp.open("POST", "aspx/DeleteSlider.aspx", false);
-		        xmlhttp.send(xmlDom);
-	
-		        window.location.reload(false);
+		        
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/deleteSlider.do",
+		        	async : false,
+		        	dataType : "text",
+		        	data : {sliderID : tempid},
+		        	success : function(result) {
+		        		if (result == "OK") {
+		        			window.location.reload(false);
+		        		} else {
+		        			alert("error");
+		        		}
+		        	}
+		        });
 		    }
 	
 		    function MakeDescription(filepath) {

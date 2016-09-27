@@ -20,6 +20,8 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalEmpMonthVO> getEmpMonth(String companyID) throws Exception;
 	
+	List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception;
+	
 	PersonalNoticeVO getNoticeInfo(String itemSeq) throws Exception;
 	
 	PersonalPopupVO getPopupInfo(String itemSeq) throws Exception;
@@ -64,9 +66,7 @@ public interface EzPersonalAdminService {
 
 	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
 
-
-
-	List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception;
+	void deleteSlider(String sliderID) throws Exception;
 
 	
 

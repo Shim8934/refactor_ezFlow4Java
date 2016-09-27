@@ -189,4 +189,11 @@
 			{CALL EZPERSONAL.EZSP_DELETEPOPUP(#v_pItemSeq#)}
 		]]>	
 	</procedure>
+	
+	<procedure id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE"			parameterClass="String">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_DELSLIDERIMAGE(#v_SLIDERID#)}
+		]]>	
+	</procedure>
+	
 </sqlMap>

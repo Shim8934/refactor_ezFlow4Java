@@ -50,6 +50,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (List<PersonalSliderImageVO>) list("EzPersonalAdmin.EZSP_GETSLIDERLIST", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalLightPollVO> getPollResult(String v_pItemSeq) throws Exception {
+		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", v_pItemSeq);
+	}
+	
 	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
 		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", v_pItemSeq);
 	}
@@ -128,8 +133,7 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollResult(String v_pItemSeq) {
-		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", v_pItemSeq);
+	public void delSliderImage(String v_SLIDERID) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELSLIDERIMAGE", v_SLIDERID);
 	}
 }
