@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import com.ibm.icu.impl.LocaleDisplayNamesImpl.DataTable;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
@@ -51,7 +52,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 @Service("EzResourceService")
-public class EzResourceServiceImpl implements EzResourceService{
+public class EzResourceServiceImpl extends EgovFileMngUtil implements EzResourceService{
 	@Resource(name="EzResourceDAO")
 	private EzResourceDAO ezResourceDAO;
 	

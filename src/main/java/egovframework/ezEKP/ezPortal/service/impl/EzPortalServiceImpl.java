@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -54,7 +55,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPortalService")
-public class EzPortalServiceImpl implements EzPortalService {
+public class EzPortalServiceImpl extends EgovFileMngUtil implements EzPortalService {
 	@Resource(name="EzPortalDAO")
 	private EzPortalDAO ezPortalDAO;
 	
