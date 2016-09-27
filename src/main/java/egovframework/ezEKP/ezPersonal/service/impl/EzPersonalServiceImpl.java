@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
 import java.lang.reflect.Field;
+import java.security.PrivateKey;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +26,14 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPersonalService")
 public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements EzPersonalService{
+	@Resource(name = "crypto") 
+	private EgovFileScrty egovFileScrty;
+	
 	@Resource(name="EzPersonalDAO")
 	private EzPersonalDAO ezPersonalDAO;
 	
@@ -304,10 +309,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		return days;
 	}
 	
-	public int checkPassword (String pCN, String pPassword) {
+	public int checkPassword (String pCN, String pPassword) throws Exception {
+    	pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
+    	
 		int pResult = 0;
-		
-		if (ezPersonalDAO.getPassword(pCN).equals(pCN)) {
+
+		if (ezPersonalDAO.getPassword(pCN).equals(pPassword)) {
 			pResult = 1;
 		} else {
 			pResult = 0;

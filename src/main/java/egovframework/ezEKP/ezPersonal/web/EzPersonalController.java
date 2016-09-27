@@ -729,6 +729,7 @@ public class EzPersonalController {
 		}
 		
 		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
 		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("userLang", userInfo.getLang());
@@ -747,6 +748,7 @@ public class EzPersonalController {
 		model.addAttribute("txtAddress", txtAddress);
 		model.addAttribute("birthDay", birthDay);
 		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("literalPhoto", literalPhoto);
 		model.addAttribute("birthType", birthType);
 		model.addAttribute("userInfo", userInfo);
@@ -793,10 +795,13 @@ public class EzPersonalController {
     	
     	String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
     	String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
-System.out.println("oldPassword:"+oldPassword);
-System.out.println("oldPasswordDec:"+EgovFileScrty.decryptRsa(pk, oldPassword));
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword));
 
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword));
+		if (checkResult != 1) {
+			return "CHKERROR";
+		}
+		
+		ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword));
 		return "OK";
 	}
 	

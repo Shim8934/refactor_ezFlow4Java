@@ -15,14 +15,15 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript">
+		var rsa = new RSAKey();
 		<%
 		String userLang = (String)request.getAttribute("userLang"); 
 		%>
@@ -86,8 +87,8 @@
 		    });
 		    <%}%>
 		    window.onload = function () {
-		        initKey();
-
+		    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		    	
 		        if ("<%=userLang%>" != "1" && "<%=userLang%>" != "4") {
 		            document.getElementById("RadBirthType1").style.display = "none";
 		            document.getElementById("RadBirthType2").style.display = "none";
@@ -194,7 +195,6 @@
 			        document.all['txtNewPassword'].focus();
 			        return;
 			    }
-
 		        if (document.getElementById('txtNewPassword').value == "") {
 		            alert("<spring:message code='ezPersonal.t195'/>");
 			        document.all['txtNewPassword'].focus();
@@ -206,16 +206,16 @@
 			        document.all['txtNewPassword'].focus();
 			        return;
 			    }
-
 		        var xmlHTTP = createXMLHttpRequest();
 		        var xmlPara = createXmlDom();
 		        var xmlDom = createXmlDom();
 		        var objRoot, objNode, subNode;
 		        var objNode;
+alert(rsa.encrypt(document.getElementById('txtOldPassword').value));
 		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", Crypt_Encrytion(document.getElementById('txtOldPassword').value));
-		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", Crypt_Encrytion(document.getElementById('txtNewPassword').value));
-		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORDCONFIRM", Crypt_Encrytion(document.getElementById('txtNewPasswordConfirm').value));
+		        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", rsa.encrypt(document.getElementById('txtOldPassword').value));
+		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", rsa.encrypt(document.getElementById('txtNewPassword').value));
+		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORDCONFIRM", rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value));
 		        xmlHTTP.open("POST", "/ezPersonal/changePassword.do", false);
 		        xmlHTTP.send(xmlDom);
 		        // 수정(2007.02.07) : 사용자 생성/수정 루틴 변경 (BE 서버)
@@ -409,5 +409,6 @@
 <br/>
 <br/>
 <input id="publicModulus" value="${publicModulus}" type="hidden"/>
+<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 </body>
 </html>
