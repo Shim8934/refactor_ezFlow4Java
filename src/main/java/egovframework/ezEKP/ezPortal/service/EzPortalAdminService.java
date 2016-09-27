@@ -7,6 +7,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
@@ -28,6 +29,8 @@ public interface EzPortalAdminService {
 	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID) throws Exception;
 	
 	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) throws Exception;
+	
+	public PortalPortletGeneralVO getPortletProperties (String pUID) throws Exception;
 	
 	public String useThemeInfo(String pUID) throws Exception;
 	
@@ -118,4 +121,5 @@ public interface EzPortalAdminService {
 	public void updateMenuItemSetOrder (int columnPos, String uID, String ownerPageID) throws Exception;
 	
 	public void removeSubMenuItem (String uID, String parentUID, String pageID) throws Exception;
+	
 }
