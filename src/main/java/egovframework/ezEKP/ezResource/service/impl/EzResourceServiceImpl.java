@@ -2538,9 +2538,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			String orgGresFlag = "";
 			String orgEntryList = "";
-			String numStr = "";
-			String numVal = "";
-			String orgNumVal = "";
 			
 			ResGetScheduleVO resGetSchedule = new ResGetScheduleVO();
 			try {
