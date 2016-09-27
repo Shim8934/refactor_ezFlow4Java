@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceAdminService")
-public class EzResourceAdminServiceImpl extends EgovFileMngUtil implements EzResourceAdminService {
+public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implements EzResourceAdminService {
 
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;

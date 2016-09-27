@@ -25,9 +25,10 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPersonalAdminService")
-public class EzPersonalAdminServiceImpl implements EzPersonalAdminService {
+public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implements EzPersonalAdminService {
 	@Autowired
 	private CommonUtil commonUtil;
 

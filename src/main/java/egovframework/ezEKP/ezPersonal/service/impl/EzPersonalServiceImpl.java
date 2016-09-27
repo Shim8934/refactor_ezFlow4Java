@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -26,9 +25,10 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPersonalService")
-public class EzPersonalServiceImpl extends EgovFileMngUtil  implements EzPersonalService{
+public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements EzPersonalService{
 	@Resource(name="EzPersonalDAO")
 	private EzPersonalDAO ezPersonalDAO;
 	

@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -26,9 +25,10 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzQuestionService")
-public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestionService{
+public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements EzQuestionService{
 	@Resource(name="EzQuestionDAO")
 	private EzQuestionDAO ezQuestionDAO;
 	

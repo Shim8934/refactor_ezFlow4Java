@@ -55,7 +55,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPortalService")
-public class EzPortalServiceImpl extends EgovFileMngUtil implements EzPortalService {
+public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPortalService {
 	@Resource(name="EzPortalDAO")
 	private EzPortalDAO ezPortalDAO;
 	
