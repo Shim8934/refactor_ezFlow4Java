@@ -218,7 +218,9 @@
 	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
 	            if (!isDelted)
 	                delDrafts();
-	        }
+	        } else if (g_cmd == "EDIT") {
+	        	delAttachListFile(filedate);
+	        } 
 	    }
 	    var mail_message_cross_dialogArguments = new Array();
 	    function window_close() {
@@ -242,7 +244,7 @@
 	        
 	        g_bDirty = false;
 	        
-	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
 	            delDrafts();
 	        }
 	        
@@ -253,6 +255,13 @@
 	    function delDrafts() {
 	        var xmlhttp = createXMLHttpRequest();
 	        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate, false);
+	        xmlhttp.send();
+	        xmlhttp = null;
+	        isDelted = true;
+	    }
+	    function delAttachListFile(filedate) {
+	    	var xmlhttp = createXMLHttpRequest();
+	        xmlhttp.open("GET", "/ezEmail/delAttachListFile.do?&delid=" + filedate, false);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;

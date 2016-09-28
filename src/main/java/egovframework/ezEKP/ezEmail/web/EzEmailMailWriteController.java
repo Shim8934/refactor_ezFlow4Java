@@ -2009,10 +2009,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		            rtnStatus = "OK";
 		        } else {                        
 		
-	//	            if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
-	//	            	rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
-	//	            else
-	//	            	rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
+//	            	if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
+//	            		rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
+//	            	else
+//	            		rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
 		            
 		            //InnterMailSend 변환 시작
 		            if (isEachMailB) {
@@ -2115,6 +2115,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 		            rtnStatus = "OK";
 		        }
 		        
+		        //file system의 templist txt파일 삭제
+		        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+		        pDirPath += commonUtil.separator + stateName + ".txt";
+		        File f = new File(pDirPath);
+		        if (f.exists()) {
+		        	f.delete();
+		        }
+		        
 	        }
 	        
 	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제(스케줄러로 지우기로함.)
@@ -2192,16 +2200,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 	        folder.close(true);
 	        
-	        //file system의 templist txt파일 삭제
-	        String delId = request.getParameter("delid");
-	        String realPath = config.getProperty("data_root");
-	        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
-	        pDirPath += commonUtil.separator + delId + ".txt";
-	        File f = new File(pDirPath);
-	        if (f.exists()) {
-	        	f.delete();
-	        }
-	        
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		} finally {
@@ -2210,6 +2208,36 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 			}
 		}
 		
+		//첨부파일 정보파일(templist) 삭제
+		String delId = request.getParameter("delid");
+        String realPath = config.getProperty("data_root");
+        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+        pDirPath += commonUtil.separator + delId + ".txt";
+        File f = new File(pDirPath);
+        if (f.exists()) {
+        	f.delete();
+        }
+		
+		return "";
+	}
+	
+	/**
+	 * 첨부파일 정보파일(templist) 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/delAttachListFile.do", produces = "text/html")
+	@ResponseBody
+	public String delAttachListFile(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+        String delId = request.getParameter("delid");
+        String realPath = config.getProperty("data_root");
+        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+        pDirPath += commonUtil.separator + delId + ".txt";
+        
+        File f = new File(pDirPath);
+        
+        if (f.exists()) {
+        	f.delete();
+        }
+        
 		return "";
 	}
 	
