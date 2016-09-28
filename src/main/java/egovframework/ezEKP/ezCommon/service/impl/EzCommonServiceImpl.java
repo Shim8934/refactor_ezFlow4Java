@@ -479,6 +479,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             }
         }
+        
         return m_ImageList;
     }
 	
@@ -682,23 +683,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 while ((len = in.read(buf)) != -1) {
                 	byteOutStream.write(buf, 0, len);
                 }
-//                if (m_ImageList[i].length() > 1) {
-//                	try {
-//                		deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
-//					} catch (Exception e) {
-//						deleteFile(m_ImageList[i].replace("&amp;", "&"));
-//					}
-//                }
+                if (m_ImageList[i].length() > 1) {
+                	if (m_ImageList[i].indexOf("files" + commonUtil.separator + "upload_approvalG") == -1) {
+                		try {
+                			deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
+                		} catch (Exception e) {
+                			deleteFile(m_ImageList[i].replace("&amp;", "&"));
+                		}
+                	}
+                }
             }
             
-            in.close();
-            byteOutStream.close();
             
             byte[] imageByte = byteOutStream.toByteArray();
             String strImageData = new String(Base64.encodeBase64String(imageByte));
             
+            in.close();
+            byteOutStream.close();
+            
             m_strMHT.append(strImageData + System.lineSeparator());
             m_strMHT.append("--" + m_strBoundary);
+            
         }
     }
 	
@@ -851,7 +856,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
         File file = new File(m_strLPath);
-System.out.println("@@@#11 : " + LfilePath);
+
         if (!file.exists()) {
         	file.mkdir();
         }

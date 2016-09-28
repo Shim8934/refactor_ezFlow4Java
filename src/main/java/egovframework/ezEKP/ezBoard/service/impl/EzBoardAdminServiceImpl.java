@@ -28,9 +28,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzBoardAdminService")
-public class EzBoardAdminServiceImpl implements EzBoardAdminService {	
+public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements EzBoardAdminService {	
 	
 	@Resource(name="EzBoardAdminDAO")
 	private EzBoardAdminDAO ezBoardAdminDAO;

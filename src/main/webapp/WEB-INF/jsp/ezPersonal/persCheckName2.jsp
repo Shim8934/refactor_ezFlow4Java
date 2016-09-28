@@ -3,27 +3,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><spring:message code='ezPersonal.t3'/></title>
+		<title><spring:message code='ezPersonal.t100002'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script src="/js/ezPersonal/ListView_list.js" type="text/javascript"></script>
-		<script type="text/javascript">
+		<script language="javascript" type="text/javascript">
 		    var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var ReturnFunction;
-		    var RetValue;
 		    window.onload = function () {
-		        
+		        try {
+		            RetValue = parent.checkname2_cross_dialogArguments[0];
+		            ReturnFunction = parent.checkname2_cross_dialogArguments[1];
+		        } catch (e) {
 		            try {
-		                ReturnFunction = opener.checkname2_cross_dialogArguments[1];
 		                RetValue = opener.checkname2_cross_dialogArguments[0];
+		                ReturnFunction = opener.checkname2_cross_dialogArguments[1];
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
-		        
+		        }
 		
 		        var listview = new ListView();
 		        listview.SetID("ListView1");
@@ -31,68 +33,74 @@
 		        listview.SetMulSelectable(true);
 		        listview.SetRowOnDblClick("change_onClick");
 		        listview.DataSource(loadXMLString(listviewheader.innerHTML.toUpperCase()));
-		        listview.DataBind("ListView");
+		        listview.DataBind("ListViewItem");
 		        listview.DataSource(RetValue["addrBook"]);
 		        listview.RowDataBind();
-		    };
+		    }
 		    function change_onClick() {
-		        var count1;
-		        var selectedItemCount;
-		        var selRow;
-		
+		        
 		        var listview = new ListView();
 		        listview.LoadFromID("ListView1");
-		        selectedItemCount = listview.GetSelectedRows().length;
-		        if (selectedItemCount == 0) {
-		            alert("<spring:message code='ezPersonal.t4'/>");
+		        var count1;
+		        var selecteditemcount = listview.GetSelectedRows().length;
+		        var selrow;
+		        if (selecteditemcount == 0) {
+		            alert("<spring:message code='ezPersonal.t207'/>");
 		            return;
 		        }
-		        else if (selectedItemCount > 1) {
-		            alert("<spring:message code='ezPersonal.t5'/>");
+		        else if (selecteditemcount > 1) {
+		            alert("<spring:message code='ezPersonal.t208'/>");
 		            return;
 		        }
-		        if (browserIE)
-		            RetValue["deptid"] = RetValue["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].text;
-		        else
-		            RetValue["deptid"] = RetValue["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].textContent;
-		
-		        if (CrossYN())
-		            ReturnFunction();
+		        
+		        if (ReturnFunction != null) {
+		            if (window.ActiveXObject)
+		                RetValue["deptid"] = RetValue["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].text;
+		            else
+		                RetValue["deptid"] = RetValue["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].textContent;
+		            ReturnFunction(RetValue);
+		        }
+		        else {
+		            dialogArguments["deptid"] = RetValue["addrBook"].getElementsByTagName("ROW")[listview.GetSelectedIndexes()].getElementsByTagName("DATA2")[0].text;
+		        }
 		
 		        window.close();
 		    }
+		
 		    function delete_onClick() {
-		        RetValue["recipientTDData"] = "delete";
-		        if (CrossYN())
-		            ReturnFunction();
+		        if (ReturnFunction != null) {
+		            RetValue["recipientTDData"] = "delete";
+		            ReturnFunction(RetValue);
+		        }
+		        else {
+		            dialogArguments["recipientTDData"] = "delete";
+		        }
 		
 		        window.close();
 		    }
 		    function cancel_onClick() {
-		        RetValue["recipientTDData"] = "dontprocess";
-		        if (CrossYN())
-		            ReturnFunction();
+		        if (ReturnFunction != null) {
+		            RetValue["recipientTDData"] = "dontprocess";
+		            ReturnFunction(RetValue);
+		        }
+		        else {
+		            dialogArguments["recipientTDData"] = "dontprocess";
+		        }
 		
 		        window.close();
 		    }
 		</script>
 	</head>
 	<body class="popup">
-		<xml id="listviewheader" style="display:none;">
+		<xml id="listviewheader" style="display:none">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <TYPE>NONE</TYPE>
 		        <NAME><spring:message code='ezPersonal.t6'/></NAME>
 		        <WIDTH>100</WIDTH>
-		        <SORTABLE>TRUE</SORTABLE>
-		        <RESIZIBLE>FALSE</RESIZIBLE>
-		        <MINSIZE>10</MINSIZE>
-		        <MAXSIZE>200</MAXSIZE>
-		        <NOWRAP>TRUE</NOWRAP>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='ezPersonal.t304'/></NAME>
+		        <NAME><spring:message code='ezPersonal.t9'/></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
@@ -102,22 +110,24 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		<h1><spring:message code='ezPersonal.t3'/></h1>
+		<object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT>
+		</object>
+		<h1><spring:message code='ezPersonal.t100002'/></h1>
 		<div id="close">
 		  <ul>
 		    <li><span onClick="delete_onClick()"><spring:message code='ezPersonal.t10'/></span></li>
 		  </ul>
 		</div>
-		<h2><spring:message code='ezPersonal.t11'/></h2>
-		<div class="listview">
-		  <div id="ListView" STYLE="Height:195px; border:0px;overflow-y:auto" ></div>
-		</div>
-		<div class="btnposition">
-		    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="cancel_onClick()" ><span><spring:message code='ezPersonal.t13'/></span></a>
-		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
+		<h2><spring:message code='ezPersonal.t100003'/></h2>
+		<div class="listview" style="overflow:auto;">
+		  <div id="ListViewItem" style="Width:587px; Height:195px; border:0px;overflow:auto;" ></div>
+		</div>
+		<div class="btnposition">
+		    <a class="imgbtn" onClick="change_onClick()"><span><spring:message code='ezPersonal.t12'/></span></a>
+		    <a class="imgbtn" onClick="cancel_onClick()"><span><spring:message code='ezPersonal.t13'/></span></a>
+		</div>
 	</body>
 </html>

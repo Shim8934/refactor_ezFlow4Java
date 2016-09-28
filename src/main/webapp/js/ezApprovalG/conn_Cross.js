@@ -18,7 +18,7 @@ function ConnExist(pprocessIdx, currTD) {
     if (GetElementsByTagName(xmlData, "confilepath").length > 0) {
         try {
             var ConnRootText = getNodeText(GetElementsByTagName(xmlData, "confilepath").item(0));
-            xmlData = loadXMLFile(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ConnRootText));
+            xmlData = loadXMLFile("/ezCommon/downloadAttach.do?filePath=" + encodeURI(ConnRootText));
         } catch (e) {
             return false;
         }
@@ -717,7 +717,7 @@ function getdocnumgroupid() {
     }
 }
 function checkValidation(xmlPath) {
-    var XMLURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(xmlPath);
+    var XMLURL = "/ezCommon/downloadAttach.do?filePath=" + encodeURI(xmlPath);
     var xmlpara = createXmlDom();
     xmlpara.async = false;
     xmlpara = loadXMLString(xmlPath.innerHTML);
@@ -890,7 +890,7 @@ function CheckSignImg() {
             if (obj[i].parentNode.id.indexOf("sign") >= 0) {
                 if (!obj[i].complete) {
                     if (typeof (obj[i].spath) != "undefined")
-                        obj[i].src = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + obj[i].spath;
+                        obj[i].src = "/ezCommon/downloadAttach.do?filePath=" + obj[i].spath;
                 }
             }
         }

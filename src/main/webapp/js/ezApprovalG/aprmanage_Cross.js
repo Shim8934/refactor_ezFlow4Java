@@ -1055,7 +1055,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             }
             else {
                 if (CrossYN() || NonActiveX == "YES")
-                    openLocation = "/myoffice/ezApprovalG/ReceivUI/recev_Cross.aspx";
+                    openLocation = "/ezApprovalG/recev.do";
                 else {
                     if (pUse_Editor == "")
                         openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG.aspx";

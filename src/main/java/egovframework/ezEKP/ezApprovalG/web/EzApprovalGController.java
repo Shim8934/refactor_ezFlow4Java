@@ -5043,6 +5043,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재G 메일보내기 Method
+	 */
 	@RequestMapping(value = "/ezApprovalG/sendToMailApproval.do")
 	public String sendToMailApproval(HttpServletRequest request) throws Exception{
 		String docHref = request.getParameter("docHref");
@@ -5052,5 +5055,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//TODO 결재문서 ezCommon 경로에 이미지 저장하는 부분 제외 아직까지 사용하는부분 없어서... 모바일쪽에서 사용할지도 
 		
 		return "redirect:/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+	}
+	
+	/**
+	 * 전자결재G 부서병렬합의 Method
+	 */
+	public String recev(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		String docID = request.getParameter("docID");
+		String draftFlag = request.getParameter("draftFlag");
+		return "";
 	}
 }

@@ -849,10 +849,10 @@ function btnSearchDept_onClick() {
                 checkname2_cross_dialogArguments[0] = rgParams;
                 checkname2_cross_dialogArguments[1] = btnSearchDept_onClick_Complete2;
 
-                DivPopUpShow(609, 372, "/myoffice/ezPersonal/PersonSearch/checkName2_Cross.aspx");
+                DivPopUpShow(609, 372, "/ezPersonal/checkName2.do");
             }
             else {
-                window.showModalDialog("/myoffice/ezPersonal/PersonSearch/checkName2_Cross.aspx", rgParams, "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken");
+                window.showModalDialog("/ezPersonal/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken");
 
                 if (rgParams["deptid"] != "") {
                     g_xmlHTTP = createXMLHttpRequest();

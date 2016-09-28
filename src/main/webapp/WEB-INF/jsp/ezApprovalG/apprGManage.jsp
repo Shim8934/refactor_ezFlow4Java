@@ -247,7 +247,6 @@
 		        var minusYear = parseInt(toDay.getFullYear()) - parseInt(pOpenYaer);
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
 		            AddOption(sel_year, i, i);
-		
 		            checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
@@ -1416,21 +1415,6 @@
 		    }
 		
 		</script>
-		<script type="text/vbscript">
-
-Function TextTrim(pStr)
-	
-	TextTrim = Trim(pStr)
-	
-End Function
-
-Function TextReplace(pStr, pStr1, pStr2)
-	
-	TextReplace = Replace(pStr, pStr1, pStr2)
-	
-End Function
-
-	</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
 		<h1><spring:message code='ezApprovalG.t102'/><span id="presentcell" style="color:#666;font-weight:normal;"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>

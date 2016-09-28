@@ -477,7 +477,7 @@ function SendDraftMappingSign(ret) {
             if (field) {
                 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
@@ -535,7 +535,7 @@ function SendDraftMappingSign(ret) {
             if (field) {
                 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
@@ -2073,7 +2073,7 @@ function putSignXML(SignXML) {
 
                         var strimg;
                         if (img.length >= 1) {
-                            strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]) + "' border=0 embedding='1' ";
+                            strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
                             strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
                             //message.BodySetAttribute(SignName, img[0]);

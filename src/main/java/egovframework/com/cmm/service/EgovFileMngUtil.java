@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,8 +26,10 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
+
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
@@ -49,7 +50,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
  *
  */
 @Component("EgovFileMngUtil")
-public class EgovFileMngUtil {
+public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 
     public static final int BUFF_SIZE = 2048;
 

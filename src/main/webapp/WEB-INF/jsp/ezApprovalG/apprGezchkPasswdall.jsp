@@ -17,6 +17,8 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var gUserID = "";
+		    var rsa = new RSAKey();
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();

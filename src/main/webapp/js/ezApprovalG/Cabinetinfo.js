@@ -182,7 +182,6 @@ function DelCabList_onclick()
 
 function TaskList_rowclick()
 {
-alert(200);
     var listview = new ListView(); 
     listview.LoadFromID("DivTaskList");
 
