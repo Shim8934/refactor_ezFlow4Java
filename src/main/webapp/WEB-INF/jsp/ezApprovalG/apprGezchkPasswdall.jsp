@@ -8,13 +8,13 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var gUserID = "";
 		    var rsa = new RSAKey();
@@ -50,11 +50,12 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {
-		        initKey();
-		        //var ua = navigator.userAgent;
-		        //if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		        //    KeEventControl(document.getElementById("inpPassword"));
-		        //}
+// 		        initKey();
+				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		        var ua = navigator.userAgent;
+		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+		           KeEventControl(document.getElementById("inpPassword"));
+		        }
 		        try {
 		            RetValue = parent.ezchkpasswd_all_cross_dialogArguments[0];
 		            ReturnFunction = parent.ezchkpasswd_all_cross_dialogArguments[1];

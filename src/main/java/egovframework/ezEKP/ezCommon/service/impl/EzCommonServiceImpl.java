@@ -683,15 +683,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 while ((len = in.read(buf)) != -1) {
                 	byteOutStream.write(buf, 0, len);
                 }
-                if (m_ImageList[i].length() > 1) {
-                	if (m_ImageList[i].indexOf("files" + commonUtil.separator + "upload_approvalG") == -1) {
-                		try {
-                			deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
-                		} catch (Exception e) {
-                			deleteFile(m_ImageList[i].replace("&amp;", "&"));
-                		}
-                	}
-                }
+//                if (m_ImageList[i].length() > 1) {
+//                	if (m_ImageList[i].indexOf("files" + commonUtil.separator + "upload_approvalG") == -1) {
+//                		try {
+//                			deleteFile(realPath + m_ImageList[i].replace("&amp;", "&"));
+//                		} catch (Exception e) {
+//                			deleteFile(m_ImageList[i].replace("&amp;", "&"));
+//                		}
+//                	}
+//                }
             }
             
             

@@ -4712,6 +4712,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String rtnVal = "OK/0/0/0";
 		int totCnt = 0, trueCnt = 0, falseCnt = 0;
 		
