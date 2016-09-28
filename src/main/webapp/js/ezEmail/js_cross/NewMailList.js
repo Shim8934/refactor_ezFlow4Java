@@ -219,8 +219,30 @@ function MakeListInfoHTML(ConentObject) {
                 _TDCheckBox.style.width = "22px";
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
-                if (p_ListorderValue == "GROUPSUBLIST") { _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); }; }
-                else { _TDCheckBox_Sub.onclick = function () { event_listCheckboxclick(this); }; }
+                
+                if (p_ListorderValue == "GROUPSUBLIST") { 
+                    _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); }; }
+                else { 
+                    _TDCheckBox_Sub.onclick = function () { 
+                            event.cancelBubble = true;
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            }
+                            
+                            event_listCheckboxclick(this);
+                        };
+                        
+                        _TDCheckBox.onclick = function () {
+                            event.cancelBubble = true;
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            }               
+                            
+                            this.children[0].checked = !this.children[0].checked;
+                            event_listCheckboxclick(this.children[0]);
+                        };
+                }
+                
                 _TDCheckBox_Sub.style.margin = "0px";
                 _TDCheckBox_Sub.style.padding = "0px";
                 _TDCheckBox_Sub.style.width = "13px";
