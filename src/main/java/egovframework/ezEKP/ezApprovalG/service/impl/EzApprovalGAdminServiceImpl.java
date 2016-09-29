@@ -1935,6 +1935,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private String makeDate (String year, String month, String day, boolean startFlag) throws Exception {
 		String result = "";
 		
+		if (month.length() == 1) {
+			month = "0" + month;
+		}
+		
 		if (!year.equals("") && !month.equals("") && !day.equals("")) {
 			result = year + "-" + month + "-" + day;
 			

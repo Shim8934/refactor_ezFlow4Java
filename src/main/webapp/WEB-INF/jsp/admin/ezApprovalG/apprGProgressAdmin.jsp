@@ -10,6 +10,7 @@
 			var i_currentDownload = 0;
 			var i_totalSize = 0;
 			var i_downSize = 0;
+			/* var i_icd = new ActiveXObject("EzIcd2.ezLauncher"); */
 			
 			function StartOn()
 			{
@@ -72,7 +73,7 @@
 	</head>
 
 	<body id=theBody bgcolor="#dedede" leftmargin="0" topmargin="0">
-		<OBJECT id="i_icd" style="DISPLAY: none" codeBase="/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+		<OBJECT id="i_icd" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
 		<table width="390" border="0" cellspacing="0" cellpadding="3" vspace="0" hspace="0">
   			<tr> 
     			<td colspan="2"> 

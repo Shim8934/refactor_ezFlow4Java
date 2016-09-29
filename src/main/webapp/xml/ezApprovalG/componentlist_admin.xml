@@ -35,18 +35,18 @@
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
-	<activex>
-		<url size="36" os="all">DOWNLOADSERVER/files/component/FormPoster.ent</url>
-		<clsid>19E224CA-6992-425C-8006-8FA6FD2BD9E5</clsid>
-		<version>1,0,0,12</version>
-		<compressed>dll</compressed>
-		<type>inproc</type>
-	</activex>
-	<activex>
-		<url size="109" os="all">DOWNLOADSERVER/files/component/ezUtil.ent</url>
-		<clsid>047A6352-670F-4EDF-AD3F-B565B62899A6</clsid>
-		<version>1,0,1,79</version>
-		<compressed>dll</compressed>
-		<type>inproc</type>
-	</activex>
+<!-- 	<activex> -->
+<!-- 		<url size="36" os="all">DOWNLOADSERVER/files/component/FormPoster.ent</url> -->
+<!-- 		<clsid>19E224CA-6992-425C-8006-8FA6FD2BD9E5</clsid> -->
+<!-- 		<version>1,0,0,12</version> -->
+<!-- 		<compressed>dll</compressed> -->
+<!-- 		<type>inproc</type> -->
+<!-- 	</activex> -->
+<!-- 	<activex> -->
+<!-- 		<url size="109" os="all">DOWNLOADSERVER/files/component/ezUtil.ent</url> -->
+<!-- 		<clsid>047A6352-670F-4EDF-AD3F-B565B62899A6</clsid> -->
+<!-- 		<version>1,0,1,80</version> -->
+<!-- 		<compressed>dll</compressed> -->
+<!-- 		<type>inproc</type> -->
+<!-- 	</activex> -->
 </components>

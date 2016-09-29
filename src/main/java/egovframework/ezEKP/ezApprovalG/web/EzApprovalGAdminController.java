@@ -1803,8 +1803,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = ezApprovalGAdminService.searchManageAprDocList(docNumber, docTitle, drafter, drafter2, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear,draftToMonth,draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, formID, draftDeptName, 
 				draftDeptName2,pageNum, pageSize, docState, subQuery, orderCell, orderOption, companyID, userInfo.getPrimary(), approvUser);
-		
-		return result; 
+        
+        return result; 
 	}
 	
 	/**
