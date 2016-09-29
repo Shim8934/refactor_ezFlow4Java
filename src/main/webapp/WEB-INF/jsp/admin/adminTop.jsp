@@ -10,7 +10,7 @@
 		<script>
 			function window_onload(){
 				if("<c:out value='${use_portal}'/>" != 'YES'){
-					window.open("index_personal.aspx","bottom")
+					window.open("index_personal.aspx","bottom");
 				}else{
 					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 					window.open("/admin/ezBoard/boardMain.do", "bottom");
@@ -87,7 +87,7 @@
                 i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
                 i_icd2.CheckVersion();
                 var nCount = i_icd2.nNeedDownload;
-
+				
                 if (nCount) {
                     if_Progress.StartOn();
                 }

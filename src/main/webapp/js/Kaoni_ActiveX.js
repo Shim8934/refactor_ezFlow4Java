@@ -1,34 +1,6 @@
-
-// ezicd
-//<SCRIPT language='JavaScript'>ezIcd_ActiveX("icdbho");</SCRIPT>
-
-// ezUtil
-//<SCRIPT language='JavaScript'>ezUtil_ActiveX("ezUtil");</SCRIPT>
-
-// 폼프로세스 
-//<SCRIPT language='JavaScript'>FormProc_ActiveX("pzFormProc","1");</SCRIPT>
-
-// TreeView 
-//<SCRIPT language='JavaScript'>ezTreeView_ActiveX("behave1");</SCRIPT>
-
-// ListView 
-//<SCRIPT language='JavaScript'>ezListView_ActiveX("behave1");</SCRIPT>
-
-// Dhtml 에디터 메뉴부분
-//<SCRIPT language='JavaScript'>ezToolBar_ActiveX("behave1", "./ToolbarScriptLet.htm");</SCRIPT>
-
-// Dhtml 에디터 에디터부분
-//<SCRIPT language='JavaScript'>ezDhtmlEditor_ActiveX("behave1");</SCRIPT>
-
-// oPoster
-//<SCRIPT language='JavaScript'>ezOPoster_ActiveX("behave1");</SCRIPT>
-
-// 한글
-//<SCRIPT language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "", "");</SCRIPT>
-
 function ezIcd_ActiveX(idName)
 {
-	document.writeln('<OBJECT id="' + idName + '" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,2,5" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="')
+	document.writeln('<OBJECT id="' + idName + '" style="DISPLAY: none" codeBase="/ezIcd2.cab#version=1,0,2,5" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="')
 	document.writeln('classid="CLSID:475DF11A-2BC2-41A9-8A97-E989E023E517" VIEWASTEXT></OBJECT>');
 }
 
@@ -154,12 +126,10 @@ function ezWordCtrl_ActiveX(idName, width, height, version, extentx, extenty, st
 	document.writeln("</OBJECT>");
 }
 
-// 20090316 EzHTTPTrans 기능 추가
 function EzHTTPTrans_ActiveX(idName){
 	document.writeln('<object classid="clsid:BE4A5C56-B0FF-4A4C-AA95-D44BA796B1B7" id="'+idName+'" width=0 height=0></object>');
 }
 
-// 20090316 Drag & Drop 기능 추가
 function EzHTTPTrans_ActiveX2(idName){
     document.writeln('<object classid="clsid:BE4A5C56-B0FF-4A4C-AA95-D44BA796B1B7" id="'+idName+'" style="HEIGHT: 100%;  WIDTH: 100%" ></object>');
 }
