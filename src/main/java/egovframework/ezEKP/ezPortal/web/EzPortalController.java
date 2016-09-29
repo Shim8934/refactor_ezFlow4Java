@@ -386,14 +386,21 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 				
 			if (userInfo.getLang().equals("1")) {
-				//resp.cookies skinnum
 				//currSkin = skinNum;
+				Cookie skinCookie = new Cookie("skinNum", skinNum);
+				resp.addCookie(skinCookie);
 			} else if (userInfo.getLang().equals("2")) {
 				//currSkin = skinNum + "_2";
+				Cookie skinCookie = new Cookie("skinNum", skinNum + "_2");
+				resp.addCookie(skinCookie);
 			} else if (userInfo.getLang().equals("3")) {
 				//currSkin = skinNum + "_3";
+				Cookie skinCookie = new Cookie("skinNum", skinNum + "_3");
+				resp.addCookie(skinCookie);
 			} else if (userInfo.getLang().equals("4")) {
 				//currSkin = skinNum + "_4";
+				Cookie skinCookie = new Cookie("skinNum", skinNum + "_4");
+				resp.addCookie(skinCookie);
 			}
 				
 			//새로만들기
@@ -608,11 +615,23 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 			}
 			
 			// 스킨폴더 정의
-			if (req.getParameter("skinNum") != null &&  !req.getParameter("skinNum").equals("")) {
-				//respons skinNum
+			Cookie[] cookies = req.getCookies();
+			String skinCookieValue = "";
+			if (cookies != null) {
+				for (int i=0; i<cookies.length; i++) {
+					if (cookies[i].getName().equals("skinNum")) {
+						skinCookieValue = cookies[i].getValue();
+					}
+				}
 			}
-			skinType = req.getParameter("skinNum");
-			if (skinType != null && skinType.trim().equals("")) {
+			
+			if (skinCookieValue == null || skinCookieValue.equals("")) {
+				Cookie skinCookie = new Cookie("skinNum", "1");
+				resp.addCookie(skinCookie);
+			}
+			
+			skinType = skinCookieValue;
+			if (skinType == null || skinType.equals("")) {
 				skinType = "1";
 			}
 			skinType = "skin_" + skinType;
@@ -649,13 +668,11 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
-System.out.println("strHTML:"+strHTML);
 				} else {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
-System.out.println("strHTML1:"+strHTML);
 				}
 			}
 			
@@ -1930,11 +1947,23 @@ System.out.println("strHTML1:"+strHTML);
 			}
 			
 			// 스킨폴더 정의
-			if (req.getParameter("skinNum") != null &&  !req.getParameter("skinNum").equals("")) {
-				//respons skinNum
+			Cookie[] cookies = req.getCookies();
+			String skinCookieValue = "";
+			if (cookies != null) {
+				for (int i=0; i<cookies.length; i++) {
+					if (cookies[i].getName().equals("skinNum")) {
+						skinCookieValue = cookies[i].getValue();
+					}
+				}
 			}
-			skinType = req.getParameter("skinNum");
-			if (skinType != null && skinType.trim().equals("")) {
+			
+			if (skinCookieValue == null || skinCookieValue.equals("")) {
+				Cookie skinCookie = new Cookie("skinNum", "1");
+				resp.addCookie(skinCookie);
+			}
+			
+			skinType = skinCookieValue;
+			if (skinType == null || skinType.equals("")) {
 				skinType = "1";
 			}
 			skinType = "skin_" + skinType;
