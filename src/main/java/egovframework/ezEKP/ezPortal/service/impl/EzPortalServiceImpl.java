@@ -1782,7 +1782,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         }
                         sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
                         sb.append("</tbody>\n</table>\n</td>\n");
-System.out.println("renderedColumn:"+getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             		} else {
             			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             		}
@@ -1896,7 +1895,6 @@ System.out.println("renderedColumn:"+getRenderedPortalPageColumn(pPortalPageID, 
                     if (pMode.equals("edit")) {
                     	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
                         sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-System.out.println("renderedColumnInsert:"+getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
                         sb.append("</tbody>\n</table>\n</td>\n");
                     }
             	} else {
@@ -2028,17 +2026,14 @@ System.out.println("renderedColumnInsert:"+getRenderedPortalPageColumnInsert(pPo
             		} else {
             			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
             		}
-System.out.println("portletType:"+portletType);
             		if (portletType == 0) {
             			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
             				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
             			}
             		} else {
             			sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
-System.out.println("renderedHTMLInsert:"+getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo));
             		}
             		sb.append("</TR>\n");
-System.out.println("sb:"+sb.toString());
             	} else {
             		if (gTableViewOption.equals("D")) {
             			if (i == 0) {
