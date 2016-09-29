@@ -91,27 +91,35 @@
 			catch (e) {}
 	
 			// 보기모드에서 미리보기가 아닌 경우 실행
-			if (mode == "view" && viewmode != "preview")
-			{
+			if (mode == "view" && viewmode != "preview") {
 			    var agentObj;
-			    if (!CrossYN()) {
+			     if (!CrossYN()) {
+			    	 //브라우저 정보 가져오기
+			    	var userAgent = window.navigator.userAgent;
+					
+			    	//IE9, IE10 일때만 ActiveX 설치하게 설정
+					if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0) {
+						var objectNode = document.getElementById("objectDiv");
+				    	 objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+					}
+		
 			        GetObject();
 			        ezNotieSetting();
-			    }
+			    } 
 //				window.setInterval("update_connectinfo()", 30000);	
 			}
 		}
 		function ezNotieSetting() {
-		 <%--추후수정    var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
+		    var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
 		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-                <% if (GetSystemConfigValue("USE_RSA").ToString() == "YES") {%>
+                <% if ("${useRSA}" == "YES") {%>
 		            ezUtil.ExecuteNoti4("", "${userInfo.id}", pwd, "", g_serverpath);
 		        <% } else { %>
 		            ezUtil.ExecuteNoti3("", "${userInfo.id}", pwd, "", g_serverpath);
                 <%}%>
 				ezUtil = null;
             } catch (e) {
-            } --%>
+            }
         }
 		function GetObject() {
 		    var agentObj;
@@ -120,19 +128,17 @@
 
 		    var agentObj;
 		    i_icd2.SetDocumentDisp(window.document);
-		    i_icd2.xmlURL = "http://" + document.location.hostname + "/binary/componentlist_transfer.aspx";
+		    i_icd2.xmlURL = "http://" + document.location.hostname + "/admin/ezPortal/componentListTransfer.do";
 		    i_icd2.CheckVersion();
 		    var nCount = i_icd2.nNeedDownload;
 		    if (nCount) {
 		        if_Progress.StartOn();
-		    }
-		    else {
+		    } else {
 		        finish_download();
 		    }
 		}
 
-		function finish_download()
-		{
+		function finish_download() {
 			OfficeBugPatch();	
 			popupNotice();
 		}
@@ -142,8 +148,7 @@
 		}
 		
 		// 2009.11.25 - 소스보기시 개인정보 유출방지
-        function CheckPwd()
-        {
+        function CheckPwd() {
                 var strPwd = "";
                 var xmlhttp = createXMLHttpRequest();
                 xmlhttp.open("POST", "interASP/CheckPwd.aspx", false);
@@ -158,9 +163,7 @@
         }
 
 		
-	
-		function popupNotice()
-		{
+		function popupNotice() {
 			//document.all.ifmpopup.src ="popup_menu.aspx";
 		}
 
@@ -180,21 +183,18 @@
 		} */
 		
 		var bLogOutNOTICE = false;
-		function event_update_connectinfo()
-		{
+		function event_update_connectinfo() {
 			if (xmlHTTP.readyState != 4)
 				return;
 			
-			if (xmlHTTP.status == 200 && xmlHTTP.responseText == "LOGOUT")
-			{
+			if (xmlHTTP.status == 200 && xmlHTTP.responseText == "LOGOUT") {
 				blogout = true;
 				alert("<spring:message code='ezPortal.t346' />");
 				window.top.location.href = "/user/login/actionLogout.do";
 			}
 		}
 		
-		function change_menu(idx, navigation_info)
-		{
+		function change_menu(idx, navigation_info) {
 			
 		}
 
@@ -1514,9 +1514,12 @@
 		}
 		</script>
 	</head>
-			
-		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>> 
-	
+		<%String browser = (String)request.getHeader("User-Agent"); %>	
+		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>>
+		<%-- <%if (browser.indexOf("Trident/5.0") > 0 || browser.indexOf("Trident/6.0") > 0){ %>  
+			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+		<%} %> --%> 
+		<div id="objectDiv"></div>
 		<%if (!mode.equals("view")) { %>	      
 		<!-- 메뉴 -->
 		<h1><spring:message code='ezPortal.t363' /></h1>
@@ -1582,7 +1585,7 @@
 			           
 		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
 		${script1}
-	<iframe id=if_Progress style="display:none" src="/binary/Progress.htm"></iframe>
+	<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
 	<iframe id=ifmpopup style="display:none" src=""></iframe>
 	</body>
 </html>

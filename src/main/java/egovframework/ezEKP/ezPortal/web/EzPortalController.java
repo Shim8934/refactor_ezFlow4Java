@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezPortal.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -562,7 +565,6 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		String pThemeSelectObject = "";
 		String gubunFlag = "";
 		String portalPageCategoryXML = "";
-		String pageOption = "";
 		try {
 			userInfo = commonUtil.userInfo(loginCookie);
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
@@ -590,10 +592,6 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 			// 마이포탈페이지 ID
 			if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
 				myPortalPageID = req.getParameter("myPortalPageID");
-			}
-			
-			if (req.getParameter("pageOption") != null && !req.getParameter("pageOption").trim().equals("")) {
-				pageOption = req.getParameter("pageOption");
 			}
 			
 			if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
@@ -1624,13 +1622,10 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		
 		String pSearchString = "";
 		String portalGubun = "";
-		String portalPageCategoryXML = "";
-		String myPortalListXML = "";
 		String parentPageID = "";
 		String pageID = "";
 		String gubunFlag = "";
 		String newMyPortalPage = "";
-		String newMyPortalPageXML = "";
 		String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
@@ -2210,5 +2205,40 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		
 		model.addAttribute("mainHTML", mainHTML);
 		return "/ezPortal/portalMenuItemSearch";
+	}
+	
+	/**
+	 * 포탈 ActiveX 다운로드 목록 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		StringBuilder result = new StringBuilder();
+		String realPath = commonUtil.getRealPath(request); 
+		String path = "xml" + commonUtil.separator + "ezPortal" + commonUtil.separator + "componentlist.xml";
+		path = realPath + commonUtil.separator + path;
+		try {
+			File file = new File(path);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = null;
+	
+			while ((line = br.readLine()) != null) {
+				result.append(line);
+			}
+			
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
+	}
+	
+	/**
+	 * 포탈 ActiveX 다운로드 실행 함수
+	 */
+	@RequestMapping(value = "/ezPortal/progress.do")
+	public String progress() {
+		return "/ezPortal/portalProgress";
 	}
 }
