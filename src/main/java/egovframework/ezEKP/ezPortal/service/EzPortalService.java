@@ -197,6 +197,8 @@ public interface EzPortalService {
 	
 	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID) throws Exception;
 	
+	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList) throws Exception;
+	
 	public int getUserInfo4 (String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception;
 	
 	public int getMenuItemHtml (String uID) throws Exception;

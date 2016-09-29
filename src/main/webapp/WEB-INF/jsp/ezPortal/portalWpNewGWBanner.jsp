@@ -13,7 +13,7 @@
             	var pTop = (pheight - 750) / 2;
             	var pLeft = (pwidth - 1000) / 2;
 
-            	window.open("/help/help.aspx", "", "height=700px,width=1000px,top=" + pTop + ",left = " + pLeft + "status = no, toolbar=no, menubar=no, location=no, resizable=0");
+            	window.open("/ezPortal/help/help.do", "", "height=700px,width=1000px,top=" + pTop + ",left = " + pLeft + "status = no, toolbar=no, menubar=no, location=no, resizable=0");
         	}
 		</script>
 	</head>	

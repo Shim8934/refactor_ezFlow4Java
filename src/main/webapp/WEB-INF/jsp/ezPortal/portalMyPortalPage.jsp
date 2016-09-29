@@ -636,12 +636,9 @@
 
 		    // 영역 선택시 처리selectcell
 
-		function selectcell(e)
-		{
-			try
-			{
-			    
-			    var Event = e ? e : window.event;
+		function selectcell(e) {
+			try {
+				var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    if (Element.getAttribute("id") == "") return;
 			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
@@ -649,7 +646,6 @@
 				if (previousCell != null) previousCell.style.backgroundColor = "white";
 				previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
 				previousCell.style.backgroundColor = "lightblue";
-				
 				
 				// 현재 선택된 cell (id='tdXXX')
 				var cell = eval(selectedCell);
@@ -667,13 +663,11 @@
 				    maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
 				
 				// 해당 table의 height를 구한다.
-				for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++)
-				{
+				for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
 					try{
 					    compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
 						
-						if (compareHeight != "")
-						{
+						if (compareHeight != "") {
 							if (parseInt(compareHeight, 10) > maxHeight)
 								maxHeight = parseInt(compareHeight, 10);
 						}
@@ -694,8 +688,7 @@
 				document.getElementById("txtHeight").disabled = false;
 				
 				// 메인테이블이 수정되는 경우를 고려
-				if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%")
-				{
+				if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%") {
 					document.getElementById("txtWidth").value = "*";
 					
 					// 메인테이블을 제외하고 테이블 너비 조정불가
@@ -704,8 +697,7 @@
 				}
 				
 				// 상속받은 페이지인 경우 테이블 사이즈 조정 불가
-				if (parentpageid.toLowerCase() != "top")
-				{
+				if (parentpageid.toLowerCase() != "top") {
 					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid)
 					{
 						document.getElementById("txtWidth").disabled = true;
@@ -719,22 +711,14 @@
 			} catch (e) {}
 		}
 
-		function selectcellTitle(e)
-		{
+		function selectcellTitle(e) {
 		    var Event = e ? e : window.event;
 		    var Element = Event.target ? Event.target : Event.srcElement;
 		    selectcell2(Element.parentElement.parentElement.parentElement.parentElement);
-		    //Element.parentElement.parentElement.parentElement.parentElement.click();
-		    //e.cancalBubble = true;
-		    //e.returnValue = false;
-			//event.srcElement.parentElement.parentElement.parentElement.parentElement.click();
-			//event.cancalBubble = true;
-			//event.returnValue = false;
+		    
 		}
-		function selectcell2(obj)
-		{
-		    try
-            {
+		function selectcell2(obj) {
+		    try {
 		        if (obj.getAttribute("id") == "") return;
 		        if (obj.getAttribute("id").indexOf("sub") > -1) return;
 		        selectedCell = obj.getAttribute("id");
@@ -813,8 +797,7 @@
 
         }
 
-		function selectsubcell(e)
-		{
+		function selectsubcell(e) {
 		    var Event = e ? e : window.event;
 		    var eventItem = Event.target ? Event.target : Event.srcElement;
 
@@ -1542,9 +1525,9 @@
 		function ACLEdit()
 		{
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
-		        window.open("PortalPage_ACL.aspx?uid=" + pageid, "", "height = 620px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 620));
+		        window.open("/ezPortal/portalPageACL.do?uID=" + pageid, "", "height = 620px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 620));
 		    else
-		        window.open("PortalPage_ACL.aspx?uid=" + pageid, "", "height = 620px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 620));
+		        window.open("/ezPortal/portalPageACL.do?uID=" + pageid, "", "height = 620px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(600, 620));
 		}
 		
 		// 테이블 크기 조정

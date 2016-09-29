@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
+import egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
@@ -1778,9 +1779,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         }
                         if (pMode.equals("edit")) {
                         	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                        	sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
-                            sb.append("</tbody>\n</table>\n</td>\n");
                         }
+                        sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
+                        sb.append("</tbody>\n</table>\n</td>\n");
+System.out.println("renderedColumn:"+getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             		} else {
             			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
             		}
@@ -1822,7 +1824,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             dsb.append("<tr id='main_row'>\n");
             dsb.append("<td id='td"+ UUID.randomUUID().toString().substring(0, 4) +"' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
             dsb.append("<TBODY>");
-            if (pMode.equals("edit")) dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+            if (pMode.equals("edit")) {
+            	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+            }
             dsb.append("</TBODY></table></td>");
             dsb.append("</tr></table>");
             String defaultValue = dsb.toString();
@@ -1846,90 +1850,89 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                 else sb.append("height=100% ");
                 sb.append("style='table-layout:fixed;'>\n");
                 sb.append("<tr id='main_row'>\n");
-            } else {
-            	for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
-            		if (pMode.equals("edit")) {
-            			String columnWidth = "*";
-            			if (i == Integer.parseInt(pageColumnLength) - 1) {
-            				if (i ==0) {
-            					sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top>\n");
-            				} else {
-            					sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
-            				}
-            				
-            				if (!pageColumnSplit.equals("")) {
-            					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-            						columnWidth = pageColumnSplit.split(";")[i] + "px";
-            						if (columnWidth.equals("9999px")) {
-            							sb.append(">\n");
-            						} else {
-            							sb.append(" style='width:" + columnWidth + "'>\n");
-            						}
-            					} 
-            				} else {
-            					sb.append(">\n");
-            				}
-            			} else {
-            				sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
-            				if (!pageColumnSplit.equals("")) {
-            					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-            						columnWidth = pageColumnSplit.split(";")[i] + "px";
-            						if (columnWidth.equals("9999px")) {
-            							sb.append(">\n");
-            						} else {
-            							sb.append(" style='width:" + columnWidth + "'>\n");
-            						}
-            					}
-            				} else {
-            					sb.append(">\n");
-            				}
-            			} 
-            			sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                        sb.append("<TBODY>\n");
-                        if (columnWidth.equals("9999px")) {
-                        	columnWidth = "*";
-                        }
-                        if (pMode.equals("edit")) {
-                        	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                        	sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-                            sb.append("</tbody>\n</table>\n</td>\n");
-                        }
-            		} else {
-            			if (gTableViewOption.equals("D")) {
-            				sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-            			} else {
-            				String columnWidth = "*";
-                			if (i == Integer.parseInt(pageColumnLength) - 1) {
-               					sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style='padding-left:20px;'>\n");
-                			} else {
-                				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
-                				if (!pageColumnSplit.equals("")) {
-                					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-                						columnWidth = pageColumnSplit.split(";")[i] + "px";
-                						if (columnWidth.equals("9999px")) {
-                							columnWidth = "100%";
-                							if (i == 0) {
-                								sb.append(" style='width:" + columnWidth + ";padding-right:20px;padding-left:5px;'>\n");
-                							} else {
-                								sb.append(" style='width:" + columnWidth + "'>\n");
-                							}
-                						} 
-                					} 
-                				} else {
-                					sb.append(">\n");
-                				}
-                			}
-                			if (pMode == "edit") sb.append(columnWidth);
-                            sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-                            sb.append("</td>\n");
-            			}
-            		}
-            	}
-            	if (pMode.equals("edit")) {
-    				sb.append("</tr>\n</table>\n");
-    			}
             }
             
+            for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
+            	if (pMode.equals("edit")) {
+            		String columnWidth = "*";
+            		if (i == Integer.parseInt(pageColumnLength) - 1) {
+            			if (i ==0) {
+            				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top>\n");
+            			} else {
+            				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+            				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+                				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+                					columnWidth = pageColumnSplit.split(";")[i] + "px";
+                					if (columnWidth.equals("9999px")) {
+                						sb.append(">\n");
+                					} else {
+                						sb.append(" style='width:" + columnWidth + "'>\n");
+                					}
+                				} 
+                			} else {
+                				sb.append(">\n");
+                			}
+            			}
+            		} else {
+            			sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
+            			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+            				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+            					columnWidth = pageColumnSplit.split(";")[i] + "px";
+            					if (columnWidth.equals("9999px")) {
+            						sb.append(">\n");
+            					} else {
+            						sb.append(" style='width:" + columnWidth + "'>\n");
+            					}
+            				}
+            			} else {
+            				sb.append(">\n");
+            			}
+            		} 
+            		sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+            		sb.append("<TBODY>\n");
+                    if (columnWidth.equals("9999px")) {
+                    	columnWidth = "*";
+                    }
+                    if (pMode.equals("edit")) {
+                    	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                        sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+System.out.println("renderedColumnInsert:"+getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                        sb.append("</tbody>\n</table>\n</td>\n");
+                    }
+            	} else {
+            		if (gTableViewOption.equals("D")) {
+            			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+            		} else {
+            			String columnWidth = "*";
+                		if (i == Integer.parseInt(pageColumnLength) - 1) {
+               				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style='padding-left:20px;'>\n");
+                		} else {
+                			sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+                			if (!pageColumnSplit.equals("")) {
+                				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+                					columnWidth = pageColumnSplit.split(";")[i] + "px";
+                					if (columnWidth.equals("9999px")) {
+                						columnWidth = "100%";
+                						if (i == 0) {
+                							sb.append(" style='width:" + columnWidth + ";padding-right:20px;padding-left:5px;'>\n");
+                						} else {
+                							sb.append(" style='width:" + columnWidth + "'>\n");
+                						}
+                					} 
+                				} 
+                			} else {
+                				sb.append(">\n");
+                			}
+                		}
+                		if (pMode == "edit") sb.append(columnWidth);
+                		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                        sb.append("</td>\n");
+            		}
+            	}
+            }
+            if (pMode.equals("edit")) {
+    			sb.append("</tr>\n</table>\n");
+    		}
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2025,15 +2028,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             		} else {
             			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
             		}
-      		
+System.out.println("portletType:"+portletType);
             		if (portletType == 0) {
             			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
             				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
             			}
             		} else {
             			sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+System.out.println("renderedHTMLInsert:"+getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo));
             		}
             		sb.append("</TR>\n");
+System.out.println("sb:"+sb.toString());
             	} else {
             		if (gTableViewOption.equals("D")) {
             			if (i == 0) {
@@ -2829,5 +2834,35 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
 	}
 	
+	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList) throws Exception {
+		String retXML = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pENDROW", pEndRow);
+		map.put("v_pDISPLAYNAME", pDisplayName);
+		List<PortalSearchMenuItemVO> list = ezPortalDAO.searchMenuItem(map);
+		
+		String strXML = "<DATA>";
+		for (int i=0; i<list.size(); i++) {
+			strXML += commonUtil.getQueryResult(list.get(i));
+		}
+		strXML += "</DATA>";
+		
+		Document xmlDom = commonUtil.convertStringToDocument(strXML);
+		
+		retXML = "<DATA>";
+		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+			if (i >= pStartRow - 1) {
+				retXML += "<ROW>";
+				retXML += "<UID_>" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim() + "</UID_>";
+				retXML += "<DISPLAYNAME>" + xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent().trim() + "</DISPLAYNAME>";
+				retXML += "</ROW>";
+			}
+		}
+		retXML += "</DATA>";
+		return retXML;
+	}
+	
 }
+
 

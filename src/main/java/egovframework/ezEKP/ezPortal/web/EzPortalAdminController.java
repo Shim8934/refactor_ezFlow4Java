@@ -2412,4 +2412,14 @@ System.out.println("strXML:"+strXML);
 		return ret;
 	}
 	
+	/**
+	 * 관리자 포탈 포탈페이지 초기화 실행 함수  // 
+	 */
+	@RequestMapping(value = "/admin/ezPortal/resetPortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String resetPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		
+		return "";
+	}
+	
 }

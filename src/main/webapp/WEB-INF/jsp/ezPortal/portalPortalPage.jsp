@@ -23,6 +23,7 @@
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<c:url value='/js/ezPortal/showModalDialog.js'/>" ></script>
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;
@@ -68,7 +69,7 @@
 			
 			if (mode != "view") {
 				// 포탈페이지 카테고리 정보
-				var PortalPageCategoryXML = "${partalPageCategoryXML}";
+				var PortalPageCategoryXML = "${portalPageCategoryXML}";
 				if (PortalPageCategoryXML != "")
 				{
 				    var xmldom = createXmlDom();
@@ -617,11 +618,8 @@
 
 		    // 영역 선택시 처리selectcell
 
-		function selectcell(e)
-		{
-			try
-			{
-			    
+		function selectcell(e) {
+alert("??");
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    if (Element.getAttribute("id") == "") return;
@@ -692,11 +690,10 @@
 				
 				// 선택한 개체의 종류
 				selObjClass = "TABLE";
-			} catch (e) {}
+			
 		}
 
-		function selectcellTitle(e)
-		{
+		function selectcellTitle(e) {
 		    var Event = e ? e : window.event;
 		    var Element = Event.target ? Event.target : Event.srcElement;
 		    selectcell2(Element.parentElement.parentElement.parentElement.parentElement);
@@ -707,10 +704,7 @@
 			//event.cancalBubble = true;
 			//event.returnValue = false;
 		}
-		function selectcell2(obj)
-		{
-		    try
-            {
+		function selectcell2(obj) {
 		        if (obj.getAttribute("id") == "") return;
 		        if (obj.getAttribute("id").indexOf("sub") > -1) return;
 		        selectedCell = obj.getAttribute("id");
@@ -779,12 +773,11 @@
 				
 		        // 선택한 개체의 종류
 		        selObjClass = "TABLE";
-		    } catch (e) {}
+		   
 
         }
 
-		function selectsubcell(e)
-		{
+		function selectsubcell(e) {
 		    var Event = e ? e : window.event;
 		    var eventItem = Event.target ? Event.target : Event.srcElement;
 
@@ -801,8 +794,7 @@
 				if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
 			} catch(e) {}
 
-			if (selectedSubCell.substr(0,2).toLowerCase() != "su") 
-			{
+			if (selectedSubCell.substr(0,2).toLowerCase() != "su") {
 				selectedSubCell = "";
 				return;
 			}
@@ -882,6 +874,7 @@
 		}
 
 		// 포틀릿 추가
+		var portlet_search_dialogArguments = new Array();
 		function insertrow() {
 			var pGubunFlag = "";
 			
@@ -901,49 +894,61 @@
 				alert("<spring:message code='ezPortal.t292'/>");
 				return;
 			}
-			var ret = window.showModalDialog("portlet_search.aspx", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken");
-			if (typeof(ret) == "undefined") return;
 			
-			if (CheckDuplicate(ret[0]))
-			{
-				alert("<spring:message code='ezPortal.t293'/>");
-				return;
-			}
-		    var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
-			newrow.style.width = "100%";
-			newrow.style.height = ret[2];
-			var subtdGetid = "subtd" + GetGUID().substr(0,4);
-			var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\""+ret[0]+"\" style=\"width:100%\"  ownerpageuid='"+pageid+"' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> "+ret[1]+"</b></td>";
-			newrow.innerHTML = strInnerHTML;
-
-			//var newcell = newrow.insertCell();
-			//newcell.id = "subtd" + GetID();
-			//newcell.uid = ret[0];
-			//newcell.pageuid = GetPageID(newcell);
-			//newcell.ownerpageuid = pageid;
-			//newcell.canremove = 1;
-			//newcell.canresize = 1;
-			//newcell.canreplace = 1;
-			//newcell.style.width = "100%";
-			//newcell.align = "center";
-			//newcell.innerHTML = "<b>" + ret[1] + "</b>";
-			//newcell.onclick = selectsubcell;
-			//newcell.ondblclick = dblclicknotice;
-			//newcell.onkeydown = cellkeydown;
-			//selectedSubCell = "";
-		    //newcell.focus();
-			var pageuid = "";
-			if(GetPageID(document.getElementById(subtdGetid)) == null)
-			    pageuid = pageid;
-            else
-			    pageuid = GetPageID(document.getElementById(subtdGetid));
-
-			document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
-			document.getElementById(subtdGetid).focus();
-
-			//alert(document.getElementById(subtdGetid).outerHTML);
+			if (CrossYN()) {
+		        portlet_search_dialogArguments[0] = pGubunFlag;
+		        portlet_search_dialogArguments[1] = insertrow_Complete;
+		        var OpenWin = window.open("/ezPortal/portletSearch.do", "portlet_search", GetOpenWindowfeature(350, 410));
+		        try { OpenWin.focus(); } catch (e) { }
+		    } else {
+				var ret = window.showModalDialog("/ezPortal/portletSearch.do", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken");
+				if (typeof(ret) == "undefined") return;
 			
+				if (CheckDuplicate(ret[0])) {
+					alert("<spring:message code='ezPortal.t293'/>");
+					return;
+				}
+		    	var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+				newrow.style.width = "100%";
+				newrow.style.height = ret[2];
+				var subtdGetid = "subtd" + GetGUID().substr(0,4);
+				var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\""+ret[0]+"\" style=\"width:100%\"  ownerpageuid='"+pageid+"' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> "+ret[1]+"</b></td>";
+				newrow.innerHTML = strInnerHTML;
+
+				var pageuid = "";
+				if(GetPageID(document.getElementById(subtdGetid)) == null)
+				    pageuid = pageid;
+    	        else
+				    pageuid = GetPageID(document.getElementById(subtdGetid));
+
+				document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
+				document.getElementById(subtdGetid).focus();
+		   	}
 		}
+		
+		   function insertrow_Complete(ret) {
+		        if (typeof (ret) == "undefined") return;
+
+		        if (CheckDuplicate(ret[0])) {
+		            alert("<spring:message code='ezPortal.t293'/>");
+		            return;
+		        }
+               var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+               newrow.style.width = "100%";
+               newrow.style.height = ret[2];
+               var subtdGetid = "subtd" + GetGUID().substr(0, 4);
+               var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
+               newrow.innerHTML = strInnerHTML;
+               var pageuid = "";
+               if (GetPageID(document.getElementById(subtdGetid)) == null)
+                   pageuid = pageid;
+               else
+                   pageuid = GetPageID(document.getElementById(subtdGetid));
+
+               document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
+               document.getElementById(subtdGetid).focus();
+
+		    }
 
 		function insertcell()
 		{
@@ -1382,7 +1387,7 @@
 			strHTML += "<TD id='td0" + GetGUID().substr(0,3) + "' vAlign=top><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>";
 			strHTML += "<TBODY><TR style='WIDTH: 100%; HEIGHT: 10px' onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR></tbody>";
 			strHTML += "</table></td></tr></table>";
-
+alert(strHTML);
 			//alert(eval(selectedCell).children[0].children[0].children.length);
 			var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 			newrow.style.width = "100%";
@@ -1448,9 +1453,9 @@
 		function ACLEdit()
 		{
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
-		        window.open("PortalPage_ACL.aspx?uid=" + pageid, "", "height = 245px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 245));
+		        window.open("/ezPortal/portalPageACL.do?uID=" + pageid, "", "height = 245px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 245));
 		    else
-		        window.open("PortalPage_ACL.aspx?uid=" + pageid, "", "height = 300px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 300));
+		        window.open("/ezPortal/portalPageACL.do?uID=" + pageid, "", "height = 300px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 300));
 		}
 		
 		// 테이블 크기 조정
@@ -1543,7 +1548,7 @@
 		function ResetPortalPage()
 		{
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "admin/edit/ResetPortalPage.aspx?Pageid=" + pageid + "&ComapnyID=" + g_CompanyID + "&BaseType=" +g_BaseType, false);
+			xmlhttp.open("POST", "/admin/resetPortalPage.do?pageID=" + pageid + "&comapnyID=" + g_CompanyID + "&baseType=" +g_BaseType, false);
 			xmlhttp.send();
 		  if (xmlhttp.responseText == "OK")
 		  {
