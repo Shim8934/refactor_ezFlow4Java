@@ -183,7 +183,6 @@
 	        else {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
 	        }
-	        message.Editor_Resize();
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -496,7 +495,7 @@
 	
 	    function Simple_Choice_complete() {
 	        try {
-	            var gubunGount = 1;
+	            var gubunCount = 1;
 	            if (Add_xmlhttp == null || Add_xmlhttp.readyState != 4)
 	                return;
 	            if (Add_xmlhttp.status >= 200 && Add_xmlhttp.status < 300) {
@@ -524,7 +523,7 @@
                             CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
                             BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
 
-	                        gubunGount = gubunGount + 2;
+                            gubunCount = gubunCount + 2;
 	                        document.getElementById("SelectToAddress").options[lastindex] = newoption;
 	                        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
 	                        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
@@ -764,7 +763,7 @@
 	
 	    </script>
 	</head>
-	<body id="parentBody" class="popup" style="overflow:hidden;height:98%;">
+	<body id="parentBody" class="popup" style="overflow:hidden;">
 	    <table id="normalScreen" class="layout">
 	        <tr>
 	            <td style="height:20px;">

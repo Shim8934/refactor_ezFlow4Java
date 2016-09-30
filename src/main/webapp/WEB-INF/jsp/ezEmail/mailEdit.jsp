@@ -376,30 +376,49 @@
 		        Add_xmlhttp.send("");     
 		       			
 		    }
-		    function Simple_Choice_complete()
-		    {
-		        try
-		        {
-		        if (Add_xmlhttp == null || Add_xmlhttp.readyState != 4)
-					return;
-		
-				if (Add_xmlhttp.status >=200 && Add_xmlhttp.status < 300)
-				{
-				    var xmlDom = loadXMLString(Add_xmlhttp.responseText);
-				    var Nodeslength = xmlDom.childNodes.item(0).childElementCount;
-				    for (var count = 0; count < Nodeslength; count++) {
-				        //lastindex = document.all("SelectToAddress").length;
-				        lastindex = document.getElementById("SelectToAddress").childNodes.length;
-			            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
-			            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
-			            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
-		
-				        document.getElementById("SelectToAddress").options[lastindex] = newoption;
-				        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
-				        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
-				    }  
+		    function Simple_Choice_complete() {
+		        try {
+		        	var gubunCount = 1;
+		        	
+			        if (Add_xmlhttp == null || Add_xmlhttp.readyState != 4) {
+						return;
+			        }
+			
+					if (Add_xmlhttp.status >=200 && Add_xmlhttp.status < 300) {
+						if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                    var xmlDom = loadXMLString(Add_xmlhttp.responseText);
+		                    var objNodes = xmlDom.selectNodes("NewDataSet/Table");
+		                    for (var count = 0; count < objNodes.length; count++) {
+		                        lastindex = document.all("SelectToAddress").length;
+		                        newoption = new Option(objNodes(count).selectSingleNode("NAME").text, objNodes(count).selectSingleNode("NAME").text + ";" + objNodes(count).selectSingleNode("EMAIL").text);
+		                        CCnewoption = new Option(objNodes(count).selectSingleNode("NAME").text, objNodes(count).selectSingleNode("NAME").text + ";" + objNodes(count).selectSingleNode("EMAIL").text);
+		                        BCCnewoption = new Option(objNodes(count).selectSingleNode("NAME").text, objNodes(count).selectSingleNode("NAME").text + ";" + objNodes(count).selectSingleNode("EMAIL").text);
+		                        document.getElementById("SelectToAddress").options[lastindex] = newoption;
+		                        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
+		                        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
+		                    }
+		                }
+		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                    var xmlDom = loadXMLString(Add_xmlhttp.responseText);
+		                    var Nodeslength = xmlDom.childNodes.item(0).childElementCount;
+		                    for (var count = 0; count < Nodeslength; count++) {
+		                        //lastindex = document.all("SelectToAddress").length;
+		                        lastindex = document.getElementById("SelectToAddress").childNodes.length;
+		                        
+	                            newoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+	                            CCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+	                            BCCnewoption = new Option(xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent, xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(0).textContent + ";" + xmlDom.childNodes.item(0).childNodes.item(count).childNodes.item(1).textContent);
+
+	                            gubunCount = gubunCount + 2;
+		                        document.getElementById("SelectToAddress").options[lastindex] = newoption;
+		                        document.getElementById("SelectCcAddress").options[lastindex] = CCnewoption;
+		                        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
+		                    }
+		                } 
+					}
+				} catch(e) {
+					alert(e.message);
 				}
-				}catch(e){}
 				Add_xmlhttp = null;
 		    }
 			function simple_select(Type,obj)
@@ -610,7 +629,8 @@
 		<div id="main_body">
 		  <table id="normalScreen" class="layout">
 		    <tr>
-		      <td height="20"><div id="menu">
+		      <td style="height:20px;">
+		      	<div id="menu">
 		          <ul>
 		            <li><span onClick="ReserverdMail_Save()"><spring:message code='ezEmail.t48' /></span></li>
 		            <li style="display:none;"><span onClick="Save_onClick('tempsave')"><spring:message code='ezEmail.t48' /></span></li>
@@ -649,9 +669,11 @@
 		        </div></td>
 		    </tr>
 		    <tr>
-		      <td height="20"><table class="popuplist">
+		      <td height="20">
+		      	<table class="popuplist" style="width:100%">
 		          <tr id="MsgTo_TR">
-		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')"><spring:message code='ezEmail.t66' /></span></a>
+		            <th rowspan="2">
+		            	<a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')"><spring:message code='ezEmail.t66' /></span></a>
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
@@ -708,33 +730,33 @@
 		      </td>
 		    </tr>
 		    <tr>
-		      <td style="height:450px;" >
-			  <table width="100%" height="100%"> 
-		          <tr> 
-		            <td>
-		            	<c:choose> 
-							<c:when test="${useEditor == 'TAGFREE'}">
-								<iframe id="message" frameborder="0" class="viewbox" src="TagFree_TFX_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-							</c:when>
-							<c:when test="${useEditor == 'DEXT'}">
-								<iframe id="message" frameborder="0" class="viewbox" src="DEXT_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-							</c:when>
-							<c:otherwise>
-								<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-							</c:otherwise>
-						</c:choose>
-		            </td> 
-		          </tr> 
-		          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
-		            <tr> 
-		                <td height="150">
-		                    <div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
-		                       <iframe id="docContent" style="height:150px; width:100%" frameborder="0" ></iframe> 
-		                    </div>
-		                </td> 
-		            </tr> 
-		          </asp:PlaceHolder>  -->
-		      </table>
+		      <td style="height:380px;" id="EdtorSize">
+				  <table width="100%" height="100%"> 
+			          <tr> 
+			            <td style="height:100%;">
+			            	<c:choose> 
+								<c:when test="${useEditor == 'TAGFREE'}">
+									<iframe id="message" frameborder="0" class="viewbox" src="TagFree_TFX_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+								</c:when>
+								<c:when test="${useEditor == 'DEXT'}">
+									<iframe id="message" frameborder="0" class="viewbox" src="DEXT_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+								</c:when>
+								<c:otherwise>
+									<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+								</c:otherwise>
+							</c:choose>
+			            </td> 
+			          </tr> 
+			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
+			            <tr> 
+			                <td height="150">
+			                    <div id="docContentBorder" style="border:#B6B6B6 1px solid; BACKGROUND-COLOR: white; margin-top:5px;"> 
+			                       <iframe id="docContent" style="height:150px; width:100%" frameborder="0" ></iframe> 
+			                    </div>
+			                </td> 
+			            </tr> 
+			          </asp:PlaceHolder>  -->
+			      </table>
 		      </td>
 		    </tr>
 		      <tr style="display:none;">

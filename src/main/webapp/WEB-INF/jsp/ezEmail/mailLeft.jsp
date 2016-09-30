@@ -203,15 +203,8 @@
 	            return get_unreadcount_2010();
 	        }
 	        function check_pop3() {
-	            if (!CrossYN()) {
-	                var feature = "dialogWidth:460px; dialogHeight:360px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(460, 360);
-	                window.showModalDialog("/myoffice/ezEmail/mail_getpop3.aspx", "check pop3", feature);
-	            }
-	            else {
-	                var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
-	                try { OpenWin.focus(); } catch (e) { }
-	            }
+	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
+	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function mail_exportall() {
 	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
@@ -293,15 +286,8 @@
 	            } catch (e) { }
 	        }
 	        function Open_ReservationManage() {
-	            if (!CrossYN()) {
-	                var feature = "dialogHeight:350px; dialogWidth:501px; status:no;scroll:auto; help:no; edge:sunken";
-	                feature = feature + GetShowModalPosition(501, 350);
-	                window.showModalDialog("/myoffice/ezEmail/mail_reservation.aspx", "", feature);
-	            }
-	            else {
-	                var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
-	                try { OpenWin.focus(); } catch (e) { }
-	            }
+	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function Open_Restore() {
 	            var pheight = window.screen.availHeight;
