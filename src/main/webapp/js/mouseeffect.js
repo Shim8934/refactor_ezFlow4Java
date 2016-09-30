@@ -274,6 +274,8 @@ function CrossYN() {
 
 //자식노드들을 가져옵니다.
 function GetChildNodes(node) {
+	return node.children;
+    /*
     var elements = new Array();
     if (window.ActiveXObject) {
         return node.childNodes;
@@ -286,11 +288,11 @@ function GetChildNodes(node) {
             if (objNode.nodeType == 1) {
                 elements[idx++] = objNode;
             }
-
             objNode = objNode.nextSibling;
         }
     }
     return elements;
+    */
 }
 
 //속성요소를 가져옵니다

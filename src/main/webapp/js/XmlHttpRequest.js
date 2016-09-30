@@ -401,6 +401,8 @@ function GetSelectSingleNode(nodes, value) {
 
 //자식노드들을 가져옵니다.
 function GetChildNodes(node) {
+    return node.children;
+    /*
     var elements = new Array();
     if (window.ActiveXObject) {
         return node.childNodes;
@@ -417,6 +419,7 @@ function GetChildNodes(node) {
         }
     }
     return elements;
+    */
 }
     //자식노드들을 가져옵니다.
     //자식 노드중 특정 노드명의 자식만 가져옵니다.
