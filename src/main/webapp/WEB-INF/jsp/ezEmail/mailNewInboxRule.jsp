@@ -371,27 +371,13 @@
 		            return;
 		        }
 		        for (var i = 0; i < Conitems.children.length; i++) {
-		            if (_exp == "") {
-		
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
-		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent)) + "\"";
-		                    _value = MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
-		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
-		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
-		                    _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));
-		                }
+		            if (_exp == "") {		
+                        _exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
+                        _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));                            
 		            }
 		            else {
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
-		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.childNodes.item(i).textContent))) + "\"";
-		                    _value += ";" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
-		
-		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
-		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
-		                    _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
-		                }
+                        _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
+                        _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		        }
 		        if (_curCellObj != null) {
