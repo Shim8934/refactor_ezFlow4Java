@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -873,7 +874,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String doMHTDecoding(String strMht, String m_strHTML) {
 		byte[] arr = Base64.decodeBase64(strMht);
-		m_strHTML = new String(arr);
+		
+		try {
+			m_strHTML = new String(arr, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		return m_strHTML;
 	}

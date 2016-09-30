@@ -692,7 +692,7 @@ function pzFormProc_ElementChange(oldElement) {
 }
 
 function DrawAutoAprLine(ret, pDraftFlag, sn) {
-
+alert(300);
     var SignCnt = 0; // 결재칸 초기값 생성하기
     var HapyCnt = 0; // 합의칸 초기값 생성하기.
     var SSignCnt = 0; // 수신 사인칸 초기값 생성하기.
@@ -751,9 +751,9 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     if (field && SignCnt > 0) {
         //TabName, Width가져오기
         if (Recv != "")
-            pFormTagName[0] = "<P align=center>수</P><P align=center>신</P><P align=center>결</P><P align=center>재</P>";
+            pFormTagName[0] = "<P align=center>" + strLang1121 + "</P><P align=center>" + strLang1122 + "</P><P align=center>" + strLang1123 + "</P><P align=center>" + strLang1124 + "</P>";
         else
-            pFormTagName[0] = "<P align=center>기</P><P align=center>안</P><P align=center>결</P><P align=center>재</P>";
+            pFormTagName[0] = "<P align=center>" + strLang1125 + "</P><P align=center>" + strLang1126 + "</P><P align=center>" + strLang1123 + "</P><P align=center>" + strLang1124 + "</P>";
 
         pFormTagName[1] = "18";
 
@@ -768,14 +768,13 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                 z = SignCnt;
             }
 
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLang9 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {
                     if (i == "1" && (j % 10) == "1") {
                         strHTML += "<TD vAlign='middle' width='" + pFormTagName[1] + "' rowSpan='4' align='center' bgColor='#d2e2fd'><STRONG>" + pFormTagName[0] + "</STRONG></TD>";
                     }
-
                     switch (i.toString()) {
                         case "1":
                             strHTML += "<TD class='FIELD' id='" + sn + "jikwe" + j + "' vAlign='middle' align='center' width='64' height='17' bgColor='#efefef'>";
@@ -842,7 +841,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
 
     if (field && HapyCnt > 0) {
         //TabName, Width가져오기
-        pFormTagName[0] = "<P align=center>합</P><P align=center>의</P><P align=center>결</P><P align=center>재</P>";
+        pFormTagName[0] = "<P align=center>" + strLang1127 + "</P><P align=center>" + strLang1128 + "</P><P align=center>" + strLang1123 + "</P><P align=center>" + strLang1124 + "</P>";
         pFormTagName[1] = "18";
 
 
@@ -856,7 +855,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                 z = HapyCnt;
             }
             //TWidth = (HapyCnt * 64) + 20;
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLang9 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {

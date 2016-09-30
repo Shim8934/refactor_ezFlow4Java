@@ -159,7 +159,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	final public String staASWheSong = "015";					// 회송
 	final public String staASSusinJinHang = "016";			// 수신진행
 	final public String staASSusinSungIn = "017";				// 수신완료
-	public String staASSusinJiJung = "018";				// 수신지정
+	final public String staASSusinJiJung = "018";				// 수신지정
 	
 	// OpinionType
 	final public String staIlBan = "001";			// 일반의견
@@ -7005,7 +7005,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		rtnVal.append("</RESULT>");
-		
+System.out.println(rtnVal.toString());		
 		return rtnVal.toString();
 	}
 
@@ -8063,8 +8063,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getFindSimpleCabinetListAll(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType) throws Exception {
-		// TODO Auto-generated method stub
-String strMultiData = commonUtil.getMultiData(langType);
+		String strMultiData = commonUtil.getMultiData(langType);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -11308,12 +11307,12 @@ String strMultiData = commonUtil.getMultiData(langType);
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT"), "");
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime() + commonUtil.separator + 
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + 
 				"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-		
-		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime() + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) +
-				commonUtil.separator + newID + "." + extFileName, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime() + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID)); 
+
+		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) +
+				commonUtil.separator + newID + "." + extFileName, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID)); 
 		
 		if (rtnVal) {
 			// 2010.08.03 다국어
@@ -11620,6 +11619,7 @@ String strMultiData = commonUtil.getMultiData(langType);
 			
 			return true;
 		} catch (Exception e) {
+System.out.println("copyFile Exception : " + e.getMessage());
 			return false;
 		}
 		

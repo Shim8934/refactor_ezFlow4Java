@@ -1727,7 +1727,7 @@ function openAprLineUI() {
         parameter[10] = pDocType;
         parameter[11] = gamsaCount;
         parameter[12] = "";
-        var url = "../ezAPRLINE/aprline_Cross.aspx";
+        var url = "/ezApprovalG/aprLine.do";
         var feature = "status:no;dialogWidth:990px;dialogHeight:720px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(990, 720);
         var ret = window.showModalDialog(url, parameter, feature);

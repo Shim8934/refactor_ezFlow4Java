@@ -1688,7 +1688,7 @@ function setHeSongDocInfo() {
     	var result = "";
         var docState = "";
         
-    	if (pAprState == "015") {
+    	if (pAprState == strAprState15) {
     		docState = "REACK";
     	} else {
     		docState = "RECEIVE";

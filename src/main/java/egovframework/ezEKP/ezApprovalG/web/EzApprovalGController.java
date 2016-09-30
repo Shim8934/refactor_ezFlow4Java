@@ -5062,9 +5062,69 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서병렬합의 Method
 	 */
-	public String recev(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	@RequestMapping(value = "/ezApprovalG/recev.do")
+	public String recev(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String docID = request.getParameter("docID");
 		String draftFlag = request.getParameter("draftFlag");
-		return "";
+		String susinAdmin = "";
+		String optSignDateFormat = "";
+		String optisSplit = "";
+		String optSplitKind = "";
+		String userDirectSign = "";
+		String draftDate = "";
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		
+		userDirectSign = config.getProperty("config.USE_DirectSign");
+		
+		draftDate = EgovDateUtil.getTodayTime();
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optisSplit", optisSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("userDirectSign", userDirectSign);
+		model.addAttribute("draftDate", draftDate);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		return "ezApprovalG/apprGrecev";
+	}
+	
+	/**
+	 * 전자결재G 결재정보 수신처 민원인주소입력 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do")
+	public String aprDeptAddressUserName() throws Exception{
+		return "ezApprovalG/apprGaprDeptAddressUserName";
+	}
+	
+	/**
+	 * 전자결재G 부서병렬합의 접수 컨텐츠 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/recevContent.do")
+	public String recevContent() throws Exception{
+		return "ezApprovalG/apprGrecevContent";
+	}
+	
+	/**
+	 * 전자결재G 부서병렬합의 접수 컨텐츠2 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/recevContent2.do")
+	public String recevContent2() throws Exception{
+		return "ezApprovalG/apprGrecevContent2";
 	}
 }

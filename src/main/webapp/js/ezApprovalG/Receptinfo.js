@@ -1966,7 +1966,7 @@ function btnAddAddress() {
         return;
     }
 
-    var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptAddressUserName_Cross.aspx";
+    var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
     if (CrossYN() || NonActiveX == "YES") {
         aprdeptaddressusername_cross_dialogArguments[0] = "";
         aprdeptaddressusername_cross_dialogArguments[1] = btnAddAddress_Complete;
@@ -1982,7 +1982,7 @@ function btnAddAddress() {
             return;
 
         var Para = window.showModalDialog("/myoffice/ezAddress/address_zip_select.aspx", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
-        var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptAddressName_Cross.aspx";
+        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
         var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
         parameter = parameter + GetShowModalPosition(330, 205);
         var dialogValue = "";
@@ -2007,7 +2007,7 @@ function btnAddAddress() {
             strAddress = AddressUserName + "(" + dialogValue + ")";
 
         if (CheckLen(strAddress, 100) == false) {
-            var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptAddressUserName_Cross.aspx";
+            var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
             var parameter = "status:no;dialogWidth:335px;dialogHeight:185px;scroll:no;edge:sunken;help:no;";
             parameter = parameter + GetShowModalPosition(330, 205);
             var dialogValue = strAddress;
@@ -2041,7 +2041,7 @@ var aprdeptaddressname_cross_dialogArguments = new Array();
 var TempdialogValue = "";
 function btnAddAddress_Complete2(Para) {
     DivPopUpHidden();
-    var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptAddressName_Cross.aspx";
+    var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
 
     if (typeof (Para) != "undefined") {
         if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "")
@@ -2072,7 +2072,7 @@ function btnAddAddress_Complete3(AddressName) {
         TempstrAddress = TempAddressUserName + "(" + TempdialogValue + ")";
 
     if (CheckLen(TempstrAddress, 100) == false) {
-        var windowName = "/myoffice/ezApprovalG/ezAPRDEPT/AprDeptAddressUserName_Cross.aspx";
+        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
 
         if (TempstrAddress == "cancel")
             return;

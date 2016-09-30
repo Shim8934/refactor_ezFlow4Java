@@ -317,6 +317,7 @@ function getReceiveDocInfo() {
 
         var node = GetElementsByTagName(xmlpara, "DocFlag");
         pDraftFlag = getNodeText(node[0]);
+        
         var node = GetElementsByTagName(xmlpara, "Href");
         pFormHref = getNodeText(node[0]);
 

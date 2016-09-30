@@ -786,7 +786,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", id);
 		map.put("v_LANGDATA", primary);
 		String strXML = commonUtil.getQueryResult(ezOrganDAO.getUserInfo(map));
-		Document xmldom = commonUtil.convertStringToDocument(strXML);
+		Document xmldom = null;
+		
+		if (strXML != null && !strXML.equals("")) {
+			xmldom = commonUtil.convertStringToDocument(strXML);
+		}
 		
 		if(xmldom == null || xmldom.getElementsByTagName("ROW").getLength() == 0){
 			map = new HashMap<String, Object>();
@@ -813,8 +817,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                 }
             }
         }
-        propInfo.append("</DATA>");
         
+        propInfo.append("</DATA>");
+
         return propInfo.toString();
 	}
 

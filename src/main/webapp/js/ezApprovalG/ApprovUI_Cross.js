@@ -78,6 +78,8 @@ function putBansongSign() {
     return signInfo;
 }
 function AprrovMappingSign(ret) {
+alert(pAprLineType);
+alert(ret);
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
@@ -99,7 +101,8 @@ function AprrovMappingSign(ret) {
     }
 
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-        OpinionText = getSignDate() + "<br>";
+alert(1000);
+        OpinionText = getSignDate() + "<br/>";
     }
 
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
@@ -195,7 +198,7 @@ function AprrovMappingSign(ret) {
         if (field) {
 
             var psingTD = field;
-            var SContent = strLang14 + "<br>" + arr_userinfo[2] + "<br>" + s;
+            var SContent = strLang14 + "<br/>" + arr_userinfo[2] + "<br/>" + s;
             psingTD.innerHTML = SContent;
             signInfo[signCnt] = signID;
             SignName[signCnt] = signID;
@@ -210,7 +213,7 @@ function AprrovMappingSign(ret) {
         var signID;
         var seumyungID;
         var seumyungdateID;
-
+alert("pAprMemberSignSN : " + pAprMemberSignSN);
         signID = "sign" + pAprMemberSignSN;
         seumyungID = "seumyung" + pAprMemberSignSN;
         seumyungdateID = "seumyungdate" + pAprMemberSignSN;
@@ -219,7 +222,7 @@ function AprrovMappingSign(ret) {
 
         if (field) {
             var psingTD = field;
-            var SContent = strLang4 + "<br>" + arr_userinfo[2];
+            var SContent = strLang4 + "<br/>" + arr_userinfo[2];
             psingTD.innerHTML = SContent;
             signInfo[signCnt] = signID;
 
@@ -266,6 +269,7 @@ function AprrovMappingSign(ret) {
         } else {
             signID = "sign" + pAprMemberSignSN;
             seumyungID = "jikwe" + pAprMemberSignSN;
+alert("pAprMemberSignSN2 : " + pAprMemberSignSN);            
             seumyungdateID = "seumyungdate" + pAprMemberSignSN;
         }
 
@@ -293,7 +297,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang17 + "<br/><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -322,7 +326,7 @@ function AprrovMappingSign(ret) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     else
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-
+                    
                     strimg = OpinionText + strimg;
                     strimg = strLang7 + strimg;
 
@@ -346,6 +350,7 @@ function AprrovMappingSign(ret) {
                 else {
                     signID = "sign" + pAprMemberSignSN;
                     seumyungID = "jikwe" + pAprMemberSignSN;
+alert("pAprMemberSignSN3 : " + pAprMemberSignSN);
                     seumyungdateID = "seumyungdate" + pAprMemberSignSN;
                 }
             }
@@ -386,7 +391,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang17 + "<br/><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -419,7 +424,7 @@ function AprrovMappingSign(ret) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     else
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-
+alert(2000);
                     strimg = OpinionText + strimg;
                     if (pAprLineType == strAprType4) {
                         strimg = strLang6 + strimg;
@@ -1269,7 +1274,7 @@ function openAprLineUI() {
     pChangeAprLineparameter[13] = pOrgAprUserID;
     pChangeAprLineparameter[14] = aprlineinfoTMP;
 
-    var URL = "../ezAPRLINE/aprline_Cross.aspx";
+    var URL = "/ezApprovalG/aprLine.do";
     var parameter = "status:no;dialogWidth:990px;dialogHeight:720px;help:no;scroll:no;edge:sunken";
     parameter = parameter + GetShowModalPosition(990, 720);
     var ret = window.showModalDialog(URL, pChangeAprLineparameter, parameter);
@@ -1602,7 +1607,7 @@ function ReAprLineSingMapping(ret) {
                     fieldname = susinSN + "sign" + idx;
                     field = message.GetListItem(fields, fieldname);
                     if (field)
-                        field.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
+                        field.innerHTML = OrderName[i] + "<br/>" + OrderReason[i];
 
                     idx = idx + 1;
                     continue;
@@ -2184,7 +2189,7 @@ function putSignXML(SignXML) {
 
 
                         if (img.length >= 2 && img[1] != "") {
-                            field.innerHTML = img[1] + "<br>" + strimg;
+                            field.innerHTML = img[1] + "<br/>" + strimg;
                         }
                         else {
                             field.innerHTML = strimg;
