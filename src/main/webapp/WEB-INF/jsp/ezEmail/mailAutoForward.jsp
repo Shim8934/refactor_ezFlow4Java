@@ -18,7 +18,6 @@
     window.onload = window_onload;
     document.onselectstart = function () { return false; };
 
-    var g_isInitialLoad = true;
     function window_onload() {
         if (navigator.userAgent.indexOf('Firefox') != -1) {
             document.body.style.MozUserSelect = 'none';
@@ -34,14 +33,6 @@
             document.getElementById("ForwardDel").style.display = "none";
         else
             document.getElementById("btnSave").style.display = "none";
-
-
-        if (g_isInitialLoad) {
-            if (document.getElementById('hdnLoaded').value)
-                return false;
-
-            g_isInitialLoad = false; 
-        }
     }
     var xmlHTTP = createXMLHttpRequest();
     function btnSave_onClick() {
