@@ -1028,7 +1028,7 @@ function btnViewContent_onclick() {
 }
 var doclistview_cross_dialogArguments = new Array();
 function DocListPrinter_onclick() {
-    var para = new Array()
+    var para = new Array();
     para[0] = DocList_Flag;
     para[1] = DeptID;
     para[2] = ContainerID;
@@ -1042,9 +1042,9 @@ function DocListPrinter_onclick() {
     para[9] = g_szParamXml;
     para[10] = deptName;
 
-    para[11] = NodeListLen
+    para[11] = NodeListLen;
 
-    var url = "/ezApprovalG/docListView.do"
+    var url = "/ezApprovalG/docListView.do";
 
     doclistview_cross_dialogArguments[0] = para;
 
@@ -1053,7 +1053,7 @@ function DocListPrinter_onclick() {
 }
 
 function ISReceivedCab(pCabID) {
-    var objCabInfoXml = GetCabinetClassInfo(pCabID)
+    var objCabInfoXml = GetCabinetClassInfo(pCabID);
 
     CabTransFlag = getNodeText(SelectSingleNode(objCabInfoXml, "CABTRANSFLAG"));
     TDetpCode = getNodeText(SelectSingleNode(objCabInfoXml, "TDEPTCODE"));
@@ -1153,48 +1153,40 @@ function ViewDoc_onclick_Complete(Rtn) {
                 left = pleftpos / 2;
                 top = ptoppos / 2;
 
-                window.open(url, "수기기록물", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+                window.open(url, strLang1116, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
             }
         }
         else {
-            var para = new Array()
+            var para = new Array();
             para[0] = DocID;
             para[1] = pURL;
+
             var openLocation = "";
-            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                if (g_uFlag == "m03") {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=&orgDocid=";
-                }
+            
+            if (g_uFlag == "m03") {
+                if (CrossYN() || NonActiveX == "YES")
+                    openLocation = "/ezApprovalG/contDocView.do";
                 else {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx?DocID=" + encodeURI(DocID) + "&DocHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
+                    if (pUse_Editor == "")
+                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
+                    else
+                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                 }
+                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
             }
             else {
-                if (g_uFlag == "m03") {
-                    if (CrossYN() || NonActiveX == "YES")
-                        openLocation = "/ezApprovalG/contDocView.do";
-                    else {
-                        if (pUse_Editor == "")
-                            openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
-                        else
-                            openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
-                    }
-                    openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
+                if (CrossYN() || NonActiveX == "YES") {
+                    openLocation = "/ezApprovalG/contDocView.do";
                 }
                 else {
-                    if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/ezApprovalG/contDocView.do";
+                    if (pUse_Editor == "") {
+                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
                     }
                     else {
-                        if (pUse_Editor == "") {
-                            openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
-                        }
-                        else {
-                            openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
-                        }
+                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
                     }
-                    openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocid=";
                 }
+                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
             }
             openwindow(openLocation, "", 880, 570);
         }
@@ -1221,27 +1213,32 @@ function chk_Passwd(pUserID, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    var url = "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx";
+    var url = "/ezApprovalG/ezchkPasswd.do";
     var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
 
 function CheckAprLine(pDocID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS");
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "MODE", "END");
-    createNodeAndInsertText(xmlpara, objNode, "USERID", UserID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPRLINE/aspx/checkaprlineuser.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "xml",
+		async : false,
+		url : "/ezApprovalG/checkAprLineUser.do",
+		data : {
+			companyID : CompanyID,
+			docID     : pDocID,
+			mode  	  : "END",
+			userID    : UserID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(result);
     return getNodeText(dataNodes[0]);
 
 }
