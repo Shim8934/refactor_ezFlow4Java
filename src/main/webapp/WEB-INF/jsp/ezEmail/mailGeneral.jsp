@@ -38,10 +38,17 @@
                 if(xmlhttp == null || xmlhttp.readyState != 4) return;
                 var result = xmlhttp.responseXML;
                 		        
-		        var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + "<spring:message code='ezEmail.t314' />";
-		        resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
-		        MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent))
-		        MailQuater.refreshtitle( resultvalue2);		        
+                if (CrossYN()) {
+                    var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent + "<spring:message code='ezEmail.t314' />";
+                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].textContent + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
+                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].textContent))
+                } else {
+                    var resultvalue2 = "<spring:message code='ezEmail.t313' />" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].text + "<spring:message code='ezEmail.t314' />";
+                    resultvalue2 += GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text + "(" + GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text + "%)<spring:message code='ezEmail.t315' /><spring:message code='ezEmail.t316' />";
+                    MailQuater.refresh(parseInt(GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text))                    
+                }
+                
+		        MailQuater.refreshtitle(resultvalue2);		        
 		    }
 			function Change_Click(Gubun)
 			{
@@ -90,6 +97,7 @@
 
 				var xmlHTTP = createXMLHttpRequest();
 				xmlHTTP.open("POST", "/ezEmail/mailGeneralSave.do?MODE=ALL", false);
+				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlHTTP.send(
 				"<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
                 "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
