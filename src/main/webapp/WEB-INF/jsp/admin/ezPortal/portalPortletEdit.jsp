@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 		var portlet_type = "${prop.portletType}";
 		var view_type = "${prop.showTitleBar}";
@@ -106,7 +107,7 @@
 		function Delete()
 		{
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "DeletePorlet.aspx?uid=" + uid, false);
+			xmlhttp.open("POST", "/admin/ezPortal/deletePortlet.do?uID=" + uid, false);
 			xmlhttp.send();
 			xmlhttp = null;
 		}
@@ -120,8 +121,7 @@
 				}
 			}
 			
-			switch(pIndex.toString())
-			{
+			switch(pIndex.toString()) {
 				case "1":
 					menu_1.src = "/images/tap_portal01o.gif";
 					menu_2.src = "/images/tap_portal02.gif";
@@ -171,16 +171,14 @@
 			}
 		}
 		
-		function MakeXMLString(str)
-	    {
+		function MakeXMLString(str) {
 		    str = ReplaceText(str, "&", "&amp;");
 		    str = ReplaceText(str, "<", "&lt;");
 		    str = ReplaceText(str, ">", "&gt;");
 		    return str;
 	    }
 		
-		function SaveProperty()
-		{
+		function SaveProperty() {
 			var displayname = ReplaceValidString(txtDisplayName.value);
 			var displayname2 = ReplaceValidString(txtDisplayName2.value);
 			var url = ReplaceValidString(txtURL.value);
@@ -201,8 +199,7 @@
 
 			
 			// 포틀릿 종류
-		    for (var i=0; i<document.getElementsByName("selectType").length; i++)
-			{
+		    for (var i=0; i<document.getElementsByName("selectType").length; i++) {
 		        if (document.getElementsByName("selectType")[i].checked == true)
 				{
 		            portlet_type = document.getElementsByName("selectType")[i].value;
@@ -211,8 +208,7 @@
 			}
 			
 			// 타이틀바
-		    for (var i=0; i<document.getElementsByName("selectViewType").length; i++)
-			{
+		    for (var i=0; i<document.getElementsByName("selectViewType").length; i++) {
 		        if (document.getElementsByName("selectViewType")[i].checked == true)
 				{
 		            view_type = document.getElementsByName("selectViewType")[i].value;
@@ -221,35 +217,26 @@
 			}
 			
 			// 게시판 포틀릿인 경우
-			if (portlet_type == "1")
-			{
+			if (portlet_type == "1") {
 				// 관리자 or 사용자
-				for (var i=0; i<document.getElementsByName("URLUserType").length; i++)
-				{
-				    if (document.getElementsByName("URLUserType")[i].checked == true)
-					{
+				for (var i=0; i<document.getElementsByName("URLUserType").length; i++) {
+				    if (document.getElementsByName("URLUserType")[i].checked == true) {
 				        pNewUserType = document.getElementsByName("URLUserType")[i].value;
 						break; 
 					}
 				}
-			}
-			else if (portlet_type == "4")
-			{
+			} else if (portlet_type == "4") {
 				// 관리자 or 사용자
-			    for (var i=0; i<document.getElementsByName("UserType").length; i++)
-				{
-			        if (document.getElementsByName("UserType")[i].checked == true)
-					{
+			    for (var i=0; i<document.getElementsByName("UserType").length; i++) {
+			        if (document.getElementsByName("UserType")[i].checked == true) {
 			            pNewUserType = document.getElementsByName("UserType")[i].value;
 						break; 
 					}
 				}
 			}
 		    // 프레임 종류를 선택(frame, div)
-			for (var i=0; i< document.getElementsByName("td_PortletDiv").length; i++)
-			{
-			    if ( document.getElementsByName("td_PortletDiv")[i].checked == true)
-			    {
+			for (var i=0; i< document.getElementsByName("td_PortletDiv").length; i++) {
+			    if ( document.getElementsByName("td_PortletDiv")[i].checked == true) {
 			        pFrameType =  document.getElementsByName("td_PortletDiv")[i].value;
 			        break;
 			    }
@@ -273,18 +260,13 @@
 			
 			var strXML2 = "";
 			
-			if (portlet_type == "1")
-			{	
-				if (pNewUserType == "1")
-				{
-					if (document.getElementById("txtMoveURL").value == "")
-					{
+			if (portlet_type == "1") {	
+				if (pNewUserType == "1") {
+					if (document.getElementById("txtMoveURL").value == "") {
 						alert("<spring:message code='ezPortal.t123'/>");
 						return;
 					}
-				}
-				else if (pNewUserType == "2")
-				{
+				} else if (pNewUserType == "2") {
 				    document.getElementById("txtMoveURL").value = "";
 				}
 				
@@ -297,14 +279,14 @@
 				strXML2 += "</DATA>";
 			}
 			// html 포틀릿
-			else if (portlet_type == "2")
-			{
+			else if (portlet_type == "2") {
 				strXML2 = "<DATA>";
 				strXML2 += "<UID>" + uid + "</UID>";
 				strXML2 += "<DISPLAYNAME>" + displayname + "</DISPLAYNAME>";
 				strXML2 += "<DISPLAYNAME2>" + displayname2 + "</DISPLAYNAME2>";
 
 				var strBody = message.GetEditorContent();
+alert("strBody:"+strBody);
 				strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>");
 				strXML2 += "<CONTENT>" +pidCryptUtil.encodeBase64(strBody, 64) + "</CONTENT>";
 				strXML2 += "</DATA>";												
@@ -313,17 +295,14 @@
 				
 			}
 			// 이미지 포틀릿
-			else if (portlet_type == "3")
-			{
-			    var normalImgPath = txtImage.src.substr(txtImage.src.indexOf("/Upload_Portal"));
-				if (normalImgPath.indexOf("/Upload_Portal") == -1) normalImgPath = "";
+			else if (portlet_type == "3") {
+			    var normalImgPath = txtImage.src.substr(txtImage.src.indexOf("/files/upload_portal"));
+				if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
 				
 				// 이미지 타입
 				image_type = "1";
-				for (var i=0; i<document.getElementsByName("ImageType").length; i++)
-				{
-				    if (document.getElementsByName("ImageType")[i].checked == true)
-					{
+				for (var i=0; i<document.getElementsByName("ImageType").length; i++) {
+				    if (document.getElementsByName("ImageType")[i].checked == true) {
 				        image_type = document.getElementsByName("ImageType")[i].value;
 						break;
 					}
@@ -348,43 +327,33 @@
 				strXML2 += "</DATA>";
 			}
 			// 게시판 포틀릿
-			else if (portlet_type == "4")
-			{
+			else if (portlet_type == "4") {
 				var pItemFields = "";
 				
 				// 관리자 지정인 경우에만 체크
-				if (pNewUserType == "1")
-				{
-					if (document.getElementById("txtBoardID").value == "")
-					{
+				if (pNewUserType == "1") {
+					if (document.getElementById("txtBoardID").value == "") {
 						alert("<spring:message code='ezPortal.t124'/>");
 						return;
 					}
 					
-					if (document.getElementById("txtItemCount").value == "")
-					{
+					if (document.getElementById("txtItemCount").value == "") {
 						alert("<spring:message code='ezPortal.t125'/>");
 						return;
-					}
-					else
-					{
-					    if (!is_num(document.getElementById("txtItemCount").value))
-						{
+					} else {
+					    if (!is_num(document.getElementById("txtItemCount").value)) {
 							alert("<spring:message code='ezPortal.t126'/>");
 							return;
 						}
 						
-					    if (parseInt(document.getElementById("txtItemCount").value, 10) > 100)
-						{
+					    if (parseInt(document.getElementById("txtItemCount").value, 10) > 100) {
 							alert("<spring:message code='ezPortal.t127'/>");
 							return;
 						}
 					}
 					
-					for (var i=0; i<document.getElementsByName("ItemField").length; i++)
-					{
-					    if (document.getElementsByName("ItemField")[i].checked == true)
-						{
+					for (var i=0; i<document.getElementsByName("ItemField").length; i++) {
+					    if (document.getElementsByName("ItemField")[i].checked == true) {
 							if (pItemFields == "")
 							    pItemFields = document.getElementsByName("ItemField")[i].value;
 							else
@@ -392,8 +361,7 @@
 						}
 					}
 					
-					if (pItemFields == "")
-					{
+					if (pItemFields == "") {
 						alert("<spring:message code='ezPortal.t128'/>");
 						return;
 					}
@@ -436,8 +404,7 @@
 		}
 		
 		
-		function RemoveParameter(pParamName)
-		{
+		function RemoveParameter(pParamName) {
 			if(!confirm("<spring:message code='ezPortal.t54'/>")) return;
 			
 		    var xmlhttp = createXMLHttpRequest();
@@ -450,27 +417,22 @@
 			location.href = "/admin/ezPortal/portletEdit.do?mode=edit&uID=" + uid + "&menuIndex=2";
 		}
 		
-		function CheckDuplicate(paramname)
-		{
-			for (var i=0; i<document.all.tags("input").length; i++)
-			{
+		function CheckDuplicate(paramname) {
+			for (var i=0; i<document.all.tags("input").length; i++) {
 				if (typeof(document.all.tags("input").item(i).utype) == "undefined") continue;
 				if (document.all.tags("input").item(i).value.toLowerCase() == paramname) return true;
 			}
 			return false;
 		}
 		
-		function AddParameter()
-		{
+		function AddParameter() {
 			var paramname = ReplaceValidString(newParamName.value);
 			var paramvalue = ReplaceValidString(newParamValue.value);
 			var paramtype = ReplaceValidString(SelectParamType.value);
-			if (paramname == "") 
-			{
+			if (paramname == "")  {
 				alert("<spring:message code='ezPortal.t111'/>");
 				return;
 			}
-			
 			
 			var strXML = "<DATA>";
 			strXML += "<UID>" + uid + "</UID>";
@@ -491,51 +453,41 @@
 		
 	    // 포틀릿타입 변경
 	    var FlagOneSelect = false;
-		function selectTypeChange(pFlag)
-	    {
-			if (pFlag == "1")
-			{
-			    
+		function selectTypeChange(pFlag) {
+			if (pFlag == "1") {
 				txtURL.value = "/ezPortal/urlPortlet.do?uID=" + uid;
 				txtURL.disabled = true;
 				selectType_1.style.display = "";
 
-				if (navigator.userAgent.indexOf("Firefox") != -1 && !FlagOneSelect)
-				{
+				if (navigator.userAgent.indexOf("Firefox") != -1 && !FlagOneSelect) {
 				    selectType_2.style.display = "";
 				    setTimeout(ckLoding, 150);
 				    FlagOneSelect = true;
+				} else {
+					selectType_2.style.display = "none";
 				}
-				else
-				    selectType_2.style.display = "none";
-
+				    
 				selectType_3.style.display = "none";
 				selectType_4.style.display = "none";
 				//window.resizeTo(530, 420);
-			}
-			else if (pFlag == "2")
-			{
-				txtURL.value = "/myoffice/ezPortal/filter/HTMLPortlet.aspx?uid=" + uid;
+			} else if (pFlag == "2") {
+				txtURL.value = "/ezPortal/htmlPortlet.do?uID=" + uid;
 				txtURL.disabled = true;
 				selectType_1.style.display = "none";
 				selectType_2.style.display = "";
 				selectType_3.style.display = "none";
 				selectType_4.style.display = "none";
 				//window.resizeTo(530, 650);
-			}
-			else if (pFlag == "3")
-			{
-				txtURL.value = "/myoffice/ezPortal/filter/ImagePortlet.aspx?uid=" + uid;
+			} else if (pFlag == "3") {
+				txtURL.value = "/ezPortal/imagePortlet.do?uID=" + uid;
 				txtURL.disabled = true;
 				selectType_1.style.display = "none";
 				selectType_2.style.display = "none";
 				selectType_3.style.display = "";
 				selectType_4.style.display = "none";
 				//window.resizeTo(530, 520);
-			}
-			else if (pFlag == "4")
-			{
-				txtURL.value = "/myoffice/ezPortal/filter/BoardPortlet.aspx?uid=" + uid;
+			} else if (pFlag == "4") {
+				txtURL.value = "/ezPortal/boardPortlet.do?uID=" + uid;
 				txtURL.disabled = true;
 				selectType_1.style.display = "none";
 				selectType_2.style.display = "none";
@@ -544,35 +496,27 @@
 				//window.resizeTo(530, 500);
 			}
 		}
-		function ckLoding()
-		{
+		function ckLoding() {
 		    selectType_2.style.display = "none";
 		}
-		function SetType()
-		{
-			for (var i=0; i<document.getElementsByName("selectType").length; i++)
-			{
-			    if(parseInt(document.getElementsByName("selectType")[i].value) == portlet_type)
-				{
+		function SetType() {
+			for (var i=0; i<document.getElementsByName("selectType").length; i++) {
+			    if(parseInt(document.getElementsByName("selectType")[i].value) == portlet_type) {
 			        document.getElementsByName("selectType")[i].checked = true;
 					break;
 				}
 			}
 			
-			for (var i=0; i<document.getElementsByName("selectViewType").length; i++)
-			{
-			    if(parseInt(document.getElementsByName("selectViewType")[i].value) == view_type)
-				{
+			for (var i=0; i<document.getElementsByName("selectViewType").length; i++) {
+			    if(parseInt(document.getElementsByName("selectViewType")[i].value) == view_type) {
 			        document.getElementsByName("selectViewType")[i].checked = true;
 					break;
 				}
 			}
 		}
 		
-		function AddRight()
-		{
-			if (newAccessID.value == "")
-			{
+		function AddRight() {
+			if (newAccessID.value == "") {
 				alert("<spring:message code='ezPortal.t85'/>");
 				return;
 			}
@@ -711,13 +655,10 @@
 		}
 		
 		// 게시판 포틀릿 설정
-		function SetBoardPortlet()
-		{
-			if (portlet_type.toString() == "4")
-			{
+		function SetBoardPortlet() {
+			if (portlet_type.toString() == "4") {
 				// 관리자 or 사용자
-				for (var i=0; i<document.getElementsByName("UserType").length; i++)
-				{
+				for (var i=0; i<document.getElementsByName("UserType").length; i++) {
 				    if (document.getElementsByName("UserType")[i].value == pUsertype)
 					{
 				        document.getElementsByName("UserType")[i].checked = true;
@@ -726,8 +667,7 @@
 				}
 				
 				// 관리자
-				if (pUsertype == "1")
-				{	
+				if (pUsertype == "1") {	
 					// 게시물 필드
 					var arrFields = pItemfields.split(",");
 					for (var i=0; i<arrFields.length; i++)
@@ -743,42 +683,34 @@
 					}
 				}
 				// 사용자
-				else
-				{
+				else {
 					SetUserType(pUsertype);
 				}
-			}
-			else
-			{
+			} else {
 			    document.getElementsByName("UserType")[0].checked = true;
 			    document.getElementById("txtItemCount").value = "5";
 			}
 		}
 		
 		var g_xmlhttp = null;
-		function changeNormalImage()
-		{
+		function changeNormalImage() {
 		    document.getElementById('mode').value = "PHOTO";
 		    document.form.file1.click();
-
 		}
 		
-		function changeNormalImage_end()
-		{
+		function changeNormalImage_end() {
 			if (g_xmlhttp.readystate != 4) return;
 			txtImage.src = g_xmlhttp.responseText;
 			txtImage.style.display = "";
 			g_xmlhttp = null;
 		}
 		var boardselect_cross_dialogArguments = new Array();
-		function SelectBoard()
-		{		    
+		function SelectBoard() {		    
 		    if (CrossYN()) {
 		        boardselect_cross_dialogArguments[1] = SelectBoard_Complete;
 		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "BoardSelect_Cross", GetOpenWindowfeature(275, 435));
 		        try { OpenWin.focus(); } catch (e) { }
-		    }
-		    else {
+		    } else {
 		        var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
 		        //var ret = window.showModalDialog("/myoffice/ezCommunity/CopyBoardItem.aspx", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken");
 		        if (typeof(ret) != "undefined")
@@ -788,39 +720,30 @@
 		        }
 		    }
 		}
-		function SelectBoard_Complete(ret)
-		{
-		    if (typeof(ret) != "undefined")
-		    {
+		function SelectBoard_Complete(ret) {
+		    if (typeof(ret) != "undefined") {
 		        document.getElementById("txtBoardID").value = ret[0];
 		        document.getElementById("txtBoardName").value = ret[2];
 		    }
 		}
 		
 		// URL 포틀릿 설정
-		function SetURLUserType(pFlag)
-		{
+		function SetURLUserType(pFlag) {
 			if (pFlag == "1")
 			{
 				tr_url1.style.display = "";
-			}
-			else if (pFlag == "2")
-			{
+			} else if (pFlag == "2") {
 				tr_url1.style.display = "none";
 			}
 		}
 		
 		// 게시판 포틀릿 설정
-		function SetUserType(pFlag)
-		{
-			if (pFlag == "1")
-			{
+		function SetUserType(pFlag) {
+			if (pFlag == "1") {
 				tr_board1.style.display = "";
 				tr_board2.style.display = "";
 				tr_board3.style.display = "";
-			}
-			else if (pFlag == "2")
-			{
+			} else if (pFlag == "2") {
 				tr_board1.style.display = "none";
 				tr_board2.style.display = "none";
 				tr_board3.style.display = "none";
@@ -828,10 +751,9 @@
 		}
 		
 		// 이미지 미리보기
-		function UserImage_Preview()
-		{
-			var ImgPath = txtImage.src.substr(txtImage.src.indexOf("/Upload_Portal"));
-			if (ImgPath.indexOf("/Upload_Portal") == -1) ImgPath = "";
+		function UserImage_Preview() {
+			var ImgPath = txtImage.src.substr(txtImage.src.indexOf("/files/upload_portal"));
+			if (ImgPath.indexOf("/files/upload_portal") == -1) ImgPath = "";
 			
 			if (ImgPath == "") return;
 			
@@ -859,24 +781,21 @@
 		}
 		var isComplete = false;
 		function DocumentComplete() {
-
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pDocPath);				
+		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
 		        var htmlData = message.SetEditorContentURL2(fullPath);
+alert("htmlData:"+htmlData);
 			    message.SetEditorContent(htmlData);
  
             }
 		
-		function newWindowClick()
-		{
-		    if(document.getElementsByName("OpenMode").checked==true)
-		    {
+		function newWindowClick() {
+		    if(document.getElementsByName("OpenMode").checked==true) {
 		        txtWindowOptionID.style.display = "";
-		    } 
-		    else
-		    {
+		    }  else {
 		        txtWindowOptionID.style.display = "none";
 		    }
 		}
+		
 		function btn_AttachAdd_onclick() {
 		    if (document.form.file1.value != "") {
 		        if (document.getElementById('mode').value == "PHOTO") {
@@ -891,10 +810,9 @@
 		        frm.submit();
 		        document.form.file1.value = "";
 		    }
-
 		}
+		
 		function returnvalue(strXML) {
-		    
 		    var xml = loadXMLString(strXML);
 		    var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		    for (i = 0; i < nodes.length; i++) {
@@ -927,100 +845,105 @@
 	</script>
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
-<div id="menu">
-  <ul>
-    <li><span onClick="SaveProperty()"><spring:message code='ezPortal.t62'/></span></li>
-  </ul>
-</div>
-<div id="close">
-  <ul>
-    <li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
-  </ul>
-</div>
-<div id="tabnav">
-  <ul>
-    <li id="menu_1"><span onClick="toggle_menu(1)" ><spring:message code='ezPortal.t86'/></span></li>
-    <li id="menu_2"><span onClick="toggle_menu(2)" ><spring:message code='ezPortal.t150'/></span></li>
-    <li id="menu_3"><span onClick="toggle_menu(3)"><spring:message code='ezPortal.t87'/></span></li>
-  </ul>
-</div>
-<script type="text/javascript">
-	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	selToggleList(document.getElementById("close"), "ul", "li", "0");
-	selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-</script>
-<!-- 일반설정 -->
-<table id="toggle_tbl1" class="content">
-  <tr>
-    <th><spring:message code='ezPortal.t130'/></th>
-    <td>
-        <table style="width:100%;">
-            <tr class="primary">
-	            <th>${langPrimary}</th>
-	            <td><input type="text" id="txtDisplayName" style="width:100%" value="${prop.displayName}"></td>	
-            </tr>
-            <tr class="secondary">
-	            <th>${langSecondary}</th>
-	            <td><input type="text" id="txtDisplayName2" style="width:100%" value="${prop.displayName2}"></td>	
-            </tr>
-        </table>
-    </td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t151'/></th>
-    <td><input type="text" id="txtURL" style="width:384px" value="${prop.url}"></td>
-  </tr>  
-    <tr>
-    <th ><spring:message code='ezPortal.t990025'/></th>
-    <td><input type="text" id="txtWidth" value="${prop.width}">
-      <spring:message code='ezPortal.t990026'/></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t153'/></th>
-    <td><input type="text" id="txtHeight" value="${prop.height}">
-      px</td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t154'/></th>
-    <td><input type="radio" name="selectViewType" value="0">
-      <spring:message code='ezPortal.t155'/>
-      <input type="radio" name="selectViewType" value="1">
-      <spring:message code='ezPortal.t156'/></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t157'/></th>
-    <td id="td_PortletType"></td>
-  </tr>
-<tr>
-    <th ><spring:message code='ezPortal.t990027'/></th>
-    <td id="">
-		<input name="td_PortletDiv" type="radio" value="iFrame" checked/>iFrame
-		<input name="td_PortletDiv" type="radio" value="DIV"/>DIV
-    </td>
-  </tr>
- 
-</table>
-<br>
-
-<table id="selectType_1" class="content"  >
-<tr>
-    <th colspan="2">
-        URL&nbsp;<spring:message code='ezPortal.t134'/>
-    </th>
-</tr>
-  <tr style="display:none">
-    <th><spring:message code='ezPortal.t160'/></th>
-    <td><input type="radio" name="URLUserType" value="1" onClick="SetURLUserType('1')"><spring:message code='ezPortal.t161'/>
-      <input type="radio" name="URLUserType" value="2" onClick="SetURLUserType('2')"><spring:message code='ezPortal.t162'/></td>
-  </tr>
-  <tr id="tr_url1">
-    <th ><spring:message code='ezPortal.t135'/></th>
-    <td><input type="text" name="txtMoveURL" id="txtMoveURL" style="width:384px" value="${pMoveURL}">
-    </td>
-  </tr>
-</table>
-<!-- html 포틀릿 -->
-<table id="selectType_2" class="content"  style="display:none"> 
+		<div id="menu">
+  			<ul>
+    			<li><span onClick="SaveProperty()"><spring:message code='ezPortal.t62'/></span></li>
+  			</ul>
+		</div>
+		<div id="close">
+  			<ul>
+    			<li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
+  			</ul>
+		</div>
+		<div id="tabnav">
+  			<ul>
+    			<li id="menu_1"><span onClick="toggle_menu(1)" ><spring:message code='ezPortal.t86'/></span></li>
+    			<li id="menu_2"><span onClick="toggle_menu(2)" ><spring:message code='ezPortal.t150'/></span></li>
+    			<li id="menu_3"><span onClick="toggle_menu(3)"><spring:message code='ezPortal.t87'/></span></li>
+  			</ul>
+		</div>
+		<script type="text/javascript">
+			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+		</script>
+		<!-- 일반설정 -->
+		<table id="toggle_tbl1" class="content">
+  			<tr>
+    			<th><spring:message code='ezPortal.t130'/></th>
+    			<td>
+        			<table style="width:100%;">
+            			<tr class="primary">
+	            			<th>${langPrimary}</th>
+	            			<td><input type="text" id="txtDisplayName" style="width:100%" value="${prop.displayName}"></td>	
+            			</tr>
+            			<tr class="secondary">
+	            			<th>${langSecondary}</th>
+	            			<td><input type="text" id="txtDisplayName2" style="width:100%" value="${prop.displayName2}"></td>	
+            			</tr>
+        			</table>
+    			</td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t151'/></th>
+    			<td><input type="text" id="txtURL" style="width:384px" value="${prop.url}"></td>
+  			</tr>  
+    		<tr>
+    			<th ><spring:message code='ezPortal.t990025'/></th>
+    			<td>
+    				<input type="text" id="txtWidth" value="${prop.width}">
+      					<spring:message code='ezPortal.t990026'/>
+      			</td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t153'/></th>
+    			<td>
+    				<input type="text" id="txtHeight" value="${prop.height}"> px
+    			</td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t154'/></th>
+    			<td>
+    				<input type="radio" name="selectViewType" value="0">
+      					<spring:message code='ezPortal.t155'/>
+      				<input type="radio" name="selectViewType" value="1">
+      					<spring:message code='ezPortal.t156'/>
+      			</td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t157'/></th>
+    			<td id="td_PortletType"></td>
+  			</tr>
+			<tr>
+    			<th ><spring:message code='ezPortal.t990027'/></th>
+    			<td id="">
+					<input name="td_PortletDiv" type="radio" value="iFrame" checked/>iFrame
+					<input name="td_PortletDiv" type="radio" value="DIV"/>DIV
+    			</td>
+  			</tr>
+		</table>
+		<br>
+		<table id="selectType_1" class="content"  >
+			<tr>
+    			<th colspan="2">
+        			URL&nbsp;<spring:message code='ezPortal.t134'/>
+    			</th>
+			</tr>
+  			<tr style="display:none">
+    			<th><spring:message code='ezPortal.t160'/></th>
+    			<td>
+    				<input type="radio" name="URLUserType" value="1" onClick="SetURLUserType('1')"><spring:message code='ezPortal.t161'/>
+      				<input type="radio" name="URLUserType" value="2" onClick="SetURLUserType('2')"><spring:message code='ezPortal.t162'/></td>
+  			</tr>
+  			<tr id="tr_url1">
+    			<th ><spring:message code='ezPortal.t135'/></th>
+    			<td>
+    				<input type="text" name="txtMoveURL" id="txtMoveURL" style="width:384px" value="${pMoveURL}">
+    			</td>
+  			</tr>
+		</table>
+		<!-- html 포틀릿 -->
+		<table id="selectType_2" class="content"  style="display:none"> 
 			<tr>
 				<th>HTML<spring:message code='ezPortal.t163'/></th> 
 			</tr>
@@ -1030,222 +953,225 @@
                     <iframe id="message" class="viewbox"  name="message" src="/admin/ezPortal/portletEditCKContent.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
 				</td>
 			</tr> 
-</table> 
-		
-<!-- 이미지 포틀릿 -->
-<table id="selectType_3" class="content" style="display:none">
-  <tr>
-    <th colspan="2" ><spring:message code='ezPortal.t164'/></th>
-  </tr>
-  <tr>
-    <th><spring:message code='ezPortal.t165'/></th>
-    <td><table width="100%" >
-        <tr>
-          <td style="width:340;HEIGHT:50"><div style="OVERFLOW:auto;width:340;HEIGHT:50"> <img id="txtImage" src="">&nbsp; </div>
-              <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-              <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Portlet" target="ifrm" >
-              <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
-              <input type="hidden" name="boardid" id="boardid" />
-              <input type="hidden" name="maxsize" id="maxsize" />
-              <input type="hidden" name="mode" id="mode" />
-              <input type="hidden" name="cnt" id="cnt" />
-              <input type="hidden" name="mailgubun" id="mailgubun" />
-              </form>
-          </td>
-          <td width="65" align="center">             
-              <a class="imgbtn"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
-		      <a class="imgbtn"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a></td>
-        </tr>
-      </table></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t166'/></th>
-    <td><input type="radio" name="ImageType" value="1">
-      <spring:message code='ezPortal.t167'/><br>
-      <input type="radio" name="ImageType" value="2">
-      <spring:message code='ezPortal.t168'/><br>
-      <input type="radio" name="ImageType" value="3">
-      <spring:message code='ezPortal.t169'/></td>
-  </tr>
-  <tr>
-    <th >URL</th>
-    <td><input type="text" id="txtMaxURL" style="width:100%" value="${prop.maxUrl}"></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t170'/></th>
-    <td>
-    	<c:choose>
-    		<c:when test="${pOpenMode == '1'}">
-    			<input type="checkbox" name="OpenMode" onclick="newWindowClick()" checked>	
-    		</c:when>
-    		<c:otherwise>
-    			<input type="checkbox" name="OpenMode" onclick="newWindowClick()">
-    		</c:otherwise>
-    	</c:choose>
-      	(<spring:message code='ezPortal.t171'/>
-	</td>
-  </tr>
-  <tr id="txtWindowOptionID" style="display:none">
-    <th ><spring:message code='ezPortal.t172'/></th>
-    <td><input type="text" name="txtWindowOption" id="txtWindowOption" style="width:100%" value="${pWindowOption}">    </td>
-  </tr>
-</table>
-<!-- 게시판 포틀릿 -->
-<table id="selectType_4" class="content" style="display:none">
-  <tr>
-    <th colspan="2" ><spring:message code='ezPortal.t173'/></th>
-  </tr>
-  <tr>
-    <th width="90" ><spring:message code='ezPortal.t160'/></th>
-    <td><input type="radio" name="UserType" value="1" onClick="SetUserType('1')">
-      <spring:message code='ezPortal.t161'/>
-      <input type="radio" name="UserType" value="2" onClick="SetUserType('2')">
-      <spring:message code='ezPortal.t162'/></td>
-  </tr>
-  <tr id="tr_board1">
-    <th width="90" ><spring:message code='ezPortal.t137'/></th>
-    <td><table width="100%" >
-        <tr>
-          <td><input type="hidden" name="txtBoardID" id="txtBoardID" style="width:100%" value="${pBoardID}">
-            <input type="text" name="txtBoardName" id="txtBoardName" style="width:100%" value="${pBoardName}" readonly>          </td>
-          <td width="99" align="center">
-		  <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a></td>
-        </tr>
-      </table></td>
-  </tr>
-  <tr id="tr_board2">
-    <th ><spring:message code='ezPortal.t139'/></th>
-    <td><input type="text" name="txtItemCount" id="txtItemCount" value="${pItemCount}">
-      <spring:message code='ezPortal.t140'/></td>
-  </tr>
-  <tr id="tr_board3">
-    <th ><spring:message code='ezPortal.t141'/></th>
-    <td><input type="checkbox" name="ItemField" value="TITLE">
-      <spring:message code='ezPortal.t145'/>
-      <input type="checkbox" name="ItemField" value="STARTDATE">
-      <spring:message code='ezPortal.t143'/></td>
-  </tr>
-</table>
-<!-- 인자설정 -->
-<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none">
-  <tr>
-    <th><spring:message code='ezPortal.t115'/></th>
-    <th ><spring:message code='ezPortal.t116'/></th>
-    <th ></th>
-  </tr>
- <%--  <c:forEach items="${param}" var="item">
-  	<c:choose>
-  		<c:when test="${item.paramType == 0}">
-  			  <tr>
-				<td>${item.paramName}</td>
-    			<td>${item.paramValue}</td>
-    			<td width="39" align="center"><a class="imgbtn"><span onClick="RemoveParameter('${item.paramName}')" ><spring:message code='ezPortal.t67'/></span></a></td>
-  			</tr>
-  		</c:when>
-  		<c:otherwise>
+		</table>
+		 
+		<!-- 이미지 포틀릿 -->
+		<table id="selectType_3" class="content" style="display:none">
   			<tr>
-    			<td>${item.paramName}</td>
-    			<td>${item.description}</td>
-    			<td width="39" align="center"><a class="imgbtn"><span onClick="RemoveParameter('${item.paramName}')"  ><spring:message code='ezPortal.t67'/></span></a></td>
+    			<th colspan="2" ><spring:message code='ezPortal.t164'/></th>
   			</tr>
-  		</c:otherwise>
-  	</c:choose>
-  </c:forEach> --%>
-  ${paramHtml}
-</table>
-<table id="toggle_tbl2_2" class="content" style="display:none">
-  <tr>
-    <th width="85" ><spring:message code='ezPortal.t117'/></th>
-    <td><input type="text" id="newParamName" style="width:100%"></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t118'/></th>
-    <td><table width="100%" >
-        <tr>
-          <td style="width:125px; ">
-          	 <select id="SelectParamType" onChange="Param_Change()" width="100%">
-            	  <c:forEach items="${paramType}" var="item">
-              	<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
-              </c:forEach>
-            </select>          </td>
-          <td><input type="text" id="newParamValue" style="width:100%"></td>
-        </tr>
-      </table></td>
-  </tr>
-</table>
-<div class="btnposition" id="toggle_tbl2_3"  style="display:none">
-
-    <a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
-</div>
-<!-- 권한설정 -->
-<table id="toggle_tbl3_1" class="popuplist" style="display:none" width="100%">
-  <tr>
-	<th width="80" ><spring:message code='ezPortal.t91'/></th>
-	<th width="80" ><spring:message code='ezPortal.t92'/></th>
-	<th width="80" ><spring:message code='ezPortal.t93'/></th>
-	<th width="80" ><spring:message code='ezPortal.t94'/></th>
-	<th>&nbsp;</th>
-  </tr>
-  
-  <c:forEach items="${aclList}" var="item">
-  	  <tr>
-    	<td>${item.accessID}</td>
-    	<td>${item.accessName}</td>
-    	<td>
-    	<c:choose>
-    		<c:when test="${item.edit_Right == 2}">
-    			<spring:message code='ezPortal.t95'/>
-    		</c:when>
-    		<c:otherwise>
-    			<spring:message code='ezPortal.t96'/>
-    		</c:otherwise>
-    	</c:choose>
-    	</td>
-    	<td>
-    	<c:choose>
-    		<c:when test="${item.view_Right == 2}">
-    			<spring:message code='ezPortal.t95'/>
-    		</c:when>
-    		<c:otherwise>
-    			<spring:message code='ezPortal.t96'/>
-    		</c:otherwise>
-    	</c:choose>
-    	</td>
-    	<td width="39" align="center"><a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
-  	</tr>
-  </c:forEach>
-</table>
-<table id="toggle_tbl3_2" class="content" style="display:none">
-  <tr>
-    <th><spring:message code='ezPortal.t91'/></th>
-    <td><table width="100%" >
-        <tr>
-          <td><input type="text" id="newAccessID" style="width:100%" readonly></td>
-          <td width="39" align="center"><a class="imgbtn"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
-        </tr>
-      </table></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t92'/></th>
-    <td><input type="text" id="newAccessName" style="width:100%" readonly></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t93'/></th>
-    <td><input type="radio" name="SelectEditRight" value="1" checked>
-      <spring:message code='ezPortal.t97'/>
-      <input type="radio" name="SelectEditRight" value="2">
-      <spring:message code='ezPortal.t174'/></td>
-  </tr>
-  <tr>
-    <th ><spring:message code='ezPortal.t94'/></th>
-    <td><input type="radio" name="SelectViewRight" value="1" checked>
-      <spring:message code='ezPortal.t97'/>
-      <input type="radio" name="SelectViewRight" value="2">
-      <spring:message code='ezPortal.t174'/></td>
-  </tr>
-</table>
-<div id="toggle_tbl3_3" class="btnposition" style="display:none">
-    <a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
-</div>
-</body>
+  			<tr>
+    			<th><spring:message code='ezPortal.t165'/></th>
+    			<td>
+    				<table width="100%" >
+      				  	<tr>
+          					<td style="width:340;HEIGHT:50"><div style="OVERFLOW:auto;width:340;HEIGHT:50"> <img id="txtImage" src="">&nbsp; </div>
+              					<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
+	              				<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Portlet" target="ifrm" >
+              						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
+              						<input type="hidden" name="boardid" id="boardid" />
+              						<input type="hidden" name="maxsize" id="maxsize" />
+              						<input type="hidden" name="mode" id="mode" />
+              						<input type="hidden" name="cnt" id="cnt" />
+              						<input type="hidden" name="mailgubun" id="mailgubun" />
+              					</form>
+          					</td>
+          					<td width="65" align="center">             
+	              				<a class="imgbtn"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
+		      					<a class="imgbtn"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a>
+		      				</td>
+        				</tr>
+      				</table>
+      			</td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t166'/></th>
+    			<td>
+    				<input type="radio" name="ImageType" value="1">
+      					<spring:message code='ezPortal.t167'/><br>
+      				<input type="radio" name="ImageType" value="2">
+      					<spring:message code='ezPortal.t168'/><br>
+      				<input type="radio" name="ImageType" value="3">
+      					<spring:message code='ezPortal.t169'/></td>
+  			</tr>
+  			<tr>
+    			<th >URL</th>
+    			<td><input type="text" id="txtMaxURL" style="width:100%" value="${prop.maxUrl}"></td>
+  			</tr>
+  			<tr>
+    			<th ><spring:message code='ezPortal.t170'/></th>
+    			<td>
+    				<c:choose>
+    					<c:when test="${pOpenMode == '1'}">
+    						<input type="checkbox" name="OpenMode" onclick="newWindowClick()" checked>	
+    					</c:when>
+    					<c:otherwise>
+    						<input type="checkbox" name="OpenMode" onclick="newWindowClick()">
+    					</c:otherwise>
+    				</c:choose>
+      				(<spring:message code='ezPortal.t171'/>
+				</td>
+  			</tr>
+  			<tr id="txtWindowOptionID" style="display:none">
+    			<th ><spring:message code='ezPortal.t172'/></th>
+    			<td><input type="text" name="txtWindowOption" id="txtWindowOption" style="width:100%" value="${pWindowOption}">    </td>
+  			</tr>
+		</table>
+		<!-- 게시판 포틀릿 -->
+			<table id="selectType_4" class="content" style="display:none">
+  				<tr>
+    				<th colspan="2" ><spring:message code='ezPortal.t173'/></th>
+  				</tr>
+  				<tr>
+    				<th width="90" ><spring:message code='ezPortal.t160'/></th>
+    				<td>
+    					<input type="radio" name="UserType" value="1" onClick="SetUserType('1')">
+      						<spring:message code='ezPortal.t161'/>
+      					<input type="radio" name="UserType" value="2" onClick="SetUserType('2')">
+      						<spring:message code='ezPortal.t162'/></td>
+  				</tr>
+  				<tr id="tr_board1">
+    				<th width="90" ><spring:message code='ezPortal.t137'/></th>
+    				<td>
+    					<table width="100%" >
+        					<tr>
+          						<td>
+          							<input type="hidden" name="txtBoardID" id="txtBoardID" style="width:100%" value="${pBoardID}">
+            						<input type="text" name="txtBoardName" id="txtBoardName" style="width:100%" value="${pBoardName}" readonly>          
+            					</td>
+          						<td width="99" align="center">
+		  							<a class="imgbtn"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a>
+		  						</td>
+        					</tr>
+      					</table>
+					</td>
+  				</tr>
+  				<tr id="tr_board2">
+    				<th ><spring:message code='ezPortal.t139'/></th>
+    				<td>
+    					<input type="text" name="txtItemCount" id="txtItemCount" value="${pItemCount}">
+      						<spring:message code='ezPortal.t140'/></td>
+  				</tr>
+  				<tr id="tr_board3">
+    				<th ><spring:message code='ezPortal.t141'/></th>
+    				<td>
+    					<input type="checkbox" name="ItemField" value="TITLE">
+      						<spring:message code='ezPortal.t145'/>
+      					<input type="checkbox" name="ItemField" value="STARTDATE">
+      						<spring:message code='ezPortal.t143'/></td>
+  				</tr>
+			</table>
+			<!-- 인자설정 -->
+			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none">
+  				<tr>
+    				<th><spring:message code='ezPortal.t115'/></th>
+    				<th ><spring:message code='ezPortal.t116'/></th>
+    				<th ></th>
+  				</tr>
+				${paramHtml}
+			</table>
+			<table id="toggle_tbl2_2" class="content" style="display:none">
+  				<tr>
+    				<th width="85" ><spring:message code='ezPortal.t117'/></th>
+    				<td><input type="text" id="newParamName" style="width:100%"></td>
+  				</tr>
+  				<tr>
+    				<th ><spring:message code='ezPortal.t118'/></th>
+    				<td>
+    					<table width="100%" >
+        					<tr>
+          						<td style="width:125px; ">
+          	 						<select id="SelectParamType" onChange="Param_Change()" width="100%">
+            	  						<c:forEach items="${paramType}" var="item">
+              								<option value="${item.paramType}"><spring:message code='ezPortal.${item.shortName}'/></option>
+              							</c:forEach>
+            						</select> 
+								</td>
+          						<td>
+          							<input type="text" id="newParamValue" style="width:100%">
+          						</td>
+        					</tr>
+      					</table>
+      				</td>
+  				</tr>
+			</table>
+			<div class="btnposition" id="toggle_tbl2_3"  style="display:none">
+				<a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
+			</div>
+			<!-- 권한설정 -->
+				<table id="toggle_tbl3_1" class="popuplist" style="display:none" width="100%">
+  					<tr>
+						<th width="80" ><spring:message code='ezPortal.t91'/></th>
+						<th width="80" ><spring:message code='ezPortal.t92'/></th>
+						<th width="80" ><spring:message code='ezPortal.t93'/></th>
+						<th width="80" ><spring:message code='ezPortal.t94'/></th>
+						<th>&nbsp;</th>
+  					</tr>
+		  			<c:forEach items="${aclList}" var="item">
+  	  					<tr>
+    						<td>${item.accessID}</td>
+    						<td>${item.accessName}</td>
+    						<td>
+    							<c:choose>
+    								<c:when test="${item.edit_Right == 2}">
+    									<spring:message code='ezPortal.t95'/>
+    								</c:when>
+    								<c:otherwise>
+    									<spring:message code='ezPortal.t96'/>
+    								</c:otherwise>
+    							</c:choose>
+    						</td>
+    						<td>
+    							<c:choose>
+    								<c:when test="${item.view_Right == 2}">
+    									<spring:message code='ezPortal.t95'/>
+    								</c:when>
+    								<c:otherwise>
+    									<spring:message code='ezPortal.t96'/>
+    								</c:otherwise>
+    							</c:choose>
+    						</td>
+    						<td width="39" align="center"><a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
+  						</tr>
+  					</c:forEach>
+				</table>
+				<table id="toggle_tbl3_2" class="content" style="display:none">
+  					<tr>
+    					<th><spring:message code='ezPortal.t91'/></th>
+    					<td>
+    						<table width="100%" >
+        						<tr>
+          							<td>
+          								<input type="text" id="newAccessID" style="width:100%" readonly>
+          							</td>
+          							<td width="39" align="center"><a class="imgbtn"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
+        						</tr>
+      						</table>
+      					</td>
+  					</tr>
+  					<tr>
+    					<th ><spring:message code='ezPortal.t92'/></th>
+    					<td><input type="text" id="newAccessName" style="width:100%" readonly></td>
+  					</tr>
+  					<tr>
+    					<th ><spring:message code='ezPortal.t93'/></th>
+    					<td>
+    						<input type="radio" name="SelectEditRight" value="1" checked>
+      							<spring:message code='ezPortal.t97'/>
+      						<input type="radio" name="SelectEditRight" value="2">
+      							<spring:message code='ezPortal.t174'/></td>
+  					</tr>
+  					<tr>
+    					<th ><spring:message code='ezPortal.t94'/></th>
+    					<td>
+    						<input type="radio" name="SelectViewRight" value="1" checked>
+      							<spring:message code='ezPortal.t97'/>
+      						<input type="radio" name="SelectViewRight" value="2">
+      							<spring:message code='ezPortal.t174'/></td>
+  					</tr>
+				</table>
+				<div id="toggle_tbl3_3" class="btnposition" style="display:none">
+    				<a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
+				</div>
+	</body>
 </html>
