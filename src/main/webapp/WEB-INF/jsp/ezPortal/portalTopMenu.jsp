@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<title>TopMenu</title>
@@ -97,20 +97,24 @@
 			    	 //브라우저 정보 가져오기
 			    	var userAgent = window.navigator.userAgent;
 					
-			    	//IE9, IE10 일때만 ActiveX 설치하게 설정
-					if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0) {
+			    	//IE10 일때만 ActiveX 설치하게 설정
+					if (userAgent.indexOf("Trident/6.0") > 0) {
 						var objectNode = document.getElementById("objectDiv");
-				    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+				    	 objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+				    	 GetObject();
+				    	 ezNotieSetting();
+				    	 
+				    	 var objectProgressNode = document.getElementById("objectProgressDiv");
+				    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
+				    	 
 					}
-		
-			        GetObject();
-			        ezNotieSetting();
+			        
 			    } 
 //				window.setInterval("update_connectinfo()", 30000);	
 			}
 		}
 		function ezNotieSetting() {
-		    var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
+		    <%-- var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
 		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
                 <% if ("${useRSA}" == "YES") {%>
 		            ezUtil.ExecuteNoti4("", "${userInfo.id}", pwd, "", g_serverpath);
@@ -119,7 +123,7 @@
                 <%}%>
 				ezUtil = null;
             } catch (e) {
-            }
+            } --%>
         }
 		function GetObject() {
 		    var agentObj;
@@ -1516,6 +1520,9 @@
 	</head>
 		<%String browser = (String)request.getHeader("User-Agent"); %>	
 		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>>
+		<%-- <%if (browser.indexOf("Trident/5.0") > 0 || browser.indexOf("Trident/6.0") > 0){ %>  
+			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+		<%} %> --%> 
 		<div id="objectDiv"></div>
 		<%if (!mode.equals("view")) { %>	      
 		<!-- 메뉴 -->
@@ -1582,7 +1589,9 @@
 			           
 		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
 		${script1}
-	<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
+	
+	<div id="objectProgressDiv"></div>
+	<!-- <iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe> -->
 	<iframe id=ifmpopup style="display:none" src=""></iframe>
 	</body>
 </html>
