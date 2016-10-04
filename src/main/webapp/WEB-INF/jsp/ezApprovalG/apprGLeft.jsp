@@ -640,9 +640,9 @@
 	        		data : {
 	        				deptID : arr_userinfo[4],
 	        				deptName  : arr_userinfo[5],
-	        				deptName2 : arr_userinfo[14],
+	        				deptName2 : arr_userinfo[16],
 	        				position  : arr_userinfo[3],
-	        				position2 : arr_userinfo[16]
+	        				position2 : arr_userinfo[14]
 	        				},
 	        		success: function(xml){
 	        		}        			

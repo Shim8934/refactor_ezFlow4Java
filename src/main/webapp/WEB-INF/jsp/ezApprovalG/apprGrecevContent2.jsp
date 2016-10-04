@@ -59,7 +59,7 @@
 	                    parent.FieldsAvailable2();
 	                }
 	            } catch (e)
-	            { }
+	            {alert("error : Set_EditorContentURL2() " + e); }
 	        }
 	        function BodyTagsEnabled(HtmlObject) {
 	            var SelectRows = HtmlObject.getElementsByTagName("SELECT");

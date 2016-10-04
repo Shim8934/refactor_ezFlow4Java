@@ -585,6 +585,7 @@
 	                    if (!rtnVal)
 	                        return;
 	                }
+
 	                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 	                    var List = new ListView();
 	                    List.LoadFromID("DivTaskSCateList");
@@ -619,7 +620,7 @@
 	                        }
 	                    }
 	                }
-	
+
 	                if (SummaryFlag)
 	                    Docinfo_ini();
 	
@@ -647,7 +648,7 @@
 	                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 	                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
 	                }
-	
+
 	                if (pReDraftAprLineChangeFlag) {
 	                    ret[5] = "R";
 	                }
@@ -665,7 +666,7 @@
 	                ret[11] = getPublicFlag();
 	                ret[12] = txtLimitRange.value;
 	                ret[13] = txtPageNum.value;
-	
+
 	                if (document.getElementById("AprSecurity").checked)
 	                    ret[14] = document.getElementById("idDatepicker").value.substring(0, 10);
 	                else
@@ -683,6 +684,7 @@
 	                else {
 	                    window.returnValue = ret;
 	                }
+	                
 	                window.close();
 	            }
 	            else {

@@ -78,13 +78,12 @@ function putBansongSign() {
     return signInfo;
 }
 function AprrovMappingSign(ret) {
-alert(pAprLineType);
-alert(ret);
+
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
     var DekyulFlag = false;
-    var habyui;
+    var habyui
     var signInfo = new Array();
     var signCnt;
 
@@ -101,8 +100,7 @@ alert(ret);
     }
 
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-alert(1000);
-        OpinionText = getSignDate() + "<br/>";
+        OpinionText = getSignDate() + "<br>";
     }
 
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
@@ -173,7 +171,7 @@ alert(1000);
         var habyuidateID = phabyuidate + pAprMemberSN;
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-            field.textContent = s;
+            setNodeText(field , s);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
@@ -184,7 +182,7 @@ alert(1000);
         var phabyuijikweeID = phabyuijikwee + pAprMemberSN;
         var field = message.GetListItem(fields, phabyuijikweeID);
         if (field) {
-            field.textContent = field.textContent + PositionText;
+            setNodeText(field , getNodeText(field) + PositionText);
         }
     }
     else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) {
@@ -198,7 +196,7 @@ alert(1000);
         if (field) {
 
             var psingTD = field;
-            var SContent = strLang14 + "<br/>" + arr_userinfo[2] + "<br/>" + s;
+            var SContent = strLang14 + "<br>" + arr_userinfo[2] + "<br>" + s;
             psingTD.innerHTML = SContent;
             signInfo[signCnt] = signID;
             SignName[signCnt] = signID;
@@ -213,7 +211,7 @@ alert(1000);
         var signID;
         var seumyungID;
         var seumyungdateID;
-alert("pAprMemberSignSN : " + pAprMemberSignSN);
+
         signID = "sign" + pAprMemberSignSN;
         seumyungID = "seumyung" + pAprMemberSignSN;
         seumyungdateID = "seumyungdate" + pAprMemberSignSN;
@@ -222,7 +220,7 @@ alert("pAprMemberSignSN : " + pAprMemberSignSN);
 
         if (field) {
             var psingTD = field;
-            var SContent = strLang4 + "<br/>" + arr_userinfo[2];
+            var SContent = strLang4 + "<br>" + arr_userinfo[2];
             psingTD.innerHTML = SContent;
             signInfo[signCnt] = signID;
 
@@ -236,7 +234,7 @@ alert("pAprMemberSignSN : " + pAprMemberSignSN);
         field = message.GetListItem(fields, seumyungID);
 
         if (field) {
-            field.textContent = arr_userinfo[5];
+            setNodeText(field , arr_userinfo[5]);
             signInfo[signCnt] = seumyungID;
             SignName[signCnt] = seumyungID;
             SignType[signCnt] = "TEXT";
@@ -247,7 +245,7 @@ alert("pAprMemberSignSN : " + pAprMemberSignSN);
 
         field = message.GetListItem(fields, seumyungdateID);
         if (field) {
-            field.textContent = s;
+            setNodeText(field , s);
             signInfo[signCnt] = seumyungdateID;
             SignName[signCnt] = seumyungdateID;
             SignType[signCnt] = "TEXT";
@@ -269,18 +267,17 @@ alert("pAprMemberSignSN : " + pAprMemberSignSN);
         } else {
             signID = "sign" + pAprMemberSignSN;
             seumyungID = "jikwe" + pAprMemberSignSN;
-alert("pAprMemberSignSN2 : " + pAprMemberSignSN);            
             seumyungdateID = "seumyungdate" + pAprMemberSignSN;
         }
 
         var field = message.GetListItem(fields, seumyungdateID);
-        if (field && !(LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16)) {
-            field.innerText = s;
+        if (field) {
+            setNodeText(field , s);
         }
 
         field = message.GetListItem(fields, seumyungID);
         if (field) {
-            field.textContent = field.textContent + PositionText;
+            setNodeText(field , getNodeText(field) + PositionText);
         }
 
         if (pAprLineType == strAprType16) {
@@ -297,7 +294,7 @@ alert("pAprMemberSignSN2 : " + pAprMemberSignSN);
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br/><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -317,7 +314,7 @@ alert("pAprMemberSignSN2 : " + pAprMemberSignSN);
                     SignContent[signCnt] = ret + "::" + strLang7 + OpinionText + contents;
 
 
-                    //message.BodySetAttribute(signID, ret);
+                    
                     signCnt = signCnt + 1;
                     SingFlag = true;
                 }
@@ -326,7 +323,7 @@ alert("pAprMemberSignSN2 : " + pAprMemberSignSN);
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     else
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-                    
+
                     strimg = OpinionText + strimg;
                     strimg = strLang7 + strimg;
 
@@ -350,7 +347,6 @@ alert("pAprMemberSignSN2 : " + pAprMemberSignSN);
                 else {
                     signID = "sign" + pAprMemberSignSN;
                     seumyungID = "jikwe" + pAprMemberSignSN;
-alert("pAprMemberSignSN3 : " + pAprMemberSignSN);
                     seumyungdateID = "seumyungdate" + pAprMemberSignSN;
                 }
             }
@@ -385,18 +381,20 @@ alert("pAprMemberSignSN3 : " + pAprMemberSignSN);
                     signHeight = 28;
 
                     var strimg;
-
                     var FilePath = encodeURI(ret);
-
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br/><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
-                    strimg = OpinionText + strimg;
+                    var contents = "";
+                    if (!message.GetListItem(fields, seumyungdateID)) {
+                        strimg = OpinionText + strimg;
+                        contents = OpinionText;
+                    }
 
                     var contents = OpinionText;
                     if (pAprLineType == strAprType4) {
@@ -415,7 +413,7 @@ alert("pAprMemberSignSN3 : " + pAprMemberSignSN);
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret + "::" + contents;
 
-                    //message.BodySetAttribute(signID, ret);
+                    
                     signCnt = signCnt + 1;
                     SingFlag = true;
                 }
@@ -424,8 +422,11 @@ alert("pAprMemberSignSN3 : " + pAprMemberSignSN);
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     else
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
-alert(2000);
-                    strimg = OpinionText + strimg;
+
+                    if (!message.GetListItem(fields, seumyungdateID)) {
+                        strimg = OpinionText + strimg;
+                    }
+
                     if (pAprLineType == strAprType4) {
                         strimg = strLang6 + strimg;
                     }

@@ -23,6 +23,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +41,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -95,6 +98,8 @@ public class CommonUtil {
 	
 	/* File separator 공통 함수 */
 	public String separator = "/";
+	
+	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
 	public LoginVO userInfo(String loginCookie){
 		try{
@@ -158,22 +163,35 @@ public class CommonUtil {
 					user.setDeptID(cookie[k].getValue());
 					break;
 				case "APRUI1":
-					user.setDeptName1(cookie[k].getValue());
+					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI2":
-					user.setTitle1(cookie[k].getValue());
+					user.setTitle1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI4":
-					user.setDeptName2(cookie[k].getValue());
+					user.setDeptName2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI6":
-					user.setTitle2(cookie[k].getValue());
+					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}
 			
+			if (user.getPrimary().equals("1")) {
+				user.setTitle(user.getTitle1());
+				user.setDeptName(user.getDeptName1());
+				user.setDisplayName(user.getDisplayName1());
+				user.setCompanyName(user.getCompanyName1());
+			} else {
+				user.setTitle(user.getTitle2());
+				user.setDeptName(user.getDeptName2());
+				user.setDisplayName(user.getDisplayName2());
+				user.setCompanyName(user.getCompanyName2());
+			}
+			
 			return user;
 		}catch(Exception e){
+			logger.debug("[Exception]aprUserInfo : " + e.getStackTrace());
 			return null;
 		}
 	}

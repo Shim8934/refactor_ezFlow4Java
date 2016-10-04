@@ -573,6 +573,10 @@
 		{CALL EZAPPROVALG_$companyID$.EZSP_DODOCCOMPLETE_RECEIPTCNT(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.checkAprLine" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_CHECKAPRLINE(#v_DOCID#, #v_MODE#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_$companyID$.spGetSerialNo(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_RtnSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>

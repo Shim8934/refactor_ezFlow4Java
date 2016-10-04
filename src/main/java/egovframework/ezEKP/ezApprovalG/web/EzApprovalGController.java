@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -736,6 +737,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/ezApprovalInfo.do")
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
 		String startDateTime = EgovDateUtil.getTodayTime();
 		String endDateTime = EgovDateUtil.getTodayTime();
@@ -4740,7 +4742,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 			
-			rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt;
+			if (falseCnt > 0) {
+				rtnVal = "ERR/" + totCnt + "/" + trueCnt + "/" + falseCnt;
+			} else {
+				rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt;
+			}
 		}
 		
 		return rtnVal;
@@ -4936,26 +4942,26 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptID = request.getParameter("deptID");
 		String deptName = request.getParameter("deptName");
 		String deptName2 = request.getParameter("deptName2");
-		String title = request.getParameter("title");
-		String title2 = request.getParameter("title2");
+		String title = request.getParameter("position");
+		String title2 = request.getParameter("position2");
 		
 		Cookie cookieID0 = new Cookie("APRUI0", deptID);
     	cookieID0.setPath("/");
     	response.addCookie(cookieID0);
     	
-    	Cookie cookieID1 = new Cookie("APRUI1", deptName);
+    	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(deptName, "utf-8"));
     	cookieID1.setPath("/");
     	response.addCookie(cookieID1);
     	
-    	Cookie cookieID2 = new Cookie("APRUI2", title);
+    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(title, "utf-8"));
     	cookieID2.setPath("/");
     	response.addCookie(cookieID2);
     	
-    	Cookie cookieID4 = new Cookie("APRUI4", deptName2);
+    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(deptName2, "utf-8"));
     	cookieID4.setPath("/");
     	response.addCookie(cookieID4);
     	
-    	Cookie cookieID6 = new Cookie("APRUI6", title2);
+    	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(title2, "utf-8"));
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
 	}
@@ -5126,5 +5132,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/recevContent2.do")
 	public String recevContent2() throws Exception{
 		return "ezApprovalG/apprGrecevContent2";
+	}
+	
+	/**
+	 * 전자결재G 결재선 사용자 포함여부 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/checkAprLineUser.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkAprLineUser(HttpServletRequest request) throws Exception{
+		String docID = request.getParameter("docID");
+		String mode = request.getParameter("mode");
+		String userID = request.getParameter("userID");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGService.checkAprLine(docID, mode, userID, companyID);
+		
+		return result;
 	}
 }

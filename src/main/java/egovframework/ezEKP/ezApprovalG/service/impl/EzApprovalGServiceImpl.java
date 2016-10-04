@@ -1483,6 +1483,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String checkAprLine(String docID, String mode, String userID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_MODE", mode);
+		map.put("v_USERID", userID);
+		
+		String result = "";
+		int tempCount = ezApprovalGDAO.checkAprLine(map);
+		
+		if (tempCount > 0) {
+			result = "<RESULT>TRUE</RESULT>";
+		} else {
+			result = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return result;
+	}
+
+	@Override
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -7005,7 +7025,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		rtnVal.append("</RESULT>");
-System.out.println(rtnVal.toString());		
+
 		return rtnVal.toString();
 	}
 
@@ -10361,9 +10381,9 @@ System.out.println(rtnVal.toString());
 			strSQL.append(makeRightField(docXML.getElementsByTagName("USERDEPTID").item(0).getTextContent()) + "', N'");
 			strSQL.append(makeRightField(docXML.getElementsByTagName("USERDEPTNAME").item(0).getTextContent()) + "', N'");
             strSQL.append(makeRightField(docXML.getElementsByTagName("USERDEPTNAME2").item(0).getTextContent()) + "', '");
-			strSQL.append(makeRightField(String.valueOf(nextSN)) + "')\n");
+			strSQL.append(makeRightField(String.valueOf(nextSN)) + "');\n");
 			
-			strSQL.append("UPDATE TBAPRDOCINFO SET HasOpinionYN = 'Y' WHERE DocID = '" + orgDocID + "'\n");
+			strSQL.append("UPDATE TBAPRDOCINFO SET HasOpinionYN = 'Y' WHERE DocID = '" + orgDocID + "';\n");
 			
 			if (mode.toUpperCase().equals("QUERY")) {
 				rtnVal = true;
@@ -10856,11 +10876,12 @@ System.out.println(rtnVal.toString());
 				if (docState.equals(staDSGongRam)) {
 					orgDeptID = deptID;
 				}
+				
 				String containerID = returnContainerID(orgDeptID, docState, companyID);
 				String extFileName = getExtendedFileName(href);
 				String oldYear = getDocHrefYear(docID, companyID);
 				String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
-				String source = dirPath + href.replace(config.getProperty("upload_approvalG.ROOT"), "");
+				String source = dirPath + commonUtil.separator + href.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
 				
 				rtnVal = copyFile(source, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
 

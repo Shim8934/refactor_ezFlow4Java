@@ -109,7 +109,7 @@ function GetDraftAprLineInfo(ret)
 	    //-------------------------------------------------------------
 	    var KyljeaJobtitle      = getNodeText(GetChildNodes(objNodes[i])[2]);
 	    var ReasonDoNotApprov   = getNodeText(GetChildNodes(objNodes[i])[12]);
-	    
+
 	    OrderType[KyljeaOrder] = KyljeaType;
 	     
 	    OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -141,6 +141,7 @@ function GetDraftAprLineInfo(ret)
      
 	//마지막 결재권자를 설정한다.
 	var field = message.GetListItem(fields, "lastKyulName");	
+
 	if(field)
 		field.textContent  = OrderName[LastSignSN];
     
@@ -295,7 +296,7 @@ function GetDraftAprLineInfo(ret)
 	  			break;
 	  	}
 	}
-	  
+
 	if(refer != "")
 	{
 	  	fieldname = "refer";
@@ -342,34 +343,33 @@ function GetDraftAprLineInfo(ret)
 	//  	susinSN = pSusinSN; 
 	//  	Flag = susinSN + "Recv"; 
 	//}
-	
+
 	for(i=1;i < OrderJobtitle.length;i ++)
 	{
-		 
 	    if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
 	  	{
-	  		if(LastSignSN == 1 ||  LastSignSN == i ) 
-			{
-			    //// 2012.01.31 프로세스 디자인 추가 관련
-                //field = message.GetListItem(fields, Flag + "AprLine");
-	  		    //var cnt = 20;
-	  		    //if (field)
-	  		    //    cnt = OrderType.length;
-	  		        
-				for(k=1;k<10;k++)
-				{
-				    //if(pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU") 
-				    if (pDraftFlag == "SUSIN")
-						signID = pSusinSN + "sign" + k;
-					else 
-						signID = "sign" + k;
-
-					field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
-					if(field)
-						LastSignNo = k;
-				}
-				idx = LastSignNo;
-			}
+//	  		if(LastSignSN == 1 ||  LastSignSN == i ) 
+//			{
+//			    //// 2012.01.31 프로세스 디자인 추가 관련
+//                //field = message.GetListItem(fields, Flag + "AprLine");
+//	  		    //var cnt = 20;
+//	  		    //if (field)
+//	  		    //    cnt = OrderType.length;
+//	  		        
+//				for(k=1;k<10;k++)
+//				{
+//				    //if(pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU") 
+//				    if (pDraftFlag == "SUSIN")
+//						signID = pSusinSN + "sign" + k;
+//					else 
+//						signID = "sign" + k;
+//	    	
+//					field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
+//					if(field)
+//						LastSignNo = k;
+//				}
+//				idx = LastSignNo;
+//			}
 	  		var j, chkflag;
 	  		 
 	  		if(OrderType[i] == strAprType3)

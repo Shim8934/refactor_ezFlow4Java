@@ -936,6 +936,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)map.get("v_pCount");
 	}
 	
+	public int checkAprLine(Map<String, Object> map) throws Exception{
+		select("EzApprovalG.checkAprLine", map);
+		return (int)map.get("v_pCount"); 
+	}
+	
 	public int getDocAprCnt(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.getDocAprCnt", map);
 	}

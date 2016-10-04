@@ -59,7 +59,7 @@
 	                    parent.FieldsAvailable();
 	                }
 	            } catch (e)
-	            { alert("error : Set_EditorContentURL()");}
+	            { alert("error : Set_EditorContentURL() " + e);}
 	        }
 	
 	        function BodyTagsEnabled(HtmlObject) {
@@ -180,7 +180,6 @@
 	
 	        var Doc_ContentHtml;
 	        function Get_EditorBodyHTML() {
-alert(200);
 	            try {
 	                var HTML = document.createElement("HTML");
 	                var HEAD = document.createElement("HEAD");
