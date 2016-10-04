@@ -262,8 +262,10 @@ public class CommonUtil {
 		
 		if (browser.equals("Edge") || browser.equals("IE11")) {
 			compatibleValue = "IE=edge";
-		} else if (browser.equals("IE10") || browser.equals("IE9")) {
-			compatibleValue = "IE=9";
+		} else if (browser.equals("IE10")) {
+			compatibleValue = "IE=10";
+        } else if (browser.equals("IE9")) {
+            compatibleValue = "IE=9";
 		} else if (browser.equals("IE8")) {
 			compatibleValue = "IE=8";
 		}
