@@ -13,7 +13,8 @@
 					window.open("index_personal.aspx","bottom");
 				}else{
 					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
-					window.open("/admin/ezBoard/boardMain.do", "bottom");
+					//메인화면 포탈로 설정 2016-10-04 지정석
+					window.open("/admin/ezPortal/portalMain.do", "bottom");
 				}
 				
 				var ua = navigator.userAgent;
