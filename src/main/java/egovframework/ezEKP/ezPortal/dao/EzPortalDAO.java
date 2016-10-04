@@ -317,6 +317,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.searchStartPage2", map);
 	}
 	
+	public String htmlPortlet (String uID) {
+		return (String) select("EzPortalDAO.htmlPortlet", uID);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		select("EzPortalDAO.getMenuItemHtml", map);
 		return (int) map.get("v_pCount");
