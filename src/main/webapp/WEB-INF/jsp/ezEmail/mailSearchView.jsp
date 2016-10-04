@@ -314,7 +314,7 @@
 	        else {
 	            var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
 	            feature = feature + GetShowModalPosition(320, 375);
-	            var moveUrl = window.showModalDialog("mail_movecopy_cross.aspx", null, feature);
+	            var moveUrl = window.showModalDialog("/ezEmail/mailMoveCopy.do", null, feature);
 
 	            if (typeof (moveUrl) == "undefined")
 	                return;
