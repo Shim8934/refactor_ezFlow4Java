@@ -1,8 +1,8 @@
-﻿function datepicker(thisobjid, elobjid) {
+function datepicker(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
-    var element = document.getElementById(elobjid); // 추가
-    this.attachEvent = function(eventname, eventhandler) {
+    var element = document.getElementById(elobjid); 
+    this.attachEvent = function (eventname, eventhandler) {
         this['on' + eventname] = eventhandler;
     }
 
@@ -26,7 +26,7 @@
     this.isoDateUTF;
     this.isoEndDateUTF;
 
-    this.setEndtimePicker24hours = function(a) {
+    this.setEndtimePicker24hours = function (a) {
         if (!a) {
             return;
         }
@@ -36,7 +36,7 @@
         m_fEndtimepicker24hours = bVal;
     }
 
-    this.isoDateUTC = function(a) {
+    this.isoDateUTC = function (a) {
         if (!a) {
             return get_isoDateUTC.call(this);
         }
@@ -51,7 +51,7 @@
         mfOutputDate.call(this, false, m_rgeInputTime[0], 1);
     }
 
-    this.isoEndDateUTC = function(a) {
+    this.isoEndDateUTC = function (a) {
         if (!a) {
             return get_isoEndDateUTC.call(this);
         }
@@ -66,14 +66,14 @@
         mfOutputDate.call(this, false, m_rgeInputTime[1], 1);
     }
 
-    this.objDateLocal = function(a) {
+    this.objDateLocal = function (a) {
         return get_objDateLocal.call(this, a);
     };
     function get_objDateLocal(iWhichDate) {
         return (m_objCurDate[(null == iWhichDate) ? 0 : iWhichDate]);
     }
 
-    this.vtLocalDate = function(a) {
+    this.vtLocalDate = function (a) {
         if (!a) {
             return get_vtLocalDate.call(this);
         }
@@ -98,7 +98,7 @@
         mfOutputDate.call(this, false, m_rgeInputTime[0], 1);
     }
 
-    this.vtLocalEndDate = function(a) {
+    this.vtLocalEndDate = function (a) {
         if (!a) {
             return get_vtLocalEndDate.call(this);
         }
@@ -123,7 +123,7 @@
         mfOutputDate.call(this, false, m_rgeInputTime[1], 1);
     }
 
-    this.vtLocalTime = function(a) {
+    this.vtLocalTime = function (a) {
         if (!a) {
             return get_vtLocalTime.call(this);
         }
@@ -146,7 +146,7 @@
         mfOutputDate.call(this, false, m_rgeInputTime[0], 1);
     }
 
-    this.vtLocalEndTime = function(a) {
+    this.vtLocalEndTime = function (a) {
         if (!a) {
             return get_vtLocalEndTime.call(this);
         }
@@ -169,7 +169,7 @@
         mfOutputDate.call(this, false, m_rgeInputTime[1], 1);
     }
 
-    this.vtLocalCalDate = function(a) {
+    this.vtLocalCalDate = function (a) {
         if (!a) {
             return;
         }
@@ -184,7 +184,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 0);
     }
 
-    this.vtLocalEndCalDate = function(a) {
+    this.vtLocalEndCalDate = function (a) {
         if (!a) {
             return;
         }
@@ -199,7 +199,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[1], 0);
     }
 
-    this.startHours = function(a) {
+    this.startHours = function (a) {
         if (!a) {
             return get_startHours.call(this);
         }
@@ -214,7 +214,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 1);
     }
 
-    this.startMinutes = function(a) {
+    this.startMinutes = function (a) {
         if (!a) {
             return get_startMinutes.call(this);
         }
@@ -229,7 +229,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 1);
     }
 
-    this.endHours = function(a) {
+    this.endHours = function (a) {
         if (!a) {
             return get_endHours.call(this);
         }
@@ -244,7 +244,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[1], 1);
     }
 
-    this.endMinutes = function(a) {
+    this.endMinutes = function (a) {
         if (!a) {
             return get_endMinutes.call(this);
         }
@@ -259,7 +259,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[1], 1);
     }
 
-    this.startFullYear = function(a) {
+    this.startFullYear = function (a) {
         if (!a) {
             return get_startFullYear.call(this);
         }
@@ -273,7 +273,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 1);
     }
 
-    this.startDate = function(a) {
+    this.startDate = function (a) {
         if (!a) {
             return get_startDate.call(this);
         }
@@ -287,7 +287,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 1);
     }
 
-    this.startMonth = function(a) {
+    this.startMonth = function (a) {
         if (!a) {
             return get_startMonth.call(this);
         }
@@ -301,7 +301,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[0], 1);
     }
 
-    this.endFullYear = function(a) {
+    this.endFullYear = function (a) {
         if (!a) {
             return get_endFullYear.call(this);
         }
@@ -315,7 +315,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[1], 1);
     }
 
-    this.endDate = function(a) {
+    this.endDate = function (a) {
         if (!a) {
             return get_endDate.call(this);
         }
@@ -329,7 +329,7 @@
         mfOutputDate.call(this, false, m_rgeInputDate[1], 1);
     }
 
-    this.endMonth = function(a) {
+    this.endMonth = function (a) {
         if (!a) {
             return get_endMonth.call(this);
         }
@@ -346,12 +346,13 @@
     this.unpopall = mfUnPopPicker;
     function mfUnPopPicker() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
+        (function () {
             if (null != m_eCalPopup) {
                 if (m_eCalPopup.style.display == "") {
                     m_eCalPopup.removeEventListener("mouseover", onMouseOverDatePicker, false);
                     if (null != m_cellSelTime) {
                         m_cellSelTime.style.backgroundColor = '#FFFFE8'; 
+
                     }
                     m_eCalPopup.style.display = "none";
 
@@ -381,13 +382,20 @@
             }
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
+        (function () {
+           
             if (null != m_eCalPopup) {
                 if (m_eCalPopup.style.display == "") {
                     m_eCalPopup.removeEventListener("mouseover", onMouseOverDatePicker, false);
+                    
                     if (null != m_cellSelTime) {
-                        m_cellSelTime.style.backgroundColor = '#FFFFE8';
+                        
+                        
+                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; 
+                        
 
+                        
+                        
                     }
                     m_eCalPopup.style.display = "none";
 
@@ -417,12 +425,20 @@
             }
         }).call(this)
         :
-        (function() {
+        (function () {
+            
             if (null != m_eCalPopup) {
                 if (m_eCalPopup.style.display == "") {
                     m_eCalPopup.detachEvent("onmouseover", onMouseOverDatePicker);
+                    
                     if (null != m_cellSelTime) {
+                        
+                        
                         m_cellSelTime.style.backgroundColor = '#FFFFE8'; 
+                        
+
+                        
+                        
                     }
                     m_eCalPopup.style.display = "none";
 
@@ -455,6 +471,7 @@
     }
 
     this.getIsoDateUTC = f_getIsoDateUTC;
+    
     function f_getIsoDateUTC(iWhichDate) {
         return ((1 == iWhichDate) ? get_isoEndDateUTC() : get_isoDateUTC());
     }
@@ -482,26 +499,29 @@
     this.monthnamesLong;
     this.textMustSpecifyValidTime;
 
-    this.ondatechange = function() { };
-    this.onenddatechange = function() { };
-    this.ontimechange = function() { };
-    this.onendtimechange = function() { };
+    this.ondatechange = function () { };
+    this.onenddatechange = function () { };
+    this.ontimechange = function () { };
+    this.onendtimechange = function () { };
 
     this.ready = onDocumentReady;
     function onDocumentReady() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
-            // firefox
+        (function () {
+            
             var szTemp;
             var x, y, eNode;
             m_winDocBody = window.document.body;
+            
             if (null != this.displayOnly) {
                 m_rgeInputDate[0] = this;
                 m_ePopBtn[0] = null;
             }
             else {
+                
                 if (null != this.elemDateButtons) {
                     m_ePopBtn = this.elemDateButtons.split(";");
+                    
                     m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);
                     m_ePopBtn[0].addEventListener("click", onClickBtnDate, false);
                     if (m_ePopBtn.length > 1) {
@@ -509,8 +529,11 @@
                         m_ePopBtn[1].addEventListener("click", onClickBtnDate, false);
                     }
                 }
+                
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
+                    
+                    
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -524,8 +547,10 @@
                         m_rgeInputDate[1].FORMATSTRING = m_rgeInputDate[0].FORMATSTRING;
                     }
                 }
+                
                 if (null != this.elemTimeButtons) {
                     m_ePopBtn = this.elemTimeButtons.split(";");
+                    
                     m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);
                     m_ePopBtn[0].addEventListener("click", onClickBtnTime, false);
                     if (m_ePopBtn.length > 1) {
@@ -534,8 +559,10 @@
                     }
 
                 }
+                
                 if (null != this.elemTimeInputs) {
                     m_rgeInputTime = this.elemTimeInputs.split(";");
+                    
                     m_rgeInputTime[0] = window.document.getElementById(m_rgeInputTime[0]);
                     m_rgeInputTime[0].FORMATSTRING = (null != this.inputTimeFormat) ? this.inputTimeFormat : "[hh]:[mm] [tt]";
                     m_rgeInputTime[0].WHICHDATE = 0;
@@ -551,10 +578,13 @@
                         m_ePopBtn[1].WHICHDATE = 1;
                     }
                 }
+                
                 m_iBtnHeight = m_ePopBtn[0].offsetHeight;
                 m_iBtnWidth = m_ePopBtn[0].offsetWidth;
             }
 
+            
+            
             m_rgDayNameLetters = (this.daynameLetters == null || this.daynameLetters == "") ?
 							"Sun;Mon;Tue;Wed;Thu;Fri;Sat".split(";") : this.daynameLetters.split(";");
             m_iCalFormat = (null == this.pickerDateFormat || "" == this.pickerDateFormat) ?
@@ -595,6 +625,7 @@
                 }
             }
 
+            
             if (null != this.isoDateUTF && "" != this.isoDateUTF) {
                 m_objCurDate[0] = mfGetISODateObj(this.isoDateUTF);
                 m_objCurDate[1] = (null != this.isoEndDateUTF) ? (("" != this.isoEndDateUTF) ? mfGetISODateObj(this.isoEndDateUTF) : null) : null;
@@ -626,18 +657,21 @@
             }
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
-            // safari
+        (function () {
+            
             var szTemp;
             var x, y, eNode;
             m_winDocBody = window.document.body;
+            
             if (null != this.displayOnly) {
                 m_rgeInputDate[0] = this;
                 m_ePopBtn[0] = null;
             }
             else {
+                
                 if (null != this.elemDateButtons) {
                     m_ePopBtn = this.elemDateButtons.split(";");
+                    
                     m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);
                     m_ePopBtn[0].addEventListener("click", onClickBtnDate, false);
                     if (m_ePopBtn.length > 1) {
@@ -645,8 +679,11 @@
                         m_ePopBtn[1].addEventListener("click", onClickBtnDate, false);
                     }
                 }
+                
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
+                    
+                    
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -660,8 +697,10 @@
                         m_rgeInputDate[1].FORMATSTRING = m_rgeInputDate[0].FORMATSTRING;
                     }
                 }
+                
                 if (null != this.elemTimeButtons) {
                     m_ePopBtn = this.elemTimeButtons.split(";");
+                    
                     m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);
                     m_ePopBtn[0].addEventListener("click", onClickBtnTime, false);
                     if (m_ePopBtn.length > 1) {
@@ -670,8 +709,10 @@
                     }
 
                 }
+                
                 if (null != this.elemTimeInputs) {
                     m_rgeInputTime = this.elemTimeInputs.split(";");
+                    
                     m_rgeInputTime[0] = window.document.getElementById(m_rgeInputTime[0]);
                     m_rgeInputTime[0].FORMATSTRING = (null != this.inputTimeFormat) ? this.inputTimeFormat : "[hh]:[mm] [tt]";
                     m_rgeInputTime[0].WHICHDATE = 0;
@@ -687,10 +728,13 @@
                         m_ePopBtn[1].WHICHDATE = 1;
                     }
                 }
+                
                 m_iBtnHeight = m_ePopBtn[0].offsetHeight;
                 m_iBtnWidth = m_ePopBtn[0].offsetWidth;
             }
 
+            
+            
             m_rgDayNameLetters = (this.daynameLetters == null || this.daynameLetters == "") ?
 							"Sun;Mon;Tue;Wed;Thu;Fri;Sat".split(";") : this.daynameLetters.split(";");
             m_iCalFormat = (null == this.pickerDateFormat || "" == this.pickerDateFormat) ?
@@ -731,6 +775,7 @@
                 }
             }
 
+            
             if (null != this.isoDateUTF && "" != this.isoDateUTF) {
                 m_objCurDate[0] = mfGetISODateObj(this.isoDateUTF);
                 m_objCurDate[1] = (null != this.isoEndDateUTF) ? (("" != this.isoEndDateUTF) ? mfGetISODateObj(this.isoEndDateUTF) : null) : null;
@@ -762,27 +807,33 @@
             }
         }).call(this)
         :
-        (function() {
-            // IE
+        (function () {
+            
             var szTemp;
             var x, y, eNode;
             m_winDocBody = window.document.body;
+            
             if (null != this.displayOnly) {
                 m_rgeInputDate[0] = this;
                 m_ePopBtn[0] = null;
             }
             else {
+                
                 if (null != this.elemDateButtons) {
                     m_ePopBtn = this.elemDateButtons.split(";");
-                    m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);  //m_winDocAll[m_ePopBtn[0]];
+                    
+                    m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);  
                     m_ePopBtn[0].attachEvent("onclick", onClickBtnDate);
                     if (m_ePopBtn.length > 1) {
                         m_ePopBtn[1] = window.document.getElementById(m_ePopBtn[1]);
                         m_ePopBtn[1].attachEvent("onclick", onClickBtnDate);
                     }
                 }
+                
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
+                    
+                    
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -796,8 +847,10 @@
                         m_rgeInputDate[1].FORMATSTRING = m_rgeInputDate[0].FORMATSTRING;
                     }
                 }
+                
                 if (null != this.elemTimeButtons) {
                     m_ePopBtn = this.elemTimeButtons.split(";");
+                    
                     m_ePopBtn[0] = window.document.getElementById(m_ePopBtn[0]);
                     m_ePopBtn[0].attachEvent("onclick", onClickBtnTime);
                     if (m_ePopBtn.length > 1) {
@@ -806,8 +859,10 @@
                     }
 
                 }
+                
                 if (null != this.elemTimeInputs) {
                     m_rgeInputTime = this.elemTimeInputs.split(";");
+                    
                     m_rgeInputTime[0] = window.document.getElementById(m_rgeInputTime[0]);
                     m_rgeInputTime[0].FORMATSTRING = (null != this.inputTimeFormat) ? this.inputTimeFormat : "[hh]:[mm] [tt]";
                     m_rgeInputTime[0].WHICHDATE = 0;
@@ -823,10 +878,13 @@
                         m_ePopBtn[1].WHICHDATE = 1;
                     }
                 }
+                
                 m_iBtnHeight = m_ePopBtn[0].offsetHeight;
                 m_iBtnWidth = m_ePopBtn[0].offsetWidth;
             }
 
+            
+            
             m_rgDayNameLetters = (this.daynameLetters == null || this.daynameLetters == "") ?
 							"Sun;Mon;Tue;Wed;Thu;Fri;Sat".split(";") : this.daynameLetters.split(";");
             m_iCalFormat = (null == this.pickerDateFormat || "" == this.pickerDateFormat) ?
@@ -867,6 +925,7 @@
                 }
             }
 
+            
             if (null != this.isoDateUTF && "" != this.isoDateUTF) {
                 m_objCurDate[0] = mfGetISODateObj(this.isoDateUTF);
                 m_objCurDate[1] = (null != this.isoEndDateUTF) ? (("" != this.isoEndDateUTF) ? mfGetISODateObj(this.isoEndDateUTF) : null) : null;
@@ -898,7 +957,7 @@
             }
         }).call(this)
         ;
-    }
+    } 
 
 
 
@@ -925,6 +984,7 @@
 
     var m_iFirstDayOfWeek = 0;
     var m_rgDayNameLetters;
+    
     var m_winDocBody;
     var m_eDest;
     var m_iOutputFormat = new Array();
@@ -941,10 +1001,12 @@
 
     function mfCreateTimepicker() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
-            // firefox
+        (function () {
+            
+            
             mfFormatTime.szFormat = this.pickerTimeFormat;
 
+            
             var eNode = document.createElement("SELECT");
             eNode.align = 'absright';
             eNode.size = '2';
@@ -957,14 +1019,15 @@
             var eOption = document.createElement("OPTION");
 
             var iMin = 0;
-            for (var x = 0; x < 48; x++, iMin += 30) {
-                eOption.textContent = mfFormatTime.call(this, iMin);
+            for (var x = 0; x < 48; x++, iMin += 30) { 
+                setNodeText(eOption, mfFormatTime.call(this, iMin));
                 eOption.value = iMin;
                 eNode.appendChild(eOption.cloneNode(true));
             }
 
             m_eTimePopup = m_winDocBody.appendChild(eNode.cloneNode(true));
 
+            
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { 
@@ -973,9 +1036,12 @@
             }
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
+        (function () {
+            
+            
             mfFormatTime.szFormat = this.pickerTimeFormat;
 
+            
             var eNode = document.createElement("SELECT");
             eNode.align = 'absright';
             eNode.size = '2';
@@ -996,6 +1062,7 @@
 
             m_eTimePopup = m_winDocBody.insertAdjacentElement("BeforeEnd", eNode.cloneNode(true));
 
+            
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { 
@@ -1004,9 +1071,12 @@
             }
         }).call(this)
         :
-        (function() {
+        (function () {
+            
+            
             mfFormatTime.szFormat = this.pickerTimeFormat;
 
+            
             var eNode = document.createElement("SELECT");
             eNode.align = 'absright';
             eNode.size = '2';
@@ -1019,7 +1089,7 @@
             var eOption = document.createElement("OPTION");
 
             var iMin = 0;
-            for (var x = 0; x < 48; x++, iMin += 30) {
+            for (var x = 0; x < 48; x++, iMin += 30) { 
                 eOption.innerText = mfFormatTime.call(this, iMin);
                 eOption.value = iMin;
                 eNode.appendChild(eOption.cloneNode(true));
@@ -1027,6 +1097,7 @@
 
             m_eTimePopup = m_winDocBody.insertAdjacentElement("BeforeEnd", eNode.cloneNode(true));
 
+            
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { 
@@ -1047,9 +1118,14 @@
         return (false);
     }
 
+    
+    
+    
     function mfCreateCalendar() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
+        (function () {
+            
+            
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.addEventListener("selectstart", mfOnSelectStartNo, false);
@@ -1108,10 +1184,11 @@
             eTR = eTable.insertRow(-1);
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
+            
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell(-1);
-                eTD.textContent = m_rgDayNameLetters[y];
+                setNodeText(eTD, m_rgDayNameLetters[y]);
                 eTD.nop = '1';
 
                 if (y == 0) {
@@ -1129,6 +1206,7 @@
                 eTD.nop = '1';
             }
 
+            
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow(-1);
                 for (y = 0; y < 7; y++) {
@@ -1154,7 +1232,9 @@
             m_eCalTitle = m_eCalPopup.rows[0].cells[2];
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
+        (function () {
+            
+            
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.addEventListener("selectstart", mfOnSelectStartNo, false);
@@ -1213,6 +1293,7 @@
             eTR = eTable.insertRow(-1);
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
+            
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell(-1);
@@ -1234,6 +1315,7 @@
                 eTD.nop = '1';
             }
 
+            
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow(-1);
                 for (y = 0; y < 7; y++) {
@@ -1259,7 +1341,9 @@
             m_eCalTitle = m_eCalPopup.rows[0].cells[2];
         }).call(this)
         :
-        (function() {
+        (function () {
+            
+            
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.attachEvent("onselectstart", mfOnSelectStartNo);
@@ -1318,6 +1402,7 @@
             eTR = eTable.insertRow();
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
+            
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell();
@@ -1339,6 +1424,7 @@
                 eTD.nop = '1';
             }
 
+            
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow();
                 for (y = 0; y < 7; y++) {
@@ -1368,16 +1454,18 @@
 
     function mfWriteEndtimePicker() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
-            // firefox
+        (function () {
+            
             if (null == m_eEndTimePopup) return;
             var x, node;
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
+            
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
+            
             if (m_fEndtimepicker24hours || (m_objCurDate[1] - m_objCurDate[0] < CONST_MS_IN_24HRS)) {
                 iMin = (m_objCurDate[0].getHours() * 60) + m_objCurDate[0].getMinutes();
                 iSpan = iMin;
@@ -1385,7 +1473,8 @@
                 {
                     if (iMin >= 1440) iMin -= 1440;
                     var szPartHrs = (x % 2) ? m_szTextDecimal + "5" : "";
-                    oOption.textContent = mfFormatTime.call(this, iMin);
+                    
+                    setNodeText(oOption, mfFormatTime.call(this, iMin));
                     oOption.value = iSpan;
                     node = oOption.cloneNode(true);
                     m_eEndTimePopup.appendChild(node);
@@ -1394,7 +1483,7 @@
             else 
             {
                 for (iMin = 0, x = 0; x < 48; x++, iMin += 30) {
-                    oOption.textContent = mfFormatTime.call(this, iMin);
+                    setNodeText(oOption, mfFormatTime.call(this, iMin));
                     oOption.value = iMin;
                     node = oOption.cloneNode(true);
                     m_eEndTimePopup.appendChild(node);
@@ -1402,16 +1491,18 @@
             }
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
-            // safari
+        (function () {
+            
             if (null == m_eEndTimePopup) return;
             var x, node;
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
+            
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
+            
             if (m_fEndtimepicker24hours || (m_objCurDate[1] - m_objCurDate[0] < CONST_MS_IN_24HRS)) {
                 iMin = (m_objCurDate[0].getHours() * 60) + m_objCurDate[0].getMinutes();
                 iSpan = iMin;
@@ -1425,7 +1516,7 @@
                     m_eEndTimePopup.insertAdjacentElement('beforeEnd', node);
                 }
             }
-            else
+            else 
             {
                 for (iMin = 0, x = 0; x < 48; x++, iMin += 30) {
                     oOption.innerText = mfFormatTime.call(this, iMin);
@@ -1436,16 +1527,18 @@
             }
         }).call(this)
         :
-        (function() {
-            // IE
+        (function () {
+            
             if (null == m_eEndTimePopup) return;
             var x, node;
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
+            
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
+            
             if (m_fEndtimepicker24hours || (m_objCurDate[1] - m_objCurDate[0] < CONST_MS_IN_24HRS)) {
                 iMin = (m_objCurDate[0].getHours() * 60) + m_objCurDate[0].getMinutes();
                 iSpan = iMin;
@@ -1453,13 +1546,14 @@
                 {
                     if (iMin >= 1440) iMin -= 1440;
                     var szPartHrs = (x % 2) ? m_szTextDecimal + "5" : "";
+                    
                     oOption.innerText = mfFormatTime.call(this, iMin);
                     oOption.value = iSpan;
                     node = oOption.cloneNode(true);
                     m_eEndTimePopup.insertAdjacentElement('beforeEnd', node);
                 }
             }
-            else
+            else 
             {
                 for (iMin = 0, x = 0; x < 48; x++, iMin += 30) {
                     oOption.innerText = mfFormatTime.call(this, iMin);
@@ -1472,6 +1566,9 @@
         ;
     }
 
+    
+    
+    
     function mfGetISODateObj(szISODate) {
         var szYear = szISODate.substring(0, 4);
         var szMonth = Number(szISODate.substring(5, 7)) - 1;
@@ -1482,6 +1579,10 @@
 
         var objD = new Date();
 
+        
+        
+
+        
         objD.setFullYear(szYear, szMonth, szDay);
         objD.setHours(szHr, szMin, szSec);
 
@@ -1496,6 +1597,7 @@
         var szHr = objDate.getUTCHours();
         var szMin = objDate.getUTCMinutes();
         var szSec = objDate.getUTCSeconds();
+        
         var szDate = szYear + "-" +
 		((szMonth < 10) ? "0" + szMonth : szMonth) + "-" +
 		((szDay < 10) ? "0" + szDay : szDay) + "T" +
@@ -1513,8 +1615,8 @@
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
-            // firefox
+        (function (event) {
+            
             if (!event) event = window.event;
             event.cancelBubble = true;
 
@@ -1522,12 +1624,17 @@
             var iMinTime = srcElement.value;
             var iWhichDate = srcElement.INPUTELEMENT ? srcElement.INPUTELEMENT.WHICHDATE : event.currentTarget.INPUTELEMENT.WHICHDATE;
             var iCurDate = m_objCurDate[iWhichDate].getDate(); 
+            
             if (1 == iWhichDate && CONST_MS_IN_24HRS > (m_objCurDate[1] - m_objCurDate[0])) {
                 if (m_objCurDate[1].getDate() != m_objCurDate[0].getDate()) {
+                    
+                    
                 }
             }
             else if (1 == iWhichDate) 
             {
+                
+                
             }
 
             m_objCurDate[iWhichDate].setHours(0, iMinTime, 0, 0);
@@ -1538,6 +1645,7 @@
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) 
             {
+                
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -1549,8 +1657,8 @@
             mfUnPopPicker.call(this);
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
             event.cancelBubble = true;
 
@@ -1558,12 +1666,17 @@
             var iMinTime = srcElement.value;
             var iWhichDate = srcElement.INPUTELEMENT ? srcElement.INPUTELEMENT.WHICHDATE : event.currentTarget.INPUTELEMENT.WHICHDATE;
             var iCurDate = m_objCurDate[iWhichDate].getDate(); 
+            
             if (1 == iWhichDate && CONST_MS_IN_24HRS > (m_objCurDate[1] - m_objCurDate[0])) {
                 if (m_objCurDate[1].getDate() != m_objCurDate[0].getDate()) {
+                    
+                    
                 }
             }
             else if (1 == iWhichDate) 
             {
+                
+                
             }
 
             m_objCurDate[iWhichDate].setHours(0, iMinTime, 0, 0);
@@ -1574,6 +1687,7 @@
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) 
             {
+                
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -1585,20 +1699,25 @@
             mfUnPopPicker.call(this);
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
             event.cancelBubble = true;
 
             var eSelect = event.srcElement;
             var iMinTime = eSelect.value;
             var iWhichDate = event.srcElement.INPUTELEMENT.WHICHDATE;
             var iCurDate = m_objCurDate[iWhichDate].getDate(); 
+            
             if (1 == iWhichDate && CONST_MS_IN_24HRS > (m_objCurDate[1] - m_objCurDate[0])) {
                 if (m_objCurDate[1].getDate() != m_objCurDate[0].getDate()) {
+                    
+                    
                 }
             }
             else if (1 == iWhichDate) 
             {
+                
+                
             }
 
             m_objCurDate[iWhichDate].setHours(0, iMinTime, 0, 0);
@@ -1609,6 +1728,7 @@
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) 
             {
+                
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -1622,13 +1742,17 @@
         ;
     }
 
+    
+    
+    
     function onChangeTimeEntry(event) {
         if (this != window[thisid]) {
             arguments.callee.call(window[thisid], event);
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
             var iWhichDate = srcElement.WHICHDATE;
@@ -1636,12 +1760,14 @@
 
             if (iTotMin > -1) {
                 srcElement.value = mfFormatTime.call(this, iTotMin);
+                
                 m_objCurDate[iWhichDate].setHours(0, iTotMin);
                 if (0 == iWhichDate) {
                     m_fUpdateEndtimepicker = true;
                 }
                 else if (m_objCurDate[0] > m_objCurDate[1]) 
                 {
+                    
                     m_objCurDate[1].setDate(m_objCurDate[1].getDate() + 1);
                     mfOutputDate.call(this, false, m_rgeInputDate[1], 0);
                 }
@@ -1649,13 +1775,18 @@
             }
             else 
             {
+                
+                
                 setTimeout(document.getElementById(srcElement.id).focus, 1);
+                
                 alert(m_szMustSpecifyValidTime);
+                
                 srcElement.value = mfFormatTime.call(this, m_objCurDate[iWhichDate].getHours() * 60 + m_objCurDate[iWhichDate].getMinutes())
             }
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
             var iWhichDate = srcElement.WHICHDATE;
@@ -1663,12 +1794,14 @@
 
             if (iTotMin > -1) {
                 srcElement.value = mfFormatTime.call(this, iTotMin);
+                
                 m_objCurDate[iWhichDate].setHours(0, iTotMin);
                 if (0 == iWhichDate) {
                     m_fUpdateEndtimepicker = true;
                 }
                 else if (m_objCurDate[0] > m_objCurDate[1]) 
                 {
+                    
                     m_objCurDate[1].setDate(m_objCurDate[1].getDate() + 1);
                     mfOutputDate.call(this, false, m_rgeInputDate[1], 0);
                 }
@@ -1676,26 +1809,32 @@
             }
             else 
             {
+                
+                
                 setTimeout(document.getElementById(srcElement.id).focus, 1);
+                
                 alert(m_szMustSpecifyValidTime);
+                
                 srcElement.value = mfFormatTime.call(this, m_objCurDate[iWhichDate].getHours() * 60 + m_objCurDate[iWhichDate].getMinutes())
             }
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
             var eSrc = event.srcElement;
             var iWhichDate = eSrc.WHICHDATE;
             var iTotMin = mfParseTime(eSrc.value);
 
             if (iTotMin > -1) {
                 eSrc.value = mfFormatTime.call(this, iTotMin);
+                
                 m_objCurDate[iWhichDate].setHours(0, iTotMin);
                 if (0 == iWhichDate) {
                     m_fUpdateEndtimepicker = true;
                 }
                 else if (m_objCurDate[0] > m_objCurDate[1]) 
                 {
+                    
                     m_objCurDate[1].setDate(m_objCurDate[1].getDate() + 1);
                     mfOutputDate.call(this, false, m_rgeInputDate[1], 0);
                 }
@@ -1703,8 +1842,11 @@
             }
             else 
             {
+                
                 setTimeout("window.document.all['" + eSrc.id + "'].focus()", 1);
+                
                 alert(m_szMustSpecifyValidTime);
+                
                 eSrc.value = mfFormatTime.call(this, m_objCurDate[iWhichDate].getHours() * 60 + m_objCurDate[iWhichDate].getMinutes())
             }
         }).call(this)
@@ -1714,17 +1856,21 @@
     function fireChangeEvent(iWhichDate, iDateTime) {
         if (0 == iDateTime) {
             if (0 == iWhichDate) {
+                
                 this.ondatechange();
             }
             else {
+                
                 this.onenddatechange();
             }
         }
         else {
             if (0 == iWhichDate) {
+                
                 this.ontimechange();
             }
             else {
+                
                 this.onendtimechange();
             }
         }
@@ -1787,17 +1933,20 @@
     mfBuildMonth.iD;
     mfBuildMonth.iY;
 
-
+    
+    
+    
     function mfBuildMonth() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function() {
-            // firefox
+        (function () {
+            
             var x, y;
             var iWhichDate = m_eCalPopup.WHICHDATE;
             var iM = mfBuildMonth.iM;
             var iD = mfBuildMonth.iD;
             var iY = mfBuildMonth.iY;
 
+            
             if (m_eCalTitle.iMonth != iM || m_eCalTitle.iFullYear != iY) {
                 m_eCalTitle.innerHTML = mfFormatDateTitle(iM, iY, m_iCalFormat);
                 m_eCalTitle.iMonth = iM;
@@ -1808,8 +1957,10 @@
                 mfBuildMonth.oTempD.setFullYear(iY, iM, 1);
                 var iFirstDay = mfBuildMonth.oTempD.getDay();
 
+                
                 if (null != m_cellSelTime) {
                     m_cellSelTime.style.backgroundColor = 'window';
+                    
                 }
                 var iOffset = iFirstDay - this.firstDayOfWeek;
                 if (iOffset < 0) {
@@ -1817,29 +1968,37 @@
                 }
                 var rgCells = m_eCalPopup.getElementsByTagName('TD');
                 iOffset += 12; 
+                
 
+                
                 for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
-                    rgCells[x].textContent = y;
+                    setNodeText(rgCells[x], y);
                     rgCells[x].style.backgroundColor = 'F9F9F0';
                 }
 
                 m_eCalTitle.idxDayOne = x - 1; 
+                
+                
                 for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
-                    rgCells[x].textContent = y;
+                    setNodeText(rgCells[x], y);
                     rgCells[x].style.backgroundColor = '#FFFFE8';
                 }
+                
+                
                 for (y = 1; x < rgCells.length; x++, y++) {
+                    
                     if (((x + 9) % 7) == 0) {
                         for (x; x < rgCells.length; x++) {
-                            rgCells[x].textContent = ""; 
+                            setNodeText(rgCells[x], "");
                         }
                         break;
                     }
-                    rgCells[x].textContent = y;
+                    setNodeText(rgCells[x], y);
                     rgCells[x].style.backgroundColor = '#F9F9F0';
                 }
             }
 
+            
             if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
                 var rgCells = m_eCalPopup.getElementsByTagName('TD');
                 x = iD + m_eCalTitle.idxDayOne;
@@ -1848,14 +2007,15 @@
             }
         }).call(this)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function() {
-            // safari
+        (function () {
+            
             var x, y;
             var iWhichDate = m_eCalPopup.WHICHDATE;
             var iM = mfBuildMonth.iM;
             var iD = mfBuildMonth.iD;
             var iY = mfBuildMonth.iY;
 
+            
             if (m_eCalTitle.iMonth != iM || m_eCalTitle.iFullYear != iY) {
                 m_eCalTitle.innerHTML = mfFormatDateTitle(iM, iY, m_iCalFormat);
                 m_eCalTitle.iMonth = iM;
@@ -1866,8 +2026,10 @@
                 mfBuildMonth.oTempD.setFullYear(iY, iM, 1);
                 var iFirstDay = mfBuildMonth.oTempD.getDay();
 
+                
                 if (null != m_cellSelTime) {
                     m_cellSelTime.style.backgroundColor = 'window';
+                    
                 }
                 var iOffset = iFirstDay - this.firstDayOfWeek;
                 if (iOffset < 0) {
@@ -1875,75 +2037,25 @@
                 }
                 var rgCells = m_eCalPopup.getElementsByTagName('TD');
                 iOffset += 12; 
+                
 
-                for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
-                    rgCells[x].innerText = y;
-                    rgCells[x].style.backgroundColor = 'F9F9F0';
-                }
-
-                m_eCalTitle.idxDayOne = x - 1;
-                for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
-                    rgCells[x].innerText = y;
-                    rgCells[x].style.backgroundColor = '#FFFFE8';
-                }
-                for (y = 1; x < rgCells.length; x++, y++) {
-                    if (((x + 9) % 7) == 0) {
-                        for (x; x < rgCells.length; x++) {
-                            rgCells[x].innerText = "";
-                        }
-                        break;
-                    }
-                    rgCells[x].innerText = y;
-                    rgCells[x].style.backgroundColor = '#F9F9F0';
-                }
-            }
-
-            if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
-                var rgCells = m_eCalPopup.getElementsByTagName('TD');
-                x = iD + m_eCalTitle.idxDayOne;
-                rgCells[x].style.backgroundColor = '#F3F3B7';
-                m_cellSelTime = rgCells[x];
-            }
-        }).call(this)
-        :
-        (function() {
-            // IE
-            var x, y;
-            var iWhichDate = m_eCalPopup.WHICHDATE;
-            var iM = mfBuildMonth.iM;
-            var iD = mfBuildMonth.iD;
-            var iY = mfBuildMonth.iY;
-
-            if (m_eCalTitle.iMonth != iM || m_eCalTitle.iFullYear != iY) {
-                m_eCalTitle.innerHTML = mfFormatDateTitle(iM, iY, m_iCalFormat);
-                m_eCalTitle.iMonth = iM;
-                m_eCalTitle.iFullYear = iY;
-                var iLastDayPrevMonth = (iM == 0) ? mfGetDaysInMonth(12, iY - 1) : mfGetDaysInMonth(iM, iY);
-                var iLastDayThisMonth = mfGetDaysInMonth(iM + 1, iY);
-
-                mfBuildMonth.oTempD.setFullYear(iY, iM, 1);
-                var iFirstDay = mfBuildMonth.oTempD.getDay();
-
-                if (null != m_cellSelTime) {
-                    m_cellSelTime.style.backgroundColor = 'window';
-                }
-                var iOffset = iFirstDay - this.firstDayOfWeek;
-                if (iOffset < 0) {
-                    iOffset += 7;
-                }
-                var rgCells = m_eCalPopup.cells;
-                iOffset += 12; 
+                
                 for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = 'F9F9F0';
                 }
 
                 m_eCalTitle.idxDayOne = x - 1; 
+                
+                
                 for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = '#FFFFE8';
                 }
+                
+                
                 for (y = 1; x < rgCells.length; x++, y++) {
+                    
                     if (((x + 9) % 7) == 0) {
                         for (x; x < rgCells.length; x++) {
                             rgCells[x].innerText = ""; 
@@ -1955,6 +2067,76 @@
                 }
             }
 
+            
+            if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
+                var rgCells = m_eCalPopup.getElementsByTagName('TD');
+                x = iD + m_eCalTitle.idxDayOne;
+                rgCells[x].style.backgroundColor = '#F3F3B7';
+                m_cellSelTime = rgCells[x];
+            }
+        }).call(this)
+        :
+        (function () {
+            
+            var x, y;
+            var iWhichDate = m_eCalPopup.WHICHDATE;
+            var iM = mfBuildMonth.iM;
+            var iD = mfBuildMonth.iD;
+            var iY = mfBuildMonth.iY;
+
+            
+            if (m_eCalTitle.iMonth != iM || m_eCalTitle.iFullYear != iY) {
+                m_eCalTitle.innerHTML = mfFormatDateTitle(iM, iY, m_iCalFormat);
+                m_eCalTitle.iMonth = iM;
+                m_eCalTitle.iFullYear = iY;
+                var iLastDayPrevMonth = (iM == 0) ? mfGetDaysInMonth(12, iY - 1) : mfGetDaysInMonth(iM, iY);
+                var iLastDayThisMonth = mfGetDaysInMonth(iM + 1, iY);
+
+                mfBuildMonth.oTempD.setFullYear(iY, iM, 1);
+                var iFirstDay = mfBuildMonth.oTempD.getDay();
+
+                
+                if (null != m_cellSelTime) {
+                    m_cellSelTime.style.backgroundColor = 'window';
+                    
+                }
+                var iOffset = iFirstDay - this.firstDayOfWeek;
+                if (iOffset < 0) {
+                    iOffset += 7;
+                }
+                var rgCells = m_eCalPopup.cells;
+                iOffset += 12; 
+                
+
+                
+                for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
+                    rgCells[x].innerText = y;
+                    rgCells[x].style.backgroundColor = 'F9F9F0';
+                }
+
+                m_eCalTitle.idxDayOne = x - 1; 
+                
+                
+                for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
+                    rgCells[x].innerText = y;
+                    rgCells[x].style.backgroundColor = '#FFFFE8';
+                }
+                
+                
+                for (y = 1; x < rgCells.length; x++, y++) {
+                    
+                    if (((x + 9) % 7) == 0) {
+                        for (x; x < rgCells.length; x++) {
+                            rgCells[x].innerText = ""; 
+                        }
+                        break;
+                    }
+                    rgCells[x].innerText = y;
+                    rgCells[x].style.backgroundColor = '#F9F9F0';
+                }
+            }
+
+            
             if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
                 var rgCells = m_eCalPopup.cells;
                 x = iD + m_eCalTitle.idxDayOne;
@@ -1980,6 +2162,7 @@
     }
 
     mfFormatTime.szFormat;
+    
     function mfFormatTime(iMin) {
         var iHr = Math.floor(iMin / 60);
         var iMn = iMin % 60;
@@ -2066,6 +2249,8 @@
         return (szFormat);
     }
 
+    
+    
     function mfOutputDate(fFireChangeEvent, eDestField, iDateTime) {
         if (null == eDestField) {
             return;
@@ -2087,19 +2272,24 @@
         }
     }
 
+    
+    
+    
     function onClickDatePicker(event) {
         if (this != window[thisid]) {
             arguments.callee.call(window[thisid], event);
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
             var pDate = new Date();
 
             event.cancelBubble = true;
 
+            
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2124,9 +2314,13 @@
                 doNextYear.call(this);
             }
             else if (null == thisCell.nop) {
+                
                 var iDate = parseInt(srcElement.innerHTML);
                 
                 if (isNaN(iDate)) {
+                    
+
+                    
                     if ("#F3F3B7" == thisCell.style.backgroundColor.toUpperCase()
                     || "RGB(243, 243, 183)" == thisCell.style.backgroundColor.toUpperCase()) {
                         mfUnPopPicker.call(this);
@@ -2139,11 +2333,19 @@
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
+                
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
+
+                
+                
+                
+                
+                
 
                 
                 if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "RGB(255, 255, 232)")
                 && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) 
+                    
                 {
                     if (iDate < 15)	
                     {
@@ -2154,6 +2356,7 @@
                         m_objCurDate[iWhichDate].setMonth(m_eCalTitle.iMonth - 1, iDate);
                     }
                 }
+                
                 var eDestFld = srcElement.offsetParent.INPUTELEMENT;
                 mfOutputDate.call(this, true, eDestFld, 0);
 
@@ -2173,14 +2376,15 @@
             }
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
             var pDate = new Date();
 
             event.cancelBubble = true;
 
+            
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2205,9 +2409,11 @@
                 doNextYear.call(this);
             }
             else if (null == thisCell.nop) {
+                
                 var iDate = parseInt(srcElement.innerHTML);
                 
                 if (isNaN(iDate)) {
+                    
                     if ("#F3F3B7" == thisCell.style['background-color'].toUpperCase()
                     || "RGB(243, 243, 183)" == thisCell.style['background-color'].toUpperCase()) {
                         mfUnPopPicker.call(this);
@@ -2220,10 +2426,19 @@
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
+                
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
 
+                
+                
+                
+                
+                
+
+                
                 if ((thisCell.style['background-color'].toUpperCase() != "#FFFFE8" && thisCell.style['background-color'].toUpperCase() != "RGB(255, 255, 232)")
-                && (thisCell.style['background-color'].toUpperCase() != "#F3F3B7" && thisCell.style['background-color'].toUpperCase() != "RGB(243, 243, 183)"))
+                && (thisCell.style['background-color'].toUpperCase() != "#F3F3B7" && thisCell.style['background-color'].toUpperCase() != "RGB(243, 243, 183)")) 
+                    
                 {
                     if (iDate < 15)	
                     {
@@ -2234,6 +2449,7 @@
                         m_objCurDate[iWhichDate].setMonth(m_eCalTitle.iMonth - 1, iDate);
                     }
                 }
+                
                 var eDestFld = srcElement.offsetParent.INPUTELEMENT;
                 mfOutputDate.call(this, true, eDestFld, 0);
 
@@ -2253,12 +2469,13 @@
             }
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
             var pDate = new Date();
 
             event.cancelBubble = true;
 
+            
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (event.srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2283,8 +2500,12 @@
                 doNextYear.call(this);
             }
             else if (null == thisCell.nop) {
+                
                 var iDate = parseInt(event.srcElement.innerHTML);
+                
+                
                 if (isNaN(iDate)) {
+                    
                     if ("#F3F3B7" == thisCell.style.backgroundColor.toUpperCase()) {
                         mfUnPopPicker.call(this);
                     }
@@ -2296,9 +2517,16 @@
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
+                
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
 
-                if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7")) 
+                
+                
+                
+                
+                if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "RGB(255, 255, 232)")
+                && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) 
+                    
                 {
                     if (iDate < 15)	
                     {
@@ -2309,6 +2537,7 @@
                         m_objCurDate[iWhichDate].setMonth(m_eCalTitle.iMonth - 1, iDate);
                     }
                 }
+                
                 var eDestFld = event.srcElement.offsetParent.INPUTELEMENT;
                 mfOutputDate.call(this, true, eDestFld, 0);
 
@@ -2338,8 +2567,8 @@
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
-            // firefox
+        (function (event) {
+            
             if (!event) event = window.event;
             var thisCell = event.target;
             if (lastCell != null) {
@@ -2351,8 +2580,8 @@
             }
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
             var thisCell = event.target;
             if (lastCell != null) {
@@ -2364,8 +2593,8 @@
             }
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
             var thisCell = event.srcElement;
             if (lastCell != null) {
                 lastCell.style.fontWeight = "normal";
@@ -2384,27 +2613,30 @@
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
-            // firefox
+        (function (event) {
+            
             if (!event) event = window.event;
 
+            
             mfUnPopPicker.call(this);
             if (null == m_eCalPopup) mfCreateCalendar.call(this);
             mfPopPicker.call(this, m_eCalPopup, event);
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
 
+            
             mfUnPopPicker.call(this);
             if (null == m_eCalPopup) mfCreateCalendar.call(this);
             mfPopPicker.call(this, m_eCalPopup, event);
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
 
+            
             mfUnPopPicker.call(this);
             if (null == m_eCalPopup) mfCreateCalendar.call(this);
             mfPopPicker.call(this, m_eCalPopup);
@@ -2417,11 +2649,12 @@
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
-            // firefox
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
 
+            
             mfUnPopPicker.call(this);
             if (null == m_eTimePopup) mfCreateTimepicker.call(this);
             if (null == srcElement.WHICHDATE || 0 == srcElement.WHICHDATE) {
@@ -2436,11 +2669,12 @@
             }
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
             var srcElement = event.target;
 
+            
             mfUnPopPicker.call(this);
             if (null == m_eTimePopup) mfCreateTimepicker.call(this);
             if (null == srcElement.WHICHDATE || 0 == srcElement.WHICHDATE) {
@@ -2455,8 +2689,9 @@
             }
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
+            
             mfUnPopPicker.call(this);
             if (null == m_eTimePopup) mfCreateTimepicker.call(this);
             if (null == event.srcElement.WHICHDATE || 0 == event.srcElement.WHICHDATE) {
@@ -2479,23 +2714,25 @@
 
     function mfPopPicker(ePicker, event) {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(ePicker, event) {
-            // firefox
+        (function (ePicker, event) {
+            
             if (!event) event = window.event;
             event.cancelBubble = true;
             var eSrc = event.target;
             var iX = 0, iY = 0;
             var iLoc;
+            
             var szPoplocation = 'bottomright';
             if (GetAttribute(eSrc, 'popuplocation') != null && GetAttribute(eSrc, 'popuplocation') != "") {
                 szPoplocation = GetAttribute(eSrc, 'popuplocation').toLowerCase();
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
                 case "topright":
                     ePicker.style.display = "";
                     ePicker.style.left = String(event.clientX - event.layerX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 210) + 'px';
                     ePicker.style.top = String(event.clientY - event.layerY - eSrc.offsetHeight + m_winDocBody.scrollTop + 120) + 'px';
+                    
                     if (typeof (GetAttribute(eSrc, 'forceMarginTop')) != "undefined" && GetAttribute(eSrc, 'forceMarginTop') != null) {
                         ePicker.style.top = String(parseInt(ePicker.style.top) + parseInt(GetAttribute(eSrc, 'forceMarginTop'))) + 'px';
                     }
@@ -2518,6 +2755,7 @@
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
                         ePicker.style.left = String(ePicker.style.left + parseInt(eSrc.forceMarginLeft)) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
                         ePicker.style.top = String(ePicker.style.top + parseInt(eSrc.forceMarginTop)) + 'px';
                     }
@@ -2553,14 +2791,17 @@
             if (ePicker.tagName.search(/TABLE/i) == -1) 
             {
                 ePicker.focus();
-                iX = (m_objCurDate[iWhichDate].getHours() * 2) - ((m_objCurDate[iWhichDate].getMinutes() > 29) ? 0 : 1) + 1;
+                var getMin = (m_objCurDate[iWhichDate].getMinutes() > 30 || m_objCurDate[iWhichDate].getMinutes() == 0) ? 0 : 30;
+                iX = (m_objCurDate[iWhichDate].getHours() * 2) - ((getMin > 29) ? 0 : 1) + 1;
                 iX -= ePicker.children[0].value / 30; 
                 if (iX < 0) {
                     iX += 48; 
                 }
                 iY = (iX > 2) ? 2 : 0;
+                
                 ePicker.children[m_eTimePopup.children.length - 1].selected = 'true';
                 ePicker.children[iX - iY].selected = 'true';
+                
                 iX = (iX > 47) ? 0 : Math.ceil(iX);
                 ePicker.children[iX].selected = 'true';
                 ePicker.INPUTELEMENT = event.target.INPUTELEMENT;
@@ -2580,12 +2821,15 @@
                 mfPopPicker.hideElements = eSrc.HIDEELEMENTS;
                 document.getElementById(eSrc.HIDEELEMENTS).style.display = "none";
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
+                
                 case "topright":
                     ePicker.style.display = "";
                     ePicker.style.left = String(event.clientX - event.layerX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 210) + 'px';
+                    
+                    
                     ePicker.style.top = String(event.clientY - event.layerY - eSrc.offsetHeight + m_winDocBody.scrollTop + 120) + 'px'; 
 
                     if (typeof (GetAttribute(eSrc, 'forceMarginTop')) != "undefined" && GetAttribute(eSrc, 'forceMarginTop') != null) {
@@ -2610,6 +2854,7 @@
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
                         ePicker.style.left = String(ePicker.style.left + parseInt(eSrc.forceMarginLeft)) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
                         ePicker.style.top = String(ePicker.style.top + parseInt(eSrc.forceMarginTop)) + 'px';
                     }
@@ -2642,25 +2887,28 @@
             }
         }).call(this, ePicker, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(ePicker, event) {
-            // safari
+        (function (ePicker, event) {
+            
             if (!event) event = window.event;
             event.cancelBubble = true;
             var eSrc = event.target;
             var iX = 0, iY = 0;
             var iLoc;
+            
             var szPoplocation = 'bottomright';
             if (GetAttribute(eSrc, 'popuplocation') != null && GetAttribute(eSrc, 'popuplocation') != "") {
                 szPoplocation = GetAttribute(eSrc, 'popuplocation').toLowerCase();
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
                 case "topright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60 + 'px';
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
@@ -2668,21 +2916,22 @@
                     break
                 case "bottomright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop - 50;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop - 50 + 'px';
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     break
                 case "topleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
 
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
-                        ePicker.style.posLeft = ePicker.style.posLeft + parseInt(eSrc.forceMarginLeft);
+                        ePicker.style.left = ePicker.style.left + parseInt(eSrc.forceMarginLeft) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
@@ -2691,22 +2940,22 @@
                 default:
                 case "bottomleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break
                 case "topcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
                 case "bottomcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
@@ -2716,14 +2965,17 @@
             if (ePicker.tagName.search(/TABLE/i) == -1) 
             {
                 ePicker.focus();
-                iX = (m_objCurDate[iWhichDate].getHours() * 2) - ((m_objCurDate[iWhichDate].getMinutes() > 29) ? 0 : 1) + 1;
+                var getMin = (m_objCurDate[iWhichDate].getMinutes() > 30 || m_objCurDate[iWhichDate].getMinutes() == 0) ? 0 : 30;
+                iX = (m_objCurDate[iWhichDate].getHours() * 2) - ((getMin > 29) ? 0 : 1) + 1;
                 iX -= ePicker.children[0].value / 30; 
                 if (iX < 0) {
                     iX += 48; 
                 }
                 iY = (iX > 2) ? 2 : 0;
+                
                 ePicker.children.item(m_eTimePopup.children.length - 1).selected = 'true';
                 ePicker.children.item(iX - iY).selected = 'true';
+                
                 iX = (iX > 47) ? 0 : Math.ceil(iX);
                 ePicker.children.item(iX).selected = 'true';
                 ePicker.INPUTELEMENT = event.target.INPUTELEMENT;
@@ -2743,16 +2995,18 @@
                 mfPopPicker.hideElements = eSrc.HIDEELEMENTS;
                 document.getElementById(eSrc.HIDEELEMENTS).style.display = "none";
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
+                
                 case "topright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 80; 
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60 + 'px'; 
 
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
@@ -2760,21 +3014,22 @@
                     break
                 case "bottomright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     break
                 case "topleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
 
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
-                        ePicker.style.posLeft = ePicker.style.posLeft + parseInt(eSrc.forceMarginLeft);
+                        ePicker.style.left = ePicker.style.left + parseInt(eSrc.forceMarginLeft) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
@@ -2783,48 +3038,51 @@
                 default:
                 case "bottomleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break
                 case "topcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
                 case "bottomcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
             }
         }).call(this, ePicker, event)
         :
-        (function(ePicker, event) {
-            // IE
+        (function (ePicker, event) {
+            
             if (!event) event = window.event;
             event.cancelBubble = true;
             var eSrc = event.srcElement;
             var iX = 0, iY = 0;
             var iLoc;
+            
             var szPoplocation = 'bottomright';
 
             if (GetAttribute(eSrc, 'popuplocation') != null && GetAttribute(eSrc, 'popuplocation') != "") {
                 szPoplocation = GetAttribute(eSrc, 'popuplocation').toLowerCase();
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
                 case "topright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60 + 'px';
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
@@ -2832,44 +3090,46 @@
                     break
                 case "bottomright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop - 50;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop - 50 + 'px';
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     break
                 case "topleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
 
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
-                        ePicker.style.posLeft = ePicker.style.posLeft + parseInt(eSrc.forceMarginLeft);
+                        ePicker.style.left = ePicker.style.left + parseInt(eSrc.forceMarginLeft) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
                 default:
+                case "bottomleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break
                 case "topcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop; + 'px';
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
                 case "bottomcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
@@ -2885,8 +3145,10 @@
                     iX += 48; 
                 }
                 iY = (iX > 2) ? 2 : 0;
+                
                 ePicker.children(m_eTimePopup.children.length - 1).selected = 'true';
                 ePicker.children(iX - iY).selected = 'true';
+                
                 iX = (iX > 47) ? 0 : Math.ceil(iX);
                 ePicker.children(iX).selected = 'true';
                 ePicker.INPUTELEMENT = event.srcElement.INPUTELEMENT;
@@ -2906,16 +3168,19 @@
                 mfPopPicker.hideElements = eSrc.HIDEELEMENTS;
                 m_winDocAll[eSrc.HIDEELEMENTS].style.display = "none";
             }
-
+            ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
+                
                 case "topright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 80; 
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    
+                    
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 80 + 'px'; 
 
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
@@ -2923,21 +3188,22 @@
                     break
                 case "bottomright":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'right')) iX -= m_iCalWidth + m_iBtnWidth;
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     break
                 case "topleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop - 60;
+                    ePicker.style.left = event.clientX - event.offsetX + -ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop - 60 + 'px';
 
                     if (typeof (eSrc.forceMarginLeft) != "undefined" && eSrc.forceMarginLeft != null) {
-                        ePicker.style.posLeft = ePicker.style.posLeft + parseInt(eSrc.forceMarginLeft);
+                        ePicker.style.left = ePicker.style.left + parseInt(eSrc.forceMarginLeft) + 'px';
                     }
+                    
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
-                        ePicker.style.posTop = ePicker.style.posTop + parseInt(eSrc.forceMarginTop);
+                        ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
                     }
 
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
@@ -2946,22 +3212,22 @@
                 default:
                 case "bottomleft": 
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - ePicker.offsetWidth + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break
                 case "topcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY - ePicker.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (iY < m_winDocBody.scrollTop) iY += m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
                 case "bottomcenter":
                     ePicker.style.display = "";
-                    ePicker.style.posLeft = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft;
-                    ePicker.style.posTop = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop;
+                    ePicker.style.left = event.clientX - event.offsetX - (ePicker.offsetWidth / 2) + m_winDocBody.scrollLeft + 'px';
+                    ePicker.style.top = event.clientY - event.offsetY + eSrc.offsetHeight + m_winDocBody.scrollTop + 'px';
                     if (!fIsRoom(iX, iY, 'bottom')) iY -= m_iCalHeight + m_iBtnHeight;
                     if (iX < m_winDocBody.scrollLeft) iX += m_iCalWidth + m_iBtnWidth;
                     break;
@@ -2976,24 +3242,24 @@
             return;
         }
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
-        (function(event) {
-            // firefox
+        (function (event) {
+            
             if (!event) event = window.event;
             if (null == event.originalTarget) {
                 mfUnPopPicker.call(this);
             }
         }).call(this, event)
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
-        (function(event) {
-            // safari
+        (function (event) {
+            
             if (!event) event = window.event;
             if (null == event.toElement) {
                 mfUnPopPicker.call(this);
             }
         }).call(this, event)
         :
-        (function() {
-            // IE
+        (function () {
+            
             if (null == event.toElement) {
                 mfUnPopPicker.call(this);
             }
@@ -3015,6 +3281,8 @@
     }
 
 
+    
+    
     mfParseTime.time;
     mfParseTime.ampm;
     function mfParseTime(szTime) {
@@ -3023,6 +3291,7 @@
             mfParseTime.time = new RegExp(szExpT, "gi");
             mfParseTime.ampm = new RegExp("(" + m_szAMtext + "|" + m_szAMtext.substring(0, 1) + ")|(" + m_szPMtext + "|" + m_szPMtext.substring(0, 1) + ")", "gi");
         }
+        
         mfParseTime.time.lastIndex = 0;
         mfParseTime.ampm.lastIndex = 0;
         var hms = mfParseTime.time.exec(szTime);
@@ -3048,7 +3317,7 @@ function isie9() {
         var arr = str1.split(';');
         var verstr = arr[0].split(' ')[1];
         var version = parseFloat(verstr);
-        if (version >= 9) // IE9
+        if (version >= 9) 
         {
             return true;
         }

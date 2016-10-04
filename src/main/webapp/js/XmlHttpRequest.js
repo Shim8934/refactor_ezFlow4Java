@@ -1,169 +1,170 @@
-﻿﻿//XMLHttpRequest객체를 생성합니다.
+﻿function BroswerAndNonActiveXCheck() {
+    if (CrossYN()) {
+        return "CROSS";
+    } else {
+        return "IE";
+    }
+    
+    /*
+    if (typeof(pNoneActiveX) == "undefined")
+    {        
+        if (window.ActiveXObject || "ActiveXObject" in window) {
+            return "IE";
+        }       
+        else if (window.DOMParser) {
+            return "CROSS";
+        }
+    }
+    else
+    { 
+        if (pNoneActiveX == "YES") {
+            return "CROSS";
+        }
+        else {
+            if (window.ActiveXObject || "ActiveXObject" in window) {
+                return "IE";
+            }
+            else if (window.DOMParser) {
+                return "CROSS";
+            }
+        }
+    }    
+    */
+}
+
 function createXMLHttpRequest() {
     var oXmlRequest;
-    try {
-        //파폭,크롬,오페라,사파리등등
-        oXmlRequest = new XMLHttpRequest();
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        oXmlRequest = new XMLHttpRequest(); 
     }
-    catch (trymicrosoft) {
-        try {
-            oXmlRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        catch (failed) {
-            oXmlRequest = false;
-        }
-    }
-
+    else {
+        oXmlRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    }    
     return oXmlRequest;
 }
-//DOM 객체를 생성합니다.
-function createXmlDom() {
-    var xmlDoc;
 
-    if (window.ActiveXObject) {
-        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-    }
-    else if (document.implementation && document.implementation.createDocument) {
+function createXmlDom() {
+    var xmlDoc;    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         xmlDoc = document.implementation.createDocument("", "", null);
     }
     else {
-        xmlDoc = null;
-    }
-
+        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+    }    
     return xmlDoc;
 }
-//XMLFile을 DOM 객채로 반환합니다.
-//filename:파일 경로및 xml파일명을 인자값으로 받습니다.
-function loadXMLFile(filename) {
 
-    var xhttp;
-    if (window.ActiveXObject) {
-        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+function loadXMLFile(filename) {
+    var xmlhttp;    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        xmlhttp = new XMLHttpRequest();
     }
     else {
-        xhttp = new XMLHttpRequest();
-    }
-
-    xhttp.open("GET", filename, false);
-    xhttp.send();
-    //return xhttp.responseXML;     //2011.07.05 IE 외 다른 브라우져에서 적용안됨.
-    return loadXMLString(xhttp.responseText);
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }    
+    xmlhttp.open("GET", filename, false);
+    xmlhttp.send();
+    return loadXMLString(xmlhttp.responseText);
 }
-//XMLString을 DOM 객채로 반환합니다.
 function loadXMLString(xmlstring) {
-    var xmlDoc;
-    if (window.ActiveXObject) {
-        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-        xmlDoc.async = "false";
-        xmlDoc.loadXML(xmlstring);
-    }
-    else if (window.DOMParser) {
+    var xmlDoc;  
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var parser = new DOMParser();
         xmlDoc = parser.parseFromString(xmlstring, "text/xml");
         parser = null;
     }
+    else {
+        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        xmlDoc.async = "false";
+        xmlDoc.loadXML(xmlstring);
+    }
     return xmlDoc;
 }
-//노드를 생성합니다.
 function createNode(node, tagName) {
-
-    if (window.ActiveXObject) {
-        return node.createNode(1, tagName, "");
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         return node.createElement(tagName);
     }
+    else {
+        return node.createNode(1, tagName, "");        
+    }    
 }
-//text를 추가합니다.
 function InsertText(xmlDoc, node, value) {
-
-    if (window.ActiveXObject) {
-        node.text = value;
-        xmlDoc.documentElement.appendChild(node);
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var newText = document.createTextNode(value);
         node.appendChild(newText);
         xmlDoc.documentElement.appendChild(node);
     }
+    else {
+        node.text = value;
+        xmlDoc.documentElement.appendChild(node);        
+    }
     return node;
 }
-//text 추가후 target에 노드를 추가합니다.
 function appendChildText(targetNode, node, value) {
-    if (window.ActiveXObject) {
-        node.text = value;
-        targetNode.appendChild(node);
-    }
-    else if (window.DOMParser) {
-
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var newText = document.createTextNode(value);
         node.appendChild(newText);
         targetNode.appendChild(node);
     }
+    else {
+        node.text = value;
+        targetNode.appendChild(node);        
+    }    
     return node;
 }
 
-function appendChildCDataText(targetNode, node, value, xmlDoc) {
-    if (window.ActiveXObject) {
+function appendChildCDataText(targetNode, node, value, xmlDoc) {    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        var newText = document.createTextNode(value);
+        node.appendChild(newText);
+        targetNode.appendChild(node);
+    }
+    else {
         var CDATA = xmlDoc.createCDATASection(value);
         node.appendChild(CDATA);
         targetNode.appendChild(node);
-    }
-    else if (window.DOMParser) {
-        var newText = document.createTextNode(value);
-        node.appendChild(newText);
-        targetNode.appendChild(node);
-    }
+    }    
     return node;
 }
 
-//노드를 생성하고  rootNode를 추가합니다
 function createNodeInsert(xmlparam, node, tagName) {
-
     node = createNode(xmlparam, tagName);
     xmlparam.appendChild(node);
     return node;
 }
 
-//노드를 생성하고 text를 추가합니다.
 function createNodeAndInsertText(xmlparam, node, tagName, value) {
-
     node = createNode(xmlparam, tagName);
     InsertText(xmlparam, node, value);
     return node;
 }
 
-//노드를 생성하고 text를 추가합니다.
 function createNodeAndInsertCDataText(xmlparam, node, tagName, value) {
-
     node = createNode(xmlparam, tagName);
     InsertCDataText(xmlparam, node, value);
     return node;
 }
 
-//text를 추가합니다.
-function InsertCDataText(xmlDoc, node, value) {
-    if (window.ActiveXObject) {
-        var CDATA = xmlDoc.createCDATASection(value);
-        node.appendChild(CDATA);
-        xmlDoc.documentElement.appendChild(node);
-    }
-    else if (document.implementation && document.implementation.createDocument) {
+function InsertCDataText(xmlDoc, node, value) {    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var newText = document.createTextNode(value);
         node.appendChild(newText);
         xmlDoc.documentElement.appendChild(node);
     }
+    else {
+        var CDATA = xmlDoc.createCDATASection(value);
+        node.appendChild(CDATA);
+        xmlDoc.documentElement.appendChild(node);
+    }    
     return node;
 }
 
-//노드를 생성하고 targetNode에 추가합니다.
 function createNodeAndAppandNode(xmlparam, targetNode, node, tagName) {
     node = createNode(xmlparam, tagName);
     targetNode.appendChild(node);
     return node;
 }
 
-//노드를 생성하고 text 추가 후 targetNode 추가합니다.
 function createNodeAndAppandNodeText(xmlparam, targetNode, node, tagName, value) {
     node = createNode(xmlparam, tagName);
     appendChildText(targetNode, node, value);
@@ -176,41 +177,25 @@ function createNodeAndAppandNodeCDataText(xmlparam, targetNode, node, tagName, v
     return node;
 }
 
-//태그명으로 노드객체의 Element를 가져옵니다.
 function GetElementsByTagName(node, tagName) {
-    var elements = new Array();
-
-    var idx = 0;
-    if (window.ActiveXObject) {
-        return node.getElementsByTagName(tagName);
-    }
-    else if (window.DOMParser) {
-        return node.getElementsByTagName(tagName);
-    }
-
-    return elements;
+    return node.getElementsByTagName(tagName);
 }
 
 function SelectNodesNew(xmlDoc, path) {
     var nodes;
-    // code for IE
-    if (window.ActiveXObject) {
-        nodes = xmlDoc.selectNodes(path);
-    }
-        // code for Mozilla, Firefox, Opera, etc.
-    else if (document.implementation && document.implementation.createDocument) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         nodes = xml.evaluate(path, xmlDoc, null, XPathResult.ANY_TYPE, null);
     }
+    else {
+        nodes = xmlDoc.selectNodes(path);
+    }    
     return nodes;
 }
 
-//해당 노드의 패스를 가져옵니다. 
 function SelectNodes(xmlDoc, elementPath) {
-
     var parentPath = "";
     var nodeName = "";
     var parentNode = null;
-    //공백이거나 널인경우 반환
     if (elementPath == null || elementPath == "" || elementPath == "undfined") return false;
     if (elementPath.indexOf("/") == -1) {
         parentPath = elementPath;
@@ -227,7 +212,6 @@ function SelectNodes(xmlDoc, elementPath) {
                 parentPath = "//" + parentPath;
             }
         }
-        //Document 인경우
         if (xmlDoc.nodeType == 9) {
             parentNode = SelectSingleNodeNew(xmlDoc, parentPath);
         }
@@ -240,38 +224,29 @@ function SelectNodes(xmlDoc, elementPath) {
     return GetElementsByTagName(parentNode, nodeName);
 }
 
-//해당 태그네임으로 노드를 가져옵니다.
 function SelectSingleNode(node, tagName) {
     var objNode = null;
-    if (window.ActiveXObject && node != null) {
-        if (node.selectSingleNode(tagName))
-            return node.selectSingleNode(tagName);
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         objNode = node.firstChild;
-
         while (objNode) {
-
-            //element 타입이면서 동일한 태그명 인경우
             if (objNode.nodeType == 1 && objNode.tagName == tagName)
                 break;
             else
                 objNode = objNode.nextSibling;
         }
     }
+    else {
+        if(node != null)
+        {
+            if (node.selectSingleNode(tagName))
+                return node.selectSingleNode(tagName);
+        }
+    }
     return objNode;
 }
 
-//기존과 동일하게 path로 가져올수 있습니다. "DOCLIST/TREEVIEW" 
-//xmlDoc 이 Document 타입인 경우만 가능합니다. 
 function SelectSingleNodeNew(xmlDoc, elementPath) {
-    //fireFox
-    if (window.ActiveXObject) {
-        try {
-            var elements = xmlDoc.selectSingleNode(elementPath);
-        } catch (e) { }
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         if (elementPath.indexOf("//") != 0) {
             if (elementPath.indexOf("/") == 0) {
                 elementPath = "/" + elementPath;
@@ -310,45 +285,42 @@ function SelectSingleNodeNew(xmlDoc, elementPath) {
             elements = selNode;
         }
     }
+    else {
+        try {
+            var elements = xmlDoc.selectSingleNode(elementPath);
+        } catch (e) { }
+    }    
     return elements;
 }
 
-//해당 태그네임으로 nodeValue를 가져옵니다.
 function SelectSingleNodeValue(node, tagName) {
     var strValue = "";
-    if (window.ActiveXObject && node != null) {
-        if (node.selectSingleNode(tagName))
-            return node.selectSingleNode(tagName).text;
-    }
-    else if (window.DOMParser) {
-        if (node != undefined) {
-            var objNode = node.firstChild;
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        var objNode = node.firstChild;
 
-            while (objNode) {
-                if (objNode.nodeType == 1 && objNode.tagName.toUpperCase() == tagName.toUpperCase()) {
-                    if (objNode.firstChild != null && objNode.firstChild.nodeValue != null) {
-                        strValue = objNode.firstChild.nodeValue;
-                    }
-                    break;
+        while (objNode) {
+            if (objNode.nodeType == 1 && objNode.tagName.toUpperCase() == tagName.toUpperCase()) {
+                if (objNode.firstChild != null && objNode.firstChild.nodeValue != null) {
+                    strValue = objNode.firstChild.nodeValue;
                 }
-                else {
-                    objNode = objNode.nextSibling;
-                }
+                break;
+            }
+            else {
+                objNode = objNode.nextSibling;
             }
         }
+    }
+    else {
+        if (node != null)
+            if (node.selectSingleNode(tagName))
+                return node.selectSingleNode(tagName).text;
     }
     return strValue;
 }
 
-//기존과 동일하게 path로 가져올수 있습니다. "DOCLIST/TREEVIEW"
-//xmlDoc 이 Document 타입인 경우만 가능합니다.
 function SelectSingleNodeValueNew(xmlDoc, elementPath) {
-    var strValue = "";
-    if (window.ActiveXObject) {
-        if (xmlDoc.selectSingleNode(elementPath))
-            return xmlDoc.selectSingleNode(elementPath).text;
-    }
-    else if (window.DOMParser) {
+    var strValue = "";    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         if (elementPath.indexOf("//") != 0) {
             if (elementPath.indexOf("/") == 0) {
                 elementPath = "/" + elementPath;
@@ -384,8 +356,12 @@ function SelectSingleNodeValueNew(xmlDoc, elementPath) {
         
         if (elements != null && elements.firstChild != null && elements.firstChild.nodeValue != null) {
             strValue = elements.firstChild.nodeValue;
-        }
+        }        
     }
+    else {
+        if (xmlDoc.selectSingleNode(elementPath))
+            return xmlDoc.selectSingleNode(elementPath).text;
+    }    
     return strValue;
 }
 function GetSelectSingleNode(nodes, value) {
@@ -399,10 +375,10 @@ function GetSelectSingleNode(nodes, value) {
     return result;
 }
 
-//자식노드들을 가져옵니다.
 function GetChildNodes(node) {
     var elements = new Array();
-    var objNode = node.firstChild;
+
+    objNode = node.firstChild;
 
     var idx = 0;
     while (objNode) {
@@ -411,29 +387,44 @@ function GetChildNodes(node) {
         }
         objNode = objNode.nextSibling;
     }
+
     return elements;
+
+    /*
+    var elements = new Array();
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        objNode = node.firstChild;
+
+        var idx = 0;
+        while (objNode) {
+            if (objNode.nodeType == 1) {
+                elements[idx++] = objNode;
+            }
+            objNode = objNode.nextSibling;
+        }
+    }
+    else {
+        return node.childNodes;
+    }    
+    return elements;
+    */
 }
-    //자식노드들을 가져옵니다.
-    //자식 노드중 특정 노드명의 자식만 가져옵니다.
+
 function GetChildNodesByNodeName(node, nodeName) {
     var elements = new Array();
-    if (window.ActiveXObject) {
-        return node.getElementByTagName(nodeName);
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var parentNode = SelectSingleNodeNew(node, "//" + nodeName).parentNode;
         elements = GetElementsByTagName(parentNode, nodeName);
     }
-
+    else {
+        return node.getElementsByTagName(nodeName);
+    }    
     return elements;
 }
 
-//맨 마지막 아이템의 ChildNodes를 가져옵니다.
-//node: Element,params: array==>순차적으로 인덱스값을 이용하여 childNodes를 가져옵니다. 
 function GetLastChildNodes(node, params) {
     var resultNodes = GetChildNodes(node);
     if (params == null || params.length == 0) return resultNodes;
-    //params의 배열값을 순차적으로 돌아가며 최종 childNodes의 결과값을 가져옵니다. 
     for (var i = 0; i < params.length; i++) {
         var idx = parseInt(params[i], 10);
         resultNodes = GetChildNodes(resultNodes[idx]);
@@ -442,23 +433,18 @@ function GetLastChildNodes(node, params) {
 }
 
 function SetChildNodeText(objDoc, params, inputIdx, value) {
-    //배열의 끝에 할당하고자 하는 인자값을 추가합니다.
     params.push(inputIdx);
-
     var arrNode = new Array();
     if (params == null || params.length == 0) return;
 
     var resultNode = objDoc;
-    //params의 배열값을 순차적으로 돌아가며 최종 childNodes의 결과값을 가져옵니다. 
     for (var i = 0; i < params.length; i++) {
         var idx = parseInt(params[i], 10);
         resultNode = GetNodeLevel(resultNode, arrNode, idx);
     }
-    //재사용을 위하여 추가된 마지막 파라메터의 인자를 삭제한다.
     params.pop();
 
     if (arrNode == null || arrNode.length == 0) return;
-
     var nodecnt = arrNode.length;
     var idx0 = 0;
     var idx1 = 1;
@@ -500,7 +486,6 @@ function SetChildNodeText(objDoc, params, inputIdx, value) {
     }
     return true;
 }
-    //자식노드들을 가져옵니다.
 function GetNodeLevel(node, arrNode, paraIdx) {
     objNode = node.firstChild;
     var idx = 0;
@@ -521,23 +506,28 @@ function GetNodeLevel(node, arrNode, paraIdx) {
     return objNode;
 }
 
-//속성요소를 가져옵니다
 function GetAttribute(node, name) {
     var result = "";
-    if (node != null && name != null && node.getAttribute(name) != null) {
-        result = node.getAttribute(name);
-    }
 
-    return String(result);
+    if (node != null && name != null) {
+        if (node.getAttribute(name) == null || node.getAttribute(name) == "undefined") {
+            return null;
+        }
+        else {
+            result = node.getAttribute(name);
+            return String(result);
+        }
+    }
+    else {
+        return result;
+    }
 }
 
-//노드에 속성을 추가하거나 변경합니다. 
 function SetAttribute(node, name, value) {
 
     if (node != null) node.setAttribute(name, value);
 }
 
- //documentElement에서 xmlString을 가져옵니다.
 function getXmlString(xmlDoc) {
 
     if (xmlDoc.nodeType == 9) {
@@ -550,22 +540,24 @@ function getXmlString(xmlDoc) {
 
     if (xmlDoc.nodeType == 9) {
         resultXML = trim_Cross(getFirstChild(xmlDoc).xml);
-    } else {
+    }
+    else if (xmlDoc.nodeType == 1) {
+        if (typeof (xmlDoc.xml) != "undefined")
+            resultXML = trim_Cross(xmlDoc.xml);
+        else
+            resultXML = trim_Cross((new XMLSerializer()).serializeToString(xmlDoc));
+    }
+    else {
         resultXML = trim_Cross(xmlDoc.xml);
     }
     return resultXML;
 }
 
-    /******************************************************************************
-    * 현재 노드에 포함되어 있는 모든 XML 직렬화(IE에서 xml속성). 
-    * IE가 아닌 타 브라우서에서 사용.
-    *****************************************************************************/
 function GetSerializeXml(oNode) {
     var oSerializer = new XMLSerializer();
     return oSerializer.serializeToString(oNode);
 }
 
-//첫번째 노드를 가져옵니다.
 function getFirstChild(node) {
     var child1 = node.firstChild;
     while (child1.nodeType != 1) {
@@ -574,7 +566,6 @@ function getFirstChild(node) {
 
     return child1;
 }
-    //Cross 마지막 노드를 가져옵니다.
 function getLastChild(node) {
     var lchild = node.lastChild;
     while (lchild.nodeType != 1) {
@@ -582,25 +573,63 @@ function getLastChild(node) {
     }
     return lchild;
 }
-    //노드를 텍스트를 가져옵니다.
 function getNodeText(node) {
     var result = "";
-    if (window.ActiveXObject) {
-        result = trim_Cross(node.text);
-    }
-    else if (window.DOMParser) {
-        result = trim_Cross(node.textContent);
+    if (node != null) {
+        if (BroswerAndNonActiveXCheck() == "CROSS") {
+            if (typeof (node.textContent) != "undefined") {
+                result = trim_Cross(node.textContent);
+            }
+            else {
+                result = trim_Cross(node.text);
+            }
+        }
+        else {
+            if (typeof (node.innerText) == "undefined") {
+                result = trim_Cross(node.text);
+            }
+            else {
+                result = trim_Cross(node.innerText);
+            }
+
+        }
     }
     return result;
 }
 
 function setNodeText(node, value) {
-    if (window.ActiveXObject) {
-        node.text = value;
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         node.textContent = value;
     }
+    else {
+        if (typeof (node.innerText) == "undefined") {
+            node.text = value;
+        }
+        else {
+            node.innerText = value;
+        }
+    }
+}
+
+function getFieldText(node) {
+    var result = "";
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        result = trim_Cross(node.textContent);
+    }
+    else {
+        result = trim_Cross(node.innerText);
+    }    
+    return result;
+}
+
+function setFieldText(node, value) {
+    var result = "";   
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
+        node.textContent = value;
+    }
+    else {
+        node.innerText = value;
+    }    
 }
 
 String.prototype.trim = function () {
@@ -610,106 +639,106 @@ String.prototype.trim = function () {
 function trim_Cross(value) {
     value = String(value);
     value = value.trim();
-    if (value == null || value == "undefind" || value == "" || value == "\n") {
+    if (value == null || value == "undefined" || value == "" || value == "\n") {
         return "";
     }
     return value.trim();
 }
-//사용하지 않음 기존분서 호환성을 위해 남겨둠
-/////////////////////////////////////////////////////////////////////////////
-function getXmlFromHttp(req) {
-
-    if (window.ActiveXObject) {
-        return req.responseXML;
-    }
-    else if (window.DOMParser) {
+function getXmlFromHttp(req) {    
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         return (new DOMParser()).parseFromString(req.responseText, "text/xml");
     }
+    else {
+        return req.responseXML;
+    }    
 }
 
 function createXMLDomFromXmlString(pXML) {
     var xmlDoc;
-    if (window.ActiveXObject) {
-        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-        xmlDoc.loadXML(pXML);
-        return xmlDoc;
-    }
-    else if (window.DOMParser) {
+    if (BroswerAndNonActiveXCheck() == "CROSS") {
         var parser = new DOMParser();
         xmlDoc = parser.parseFromString(pXML, "text/xml");
         parser = null;
         return xmlDoc;
     }
     else {
-        return null;
-    }
+        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        xmlDoc.loadXML(pXML);
+        return xmlDoc;
+    }    
 }
-////////////////////////////////////////////////////////////////////////
-// CrossBrowser적용
+
 function CrossYN() {
-	var ua = navigator.userAgent;
-	var result = true;
+    var ua = navigator.userAgent;
+    var result = true;
 
     // 크로스 브라우저 IE:false IE외: true    
-	if (/msie/i.test(ua)){
-		result = false;
-//	}else if (/rv:11.0/i.test(ua)){
-//		result = false;
-	}else if (/firefox/i.test(ua)){
-		result = true;
-	}else if (/chrome/i.test(ua)){
-		result = true;
-	}else if (/safari/i.test(ua)){
-		result = true;
-	}else if (/opera/i.test(ua)){
-		result = true;
-	}else if (/trident/i.test(ua)){
-		result = true;
-	}
-	
+    if (/msie/i.test(ua)){
+        result = false;
+    }else if (/firefox/i.test(ua)){
+        result = true;
+    }else if (/chrome/i.test(ua)){
+        result = true;
+    }else if (/safari/i.test(ua)){
+        result = true;
+    }else if (/opera/i.test(ua)){
+        result = true;
+    }else if (/trident/i.test(ua)){
+        result = true;
+    }
+    
     return result;
+
+    /*
+    var result = true;
+    if (navigator.appName.indexOf("Microsoft") > -1) {
+        result = false;
+    } else {
+        if (navigator.userAgent.indexOf("Trident") > 0)
+            result = false;
+        else
+            result = true;
+    }
+    return result;
+    */
 }
 
-///////////////////////////////////////////////////////////////////////
-// CK Editer 관련 함수 ////////////////////////////////////////////////
-function ConvertMHTtoHTML(pURL) {	
+function ConvertMHTtoHTML(pURL) {
     var rtnVal = '';
-
+    
     $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezCommon/mhtToHTML.do",
-		data : { strURL   : pURL },
-		success: function(result){
-			rtnVal = result;
-		}        			
-	});
-    return rtnVal;
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezCommon/mhtToHTML.do",
+        data : { strURL   : pURL },        
+        success: function(result){
+            rtnVal = result;
+        }                   
+    });
+    return rtnVal;    
 }
 
 function ConvertHTMLtoMHT(pContent) {
-	var rtnVal = '';
+    var rtnVal = '';
     $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezCommon/htmlToMHT.do",
-		data : { strHTML   : encodeURIComponent(pContent) },
-		success: function(result){
-			rtnVal = result;
-		}        			
-	});
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezCommon/htmlToMHT.do",
+        data : { strHTML   : encodeURIComponent(pContent) },        
+        success: function(result){
+            rtnVal = result;
+        }                   
+    });
     
-    return rtnVal;
+    return rtnVal;    
 }
 
-
-//에디터 Read 프레임 관련 사용함수
 function CKediter_Trim(value) {
     var temp = trim_Cross(value);
-    temp = temp.replace(/\n/g, "");     // 행바꿈제거
-    temp = temp.replace(/\r/g, "");      // 엔터제거 
+    temp = temp.replace(/\n/g, "");     
+    temp = temp.replace(/\r/g, "");     
     return temp;
 }
 
@@ -741,7 +770,6 @@ function GetBODY(iframePage) {
     return BODYTag;
 }
 
-//CKEDITOR
 function GetListItem(pList, str) {
     for (i = 0; i < pList.length; i++) {
         if (pList[i].id == str)
@@ -749,7 +777,6 @@ function GetListItem(pList, str) {
     }
 }
 
-// 웹에디터의 필드 값을 리턴
 function GetNamedItem(iframePage, id, index) {
     var rtnVal = null;
     var tmp = null;
@@ -784,7 +811,7 @@ function GetMhtContentHTML(pfilepath) {
     } catch (e) {
         Result = e.description;
     }
-    return Result;
+    return Result;    
 }
 
 function setpause(numberMillis) {
@@ -798,7 +825,6 @@ function setpause(numberMillis) {
 }
 
 function GetShowModalPosition(popUpW, popUpH) {
-    //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
     var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
     var left = 0;
@@ -818,7 +844,6 @@ function GetShowModalPosition(popUpW, popUpH) {
 }
 
 function GetOpenPosition(popUpW, popUpH) {
-    //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
     var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
     var left = 0;
@@ -827,16 +852,12 @@ function GetOpenPosition(popUpW, popUpH) {
     pleftpos = parseInt(width) - popUpW;
     heigth = parseInt(heigth) - popUpH;
     width = parseInt(width) - pleftpos;
-
     left = pleftpos / 2;
     top = heigth / 2;
-
     var feature = ",left=" + left + ",top=" + top;
-
     return feature
 }
 
-//브라우져를 통한 로컬 언어 값 가져오는 함수
 function GetbrowserLanguage() {
     var strReturn = "";
     var strLang = "";
@@ -856,17 +877,13 @@ function GetbrowserLanguage() {
 }
 
 function GetCKEditerHeader() {
-    return "<HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    return "<HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD>";
 }
-    // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
     useragt = navigator.userAgent.toUpperCase();
-    if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
+    if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) 
     {
         return;
-        //useragt = useragt.substring(useragt.indexOf("VERSION/") + 8, useragt.indexOf("VERSION/") + 9);
-        //if (parseInt(useragt) > 5) {
-        //}
     }
     obj.onkeydown = function () {
         if (parseInt(window.event.keyCode) >= 48 && parseInt(window.event.keyCode) <= 126)
@@ -898,7 +915,11 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     }
 }
 
-function GetOpenWindowfeature(popUpW, popUpH) {
+function ReplaceAll(pStrContent, pStrOrg, pStrRep) {
+    return pStrContent.split(pStrOrg).join(pStrRep);
+}
+
+function GetOpenWindowfeature(popUpW, popUpH, scrollFlag) {
     var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
     var left = 0;
@@ -909,7 +930,11 @@ function GetOpenWindowfeature(popUpW, popUpH) {
     width = parseInt(width) - pleftpos;
     left = pleftpos / 2;
     top = heigth / 2;
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no";
+
+    if (scrollFlag == undefined || scrollFlag == "NO" || !scrollFlag)
+        var feature = "height=" + popUpH + "px,width=" + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no";
+    else
+        var feature = "height=" + popUpH + "px,width=" + popUpW + "px,left=" + left + ",top=" + top + ",scrollbars=yes, status=no, toolbar=no, menubar=no,location=no, resizable=no";
     return feature
 }
 
@@ -918,17 +943,10 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     if (MACSAFARIYN())
         popUpH = popUpH + 50;
 
-    //var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-    //var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-    //var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    //var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-    //var left = ((width / 2) - (popUpW / 2)) + dualScreenLeft;
-    //var top = ((height / 2) - (popUpH / 2)) + dualScreenTop;
-
     var left = (screen.width / 2) - (popUpW / 2);
     var top = (screen.height / 2) - (popUpH / 2);
 
-    if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
+    if (resizeFlag == undefined || resizeFlag == "NO" || !resizeFlag)
         resize = "resizable=no";
     else
         resize = "resizable=yes";
@@ -1026,12 +1044,10 @@ function DivPopUpHidden_sub() {
         document.getElementById("iFrameLayer_sub").src = "/blank.htm";
     } catch (e) { }
 }
-// 2002-11-05 >> return 20021105
 function CalToDate(p_strCal) {
     return p_strCal.substr(0, 4) + p_strCal.substr(5, 2) + p_strCal.substr(8, 2);
 }
 
-// 20021105 >> return 2002-11-05
 function CalToDate2(p_strCal) {
     return p_strCal.substr(0, 4) + "-" + p_strCal.substr(4, 2) + "-" + p_strCal.substr(6, 2);
 }
@@ -1423,15 +1439,15 @@ function CompareDate(sdate, edate) {
 function getHourInterval(time1, time2) {
     var date1 = toTimeObject(time1);
     var date2 = toTimeObject(time2);
-    var hour = 1000 * 3600;          //1시간이다.
+    var hour = 1000 * 3600;          
 
     var returnval = parseFloat((date2 - date1) / hour);
     return returnval.toFixed(2);
 }
 
-function toTimeObject(time) { //YYYYMMDDHHMI 형태
+function toTimeObject(time) { 
     var year = time.substr(0, 4);
-    var month = time.substr(4, 2) - 1; // 1월=0, 12월=11
+    var month = time.substr(4, 2) - 1; 
     var day = time.substr(6, 2);
     var hour = time.substr(8, 2);
     var min = time.substr(10, 2);
@@ -1492,11 +1508,7 @@ function HTMLtoMHT_MakeTag(ContnetHTML) {
     var META = document.createElement("META");
     META.content = "text/html; charset=utf-8";
     META.httpEquiv = "Content-Type";
-    var META2 = document.createElement("META");
-    META2.content = "IE=9";
-    META2.httpEquiv = "X-UA-COMPATIBLE";
     HEAD.appendChild(META);
-    HEAD.appendChild(META2);
 
     var STYLE = document.createElement("STYLE");
     STYLE.type = "text/css";
@@ -1531,7 +1543,6 @@ function HTMLtoMHT_MakeTag(ContnetHTML) {
 }
 
 function MACSAFARIYN() {
-    // 크로스 브라우저 IE:false IE외: true
     var result = true;
     if (navigator.userAgent.toUpperCase().indexOf("MACINTOSH") > -1) {
         if (navigator.userAgent.toUpperCase().indexOf("CHROME") > -1) {
@@ -1543,4 +1554,30 @@ function MACSAFARIYN() {
         result = false;
     }
     return result;
+}
+
+function CustomRandom() {
+    var now = new Date();
+    var seed = now.getMilliseconds();
+    return Math.random(seed) + 1;
+}
+
+function S4() {
+    return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
+}
+
+function GetGUID() {
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
+function DelComment(pContent) {
+    pContent = ReplaceAll(pContent, "<!--[if-->", "");
+    pContent = ReplaceAll(pContent, "<!--![if-->", "");
+    pContent = ReplaceAll(pContent, "&lt;!--[if--&gt;", "");
+    pContent = ReplaceAll(pContent, "&lt;!--![if--&gt;", "");
+    pContent = ReplaceAll(pContent, "<!--[endif]-->", "");
+    pContent = ReplaceAll(pContent, "<!--![endif]-->", "");
+    pContent = ReplaceAll(pContent, "&lt;!--[endif]--&gt;", "");
+    pContent = ReplaceAll(pContent, "&lt;!--![endif]--&gt;", "");
+    return pContent;
 }
