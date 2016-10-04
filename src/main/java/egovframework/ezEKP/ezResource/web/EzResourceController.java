@@ -2224,4 +2224,17 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String scheduleRepetitionOpen() throws Exception {
 		return "/ezResource/resScheduleRepetitionOpen";
 	}
+	
+	/**
+	 * 자원관리 권한없는 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezResource/nonResList.do")
+	public String nonResList(HttpServletRequest req, Model model) throws Exception {
+		String accMessage = "";
+		if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
+			accMessage = req.getParameter("msg");
+		}
+		model.addAttribute("accMessage", accMessage);
+		return "/ezResource/resNonResList";
+	}
 }
