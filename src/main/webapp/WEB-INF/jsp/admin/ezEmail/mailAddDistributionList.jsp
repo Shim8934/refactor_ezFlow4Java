@@ -205,7 +205,7 @@
 	        	
 	        	$.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
 		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
@@ -296,7 +296,7 @@
 				
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
@@ -308,14 +308,15 @@
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-	
+						
+	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
-	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 	                        headerData.documentElement.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
@@ -353,7 +354,7 @@
 	            
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {
@@ -363,7 +364,7 @@
 		        		type : "group"
 		        	},
 		        	success : function(result){	
-		        		xmlDOM = result;
+		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){

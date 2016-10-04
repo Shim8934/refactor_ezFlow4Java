@@ -342,13 +342,20 @@
 		        if (typeof (Para) != "undefined" && Para[0] != "cancel") {
 		            if (address_zip_select_dialogArguments[3] == 0) {
 		                document.getElementById("TextComZip").value = Para[0];
-		                document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
+		                if (Para[4] == "") {
+		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
+		                } else {
+		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + " " + Para[4];
+		                }
 		                document.getElementById("TextComAddr").focus();
 		            }
-		
 		            else {
 		                document.getElementById("TextHomeZip").value = Para[0];
-		                document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
+		                if (Para[4] == "") {
+		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
+		                } else {
+		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + " " + Para[4];
+		                }
 		                document.getElementById("TextHomeAddr").focus();
 		            }
 		        }

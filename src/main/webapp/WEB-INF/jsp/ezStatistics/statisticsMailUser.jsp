@@ -113,7 +113,7 @@
     	
     	$.ajax({
         	type : "POST",
-        	dataType : "xml",
+        	dataType : "text",
         	url : "/ezOrgan/getDeptMemberList.do",
         	async : false,
         	data : {deptID : DeptID, cell : "displayName;description", prop : "department;displayName;description;title", type : "user"},
@@ -126,13 +126,14 @@
                 var headerData = createXmlDom();
                 headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
                 if (result != "") {
+                	var xmlDom = loadXMLString(result);
                     if (CrossYN()) {
-                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
                         var Node = headerData.importNode(xmlRtn, true);
                         headerData.documentElement.appendChild(Node);
                     }
                     else {
-                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
                         headerData.documentElement.appendChild(xmlRtn);
                     }
                 }
@@ -557,12 +558,12 @@
         
         $.ajax({
         	type : "POST",
-        	dataType : "xml",
+        	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
         	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
         	success : function(result){	
-        		xmlDom = result;
+        		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
         	},
         	error : function(error){
@@ -647,12 +648,13 @@
         
         $.ajax({
         	type : "POST",
-        	dataType : "xml",
+        	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : true,
         	data : {search : "displayname::" + keyword.value, cell : "displayName;description", prop : "", type : "user"},
         	success : function(result){	
-        		if (result.getElementsByTagName("ROW").length == 0)
+        		var xmlDom = loadXMLString(result);
+        		if (xmlDom.getElementsByTagName("ROW").length == 0)
                     alert("<spring:message code='ezStatistics.t1016' />");
                 else {
                     var retXml = createXmlDom();
@@ -664,12 +666,12 @@
                     headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
                     if (result != "") {
                         if (CrossYN()) {
-                            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+                            var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
                             var Node = headerData.importNode(xmlRtn, true);
                             headerData.documentElement.appendChild(Node);
                         }
                         else {
-                            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+                            var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
                             headerData.documentElement.appendChild(xmlRtn);
                         }
                     }

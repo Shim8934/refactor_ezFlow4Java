@@ -389,12 +389,12 @@
         
         $.ajax({
         	type : "POST",
-        	dataType : "xml",
+        	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
         	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
         	success : function(result){	
-        		xmlDom = result;
+        		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
         	},
         	error : function(error){

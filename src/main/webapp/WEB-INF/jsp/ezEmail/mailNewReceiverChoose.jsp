@@ -1212,12 +1212,12 @@
 	            
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
 		        	success : function(result){	
-		        		xmlDom = result;
+		        		xmlDom = loadXMLString(result);
 		                adCount = xmlDom.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){
@@ -1302,12 +1302,11 @@
 	            
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
 		        	success : function(result){
-		                pListXML_Info = result;
-		        		
+		                pListXML_Info = loadXMLString(result);
 		                //TODO: delete
 		        		$(pListXML_Info).find('DATA3').each(function(){
 		        			var mailaddress = $(this).text();
@@ -1791,7 +1790,7 @@
 	            
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
@@ -1801,11 +1800,11 @@
 		        			page : CurPage, 
 		        			type : "user"},
 		        	success : function(result){	
-		        		if (result.getElementsByTagName("ROW").length == 0)
+		        		pListXML_Info = loadXMLString(result);
+		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0)
 	                        alert(strLang155);
 	                    else {
 	                        listContentArry = new Array();
-	                        pListXML_Info = result;
 	                        pSeach = true;
 	                        DisplayUserImageList();
 	                        makePageSelPage2();
@@ -1839,16 +1838,16 @@
 	            
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
 		        	success : function(result){	
-		        		if (result.getElementsByTagName("ROW").length == 0)
+		        		pListXML_Info = loadXMLString(result);
+		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0)
 	                        alert(strLang155);
 	                    else {
 	                        listContentArry = new Array();
-	                        pListXML_Info = result;
 	                        pSeach = true;
 	                        DisplayUserImageList();
 	                        makePageSelPage2();

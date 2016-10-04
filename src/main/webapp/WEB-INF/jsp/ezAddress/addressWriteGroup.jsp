@@ -592,11 +592,11 @@
 				
 	            $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : tempDeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", page: CurPage, type : "user"},
 		        	success : function(result){
-		                pListXML_Info = result;
+		                pListXML_Info = loadXMLString(result);
 		        		
 		                //TODO: delete
 		        		$(pListXML_Info).find('DATA3').each(function(){
