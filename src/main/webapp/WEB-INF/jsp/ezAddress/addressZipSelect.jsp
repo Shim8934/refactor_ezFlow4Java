@@ -82,20 +82,13 @@
 			function Row_onClick(vThis) {
 		        if (vThis) {
 		            var para = new Array();
-		            if (CrossYN()) {
-		                para[0] = GetChildNodes(vThis)[0].textContent;
-		                para[1] = GetChildNodes(vThis)[1].textContent;
-		                para[2] = GetChildNodes(vThis)[2].textContent;
-		                para[3] = GetChildNodes(vThis)[3].textContent;
-		                para[4] = GetChildNodes(vThis)[4].textContent;
-		            }
-		            else {
-		                para[0] = GetChildNodes(vThis)[1].innerText;
-		                para[1] = GetChildNodes(vThis)[2].innerText;
-		                para[2] = GetChildNodes(vThis)[3].innerText;
-		                para[3] = GetChildNodes(vThis)[4].innerText;
-		                para[4] = GetChildNodes(vThis)[5].innerText;
-		            }
+		            
+	                para[0] = GetChildNodes(vThis)[0].textContent;
+	                para[1] = GetChildNodes(vThis)[1].textContent;
+	                para[2] = GetChildNodes(vThis)[2].textContent;
+	                para[3] = GetChildNodes(vThis)[3].textContent;
+	                para[4] = GetChildNodes(vThis)[4].textContent;
+	                
 		            if (ReturnFunction != null) {
 		                ReturnFunction(para);
 		                if (!isDivPopup)
