@@ -592,6 +592,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public List<PortalTBLPortalACLVO> getAclItems(String pUID) throws Exception {
 		return ezPortalDAO.getAclItems(pUID);
 	}
+	
+	@Override
+	public String htmlPortlet(String uID) throws Exception {
+		return ezPortalDAO.htmlPortlet(uID);
+	}
 
 	public String getAccessList(LoginVO userInfo) {
 		try {

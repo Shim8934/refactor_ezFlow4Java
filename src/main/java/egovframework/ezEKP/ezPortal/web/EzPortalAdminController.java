@@ -1013,7 +1013,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		} else if (portletType.equals("2")) {
 			//HTML 포틀릿
 			pDocPath = subProp.getElementsByTagName("HTMLDATA").item(0).getTextContent();
-			
+System.out.println("pDocPath:"+pDocPath);
 		} else if (portletType.equals("3")) {
 			//이미지 포틀릿
 			pImagePath = subProp.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
@@ -1287,8 +1287,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pMode= "";
 		
-		if (req.getParameter("draftFlag") != null && !req.getParameter("drfatFlag").equals("")) {
-			pMode = req.getParameter("drfatFlag");
+		if (req.getParameter("draftFlag") != null && !req.getParameter("draftFlag").equals("")) {
+			pMode = req.getParameter("draftFlag");
 		}
 		
 		model.addAttribute("pMode", pMode);

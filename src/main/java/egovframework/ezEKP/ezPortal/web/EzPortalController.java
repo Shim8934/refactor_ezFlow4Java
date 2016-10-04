@@ -2241,4 +2241,21 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 	public String progress() {
 		return "/ezPortal/portalProgress";
 	}
+	
+	/**
+	 * 포탈 - HTMLPortlet 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/htmlPortlet.do")
+	public String htmlPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		String htmlData = ezPortalService.htmlPortlet(uID);
+		model.addAttribute("htmlData", htmlData);
+		
+		return "/ezPortal/portalHtmlPortlet";
+	}
 }

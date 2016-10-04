@@ -678,21 +678,27 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
-	
 	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_EZCK_ADMINACL(#v_pOWNERPAGEID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getAclItems" parameterClass="String"  resultClass="PortalTBLPortalACLVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETACLITEMS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.htmlPortlet" parameterClass="String"  resultClass="String" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_HTMLPORTLET(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
