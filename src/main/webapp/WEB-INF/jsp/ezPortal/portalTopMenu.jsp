@@ -1516,9 +1516,6 @@
 	</head>
 		<%String browser = (String)request.getHeader("User-Agent"); %>	
 		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>>
-		<%-- <%if (browser.indexOf("Trident/5.0") > 0 || browser.indexOf("Trident/6.0") > 0){ %>  
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
-		<%} %> --%> 
 		<div id="objectDiv"></div>
 		<%if (!mode.equals("view")) { %>	      
 		<!-- 메뉴 -->
