@@ -211,7 +211,6 @@
 		        var xmlDom = createXmlDom();
 		        var objRoot, objNode, subNode;
 		        var objNode;
-alert(rsa.encrypt(document.getElementById('txtOldPassword').value));
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", rsa.encrypt(document.getElementById('txtOldPassword').value));
 		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", rsa.encrypt(document.getElementById('txtNewPassword').value));
