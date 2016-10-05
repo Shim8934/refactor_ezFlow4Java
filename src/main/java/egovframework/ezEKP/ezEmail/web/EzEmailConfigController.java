@@ -1319,7 +1319,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		response.setContentType("text/html; charset=utf-8");
 
 		PrintWriter out = response.getWriter();
-		out.write("<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'><head>");
+		out.write("<!DOCTYPE html><head>");
 		out.write("<title>" + egovMessageSource.getMessage("ezEmail.t490", locale) + "</title>");
 		out.write("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>");
 		out.write("<link rel='stylesheet' href='" + egovMessageSource.getMessage("ezEmail.c1", locale) + "' type=text/css>");
