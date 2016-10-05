@@ -3,7 +3,7 @@
 (function TreeView(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
-    var element = document.getElementById(elobjid); 
+    var element = document.getElementById(elobjid); // 추가
     this.attachEvent = function(eventname, eventhandler) {
         this['on' + eventname] = eventhandler;
     }
@@ -29,7 +29,14 @@
             g_treeXML = sourceXML;
             return;
         }
-        g_treeXML = loadXMLString(sourceXML);
+
+        if (CrossYN()) { 
+            g_treeXML = new DOMParser().parseFromString(sourceXML, "text/xml");
+        } else { 
+            g_treeXML = new ActiveXObject("Microsoft.XMLDom");
+            g_treeXML.loadXML(sourceXML);
+        }
+
     }
     
     this.selectedIndex = function(a) {
@@ -107,17 +114,17 @@
 
             var toggleel = document.getElementById(g_toggleid + nodeIdx);
 
-            if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["plus_normal"]) == -1 &&
-		        GetAttribute(toggleel, 'src').indexOf(g_baseImage["minus_normal"]) == -1 &&
-		        GetAttribute(toggleel, 'src').indexOf(g_baseImage["plus_end"]) == -1 &&
-		        GetAttribute(toggleel, 'src').indexOf(g_baseImage["minus_end"]) == -1)
+            if (toggleel.getAttribute('src').indexOf(g_baseImage["plus_normal"]) == -1 &&
+		        toggleel.getAttribute('src').indexOf(g_baseImage["minus_normal"]) == -1 &&
+		        toggleel.getAttribute('src').indexOf(g_baseImage["plus_end"]) == -1 &&
+		        toggleel.getAttribute('src').indexOf(g_baseImage["minus_end"]) == -1)
                 return;
 
             var childel = document.getElementById(g_childid + nodeIdx);
 
             if (childel.style.display == "none") {
                 childel.style.display = "";
-                if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["plus_normal"]) >= 0)
+                if (toggleel.getAttribute('src').indexOf(g_baseImage["plus_normal"]) >= 0)
                     toggleel.setAttribute('src', g_baseImage["minus_normal"]);
                 else
                     toggleel.setAttribute('src', g_baseImage["minus_end"]);
@@ -134,7 +141,7 @@
             }
             else {
                 childel.style.display = "none";
-                if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["minus_normal"]) >= 0)
+                if (toggleel.getAttribute('src').indexOf(g_baseImage["minus_normal"]) >= 0)
                     toggleel.setAttribute('src', g_baseImage["plus_normal"]);
                 else
                     toggleel.setAttribute('src', g_baseImage["plus_end"]);
@@ -144,39 +151,35 @@
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return;
 
-            if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
-		        document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) == -1 &&
-		        document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
-		        document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
+            if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
+		        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) == -1 &&
+		        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
+		        element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
                 return;
 
-            if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
-                document.getElementById(g_childid + nodeIdx).style.display = "";
-                if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) >= 0)
-                    document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"];
+            if (element.all(g_childid + nodeIdx).style.display == "none") {
+                element.all(g_childid + nodeIdx).style.display = "";
+                if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) >= 0)
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_normal"];
                 else
-                    document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["minus_end"];
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["minus_end"];
 
-                if (document.getElementById(g_childid + nodeIdx).innerHTML == "") {
+                if (element.all(g_childid + nodeIdx).innerHTML == "") {
                     if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length == 0) {
-                        var oEvent;
-                        if (document.createEventObject)
-                            oEvent = document.createEventObject();
-                        else
-                            oEvent = {};
+                        var oEvent = document.createEventObject();
                         oEvent.nodeIdx = nodeIdx;
                         window[thisid].onrequestdata(oEvent); 
                     }
                     else
-                        document.getElementById(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
+                        element.all(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
                 }
             }
             else {
-                document.getElementById(g_childid + nodeIdx).style.display = "none";
-                if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
-                    document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["plus_normal"];
+                element.all(g_childid + nodeIdx).style.display = "none";
+                if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_normal"];
                 else
-                    document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["plus_end"];
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["plus_end"];
             }
         }).call(this, nodeIdx);
     }
@@ -200,15 +203,25 @@
             if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
                 return "";
 
-            return getNodeText(g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName));
+            return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
         }).call(this,nodeIdx, valueName);
     }
 
     this.putvalue = ex_putvalue;
     function ex_putvalue(nodeIdx, valueName, value) {
-        if (nodeIdx > g_nodeCount || nodeIdx < 1)
-            return "";
-        setNodeText(g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName), value);
+        return (CrossYN()) ?
+        (function(nodeIdx, valueName, value) {
+            if (nodeIdx > g_nodeCount || nodeIdx < 1)
+                return "";
+
+            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).textContent = value;
+        }).call(this,nodeIdx, valueName, value) :
+        (function(nodeIdx, valueName, value) {
+            if (nodeIdx > g_nodeCount || nodeIdx < 1)
+                return "";
+
+            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
+        }).call(this,nodeIdx, valueName, value);
     }
 
     this.select = ex_select;
@@ -233,12 +246,12 @@
                 return;
 
             if (g_selectedIdx != -1) {
-                document.getElementById(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
+                element.all(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
             }
 
-            document.getElementById(g_nodeid + nodeIdx).className = g_baseClass["selected"];
+            element.all(g_nodeid + nodeIdx).className = g_baseClass["selected"];
             g_selectedIdx = nodeIdx;
-            g_selectedNode = document.getElementById(g_nodeid + nodeIdx);
+            g_selectedNode = element.all(g_nodeid + nodeIdx);
 
             window[thisid].onnodeselect(); 
         }).call(this,nodeIdx);
@@ -251,7 +264,7 @@
             document.getElementById(g_nodeid + nodeIdx).innerHTML = caption;
         }).call(this,nodeIdx, caption) :
         (function(nodeIdx, caption) {
-            document.getElementById(g_nodeid + nodeIdx).innerHTML = caption;
+            element.all(g_nodeid + nodeIdx).innerHTML = caption;
         }).call(this,nodeIdx, caption);
     }
 
@@ -262,29 +275,55 @@
             document.getElementById(g_nodeid + nodeIdx).style.cssText = style;
         }).call(this,nodeIdx, style) :
         (function(nodeIdx, style) {
-            document.getElementById(g_nodeid + nodeIdx).style.cssText = style;
+            element.all(g_nodeid + nodeIdx).style.cssText = style;
         }).call(this,nodeIdx, style);
     }
 
     this.putchildxml = ex_putchildxml;
     function ex_putchildxml(nodeIdx, childxml) {
-        if (childxml == "") {
-            document.getElementById(g_childid + nodeIdx).style.display = "none";
-            if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
-                document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["dot_normal"];
-            else
-                document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["dot_end"];
-        }
-        else {
-            var childXML = loadXMLString("<nodes>" + childxml + "</nodes>");
+        return (CrossYN()) ?
+        (function(nodeIdx, childxml) {
+            var toggleel = document.getElementById(g_toggleid + nodeIdx);
+            var childel = document.getElementById(g_childid + nodeIdx);
 
-            var childLength = childXML.documentElement.childNodes.length
-            for (var i = 0; i < childLength; i++)
-                g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement.childNodes.item(0));
+            if (childxml == "") {
+                childel.style.display = "none";
+                if (toggleel.getAttribute('src').indexOf(g_baseImage["minus_normal"]) >= 0)
+                    toggleel.setAttribute('src', g_baseImage["dot_normal"]);
+                else
+                    toggleel.setAttribute('src', g_baseImage["dot_end"]);
+            }
+            else {
+                var childXML = new DOMParser().parseFromString("<nodes>" + childxml + "</nodes>", "text/xml");
 
-            childXML = null;
-            document.getElementById(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
-        }
+                g_nodeArray["nodeXML"][nodeIdx].appendChild(
+                    childXML.documentElement.cloneNode(true)
+                    );
+
+                childXML = null;
+                childel.innerHTML = make_childHtml(nodeIdx);
+            }
+        }).call(this,nodeIdx, childxml) :
+        (function(nodeIdx, childxml) {
+            if (childxml == "") {
+                element.all(g_childid + nodeIdx).style.display = "none";
+                if (element.all(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) >= 0)
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_normal"];
+                else
+                    element.all(g_toggleid + nodeIdx).src = g_baseImage["dot_end"];
+            }
+            else {
+                var childXML = new ActiveXObject("Microsoft.XMLDom");
+                childXML.loadXML("<nodes>" + childxml + "</nodes>");
+
+                var childLength = childXML.documentElement.childNodes.length
+                for (var i = 0; i < childLength; i++)
+                    g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement.childNodes.item(0));
+
+                childXML = null;
+                element.all(g_childid + nodeIdx).innerHTML = make_childHtml(nodeIdx);
+            }
+        }).call(this,nodeIdx, childxml);
     }
 
     this.deletenode = ex_deletenode;
@@ -303,11 +342,11 @@
                     var depth = g_nodeArray["depth"][nodeIdx].length;
                     var imgnode = child.children.item(0).children.item(depth - 1);
 
-                    if (GetAttribute(imgnode, 'src').indexOf(g_baseImage["dot_normal"]) >= 0) {
+                    if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_normal"]) >= 0) {
                         imgnode.setAttribute('src', g_baseImage["dot_end"]);
                     }
                     else {
-                        if (GetAttribute(imgnode, 'src').indexOf(g_baseImage["plus_normal"]) >= 0)
+                        if (imgnode.getAttribute('src').indexOf(g_baseImage["plus_normal"]) >= 0)
                             imgnode.setAttribute('src', g_baseImage["plus_end"]);
                         else
                             imgnode.setAttribute('src', g_baseImage["minus_end"]);
@@ -326,7 +365,7 @@
                 else {
                     var depth = g_nodeArray["depth"][nodeIdx].length;
                     imgnode = node.parentElement.parentElement.parentElement.children.item(0).children.item(depth - 2);
-                    if (GetAttribute(imgnode, 'src').indexOf(g_baseImage["plus_normal"]) >= 0 || GetAttribute(imgnode, 'src').indexOf(g_baseImage["minus_normal"]) >= 0)
+                    if (imgnode.getAttribute('src').indexOf(g_baseImage["plus_normal"]) >= 0 || imgnode.getAttribute('src').indexOf(g_baseImage["minus_normal"]) >= 0)
                         imgnode.setAttribute('src', g_baseImage["dot_normal"]);
                     else
                         imgnode.setAttribute('src', g_baseImage["dot_end"]);
@@ -351,7 +390,7 @@
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
 
-            var node = document.getElementById(g_nodeid + nodeIdx).parentElement.parentElement;
+            var node = element.all(g_nodeid + nodeIdx).parentElement.parentElement;
             var children = node.parentElement.children;
 
             if (children.item(children.length - 1) == node) {
@@ -420,9 +459,9 @@
             if (childNodes.innerHTML == "") {
                 var imgnode = node.parentElement.children.item(depth - 1);
 
-                if (GetAttribute(imgnode, 'src').indexOf(g_baseImage["dot_normal"]) >= 0)
+                if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_normal"]) >= 0)
                     imgnode.setAttribute('src', g_baseImage["plus_normal"]);
-                else if (GetAttribute(imgnode, 'src').indexOf(g_baseImage["dot_end"]) >= 0)
+                else if (imgnode.getAttribute('src').indexOf(g_baseImage["dot_end"]) >= 0)
                     imgnode.setAttribute('src', g_baseImage["plus_end"]);
 
                 imgnode = null;
@@ -456,7 +495,7 @@
 					    g_baseClass["normal"] + "'");
                 nodeHtml += ">";
 
-                nodeHtml += (MakeHTMLStr(getNodeText(childXML.documentElement.attributes.getNamedItem("caption"))) + "</span></div>");
+                nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").textContent) + "</span></div>");
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
 
                 var nodeDIV = document.createElement("DIV");
@@ -464,11 +503,11 @@
                 childNodes.children.item(0).appendChild(nodeDIV);
 
                 var prelastnode = childNodes.children.item(0).children.item(childNodes.children.item(0).children.length - 2);
-                if (GetAttribute(prelastnode.children.item(0).children.item(depth), 'src').indexOf(g_baseImage["dot_end"]) >= 0) {
+                if (prelastnode.children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["dot_end"]) >= 0) {
                     prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["dot_normal"]);
                 }
                 else {
-                    if (GetAttribute(prelastnode.children.item(0).children.item(depth), 'src').indexOf(g_baseImage["plus_end"]) >= 0)
+                    if (prelastnode.children.item(0).children.item(depth).getAttribute('src').indexOf(g_baseImage["plus_end"]) >= 0)
                         prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["plus_normal"]);
                     else
                         prelastnode.children.item(0).children.item(depth).setAttribute('src', g_baseImage["minus_normal"]);
@@ -510,7 +549,7 @@
                 imgnode = null;
             }
             else {
-                var childXML = createXmlDom();
+                var childXML = new ActiveXObject("Microsoft.XMLDom");
                 childXML.loadXML(nodeXML);
                 var depth = g_nodeArray["depth"][nodeIdx].length;
 
@@ -537,7 +576,7 @@
 					    g_baseClass["normal"] + "'");
                 nodeHtml += ">";
 
-                nodeHtml += (MakeHTMLStr(getNodeText(childXML.documentElement.attributes.getNamedItem("caption"))) + "</span></div>");
+                nodeHtml += (MakeHTMLStr(childXML.documentElement.attributes.getNamedItem("caption").text) + "</span></div>");
                 nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
 
                 var nodeDIV = document.createElement("DIV");
@@ -580,7 +619,7 @@
         (function(valueName, value) {
             for (var i = 1; i <= g_nodeCount; i++) {
                 if (g_nodeArray["nodeXML"][i] != null)
-                    if (getNodeText(g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName)) == value)
+                    if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
                     return i;
             }
 
@@ -589,7 +628,7 @@
         (function(valueName, value) {
             for (var i = 1; i <= g_nodeCount; i++) {
                 if (g_nodeArray["nodeXML"][i] != null)
-                    if (getNodeText(g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName)) == value)
+                    if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
                     return i;
             }
 
@@ -602,7 +641,7 @@
         return (CrossYN()) ?
         (function() {
             var depth = g_nodeArray["depth"][nodeIdx].length;
-            var src = GetAttribute(document.getElementById(g_nodeid + nodeIdx).parentNode.children.item(depth - 1), 'src');
+            var src = document.getElementById(g_nodeid + nodeIdx).parentNode.children.item(depth - 1).getAttribute('src');
             if (src.indexOf(g_baseImage["plus_normal"]) > 0 ||
 		        src.indexOf(g_baseImage["plus_end"]) > 0 ||
 		        src.indexOf(g_baseImage["minus_normal"]) > 0 ||
@@ -613,7 +652,7 @@
         }).call(this) :
         (function() {
             var depth = g_nodeArray["depth"][nodeIdx].length;
-            var src = document.getElementById(g_nodeid + nodeIdx).parentElement.children.item(depth - 1).src;
+            var src = element.all(g_nodeid + nodeIdx).parentElement.children.item(depth - 1).src;
 
             if (src.indexOf(g_baseImage["plus_normal"]) > 0 ||
 		        src.indexOf(g_baseImage["plus_end"]) > 0 ||
@@ -819,12 +858,7 @@
                 if (elementid.indexOf(g_nodeid) == 0) {
                     event.returnValue = false;
 
-                    var oEvent;
-                    if (document.createEventObject)
-                        oEvent = document.createEventObject();
-                    else
-                        oEvent = {};
-
+                    var oEvent = document.createEventObject();
                     oEvent.nodeIdx = elementid.split(g_nodeid)[1];
                     oEvent.bctrl = window.event.ctrlKey;
                     oEvent.command = window.event.dataTransfer.getData("Text");
@@ -840,7 +874,7 @@
         g_treeXML = null;
     }
 
-    if (element.addEventListener) {
+    if (CrossYN()) {
         element.addEventListener('selectstart', event_onselectstart, false);
         element.addEventListener('mousedown', event_onmousedown, false);
         element.addEventListener('dblclick', event_ondblclick, false);
@@ -896,115 +930,235 @@
 
 
     function make_childHtml(nodeIdx) {
-        var nodeXML;
-        var depth = "";
-        if (nodeIdx == 0) {
-            nodeXML = GetChildNodes(SelectNodes(g_treeXML, "tree/nodes")[0]);
-        }
-        else {
-            nodeXML = GetChildNodes(g_nodeArray["nodeXML"][nodeIdx]);
-            depth = g_nodeArray["depth"][nodeIdx];
-        }
-
-        var childHtml = "<div>";
-        var childLength = nodeXML.length;
-
-        for (var i = 0; i < childLength; i++) {
-            g_nodeCount++;
-            var mydepth = depth;
-            var childNode = nodeXML[i];
-            var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
-
-            for (var j = 0; j < depth.length; j++) {
-                if (depth.charAt(j) == "1")
-                    nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-                else
-                    nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-            }
-
-            var bParent = (childNode.childNodes.length > 0) ? true : false;
-            var bEndNode = (i == childLength - 1) ? true : false;
-            if (childNode.attributes.getNamedItem("hassub") != null)
-                bParent = true;
-
-            nodeHtml += "<img src='";
-            if (bParent) {
-                if (!bEndNode) {
-                    nodeHtml += g_baseImage["plus_normal"];
-                    mydepth += "1";
-                }
-                else {
-                    nodeHtml += g_baseImage["plus_end"];
-                    mydepth += "0";
-                }
-
-                nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+        return (CrossYN()) ?
+        (function(nodeIdx) {
+            if (nodeIdx == 0) {
+                var nodeXML = g_treeXML.getElementsByTagName('tree').item(0);
+                var depth = "";
             }
             else {
-                if (!bEndNode) {
-                    nodeHtml += g_baseImage["dot_normal"];
-                    mydepth += "1";
+                var nodeXML = g_nodeArray["nodeXML"][nodeIdx];
+                var depth = g_nodeArray["depth"][nodeIdx];
+            }
+
+            var childHtml = "<div>";
+            var childLength = nodeXML.getElementsByTagName('nodes').item(0).childElementCount;
+            var childNode = nodeXML.getElementsByTagName('nodes').item(0).firstElementChild;
+            var i = 0;
+            while (childNode) {
+                g_nodeCount++;
+                var mydepth = depth;
+                var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+
+                for (var j = 0; j < depth.length; j++) {
+                    if (depth.charAt(j) == "1")
+                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    else
+                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                }
+
+                var bParent = (childNode.childElementCount > 0) ? true : false;
+                var bEndNode = (i == childLength - 1) ? true : false;
+                if (childNode.attributes.getNamedItem("hassub") != null)
+                    bParent = true;
+
+                nodeHtml += "<img src='";
+                if (bParent) {
+                    if (!bEndNode) {
+                        nodeHtml += g_baseImage["plus_normal"];
+                        mydepth += "1";
+                    }
+                    else {
+                        nodeHtml += g_baseImage["plus_end"];
+                        mydepth += "0";
+                    }
+
+                    nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
                 else {
-                    nodeHtml += g_baseImage["dot_end"];
-                    mydepth += "0";
+                    if (!bEndNode) {
+                        nodeHtml += g_baseImage["dot_normal"];
+                        mydepth += "1";
+                    }
+                    else {
+                        nodeHtml += g_baseImage["dot_end"];
+                        mydepth += "0";
+                    }
+
+                    nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
 
-                nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                var g_images_func = function (node) {
+                    var _imgsrc = null;
+                    var _foldername = node.getAttribute('href') != null ? node.getAttribute('FullCaption') : null;
+                    switch (_foldername) {
+                        case 'Inbox':
+                            _imgsrc = '/images/ImgIcon/inbox.gif';
+                            break;
+                        case 'SentItems':
+                            _imgsrc = '/images/ImgIcon/outbox.gif';
+                            break;
+                        case 'Drafts':
+                            _imgsrc = '/images/ImgIcon/drafts.gif';
+                            break;
+                        case 'JunkEmail':
+                            _imgsrc = '/images/ImgIcon/junkemail.gif';
+                            break;
+                        case 'DeletedItems':
+                            _imgsrc = '/images/ImgIcon/deleted.gif';
+                            break;
+                        case 'PERSONAL':
+                            _imgsrc = '/images/ImgIcon/sentitems.gif';
+                            break;
+                        default:
+                            _imgsrc = '/images/ImgIcon/fldr.gif';
+                            break;
+
+                    }
+
+                    return _imgsrc;
+
+                };
+
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + g_images_func(childNode) + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
+					    g_baseClass["normal"] + "' ");
+
+                if (childNode.attributes.getNamedItem("style") != null)
+                    nodeHtml += ("style='" + childNode.attributes.getNamedItem("style").nodeValue + "'");
+
+                if (childNode.attributes.getNamedItem("title") != null)
+                    nodeHtml += ("title='" + childNode.attributes.getNamedItem("title").nodeValue + "'>");
+                else
+                    nodeHtml += ">";
+
+                nodeHtml += (MakeHTMLStr(childNode.attributes.getNamedItem("caption").nodeValue) + "</span></div>");
+                nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
+                nodeHtml += "</div>"
+
+                g_nodeArray["nodeXML"][g_nodeCount] = childNode;
+                g_nodeArray["depth"][g_nodeCount] = mydepth;
+
+                childHtml += nodeHtml;
+
+                childNode = childNode.nextElementSibling;
+                i++;
+            }
+            childHtml += "</div>"
+
+            nodeXML = null;
+            return childHtml;
+        }).call(this, nodeIdx) :
+        (function(nodeIdx) {
+            if (nodeIdx == 0) {
+                var nodeXML = g_treeXML.selectSingleNode("tree/nodes").childNodes;
+                var depth = "";
+            }
+            else {
+                var nodeXML = g_nodeArray["nodeXML"][nodeIdx].childNodes;
+                var depth = g_nodeArray["depth"][nodeIdx];
             }
 
-            var _imgsrc;
-            var _foldername = GetAttribute(childNode, 'href') != null ? GetAttribute(childNode, 'FullCaption') : null;
-            switch (_foldername) {
-                case 'Inbox':
-                    _imgsrc = '/images/ImgIcon/inbox.gif';
-                    break;
-                case 'SentItems':
-                    _imgsrc = '/images/ImgIcon/outbox.gif';
-                    break;
-                case 'Drafts':
-                    _imgsrc = '/images/ImgIcon/drafts.gif';
-                    break;
-                case 'JunkEmail':
-                    _imgsrc = '/images/ImgIcon/junkemail.gif';
-                    break;
-                case 'DeletedItems':
-                    _imgsrc = '/images/ImgIcon/deleted.gif';
-                    break;
-                case 'PERSONAL':
-                    _imgsrc = '/images/ImgIcon/sentitems.gif';
-                    break;
-                default:
-                    _imgsrc = '/images/ImgIcon/fldr.gif';
-                    break;
+            var childHtml = "<div>";
+            var childLength = nodeXML.length;
 
+            for (var i = 0; i < childLength; i++) {
+                g_nodeCount++;
+                var mydepth = depth;
+                var childNode = nodeXML.item(i);
+                var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+
+                for (var j = 0; j < depth.length; j++) {
+                    if (depth.charAt(j) == "1")
+                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    else
+                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                }
+
+                var bParent = (childNode.childNodes.length > 0) ? true : false;
+                var bEndNode = (i == childLength - 1) ? true : false;
+                if (childNode.attributes.getNamedItem("hassub") != null)
+                    bParent = true;
+
+                nodeHtml += "<img src='";
+                if (bParent) {
+                    if (!bEndNode) {
+                        nodeHtml += g_baseImage["plus_normal"];
+                        mydepth += "1";
+                    }
+                    else {
+                        nodeHtml += g_baseImage["plus_end"];
+                        mydepth += "0";
+                    }
+
+                    nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                }
+                else {
+                    if (!bEndNode) {
+                        nodeHtml += g_baseImage["dot_normal"];
+                        mydepth += "1";
+                    }
+                    else {
+                        nodeHtml += g_baseImage["dot_end"];
+                        mydepth += "0";
+                    }
+
+                    nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                }
+
+                var _imgsrc;
+                var _foldername = childNode.getAttribute('href') != null ? childNode.getAttribute('FullCaption') : null;
+                switch (_foldername) {
+                    case 'Inbox':
+                        _imgsrc = '/images/ImgIcon/inbox.gif';
+                        break;
+                    case 'SentItems':
+                        _imgsrc = '/images/ImgIcon/outbox.gif';
+                        break;
+                    case 'Drafts':
+                        _imgsrc = '/images/ImgIcon/drafts.gif';
+                        break;
+                    case 'JunkEmail':
+                        _imgsrc = '/images/ImgIcon/junkemail.gif';
+                        break;
+                    case 'DeletedItems':
+                        _imgsrc = '/images/ImgIcon/deleted.gif';
+                        break;
+                    case 'PERSONAL':
+                        _imgsrc = '/images/ImgIcon/sentitems.gif';
+                        break;
+                    default:
+                        _imgsrc = '/images/ImgIcon/fldr.gif';
+                        break;
+
+                }
+                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + _imgsrc + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
+					    g_baseClass["normal"] + "' ");
+
+                if (childNode.attributes.getNamedItem("style") != null)
+                    nodeHtml += ("style='" + childNode.attributes.getNamedItem("style").text + "'");
+
+                if (childNode.attributes.getNamedItem("title") != null)
+                    nodeHtml += ("title='" + childNode.attributes.getNamedItem("title").text + "'>");
+                else
+                    nodeHtml += ">";
+
+                nodeHtml += (MakeHTMLStr(childNode.attributes.getNamedItem("caption").text) + "</span></div>");
+                nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
+                nodeHtml += "</div>"
+
+                g_nodeArray["nodeXML"][g_nodeCount] = childNode;
+                g_nodeArray["depth"][g_nodeCount] = mydepth;
+
+                childHtml += nodeHtml;
+                childNode = null;
             }
-            nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + _imgsrc + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-            nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
-                    g_baseClass["normal"] + "' ");
+            childHtml += "</div>"
 
-            if (childNode.attributes.getNamedItem("style") != null)
-                nodeHtml += ("style='" + getNodeText(childNode.attributes.getNamedItem("style")) + "'");
-
-            if (childNode.attributes.getNamedItem("title") != null)
-                nodeHtml += ("title='" + getNodeText(childNode.attributes.getNamedItem("title")) + "'>");
-            else
-                nodeHtml += ">";
-
-            nodeHtml += (MakeHTMLStr(getNodeText(childNode.attributes.getNamedItem("caption"))) + "</span></div>");
-            nodeHtml += ("<span style='display:none' id='" + g_childid + g_nodeCount + "'></span>");
-            nodeHtml += "</div>"
-
-            g_nodeArray["nodeXML"][g_nodeCount] = childNode;
-            g_nodeArray["depth"][g_nodeCount] = mydepth;
-
-            childHtml += nodeHtml;
-            childNode = null;
-        }
-        childHtml += "</div>"
-
-        nodeXML = null;
-        return childHtml;
+            nodeXML = null;
+            return childHtml;
+        }).call(this, nodeIdx);
     }
     
     function changeRecursiveImg(node, bspace, depth, recuringCount) {
@@ -1058,26 +1212,96 @@
     }
 
     function set_initvalue() {
-        var bimageNodes = GetChildNodes(SelectNodes(g_configXML, "tree/config/baseimage")[0]);
-        for (var i = 0; i < bimageNodes.length; i++)
-            g_baseImage[bimageNodes[i].nodeName.toLowerCase()] = GetAttribute(bimageNodes[i], "path");
+        return (navigator.userAgent.indexOf('Trident') == -1) ?
+        (function() {
 
-        bimageNodes = null;
+            iterator(
+                g_configXML.evaluate('tree/config/baseimage', g_configXML, null, XPathResult.ANY_TYPE, null).iterateNext(),
+                function(node) {
+                    var nodename = node.nodeName;
+                    var nodeval = node.attributes.getNamedItem("path").nodeValue;
+                    g_baseImage[nodename.toLowerCase()] = nodeval;
+                }
+            );
 
-        var classNodes = GetChildNodes(SelectNodes(g_configXML, "tree/config/baseclass")[0]);
-        for (var i = 0; i < classNodes.length; i++)
-            g_baseClass[classNodes[i].nodeName.toLowerCase()] = GetAttribute(classNodes[i], "name");
+            iterator(
+                g_configXML.evaluate('tree/config/baseclass', g_configXML, null, XPathResult.ANY_TYPE, null).iterateNext(),
+                function(node) {
+                    var nodename = node.nodeName;
+                    var nodeval = node.attributes.getNamedItem("name").nodeValue;
+                    g_baseClass[nodename.toLowerCase()] = nodeval;
+                }
+            );
 
-        classNodes = null;
+            iterator(
+                g_configXML.evaluate('tree/config/images', g_configXML, null, XPathResult.ANY_TYPE, null).iterateNext(),
+                function(node) {
+                    var nodename = node.attributes.getNamedItem("idx").nodeValue;
+                    var nodeval = node.attributes.getNamedItem("path").nodeValue;
+                    g_images[nodename.toLowerCase()] = nodeval;
+                }
+            );
 
-        var imageNodes = GetChildNodes(SelectNodes(g_configXML, "tree/config/images")[0]);
-        for (var i = 0; i < imageNodes.length; i++)
-            g_images[GetAttribute(imageNodes[i], "idx").toLowerCase()] = GetAttribute(imageNodes[i], "path");
+            (function() {
+                var sizenode = g_configXML.getElementsByTagName('size')[0];
+                g_imageWidth = sizenode.attributes.getNamedItem("width").nodeValue;
+                g_imageHeight = sizenode.attributes.getNamedItem("height").nodeValue;
+            })();
 
-        imageNodes = null;
+        }).call(this) :
+        (function() {
+        	if (CrossYN()) { //IE11
+        		var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
+                for (var i = 0; i < bimageNodes.length; i++){
+                	if(bimageNodes.item(i).nodeType == 1){
+            			g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes[i].getAttribute("path");
+            		}
+                }
+                bimageNodes = null;
 
-        g_imageWidth = GetAttribute(SelectNodes(g_configXML, "tree/config/size")[0], "width");
-        g_imageHeight = GetAttribute(SelectNodes(g_configXML, "tree/config/size")[0], "height");
+                var classNodes = g_configXML.getElementsByTagName("baseclass")[0].childNodes;
+                for (var i = 0; i < classNodes.length; i++){
+                	if(classNodes.item(i).nodeType == 1){
+                		g_baseClass[classNodes.item(i).nodeName] = classNodes[i].getAttribute("name");
+                	}
+                }
+                classNodes = null;
+
+                var imageNodes = g_configXML.getElementsByTagName("images")[0].childNodes;
+                for (var i = 0; i < imageNodes.length; i++){
+                	if(imageNodes.item(i).nodeType == 1){
+                		g_images[imageNodes[i].getAttribute("idx")] = imageNodes[i].getAttribute("path");
+                	}
+                }
+
+                imageNodes = null;
+                
+                g_imageWidth = g_configXML.getElementsByTagName("size")[0].getAttribute("width");
+                g_imageHeight = g_configXML.getElementsByTagName("size")[0].getAttribute("height");
+        	} else {
+        		var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
+                for (var i = 0; i < bimageNodes.length; i++)
+                    g_baseImage[bimageNodes.item(i).nodeName] = bimageNodes.item(i).attributes.getNamedItem("path").text;
+
+                bimageNodes = null;
+
+                var classNodes = g_configXML.selectSingleNode("tree/config/baseclass").childNodes;
+                for (var i = 0; i < classNodes.length; i++)
+                    g_baseClass[classNodes.item(i).nodeName] = classNodes.item(i).attributes.getNamedItem("name").text;
+
+                classNodes = null;
+
+                var imageNodes = g_configXML.selectSingleNode("tree/config/images").childNodes;
+                for (var i = 0; i < imageNodes.length; i++)
+                    g_images[imageNodes.item(i).attributes.getNamedItem("idx").text] = imageNodes.item(i).attributes.getNamedItem("path").text;
+
+                imageNodes = null;
+
+                g_imageWidth = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("width").text;
+                g_imageHeight = g_configXML.selectSingleNode("tree/config/size").attributes.getNamedItem("height").text;
+        	}
+            
+        }).call(this);
     }
 
     function MakeHTMLStr(orgStr) {

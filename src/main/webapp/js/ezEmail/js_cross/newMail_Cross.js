@@ -709,10 +709,10 @@ function event_SaveonClick() {
     if (g_saveHttp != null && g_saveHttp.readyState == 4) {
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
-        if (navigator.userAgent.indexOf("MSIE") != -1) {
+        if (!CrossYN()) {
             pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
         }
-        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+        else if (CrossYN()) {
         	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
 //        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(1).textContent;
         }
@@ -774,10 +774,10 @@ function event_SaveonClick() {
 
                 if (result != "OK") {
                     if (event_SaveonClick.savemode == "tempsave") {
-                        if (navigator.userAgent.indexOf("MSIE") != -1) {
+                        if (!CrossYN()) {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }
-                        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+                        else if (CrossYN()) {
                         	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
 //                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
@@ -814,10 +814,10 @@ function event_SaveonClick() {
                 }
                 else {
                     if (event_SaveonClick.savemode == "tempsave") {
-                        if (navigator.userAgent.indexOf("MSIE") != -1) {
+                        if (!CrossYN()) {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }
-                        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+                        else if (CrossYN()) {
                         	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
 //                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
@@ -836,10 +836,10 @@ function event_SaveonClick() {
                     }
                     else {
                         var tempUrl = "";
-                        if (navigator.userAgent.indexOf("MSIE") != -1) {
+                        if (!CrossYN()) {
                             tempUrl = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }
-                        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+                        else if (CrossYN()) {
                         	tempUrl = xmlID.childNodes.item(0).childNodes.item(1).textContent;
 //                          tempUrl = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
@@ -2251,11 +2251,11 @@ function Attach_onClick() {
 function important_change() {
     g_bDirty = true;
 
-    if (navigator.userAgent.indexOf("MSIE") != -1) {
+    if (!CrossYN()) {
         eImportant.value = importantSelect.selectedIndex.toString();
         m_rgParams4PostOption["important"] = eImportant.value;
     }
-    else if (navigator.userAgent.indexOf("MSIE") == -1) {
+    else if (CrossYN()) {
         m_rgParams4PostOption["important"] = importantSelect.selectedIndex.toString();
     }
     m_rgParams4PostOption["important"] = eImportant.value;
@@ -2273,10 +2273,10 @@ function Option_onClick() {
 function Option_onClick_Complete(m_rgParams4PostOption) {
     DivPopUpHidden();
     importantSelect.selectedIndex = parseInt(m_rgParams4PostOption["important"]);
-    if (navigator.userAgent.indexOf("MSIE") != -1) {
+    if (!CrossYN()) {
         eImportant.value = importantSelect.selectedIndex.toString();
     }
-    else if (navigator.userAgent.indexOf("MSIE") == -1) {
+    else if (CrossYN()) {
         m_rgParams4PostOption["important"] = importantSelect.selectedIndex.toString();
     }
 

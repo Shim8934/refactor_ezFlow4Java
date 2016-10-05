@@ -499,7 +499,7 @@
 	            if (Add_xmlhttp == null || Add_xmlhttp.readyState != 4)
 	                return;
 	            if (Add_xmlhttp.status >= 200 && Add_xmlhttp.status < 300) {
-	                if (navigator.userAgent.indexOf("MSIE") != -1) {
+	                if (!CrossYN()) {
 	                    var xmlDom = loadXMLString(Add_xmlhttp.responseText);
 	                    var objNodes = xmlDom.selectNodes("NewDataSet/Table");
 	                    for (var count = 0; count < objNodes.length; count++) {
@@ -512,7 +512,7 @@
 	                        document.getElementById("SelectBCCAddress").options[lastindex] = BCCnewoption;
 	                    }
 	                }
-	                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+	                else if (CrossYN()) {
 	                    var xmlDom = loadXMLString(Add_xmlhttp.responseText);
 	                    var Nodeslength = xmlDom.childNodes.item(0).childElementCount;
 	                    for (var count = 0; count < Nodeslength; count++) {
