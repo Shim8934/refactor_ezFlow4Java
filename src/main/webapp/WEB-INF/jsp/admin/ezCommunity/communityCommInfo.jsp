@@ -18,10 +18,11 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t59' />");
 					
 					if (result) {
-							window.location.href = "/admin/ezCommunity/commCloseAll.do?code=" + code;
+						window.location.href = "/admin/ezCommunity/commCloseAll.do?code=" + code;
 					} else {
 						alert("<spring:message code = 'ezCommunity.t60' />");
 					}
+					self.close();
 				} else {	//if (pType == "New")
 					var result = confirm("<spring:message code = 'ezCommunity.t61' />");
 					

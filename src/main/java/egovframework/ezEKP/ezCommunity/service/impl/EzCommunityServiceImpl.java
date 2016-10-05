@@ -155,7 +155,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String intro = request.getParameter("intro");
 		String pNewID = request.getParameter("sNewID");
 		String pNewSubID = request.getParameter("sNewSubID");
-		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
 		String logo = "default_logo_type1.jpg";
 		String banner = "default_banner.jpg";
 		int isIn = 0, boardNo = 0;
@@ -483,7 +483,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String userImage = xmldomMemberInfo.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim();
 		
 		if (!commonUtil.checkIE(request)) {
-			userImage = userImage.replace(request.getServletContext().getRealPath(""), "");
+			userImage = userImage.replace(commonUtil.getRealPath(request), "");
 		}
 		
 		Node targetNode = xmlMainDom.getElementsByTagName("DATA").item(0);
@@ -707,7 +707,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String userExtension = config.getProperty("config.USE_FileExtension").toString();
 		Iterator<String> itr = request.getFileNames();
 		
-		String pDirPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String pDirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
 		String tempPath = pDirPath  + "TempUploadFile";
 		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "uploadFile";
 		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
@@ -1503,7 +1503,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String imageSrc = request.getParameter("imageSrc");		
 		MultipartFile logoFile = request.getFile("logo");
 		
-		String logoPath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
 		
 		if (!logoFile.isEmpty()) {
 			fileName = code;
@@ -2774,7 +2774,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String attachList = request.getParameter("attachList");
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 
 		if (!request.getParameter("ref").equals("")) {
             myRef = Integer.parseInt(request.getParameter("ref"));
@@ -2933,7 +2933,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			fileName = board.getFileName();
 			
 			if (fileName != null) {
-				folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
+				folder = commonUtil.getRealPath(request) + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
 				strFile = folder + fileName;
 				File file = new File(strFile);
 				
@@ -2947,7 +2947,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				if (board.getCharFileName() != null) {
 					attachList = board.getCharFileName();
 					String[] strAttachFile = attachList.split(";");
-					folder = request.getServletContext().getRealPath("") + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
+					folder = commonUtil.getRealPath(request) + config.getProperty("upload_community.FILEDATA") + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
 					
 					for (int i = 0; i <= strAttachFile.length; i++) {
 						strFile = folder + strAttachFile[i];

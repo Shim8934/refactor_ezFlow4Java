@@ -33,7 +33,8 @@
         </style>
         
 		<script type="text/javascript">
-	        var pOrgBoardParameters = "<c:out value='${orgBoardParameters}' />'";
+	        var pOrgBoardParameters = "<c:out value='${orgBoardParameters}' />";
+	        pOrgBoardParameters = pOrgBoardParameters.replace(/&amp;/g, '&');
 		    var searchStart = "<c:out value='${searchStart}' />";
 		    var searchEnd = "<c:out value='${searchEnd}' />";
 		    var pBoardID = "<c:out value='${boardInfo.boardID}' />";
@@ -686,7 +687,8 @@
 			}
 
 			function BoardItemList() {
-				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
+				$(location).attr('href', '/ezCommunity/boardItemList.do?' + pOrgBoardParameters);
+// 				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
 			}
 			
 			function Print_onclick() {

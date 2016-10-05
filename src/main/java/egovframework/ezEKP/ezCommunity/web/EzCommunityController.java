@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.List;
 import java.util.Map;
@@ -396,7 +397,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = "";
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
-		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(pBoardID, userInfo.getId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
@@ -603,7 +603,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		Document xmlData = commonUtil.convertStringToDocument(xmlStr);
 		String pMode = request.getParameter("mode");
 
-		String ret = ezCommunityService.newItem(xmlData, pMode, request.getServletContext().getRealPath(""), userInfo);
+		String ret = ezCommunityService.newItem(xmlData, pMode, commonUtil.getRealPath(request), userInfo);
 		
 		return ret;
 	}
@@ -967,7 +967,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pOrgBoardID = request.getParameter("orgBoardID");
 		String pDestItemIDList = request.getParameter("destItemIDList");
 		String pDestBoardID = request.getParameter("destBoardID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String ret = "";
 		
 		int i = 0;
@@ -3458,7 +3458,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.getTodayTime());
         		}
         		
-        		ret = ezCommunityService.newItem(xmlDom, mode, request.getServletContext().getRealPath(""), userInfo);
+        		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
         	}
         }
         
@@ -3544,7 +3544,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (item.getExtensionAttribute5().length() > 0) {
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
-			String pFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
+			String pFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
 			
 			File file = new File(pFilePath);
