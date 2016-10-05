@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
@@ -213,8 +214,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalTBLPortletHtmlPageVO) select("EzPortalDAO.getTBLPortletHtmlPage", pUID);
 	}
 	
-	public PortalTBLPortletImageVO getTBLPortleImage (String pUID) {
-		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortleImage", pUID);
+	public PortalTBLPortletImageVO getTBLPortletImage (String pUID) {
+		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortletImage", pUID);
 	}
 	
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) {
@@ -223,6 +224,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {
 		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", map);
+	}
+	
+	public PortalImagePortletVO imagePortlet (String pUID) {
+		return (PortalImagePortletVO) select("EzPortalDAO.imagePortlet", pUID);
 	}
 	
 	public String getTopMenuConfigItem(Map<String, Object> map) {

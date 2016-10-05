@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
@@ -94,6 +95,8 @@ public interface EzPortalService {
 	public PortalTBLPortletImageVO getTBLPortletImage (String pUID) throws Exception;
 	
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) throws Exception;
+	
+	public PortalImagePortletVO imagePortlet (String pUID) throws Exception;
 	
 	public String getTopMenuConfigItem (String itemName, String uID) throws Exception;
 	

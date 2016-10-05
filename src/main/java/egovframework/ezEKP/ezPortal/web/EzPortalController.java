@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
@@ -2257,5 +2258,25 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		model.addAttribute("htmlData", htmlData);
 		
 		return "/ezPortal/portalHtmlPortlet";
+	}
+	
+	/**
+	 * 포탈 - imagePortlet 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/imagePortlet.do")
+	public String imagePortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
+		}
+		
+		PortalImagePortletVO result = ezPortalService.imagePortlet(uID);
+		
+		if (result.getImagePath() != null && !result.getImagePath().equals("")) {
+			model.addAttribute("result", result);
+		}
+		
+		return "/ezPortal/portalImagePortlet";
 	}
 }

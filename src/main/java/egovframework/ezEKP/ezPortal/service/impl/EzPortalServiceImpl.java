@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
@@ -512,7 +513,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 
 	@Override
 	public PortalTBLPortletImageVO getTBLPortletImage(String pUID) throws Exception {
-		return ezPortalDAO.getTBLPortleImage(pUID);
+		return ezPortalDAO.getTBLPortletImage(pUID);
 	}
 
 	@Override
@@ -596,6 +597,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	@Override
 	public String htmlPortlet(String uID) throws Exception {
 		return ezPortalDAO.htmlPortlet(uID);
+	}
+	
+	@Override
+	public PortalImagePortletVO imagePortlet(String pUID) throws Exception {
+		return ezPortalDAO.imagePortlet(pUID);
 	}
 
 	public String getAccessList(LoginVO userInfo) {
