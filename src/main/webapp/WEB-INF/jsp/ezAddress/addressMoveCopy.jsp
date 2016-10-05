@@ -38,7 +38,7 @@
 	            xmlHTTP.send();
 	
 	            var treeconfig;
-	            if (navigator.userAgent.indexOf('MSIE') == -1) {
+	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
 	            }
 	            else {

@@ -89,7 +89,7 @@
 	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
 	            xmlHTTP.send();
 	            var treeconfig;
-	            if (navigator.userAgent.indexOf('MSIE') == -1) {
+	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
 	            }
 	            else
@@ -135,7 +135,7 @@
 	            var szCommand = (event.bctrl) ? "copy" : "move";
 	            var szSubCommand = event.command;
 	
-	            if (navigator.userAgent.indexOf('MSIE') == -1) {
+	            if (CrossYN()) {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
 	                        window.parent.frames("right").move_on_dragdrop(PostTreeView.getvalue(event.nodeIdx, "href"));
@@ -365,7 +365,7 @@
 	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
 	            xmlHTTP.send();
 	            var treeconfig;
-	            if (navigator.userAgent.indexOf('MSIE') == -1) {
+	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
 	            }
 	            else {

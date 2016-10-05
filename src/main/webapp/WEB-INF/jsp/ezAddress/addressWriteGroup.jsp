@@ -1234,7 +1234,7 @@
 	                    contactTabButton.setAttribute('src', m_contactImg[m_tabDialogState["contact"]]);
 	                    dlTabButton.setAttribute('src', m_dlImg[m_tabDialogState["dl"]]);
 	                }).call(this)
-	                : (navigator.userAgent.indexOf('MSIE') == -1) ?
+	                : (CrossYN()) ?
 	                (function () {
 	                    orgTabButton.setAttribute('src', m_orgImg[m_tabDialogState["org"]]);
 	                    contactTabButton.setAttribute('src', m_contactImg[m_tabDialogState["contact"]]);

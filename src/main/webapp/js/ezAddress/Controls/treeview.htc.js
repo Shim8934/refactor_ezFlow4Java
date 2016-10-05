@@ -28,7 +28,7 @@
             return;
         }
 
-        if (navigator.userAgent.indexOf('MSIE') == -1) { 
+        if (CrossYN()) { 
             g_treeXML = new DOMParser().parseFromString(sourceXML, "text/xml");
         } else { 
             g_treeXML = new ActiveXObject("Microsoft.XMLDom");
@@ -80,7 +80,7 @@
 
     this.update = ex_update;
     function ex_update() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function() {
             if (g_treeXML == null)
                 return;
@@ -105,7 +105,7 @@
 
     this.toggle = ex_toggle;
     function ex_toggle(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return;
@@ -184,7 +184,7 @@
 
     this.getvalue = ex_getvalue;
     function ex_getvalue(nodeIdx, valueName) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, valueName) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
@@ -207,7 +207,7 @@
 
     this.putvalue = ex_putvalue;
     function ex_putvalue(nodeIdx, valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, valueName, value) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
@@ -224,7 +224,7 @@
 
     this.select = ex_select;
     function ex_select(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return;
@@ -257,7 +257,7 @@
 
     this.putcaption = ex_putcaption;
     function ex_putcaption(nodeIdx, caption) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, caption) {
             document.getElementById(g_nodeid + nodeIdx).innerHTML = caption;
         }).call(this,nodeIdx, caption) :
@@ -268,7 +268,7 @@
 
     this.putstyle = ex_putstyle;
     function ex_putstyle(nodeIdx, style) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, style) {
             document.getElementById(g_nodeid + nodeIdx).style.cssText = style;
         }).call(this,nodeIdx, style) :
@@ -279,7 +279,7 @@
 
     this.putchildxml = ex_putchildxml;
     function ex_putchildxml(nodeIdx, childxml) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, childxml) {
             var toggleel = document.getElementById(g_toggleid + nodeIdx);
             var childel = document.getElementById(g_childid + nodeIdx);
@@ -335,7 +335,7 @@
 
     this.deletenode = ex_deletenode;
     function ex_deletenode(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
@@ -459,7 +459,7 @@
 
     this.addnode = ex_addnode;
     function ex_addnode(nodeIdx, nodeXML) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx, nodeXML) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
@@ -629,7 +629,7 @@
 
     this.findindex = ex_findindex;
     function ex_findindex(valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(valueName, value) {
             for (var i = 1; i <= g_nodeCount; i++) {
                 if (g_nodeArray["nodeXML"][i] != null)
@@ -652,7 +652,7 @@
 
     this.haschild = ex_haschild;
     function ex_haschild(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function() {
             var depth = g_nodeArray["depth"][nodeIdx].length;
             var src = document.getElementById(g_nodeid + nodeIdx).parentNode.children.item(depth - 1).getAttribute('src');
@@ -698,7 +698,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (!event) event = window.event;
             var targetEl = event.target;
@@ -722,7 +722,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (!event) event = window.event;
             var targetEl = event.target;
@@ -746,7 +746,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (!event) event = window.event;
             var targetEl = event.target;
@@ -769,7 +769,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (!event) event = window.event;
             var targetEl = event.target;
@@ -798,7 +798,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (g_bdragdrop) {
                 if (!event) event = window.event;
@@ -823,7 +823,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (g_bdragdrop) {
                 if (!event) event = window.event;
@@ -848,7 +848,7 @@
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             if (g_bdragdrop) {
                 if (!event) event = window.event;
@@ -889,7 +889,7 @@
         g_treeXML = null;
     }
 
-    if (navigator.userAgent.indexOf('MSIE') == -1) {
+    if (CrossYN()) {
         element.addEventListener('selectstart', event_onselectstart, false);
         element.addEventListener('mousedown', event_onmousedown, false);
         element.addEventListener('dblclick', event_ondblclick, false);
@@ -945,7 +945,7 @@
 
 
     function make_childHtml(nodeIdx) {        
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(nodeIdx) {
             if (nodeIdx == 0) {
                 var nodeXML = g_treeXML.getElementsByTagName('tree').item(0);
@@ -1183,7 +1183,7 @@
     }
     
     function changeRecursiveImg(node, bspace, depth, recuringCount) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(node, bspace, depth, recuringCount) {
             if (node.innerHTML == "")
                 return;
@@ -1271,7 +1271,7 @@
 
         }).call(this) :
         (function() {
-        	if (navigator.userAgent.indexOf('MSIE') == -1) { //IE11
+        	if (CrossYN()) { //IE11
         		var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
                 for (var i = 0; i < bimageNodes.length; i++){
                 	if(bimageNodes.item(i).nodeType == 1){
