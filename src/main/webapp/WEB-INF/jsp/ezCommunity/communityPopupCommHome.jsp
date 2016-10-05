@@ -529,7 +529,7 @@
 		    
 		    function open_admin(code) {
 		        var wWeight = "840";
-		        var wHeight = "510";
+		        var wHeight = "530";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - wWeight) / 2;
