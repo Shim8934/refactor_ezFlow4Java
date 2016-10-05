@@ -247,56 +247,6 @@ function SwapImage(obj,flag)
 	}
 }
 
-
-////////////////////////////////////////////////////////////////////////
-// CrossBrowser적용
-function CrossYN() {
-	var ua = navigator.userAgent;
-	var result = true;
-
-    // 크로스 브라우저 IE:false IE외: true    
-	if (/msie/i.test(ua)){
-		result = false;
-	}else if (/firefox/i.test(ua)){
-		result = true;
-	}else if (/chrome/i.test(ua)){
-		result = true;
-	}else if (/safari/i.test(ua)){
-		result = true;
-	}else if (/opera/i.test(ua)){
-		result = true;
-	}else if (/trident/i.test(ua)){
-		result = true;
-	}
-	
-    return result;
-}
-
-//자식노드들을 가져옵니다.
-function GetChildNodes(node) {
-    var elements = new Array();
-    var objNode = node.firstChild;
-
-    var idx = 0;
-    while (objNode) {
-        if (objNode.nodeType == 1) {
-            elements[idx++] = objNode;
-        }
-        objNode = objNode.nextSibling;
-    }
-    return elements;
-}
-
-//속성요소를 가져옵니다
-function GetAttribute(node, name) {
-
-    var result = "";
-    if (node != null && name != null && node.getAttribute(name) != null) {
-        result = node.getAttribute(name);
-    }
-
-    return String(result);
-}
 function SetFormProc_SetLineStyle(obj) {
     try {
         var styleTag;
