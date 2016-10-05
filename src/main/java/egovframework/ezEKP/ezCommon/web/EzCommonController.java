@@ -143,8 +143,7 @@ public class EzCommonController extends EgovFileMngUtil{
 //        }
         // reform - end
         String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo.getLocale());
-System.out.println("strHTML:"+strHTML);
-System.out.println("mhtData:"+mhtData);
+        
         return mhtData;
 	}
 	
@@ -176,10 +175,8 @@ System.out.println("mhtData:"+mhtData);
         String uploadModule = config.getProperty("config.LocalPath");
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
-System.out.println("uploadModule:"+uploadModule);
-System.out.println("realPath:"+realPath);
-System.out.println("strURL:"+strURL);
-        filePath = realPath + strURL;
+        
+        filePath = realPath + uploadModule;
         
         File file = new File(filePath);
         if (!file.exists()) {
@@ -192,10 +189,10 @@ System.out.println("strURL:"+strURL);
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
-System.out.println("m_strMHT:"+m_strMHT);
+        
         String result = "";
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, request, locale);
-System.out.println("strHTML:"+strHTML);
+
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
         } else {
