@@ -647,8 +647,10 @@ function CrossYN() {
 	var ua = navigator.userAgent;
 	var result = true;
 
-    // 크로스 브라우저 IE:false IE외: true    
-	if (/msie 9/i.test(ua)){
+    // 크로스 브라우저 IE9이하:false IE외: true
+    if (/msie 10/i.test(ua)){
+        result = true;	
+    }else if (/msie/i.test(ua)){
 		result = false;
 	}else if (/firefox/i.test(ua)){
 		result = true;
