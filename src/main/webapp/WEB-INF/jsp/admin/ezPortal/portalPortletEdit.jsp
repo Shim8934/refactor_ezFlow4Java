@@ -286,9 +286,11 @@
 				strXML2 += "<DISPLAYNAME2>" + displayname2 + "</DISPLAYNAME2>";
 
 				var strBody = message.GetEditorContent();
-alert("strBody:"+strBody);
+///////converHTMLtoMHT
 				strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>");
-				strXML2 += "<CONTENT>" +pidCryptUtil.encodeBase64(strBody, 64) + "</CONTENT>";
+				//strXML2 += "<CONTENT>" +pidCryptUtil.encodeBase64(strBody, 64) + "</CONTENT>";
+				//2019-10-09 strBody 수정
+				strXML2 += "<CONTENT>" + strBody + "</CONTENT>";
 				strXML2 += "</DATA>";												
 				// 폼프로세스가 로드가 끝난 상태에서만 저장
 				//if( bEditorLoaded!=true) strXML2 = "";
@@ -781,9 +783,10 @@ alert("strBody:"+strBody);
 		}
 		var isComplete = false;
 		function DocumentComplete() {
-		        var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
-		        var htmlData = message.SetEditorContentURL2(fullPath);
-alert("htmlData:"+htmlData);
+		        //var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
+		        //var htmlData = message.SetEditorContentURL2(fullPath);
+		        //2016-10-09 mht파일 저장경로 수정
+		        var htmlData = message.SetEditorContentURL2(escape(pDocPath));
 			    message.SetEditorContent(htmlData);
  
             }

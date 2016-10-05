@@ -51,7 +51,6 @@
 			    var XmlBodyDATA = createXmlDom();
 			    var tempStr = "";
 			    tempStr = ConvertMHTtoHTML(url);
-alert("tempStr:"+tempStr);
 			    tempXML = loadXMLString(tempStr);
 
 			    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];

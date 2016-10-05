@@ -1013,7 +1013,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		} else if (portletType.equals("2")) {
 			//HTML 포틀릿
 			pDocPath = subProp.getElementsByTagName("HTMLDATA").item(0).getTextContent();
-System.out.println("pDocPath:"+pDocPath);
 		} else if (portletType.equals("3")) {
 			//이미지 포틀릿
 			pImagePath = subProp.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
@@ -1144,13 +1143,14 @@ System.out.println("pDocPath:"+pDocPath);
 			map.put("v_URL", moveUrl);
 			ezPortalAdminService.savePortletSubProperty(map);
 		} else if (portletType.equals("2")) {
+			String realPath = req.getServletContext().getRealPath("");
 			// html 포틀릿
 			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 			displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 			pContent = xmlDom.getElementsByTagName("CONTENT").item(0).getTextContent();
-			mhtFilePath = "/files/upload_portal/mht" + uID + ".mht";
-			bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator);
-			
+			mhtFilePath = "/files/upload_portal/mht/" + uID + ".mht";
+			bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator, realPath);
+
 			if (bResult == true) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("v_UID", uID);
@@ -1201,12 +1201,12 @@ System.out.println("pDocPath:"+pDocPath);
 		return "OK";
 	}
 	
-	public boolean saveMHT (String strHTML, String strMHTFileName, String strFilePath) {
+	public boolean saveMHT (String strHTML, String strMHTFileName, String strFilePath, String realPath) {
 		String docPath = "";
 		String mhtFilePath = "";
 		try {
-			docPath = strFilePath + "\\Mht";
-			
+			docPath = realPath + strFilePath + "\\mht";
+
 			if (!new File(docPath).exists()) {
 				File dir = new File(docPath);
 				dir.mkdirs();
@@ -1815,7 +1815,7 @@ System.out.println("pDocPath:"+pDocPath);
 		}
 		
 		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1");
-System.out.println("strXML:"+strXML);
+
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
 			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
