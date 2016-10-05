@@ -1125,18 +1125,18 @@
 					},
 					success: function(result){
 						if (result == "FALSE") {
-							var wWeight = "330";
+							var wWidth = "330";
 			                var wHeight = "207";
 			                var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
-	                        var left = (width - wWeight) / 2;
+	                        var left = (width - wWidth) / 2;
 	                        var top = (heigth - wHeight) / 2;
 	                        var type = val.getAttribute("type");
 
 	                        if (type == "2") {
-	                            window.open("/ezCommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                            window.open("/ezCommunity/join1.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 	                        } else if (type == "3") {
-	                            window.open("/ezCommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                            window.open("/ezCommunity/join2.do?no=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 	                        }
 	                	} else {
 	                    	alert(strLang7);

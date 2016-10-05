@@ -52,8 +52,14 @@
 			}
 			
 			function open_info( code ) {
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=350";
-			    feature = feature + GetOpenPosition(400, 350);
+				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=400,height=370";
+				    feature = feature + GetOpenPosition(380, 350);
+				} else {
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=380,height=350";
+				    feature = feature + GetOpenPosition(380, 350);
+				}
+				
 			    comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);
 			}
 		//########################################페이지네이션 변경 ##############################################

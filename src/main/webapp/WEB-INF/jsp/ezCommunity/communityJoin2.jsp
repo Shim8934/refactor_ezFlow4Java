@@ -39,18 +39,21 @@
 	
 		        var UserAgentState = navigator.userAgent.toLowerCase();
 		        
-		        if (!CrossYN()) {
-		            if (UserAgentState.indexOf("firefox") != -1) {
+		        if (CrossYN()) {
+		        	if (UserAgentState.indexOf("rv:11") > 0) {
+		        		window.resizeTo(346, 240);
+		        	} else {
+		        		window.resizeTo(340, 260);
+		        	}
+		        } else {
+		        	if (UserAgentState.indexOf("firefox") != -1) {
 		                window.resizeTo(349, 279);
 		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
 		                window.resizeTo(346, 243);
 		            } else {
-		                window.resizeTo(346, 269);
+		            	window.resizeTo(346, 240);
 		            }
-		        } else {
-		            window.resizeTo(346, 240);
 		        }
-		        
 		        if (MACSAFARIYN()) {
 		            window.resizeTo(330, 251);
 		        }
