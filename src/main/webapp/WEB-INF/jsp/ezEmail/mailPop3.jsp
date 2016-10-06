@@ -226,13 +226,13 @@
 		                svElem = document.getElementById("popSSL" + i);
 		            }
 		            var popSSL = svElem.checked;
-		            popXML = popXML + "<ROW><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID><DELETE>" + popDelete + "</DELETE><PW>" + rsa.encrypt(popPW) + "</PW><SAVETO>" + popSaveTo + "</SAVETO><SAVETOFOLDER>" + encodeURIComponent(popSaveToFolder) + "</SAVETOFOLDER><SSL>" + popSSL + "</SSL></ROW>";
-		
+		            popXML = popXML + "<ROW><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID><DELETE>" + popDelete + "</DELETE><PW>" + rsa.encrypt(popPW) + "</PW><SAVETO>" + popSaveTo + "</SAVETO><SAVETOFOLDER>" + popSaveToFolder + "</SAVETOFOLDER><SSL>" + popSSL + "</SSL></ROW>";
 		        }
 		        popXML = popXML + "</DATA>";
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezEmail/mailPop3Save.do", false);
+		            xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		            xmlHTTP.send(popXML);
 		
 		            if (xmlHTTP.status == 200)
