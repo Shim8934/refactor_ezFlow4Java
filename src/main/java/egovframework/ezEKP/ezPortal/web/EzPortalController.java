@@ -43,6 +43,8 @@ import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
@@ -236,7 +238,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							}
 						}
 					}
-					if (pageID.equals("")) {
+					if (pageID != null && pageID.equals("")) {
 						pageID = xmlDom2.getElementsByTagName("UID_").item(0).getTextContent();
 						xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
 						if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
@@ -260,7 +262,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 			String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
 
-			if ("new".equals(req.getParameter("mode"))) {
+			if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
 				mainUrl = "/myoffice/main/index_environment2.htm";
 			} else if ("mail".equals(req.getParameter("mode"))) {
 				mainUrl = "/myoffice/main/index_myoffice.aspx?funCode=1";
@@ -1645,12 +1647,12 @@ System.out.println("themeSize:"+themeList.size());
 		}
 		
 		gubunFlag = "1";
-		List<PortalTBLPortalPageGeneralVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
-		
+		List<PortalMyPortalListVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
+
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
-			for (PortalTBLPortalPageGeneralVO myPortal : myPortalList) {
-				parentPageID = myPortal.getuID();
+			for (PortalMyPortalListVO myPortal : myPortalList) {
+				parentPageID = myPortal.getuID_();
 				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "");
 			}
 		}
@@ -1660,15 +1662,15 @@ System.out.println("themeSize:"+themeList.size());
 			sb.append("<DATA>");
 			
 			for (int i=0; i<myPortalList.size(); i++) {
-				List<PortalTBLPortalPageGeneralVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag);
+				List<PortalNewMyPortalPageListVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag);
 				for (int t=0; t<tempNewMyPortalPageList.size(); t++) {
-					String uID = myPortalList.get(i).getuID();
+					String uID = myPortalList.get(i).getuID_();
 					String newPortalParentUID = tempNewMyPortalPageList.get(t).getParentUID().trim();
 					
 					if (uID != null && uID.equals(newPortalParentUID)) {
 						sb.append("<ROW>");
-						sb.append("<UID_>" + tempNewMyPortalPageList.get(t).getuID() + "</UID_>");
-                        sb.append("<DISPLAYNAME>" + tempNewMyPortalPageList.get(t).getDisplayName() + "</DISPLAYNAME>");
+						sb.append("<UID_>" + tempNewMyPortalPageList.get(t).getuID_() + "</UID_>");
+                        sb.append("<DISPLAYNAME>" + myPortalList.get(i).getDisplayName() + "</DISPLAYNAME>");
                         sb.append("<USEFLAG>" + tempNewMyPortalPageList.get(t).getUseFlag() + "</USEFLAG>");
                         sb.append("</ROW>");
 					}
@@ -1710,6 +1712,7 @@ System.out.println("themeSize:"+themeList.size());
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
 		String resultHTML = "";
+
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent() != null && xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
 				resultHTML += "<script>var SelectedItems ="+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"</script>";

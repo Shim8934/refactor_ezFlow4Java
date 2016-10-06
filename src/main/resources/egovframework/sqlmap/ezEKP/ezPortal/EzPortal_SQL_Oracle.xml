@@ -30,6 +30,8 @@
 	<typeAlias  alias="PortalTBLPortalACLVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO"/>
 	<typeAlias  alias="PortalSearchMenuItemVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO"/>
 	<typeAlias  alias="PortalImagePortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
+	<typeAlias  alias="PortalMyPortalListVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
+	<typeAlias  alias="PortalNewMyPortalPageListVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -595,13 +597,13 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.myPortalList" parameterClass="Map" resultClass="PortalTBLPortalPageGeneralVO">
+	<procedure id="EzPortalDAO.myPortalList" parameterClass="Map" resultClass="PortalMyPortalListVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_MYPORTALLIST(#v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pIDUSER#, #v_pIDDEPT#, #v_pIDCOMPANY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.newMyPortalList" parameterClass="Map" resultClass="portalTBLPortalPageGeneralVO">
+	<procedure id="EzPortalDAO.newMyPortalList" parameterClass="Map" resultClass="PortalNewMyPortalPageListVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_NEWMYPOTALPAGELIST(#v_pDISPLAYNAME#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

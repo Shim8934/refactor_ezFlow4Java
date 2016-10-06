@@ -32,6 +32,8 @@ import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
@@ -568,7 +570,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageGeneralVO> newMyPortalList(String pUserID, String pGubunFlag) throws Exception {
+	public List<PortalNewMyPortalPageListVO> newMyPortalList(String pUserID, String pGubunFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pDISPLAYNAME", pUserID);
 		map.put("v_pGUBUNFLAG", pGubunFlag);
@@ -2524,7 +2526,7 @@ System.out.println();
 		return aclResult;
 	}
 	
-	public List<PortalTBLPortalPageGeneralVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
 		String[] pAccessID = pAccessIDList.split("\\,");
 		String pIDUser = pAccessID[0].trim();
 		String pIDDept = "";
@@ -2541,7 +2543,7 @@ System.out.println();
 		map.put("v_pIDUSER", pIDUser);
 		map.put("v_pIDDEPT", pIDDept);
 		map.put("v_pIDCOMPANY", pCompanyID);
-		List<PortalTBLPortalPageGeneralVO> list = ezPortalDAO.myPortalList(map);
+		List<PortalMyPortalListVO> list = ezPortalDAO.myPortalList(map);
 		
 		return list;
 	}
@@ -2673,52 +2675,6 @@ System.out.println();
 			map.put("v_pCOMPANYID", pCompanyID);
 			map.put("v_pGUBUNFLAG", pGubunFlag);
 			map.put("v_pUSEFLAG", "Y");
-			/*map.put("pDisplayName", pUserID);
-			map.put("pCompanyID", pCompanyID);
-			map.put("pGubunFlag", pGubunFlag);*/
-			
-			List<String> list = ezPortalDAO.selectUseFlag(map);
-			
-			String[] arrays = list.toArray(new String[list.size()]);
-			
-			
-/*			for (int i=0; i<arrays.length; i++) {
-				if (arrays[i].equals(pUID)) {
-					Map<String, Object> map1 = new HashMap<String, Object>();
-					map1.put("pUID", pUID);
-					map1.put("pUserID", pUserID);
-					map1.put("pCompanyID", pCompanyID);
-					map1.put("pGubunFlag", pGubunFlag);
-					map1.put("useFlag", "Y");
-					ezPortalDAO.updateUseFlag(map1);
-				} else {
-					Map<String, Object> map2 = new HashMap<String, Object>();
-					map2.put("pUID", pUID);
-					map2.put("pUserID", pUserID);
-					map2.put("pCompanyID", pCompanyID);
-					map2.put("pGubunFlag", pGubunFlag);
-					map2.put("useFlag", "");
-					ezPortalDAO.updateUseFlagDefault(map2);
-				}
-			}*/
-		/*	Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("pUID", pUID);
-			map1.put("pUserID", pUserID);
-			map1.put("pCompanyID", pCompanyID);
-			map1.put("pGubunFlag", pGubunFlag);
-			map1.put("useFlag", "Y");
-			ezPortalDAO.updateUseFlag(map1);
-			
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map2.put("pUID", pUID);
-			map2.put("pUserID", pUserID);
-			map2.put("pCompanyID", pCompanyID);
-			map2.put("pGubunFlag", pGubunFlag);
-			map2.put("useFlag", "");
-			ezPortalDAO.updateUseFlagDefault(map2);*/
-			
-			
-			
 			
 			ezPortalDAO.setUseMyPortalPage(map);
 			return "OK";

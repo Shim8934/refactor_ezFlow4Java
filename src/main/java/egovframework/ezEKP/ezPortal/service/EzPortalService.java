@@ -12,6 +12,8 @@ import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
@@ -64,9 +66,9 @@ public interface EzPortalService {
 	
 	public List<PortalTBLPortalPageGeneralVO> getUserInfo5 (int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception;
 	
-	public List<PortalTBLPortalPageGeneralVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception;
+	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception;
 	
-	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (String pUserID, String pGubunFlag) throws Exception;
+	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag) throws Exception;
 	
 	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath) throws Exception;
 	

@@ -14,6 +14,8 @@ import egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO;
 import egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO;
+import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
+import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMenuItemVO;
 import egovframework.ezEKP.ezPortal.vo.PortalSearchMyPortalPage3VO;
@@ -119,13 +121,13 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLPortalPageGeneralVO> myPortalList (Map<String, Object> map) {
-		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.myPortalList", map);
+	public List<PortalMyPortalListVO> myPortalList (Map<String, Object> map) {
+		return (List<PortalMyPortalListVO>) list("EzPortalDAO.myPortalList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLPortalPageGeneralVO> newMyPortalList (Map<String, Object> map) {
-		return (List<PortalTBLPortalPageGeneralVO>) list("EzPortalDAO.newMyPortalList", map);
+	public List<PortalNewMyPortalPageListVO> newMyPortalList (Map<String, Object> map) {
+		return (List<PortalNewMyPortalPageListVO>) list("EzPortalDAO.newMyPortalList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
