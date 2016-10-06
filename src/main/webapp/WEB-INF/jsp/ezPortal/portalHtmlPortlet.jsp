@@ -106,15 +106,12 @@
 		</script>
 	</head>
 	<body onload="javascript:window_onload()">
-		11111
-		<p>111111</p>
-		<div>1111</div>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
 			<tr>
 				<td width="5"></td>
 				<td valign="top">
                         <div id="DocSummary" style="PADDING-TOP:3px"></div>
-                        <iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;">1111</iframe>
+                        <iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 		</table>
