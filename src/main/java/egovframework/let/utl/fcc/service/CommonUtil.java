@@ -110,16 +110,21 @@ public class CommonUtil {
 			String lang = decData.split("///")[6];
 			String timeZone = decData.split("///")[7];
 			
+			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
-	
+			
 			LoginVO user = loginService.selectUser(login);
 	
 			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
 			
 			user.setLang(lang);
-
+			user.setTheme("BASIC");
+			user.setTableViewOption("D");
+			user.setSkinNum("1");
+			user.setRootPage(false);
+			
 			if (config.getProperty("config.primary").equals(lang)) {
 				user.setPrimary("1");
 			} else {
