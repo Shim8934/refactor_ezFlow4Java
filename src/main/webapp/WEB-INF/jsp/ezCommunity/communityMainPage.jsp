@@ -302,18 +302,18 @@
 
                         var span2 = document.createElement("SPAN");
                         span2.className = "line";
-
+                        
                         var span3 = document.createElement("SPAN");
                         span3.className = "icon_community02";
                         span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMCNT");
 
                         var span4 = document.createElement("SPAN");
                         span4.className = "line";
-
+                        
                         var span5 = document.createElement("SPAN");
                         span5.className = "btn_community01";
                         span5.setAttribute("code", copno);
-                        span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
+                        span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBCONFIRMTYPE"));
                         span5.onclick = function () { move_cop(this); };
 
                         var span6 = document.createElement("SPAN");
@@ -351,7 +351,7 @@
                     var td2 = document.createElement("TD");
                     var td3 = document.createElement("TD");
                     var td4 = document.createElement("TD");
-
+                    
                     td.className = "text";
                     var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
                     var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
@@ -1126,7 +1126,7 @@
 					success: function(result){
 						if (result == "FALSE") {
 							var wWidth = "330";
-			                var wHeight = "207";
+			                var wHeight = "220";
 			                var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
 	                        var left = (width - wWidth) / 2;

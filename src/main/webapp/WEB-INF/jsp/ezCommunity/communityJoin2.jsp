@@ -40,10 +40,10 @@
 		        var UserAgentState = navigator.userAgent.toLowerCase();
 		        
 		        if (CrossYN()) {
-		        	if (UserAgentState.indexOf("rv:11") > 0) {
-		        		window.resizeTo(346, 240);
-		        	} else {
+		        	if (UserAgentState.indexOf("chrome") > 0) {
 		        		window.resizeTo(340, 260);
+		        	} else {
+		        		window.resizeTo(346, 240);
 		        	}
 		        } else {
 		        	if (UserAgentState.indexOf("firefox") != -1) {

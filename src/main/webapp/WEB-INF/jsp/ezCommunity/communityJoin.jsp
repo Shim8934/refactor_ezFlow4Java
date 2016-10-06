@@ -8,8 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
+			var UserAgentState = navigator.userAgent.toLowerCase();
+			
+	        if (CrossYN()) {
+	        	alert(UserAgentState);
+	        	if (UserAgentState.indexOf("chrome") > 0) {
+	        		window.resizeTo(410, 520);
+	        	} else {
+	        		window.resizeTo(410, 490);
+	        	}
+	        }
+	        
 			<!--
 			function birthYear_onfocus() {
 				join.birthYear.value = "";
@@ -241,21 +253,6 @@
 				} else {
 			        document.getElementById("join").submit();
 				}
-				
-			    //window.resizeTo(435, 320);
-			    var UserAgentState = navigator.userAgent.toLowerCase();
-			    
-			    if (!CrossYN()) {
-			        if (UserAgentState.indexOf("firefox") != -1) {
-			            window.resizeTo(349, 299);
-			        } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-			            window.resizeTo(346, 263);
-			        } else {
-			            window.resizeTo(346, 289);
-			        }
-			    } else {
-			        window.resizeTo(346, 260);
-			    }
 			}
 	
 			function join_cancel() {
@@ -336,7 +333,7 @@
 		      		<th><spring:message code = 'ezCommunity.t527' /></th>
 		    	</tr>
 	    		<tr>
-		      		<td><textarea name="cIntro" id="c_intro" style="width: 100%;height:110px" tabindex="10"></textarea></td>
+		      		<td><textarea name="cIntro" id="c_intro" style="width: 98%;height:110px" tabindex="10"></textarea></td>
 		    	</tr>
 		  	</table>
 		  	<!--커뮤니티 배너부분 -->

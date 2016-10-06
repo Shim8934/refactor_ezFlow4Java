@@ -29,23 +29,26 @@
 			window.onload = function () {
 			    document.getElementById("pMessageContent").innerHTML = "<spring:message code = 'ezCommunity.t1078' />" + "<br />" + "<spring:message code = 'ezCommunity.t1079' />";
 	
-			    var UserAgentState = navigator.userAgent.toLowerCase();
-			    
-			    if (!CrossYN()) {
-			        if (UserAgentState.indexOf("firefox") != -1) {
-			            window.resizeTo(349, 279);
-			        } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-			            window.resizeTo(346, 243);
-			        } else {
-			            window.resizeTo(346, 269);
-			        }
-			    } else {
-			        window.resizeTo(346, 240);
-			    }
-			    
-			    if (MACSAFARIYN()) {
-			        window.resizeTo(330, 251);
-			    }
+ 				var UserAgentState = navigator.userAgent.toLowerCase();
+		        
+		        if (CrossYN()) {
+		        	if (UserAgentState.indexOf("chrome") > 0) {
+		        		window.resizeTo(340, 260);
+		        	} else {
+		        		window.resizeTo(346, 240);
+		        	}
+		        } else {
+		        	if (UserAgentState.indexOf("firefox") != -1) {
+		                window.resizeTo(349, 279);
+		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
+		                window.resizeTo(346, 243);
+		            } else {
+		            	window.resizeTo(346, 240);
+		            }
+		        }
+		        if (MACSAFARIYN()) {
+		            window.resizeTo(330, 251);
+		        }
 			}
 		
 		</script>
