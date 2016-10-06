@@ -113,6 +113,14 @@ public class LoginVO implements Serializable{
 	private String offset;
 	/** 다국어설정*/
 	private Locale locale;
+	/** rootPage*/
+	private boolean rootPage;
+	/** 유저테마*/
+	private String theme;
+	/** 유저스킨번호*/
+	private String skinNum;
+	/** 유저 tableViewOption*/
+	private String tableViewOption;
 	
 	public String getId() {
 		return id;
@@ -368,5 +376,30 @@ public class LoginVO implements Serializable{
 	}
 	public void setOffset(String offset) {
 		this.offset = offset;
-	}	
+	}
+	public boolean isRootPage() {
+		return rootPage;
+	}
+	public void setRootPage(boolean rootPage) {
+		this.rootPage = rootPage;
+	}
+	public String getTheme() {
+		return theme;
+	}
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
+	public String getSkinNum() {
+		return skinNum;
+	}
+	public void setSkinNum(String skinNum) {
+		this.skinNum = skinNum;
+	}
+	public String getTableViewOption() {
+		return tableViewOption;
+	}
+	public void setTableViewOption(String tableViewOption) {
+		this.tableViewOption = tableViewOption;
+	}
+	
 }
