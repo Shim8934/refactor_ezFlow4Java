@@ -883,7 +883,7 @@ function event_SearchlistDBClick(obj) {
     var pAddressID = obj.getAttribute("_AddressID");
     var pAddressType = obj.getAttribute("_SType");
     var pFolderType = obj.getAttribute("_FolderType");
-    var _PFolderID = obj.getAttribute("_folderid");
+    var _PFolderID = obj.getAttribute("_FolderID");
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     if (pAddressType == "P") {

@@ -1202,7 +1202,20 @@ public class EzAddressController{
 			sb.append("<DISPLAYNAME></DISPLAYNAME>");
 			
 			for (AddressInfoVO vo : addressList) {
+				
+				//set folderType
+				String folderType = "";
+				if (vo.getOwnerId().equals(userInfo.getId())) {
+					folderType = "P";
+				} else if (vo.getOwnerId().equals(userInfo.getDeptID())) {
+					folderType = "D";
+				} else if (vo.getOwnerId().equals(userInfo.getCompanyID())) {
+					folderType = "C";
+				}
+				
 				sb.append("<ROW>");
+				sb.append("<FOLDERID>" + vo.getFolderId() + "</FOLDERID>");
+				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
 				sb.append("<ADDRESSID>" + vo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + vo.getCreatorId() + "</CREATORID>");
 				sb.append("<MODIFIERID>" + vo.getModifierId() + "</MODIFIERID>");

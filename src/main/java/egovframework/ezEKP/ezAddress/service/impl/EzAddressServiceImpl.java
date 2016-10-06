@@ -355,7 +355,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	public List<AddressInfoVO> getSearchList(String pIdList, String pOrderOption, String pFilter, String pFieldList,
 			int pFolderMaxCount, int pListPageSize, int pStart) throws Exception {
 		if (pFieldList.equals("")) {
-            pFieldList = "AddressID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
+            pFieldList = "AddressID, FolderID, OwnerID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
 		}
 		
         if (pOrderOption.equals("")){
