@@ -2088,12 +2088,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String makeContainer(String deptID, String containerID, String companyID) throws Exception {
-		
-		return null;
-	}
-
-	@Override
 	public String setContainerIDForDoc2(String docID, String containerID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);

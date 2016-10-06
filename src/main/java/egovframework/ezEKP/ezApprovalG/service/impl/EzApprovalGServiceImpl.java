@@ -10918,17 +10918,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return containerID;
 	}
 
-	public String makeContainer(String deptID, String containerType, String companyID) throws Exception{
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("v_CONTAINERTYPE", containerType);
-		map.put("v_DEPTID", deptID);
-		
-		String maxContainerID = ezApprovalGDAO.makeContainer(map);
-		
-		return maxContainerID;
-	}
-
 	public String doSendDoc(String docID, String deptID, String dirPath, String docState, String companyID, String lang) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		boolean rtnVal = true;
@@ -17413,5 +17402,17 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
 		return resultXML.toString();
-}
+	}
+	
+	@Override
+	public String makeContainer(String deptID, String containerType, String companyID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTAINERTYPE", containerType);
+		map.put("v_DEPTID", deptID);
+		
+		String maxContainerID = ezApprovalGDAO.makeContainer(map);
+		
+		return maxContainerID;
+	}
 }

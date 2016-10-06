@@ -369,5 +369,7 @@ public interface EzApprovalGService {
 	public String doReSendDoc(Document xmlDom, String dirPath, String lang) throws Exception;
 
 	public String getRecSCInfo(Document xmlDom, String lang, LoginVO userInfo)throws Exception;
+	
+	public String makeContainer(String deptID, String containerType, String companyID) throws Exception;
 
 }

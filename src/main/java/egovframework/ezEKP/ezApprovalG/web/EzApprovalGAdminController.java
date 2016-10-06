@@ -1978,7 +1978,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(deptID, containerType, companyID);
 		
 		if (containerID == null) {
-			containerID = ezApprovalGAdminService.makeContainer(deptID, containerID, companyID);
+			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID);
 		}
 		
 		String result;

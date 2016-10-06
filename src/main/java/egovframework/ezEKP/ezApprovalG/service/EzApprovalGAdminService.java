@@ -121,7 +121,6 @@ public interface EzApprovalGAdminService {
 	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
 
-	public String makeContainer(String deptID, String containerID, String companyID) throws Exception;
 
 	
 
