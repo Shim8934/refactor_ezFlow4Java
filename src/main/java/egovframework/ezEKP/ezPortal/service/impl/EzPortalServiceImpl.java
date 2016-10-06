@@ -2831,7 +2831,7 @@ System.out.println();
 				}
 			}
 		}
-		
+System.out.println("retXML:"+retXML);		
 		retXML += "</DATA>";
 
 		return retXML;

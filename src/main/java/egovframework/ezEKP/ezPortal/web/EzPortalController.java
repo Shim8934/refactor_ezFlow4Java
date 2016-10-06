@@ -688,7 +688,8 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID);
 	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
 	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
-	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
+/*	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
+System.out.println("themeSize:"+themeList.size());
 	        	String xmlStr = "<DATA>";
 				for (int i=0; i<themeList.size(); i++) {
 					xmlStr += commonUtil.getQueryResult(themeList.get(i));
@@ -703,7 +704,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 						pThemeSelectObject += "<option value='" + themeList.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
 					}
 					
-				}        
+				}     */   
 	            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
 	            if (editMode.equals("new_inherit")) {
 	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID);
@@ -2123,7 +2124,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		} else {
 			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getLang()));
 		}
-		
+
 		return "/ezPortal/portalPortletSearch";
 	}
 	
@@ -2150,7 +2151,7 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 		}
 		
 		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID());
-
+System.out.println("strXML:"+strXML);
 		return strXML;
 	}
 	
