@@ -10,7 +10,6 @@
 			<c:when test="${bCanJoin == 'true' }">
 				<script type="text/javascript">
 					<!--
-					window.resizeTo(435,495);
 					document.location.href = "join.do?code=<c:out value = '${code}' />";
 					//-->
 				</script>

@@ -334,7 +334,7 @@
 			            	window.open("commhome/guest/guestOne.do?code=" + code, "right");
 			                break;
 			            case "btn_MemberIn":
-			                var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=390,height=210";
+			                var feature = "toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=390,height=210";
 			                feature = feature + GetOpenPosition(390, 210);
 		
 			                if (newmember_confirmtype == "2"){

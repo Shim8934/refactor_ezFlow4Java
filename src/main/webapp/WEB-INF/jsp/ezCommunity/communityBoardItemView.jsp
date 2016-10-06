@@ -349,7 +349,6 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-alert(filepath);
 	                filename = filepath.substr(89, filepath.length - 88);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
@@ -446,7 +445,7 @@ alert(filepath);
 	        function downloadAll(checks) {
 	            if (checks.item(suffix)) {
 	                if (checks.item(suffix).checked) {
-	                    location.href = checks.item(suffix++).value;
+	                    location.href = checks.item(suffix++).getAttribute("filehref");
 	                    setTimeout(function () { downloadAll(checks) }, 1000);
 	                }
 	                else {

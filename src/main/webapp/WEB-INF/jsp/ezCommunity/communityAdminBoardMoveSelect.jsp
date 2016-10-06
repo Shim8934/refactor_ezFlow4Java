@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>		
+		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
@@ -63,12 +63,7 @@
 			    code = dialogArguments[2];
 	
 			    var xmlHTTP = createXMLHttpRequest();
-			    if (CrossYN()) {
-			        xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config.xml", false);
-			    } else {
-			        xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
-			    }
-			    
+			    xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
 			    xmlHTTP.send();
 	
 			    DisplayTopBoard();
@@ -147,12 +142,7 @@
 	
 			function SetTreeConfig() {
 			    var xmlDom_treeview = createXMLHttpRequest();
-			    if (CrossYN()) {
-			        xmlDom_treeview.open("GET", "/xml/ezCommunity/organtree_config.xml", false);
-			    } else {
-			        xmlDom_treeview.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
-			    }
-			    
+			    xmlDom_treeview.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
 			    xmlDom_treeview.send();
 	
 			    if (xmlDom_treeview.readyState == 4 && xmlDom_treeview.status == 200) {

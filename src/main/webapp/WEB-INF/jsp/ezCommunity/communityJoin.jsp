@@ -11,16 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
-			var UserAgentState = navigator.userAgent.toLowerCase();
-			
-	        if (CrossYN()) {
-	        	alert(UserAgentState);
-	        	if (UserAgentState.indexOf("chrome") > 0) {
-	        		window.resizeTo(410, 520);
-	        	} else {
-	        		window.resizeTo(410, 490);
-	        	}
-	        }
+			window.resizeTo(410, 520);
 	        
 			<!--
 			function birthYear_onfocus() {

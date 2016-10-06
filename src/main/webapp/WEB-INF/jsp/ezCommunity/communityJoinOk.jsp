@@ -61,27 +61,28 @@
 								        window.focus();
 								    }
 								}
-								//if (new RegExp(/Chrome/).test(navigator.userAgent)) {
-								//    window.resizeTo(348, 271);
-								//}
-								//if (navigator.userAgent.indexOf('Firefox') != -1) {
-								//    window.resizeTo(348, 271);
-								    //}
+
 								var UserAgentState = navigator.userAgent.toLowerCase();
 								
-								if (!CrossYN()) {
-								    if (UserAgentState.indexOf("firefox") != -1) {
-								        window.resizeTo(349, 279);
-								    }
-								    else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-								        window.resizeTo(346, 243);
-								    }
-								    else
-								        window.resizeTo(346, 269);
-								}
-								else {
-								    window.resizeTo(346, 240);
-								}
+								if (CrossYN()) {
+						        	if (UserAgentState.indexOf("chrome") > 0) {
+						        		window.resizeTo(340, 260);
+						        	} else {
+						        		window.resizeTo(346, 270);
+						        	}
+						        } else {
+						        	if (UserAgentState.indexOf("firefox") != -1) {
+						                window.resizeTo(349, 279);
+						            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
+						                window.resizeTo(346, 243);
+						            } else {
+						            	window.resizeTo(346, 240);
+						            }
+						        }
+						        
+						        if (MACSAFARIYN()) {
+						            window.resizeTo(330, 251);
+						        }
 								
 								function goclub(a)
 								{
@@ -135,39 +136,27 @@
 								    }
 	
 								    var UserAgentState = navigator.userAgent.toLowerCase();
-								    
-								    if (!CrossYN()) {
-								        if (UserAgentState.indexOf("firefox") != -1) {
-								            window.resizeTo(349, 279);
-								        }
-								        else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-								            window.resizeTo(346, 243);
-								        }
-								        else
-								            window.resizeTo(346, 269);
-								    }
-								    else {
-								        window.resizeTo(346, 240);
-								    }
-								    if (MACSAFARIYN()) {
-								        window.resizeTo(330, 251);
-								    }
+									
+									if (CrossYN()) {
+							        	if (UserAgentState.indexOf("chrome") > 0) {
+							        		window.resizeTo(340, 260);
+							        	} else {
+							        		window.resizeTo(346, 270);
+							        	}
+							        } else {
+							        	if (UserAgentState.indexOf("firefox") != -1) {
+							                window.resizeTo(349, 279);
+							            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
+							                window.resizeTo(346, 243);
+							            } else {
+							            	window.resizeTo(346, 240);
+							            }
+							        }
+							        
+							        if (MACSAFARIYN()) {
+							            window.resizeTo(330, 251);
+							        }
 								}
-								
-								var UserAgentState = navigator.userAgent.toLowerCase();
-							    if (!CrossYN()) {
-							        if (UserAgentState.indexOf("firefox") != -1) {
-							            window.resizeTo(349, 279);
-							        }
-							        else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-							            window.resizeTo(346, 243);
-							        }
-							        else
-							            window.resizeTo(346, 269);
-							    }
-							    else {
-							        window.resizeTo(346, 240);
-							    }
 							</script>
 						</c:otherwise>
 					</c:choose>
