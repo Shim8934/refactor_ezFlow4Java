@@ -773,7 +773,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	file.mkdir();
         }
         
-        String url = getContentInfo(type, itemID);
+        String url = "";
+        if (type.equals("HTMLPORTLET")) {
+        	url = request.getParameter("href");
+        } else {
+        	url = getContentInfo(type, itemID);
+        }
+        
         String m_strMHT = "";
         
         try {
