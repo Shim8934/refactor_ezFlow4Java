@@ -12,8 +12,6 @@
 		<script type="text/javascript">
 		var htmlData = "${htmlData}";
 		function MhtConvertCross() {
-			
-alert("!!");
 		    //var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + "${htmlData}";
 		    var fullPath = "${htmlData}";
 		    //document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?href=" + fullPath;
@@ -30,13 +28,15 @@ alert("!!");
 						   },
 					success: function(result){
 						html = result;
-alert(html);
 					}
 				});
+
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
 				doc.write(html);
 				doc.close();
+				var message = $('message'); 
+				message.html(html);
 	   	    } catch (e) {
 	   	        alert(e.description);
 	   	    }
@@ -108,6 +108,7 @@ alert(html);
 	<body onload="javascript:window_onload()">
 		11111
 		<p>111111</p>
+		<div>1111</div>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
 			<tr>
 				<td width="5"></td>
