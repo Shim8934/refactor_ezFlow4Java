@@ -118,7 +118,7 @@
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function search_mailbox(idx) {
 		        mail_selectfolder_cross_dialogArguments[1] = search_mailbox_complete;
-		        mail_selectfolder_cross_dialogArguments[2] = "CLOSE";
+		        mail_selectfolder_cross_dialogArguments[2] = search_mailbox_complete;
 		        mail_selectfolder_cross_dialogArguments[3] = idx;
 		
 		        var OpenWin = GetOpenWindow("/ezEmail/mailSelectFolder.do", "mail_selectfolder_cross", 400, 355);
@@ -226,7 +226,7 @@
 		                svElem = document.getElementById("popSSL" + i);
 		            }
 		            var popSSL = svElem.checked;
-		            popXML = popXML + "<ROW><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID><DELETE>" + popDelete + "</DELETE><PW>" + rsa.encrypt(popPW) + "</PW><SAVETO>" + popSaveTo + "</SAVETO><SAVETOFOLDER>" + popSaveToFolder + "</SAVETOFOLDER><SSL>" + popSSL + "</SSL></ROW>";
+		            popXML = popXML + "<ROW><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID><DELETE>" + popDelete + "</DELETE><PW>" + rsa.encrypt(popPW) + "</PW><SAVETO>" + popSaveTo + "</SAVETO><SAVETOFOLDER>" + encodeURIComponent(popSaveToFolder) + "</SAVETOFOLDER><SSL>" + popSSL + "</SSL></ROW>";
 		
 		        }
 		        popXML = popXML + "</DATA>";

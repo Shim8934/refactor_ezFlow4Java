@@ -204,7 +204,7 @@
 	    <table class="popuplist" style="width: 100%;">
 	        <tr>
 	            <td>
-	                <div style="border: 0px solid #B6B6B6; behavior: url(Controls/treeview.htc); height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
+	                <div style="border: 0px solid #B6B6B6; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
 	                </div>
 	            </td>
 	            <td style="width: 25px;">

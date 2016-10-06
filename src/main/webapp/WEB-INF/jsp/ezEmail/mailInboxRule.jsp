@@ -57,122 +57,237 @@
     
                     _html = "<table class='mainlist' style='width:100%;'>";
                     if (XmlNode.getElementsByTagName("ROWS").length > 0) {
-                        for (var i = 0; i < XmlNode.getElementsByTagName("ROWS").length; i++) {
-    
-                            var _itemid = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ID").item(0).textContent;
-                            var _name = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("NAME").item(0).textContent;
-                            var _Use = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("USE").item(0).textContent;
-                            var _priority = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("PRIORITY").item(0).textContent;
-                            var _con = "";
-                            var _conval = "";
-    
-                            var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
-    
-                            for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
-                                _con += "#" + conPath.getElementsByTagName("KIND").item(j).textContent;
-                                _conval += "#" + conPath.getElementsByTagName("VALUES").item(j).textContent;
-                            }
-    
-                            _con = _con.substring(1, _con.length);
-                            _conval = _conval.substring(1, _conval.length);
-    
-                            var _act = "";
-                            var _actfid = "";
-                            var _actfnm = "";
-                            var _actval = "";
-                            
-    
-                            var actPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ACTION").item(0);
-                            var actfcnt = 0;
-    
-                            for (var j = 0 ; j < actPath.getElementsByTagName("KIND").length; j++) {
-                                curkind = actPath.getElementsByTagName("KIND").item(j).textContent;
+                    	if (CrossYN()) {
+                    		for (var i = 0; i < XmlNode.getElementsByTagName("ROWS").length; i++) {
+                    		    
+                                var _itemid = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ID").item(0).textContent;
+                                var _name = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("NAME").item(0).textContent;
+                                var _Use = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("USE").item(0).textContent;
+                                var _priority = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("PRIORITY").item(0).textContent;
+                                var _con = "";
+                                var _conval = "";
+        
+                                var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
+        
+                                for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
+                                    _con += "#" + conPath.getElementsByTagName("KIND").item(j).textContent;
+                                    _conval += "#" + conPath.getElementsByTagName("VALUES").item(j).textContent;
+                                }
+        
+                                _con = _con.substring(1, _con.length);
+                                _conval = _conval.substring(1, _conval.length);
+        
+                                var _act = "";
+                                var _actfid = "";
+                                var _actfnm = "";
+                                var _actval = "";
                                 
-                                if (curkind == "MOVE" || curkind == "COPY") {
-                                    _act += "#" + curkind;
-                                    _actfid += "#" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).textContent;
-                                    _actfnm += "#" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).textContent;
-                                    _actval += "#0";
-                                    actfcnt++;
+        
+                                var actPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ACTION").item(0);
+                                var actfcnt = 0;
+        
+                                for (var j = 0 ; j < actPath.getElementsByTagName("KIND").length; j++) {
+                                    curkind = actPath.getElementsByTagName("KIND").item(j).textContent;
+                                    
+                                    if (curkind == "MOVE" || curkind == "COPY") {
+                                        _act += "#" + curkind;
+                                        _actfid += "#" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).textContent;
+                                        _actfnm += "#" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).textContent;
+                                        _actval += "#0";
+                                        actfcnt++;
+                                    }
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                        _act += "#" + curkind;
+                                        _actval += "#" + actPath.getElementsByTagName("VALUES").item(j).textContent;
+                                    }
+                                    else if (curkind == "READ" || curkind == "DELETE") {
+                                        _act += "#" + curkind;
+                                        _actval += "#0";
+                                    }
+                                    else {
+                                        _act += "#NONE";
+                                        _actval += "#0";
+                                    }
                                 }
-                                else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
-                                    _act += "#" + curkind;
-                                    _actval += "#" + actPath.getElementsByTagName("VALUES").item(j).textContent;
-                                }
-                                else if (curkind == "READ" || curkind == "DELETE") {
-                                    _act += "#" + curkind;
-                                    _actval += "#0";
-                                }
-                                else {
+        
+                                if (actPath.getElementsByTagName("KIND").length == 0) {
                                     _act += "#NONE";
                                     _actval += "#0";
                                 }
-                            }
-    
-                            if (actPath.getElementsByTagName("KIND").length == 0) {
-                                _act += "#NONE";
-                                _actval += "#0";
-                            }
-    
-                            _act = _act.substring(1, _act.length);
-                            _actfid = _actfid.substring(1, _actfid.length);
-                            _actfnm = _actfnm.substring(1, _actfnm.length);
-                            _actval = _actval.substring(1, _actval.length);
-    
-                            var _expt = "";
-                            var _exptval = "";
-    
-                            var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
-    
-                            for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
-                                _expt += "#" + exptPath.getElementsByTagName("KIND").item(j).textContent;
-                                _exptval += "#" + exptPath.getElementsByTagName("VALUES").item(j).textContent;
-                            }
-    
-                            _expt = _expt.substring(1, _expt.length);
-                            _exptval = _exptval.substring(1, _exptval.length);
-    
-                            _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-                            //alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
-                            
-                            if (_act.indexOf("NONE") != -1) {
-                                if (_Use == "Y")
-                                    _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+        
+                                _act = _act.substring(1, _act.length);
+                                _actfid = _actfid.substring(1, _actfid.length);
+                                _actfnm = _actfnm.substring(1, _actfnm.length);
+                                _actval = _actval.substring(1, _actval.length);
+        
+                                var _expt = "";
+                                var _exptval = "";
+        
+                                var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
+        
+                                for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
+                                    _expt += "#" + exptPath.getElementsByTagName("KIND").item(j).textContent;
+                                    _exptval += "#" + exptPath.getElementsByTagName("VALUES").item(j).textContent;
+                                }
+        
+                                _expt = _expt.substring(1, _expt.length);
+                                _exptval = _exptval.substring(1, _exptval.length);
+        
+                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+                                //alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
+                                
+                                if (_act.indexOf("NONE") != -1) {
+                                    if (_Use == "Y")
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                    else
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+        
+                                    _html += "<td style='width:60%;color:gray;'>" + MakeXMLString(_name) + "</td>";
+                                }
+                                else {
+                                    if (_Use == "Y")
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                    else
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+        
+                                    _html += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + MakeXMLString(_name) + "</td>";
+                                }
+                                /*
+                                if (_Act == "DELETE")
+                                    _html += "<td style='width:32%;text-align:center;color:Red;'> " + strLang201 + "</td>";
                                 else
-                                    _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
-    
-                                _html += "<td style='width:60%;color:gray;'>" + MakeXMLString(_name) + "</td>";
-                            }
-                            else {
-                                if (_Use == "Y")
-                                    _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
-                                else
-                                    _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
-    
-                                _html += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + MakeXMLString(_name) + "</td>";
-                            }
-                            /*
-                            if (_Act == "DELETE")
-                                _html += "<td style='width:32%;text-align:center;color:Red;'> " + strLang201 + "</td>";
-                            else
-                            */
-                                _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("#", ", ") + "</td>";
+                                */
+                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("#", ", ") + "</td>";
+                                
                             
+                                _html += "</tr></html>";
+                                
+        
+                                if (SelectNodes(XmlNode, "ROWS").length == 0)
+                                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
+                                else
+                                    document.getElementById("contentlist").innerHTML = _html;
+                            }
+                    	} else {
+                    		for (var i = 0; i < XmlNode.getElementsByTagName("ROWS").length; i++) {
+                    		    
+                                var _itemid = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ID").item(0).text;
+                                var _name = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("NAME").item(0).text;
+                                var _Use = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("USE").item(0).text;
+                                var _priority = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("PRIORITY").item(0).text;
+                                var _con = "";
+                                var _conval = "";
+        
+                                var conPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("CONDITION").item(0);
+        
+                                for (var j = 0; j < conPath.getElementsByTagName("KIND").length; j++) {
+                                    _con += "#" + conPath.getElementsByTagName("KIND").item(j).text;
+                                    _conval += "#" + conPath.getElementsByTagName("VALUES").item(j).text;
+                                }
+        
+                                _con = _con.substring(1, _con.length);
+                                _conval = _conval.substring(1, _conval.length);
+        
+                                var _act = "";
+                                var _actfid = "";
+                                var _actfnm = "";
+                                var _actval = "";
+                                
+        
+                                var actPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("ACTION").item(0);
+                                var actfcnt = 0;
+        
+                                for (var j = 0 ; j < actPath.getElementsByTagName("KIND").length; j++) {
+                                    curkind = actPath.getElementsByTagName("KIND").item(j).text;
+                                    
+                                    if (curkind == "MOVE" || curkind == "COPY") {
+                                        _act += "#" + curkind;
+                                        _actfid += "#" + actPath.getElementsByTagName("FOLDERID").item(actfcnt).text;
+                                        _actfnm += "#" + actPath.getElementsByTagName("FOLDERNAME").item(actfcnt).text;
+                                        _actval += "#0";
+                                        actfcnt++;
+                                    }
+                                    else if (curkind == "REDIRECTION" || curkind == "FORWARD" || curkind == "IMPORTANCE") {
+                                        _act += "#" + curkind;
+                                        _actval += "#" + actPath.getElementsByTagName("VALUES").item(j).text;
+                                    }
+                                    else if (curkind == "READ" || curkind == "DELETE") {
+                                        _act += "#" + curkind;
+                                        _actval += "#0";
+                                    }
+                                    else {
+                                        _act += "#NONE";
+                                        _actval += "#0";
+                                    }
+                                }
+        
+                                if (actPath.getElementsByTagName("KIND").length == 0) {
+                                    _act += "#NONE";
+                                    _actval += "#0";
+                                }
+        
+                                _act = _act.substring(1, _act.length);
+                                _actfid = _actfid.substring(1, _actfid.length);
+                                _actfnm = _actfnm.substring(1, _actfnm.length);
+                                _actval = _actval.substring(1, _actval.length);
+        
+                                var _expt = "";
+                                var _exptval = "";
+        
+                                var exptPath = XmlNode.getElementsByTagName("ROWS").item(i).getElementsByTagName("EXCEPTION").item(0);
+        
+                                for (var j = 0; j < exptPath.getElementsByTagName("KIND").length; j++) {
+                                    _expt += "#" + exptPath.getElementsByTagName("KIND").item(j).text;
+                                    _exptval += "#" + exptPath.getElementsByTagName("VALUES").item(j).text;
+                                }
+        
+                                _expt = _expt.substring(1, _expt.length);
+                                _exptval = _exptval.substring(1, _exptval.length);
+        
+                                _html += "<tr _itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'  onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+                                //alert("itemid='" + _itemid + "' _name='" + MakeXMLString(_name).replace(/\'/g, "&#039;") + "' _priority='" + _priority + "' _con='" + _con + "' _conval='" + _conval + "' _act='" + _act + "' _actfid='" + _actfid + "'  _actfnm='" + _actfnm + "' _actval='" + _actval + "' _expt='" + _expt + "' _exptval='" + _exptval + "'");
+                                
+                                if (_act.indexOf("NONE") != -1) {
+                                    if (_Use == "Y")
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                    else
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+        
+                                    _html += "<td style='width:60%;color:gray;'>" + MakeXMLString(_name) + "</td>";
+                                }
+                                else {
+                                    if (_Use == "Y")
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                    else
+                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+        
+                                    _html += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + MakeXMLString(_name) + "</td>";
+                                }
+                                /*
+                                if (_Act == "DELETE")
+                                    _html += "<td style='width:32%;text-align:center;color:Red;'> " + strLang201 + "</td>";
+                                else
+                                */
+                                    _html += "<td style='width:32%;text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + _actfnm.replace("#", ", ") + "</td>";
+                                
+                            
+                                _html += "</tr></html>";
+                                
+        
+                                if (SelectNodes(XmlNode, "ROWS").length == 0)
+                                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
+                                else
+                                    document.getElementById("contentlist").innerHTML = _html;
+                            }
+                    	}
+                    	
                         
-                            _html += "</tr></html>";
-                            
-    
-                            if (SelectNodes(XmlNode, "ROWS").length == 0)
-                                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang202 + "</td></tr></table>";
-                            else
-                                document.getElementById("contentlist").innerHTML = _html;
-                        }
                     }
                     else {
                         document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang202 + "</td></tr></table>";
-                    }		
-		        }
-		        catch (e) {
+                    }
+                    
+		        } catch (e) {
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang202 + "</td></tr></table>";
 		
 		        }
@@ -437,14 +552,27 @@
 		        if (XmlhttpDelete == null || XmlhttpDelete.readyState != 4)
 		            return;
 		        if (XmlhttpDelete.status >= 200 && XmlhttpDelete.status < 300) {
-		            if (XmlhttpDelete.responseXML.getElementsByTagName("DATA")[0].textContent == "OK") {
-		                alert(strLang215);
-		                document.getElementById("ContentDescription").innerHTML = "";
-		                _RowObject = null;
-		                Rule_Reload();
-		            }
-		            else
-		                alert(strLang216);
+		        	if (CrossYN()) {
+		        		if (XmlhttpDelete.responseXML.getElementsByTagName("DATA")[0].textContent == "OK") {
+			                alert(strLang215);
+			                document.getElementById("ContentDescription").innerHTML = "";
+			                _RowObject = null;
+			                Rule_Reload();
+			            }
+			            else {
+			                alert(strLang216);
+			            }
+		        	} else {
+		        		if (XmlhttpDelete.responseXML.getElementsByTagName("DATA")[0].text == "OK") {
+			                alert(strLang215);
+			                document.getElementById("ContentDescription").innerHTML = "";
+			                _RowObject = null;
+			                Rule_Reload();
+			            }
+			            else {
+			                alert(strLang216);
+			            }
+		        	}
 		
 		            XmlhttpDelete = null;
 		        }
@@ -478,10 +606,18 @@
 		        if (XmlhttpStatus == null || XmlhttpStatus.readyState != 4)
 		            return;
 		        if (XmlhttpStatus.status >= 200 && XmlhttpStatus.status < 300) {
-		            if (XmlhttpStatus.responseXML.getElementsByTagName("DATA")[0].textContent == "OK")
-		            { }
-		            else
-		                alert(strLang217);
+		            if (CrossYN()) {
+		            	if (XmlhttpStatus.responseXML.getElementsByTagName("DATA")[0].textContent == "OK") {
+			            } else {
+			                alert(strLang217);
+			            }	
+		            } else {
+		            	if (XmlhttpStatus.responseXML.getElementsByTagName("DATA")[0].text == "OK") {
+			            } else {
+			                alert(strLang217);
+			            }
+		            }
+		        	
 		            
 		            XmlhttpStatus = null;
 		        }
@@ -616,7 +752,7 @@
 		</script>
 	</head>
 	<body style="margin-left:10px;margin-right:10px;"> 
-		<form method="post" runat="server"> 
+		<form method="post"> 
 			<br>
 			<span class="txt">&nbsp;<spring:message code='ezEmail.t800' /></span><br />
 			<span class="txt">&nbsp;<spring:message code='ezEmail.t801' /></span><br />

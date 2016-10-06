@@ -88,7 +88,7 @@ function appendChildText(targetNode, node, value) {
         targetNode.appendChild(node);
     }
     else {
-        node.text = value;
+        node.text = value == null ? "" : value;
         targetNode.appendChild(node);        
     }    
     return node;

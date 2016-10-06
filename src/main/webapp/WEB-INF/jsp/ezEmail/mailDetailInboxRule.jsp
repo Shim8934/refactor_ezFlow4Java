@@ -202,16 +202,16 @@
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActFcnt++;
 		                    break;
-		                case "READ":
+		                /* case "READ":
 		                    ActObj.selectedIndex = 5;
 		                    ActObj.item(5).checked = true;
 		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang341 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltAct[i]);
-		                    break;
+		                    break; */
 		                case "IMPORTANCE":
-		                    ActObj.selectedIndex = 6;
-		                    ActObj.item(6).checked = true;
+		                    ActObj.selectedIndex = 5;
+		                    ActObj.item(5).checked = true;
 		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang343 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.style.width = "auto";
@@ -229,14 +229,14 @@
 		                    }
 		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
 		                    break;
-		                case "FORWARD":
+		                /* case "FORWARD":
 		                    ActObj.selectedIndex = 7;
 		                    ActObj.item(7).checked = true;
 		                    var _exp = "\"" + MakeXMLString(spltActVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
 		                    ActObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + MakeXMLString(spltActVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltActVal[i]);
-		                    break;
+		                    break; */
 		            }
 		        }
 		

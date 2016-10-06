@@ -583,7 +583,6 @@
 		        }
 		    }
 		    function New_InboxRule() {
-		
 		        if (document.getElementById("RuleDisplayName").value == "") {
 		            alert(strLang230); return;
 		        }
@@ -614,7 +613,6 @@
 		        var objRoot, objRow, objRow2, objRow3, objNode, objRowRow, objRow2Row, objRow3Row, objRows;
 		        objNode = createNodeInsert(XmlDom, objNode, "DATA");
 		        createNodeAndInsertText(XmlDom, objNode, "NAME", document.getElementById("RuleDisplayName").value);
-		
 		        // CONDITION NODE
 		        objRow = createNodeAndAppandNode(XmlDom, objNode, objRow, "CONDITION");
 		
@@ -625,7 +623,6 @@
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONKIND", curKind);
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRowRow, "CONVALUE", document.getElementsByName("ConS").item(i).getAttribute("value"));
 		        }
-		
 		        // ACTION NODE
 		        objRow2 = createNodeAndAppandNode(XmlDom, objNode, objRow2, "ACTION");
 		
@@ -660,13 +657,13 @@
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTKIND", curKind);
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", document.getElementsByName("ExptS").item(i).getAttribute("value"));
 		        }
-		
+				
 		        Xmlhttp.open("POST", "/ezEmail/mailSetInboxRule.do?mode=NEW", false);
 		        Xmlhttp.send(XmlDom);
 		        if (!CrossYN()) {
 		            if (Xmlhttp.responseXML.text == "OK") {
 		                alert("<spring:message code='ezEmail.t134' />");
-		                window.returnValue = "OK";
+		                ReturnFunction("OK");
 		                window.close();
 		            }
 		            else
