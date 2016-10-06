@@ -78,12 +78,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	@Autowired
 	private Properties globals;
 	
-	private boolean bRootPage = false;
-	private String gTheme = "BASIC";
-	private String gSkinNum = "1";
-	private String gTableViewOption = "D";
-	private String pSelectThemeUID = "";
-
 	@Override
 	public String getTopMenuConfigItem(String itemName, String uID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -662,12 +656,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 			}
 			
-			if (!skinNum.equals("")) {
-				this.gSkinNum = skinNum;
+			if (skinNum != null && !skinNum.equals("")) {
+				userInfo.setSkinNum(skinNum);
 			}
 			
-			if (!theme.equals("")) {
-				this.gTheme = theme;
+			if (theme != null && !theme.equals("")) {
+				userInfo.setTheme(theme);
 			}
 			
 			StringBuilder sb = new StringBuilder();
@@ -1277,7 +1271,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String pSkinNum = "";
 			String strHTML = "";
 			if (pContentsUID.equals("203")) {
-				pSkinNum = this.gSkinNum;
+				pSkinNum = userInfo.getSkinNum();
 			} else {
 				pSkinNum = "1";
 			}
@@ -1306,8 +1300,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						sb.append(", \"" + imageWindowOption + "\")'");
 					
 					}
-					if (imageImageWidth != 0 && "BASIC".equals(gTheme)) sb.append(" width='" + imageImageWidth + "'");
-                    if (imageImageHeight != 0 && "BASIC".equals(gTheme)) sb.append(" height='" + imageImageHeight + "'");
+					if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" width='" + imageImageWidth + "'");
+                    if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" height='" + imageImageHeight + "'");
 					sb.append(">");
 					strHTML = sb.toString();
 					sb.delete(0, sb.length());
@@ -1485,11 +1479,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
 		try {
-			List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(gSkinNum));
+			List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()));
 			
 
 			StringBuilder sb = new StringBuilder();
-            if (gTheme.equals("BASIC")) {
+            if (userInfo.getTheme().equals("BASIC")) {
             	sb.append("</header>\n");
             }
 			sb.append("<nav>\n");
@@ -1607,7 +1601,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String pSkinNum = "";
 			String strHTML = "";
 			if (pContentsUID.equals("203")) {
-				pSkinNum = this.gSkinNum;
+				pSkinNum = userInfo.getSkinNum();
 			} else {
 				pSkinNum = "1";
 			}
@@ -1636,10 +1630,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         sb.append(", \"" + imageLinkLocation + "\"");
                         sb.append(", \"" + imageWindowOption + "\")'");
                     }
-                    if (imageImageWidth != 0 && gTheme.equals("BASIC")) {
+                    if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) {
                     	sb.append(" width='" + imageImageWidth + "'");
                     }
-                    if (imageImageHeight != 0 && gTheme.equals("BASIC")) {
+                    if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) {
                     	sb.append(" height='" + imageImageHeight + "'");
                     }
                     sb.append("></li>\n");
@@ -1679,11 +1673,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption) {
 		try {
 			if (pTheme != null && !pTheme.trim().equals("")) {
-				this.gTheme = pTheme;
+				userInfo.setTheme(pTheme);
 			}
 			
 			if (pTableViewOption != null && !pTableViewOption.trim().equals("")) {
-				this.gTableViewOption = pTableViewOption;
+				userInfo.setTableViewOption(pTableViewOption);
 			}
 			
 			if (pMode.equals("view")) {
@@ -1705,8 +1699,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             String boarderValue = "0";
             int i= 0;
             if (pPortalPageID.equals(RootParentUID)) {
-            	bRootPage = true;
-
+            	userInfo.setRootPage(true);
             }
             if (pMode.equals("edit")) {
             	boarderValue = "1";
@@ -1745,7 +1738,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                 sb.append("style='table-layout:fixed;'>\n");
                 sb.append("<tr id='main_row'>\n");
             } else {
-            	if (gTheme.equals("BASIC")) {
+            	if (userInfo.getTheme().equals("BASIC")) {
             		sb.append("<div id='Center'>");
             	}
             }
@@ -1823,7 +1816,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             String boarderValue = "0";
             int i= 0;
             if (pPortalPageID.equals(RootParentUID)) {
-            	bRootPage = true;
+            	//bRootPage = true;
+            	userInfo.setRootPage(true);
             }
             if (pMode.equals("edit")) {
             	boarderValue = "1";
@@ -1909,7 +1903,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         sb.append("</tbody>\n</table>\n</td>\n");
                     }
             	} else {
-            		if (gTableViewOption.equals("D")) {
+            		if (userInfo.getTableViewOption().equals("D")) {
             			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
             		} else {
             			String columnWidth = "*";
@@ -2000,7 +1994,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             	count ++;
             }
             
-            if (bRootPage == true) {
+            if (userInfo.isRootPage() == true) {
             	result = getTBLPortalPageItemsT(strSQL);
             } else {
             	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID));
@@ -2046,11 +2040,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             		}
             		sb.append("</TR>\n");
             	} else {
-            		if (gTableViewOption.equals("D")) {
+            		if (userInfo.getTableViewOption().equals("D")) {
             			if (i == 0) {
             				sb.append("<div class='section1_bg'><section class='section1'>\n");
             			} else {
-            				if (!gTheme.equals("BASIC") && loadFlag) {
+            				if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
             					sb.append("<div id='Center'>");
                                 loadFlag = false;
             				}
@@ -2087,7 +2081,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             					sb.append("</section>\n");
             				}
             			} else {
-            				if (gTableViewOption.equals("T") && loadFlag) {
+            				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
             					sb.append("<div id='Center' style=' margin-top: 15px; '>");
                                 sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
                                 sb.append("<tbody>");
@@ -2105,7 +2099,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             				}
             				sb.append("</TR>\n");
             				
-            				if (gTableViewOption.equals("T") && loadFlag) {
+            				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
             					 sb.append("</tbody>");
                                  sb.append("</table>");
                                  sb.append("</div>\n");
@@ -2141,7 +2135,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             	count ++;
             }
             
-            if (bRootPage == true) {
+            if (userInfo.isRootPage() == true) {
             	result = getTBLPortalPageItemsT(strSQL);
             } else {
             	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID));
@@ -2185,7 +2179,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             		}
             		sb.append("</TR>\n");
             	} else {
-            		if (gTableViewOption.equals("D")) {
+            		if (userInfo.getTableViewOption().equals("D")) {
             			if (portletType == 0) {
             				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
             					portletMoveURL = getPortletConfigItem("URL",portletUID);
