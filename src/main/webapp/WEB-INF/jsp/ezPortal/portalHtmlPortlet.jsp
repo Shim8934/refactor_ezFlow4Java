@@ -12,8 +12,35 @@
 		<script type="text/javascript">
 		var htmlData = "${htmlData}";
 		function MhtConvertCross() {
-		    var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + "${htmlData}";
-		    document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?href=" + fullPath;
+			
+alert("!!");
+		    //var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + "${htmlData}";
+		    var fullPath = "${htmlData}";
+		    //document.getElementById('message').src = "/ezCommon/mhtToHTMLContent.do?href=" + fullPath;
+		    
+	   	    try {
+	   	    	var html = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommon/mhtToHTMLContent.do",
+					data : { type	:	"HTMLPORTLET", 
+							  href	:	fullPath
+						   },
+					success: function(result){
+						html = result;
+alert(html);
+					}
+				});
+				var doc = document.getElementById('message').contentWindow.document;
+				doc.open();
+				doc.write(html);
+				doc.close();
+	   	    } catch (e) {
+	   	        alert(e.description);
+	   	    }
+		   
 		}
 		
 		//2007.06.21 SSL 적용후 본문에 이미지가 들어간 mht로드시 보안 경고창 뜨는 오류 수정함.
@@ -79,12 +106,14 @@
 		</script>
 	</head>
 	<body onload="javascript:window_onload()">
+		11111
+		<p>111111</p>
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
 			<tr>
 				<td width="5"></td>
 				<td valign="top">
                         <div id="DocSummary" style="PADDING-TOP:3px"></div>
-                        <iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+                        <iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;">1111</iframe>
 				</td>
 			</tr>
 		</table>

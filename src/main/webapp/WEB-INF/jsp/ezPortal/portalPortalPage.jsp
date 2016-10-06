@@ -467,29 +467,25 @@
 			xmlhttp = null;
 		}
 
-		function save()
-		{
-			if (document.getElementById("txtDisplayName").value == "")
-			{
+		function save() {
+			if (document.getElementById("txtDisplayName").value == "") {
 				alert("<spring:message code='ezPortal.t289' />");
 				document.getElementById("txtDisplayName").focus();
 				return;
 			}
-			if (document.getElementById("txtDisplayName2").value == "")
-			{
+			
+			if (document.getElementById("txtDisplayName2").value == "") {
 			    document.getElementById("txtDisplayName2").value = document.getElementById("txtDisplayName").value;
 			}
 			
 			// 상속페이지인 경우 자신의 캐쉬정보를 바로 삭제한다.
-			if (parentpageid.toLowerCase() != "top")
-			{
+			if (parentpageid.toLowerCase() != "top") {
 				DeleteCache();
 			}
 			
 			var xmlhttp = null;
 			
-			if (g_XML != "")
-			{
+			if (g_XML != "") {
 				var pUserID = g_UserID;
 				var pUserName = g_UserName;
 				
@@ -903,7 +899,7 @@ alert("??");
 		    } else {
 				var ret = window.showModalDialog("/ezPortal/portletSearch.do", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken");
 				if (typeof(ret) == "undefined") return;
-			
+alert("ret:"+ret);
 				if (CheckDuplicate(ret[0])) {
 					alert("<spring:message code='ezPortal.t293'/>");
 					return;
