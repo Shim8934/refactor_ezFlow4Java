@@ -271,6 +271,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.createNewMenuItem2", map);
 	}
 	
+	public void saveDelPortletInfo (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveDelPortletInfo", map);
+	}
+	
 	public void saveMenuItemConfig (Map<String, Object> map) {
 		update("EzPortalAdminDAO.saveMenuItemConfig", map);
 	}

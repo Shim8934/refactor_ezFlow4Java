@@ -84,6 +84,8 @@ public interface EzPortalAdminService {
 	
 	public String saveSubMenuItemConfig (String pXML, String pPageID) throws Exception;
 	
+	public String saveDelPortletInfo (String pUserID, String pUserName, String pXML) throws Exception;
+	
 	public int searchPortalPageCount (String pDisplayName, String pGubunFlag, String pCompanyID) throws Exception;
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID) throws Exception;

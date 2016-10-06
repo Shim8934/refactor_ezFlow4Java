@@ -1542,6 +1542,28 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
+	public String saveDelPortletInfo (String pUserID, String pUserName, String pXML) {
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+			String pUID = xmlDom.getElementsByTagName("UID").item(i).getTextContent();
+			String pPageUID = xmlDom.getElementsByTagName("PAGEUID").item(i).getTextContent();
+			String pOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(i).getTextContent();
+			String pUserPageUID = xmlDom.getElementsByTagName("USERPAGEUID").item(i).getTextContent();
+			String pChangeFlag = xmlDom.getElementsByTagName("CHANGEFLAG").item(i).getTextContent();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pUID", pUID);
+			map.put("v_pPAGEUID", pPageUID);
+			map.put("v_pOWNERPAGEUID", pOwnerPageUID);
+			map.put("v_pCREATORID", pUserID);
+			map.put("v_pUSERNAME", pUserName);
+			map.put("v_pCHANGEFLAG", pChangeFlag);
+			map.put("v_pUSERPAGEUID", pUserPageUID);
+			ezPortalAdminDAO.saveDelPortletInfo(map);
+		}
+		return "OK";
+	}
+	
 }
 
 
