@@ -80,7 +80,17 @@
 	        function upload_mail() {
 	            try {
 	                var frm = document.getElementById('form');
-	                frm.submit();
+	                try {
+	                	frm.submit();
+	                } catch (e) {
+	                		setTimeout(function () { 
+	                			try {
+	                				frm.submit();
+	                			} catch (e) {
+	                				setTimeout(function () { frm.submit(); }, 50);
+	                			}
+	                		}, 50);
+	                }
 	            }
 	            catch (e) {
 	                alert("<spring:message code='ezEmail.t404' />" + e.description);
