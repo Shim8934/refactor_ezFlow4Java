@@ -46,7 +46,7 @@
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
-	        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+	        var browserIE = (!CrossYN()) ? true : false;
 	        var type = "${type}";
 	        var rulekind = "${ruleKind}";
 	        var pListType = "TXT";
@@ -282,12 +282,12 @@
 		            var XmlText = getOrganinfo();
 		            var XmlDom = XmlText;
 		            var count = XmlDom.getElementsByTagName("Table").length;
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                if (XmlDom.getElementsByTagName("NAME")[0] == null || XmlDom.getElementsByTagName("NAME")[0].text == "") {
 		                    return;
 		                }
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                if (XmlDom.getElementsByTagName("NAME")[0] == undefined) {
 		                    return;
 		                }
@@ -298,11 +298,11 @@
 		            var strEmail = "";
 		            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		            for (var i = 0; i < count; i++) {
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		                    strName = XmlDom.getElementsByTagName("NAME")[i].text;
 		                    strEmail = XmlDom.getElementsByTagName("EMAIL")[i].text;
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		                    strName = XmlDom.getElementsByTagName("NAME")[i].textContent;
 		                    strEmail = XmlDom.getElementsByTagName("EMAIL")[i].textContent;
 		                }

@@ -638,23 +638,23 @@
 		        for (var i = 0; i < Conitems.children.length; i++) {
 		            if (_exp == "") {
 		
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent)) + "\"";
 		                    _value = MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
 		                    _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		                }
 		            }
 		            else {
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		
 		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.childNodes.item(i).textContent))) + "\"";
 		                    _value += ";" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
 		
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		
 		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
 		                    _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
@@ -862,7 +862,7 @@
 		        */
 		        Xmlhttp.open("POST", "/ezEmail/mailSetInboxRule.do?mode=MOD", false);
 		        Xmlhttp.send(XmlDom);
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            if (Xmlhttp.responseXML.text == "OK") {
 		                alert("<spring:message code='ezEmail.t134' />");
 		                window.returnValue = "OK";
@@ -871,7 +871,7 @@
 		            else
 		                alert(strLang233);
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            var result = Xmlhttp.responseText;
 		
 		            result = replaceAll(result, "<DATA><![CDATA[", "");
@@ -928,23 +928,23 @@
 		        var count = ListData.getElementsByTagName("ROW").length;
 		        for (var nCnt1 = 0; nCnt1 < count; nCnt1++) {
 		            var ischeck = true;
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                if (!IsEmail(ListData.getElementsByTagName("EMAIL")[nCnt1].text)) {
 		                    continue;
 		                }
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                if (!IsEmail(ListData.getElementsByTagName("EMAIL")[nCnt1].textContent)) {
 		                    continue;
 		                }
 		            }
 		            var Name = "";
 		            var Email = "";
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                Name = ListData.getElementsByTagName("NAME")[nCnt1].text;
 		                Email = ListData.getElementsByTagName("EMAIL")[nCnt1].text;
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                Name = ListData.getElementsByTagName("NAME")[nCnt1].textContent;
 		                Email = ListData.getElementsByTagName("EMAIL")[nCnt1].textContent;
 		            }

@@ -100,7 +100,7 @@
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
 		
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            if (NonActiveX == "YES") {
 		                document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
 		                document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
@@ -112,7 +112,7 @@
 		                bodyType.selectedIndex = parseInt(rgParams["bodyType"]);
 		            }
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
 		            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
 		            document.getElementById("bodyType").selectedIndex = parseInt(rgParams.bodyType);
@@ -295,19 +295,19 @@
 		    }
 		
 		    function important_onChange() {
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            dialogArguments["important"] = important.selectedIndex.toString();
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
 		        }
 		    }
 		
 		    function postType_onChange() {
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            dialogArguments["bodyType"] = postType.selectedIndex.toString();
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
 		        }
 		    }

@@ -86,10 +86,10 @@
             else {
                 var ret = "";
                 if (xmlHTTP.status == 200) {
-                    if (navigator.userAgent.indexOf("MSIE") != -1) {
+                    if (!CrossYN()) {
                         ret = xmlHTTP.responseXML.text;
                     }
-                    else if (navigator.userAgent.indexOf("MSIE") == -1) {
+                    else if (CrossYN()) {
                         var result = xmlHTTP.responseText;
                         result = replaceAll(result, "<RESULT>", "");
                         result = replaceAll(result, "</RESULT>", "");
@@ -137,10 +137,10 @@
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         	var ret = "";
             
-            if (navigator.userAgent.indexOf("MSIE") != -1) {
+            if (!CrossYN()) {
                 ret = xmlhttp.responseXML.text;
             }
-            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+            else if (CrossYN()) {
                 var result = xmlhttp.responseText;
                 result = replaceAll(result, "<RESULT>", "");
                 result = replaceAll(result, "</RESULT>", "");

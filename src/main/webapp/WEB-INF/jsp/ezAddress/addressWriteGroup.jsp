@@ -424,20 +424,20 @@
 	            var count = XmlDom.getElementsByTagName("Table").length;
 	
 	            if (addressid != "") {
-	                if (navigator.userAgent.indexOf("MSIE") != -1) {
+	                if (!CrossYN()) {
 	                    document.getElementById("TextName").value = XmlDom.getElementsByTagName("SNAME")[0].text;
 	                }
-	                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+	                else if (CrossYN()) {
 	                    document.getElementById("TextName").value = XmlDom.getElementsByTagName("SNAME")[0].textContent;
 	                }
 	            }
 	
-	            if (navigator.userAgent.indexOf("MSIE") != -1) {
+	            if (!CrossYN()) {
 	                if (XmlDom.getElementsByTagName("NAME")[0] == null || XmlDom.getElementsByTagName("NAME")[0].text == "") {
 	                    return;
 	                }
 	            }
-	            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+	            else if (CrossYN()) {
 	                if (XmlDom.getElementsByTagName("NAME")[0] == null) {
 	                    return;
 	                }

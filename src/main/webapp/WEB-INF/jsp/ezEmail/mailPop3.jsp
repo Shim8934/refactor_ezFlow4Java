@@ -39,7 +39,7 @@
 		            var i;
 		            var popID, popPW, popSave, popSaveTo, popServer;
 		            for (i = 0; i < nCount; i++) {
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		                    popServer = bResult.getElementsByTagName("POP3SERVER")[i].text;
 		                    popPort = bResult.getElementsByTagName("POP3PORTNO")[i].text;
 		                    popID = bResult.getElementsByTagName("POP3USERID")[i].text;
@@ -58,7 +58,7 @@
 		                    svElem = document.body.all("popBox" + (i + 1));
 		
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		                    popServer = bResult.getElementsByTagName("POP3SERVER")[i].textContent;
 		                    popPort = bResult.getElementsByTagName("POP3PORTNO")[i].textContent;
 		                    popID = bResult.getElementsByTagName("POP3USERID")[i].textContent;
@@ -84,11 +84,11 @@
 		                    svElem.innerHTML = folderdisnameChange(decodeUTF8Encode(popSaveToFolder));
 		                    svElem.setAttribute("url", popSaveTo);
 		                }
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		                    svElem = document.body.all("popDelete" + (i + 1));
 		
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		                    svElem = document.getElementById("popDelete" + (i + 1));
 		                }
 		
@@ -97,11 +97,11 @@
 		                else
 		                    svElem.checked = false;
 		
-		                if (navigator.userAgent.indexOf("MSIE") != -1) {
+		                if (!CrossYN()) {
 		                    var popSSL = bResult.getElementsByTagName("POP3SSLYN")[i].text;
 		                    svElem = document.body.all("popSSL" + (i + 1));
 		                }
-		                else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		                else if (CrossYN()) {
 		                    var popSSL = bResult.getElementsByTagName("POP3SSLYN")[i].textContent;
 		                    svElem = document.getElementById("popSSL" + (i + 1));
 		                }
@@ -128,11 +128,11 @@
 		        if (typeof (mailBoxInfo) == "undefined")
 		            return;
 		
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popBox" + mail_selectfolder_cross_dialogArguments[3]);
 		
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popBox" + mail_selectfolder_cross_dialogArguments[3]);
 		        }
 		        svElem.innerHTML = mailBoxInfo.name;
@@ -143,22 +143,22 @@
 		        popXML = "<DATA>"
 		        for (var i = 1; i < 4; i++) {
 		            var svElem = "";
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popServer" + i);
 		
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popServer" + i);
 		            }
 		            popServer = svElem.value;
 		            if (popServer == "")
 		                continue;
 		
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popID" + i);
 		
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popID" + i);
 		            }
 		            popID = svElem.value;
@@ -166,11 +166,11 @@
 		            	alert(i + "<spring:message code='ezEmail.t224' />");
 		                return;
 		            }
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popPW" + i);
 		
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popPW" + i);
 		            }
 		            popPW = svElem.value;
@@ -179,10 +179,10 @@
 		            	alert(i + "<spring:message code='ezEmail.t225' />");
 		                return;
 		            }
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popPort" + i);
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popPort" + i);
 		            }
 		            popPort = svElem.value;
@@ -190,10 +190,10 @@
 		            	alert(i + "<spring:message code='ezEmail.t226' />");
 		                return;
 		            }
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popBox" + i);
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popBox" + i);
 		            }
 		            if (svElem.getAttribute("url") == "") {
@@ -207,11 +207,11 @@
 		            else {
 		                popSaveToFolder = svElem.innerText;
 		            }
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popDelete" + i);
 		
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popDelete" + i);
 		            }
 		            if (svElem.checked == true)
@@ -219,10 +219,10 @@
 		            else
 		                popDelete = "N";
 		
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                svElem = document.body.all("popSSL" + i);
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                svElem = document.getElementById("popSSL" + i);
 		            }
 		            var popSSL = svElem.checked;
@@ -252,11 +252,11 @@
 		    function popChange(idx) {
 		        var svElem = "";
 		        var textValue = "";
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popSelect" + idx);
 		            textValue = document.body.all("popServer" + idx);
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popSelect" + idx);
 		            textValue = document.getElementById("popServer" + idx);
 		        }
@@ -264,30 +264,30 @@
 		            alert(svElem.options[svElem.selectedIndex].text + "<spring:message code='ezEmail.t229' />");
 		            return;
 		        }
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem2 = document.body.all("popSelect" + idx);
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem2 = document.getElementById("popSelect" + idx);
 		        }
 		        svElem2.value = svElem.options[svElem.selectedIndex].value;
 		        textValue.value = svElem2.value;
 		        if (svElem.options[svElem.selectedIndex].value == 'pop.gmail.com' || svElem.options[svElem.selectedIndex].value == 'pop.hanmail.net' || svElem.options[svElem.selectedIndex].value == 'pop3.live.com' || svElem.options[svElem.selectedIndex].value == 'pop3.nate.com' || svElem.options[svElem.selectedIndex].value == 'pop.naver.com') {
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                document.body.all("popPort" + idx).value = "995";
 		                document.body.all("popSSL" + idx).checked = true;
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                document.getElementById("popPort" + idx).value = "995";
 		                document.getElementById("popSSL" + idx).checked = true;
 		            }
 		        }
 		        else {
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                document.body.all("popPort" + idx).value = "110";
 		                document.body.all("popSSL" + idx).checked = false;
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                document.getElementById("popPort" + idx).value = "110";
 		                document.getElementById("popSSL" + idx).checked = false;
 		            }
@@ -295,19 +295,19 @@
 		
 		        if (svElem.options[svElem.selectedIndex].ispay == "true") {
 		
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                document.body.all("popSpan" + idx).innerText = " " + strLang181;
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                document.getElementById("popPort" + idx).innerHTML = " " + strLang181;
 		            }
 		
 		        }
 		        else {
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                document.body.all("popSpan" + idx).innerText = "";
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                document.getElementById("popSpan" + idx).innerHTML = "";
 		            }
 		
@@ -316,11 +316,11 @@
 		    }
 		    function connect_test(idx) {
 		        var svElem = "";
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popServer" + idx);
 		            var popServer = svElem.value;
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            var svElem = document.getElementById("popServer" + idx);
 		            var popServer = svElem.value;
 		        }
@@ -329,11 +329,11 @@
 		        	alert("<spring:message code='ezEmail.t230' />");
 		            return;
 		        }
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popPort" + idx);
 		            var popPort = svElem.value;
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popPort" + idx);
 		            var popPort = svElem.value;
 		        }
@@ -341,11 +341,11 @@
 		        	alert("<spring:message code='ezEmail.t231' />");
 		            return;
 		        }
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popID" + idx);
 		            var popID = svElem.value;
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popID" + idx);
 		            var popID = svElem.value;
 		        }
@@ -353,11 +353,11 @@
 		        	alert("<spring:message code='ezEmail.t232' />");
 		            return;
 		        }
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popPW" + idx);
 		            var popPW = svElem.value;
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popPW" + idx);
 		            var popPW = svElem.value;
 		        }
@@ -365,13 +365,13 @@
 		        	alert("<spring:message code='ezEmail.t233' />");
 		            return;
 		        }
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            svElem = document.body.all("popSSL" + idx);
 		            var popSSL = svElem.checked;
 		            var popXML = "<DATA><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID>" + "<PW>" + rsa.encrypt(popPW) + "</PW><SSL>" + popSSL + "</SSL></DATA>";
 		
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            svElem = document.getElementById("popSSL" + idx);
 		            var popSSL = svElem.checked;
 		            var popXML = "<DATA><SERVER>" + popServer + "</SERVER><PORT>" + popPort + "</PORT><ID>" + rsa.encrypt(popID) + "</ID>" + "<PW>" + rsa.encrypt(popPW) + "</PW><SSL>" + popSSL + "</SSL></DATA>";
@@ -381,14 +381,14 @@
 		        xmlHTTP.open("POST", "/ezEmail/mailPop3Connect.do", false);
 		        xmlHTTP.send(popXML);
 		        if (xmlHTTP.status == 200) {
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                if (xmlHTTP.responseXML.text == "OK")
 		                	alert("<spring:message code='ezEmail.t234' />");
 		                else
 		                	alert("<spring:message code='ezEmail.t235' />\n\n<spring:message code='ezEmail.t236' />");
 		
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                var result = xmlHTTP.responseText;
 		
 		                result = replaceAll(result, "<DATA>", "");

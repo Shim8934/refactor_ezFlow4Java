@@ -526,24 +526,24 @@
 		        var count = ListData.getElementsByTagName("ROW").length;
 		        for (var nCnt1 = 0; nCnt1 < count; nCnt1++) {
 		            var ischeck = true;
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		                if (!IsEmail(ListData.getElementsByTagName("EMAIL")[nCnt1].text)) {
 		                    continue;
 		                }
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		                if (!IsEmail(ListData.getElementsByTagName("EMAIL")[nCnt1].textContent)) {
 		                    continue;
 		                }
 		            }
 		            var Name = "";
 		            var Email = "";
-		            if (navigator.userAgent.indexOf("MSIE") != -1) {
+		            if (!CrossYN()) {
 		
 		                Name = ListData.getElementsByTagName("NAME")[nCnt1].text;
 		                Email = ListData.getElementsByTagName("EMAIL")[nCnt1].text;
 		            }
-		            else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		            else if (CrossYN()) {
 		
 		                Name = ListData.getElementsByTagName("NAME")[nCnt1].textContent;
 		                Email = ListData.getElementsByTagName("EMAIL")[nCnt1].textContent;
@@ -663,7 +663,7 @@
 		
 		        Xmlhttp.open("POST", "/ezEmail/mailSetInboxRule.do?mode=NEW", false);
 		        Xmlhttp.send(XmlDom);
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            if (Xmlhttp.responseXML.text == "OK") {
 		                alert("<spring:message code='ezEmail.t134' />");
 		                window.returnValue = "OK";
@@ -672,7 +672,7 @@
 		            else
 		                alert(strLang233);
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            var result = Xmlhttp.responseText;
 		            result = replaceAll(result, "<DATA><![CDATA[", "");
 		            result = replaceAll(result, "]]></DATA>", "");

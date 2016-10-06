@@ -497,7 +497,7 @@
 		        var XmlhttpPriority = createXMLHttpRequest();
 		        XmlhttpPriority.open("POST", "/ezEmail/mailSetRulePriority.do", false);
 		        XmlhttpPriority.send(Xmldom);
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            if (XmlhttpPriority.responseXML.text == "OK") {
 		                XmlhttpPriority = null;
 		                return true;
@@ -508,7 +508,7 @@
 		                return false;
 		            }
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            var result = XmlhttpPriority.responseText;
 		
 		            result = replaceAll(result, "<DATA><![CDATA[", "");
@@ -538,7 +538,7 @@
 		        return pStrContent.split(pStrOrg).join(pStrRep);
 		    }
 		    function Priority_UP() {
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
+		        if (!CrossYN()) {
 		            if (_RowObject == null) {
 		                alert(strLang214);
 		                return;
@@ -556,7 +556,7 @@
 		                }
 		            }
 		        }
-		        else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		        else if (CrossYN()) {
 		            if (_RowObject == null) {
 		                alert(strLang214);
 		                return;

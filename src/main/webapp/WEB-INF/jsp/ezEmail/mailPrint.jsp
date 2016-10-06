@@ -7,6 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<title><spring:message code='ezEmail.t546' /></title>
 	    <script type="text/javascript">
 	        var myVar;
@@ -16,7 +17,7 @@
 	        }
 	        function DocumentComplate()
 	        {
-	            if (navigator.userAgent.indexOf("MSIE") > 0) {
+	            if (!CrossYN()) {
 	                preview_print();
 	            }
 	            else
