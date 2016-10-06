@@ -345,7 +345,7 @@
 		                if (Para[4] == "") {
 		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
 		                } else {
-		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + " " + Para[4];
+		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + Para[4];
 		                }
 		                document.getElementById("TextComAddr").focus();
 		            }
@@ -354,7 +354,7 @@
 		                if (Para[4] == "") {
 		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
 		                } else {
-		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + " " + Para[4];
+		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + Para[4];
 		                }
 		                document.getElementById("TextHomeAddr").focus();
 		            }

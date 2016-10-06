@@ -191,11 +191,11 @@
 	                alert("<spring:message code='ezAddress.t154' />");
 	                    return;
 	                }
-	            if (AddressTreeView.getvalue(nodeIdx, "TYPE") == "D" && deptadmin != "Y") {
+	            if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
 	                alert("<spring:message code='ezAddress.t155' />");
 	                return;
 	            }
-	            if (AddressTreeView.getvalue(nodeIdx, "TYPE") == "C" && companyadmin != "Y") {
+	            if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
 	                alert("<spring:message code='ezAddress.t156' />");
 	                return;
 	            }
@@ -270,13 +270,14 @@
 	            }
 	            else if (AddressTreeView.haschild(nodeIdx)) {
 	                alert("<spring:message code='ezAddress.t160' />");
-	                    return;
-	                }
-	        if (AddressTreeView.getvalue(nodeIdx, "TYPE") == "D" && deptadmin != "Y") {
-	            alert("<spring:message code='ezAddress.t161' />");
 	                return;
 	            }
-	            if (AddressTreeView.getvalue(nodeIdx, "TYPE") == "C" && companyadmin != "Y") {
+	            
+	        	if (AddressTreeView.getvalue(nodeIdx, "type") == "D" && deptadmin != "Y") {
+	            	alert("<spring:message code='ezAddress.t161' />");
+	                return;
+	            }
+	            if (AddressTreeView.getvalue(nodeIdx, "type") == "C" && companyadmin != "Y") {
 	                alert("<spring:message code='ezAddress.t162' />");
 	                return;
 	            }
