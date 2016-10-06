@@ -65,7 +65,7 @@
 
 			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
 			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
-alert(normalImgPath);
+
 			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
 			if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
 			
@@ -468,7 +468,8 @@ alert(normalImgPath);
                 </table>
 			</td>
 		</tr>
-		<%String imageWidth = (String)request.getParameter("imageWidth"); %>
+
+		<%String imageWidth = (String)request.getAttribute("imageWidth"); %>
 		<% if (imageWidth != null && !imageWidth.equals("")) { %>
 		<tr>
 			<th>
@@ -477,10 +478,10 @@ alert(normalImgPath);
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-					<%String normalImagePath = (String)request.getParameter("normalImagePath"); %>
+					<%String normalImagePath = (String)request.getAttribute("normalImagePath"); %>
 						<% if (normalImagePath != null && !normalImagePath.trim().equals("")) { %>
 							<td id="tdNormalImage">
-							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath %>"></td>
+							&nbsp;<img id="txtNormalImage" src="${normalImagePath}"></td>
 						<% } else { %>
 						<td id="tdNormalImage">
 							&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
@@ -503,10 +504,10 @@ alert(normalImgPath);
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-					<%String overImagePath = (String)request.getParameter("overImagePath"); %>
+					<%String overImagePath = (String)request.getAttribute("overImagePath"); %>
 						<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
 						<td>
-							&nbsp;<img id="txtOverImage" src="<%= overImagePath %>"></td>
+							&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
 						<% } else { %>
 						<td id="tdOverImage">
 							&nbsp;<img id="txtOverImage" src="" style="display: none"></td>

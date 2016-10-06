@@ -498,7 +498,7 @@
 				
 		    </td>
 		</tr>
-		<%String imageWidth = (String)request.getParameter("imageWidth"); %>
+		<%String imageWidth = (String)request.getAttribute("imageWidth"); %>
 		<% if (imageWidth != null && !imageWidth.equals("")) { %>
 		<tr>
 			<th>
@@ -507,7 +507,7 @@
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<%String normalImagePath = (String)request.getParameter("normalImagePath"); %>
+						<%String normalImagePath = (String)request.getAttribute("normalImagePath"); %>
 						<% if (normalImagePath != null && !normalImagePath.trim().equals("")) { %>
 						<td id="tdNormalImage">
 							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath%>"></td>
@@ -533,7 +533,7 @@
 			<td>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-					<%String overImagePath = (String)request.getParameter("overImagePath"); %>
+					<%String overImagePath = (String)request.getAttribute("overImagePath"); %>
 					<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
 						<td>
 							&nbsp;<img id="txtOverImage" src="<%= overImagePath %>"></td>

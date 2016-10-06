@@ -1392,7 +1392,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String resultStr = commonUtil.getQueryResult(result);
 		String imageUID = result.getImageUId();
 		
-		if (imageUID != null && !imageUID.equals("")) {
+		if (imageUID != null && !imageUID.trim().equals("")) {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_PUID", imageUID);
 			map1.put("v_PPAGEID", pPageID);

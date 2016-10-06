@@ -302,7 +302,7 @@
 				<th><spring:message code='ezPortal.t65'/></th> 
 				<td><table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
 				<tr> 
-					<%String imagePath = (String)request.getParameter("imagePath"); %>
+					<%String imagePath = (String)request.getAttribute("imagePath"); %>
 					<% if (imagePath != null && !imagePath.trim().equals("")) { %>
 					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=186 height=40 ></td>
 					<% } else { %>
