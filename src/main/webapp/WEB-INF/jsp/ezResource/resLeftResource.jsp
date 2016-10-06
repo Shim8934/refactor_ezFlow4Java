@@ -12,7 +12,6 @@
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequestPath.js"></script>
 		<script type="text/javascript" src="/js/ezResource/ResTreeInfo_cross.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 		    var brdId		= "${brdID}";			
