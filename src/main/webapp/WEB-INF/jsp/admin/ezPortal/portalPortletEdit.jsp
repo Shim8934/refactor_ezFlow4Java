@@ -45,12 +45,10 @@
 			
 			// 포틀릿 카테고리 정보
 			var portletHTML = "";
-			if (g_PortletCategoryXML != "")
-			{
+			if (g_PortletCategoryXML != "") {
 			    xmldom = loadXMLString(g_PortletCategoryXML);
 				
-				for (var i=0; i<xmldom.getElementsByTagName("CATEGORY").length; i++)
-				{
+				for (var i=0; i<xmldom.getElementsByTagName("CATEGORY").length; i++) {
 					if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
 						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.t990033'/>" + "&nbsp;";	
 					} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4076') {
@@ -456,7 +454,7 @@
 	    // 포틀릿타입 변경
 	    var FlagOneSelect = false;
 		function selectTypeChange(pFlag) {
-			if (pFlag == "1") {
+			if (pFlag == "1") {			
 				txtURL.value = "/ezPortal/urlPortlet.do?uID=" + uid;
 				txtURL.disabled = true;
 				selectType_1.style.display = "";

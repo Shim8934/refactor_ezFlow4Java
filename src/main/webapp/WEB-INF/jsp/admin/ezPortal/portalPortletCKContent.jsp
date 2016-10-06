@@ -142,8 +142,7 @@
 		        return BODYTag;
 		    }
 
-		    function GetListItem(pList, str)
-		    {
+		    function GetListItem(pList, str) {
 		        for( i=0; i<pList.length; i++)
 		        {
 			        if(pList[i].id == str)
@@ -151,8 +150,7 @@
 		        }
 		    }
 
-		    function deleteRows( selectionOrRow )
-			{
+		    function deleteRows( selectionOrRow ) {
 				if ( selectionOrRow instanceof CKEDITOR.dom.selection )
 				{
 					var cells = getSelectedCells( selectionOrRow );
