@@ -210,16 +210,18 @@
 		        	async : true,
 		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
 		        	success : function(result){
+		        		var resultXML = loadXMLString(result);
+		        		
 		        		var headerData = createXmlDom();
 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
-	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
 	                        headerData.documentElement.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
