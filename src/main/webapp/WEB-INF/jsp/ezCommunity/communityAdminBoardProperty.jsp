@@ -252,6 +252,7 @@
 
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/ezCommunity/saveBoardProperty.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
 			xmlhttp.send(xmldom);
 
 			alert("<spring:message code = 'ezCommunity.t282' />");

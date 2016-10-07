@@ -339,13 +339,15 @@
 				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
 				xmlhttp.send();
 				
-				if(xmlhttp.responseText == "FALSE") {
-					xmlhttp = null;	
-					return false;
-				}
-				
-				xmlhttp = null;
-				return true;
+				if (xmlhttp.responseText == "FALSE") {
+		            xmlhttp = null;
+		            
+		            return true;
+		        }
+		        
+		        xmlhttp = null;
+		        
+		        return false;
 			}
 	
 			function DeleteItem() {

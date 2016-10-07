@@ -54,6 +54,7 @@
 	
 	            var xmlhttp = createXMLHttpRequest();
 	            xmlhttp.open("POST", "/ezCommunity/saveBoardOrder.do", false);
+	            xmlhttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
 	            xmlhttp.send(xmldom);
 	
 	            if (xmlhttp.responseText.indexOf("OK") > -1) {

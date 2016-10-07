@@ -285,6 +285,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "RIGHT", rightboardid);
 
 		        xmlhttp.open("POST", "/ezCommunity/saveHomeBoard.do", false);
+		        xmlhttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
 		        xmlhttp.send(xmlDom);
 
 		        if (xmlhttp.responseText == "OK") {
