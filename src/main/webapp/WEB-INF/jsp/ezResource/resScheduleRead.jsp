@@ -208,7 +208,7 @@
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>Print Preview</title>";
-	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/Default_kr.css\" type=\"text/css\" />";
+	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/default_kr.css\" type=\"text/css\" />";
 	            strContent = strContent + "</head><body  style='overflow:hidden;height:100px;'onload='window.print();window.close();' >";
 	            strContent = strContent + "<div style='width:100%;text-align:right; margin-bottom:5px;'>";
 	            strContent = strContent + "</div>";
@@ -432,19 +432,19 @@
     					<td style="vertical-align:top">
     						<table style="width:690px;border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
       							<tr style="height:25px"> 
-        							<th style="padding-left:10px" width="80">"<spring:message code='ezResource.t193' />";</th> 
+        							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
         							<td style="padding-left:10px"> <div id="printOwner" style="text-align:left;"></div></td> 
       							</tr> 
       							<tr style="height:25px"> 
-        							<th style="padding-left:10px">"<spring:message code='ezResource.t213' />";</th> 
+        							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
         							<td style="padding-left:10px"> <div id="printImportance" style="text-align:left;"></div></td> 
       							</tr> 
       							<tr style="height:25px"> 
-        							<th style="padding-left:10px">"<spring:message code='ezResource.t197' />";</th> 
+        							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
         							<td style="padding-left:10px"> <div id="printDate" style="text-align:left;"></div></td> 
       							</tr> 
       							<tr style="height:25px"> 
-        							<th style="padding-left:10px">"<spring:message code='ezResource.t224' />";</th> 
+        							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
         							<td style="padding-left:10px"> <div id="printTitle" style="text-align:left;"></div></td> 
       							</tr> 
       							<tr> 
