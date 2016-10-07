@@ -58,6 +58,7 @@
 				}
 			}
 
+			var boardmoveselect_cross_dialogArguments = new Array();
 			function MoveSelect() {
 				var parameter = new Array();
 				parameter[0] = OrgBoardID;
@@ -66,11 +67,37 @@
 				var url;
 				
 				url = "/ezCommunity/boardMoveSelect.do";
-				
-				var feature	= "status:no;dialogWidth:338px;dialogHeight:650px;help:no;scroll:no;edge:sunken";
+				boardmoveselect_cross_dialogArguments[0] = parameter;
+		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
+		        var BoardMoveSelect_Cross = window.open(url, "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        try { 
+		        	BoardMoveSelect_Cross.focus(); 
+		        }catch (e) {}
+				/* var feature	= "status:no;dialogWidth:338px;dialogHeight:650px;help:no;scroll:no;edge:sunken";
 				feature = feature + GetShowModalPosition(338, 650);
 				var ret = window.showModalDialog(url, parameter, feature);
 				
+				if (typeof(ret) == "undefined") {
+					return;
+				}
+				
+				if (ret[0] == "cancel") {
+					alert("<spring:message code = 'ezCommunity.t345' />");
+				} else {
+					SelectedBoardID = ret[0];
+					selectedBoardGroupID = ret[1];
+					
+					if (CrossYN()) {
+					    document.getElementById("pSelectBoardName").textContent = ret[2];
+					} else {
+					    document.getElementById("pSelectBoardName").innerText = ret[2];
+					}
+					
+					MoveCheck.style.display = "";
+				} */
+			}
+			
+			function MoveSelect_Complete(ret) {
 				if (typeof(ret) == "undefined") {
 					return;
 				}

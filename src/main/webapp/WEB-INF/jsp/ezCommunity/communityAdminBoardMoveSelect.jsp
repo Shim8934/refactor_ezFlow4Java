@@ -53,14 +53,29 @@
 			        ret[2] = SelectedBoardName;
 			    }
 	
-			    window.returnValue = ret;
-			    window.close();
+			    if (ReturnFunction !=null)
+				    ReturnFunction(ret);
+				else
+				    window.returnValue = ret;
+				window.close();
 			}
 	
 			window.onload = function () {
-			    BoardID = dialogArguments[0];
-			    BoardGroupID = dialogArguments[1];
-			    code = dialogArguments[2];
+				try {
+			        RetValue = parent.boardmoveselect_cross_dialogArguments[0];
+			        ReturnFunction = parent.boardmoveselect_cross_dialogArguments[1];
+			    } catch (e) {
+			        try {
+			            RetValue = opener.boardmoveselect_cross_dialogArguments[0];
+			            ReturnFunction = opener.boardmoveselect_cross_dialogArguments[1];
+			        } catch (e) {
+			            RetValue = window.dialogArguments;
+			        }
+			    }
+			    
+			    BoardID = RetValue[0];
+			    BoardGroupID = RetValue[1];
+			    code = RetValue[2];
 	
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
