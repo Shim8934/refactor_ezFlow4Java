@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.security.PrivateKey;
 import java.util.Calendar;
 import java.util.List;
@@ -7,10 +9,12 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +22,12 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
@@ -50,7 +56,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzPersonalController {
+public class EzPersonalController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -727,7 +733,7 @@ public class EzPersonalController {
 		} else {
 			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=/files/upload_personal/photo/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 		}
-		
+System.out.println("literalPhoto:"+literalPhoto);
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -874,5 +880,86 @@ public class EzPersonalController {
 		}
 
 		return "OK";
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 사진설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/personPicture.do")
+	public String personPicture(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		return "/ezPersonal/persPersonPicture";
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 사진업로드 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/photoUploadByUser.do")
+	public String photoUploadByUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, MultipartHttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String fileName = "";
+		String filePath = "";
+		String filePath2 = "";
+		String realPath = req.getServletContext().getRealPath("");
+		 
+		fileName = req.getFile("file1").getOriginalFilename();
+
+		if (fileName.indexOf(".") != -1) {
+			fileName = fileName.substring(fileName.lastIndexOf(".")+1);
+		} else {
+			fileName = "";
+		}
+	
+		String[] extArr = { "gif", "jpg"};
+		boolean ret = false;
+		
+		for (int i=0; i<extArr.length; i++) {
+			if (fileName.toLowerCase().trim().equals(extArr[i].toLowerCase().trim())) {
+				ret = true;
+				break;
+			}
+		}
+		
+		if (ret == false) {
+			//return "";
+		}
+		
+		fileName = userInfo.getId() + "." + fileName;
+		filePath = config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
+		
+		filePath2 = realPath + filePath;
+
+		File file = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP")); 
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+			
+		writeUploadedFile(req.getFile("file1"), fileName, realPath + config.getProperty("upload_personal.PHOTOTEMP"));
+		
+		File imageFile = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator + fileName); 
+
+		if (imageFile.exists()) {
+			BufferedImage bi = ImageIO.read(imageFile);	
+			
+			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+			
+			ImageIO.write(bufferedImage, "png", new File(filePath2));
+			
+			File file1 = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator + fileName);
+			if (file1.exists()) {
+				FileUtils.deleteQuietly(file1);
+			}
+		}
+		
+		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user");
+		
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("filePath2", filePath2);
+		return "/ezPersonal/persPhotoUploadByUser";
 	}
 }
