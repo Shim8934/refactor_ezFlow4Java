@@ -995,7 +995,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailInterUploadXCK(MultipartHttpServletRequest request) throws Exception{
 		String strXML = "";
@@ -1226,7 +1226,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 첨부파일을 포함한 메일을 임시 보관함에 저장하는 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailInterAttachCK(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
 		String returnValue = "";
@@ -2590,7 +2590,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 메일쓰기 - 공용배포그룹(받는사람,참조,숨은참조) 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String returnData = "";
@@ -2735,7 +2735,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 간편주소록 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
@@ -2759,7 +2759,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil{
 	/**
 	 * 간편주소록 정보 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
