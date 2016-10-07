@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html style="height:100%">
 	<head>
 		<title><spring:message code="ezResource.t171"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -379,7 +379,7 @@
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
-	<body id="mainbodytag" class="popup" style="height: 98%;">
+	<body id="mainbodytag" class="popup" style="height: 100%;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -433,7 +433,7 @@
           					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
         				</ul>
       				</div>
-      				<table class="content" style="width:100%">
+      				<table class="content" style="width:100%;">
         				<tr>
           					<th> <spring:message code="ezResource.t193"/></th>
           					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
@@ -534,7 +534,7 @@
            						~
            					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
           				</td>
-					</td>
+					<!-- </td> -->
         				</tr>
 				        <tr>
           					<th> <spring:message code="ezResource.t213"/></th>
@@ -598,14 +598,20 @@
       			</td>
   			</tr>
   			<tr>
-        		<c:choose>
+        		<%-- <c:choose>
         			<c:when test="${pNoneActiveX eq 'YES'}">
         				<td>
         			</c:when>
         			<c:otherwise>
         				<td style="height:100%">
         			</c:otherwise>
-        		</c:choose>
+        		</c:choose> --%>
+        		<%String pNoneActiveX = (String)request.getAttribute("noneActiveX"); %>
+        		 <%if(pNoneActiveX.equals("YES")){ %>
+    				<td>
+    			 <%}else{%>
+        			<td style="height:100%">
+        		<%}%>
         			<table style="height:100%; width:100%">
         				<tr style="height:100%">
           					<td id="EdtorSize">
@@ -625,15 +631,15 @@
 				          </td>
         				</tr>
 
-				        <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
+				       <%--  <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
         				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
         				<input type="hidden" id="gresFlag" value="${gresFlag}" />
         				<input type="hidden" id="num" value="${num}" />
         				<input type="hidden" id="pnum" value="${pNum}" />
         				<input type="hidden" id="ownerID" value="${ownerID}" />
-        				<input type="hidden" id="writerID" value="${writerID}" />
+        				<input type="hidden" id="writerID" value="${writerID}" /> --%>
       				</table>
-      			</td>
+      			<!-- </td> -->
   			</tr>
   			<tr style="display: none">
 			    <td style="height:10px" class="pad1">
@@ -709,7 +715,7 @@
         					<td style="padding-left:10px"> <div id="printTitle"></div></td> 
       					</tr> 
       					<tr> 
-	        				<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px"></div></td> 
+	        				<td colspan="2"><div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%;  PADDING-TOP: 5px"></div></td> 
       					</tr> 
    					</table>
    				</td>
@@ -722,7 +728,7 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
-        	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
+	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
     	</script>
 	</body>
 </html>
