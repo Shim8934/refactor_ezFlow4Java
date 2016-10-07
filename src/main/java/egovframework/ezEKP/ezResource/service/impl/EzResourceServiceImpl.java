@@ -2731,7 +2731,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return aclTblBrd;
 	}
 	
-	public String isoUTFDate(String dateTimeStr) throws Exception{
+	public String isoUTFDate(String dateTimeStr) {
         String timeSetStr = "";
         String resultStr = "";
 
@@ -2749,7 +2749,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
                         timeSetStr = dateTimeStr.split(" ")[2];
                     }
                 } else {
-                    timeSetStr = dateTimeStr.split(" ")[2];
+                    timeSetStr = dateTimeStr.split(" ")[1];	// 20160909 by kgs: from [2] to [1]
                 }
                 resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
             } else {
