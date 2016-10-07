@@ -435,6 +435,17 @@ public class CommonUtil {
 		return value;
 	}
 	
+	// 2016.09.06 by kgs: Property value의 값을 변환
+	public String cleanPropertyValue(String pOrgString) {
+		String value = ""; 
+				
+		if(pOrgString != null){
+			value = pOrgString.replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
+		}
+
+		return value;
+	}
+	
 	public String trimDoubleQuotes(String src) {
 		if (src.startsWith("\"") && src.endsWith("\"")) {
 			src = src.substring(1, src.length() - 1);

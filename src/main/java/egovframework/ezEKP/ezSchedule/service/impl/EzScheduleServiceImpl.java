@@ -9,15 +9,19 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
+import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzScheduleService")
@@ -44,6 +48,27 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		return ezScheduleDAO.getScheduleConfig(map);
+	}
+
+	@Override
+	public ScheduleInfoVO getScheduleInfo(String scheduleID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SCHEDULEID", scheduleID);
+		return ezScheduleDAO.getScheduleInfo(map);
+	}
+
+	@Override
+	public List<AttendantListVO> getAttendantList(String scheduleID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SCHEDULEID", scheduleID);
+		return ezScheduleDAO.getAttendantList(map);
+	}
+
+	@Override
+	public List<AttachListVO> getAttachList(String scheduleID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SCHEDULEID", scheduleID);
+		return ezScheduleDAO.getAttachList(map);
 	}
 
 	@Override
@@ -89,6 +114,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", pUserId);
 		return ezScheduleDAO.getInviteScheduleGroupCnt(map);
+	}
+
+	@Override
+	public void scheduleNewItem(ScheduleInfoVO schInfoVO) throws Exception {
+		ezScheduleDAO.scheduleNewItem(schInfoVO);
+//		ezBoardDAO.newItem(boardListVO.getItemID());
 	}
 }
 

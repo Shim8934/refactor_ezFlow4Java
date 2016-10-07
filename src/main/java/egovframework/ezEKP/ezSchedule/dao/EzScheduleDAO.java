@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
+import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
@@ -15,6 +18,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -29,6 +33,21 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public ScheduleConfigVO getScheduleConfig(Map<String, Object> map){
 		return (ScheduleConfigVO) select("EzScheduleDAO.getScheduleConfig", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ScheduleInfoVO getScheduleInfo(Map<String, Object> map){
+		return (ScheduleInfoVO) select("EzScheduleDAO.getScheduleInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AttendantListVO> getAttendantList(Map<String, Object> map){
+		return (List<AttendantListVO>) list("EzScheduleDAO.getAttendantList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AttachListVO> getAttachList(Map<String, Object> map){
+		return (List<AttachListVO>) list("EzScheduleDAO.getAttachList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -79,6 +98,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ScheduleGmailInfoVO> getScheduleGmailInfo(Map<String, Object> map){
 		return (List<ScheduleGmailInfoVO>) list("EzScheduleDAO.getScheduleGmailInfo", map);
+	}
+	
+	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception{
+		insert("EzScheduleDAO.scheduleNewItem", scheduleInfoVO);
 	}
 }
 

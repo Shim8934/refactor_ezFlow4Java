@@ -4,6 +4,9 @@
 <sqlMap namespace="ezSchedule">
 	<typeAlias  alias="ScheGetHolidayVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO"/>
 	<typeAlias  alias="ScheduleConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO"/>
+	<typeAlias  alias="ScheduleInfoVO"	 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO"/>
+	<typeAlias  alias="AttendantListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttendantListVO"/>
+	<typeAlias  alias="AttachListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttachListVO"/>
 	<typeAlias  alias="PubScheHqVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheHqVO"/>
 	<typeAlias  alias="PubScheSecVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheSecVO"/>
 	<typeAlias  alias="PubScheDeptVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO"/>
@@ -32,6 +35,51 @@
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap class="ScheduleInfoVO" id="scheduleInfoVO">
+		<result property="parentId"			column="parentId"			columnIndex="1"/>
+		<result property="ownerId"			column="ownerId"			columnIndex="2"/>
+		<result property="ownerName"		column="ownerName"			columnIndex="3"/>
+		<result property="ownerName2"		column="ownerName2"			columnIndex="4"/>
+		<result property="creatorId"		column="creatorId"			columnIndex="5"/>
+		<result property="creatorName"		column="creatorName"		columnIndex="6"/>
+		<result property="creatorName2"		column="creatorName2"		columnIndex="7"/>
+		<result property="createDate"		column="createDate"			columnIndex="8"/>
+		<result property="modifierId"		column="modifierId"			columnIndex="9"/>
+		<result property="modifierName"		column="modifierName"		columnIndex="10"/>
+		<result property="modifierName2"	column="modifierName2"		columnIndex="11"/>
+		<result property="modifyDate"		column="modifyDate"			columnIndex="12"/>
+		<result property="scheduleType"		column="scheduleType"		columnIndex="13"/>
+		<result property="importance"		column="importance"			columnIndex="14"/>
+		<result property="hasAttendant"		column="hasAttendant"		columnIndex="15"/>
+		<result property="startDate"		column="startDate"			columnIndex="16"/>
+		<result property="endDate"			column="endDate"			columnIndex="17"/>
+		<result property="repetition"		column="repetition"			columnIndex="18"/>
+		<result property="repetitionDelete"	column="repetitionDelete"	columnIndex="19"/>
+		<result property="title"			column="title"				columnIndex="20"/>
+		<result property="location"			column="location"			columnIndex="21"/>
+		<result property="contentPath"		column="contentPath"		columnIndex="22"/>
+		<result property="isReadOnly"		column="isReadOnly"			columnIndex="23"/>
+		<result property="isPublic"			column="isPublic"			columnIndex="24"/>
+		<result property="groupName"		column="groupName"			columnIndex="25"/>
+	</resultMap>
+
+	<resultMap class="AttendantListVO" id="attendantListVO">
+		<result property="attendantId"		column="attendantId"		columnIndex="1"/>
+		<result property="attendantName"	column="attendantName"		columnIndex="2"/>
+		<result property="attendantName2"	column="attendantName2"		columnIndex="3"/>
+		<result property="attendantDeptName"	column="attendantDeptName"	columnIndex="4"/>
+		<result property="attendantDeptName2"	column="attendantDeptName2"	columnIndex="5"/>
+		<result property="status"			column="status"				columnIndex="6"/>
+		<result property="responseDate"		column="responseDate"		columnIndex="7"/>
+	</resultMap>
+
+	<resultMap class="AttachListVO" id="attachListVO">
+		<result property="attachId"			column="attachId"			columnIndex="1"/>
+		<result property="fileSize"			column="fileSize"			columnIndex="2"/>
+		<result property="fileName"			column="fileName"			columnIndex="3"/>
+		<result property="filePath"			column="filePath"			columnIndex="4"/>
+	</resultMap>
+
 	<resultMap class="PubScheHqVO" id="pubScheHqVO">
 		<result property="hqId"				column="HQID"				columnIndex="1"/>
 		<result property="hqName"			column="HQNAME"				columnIndex="2"/>
@@ -78,6 +126,18 @@
 		{CALL EZPIMS.EZSP_GETCONFIGINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzScheduleDAO.getScheduleInfo" parameterClass="Map" resultMap="scheduleInfoVO" >
+		{CALL EZPIMS.EZSP_GETSCHEDULEINFO(#v_SCHEDULEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getAttendantList" parameterClass="Map" resultMap="attendantListVO" >
+		{CALL EZPIMS.EZSP_GETATTENDANTLIST(#v_SCHEDULEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzScheduleDAO.getAttachList" parameterClass="Map" resultMap="attachListVO" >
+		{CALL EZPIMS.EZSP_GETATTACHLIST(#v_SCHEDULEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzScheduleDAO.getPublicScheduleHq" parameterClass="Map" resultMap="pubScheHqVO" >
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -118,5 +178,12 @@
 		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
+	<procedure id="EzBoardDAO.scheduleNewItem" parameterClass="ScheduleInfoVO">
+		{CALL EZPIMS.EZSP_INSERTSCHEDULE(#parentID#, #ownerID#, #ownerName#, #ownerName2#, #creatorId#, #creatorName#, #creatorName2#,
+										 #modifierID#, #modifierName#, #modifierName2#, #scheduleType#, #importance#, #hasAttendant#, #hasAttach#, #hasComment#,
+										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDel#,
+										 #title#, #location#, #contentPath#, #groupName#)}
+	</procedure>
+	
 </sqlMap>
 

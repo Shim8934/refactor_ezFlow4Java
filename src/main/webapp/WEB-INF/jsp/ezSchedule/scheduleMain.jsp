@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
 	<HEAD>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
         <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
+
 		<script type="text/javascript" src="/js/Holiday.js"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -18,13 +19,13 @@
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js?ver=1.3"></script>
     	
 		<script type="text/javascript">
-		    var UserOffset = "${pOffset}";
+		    var userOffset = "${pOffset}";
 			var timeZoneStr = "${timeZoneStr}";
 			var receivecount = "${receiveCount}";
 			var groupcount = "${groupCount}>";
-			var userid = "${userinfo.UserID}";
-		    var deptid = "${userinfo.DeptID}";
-		    var uselang = "${userinfo.lang}";
+			var userid = "${userInfo.id}";
+		    var deptid = "${userInfo.deptID}";
+		    var uselang = "${userInfo.lang}";
 			var deptadmin = "${deptAdmin}";
 			var companyadmin = "${companyAdmin}";
 			var idtype = "${idType}";
@@ -120,13 +121,26 @@
 		            parent.frames["left"].typeCal = 2
 		        }
 
-
 		        if (pStartday == 1)
 		            DefaultView = 1
 		        else
 		            DefaultView = 0
 
-		        if (receivecount != "0") {
+				<c:forEach items="${hqList}" var = "item" >
+					var hqOpt = document.createElement("option");
+					hqOpt.value = "${item.value}";
+					hqOpt.text  = "${item.text}";
+					document.getElementById("idSelect").add(hqOpt);
+				</c:forEach>
+
+				<c:forEach items="${hqList}" var = "item" >
+					var secOpt = document.createElement("option");
+					secOpt.value = "${item.value}";
+					secOpt.text  = "${item.text}";
+					document.getElementById("secretarySelect").add(secOpt);
+				</c:forEach>
+
+				if (receivecount != "0") {
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		            var OpenWin = window.open("/myoffice/ezSchedule/schedule_receive_attendant_cross.aspx", "schedule_select_attendant", GetOpenWindowfeature(730, 420));
@@ -292,7 +306,7 @@
                     
 		            var feature = GetOpenPosition(790, 760);
 		            if (CrossYN() || pNoneActiveX == "YES") {
-		                window.open("schedule_write_Cross.aspx?defaultid=" + index, "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index, "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            }
 		            else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -1059,12 +1073,10 @@
 									            <option value="T"><spring:message code='ezSchedule.t220'/></option>
 									            <option value="P" selected><spring:message code='ezSchedule.t221'/></option>
 									            <option value="D"><spring:message code='ezSchedule.t222'/></option>
-									            <asp:Literal ID="LitHq" Runat="server"></asp:Literal> 
 									            <option value="C"><spring:message code='ezSchedule.t223'/></option>									            
 								            </select></li>
               <li style="background:none;padding:0;"><select class="select" onChange="SecretaryChange()" id="secretarySelect" name="secretarySelect">
 									            <option value="" selected><spring:message code='ezSchedule.t224'/></option>
-									            <asp:Literal ID="LitShare" Runat="server"></asp:Literal> 
 								            </select></li>
 								            <li onClick="IDClick('P')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezSchedule.t221'/></li>
 								            <li onClick="IDClick('D')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezSchedule.t222'/></li>

@@ -27,7 +27,7 @@ var memorialDays = Array(
         new memorialDay("", "", 8, 14, 2, true),
         new memorialDay("추석", "Thanksgiving Day", 8, 15, 2, true),
         new memorialDay("", "", 8, 16, 2, true),
-        new memorialDay("김경식", "Kim Gyeong Sik", 8, 31, 1, true),
+        new memorialDay("김경식", "김경식의 테스트 기념일", 8, 31, 1, true),
         new memorialDay("개천절", "Foundation Day", 10, 3, 1, true),
         new memorialDay("성탄절", "Christmas", 12, 25, 1, true),
         new memorialDay("한글날", "Hangul Proclamation Day", 10, 9, 1, true)
