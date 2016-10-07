@@ -929,8 +929,7 @@ System.out.println("literalPhoto:"+literalPhoto);
 		
 		fileName = userInfo.getId() + "." + fileName;
 		filePath = config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
-		
-		filePath2 = realPath + filePath;
+		filePath2 = "/ezCommon/downloadAttach.do?filePath="+config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
 
 		File file = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP")); 
 		
@@ -948,7 +947,7 @@ System.out.println("literalPhoto:"+literalPhoto);
 			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
 			
-			ImageIO.write(bufferedImage, "png", new File(filePath2));
+			ImageIO.write(bufferedImage, "png", new File(realPath + filePath));
 			
 			File file1 = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator + fileName);
 			if (file1.exists()) {
