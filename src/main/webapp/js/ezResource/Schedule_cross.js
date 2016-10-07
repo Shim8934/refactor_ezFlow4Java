@@ -1278,7 +1278,7 @@ function print_onClick( printTrueFalse )
         printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
         var strContent = "<html><head>"; // If you use this script inside <head> on the page, there might be error. So I am keeping inside body (becaue of <head>)        
         strContent = strContent + "<title>Print Preview</title>";      
-        strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/Default_kr.css\" type=\"text/css\" />";       
+        strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/default_kr.css\" type=\"text/css\" />";       
         strContent = strContent + "</head><body class=\"popup\">";        
         strContent = strContent + "<div style='width:100%;height:20;text-align:right; margin-bottom:25px;'>";        
         strContent = strContent + "<input type='button' id='btnPrint' value='Print' style='width:100px' onclick='window.print()' />";       
