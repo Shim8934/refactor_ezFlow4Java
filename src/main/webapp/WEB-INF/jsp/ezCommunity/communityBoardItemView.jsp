@@ -994,7 +994,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td class="pad1" id="ItemOverflow">
+	            <td class="pad1" style="height:300px">
 	            
 	            	<c:choose>
 	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">

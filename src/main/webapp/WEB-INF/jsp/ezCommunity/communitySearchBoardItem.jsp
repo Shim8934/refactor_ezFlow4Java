@@ -346,11 +346,21 @@
 			}
 
 			function DeleteItem() {
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
-				xmlhttp.send();
-				xmlhttp = null;
-
+// 			    var xmlhttp = createXMLHttpRequest();
+			    
+// 				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
+// 				xmlhttp.send();
+				
+				$.ajax({
+					type : 'POST',
+					url : '/ezCommunity/deleteItem.do',
+					async : false,
+					data : {itemList : strListInfo},
+					success : function() {
+						alert(1);
+					}
+				})
+				
 				if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && CurPage != 1) {
 					movePage(CurPage);
 				} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {

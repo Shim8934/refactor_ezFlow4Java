@@ -3328,14 +3328,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardPropertyVO boardInfo = null;
 		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "", strAbstract = "";
 		
-		/*폼프로세서 맞춤법 검사 버튼 display 여부 1(display:inline), 0(display:none)
-		String formProcSpelling = config.getProperty("config.FormProcSpelling");
-		
-		if (!formProcSpelling.equals("1")) {
-			formProcSpelling = "0";
-		}*/
-		
-		
 		String boardID = request.getParameter("boardID");
 		String mode = request.getParameter("mode");
 		

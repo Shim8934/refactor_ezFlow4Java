@@ -235,7 +235,7 @@
 							        	if (UserAgentState.indexOf("chrome") > 0) {
 							        		window.resizeTo(340, 260);
 							        	} else {
-							        		window.resizeTo(346, 240);
+							        		window.resizeTo(346, 270);
 							        	}
 							        } else {
 							        	if (UserAgentState.indexOf("firefox") != -1) {
