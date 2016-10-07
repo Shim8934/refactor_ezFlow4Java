@@ -409,7 +409,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	
 		    try {
 		    	in = new BufferedInputStream(new FileInputStream(file));	
-	    	    String mimetype = "text/html"; //"application/x-msdownload"	
+	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
 	    	    response.setBufferSize(fSize);
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
