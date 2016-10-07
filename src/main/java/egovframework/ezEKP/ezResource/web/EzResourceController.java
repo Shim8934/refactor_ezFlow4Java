@@ -1395,7 +1395,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String useIE11Browser = "";
 		String editor = config.getProperty("EDITOR");
-		String nonActiveX = "YES";
+		String noneActiveX = "YES";
 		String resID = "";
 		String brdName = "";
 		String cmdStr = "";
@@ -1616,7 +1616,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("editor", editor);
-		model.addAttribute("nonActiveX", nonActiveX);
+		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("brdName", brdName);
 		model.addAttribute("resID", resID);
