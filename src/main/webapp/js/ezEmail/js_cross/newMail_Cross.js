@@ -894,6 +894,10 @@ function Save_onClick_Complete(ReturnValue) {
 
                     if (Save_onClick_Complete.savemode == "sendsave") {
                         MailSend_Show_Progress();
+                        
+                        if (!CrossYN()) {
+                            EzHTTPTrans.style.display = "none";
+                        }
                     }
 
                     g_saveHttp.onreadystatechange = event_SaveonClick;
@@ -2042,12 +2046,27 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     tempDiv.innerHTML = message.GetEditorContent();
 
     var isBigFile = false;
-    for (var i = 0; i < dadiframe.document.getElementById("filelist").childNodes.length - 1; i++) {
-        if (dadiframe.document.getElementById("filelist").childNodes.length > 1) {
-            if (dadiframe.document.getElementById("filelist").childNodes[i + 1].getAttribute("_big") == "Y") {
-                isBigFile = true;
+    
+    if (CrossYN()) {
+        for (var i = 0; i < dadiframe.document.getElementById("filelist").childNodes.length - 1; i++) {
+            if (dadiframe.document.getElementById("filelist").childNodes.length > 1) {
+                if (dadiframe.document.getElementById("filelist").childNodes[i + 1].getAttribute("_big") == "Y") {
+                    isBigFile = true;
+                }
             }
         }
+    } else {
+        var bigfile = EzHTTPTrans.FileListAll();
+        var bigfilelist = bigfile.split("\\");
+        var bigFileYN = EzHTTPTrans.IsBigfileSizeAll();
+        var bigFileYNlist = bigFileYN.split("\\");
+        var bigfileCount = 0;
+        for (var i = 0; i < bigfilelist.length; i++) {
+            var bigFileYN = bigFileYNlist[i]
+            if (bigFileYN == "Y") {
+                isBigFile = true; break;
+            }
+        }        
     }
 
     if (isBigFile) {
