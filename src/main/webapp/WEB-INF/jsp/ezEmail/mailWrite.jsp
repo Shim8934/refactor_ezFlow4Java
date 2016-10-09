@@ -188,7 +188,12 @@
 		}
 	    window.onresize = function () {       
 	        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
+	            <c:if test="${isCrossBrowser == true}">
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+	            </c:if>
+                <c:if test="${isCrossBrowser != true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+                </c:if>	            
 	        }
 	        else {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
@@ -1054,10 +1059,17 @@
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
-	    <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
+	    <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
+        <c:if test="${isCrossBrowser == true}">       
 	    <script type="text/javascript">
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
 	    </script>
+        </c:if>
+        <c:if test="${isCrossBrowser != true}">       
+        <script type="text/javascript">
+            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+        </script>
+        </c:if>                  
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">
 	   ${attach}
