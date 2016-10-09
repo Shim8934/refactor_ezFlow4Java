@@ -892,12 +892,8 @@ function Save_onClick_Complete(ReturnValue) {
                     g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
                     event_SaveonClick.savemode = Save_onClick_Complete.savemode;
 
-                    if (Save_onClick_Complete.savemode == "sendsave") {
-                        MailSend_Show_Progress();
-                        
-                        if (!CrossYN()) {
-                            EzHTTPTrans.style.display = "none";
-                        }
+                    if (!isAutoSave) {
+                        MailSend_Show_Progress();                        
                     }
 
                     g_saveHttp.onreadystatechange = event_SaveonClick;
@@ -925,11 +921,25 @@ function Save_onClick_Complete(ReturnValue) {
 function MailSend_Show_Progress() {
     document.getElementById("mailPanel").style.display = "";
     document.getElementById("loadingLayer").style.display = "";
+    
+    if (event_SaveonClick.savemode == "sendsave") {
+        messageInSending.style.display = "";
+    } else {
+        messageInSending.style.display = "none";
+    }
+    
+    if (!CrossYN()) {
+        EzHTTPTrans.style.display = "none";
+    }    
 }
 
 function MailSend_Hidden_Progress() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("loadingLayer").style.display = "none";
+    
+    if (!CrossYN()) {
+        EzHTTPTrans.style.display = "";
+    }    
 }
 
 function event_SaveonClick() {
@@ -978,6 +988,11 @@ function event_SaveonClick() {
                     MailStatus = "NO";
                 }
                 else {
+                    if (!isAutoSave) {
+                        MailSend_Hidden_Progress();
+                        isAutoSave = false;
+                    }
+                    
                     if (result.indexOf("ERROR") == 0) {
                         if (result.lastIndexOf("not be created.") > 0) {
                             alert(strLang363);
@@ -1012,6 +1027,7 @@ function event_SaveonClick() {
                         g_saveHttp = null;
                         g_cmd = "EDIT";
                         if (!isAutoSave) {
+                            MailSend_Hidden_Progress();
                             alert(strLang108);
                             isAutoSave = false;
                         }
@@ -1053,6 +1069,7 @@ function event_SaveonClick() {
                         g_saveHttp = null;
                         g_cmd = "EDIT";
                         if (!isAutoSave) {
+                            MailSend_Hidden_Progress();
                             alert(strLang108);
                             isAutoSave = false;
                         }

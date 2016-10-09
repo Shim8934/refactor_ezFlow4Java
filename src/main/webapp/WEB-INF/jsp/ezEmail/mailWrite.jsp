@@ -1050,7 +1050,7 @@
 	        <input type="hidden" name="endDay" id="endDay" />
 	    </form>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.7);display:none;" id="mailPanel">&nbsp;</div>
-	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t679' /><spring:message code='ezEmail.t680' /></span></span>
+	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
