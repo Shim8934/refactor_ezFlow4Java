@@ -563,7 +563,17 @@ function attach_Delete() {
     var filelist = "";
     var retFileName;
     var pBigSizefileListYN = "Y";
-
+    var MailAttachID = "";
+    var DelIndex = EzHTTPTrans.GetCheckFileInfo();
+    var DelArray = DelIndex.split("\\");
+    for (var Cnt = 0; Cnt < DelArray.length; Cnt++) {
+        if (DelArray[Cnt] != "") {
+            if (MailAttachID == "")
+                MailAttachID = EzHTTPTrans.GetFileInfo2(DelArray[Cnt]);
+            else
+                MailAttachID += "|!|" + EzHTTPTrans.GetFileInfo2(DelArray[Cnt]);
+        }
+    }
     EzHTTPTrans.DeleteFileList();
     filelist = EzHTTPTrans.DelfileList();
 
@@ -581,34 +591,37 @@ function attach_Delete() {
             g_fileSizelist.splice(i, 1);
         }
     }
-
+    
     if (filelist == "") {
         alert(strLang90);
         return;
     }
 
-    if (g_url != null && g_url != '') {
-        var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-        var rootNodes = xmlDoc.createElement("DATA");
-        xmlDoc.appendChild(rootNodes);
-
-        var rootNode = xmlDoc.createElement("CMD");
-        rootNode.text = "DEL";
-        rootNodes.appendChild(rootNode);
-
-        var rootNode = xmlDoc.createElement("URL");
-        rootNode.text = g_url;
-        rootNodes.appendChild(rootNode);
-
-        var rootNode = xmlDoc.createElement("FILE");
-        rootNode.text = filelist;
-        rootNodes.appendChild(rootNode)
-
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_interattach.aspx", false);
-        xmlhttp.send(xmlDoc.xml);
+    var mailAttachIdList = MailAttachID.split("|!|");
+    var filecnt = mailAttachIdList.length;
+    var hasAttachment = false;
+    var xmlStr = "<FILE>";    
+    
+    for (var i = 0; i < filecnt; i++) {
+        var pItemID = mailAttachIdList[i];
+        var pISBig = bigfileList[i];
+        
+        if (pISBig != "Y") {
+            hasAttachment = true;
+            xmlStr += "<ROW>";
+            xmlStr += "<ATTACHID><![CDATA[" + pItemID + "]]></ATTACHID>";
+            xmlStr += "<BIGYN><![CDATA[" + pISBig + "]]></BIGYN>";
+            xmlStr += "</ROW>";
+        } else {
+            var para = document.createElement("P");
+            para.setAttribute("_itemid", pItemID);
+            DelAttachFileAtList2(para);
+        }        
     }
-    AtthacDivUpdate("del", "", "", "", "", "");
+    
+    if (hasAttachment) {
+        DelAttachFileAtList3(xmlStr);
+    }    
 }
 
 function disable_button() {
