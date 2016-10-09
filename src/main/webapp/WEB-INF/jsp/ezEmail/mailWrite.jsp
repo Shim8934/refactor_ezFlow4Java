@@ -17,6 +17,9 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+        <c:if test="${isCrossBrowser != true}">
+        <script type="text/javascript" src="/js/ezEmail/js/kaoni_ActiveX.js"></script>
+        </c:if>
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";
@@ -101,6 +104,10 @@
 	    var domainName = "${domainName}";
 	    
 	    window.onload = function () {
+	        if (!CrossYN()) {
+	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
+	            EzHTTPTrans.UseDbCl = true;
+	        }
 	
 	        if (g_unread == "1") {
 	            try {
@@ -215,8 +222,9 @@
 	    window.onbeforeunload = function () {
 	        var retVal = "";
 	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
-	            if (!isDelted)
+	            if (!isDelted) {
 	                delDrafts();
+	            }
 	        } else if (g_cmd == "EDIT") {
 	        	delAttachListFile(filedate);
 	        } 
@@ -762,6 +770,15 @@
 	    }
 	
 	    </script>
+        <c:if test="${isCrossBrowser != true}">
+        <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
+            attach_Add(filename);
+        </script>
+        <script LANGUAGE="javascript" FOR="EzHTTPTrans" EVENT="DbClListFile(mPath,mUserlist)">
+            if(mPath != "")
+                DownloadAttach(mPath);
+        </script>
+        </c:if>
 	</head>
 	<body id="parentBody" class="popup" style="overflow:hidden;">
 	    <table id="normalScreen" class="layout">
@@ -966,12 +983,36 @@
 	            </table>
 	        </td>
 	        </tr>
+            <c:if test="${isCrossBrowser == true}">
 	        <tr>
 	            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
 	                <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
 	                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
 	            </td>
 	        </tr>
+            </c:if>
+            <c:if test="${isCrossBrowser != true}">
+            <tr>
+                <td height="20" style="padding-top: 10px;">
+                    <span style="color: #3a76c3; font-weight: bold; height: 15px; display: inline-block;">
+                        <img src="/images/i_urgency.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
+                    <table class="file" id="attachTable">
+                        <tr>
+                            <th><spring:message code='ezEmail.t557' /></th>
+                            <td class="pos1">                                
+                                <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
+                            </td>
+                            <td class="pos2">
+                                <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                <br>
+                                <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                <br>
+                                <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>            
+            </c:if>
 	    </table>
 	    <div id="sendScreen" style="display:none;">
 	      <table width="100%" cellspacing="0" cellpadding="0" class="message" style="background-image:url(/images/email/mailsendnoti.gif)">

@@ -55,8 +55,218 @@ function sendType_change(pMode) {
 
 var totfileSize = 0;
 var totfileSize2 = 0;
-function attach_Add() {
-    document.form.file1.click();
+
+function do_Attach_Add(ocx_file, forceBigFileUpload) {
+    if (CrossYN()) {
+        document.form.file1.click();
+    } else {
+        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+        ezUtil.UseUTF8 = true;
+
+        if (!ocx_file) {
+            var file = ezUtil.OpenLoadDlgMultiNew("All Files (*.*)\0*.*\0Microsoft Office Files\0*.doc;*.xls;*.ppt;*.pst;*.mdb;\0Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0Text Files\0*.txt;*.csv;\0Archive Files\0*.zip;*.rar;*.cab;*.alz;*.tar\0Executable Files\0*.exe;*.com;*.bat;\0\0", "")
+
+            if (!file)
+                return;
+            g_fileList = file.split("|");
+        }
+        else {
+            g_fileList = ocx_file.split("|");
+        }
+        
+        var fileSize = 0;
+        var fileSize2 = 0;
+        var tmpFileSize = 0;
+        var pBigFileUploadYN = "N";
+        var fileLen = g_fileSizelist.length;
+        var strPrint = "";
+        for (var i = 0; i < g_fileList.length - 1; i++) {
+            tmpFileSize = ezUtil.GetFileSize(g_fileList[i]);
+            if (tmpFileSize == 0) {
+                alert(strLang167);
+                return;
+            }
+            g_fileSizelist[fileLen + i] = tmpFileSize;
+            if (BigSizeAttachSize < tmpFileSize || forceBigFileUpload) {
+                pBigFileUploadYN = "Y";
+                totfileSize2 += tmpFileSize;
+                fileSize2 += tmpFileSize;
+            }
+            else {
+                totfileSize += tmpFileSize;
+                fileSize += tmpFileSize;
+            }
+        }    
+        
+        if (totfileSize > totSizeAttachSize) {
+            alert(strLang75 + totSizeAttachMBSize + "MB" + strLang76);
+            totfileSize = totfileSize - fileSize;
+            return;
+        }
+        else if (totfileSize2 > totBigSizeAttachSize) {
+            alert(strLang168 + totBigSizeAttachMBSize + "MB" + strLang169);
+            totfileSize2 = totfileSize2 - fileSize2;
+            return;
+        }
+
+        ezUtil = null;
+        if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
+            alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLang79);
+            BigSizeAttach = true;
+            pBigFileUpload = "Y";
+        }
+
+        EzHTTPTrans.AddUploadFile("", "");
+
+        var fileNamelist = "";
+        var fileName = "";
+        var savefileNamelist = "";
+        var pBigSizefileListYN = "Y";
+        var g_fileGBList = new Array();
+        for (var i = 0; i < g_fileList.length - 1; i++) {
+            try {
+                var pTmpBigFileUpload = "N";
+                if (g_fileSizelist[fileLen + i] > BigSizeAttachSize || forceBigFileUpload) {
+                    pTmpBigFileUpload = "Y";
+                    g_fileBigSizeYN[i] = "Y";
+                }
+                else {
+                    g_fileBigSizeYN[i] = "N";
+                    pBigSizefileListYN = "N";
+                }
+
+                EzHTTPTrans.AddUploadFile(g_fileList[i], pTmpBigFileUpload);
+                g_fileGBList[i] = pTmpBigFileUpload;
+                if (pTmpBigFileUpload != "Y") {
+                }
+            }
+            catch (e) {
+                alert(g_fileList[i] + " " + strLang85 + "\n\n" + e.number + " - " + e.description);
+                return;
+            }
+        }     
+        
+        var newid = '';
+        newid = '&newid=' + g_newid;
+
+        var RemotePath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailInterUploadX.do";
+        var nCount = EzHTTPTrans.StartUpload(RemotePath, filedate, "DocManagement" + newid, "", "");
+        if (nCount == 0) {
+            alert(strLang89);
+            var isBigSizeAttach = false;
+            var bigfile = EzHTTPTrans.IsBigfileYN;
+            var bigfileList = bigfile.split("\\");
+
+            for (var i = 0 ; i < bigfileList.length ; i++) {
+                if (bigfileList[i] == "Y") {
+                    isBigSizeAttach = true;
+                }
+            }
+
+            if (isBigSizeAttach) {
+                BigSizeAttach = true;
+            }
+            else {
+                BigSizeAttach = false;
+            }
+            return false;
+        }        
+        
+        var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        var rootNodes = xmlDoc.createElement("DATA");
+        xmlDoc.appendChild(rootNodes);
+
+        var rootNode = xmlDoc.createElement("CMD");
+        rootNode.text = "ADD";
+        rootNodes.appendChild(rootNode);
+
+        var rootNode = xmlDoc.createElement("URL");
+        rootNode.text = g_url;
+        rootNodes.appendChild(rootNode);
+
+        var rootNode = xmlDoc.createElement("FILELIST");
+        rootNodes.appendChild(rootNode);
+
+        var extFlag = false;
+        for (var i = 0; i < nCount; i++) {
+            var fileinfo = EzHTTPTrans.GetReturn(i);
+            var infos = fileinfo.split('/');
+            var filename = infos[0].substr(infos[0].lastIndexOf("\\") + 1);
+            var filesize = infos[2];
+            var filePath = infos[1].split('_kaonisplit_')[0];
+            var BigYN = infos[1].split('_kaonisplit_')[1].split('_')[0];
+            var extYN = infos[1].split('_kaonisplit_')[1].split('_')[1];
+
+            if (extYN == "true") {
+                var subNodes = xmlDoc.createElement("FILE");
+                rootNode.appendChild(subNodes);
+                var subNode = xmlDoc.createElement("NAME");
+                subNode.text = filename
+                subNodes.appendChild(subNode);
+
+                var subNode = xmlDoc.createElement("PATH");
+                subNode.text = filePath
+                subNodes.appendChild(subNode);
+
+                var subNode = xmlDoc.createElement("BIG");
+                subNode.text = BigYN
+                subNodes.appendChild(subNode);
+
+                var subNode = xmlDoc.createElement("SIZE");
+                subNode.text = filesize
+                subNodes.appendChild(subNode);
+
+                var subNode = xmlDoc.createElement("ITEMID");
+                subNode.text = "Y";
+                subNodes.appendChild(subNode);
+            }
+            else if (extYN == "denied") {
+                extFlag = true;
+            }
+        }
+
+        if (extFlag)
+            alert(strLang323);
+        
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+        xmlhttp.send(xmlDoc.xml);
+
+        if (xmlhttp.status == "200") {
+            if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
+                alert(strLang241);
+            }
+            else {            
+                xmlDoc.load(xmlhttp.responseXML)
+                g_url = xmlDoc.getElementsByTagName("URL")[0].text;
+    
+                for (var i = 0; i < xmlDoc.getElementsByTagName("FILE").length; i++) {
+                    filename = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("NAME").text
+                    path = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("PATH").text
+                    big_yn = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("BIG").text
+                    size = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("SIZE").text
+                    attid = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("ITEMID").text
+                    var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews2.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+                    if (big_yn == "Y") {
+                        var aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + escape(path) + "&filedate=" + escape(attid.split('\\')[0]);
+                    }
+                    AtthacDivUpdate("addattach", aitem, attid, filename, size, big_yn)
+                }
+            }
+        }
+        else {
+            alert(xmlhttp.status + " : " + strLang241);
+        }
+        xmlhttp = null;        
+    }
+}
+
+function attach_Add(ocx_file) {
+    do_Attach_Add(ocx_file, false);
+}
+
+function bigattach_Add(ocx_file) {
+    do_Attach_Add(ocx_file, true);
 }
 
 function btn_AttachAdd_onclick() {
