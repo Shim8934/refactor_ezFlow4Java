@@ -99,7 +99,12 @@ function DelList(resultXML) {
     xmlhttp.send(xml);
     
     var xmlDoc = loadXMLString(xmlhttp.responseText);	
-    g_url = xmlDoc.getElementsByTagName("DATA").item(0).textContent;    
+    
+    if (CrossYN()) {
+        g_url = xmlDoc.getElementsByTagName("DATA").item(0).textContent;
+    } else {
+        g_url = xmlDoc.getElementsByTagName("DATA").item(0).text;
+    }
 }
 
 function AddAttachFileInfoXmlParsing(resultXML) {
