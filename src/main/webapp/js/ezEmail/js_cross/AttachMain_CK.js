@@ -207,60 +207,13 @@ function AppendFileAttachInfo(ret) {
 
             if (is_newfile != "DEL") {
                 if (AttachFlag) {
-                    objTr = document.createElement("TR");
-                    objTr.setAttribute("VALUE", ServerFile);
-                    objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
-                    objTr.setAttribute("_big", is_big);
-                    objTr.setAttribute("_itemid", ServerFile);
-
-                    var objTd = document.createElement("TD");
-                    objTd.style.textAlign = "center";
-
-                    var input = document.createElement("input");
-                    input.type = "checkbox";
-                    input.name = "fileSelect";
-
-                    objTd.appendChild(input);
-                    objTr.appendChild(objTd);
-
-                    var objTd2 = document.createElement("TD");
-                    if(is_big == "Y")
-                        objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
-                    else
-                        objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
-                    objTr.appendChild(objTd2);
-
-                    if (fileSize != strLang116) {
-                        if (fileSize / 1024 / 1024 > 1) {
-                            fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
-                        }
-                        else if (fileSize / 1024 > 1) {
-                            fileSize = parseInt(fileSize / 1024) + "KB";
-                        }
-                        else if (fileSize.indexOf("B") > -1) {
-                            fileSize = fileSize;
-                        }
-                        else {
-                            fileSize = fileSize + "B";
-                        }
-                    }
-
-                    var objTd3 = document.createElement("TD");
-                    if (CrossYN())
-                        objTd3.textContent = fileSize;
-                    else
-                        objTd3.innerText = fileSize;
-                    objTr.appendChild(objTd3);
-
-                    dadiframe.document.getElementById("filelist").appendChild(objTr);
-                }
-                else {
-                    if (getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) == "Y") {
+                    if (CrossYN()) {
                         objTr = document.createElement("TR");
                         objTr.setAttribute("VALUE", ServerFile);
                         objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
                         objTr.setAttribute("_big", is_big);
                         objTr.setAttribute("_itemid", ServerFile);
+
                         var objTd = document.createElement("TD");
                         objTd.style.textAlign = "center";
 
@@ -272,7 +225,7 @@ function AppendFileAttachInfo(ret) {
                         objTr.appendChild(objTd);
 
                         var objTd2 = document.createElement("TD");
-                        if (is_big == "Y")
+                        if(is_big == "Y")
                             objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
                         else
                             objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
@@ -301,6 +254,61 @@ function AppendFileAttachInfo(ret) {
                         objTr.appendChild(objTd3);
 
                         dadiframe.document.getElementById("filelist").appendChild(objTr);
+                    } else {
+                        EzHTTPTrans.InsertFileList(ServerFile, ServerFile, "N", ServerFile, fileSize);
+                    }
+                }
+                else {
+                    if (getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) == "Y") {
+                        if (CrossYN()) {
+                            objTr = document.createElement("TR");
+                            objTr.setAttribute("VALUE", ServerFile);
+                            objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
+                            objTr.setAttribute("_big", is_big);
+                            objTr.setAttribute("_itemid", ServerFile);
+                            var objTd = document.createElement("TD");
+                            objTd.style.textAlign = "center";
+
+                            var input = document.createElement("input");
+                            input.type = "checkbox";
+                            input.name = "fileSelect";
+
+                            objTd.appendChild(input);
+                            objTr.appendChild(objTd);
+
+                            var objTd2 = document.createElement("TD");
+                            if (is_big == "Y")
+                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
+                            else
+                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                            objTr.appendChild(objTd2);
+
+                            if (fileSize != strLang116) {
+                                if (fileSize / 1024 / 1024 > 1) {
+                                    fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+                                }
+                                else if (fileSize / 1024 > 1) {
+                                    fileSize = parseInt(fileSize / 1024) + "KB";
+                                }
+                                else if (fileSize.indexOf("B") > -1) {
+                                    fileSize = fileSize;
+                                }
+                                else {
+                                    fileSize = fileSize + "B";
+                                }
+                            }
+
+                            var objTd3 = document.createElement("TD");
+                            if (CrossYN())
+                                objTd3.textContent = fileSize;
+                            else
+                                objTd3.innerText = fileSize;
+                            objTr.appendChild(objTd3);
+
+                            dadiframe.document.getElementById("filelist").appendChild(objTr);
+                        } else {
+                            EzHTTPTrans.InsertFileList(ServerFile, ServerFile, "N", ServerFile, fileSize);
+                        }
                     }
                 }
             }
