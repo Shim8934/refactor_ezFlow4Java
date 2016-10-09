@@ -67,10 +67,7 @@
 					HideMenu();
 			    }
 			    
-			    if(CrossYN())
-			    {
-			        document.getElementById("PcSave").style.display = "none";
-			    }
+			    document.getElementById("PcSave").style.display = "none";
 			    
 			    form1.iptFolderPath.value = "${folderPath}";
 		        form1.iptURL.value = "${uid}";
