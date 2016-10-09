@@ -60,6 +60,9 @@ public class SMTPAccess {
 	public MimeMessage createMimeMessage(){
 		MimeMessage message = new MimeMessage(getSession()) {
 			
+		    // 메시지를 전송할 때 보낸 편지함에 저장되는 메시지와 다른 Message-ID가 새로
+		    // 생성되어 발송되는 문제가 있어 Message-ID가 이미 있는 경우에는 새로운 Message-ID로
+		    // 갱신하지 못하도록 함(메일 회수를 위해 필요한 조치).
 			@Override
 			protected void updateMessageID() throws MessagingException {
 				if (getHeader("Message-ID") == null) {
