@@ -107,6 +107,9 @@
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
 	            EzHTTPTrans.UseDbCl = true;
+	            
+	            var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	            ezUtil.UseUTF8 = true;	            
 	        }
 	
 	        if (g_unread == "1") {
