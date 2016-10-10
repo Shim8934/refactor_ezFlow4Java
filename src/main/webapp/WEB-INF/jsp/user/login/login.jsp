@@ -78,6 +78,11 @@
 			}
 			
 			function fnInit() {
+			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
+                if (top != self) {
+                    top.location.href = self.location.href;
+                }
+			    
 			    var message = document.loginForm.message.value;	    
 			    if (message != "") {
 			        alert(message);
