@@ -491,7 +491,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzResourceDAO.modifyRessch" parameterClass="Map" >
+	<procedure id="EzResourceDAO.modifyResSch" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_MODIFYRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#
 			, #v_P_startDate#, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#,

@@ -870,6 +870,7 @@ function SaveSchedule_onClick( cmd , resItem) {
 	
 	// 위에 노드 22까지 값을 받아 처리부분으로 넘겨준다.
 	xmlHttp.open("POST","/ezResource/scheduleAddOk.do?cmd="+cmd+"&type="+typeVal,false);
+	xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	xmlHttp.send(getXmlString(xmlDoc));
 	
 	var returnStr, p_num, p_ownerID;

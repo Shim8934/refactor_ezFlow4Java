@@ -1971,10 +1971,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		String typeVal = "";
 		String companyID = "";
 		try {
-			if (req.getParameter("cmd") != null) {
+			if (req.getParameter("cmd") != null && !req.getParameter("cmd").equals("")) {
 				cmd = req.getParameter("cmd");
 			}
-			if (req.getParameter("type") != null) {
+			if (req.getParameter("type") != null && !req.getParameter("type").equals("")) {
 				typeVal = req.getParameter("type");
 			}
 			companyID = userInfo.getCompanyID();
@@ -2012,25 +2012,24 @@ public class EzResourceController extends EgovFileMngUtil {
 				String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 				String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 				SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				
+
 				//////////////////////////////추후 수정
 				if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
 					endDate = ezResourceService.addMinutes(endDate, -1, "yyyy-MM-dd HH:mm");
 				}
-				dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(ezResourceService.getDBTime(startDate));
-				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(ezResourceService.getDBTime(endDate));
+				dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 				
 				Node rootNode = dom.getDocumentElement();
 				Node objNode = dom.createElement("TYPE_VAL");
 				objNode.setTextContent(typeVal);
 				rootNode.appendChild(objNode);
-				
+
 				String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom));
-				
 				return ret;
 			}
 		} catch (Exception e) {
-			 
+			 e.printStackTrace();
 		}
 		return "";
 	}

@@ -2843,9 +2843,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String companyID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(17).getTextContent().trim();
 			String characterID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(18).getTextContent().trim();
 			String typeVal = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(19).getTextContent().trim();
-			String strApprove = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(20).getTextContent().trim();
+			String strApprove = xmlRes.getElementsByTagName("APPROVE").item(0).getTextContent().trim();
 			
-			if (!attachFiles.equals("")) {
+			if (attachFiles != null && !attachFiles.equals("")) {
 				attachFlag = "1";
 			} else {
 				attachFlag = "0";
@@ -2858,10 +2858,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
             returnStr += "<NUM>" + num + "</NUM>";
             returnStr += "<OWNERID>" + ownerID + "</OWNERID>";
             returnStr += "</RTN_DATA>";
-            
+
             return returnStr;
             
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 	}
