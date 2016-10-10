@@ -196,7 +196,12 @@
                 </c:if>	            
 	        }
 	        else {
+	            <c:if test="${isCrossBrowser == true}">
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+	            </c:if>
+                <c:if test="${isCrossBrowser != true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+                </c:if>	            
 	        }
 	    }
 	    function KeEventControl(obj) {
@@ -740,12 +745,22 @@
 	            document.getElementById("MsgBCC_TR").style.display = "none";
 	            obj.setAttribute("status", "off");
 	        }
-	        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
-	        }
-	        else {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
-	        }
+            if (document.getElementById("BccViewer").getAttribute("status") == "off") {
+                <c:if test="${isCrossBrowser == true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+                </c:if>
+                <c:if test="${isCrossBrowser != true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+                </c:if>             
+            }
+            else {
+                <c:if test="${isCrossBrowser == true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+                </c:if>
+                <c:if test="${isCrossBrowser != true}">
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+                </c:if>             
+            }	        
 	    }
 	
 	    function ChangeSenderName(obj) {

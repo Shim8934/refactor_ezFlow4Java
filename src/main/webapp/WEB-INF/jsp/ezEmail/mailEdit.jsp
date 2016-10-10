@@ -180,8 +180,22 @@
 			
 		    window.onresize = function()
 			{
-				//headerTable.style.width = document.body.clientWidth - 115;
-				//attachTable.style.width = document.body.clientWidth - 20;
+	            if (document.getElementById("BccViewer").getAttribute("status") == "off") {
+	                <c:if test="${isCrossBrowser == true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+	                </c:if>
+	                <c:if test="${isCrossBrowser != true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+	                </c:if>             
+	            }
+	            else {
+	                <c:if test="${isCrossBrowser == true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+	                </c:if>
+	                <c:if test="${isCrossBrowser != true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+	                </c:if>             
+	            }
 			}
 		    window.onbeforeunload = function()
 			{
@@ -490,12 +504,22 @@
 		            document.getElementById("MsgBCC_TR").style.display = "none";
 		            obj.setAttribute("status","off");
 		        }
-		        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
-		            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
-		        }
-		        else {
-		            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
-		        }
+	            if (document.getElementById("BccViewer").getAttribute("status") == "off") {
+	                <c:if test="${isCrossBrowser == true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+	                </c:if>
+	                <c:if test="${isCrossBrowser != true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+	                </c:if>             
+	            }
+	            else {
+	                <c:if test="${isCrossBrowser == true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+	                </c:if>
+	                <c:if test="${isCrossBrowser != true}">
+	                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+	                </c:if>             
+	            }		        
 		    }
 		    function ReserverdMail_Save()
 		    {
@@ -871,6 +895,16 @@
 			<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 			<form id="Form1" name="form1" runat="server" style="display:none;"></form>
 		</div>
+        <c:if test="${isCrossBrowser == true}">       
+        <script type="text/javascript">
+            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+        </script>
+        </c:if>
+        <c:if test="${isCrossBrowser != true}">       
+        <script type="text/javascript">
+            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+        </script>
+        </c:if>                    
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">${attachCK}</xmp>
 </html>
