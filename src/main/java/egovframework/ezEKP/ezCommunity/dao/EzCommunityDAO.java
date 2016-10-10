@@ -827,6 +827,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void copyUpdate(String v_pItemID) throws Exception {
 		update("EzCommunityDAO.copyUpdate", v_pItemID);
 	}
+	
+	public void bbsViewNewUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.bbsViewNewUpdate", map);
+	}
 
 	public void newItemDel(String v_PITEMID) throws Exception {
 		delete("EzCommunityDAO.newItemDel", v_PITEMID);
@@ -899,4 +903,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void brdDeleteBoard(String v_pBoardID) throws Exception {
 		delete("EzCommunityDAO.brdDeleteBoard", v_pBoardID);
 	}
+
+
 }

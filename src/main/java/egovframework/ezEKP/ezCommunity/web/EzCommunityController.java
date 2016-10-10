@@ -1156,7 +1156,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 			}
 		} 
-        
+		
 		model.addAttribute("bName", bName);
 		model.addAttribute("no", no);
 		model.addAttribute("nowBlock", nowBlock);

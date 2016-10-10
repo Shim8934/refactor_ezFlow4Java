@@ -73,7 +73,7 @@
 					var strSearch = "sRadio=writer&keyword=" + make_searchstring(document.page.keyword.value);
 				}
 				
-				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bname=" + "<c:out value = '${bname}' />" + "&key=" + make_searchstring(document.page.keyword.value);
+				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />" + "&key=" + make_searchstring(document.page.keyword.value);
 				window.location.href = "/admin/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
 			}
 	

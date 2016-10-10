@@ -813,6 +813,10 @@
 		{CALL EZCOMMUNITY.EZSP_OKNO_SET(#v_FLAG#, #v_CODE#, #v_C_ID#)}
 	</procedure>
 	
+	<procedure id="EzCommunityDAO.bbsViewNewUpdate"				parameterClass="Map">
+		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_UPDATE(#v_BNAME#, #v_NO#)}
+	</procedure>
+	
 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL2(#v_QUESTIONID#)}
 	</procedure>

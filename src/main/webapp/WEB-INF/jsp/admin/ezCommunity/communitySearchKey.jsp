@@ -51,7 +51,7 @@
 	
 			function moveToPage(sCurPage) {
 	            if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + make_searchstring('${query}') + "pPage=" + sCurPage;
+					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + make_searchstring('${query}') + "&page=" + sCurPage;
 				}
 			}
 			

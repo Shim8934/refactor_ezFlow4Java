@@ -1803,6 +1803,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
 		
+		bbsViewNewUpdate(map);
+		
 		return ezCommunityDAO.bbsViewNewGet1(map);
 	}
 
@@ -5034,6 +5036,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         FileCopyUtils.copy(orgFile, destFile);
 	}
 	
+	private void bbsViewNewUpdate(Map<String, Object> map) throws Exception {
+		ezCommunityDAO.bbsViewNewUpdate(map);
+	}
 	
 	/*public void SndMail(string code)
 	{
