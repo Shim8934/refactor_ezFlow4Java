@@ -84,7 +84,9 @@
 // 		    var _hasattach = "<c:out value = '${_hasattach}' />";
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
-		    
+		    //사진올리기 중복 클릭 방지
+		    var delay = 1000;
+		    var submitted = false;
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
 		    }
@@ -307,7 +309,7 @@
 		            
 		            return;
 		        }
-							
+							if(unloadflag =="1")
 		        var strXML = "";
 		        var newID = "";
 		        var pStartDate = GetStartDate();
@@ -932,6 +934,14 @@
 
 		        return strRet;
 		    }
+
+		    function submitCheck() {
+
+		    	  if(submitted == true) { return; }
+		    	  setTimeout ('SaveItem()', delay);
+
+		    	  submitted = true;
+		    	}
 		    
 		    function GetFileName() {
 		        var strRet = "";
@@ -962,7 +972,7 @@
 	    		<td style="height:20px">
 	    			<div id="menu">
 		        		<ul>
-		          			<li><span onClick="SaveItem();"><spring:message code = 'ezCommunity.t155' /></span></li>
+		          			<li><span  onClick="submitCheck();"><spring:message code = 'ezCommunity.t155' /></span></li>
 		          			<li style="display:none"><span  onClick="PreviewItem();"><spring:message code = 'ezCommunity.t1167' /></span></li>
 		        		</ul>
 	      			</div>
