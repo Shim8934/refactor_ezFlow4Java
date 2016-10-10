@@ -211,7 +211,7 @@ function getCalWeekViewSource_after() {
 //일보기
 function getCalDayViewSource_after() {
 
-	
+alert("!!");
     var tempData = new Array();
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 
@@ -776,7 +776,7 @@ function CalWeekDataBind(oAppointment, order) {
 
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
-        oDiv.style.width = "95%";
+        oDiv.style.width = "105%";
         oDiv.style.height = hSize - 3 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
@@ -959,7 +959,7 @@ function CalDayDataBind(oAppointment, order) {
 
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
-        oDiv.style.width = "95%";
+        oDiv.style.width = "105%";
 
         if (objDivE) {
             var DivSRect = objDivS.getBoundingClientRect();
