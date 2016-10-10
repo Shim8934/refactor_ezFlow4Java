@@ -168,6 +168,9 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			NodeList nodes3 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA12", xmlRet, XPathConstants.NODESET);
 			NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
 			NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
+			NodeList nodes16 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+			NodeList nodes17 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+			NodeList nodes18 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
 				
 			NodeList nodes7 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
 			NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
@@ -188,6 +191,17 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					
 					if(nodes5.item(i).getTextContent().equals("")) {
 						nodes5.item(i).setTextContent("<![CDATA[]]>");
+					}
+					
+					//
+					if(nodes16.item(i).getTextContent().equals("")) {
+						nodes16.item(i).setTextContent("<![CDATA[]]>");
+					}
+					if(nodes17.item(i).getTextContent().equals("")) {
+						nodes17.item(i).setTextContent("<![CDATA[]]>");
+					}
+					if(nodes18.item(i).getTextContent().equals("")) {
+						nodes18.item(i).setTextContent("<![CDATA[]]>");
 					}
 						
 					//좌측 리로드할때는 선택 안되도록
@@ -211,7 +225,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					if(nodes14.item(i).getTextContent().equals("")) {
 						nodes14.item(i).setTextContent("<![CDATA[]]>");
 					}
-					if(nodes15.item(i).getTextContent().equals("")) {
+					if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
 						nodes15.item(i).setTextContent("<![CDATA[]]>");
 					}
 					
