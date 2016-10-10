@@ -238,7 +238,7 @@
 	            if (!isDelted) {
 	                delDrafts();
 	            }
-	        } else if (g_cmd == "EDIT") {
+	        } else {
 	        	delAttachListFile(filedate);
 	        } 
 	    }
