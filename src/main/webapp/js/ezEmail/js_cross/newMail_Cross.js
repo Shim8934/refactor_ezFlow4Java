@@ -892,7 +892,7 @@ function Save_onClick_Complete(ReturnValue) {
                     g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
                     event_SaveonClick.savemode = Save_onClick_Complete.savemode;
 
-                    if (!isAutoSave) {
+                    if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
                         MailSend_Show_Progress();                        
                     }
 
@@ -922,10 +922,14 @@ function MailSend_Show_Progress() {
     document.getElementById("mailPanel").style.display = "";
     document.getElementById("loadingLayer").style.display = "";
     
-    if (event_SaveonClick.savemode == "sendsave") {
-        messageInSending.style.display = "";
-    } else {
-        messageInSending.style.display = "none";
+    var messageInSending = document.getElementById("messageInSending");
+    
+    if (messageInSending != null) {
+        if (event_SaveonClick.savemode == "sendsave") {
+            messageInSending.style.display = "";
+        } else {
+            messageInSending.style.display = "none";
+        }
     }
     
     if (!CrossYN()) {

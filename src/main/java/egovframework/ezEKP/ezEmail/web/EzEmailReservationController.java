@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -186,6 +187,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String pAttachWarning = "";
 		String attachCK = "";
 		String showDisplay = "";
+		String serverName = config.getProperty("config.ServerName") != null ? config.getProperty("config.ServerName") : "";
 		
 		long uid = 0;
 		// get user credentials
@@ -468,9 +470,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("strSelectHtml", strSelectHtml);
 		model.addAttribute("showDisplay", showDisplay);
+		model.addAttribute("serverName", serverName);
 		
 		//TODO: delete
 		model.addAttribute("domainName", config.getProperty("config.DomainName"));
+		
+        String browser = ClientUtil.getClientInfo(request, "browser");
+        boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+        
+        model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "ezEmail/mailEdit";
 	}

@@ -16,6 +16,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+        <c:if test="${isCrossBrowser != true}">
+        <script type="text/javascript" src="/js/ezEmail/js/kaoni_ActiveX.js"></script>
+        </c:if>  
 		<script>
 			
 			//TODO: delete
@@ -25,7 +28,7 @@
 			var g_szExchange = "exchange";
 			var g_cmd = "${cmd}";
 		    var Org_cmd = "${cmd}";
-			var g_servername = document.location.hostname;
+			var g_servername = "${serverName}";
 			var g_myemail = "${userInfo.mail}";
 			var g_szUserID = "${userInfo.cn}";
 			var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
@@ -94,6 +97,14 @@
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 			function window_onload()
 			{
+	            if (!CrossYN()) {
+	                document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
+	                EzHTTPTrans.UseDbCl = true;
+	                
+	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                ezUtil.UseUTF8 = true;              
+	            }
+			    
 				if (useMultiLangMail == "1") LoadLanguageConfig();
 				
 				if (g_unread == "1")
@@ -166,6 +177,7 @@
 		        MailSignLoad();
 		        Simple_Choice();
 			}
+			
 		    window.onresize = function()
 			{
 				//headerTable.style.width = document.body.clientWidth - 115;
@@ -624,6 +636,15 @@
 		    }
 		
 		</script>
+        <c:if test="${isCrossBrowser != true}">
+        <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
+            attach_Add(filename);
+        </script>
+        <script LANGUAGE="javascript" FOR="EzHTTPTrans" EVENT="DbClListFile(mPath,mUserlist)">
+            if(mPath != "")
+                DownloadAttach(mPath);
+        </script>
+        </c:if>  
 	</head>
 	<body id="parentBody" class="popup" onload="javascript:window_onload()">
 		<div id="main_body">
@@ -770,12 +791,36 @@
 		            </table>
 		        </td>
 		        </tr>
-		      <tr>
+                <c:if test="${isCrossBrowser == true}">          
+		        <tr>
 		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
 		                <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>
 		        </tr>
+                </c:if>
+                <c:if test="${isCrossBrowser != true}">
+                <tr>
+                    <td height="20" style="padding-top: 10px;">
+                        <span style="color: #3a76c3; font-weight: bold; height: 15px; display: inline-block;">
+                            <img src="/images/i_urgency.gif" align="absmiddle" />&nbsp;${pAttachWarning}</span>
+                        <table class="file" id="attachTable">
+                            <tr>
+                                <th><spring:message code='ezEmail.t557' /></th>
+                                <td class="pos1">                                
+                                    <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
+                                </td>
+                                <td class="pos2">
+                                    <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <br>
+                                    <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <br>                                    
+                                    <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>            
+                </c:if>                
 		  </table>
 		</div>
 		<div id="sendScreen" style="display:none;">
