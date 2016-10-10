@@ -179,9 +179,9 @@
 	</procedure>
 
 	<procedure id="EzBoardDAO.scheduleNewItem" parameterClass="ScheduleInfoVO">
-		{CALL EZPIMS.EZSP_INSERTSCHEDULE(#parentID#, #ownerID#, #ownerName#, #ownerName2#, #creatorId#, #creatorName#, #creatorName2#,
-										 #modifierID#, #modifierName#, #modifierName2#, #scheduleType#, #importance#, #hasAttendant#, #hasAttach#, #hasComment#,
-										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDel#,
+		{CALL EZPIMS.EZSP_INSERTSCHEDULE(#parentId#, #ownerId#, #ownerName#, #ownerName2#, #creatorId#, #creatorName#, #creatorName2#,
+										 #modifierId#, #modifierName#, #modifierName2#, #scheduleType#, #importance#, #hasAttendant#, #hasAttach#, #hasComment#,
+										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDelete#,
 										 #title#, #location#, #contentPath#, #groupName#)}
 	</procedure>
 	
