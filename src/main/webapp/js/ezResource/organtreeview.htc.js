@@ -142,7 +142,9 @@ function organtreeview(thisobjid, elobjid) {
     // method
     this.update = ex_update;
     function ex_update() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2016-10-10
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function() {
             // safari
             if (g_treeXML == null)
@@ -170,9 +172,7 @@ function organtreeview(thisobjid, elobjid) {
                 delete nousenodes[i];
             }
 
-
             element.innerHTML = make_childHtml(0, tmp_treeXML);
-
 
             if (g_selectedIdx != -1) {
                 //nodeselect.fire();
@@ -213,7 +213,9 @@ function organtreeview(thisobjid, elobjid) {
     
     this.toggle = ex_toggle;
     function ex_toggle(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2016-10-10
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -292,7 +294,7 @@ function organtreeview(thisobjid, elobjid) {
     
     this.getvalue = ex_getvalue;
     function ex_getvalue(nodeIdx, valueName) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+      return (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function(nodeIdx, valueName) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -377,7 +379,9 @@ function organtreeview(thisobjid, elobjid) {
     
     this.putchildxml = ex_putchildxml;
     function ex_putchildxml(nodeIdx, childxml) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2016-10-10
+    	return (CrossYN()) ?
         (function(nodeIdx, childxml) {
             // safari
             if (typeof (childxml) == "object") {
@@ -1017,7 +1021,9 @@ function organtreeview(thisobjid, elobjid) {
 
 
     function make_childHtml(nodeIdx, nodeXML) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2016-10-10
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx, nodeXML) {
             // safari
             if (nodeIdx == 0)
@@ -1026,10 +1032,13 @@ function organtreeview(thisobjid, elobjid) {
                 var depth = g_nodeArray["depth"][nodeIdx];
 
             var childHtml = "<span style='display:block;width:150px;'>";
+            //2016-10-10
             var childLength = nodeXML.childElementCount; //nodeXML.length;
-
+            //var childLength = nodeXML.getElementsByTagName('NODE').item(0).childElementCount;
             var i = 0;
+          //2016-10-10
             var childNode = nodeXML.firstElementChild;
+            //var childNode = nodeXML.getElementsByTagName('NODE').item(0).firstElementChild;
             while (childNode) {
                 g_nodeCount++;
 
