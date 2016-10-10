@@ -246,6 +246,10 @@
 	    function window_close() {
 	        var g_filelist = "";
 	        if ((g_bDirty || g_originalHTML != message.GetEditorContent() || g_filelist != "") && g_saveHttp == null) {
+	            if (!CrossYN()) {
+	                EzHTTPTrans.style.display = "none";
+	            }    
+	            
 	            mail_message_cross_dialogArguments[1] = window_close_Complete;
 	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURI("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURI("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURI("<spring:message code='ezEmail.t671' />");
 	            DivPopUpShow(330, 205, pUrl);	            

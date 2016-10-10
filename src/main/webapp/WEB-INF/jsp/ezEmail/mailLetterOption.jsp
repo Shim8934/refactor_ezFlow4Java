@@ -149,8 +149,14 @@
 		        else {
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
-		        }
+		        }		        
 		    }
+		    
+	        window.onbeforeunload = function () {
+                if (!CrossYN()) {
+                    parent.EzHTTPTrans.style.display = "";
+                }                   	            
+	        }
 		    
 		    function cancel() {
 		        if (ReturnFunction != null) {

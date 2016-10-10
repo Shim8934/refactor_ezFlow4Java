@@ -1502,6 +1502,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        checkname_cross_dialogArguments[4] = iType;
 	        checkname_cross_dialogArguments[5] = validDIV;
 	        checkname_cross_dialogArguments[6] = formName;
+	        
+	        if (!CrossYN()) {
+	            EzHTTPTrans.style.display = "none";
+	        }    
+	        
 	        DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
 	    }
     }
@@ -2526,6 +2531,10 @@ function important_change() {
 
 var letteroption_cross_dialogArguments = new Array();
 function Option_onClick() {
+    if (!CrossYN()) {
+        EzHTTPTrans.style.display = "none";
+    }    
+    
     g_bDirty = true;
     letteroption_cross_dialogArguments[0] = m_rgParams4PostOption;
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
@@ -2657,6 +2666,11 @@ function NameChange_onClick() {
         checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
         checkname_cross_dialogArguments[2] = DivPopUpHidden;
         checkname_cross_dialogArguments[3] = event.target.parentElement;
+        
+        if (!CrossYN()) {
+            EzHTTPTrans.style.display = "none";
+        }    
+        
         DivPopUpShow(625, 410, "/ezEmail/mailCheckName.do");
     }
 }

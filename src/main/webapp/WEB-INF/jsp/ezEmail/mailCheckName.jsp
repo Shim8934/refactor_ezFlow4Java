@@ -73,6 +73,12 @@
 				initializeReceiverList();
 			}
 		
+            window.onbeforeunload = function () {
+                if (!CrossYN()) {
+                    parent.EzHTTPTrans.style.display = "";
+                }                                   
+            }
+		    
 			function initializeReceiverList()
 			{
 			    var count, length;

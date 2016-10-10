@@ -6,6 +6,7 @@
 	<head>
 	<title>${caption}</title>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>  
 		<script type="text/javascript">
 	        var ReturnFunction;
 	        window.onload = function () {
@@ -17,6 +18,13 @@
 	                } catch (e) { }
 	            }
 	        }
+	        
+            window.onbeforeunload = function () {
+                if (!CrossYN()) {
+                    parent.EzHTTPTrans.style.display = "";
+                }                                   
+            }
+	        
 	        function Button_Onclick(obj) {
 	            var ReturnValue = obj.getAttribute("id");
 	            if (ReturnFunction != null) {
