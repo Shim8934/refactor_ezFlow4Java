@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
@@ -33,7 +33,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -356,8 +356,10 @@ public class EzEmailMenuController {
 	 */
 	@RequestMapping(value="/ezEmail/mailImport.do")
 	public String mailImport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String pNonActivX = "YES";
-		model.addAttribute("pNonActivX", pNonActivX);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 
 		return "ezEmail/mailImport";
 	}
@@ -421,6 +423,63 @@ public class EzEmailMenuController {
 		
 		model.addAttribute("strResult", strResult);
 		return "ezEmail/mailImportUpload";
+	}
+	
+	/**
+	 * PC에서 메일 가져오기 실행 함수(ActiveX)
+	 */
+	@RequestMapping(value="/ezEmail/mailImportUploadX.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String mailImportUploadX(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String strResult = "ERROR";
+		
+		String sFileTitle = request.getParameter("name");
+        String sExt = request.getParameter("ext");
+        String folderId = request.getParameter("dir");
+		
+        logger.debug("sFileTitle=" + sFileTitle + ",sExt=" + sExt + ",folderId=" + folderId);
+        
+        if (sFileTitle == null || sExt == null || !sExt.toLowerCase().equals("eml") || folderId == null) {
+        	return strResult;
+        }
+        
+        List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String id = userInfo.get(0);
+		String password  = userInfo.get(1);
+        
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				id+"@"+config.getProperty("config.DomainName"), password);
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(folderId);
+			if (folder != null && folder.exists()) {
+				folder.open(Folder.READ_WRITE);
+				
+				InputStream inputStream = request.getInputStream();
+				MimeMessage message = sa.readMimeMessage(inputStream);
+				inputStream.close();
+				
+				folder.appendMessages(new Message[]{message});
+				folder.close(true);
+				
+				strResult = "OK";
+			}
+			
+		} catch (MessagingException e) {
+			strResult = "ERROR : " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+        
+		return strResult;
 	}
 	
 	/**

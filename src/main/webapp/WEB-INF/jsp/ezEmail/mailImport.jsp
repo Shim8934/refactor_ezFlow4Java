@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,15 +11,15 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		
+		<c:if test="${isCrossBrowser != true}">
 	    <script type="text/javascript" src="/js/ezEmail/js/kaoni_ActiveX.js"></script>
+	    </c:if>
 	    <script>
-	        var totalCount = 0;
-	        var Count = 0;
+	        var g_fileList;
 	        var folderpath = "";
 	        var test = "";        
 	        var attachxml = "";
-	        var pNonActivX = "${pNonActivX}";
+	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -39,14 +40,46 @@
 	            }            
 	        }
 	        window.onunload = function () {
-	            if (CrossYN() || pNonActivX == "YES")
 	                ReturnFunction();
 	        }
 	        function selectMail() {
 	            document.getElementById("filepath").innerHTML = "";
-	            document.getElementById("form").value = "";
-	            document.getElementById("cnt").value = "";
-	            document.form.file1.click();
+	            
+	            if (CrossYN()) {
+	            	document.getElementById("form").value = "";
+		            document.getElementById("cnt").value = "";
+	            	document.form.file1.click();
+	            } else {
+	            	var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	        		ezUtil.UseUTF8 = true;
+	        		var file = ezUtil.OpenLoadDlgMultiNew("Outlook Express Mail Message\0*.eml\0\0", "")
+	        		
+	        		if (!file) {
+	        			return;
+	        		}
+	        		
+	        		g_fileList = file.split("|");
+		            for (var i = 0; i < g_fileList.length - 1; i++) {
+		            	var last = g_fileList[i].split("\\").length;
+		                var tempname = g_fileList[i].split("\\")[last - 1];
+		                last = tempname.split(".").length;
+		                var extension = tempname.split(".")[last - 1];
+		
+		                if (extension.toUpperCase() != "EML") {
+		                    alert("<spring:message code='ezEmail.t401' />");
+		                    return;
+		                }
+		                
+		                var _Span = document.createElement("SPAN");
+		                _Span.style.width = "310px";
+		                _Span.style.textOverflow = "epllipsis";
+		                _Span.style.whiteSpace = "nowrap";
+		                _Span.style.display = "inline-block";
+		                _Span.innerHTML = tempname;
+		                document.getElementById("filepath").innerHTML += _Span.outerHTML;
+		            }
+	        		
+	            }
 	        }
 	        var mail_selectfolder_cross_dialogArguments = new Array();
 	        function selectFolder() {
@@ -78,27 +111,76 @@
 	            window.close();
 	        }
 	        function upload_mail() {
-	            try {
-	                var frm = document.getElementById('form');
-	                try {
-	                	frm.submit();
-	                } catch (e) {
-	                		setTimeout(function () { 
-	                			try {
-	                				frm.submit();
-	                			} catch (e) {
-	                				setTimeout(function () { frm.submit(); }, 50);
-	                			}
-	                		}, 50);
+	        	if (CrossYN()) {
+	        		try {
+		                var frm = document.getElementById('form');
+		                try {
+		                	frm.submit();
+		                } catch (e) {
+		                		setTimeout(function () { 
+		                			try {
+		                				frm.submit();
+		                			} catch (e) {
+		                				setTimeout(function () { frm.submit(); }, 50);
+		                			}
+		                		}, 50);
+		                }
+		            }
+		            catch (e) {
+		                alert("<spring:message code='ezEmail.t404' />" + e.description);
+		                return;
+		            }
+	        	} else {
+	        		try {
+	                    mailInBtn.disabled = true;
+	                    
+	                    EzHTTPTrans.AddUploadFile("", "");
+	                    
+	                    var totalCount = g_fileList.length - 1;
+						for (var i = 0; i < totalCount; i++) {
+	                    	EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
+						}
+
+	                    var RemotePath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailImportUploadX.do";
+	                    var nCount = EzHTTPTrans.StartUpload(RemotePath, encodeURIComponent(folderpath), "DocManagement", "", "");
+
+	                    if (nCount == 0) {
+	                    	alert("<spring:message code='ezEmail.t404' />");
+	                        return false;
+	                    }
+						
+	                    for (var i = 0; i < nCount; i++) {
+	                    	var fileinfo = EzHTTPTrans.GetReturn(i);
+		                    var infos = fileinfo.split('/');
+		                    var Result = infos[1];
+		                    
+		                    if (Result.length > 1000) {
+		                        alert(g_fileList[i] + " <spring:message code='ezEmail.t112' />");
+		                        return;
+		                    }
+		                    else if (Result != "OK") {
+		                        if (Result == "FULL") {
+		                            alert(strLang241);
+		                        }
+		                        else {
+		                            alert(g_fileList[i] + " <spring:message code='ezEmail.t402' />" + Result);
+		                        }
+		                        return;
+		                    }
+	                    }
+	                    
+	                    alert("<spring:message code='ezEmail.t403' />");
+	                    window.close();
+	                    
 	                }
-	            }
-	            catch (e) {
-	                alert("<spring:message code='ezEmail.t404' />" + e.description);
-	                return;
-	            }
+	                catch (e) {
+	                    alert("<spring:message code='ezEmail.t404' />" + e.description);
+	                    return;
+	                }
+	        	}
 	        }
 	        function btn_AttachAdd_onclick() {
-	            var cnt = document.getElementById("form").file1.files.length;
+        		var cnt = document.getElementById("form").file1.files.length;
 	            for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
@@ -116,7 +198,7 @@
 	                _Span.innerHTML = document.getElementById("form").file1.files[i].name;
 	                document.getElementById("filepath").innerHTML += _Span.outerHTML;
 	            }
-	            document.getElementById("cnt").value = cnt
+	            document.getElementById("cnt").value = cnt;
 	        }
 	        function returnvalue(resultxml) {
 	            if (resultxml == "OK") {
@@ -135,6 +217,7 @@
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
+	
 	    <h1><spring:message code='ezEmail.t400' /></h1>
 	    <table class="popuplist">
 	        <tr>
@@ -166,6 +249,11 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
+		<c:if test="${isCrossBrowser != true}">
+		<script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>
+		</c:if>
+		
 	</body>
 </html>
 
