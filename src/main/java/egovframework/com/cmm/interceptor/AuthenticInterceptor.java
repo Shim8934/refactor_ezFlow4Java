@@ -52,7 +52,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		String isCookie = null;		
 		Cookie[] cookies = request.getCookies();
 		
-		logger.debug("=========================================== Interface Check ============================================");
+//		logger.debug("=========================================== Interface Check ============================================");
 
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
