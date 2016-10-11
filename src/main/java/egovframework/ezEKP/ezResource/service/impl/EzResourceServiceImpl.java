@@ -2735,12 +2735,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String timeSetStr = "";
         String resultStr = "";
 
-        if (!dateTimeStr.trim().equals("")){
+        if (dateTimeStr != null && !dateTimeStr.trim().equals("")){
             if (dateTimeStr.indexOf(" ") != -1){
-                if ((dateTimeStr.split(" ")[1].equals("오후") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                if ((dateTimeStr.split(" ")[1].equals("PM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t205"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
                     timeSetStr = String.valueOf(Integer.parseInt((dateTimeStr.split(" ")[2].split(":")[0]))+ 12);
                     timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                } else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))) {
+                } else if (dateTimeStr.split(" ")[1].equals("AM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t204"))) {
                     if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
                         timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
                     } else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
