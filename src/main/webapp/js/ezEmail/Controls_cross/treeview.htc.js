@@ -184,59 +184,31 @@
 
     this.getvalue = ex_getvalue;
     function ex_getvalue(nodeIdx, valueName) {
-        return (navigator.userAgent.indexOf('Trident') == -1) ?
-        (function(nodeIdx, valueName) {
+        return (function(nodeIdx, valueName) {
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
                 return "";
             if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
                 return "";
-
-            return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).nodeValue;
-        }).call(this,nodeIdx, valueName) :
-        (function(nodeIdx, valueName) {
-        	if(CrossYN()){ //IE11
-	            if (nodeIdx > g_nodeCount || nodeIdx < 1)
-	                return "";
-	
-	            if (g_nodeArray["nodeXML"][nodeIdx].getAttribute(valueName) == null)
-	                return "";
-	
-	            return g_nodeArray["nodeXML"][nodeIdx].getAttribute(valueName);
-        	}
-        	else{
-        		if (nodeIdx > g_nodeCount || nodeIdx < 1)
-	                return "";
-	
-	            if (g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName) == null)
-	                return "";
-	
-	            return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
-        	}
+            
+            if (CrossYN()) {
+            	return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).textContent;
+            } else {
+            	return g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text;
+            }
         }).call(this,nodeIdx, valueName);
     }
 
     this.putvalue = ex_putvalue;
     function ex_putvalue(nodeIdx, valueName, value) {
-        return (navigator.userAgent.indexOf('Trident') == -1) ?
-        (function(nodeIdx, valueName, value) {
-            if (nodeIdx > g_nodeCount || nodeIdx < 1)
-                return "";
-
-            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).textContent = value;
-        }).call(this,nodeIdx, valueName, value) :
-        (function(nodeIdx, valueName, value) {
-        	if(CrossYN()){ //IE11
-	            if (nodeIdx > g_nodeCount || nodeIdx < 1)
-	                return "";
-	
-	            g_nodeArray["nodeXML"][nodeIdx].setAttribute(value);
-        	}
-        	else{
-        		if (nodeIdx > g_nodeCount || nodeIdx < 1)
-	                return "";
-	
-	            g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
-        	}
+    	return (function(nodeIdx, valueName, value) {
+            if (nodeIdx > g_nodeCount || nodeIdx < 1) {
+            	return "";
+            }
+            if (CrossYN()) {
+            	g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).textContent = value;
+            } else {
+            	g_nodeArray["nodeXML"][nodeIdx].attributes.getNamedItem(valueName).text = value;
+            }
         }).call(this,nodeIdx, valueName, value);
     }
 
@@ -330,7 +302,6 @@
             }
         }).call(this,nodeIdx, childxml) :
         (function(nodeIdx, childxml) {
-            // IE
             var toggleel = document.getElementById(g_toggleid + nodeIdx);
             var childel = document.getElementById(g_childid + nodeIdx);
             if (childxml == "") {
@@ -654,35 +625,22 @@
 
     this.findindex = ex_findindex;
     function ex_findindex(valueName, value) {
-        return (navigator.userAgent.indexOf('Trident') == -1) ?
-        (function(valueName, value) {
-            for (var i = 1; i <= g_nodeCount; i++) {
-                if (g_nodeArray["nodeXML"][i] != null)
-                    if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
-                    return i;
-            }
-
-            return -1;
-        }).call(this,valueName, value) :
-        (function(valueName, value) {
-        	if(CrossYN()){
-	            for (var i = 1; i <= g_nodeCount; i++) {
-	                if (g_nodeArray["nodeXML"][i] != null)
-	                    if (g_nodeArray["nodeXML"][i].getAttribute(valueName) == value)
-	                    return i;
-	            }
-            
-	            return -1;
-        	}
-        	else{
-        		for (var i = 1; i <= g_nodeCount; i++) {
-                    if (g_nodeArray["nodeXML"][i] != null)
-                        if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value)
-                        return i;
+        return (function(valueName, value) {
+        	for (var i = 1; i <= g_nodeCount; i++) {
+                if (g_nodeArray["nodeXML"][i] != null) {
+                	if (CrossYN()) {
+                		if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).textContent == value) {
+                        	return i;
+                        }
+                	} else {
+                		if (g_nodeArray["nodeXML"][i].attributes.getNamedItem(valueName).text == value) {
+                        	return i;
+                        }
+                	}
+                    
                 }
-                
-                return -1;
-        	}
+            }
+            return -1;
         }).call(this,valueName, value);
     }
 

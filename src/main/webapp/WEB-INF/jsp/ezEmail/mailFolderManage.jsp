@@ -98,7 +98,7 @@
 		        var childXML = "<node imgidx='1' caption='" + MakeRightField(szName) + "' ";
 		        childXML += ("href='" + szURL + "' ");
 		        childXML += "></node>";
-		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false)
+		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
 		        PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
 		        EventCheck = true;
 		    }
@@ -129,8 +129,13 @@
 		        if (checkBadFolderName(szName))
 		            return;
 
-		        var orgURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")
-		        var szURL = CutAfterText(CutAfterText(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "/"), "/");
+		        var orgURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        var szURL = "";
+		        var tempIdx = orgURL.lastIndexOf(PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption"));
+		        if (tempIdx != -1) {
+		        	szURL = orgURL.substring(0, tempIdx) + szName;
+		        }
+
 		        var result = Modify_folder_2010(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szName);
 		        if (result != true) {
 		            if (result == 412 || result == 500)
@@ -139,8 +144,9 @@
 		            return;
 		        }
 		        PostTreeView.putcaption(PostTreeView.selectedIndex(), szName);
-		        PostTreeView.putvalue(PostTreeView.selectedIndex(), "href", orgURL);
+		        PostTreeView.putvalue(PostTreeView.selectedIndex(), "href", szURL);
 		        PostTreeView.putvalue(PostTreeView.selectedIndex(), "caption", szName);
+		        LoadAddressTree(PostTreeView.selectedIndex());
 		        EventCheck = true;
 		    }
 		    function CheckRootFolder(currentnode) {
@@ -160,7 +166,7 @@
 		        }
 		        var deleteURL = "${pDeleteBoxID }";
 		        var deleteboxname = "${pDeleteBoxName}";
-		        if(gettopvalue(PostTreeView.selectedNode(), 'href') == deleteURL){
+		        if (gettopvalue(PostTreeView.selectedNode(), 'href') == deleteURL) {
 		            if (confirm("<spring:message code='ezEmail.t461' />")) {
 		                if (delete_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) != true) {
 		                    alert("<spring:message code='ezEmail.t462' />");
@@ -175,20 +181,27 @@
 		                var szName = PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption");
 		                var szURL = deleteURL;
 		                var result = move_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
+		                
 		                if (result != true) {
 		                    if (result == 412 || result == 500)		                        
 		                        alert("<spring:message code='ezEmail.t464' />");
 		                    return;
 		                }
+		                
 		                var haschild = PostTreeView.haschild(PostTreeView.selectedIndex());
 		                var childXML = "<node imgidx='1' caption='" + szName + "' ";
 		                childXML += ("href='" + szURL + "/' ");
-		                if (haschild)
-		                    childXML += "hassub='1' />";
-		                else
-		                    childXML += "/>";
-
+		                
+		                if (haschild) {
+                            childXML += "hassub='1' />";
+		                } else {
+                            childXML += "/>";
+		                }
+		                
 		                PostTreeView.deletenode(PostTreeView.selectedIndex());
+			            var nodeIdx = PostTreeView.findindex("href", deleteURL);
+			            PostTreeView.addnode(nodeIdx, childXML);
+			            LoadAddressTree(nodeIdx);
 		                EventCheck = true;
 		            }
 		        }
@@ -237,10 +250,10 @@
 
 		            var childXML = "<node imgidx='1' caption='" + szName + "' ";
 		            childXML += ("href='" + szURL + "/' ");
-		            childXML += "/>";
+                    childXML += "/>";
 		            PostTreeView.deletenode(PostTreeView.selectedIndex());
 		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML); //TODO: 수정 필요.
+		            PostTreeView.addnode(nodeIdx, childXML);
 		        }
 		        else if (moveUrl["cmd"] == "COPY") {
 		            var result = copy_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
@@ -251,9 +264,9 @@
 		            }
 		            var childXML = "<node imgidx='1' caption='" + szName + "' ";
 		            childXML += ("href='" + szURL + "/' ");
-		            childXML += "/>";
+                    childXML += "/>";
 		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML); //TODO: 수정 필요.
+		            PostTreeView.addnode(nodeIdx, childXML);
 		        }
 		        LoadAddressTree(moveUrl["idx"]);
 		        EventCheck = true;
