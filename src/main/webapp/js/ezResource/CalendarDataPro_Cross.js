@@ -210,8 +210,6 @@ function getCalWeekViewSource_after() {
 
 //일보기
 function getCalDayViewSource_after() {
-
-alert("!!");
     var tempData = new Array();
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 
