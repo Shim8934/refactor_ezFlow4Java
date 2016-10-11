@@ -631,15 +631,15 @@
 				          </td>
         				</tr>
 
-				       <%--  <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
+				       <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
         				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
         				<input type="hidden" id="gresFlag" value="${gresFlag}" />
         				<input type="hidden" id="num" value="${num}" />
         				<input type="hidden" id="pnum" value="${pNum}" />
         				<input type="hidden" id="ownerID" value="${ownerID}" />
-        				<input type="hidden" id="writerID" value="${writerID}" /> --%>
+        				<input type="hidden" id="writerID" value="${writerID}" /> 
       				</table>
-      			<!-- </td> -->
+      			</td>
   			</tr>
   			<tr style="display: none">
 			    <td style="height:10px" class="pad1">
