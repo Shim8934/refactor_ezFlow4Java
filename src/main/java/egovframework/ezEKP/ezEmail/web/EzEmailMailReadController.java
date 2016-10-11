@@ -1382,7 +1382,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				InternetHeaders h = new InternetHeaders();
 				
-				h.addHeader("Reporting-UA", "JMocha Mail 0.1");
+				h.addHeader("Reporting-UA", "JMocha Mail 1.0");
 				h.addHeader("Final-Recipient", String.format("rfc822;%s", myEmailAddress));
 				h.addHeader("Original-Message-ID", messageIds[0]);
 				h.addHeader("Disposition", "automatic-action/MDN-sent-automatically; displayed");

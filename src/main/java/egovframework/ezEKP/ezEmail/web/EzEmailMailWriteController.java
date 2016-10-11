@@ -1969,7 +1969,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        message.setSentDate(Calendar.getInstance().getTime());
 	        
 	        //User-Agent 설정
-	        message.setHeader("User-Agent", "JMocha Mail 0.1");
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
 	        
 	        //inline image 처리
 	        MimeMultipart relatedPart = null;
