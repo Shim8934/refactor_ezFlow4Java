@@ -675,7 +675,7 @@ public class EzScheduleController extends EgovFileMngUtil {
                     ownerName		= scheduleInfo.getOwnerName();
                     ownerName2		= scheduleInfo.getOwnerName2();
                     repetition		= scheduleInfo.getRepetition();
-                    repetitionDel	= scheduleInfo.getRepetitionDelete();
+                    repetitionDel	= scheduleInfo.getRepetitionDel();
                     isPublic		= scheduleInfo.getIsPublic();
                     importance		= scheduleInfo.getImportance();
                 }
@@ -905,7 +905,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			schInfoVO.setStartDate(startdate);
 			schInfoVO.setEndDate(enddate);
 			schInfoVO.setRepetition(repetition);
-			schInfoVO.setRepetitionDelete(repetitiondel);
+			schInfoVO.setRepetitionDel(repetitiondel);
 			schInfoVO.setTitle(title);
 			schInfoVO.setLocation(location);
 			schInfoVO.setContentPath(doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent());

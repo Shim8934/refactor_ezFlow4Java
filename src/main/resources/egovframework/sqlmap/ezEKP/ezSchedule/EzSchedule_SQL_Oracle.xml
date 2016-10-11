@@ -54,7 +54,7 @@
 		<result property="startDate"		column="startDate"			columnIndex="16"/>
 		<result property="endDate"			column="endDate"			columnIndex="17"/>
 		<result property="repetition"		column="repetition"			columnIndex="18"/>
-		<result property="repetitionDelete"	column="repetitionDelete"	columnIndex="19"/>
+		<result property="repetitionDel"	column="repetitionDel"		columnIndex="19"/>
 		<result property="title"			column="title"				columnIndex="20"/>
 		<result property="location"			column="location"			columnIndex="21"/>
 		<result property="contentPath"		column="contentPath"		columnIndex="22"/>
@@ -178,12 +178,12 @@
 		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardDAO.scheduleNewItem" parameterClass="ScheduleInfoVO">
+	<procedure id="EzScheduleDAO.scheduleNewItem" parameterClass="ScheduleInfoVO">
 		{CALL EZPIMS.EZSP_INSERTSCHEDULE(#parentId#, #ownerId#, #ownerName#, #ownerName2#, #creatorId#, #creatorName#, #creatorName2#,
 										 #modifierId#, #modifierName#, #modifierName2#, #scheduleType#, #importance#, #hasAttendant#, #hasAttach#, #hasComment#,
-										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDelete#,
+										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDel#,
 										 #title#, #location#, #contentPath#, #groupName#)}
 	</procedure>
-	
+
 </sqlMap>
 

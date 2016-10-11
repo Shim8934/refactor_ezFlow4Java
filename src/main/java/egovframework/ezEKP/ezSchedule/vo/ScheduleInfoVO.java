@@ -47,7 +47,7 @@ public class ScheduleInfoVO {
 
 	private String repetition;
 
-	private String repetitionDelete;
+	private String repetitionDel;
 
 	private String title;
 
@@ -382,15 +382,15 @@ public class ScheduleInfoVO {
 	/**
 	 * @return the repetitionDelete
 	 */
-	public String getRepetitionDelete() {
-		return repetitionDelete;
+	public String getRepetitionDel() {
+		return repetitionDel;
 	}
 
 	/**
 	 * @param repetitionDelete the repetitionDelete to set
 	 */
-	public void setRepetitionDelete(String repetitionDelete) {
-		this.repetitionDelete = repetitionDelete;
+	public void setRepetitionDel(String repetitionDelete) {
+		this.repetitionDel = repetitionDel;
 	}
 
 	/**
