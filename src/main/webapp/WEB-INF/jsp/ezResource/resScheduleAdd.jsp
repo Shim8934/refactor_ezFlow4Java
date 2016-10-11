@@ -631,7 +631,7 @@
 				          </td>
         				</tr>
 
-				       <input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
+				      	<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
         				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
         				<input type="hidden" id="gresFlag" value="${gresFlag}" />
         				<input type="hidden" id="num" value="${num}" />
