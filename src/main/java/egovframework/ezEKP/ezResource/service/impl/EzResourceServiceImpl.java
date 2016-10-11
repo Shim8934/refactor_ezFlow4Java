@@ -2731,16 +2731,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return aclTblBrd;
 	}
 	
-	public String isoUTFDate(String dateTimeStr) {
+	public String isoUTFDate(String dateTimeStr, Locale locale) {
         String timeSetStr = "";
         String resultStr = "";
 
         if (dateTimeStr != null && !dateTimeStr.trim().equals("")){
             if (dateTimeStr.indexOf(" ") != -1){
-                if ((dateTimeStr.split(" ")[1].equals("PM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t205"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
+                if ((dateTimeStr.split(" ")[1].equals("PM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t205", locale))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
                     timeSetStr = String.valueOf(Integer.parseInt((dateTimeStr.split(" ")[2].split(":")[0]))+ 12);
                     timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                } else if (dateTimeStr.split(" ")[1].equals("AM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t204"))) {
+                } else if (dateTimeStr.split(" ")[1].equals("AM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t204", locale))) {
                     if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
                         timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
                     } else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezResource.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -86,7 +87,7 @@ public interface EzResourceService {
 	
 	public String getBrdApproveFlag(int brdID, String companyID) throws Exception;
 	
-	public String isoUTFDate(String dateTimeStr);
+	public String isoUTFDate(String dateTimeStr, Locale locale);
 	
 	public String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) throws Exception;
 	

@@ -1108,7 +1108,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRead.do")
-	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useIE11Browser = "";
@@ -1323,8 +1323,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
 
-		startDateTime2 = ezResourceService.isoUTFDate(startDateTime);
-		endDateTime2 = ezResourceService.isoUTFDate(endDateTime);
+		startDateTime2 = ezResourceService.isoUTFDate(startDateTime, locale);
+		endDateTime2 = ezResourceService.isoUTFDate(endDateTime, locale);
 
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
@@ -1391,7 +1391,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAdd.do")
-	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
+	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String useIE11Browser = "";
 		String editor = config.getProperty("EDITOR");
@@ -1607,8 +1607,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
 
-		startDateTime2 = ezResourceService.isoUTFDate(startDateTime);
-		endDateTime2 = ezResourceService.isoUTFDate(endDateTime);
+		startDateTime2 = ezResourceService.isoUTFDate(startDateTime, locale);
+		endDateTime2 = ezResourceService.isoUTFDate(endDateTime, locale);
 
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
