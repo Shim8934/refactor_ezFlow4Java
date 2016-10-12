@@ -1204,7 +1204,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getThemeInfoStr (String pThemeUID, String pGubun) {
 		try {
 			PortalTBLThemeGeneralVO result = getThemeInfo(pThemeUID, pGubun); 
-			return commonUtil.getQueryResult(result);
+			return "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "ERROR";
@@ -1575,7 +1575,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			  StringBuilder searchHTML = new StringBuilder();
               searchHTML.append("<div class='top_search'>\n");
               searchHTML.append("<input id='input_search' class='input_text' type='text' onfocus=\"this.className='input_text focus'; \" onblur='input_Onblur(this)' onkeyup='Key_event(event);' onmousedown='keyword_Clear(this);' />");
-              searchHTML.append("<input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' class='topsearch_btn' onclick='Emp_Search()'>");
+              searchHTML.append("<input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' class='topsearch_btn' onclick=\"Emp_Search()\">");
               searchHTML.append("</div>");
 			return searchHTML.toString();
 		} catch (Exception e) {
@@ -1589,7 +1589,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			 StringBuilder searchHTML = new StringBuilder();
              searchHTML.append("<div class='top_search'>\n");
              searchHTML.append("<input id='input_search' class='input_text' type='text'  onfocus=\"this.className='input_text focus'; \" onblur='input_Onblur(this)' onkeyup='Key_event(event);' onmousedown='keyword_Clear(this);'/>");
-             searchHTML.append("<input type='image' src='/images/kr/cm/top_search_btn.gif' alt=''  class='topsearch_btn ' onclick='Emp_Search()'>");
+             searchHTML.append("<input type='image' src='/images/kr/cm/top_search_btn.gif' alt=''  class='topsearch_btn ' onclick=\"Emp_Search()\">");
              searchHTML.append("</div>");
 			return searchHTML.toString();
 		} catch (Exception e) {
