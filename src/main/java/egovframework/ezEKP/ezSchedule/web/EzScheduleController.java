@@ -702,9 +702,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}
 				cDate = cDate.substring(0, 10);
 
-				uploadSDate = getUploadDate(cDate, cTime, true);
+				uploadSDate = getUploadDate(cDate, cTime, true, locale);
 			} else {
-				uploadSDate = ezResourceService.isoUTFDate(startDateTime);
+				uploadSDate = ezResourceService.isoUTFDate(startDateTime, locale);
 			}
 
 			endDateTime = request.getParameter("edate");
@@ -718,9 +718,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}
 				cDate = cDate.substring(0, 10);
 
-				uploadEDate = getUploadDate(cDate, cTime, false);
+				uploadEDate = getUploadDate(cDate, cTime, false, locale);
 			} else {
-				uploadEDate = ezResourceService.isoUTFDate(endDateTime);
+				uploadEDate = ezResourceService.isoUTFDate(endDateTime, locale);
 			}
 
 			model.addAttribute("userInfo",		loginVO);
@@ -1367,7 +1367,7 @@ public class EzScheduleController extends EgovFileMngUtil {
     	}
     }
     
-    private String getUploadDate(String cDate, String cTime, boolean isStart)
+    private String getUploadDate(String cDate, String cTime, boolean isStart, Locale locale)
     {
 		String uploadDate = cDate + " " + cTime + ":00:00";
 		
@@ -1387,6 +1387,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 
 		System.err.println("uploadDate: " + uploadDate);
-		return ezResourceService.isoUTFDate(uploadDate);
+		return ezResourceService.isoUTFDate(uploadDate, locale);
     }
 }
