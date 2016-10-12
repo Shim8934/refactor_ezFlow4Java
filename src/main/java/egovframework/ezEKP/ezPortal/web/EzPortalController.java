@@ -258,15 +258,17 @@ public class EzPortalController extends EgovFileMngUtil {
 			String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3");
 			
 			Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
-			
+			logger.debug("themeInfoXml="+themeInfoXml);
 			if (xmlDomACL != null) {
-				if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent() != null && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
+				if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
 					topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
 				}
 			}
 			
+			//masterAdmin nullPoint처리
 			topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
 			topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+			
 			String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
 
 			if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
