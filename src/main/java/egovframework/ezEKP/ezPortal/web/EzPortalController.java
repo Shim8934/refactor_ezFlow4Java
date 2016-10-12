@@ -124,7 +124,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String topHeight = "78";
 		
 		try {
-			String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID());
+			String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID(), locale);
 			
 			Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 			
@@ -787,7 +787,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			// 권한이 있는 Root페이지 정보를 가져온다.
-			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID());
+			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale);
 
 			Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
 
@@ -1760,7 +1760,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 환경설정 초기 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/startPageUser.do")
-	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		String pUserThemeUID = "";
@@ -1772,7 +1772,7 @@ public class EzPortalController extends EgovFileMngUtil {
         String useStartPage = "";
         String deptPathOrgan = "";
 		
-		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID());
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale);
 		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 		
 		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {

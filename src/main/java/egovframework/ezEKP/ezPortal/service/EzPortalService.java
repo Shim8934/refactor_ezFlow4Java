@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezPortal.service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
@@ -120,7 +120,7 @@ public interface EzPortalService {
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme) throws Exception;
 	
-	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception;
+	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale) throws Exception;
 	
 	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception;
 	

@@ -4,6 +4,7 @@ package egovframework.ezEKP.ezPortal.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -1025,12 +1026,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) {
+	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale) {
 		try {
 			if (("edit").equals(pMode)) {
 				if (checkEditRightBln(parentUID, getAccessList(userInfo)) == true) {
 					String newPageID = UUID.randomUUID().toString();
-					getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, "everyone", "최상위회사", 2, 2, 2, pCompanyID);
+					getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, egovMessageSource.getMessage("ezPortal.t990038", locale), egovMessageSource.getMessage("ezPortal.t990037", locale), 2, 2, 2, pCompanyID);
 				}
 			}
 			
