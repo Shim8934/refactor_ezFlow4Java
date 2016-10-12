@@ -240,7 +240,7 @@ public class LoginController {
     	List<String> userIDList = loginService.getUserIDList();
     	
     	for (int k = 0; k < userIDList.size(); k++) {
-    		logger.info("userID = " + userIDList.get(k));
+    		logger.info("setPassword.do::userID = " + userIDList.get(k));
     		
     		String pwd = EgovFileScrty.encryptPassword(userIDList.get(k) + "1!", userIDList.get(k));
     		
