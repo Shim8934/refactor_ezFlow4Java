@@ -198,7 +198,6 @@ public class LoginController {
 				loginService.insertLog(resultVO);
 				
 				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone;
-				logger.debug("cInfo : " + cInfo);
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
@@ -241,7 +240,7 @@ public class LoginController {
     }
     
     @RequestMapping(value = "/user/login/setPassword.do")
-    public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+    public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception{
     	userInfo = commonUtil.userInfo(loginCookie);
     	
     	if (userInfo.getId().equals("masteradmin")) {
