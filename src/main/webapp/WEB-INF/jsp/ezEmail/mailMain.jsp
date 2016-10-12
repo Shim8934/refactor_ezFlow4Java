@@ -13,8 +13,18 @@
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="about:blank" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
 		    <frameset cols="200,*" frameborder="0" border="0">
-			    <frame src="/ezEmail/mailLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" resize>
-	            <frame src="/ezEmail/mailList.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+	            
+	            <c:choose>
+	            	<c:when test="${funCode eq '2'}">
+			    		<frame src="/ezEmail/mailLeft.do?funCode=2" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" resize>
+			        	<frame src="/ezAddress/addressMainList.do?folderid=0&type=P" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+	            	</c:when>
+	            	<c:otherwise>
+			    		<frame src="/ezEmail/mailLeft.do?funCode=1" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" resize>
+			        	<frame src="/ezEmail/mailList.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+	            	</c:otherwise>
+	            </c:choose>
+		    
 		    </frameset>
     </frameset>
 </html>

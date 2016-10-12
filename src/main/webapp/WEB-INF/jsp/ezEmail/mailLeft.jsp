@@ -20,7 +20,7 @@
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
-	        var funcCode = "1"; //${funCode}
+	        var funcCode = "${funCode}";
 	        var g_szMailFolderURL = "http://${mailServerAddress}/exchange/${userinfo.EmailID}"; //추후 수정
 	        var g_firstOpen = true;
 	        var lang = "${userinfo.lang}";
@@ -402,7 +402,7 @@
 	        }
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
-	            var url = "/ezAddress/addressMainList.do?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&ownerid=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "ownerid")) + "&type=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "type"));
+	            var url = "/ezAddress/addressMainList.do?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&type=" + encodeURI(AddressTreeView.getvalue(nodeIdx, "type"));
 	            window.open(url, "right");
 	        }
 	        var address_foldermanage_dialogArguments = new Array();

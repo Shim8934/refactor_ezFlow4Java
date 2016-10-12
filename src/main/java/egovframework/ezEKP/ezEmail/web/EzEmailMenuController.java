@@ -66,7 +66,7 @@ public class EzEmailMenuController {
 	 * 메일 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailLeft.do")
-	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
@@ -160,10 +160,18 @@ public class EzEmailMenuController {
 		
 		String use_ArchiveMailBox = config.getProperty("config.USE_ArchiveMailBox");
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		
+		String funCode = "1";
+		if (request.getParameter("funCode") != null) {
+			funCode = request.getParameter("funCode");
+		}
+		
 		model.addAttribute("use_ArchiveMailBox", use_ArchiveMailBox);
 		model.addAttribute("mailServerAddress", mailServerAddress);
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
+		model.addAttribute("funCode", funCode);
+		
 		return "ezEmail/mailLeft";
 	}
 	

@@ -496,7 +496,7 @@
 				switch (objThis.id)
 				{
 					case "NewMail" : 
-						window.open("/myoffice/MAIN/index_myoffice.aspx?funCode=1", "main");
+						window.open("/ezEmail/mailMain.do?funCode=1", "main");
 						break;
 						
 										
