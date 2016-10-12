@@ -213,8 +213,8 @@
 				</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; height:95%; padding-right:12px">
-        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 95%;resize:none"> ${brdExplain}</textarea>
+    			<td style="padding-bottom:1px; height:100%; padding-right:12px">
+        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none"> ${brdExplain}</textarea>
     			</td>
   			</tr>
 		</table>
