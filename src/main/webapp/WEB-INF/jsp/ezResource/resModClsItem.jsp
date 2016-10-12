@@ -137,7 +137,7 @@
 			}
 		</script>
 	</head>
-	<body class="popup"  style="height:95%">
+	<body class="popup"  style="height:100%">
 		<table class="layout">
   			<tr>
 				<td style="height:20px">
