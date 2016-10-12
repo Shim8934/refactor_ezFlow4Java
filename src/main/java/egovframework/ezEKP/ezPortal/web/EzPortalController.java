@@ -517,7 +517,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 				
 			}
-System.out.println("pThemeSelectObject:"+pThemeSelectObject);
+
 			model.addAttribute("pageID", pageID);
 			model.addAttribute("parentPageID", parentPageID);
 			model.addAttribute("editMode", editMode);
@@ -691,7 +691,6 @@ System.out.println("pThemeSelectObject:"+pThemeSelectObject);
 	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
 	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
 /*	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
-System.out.println("themeSize:"+themeList.size());
 	        	String xmlStr = "<DATA>";
 				for (int i=0; i<themeList.size(); i++) {
 					xmlStr += commonUtil.getQueryResult(themeList.get(i));
@@ -2154,7 +2153,6 @@ System.out.println("themeSize:"+themeList.size());
 		}
 		
 		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID());
-System.out.println("strXML:"+strXML);
 		return strXML;
 	}
 	

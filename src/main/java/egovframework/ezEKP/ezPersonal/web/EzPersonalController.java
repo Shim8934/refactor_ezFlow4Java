@@ -733,7 +733,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		} else {
 			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=/files/upload_personal/photo/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 		}
-System.out.println("literalPhoto:"+literalPhoto);
+
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
