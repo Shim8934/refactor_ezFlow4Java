@@ -31,6 +31,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -89,6 +90,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Autowired
     private LocaleResolver localeResolver;
+	
+    // dhlee
+    @Autowired
+    private EzEmailUserAdminService ezEmailUserAdminService;
+    // dhlee - end
 	
 	public void setLocaleResolver(LocaleResolver localeResolver) {
     	this.localeResolver = localeResolver;
@@ -807,7 +813,29 @@ public class EzPersonalController extends EgovFileMngUtil {
 			return "CHKERROR";
 		}
 		
-		ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword));
+        // dhlee
+        String domain = config.getProperty("config.DomainName");
+        String mailAddr = userInfo.getId() + "@" + domain;
+        
+        // 이메일 계정의 암호를 새 암호로 설정한다.
+        String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
+        String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
+        int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
+        
+        if (rc == 0) { // checkAndUpdateUserPassword 성공                                                 
+            try {
+                // 로컬 시스템에서 해당 User의 암호를 변경한다.
+                ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword));
+            } catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+                ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedNewPassword, decryptedOldPassword);
+                
+                throw e;
+            }                                       
+        } else {
+            throw new Exception("setting the user '" + mailAddr + "' password failed.");
+        }        
+        // dhlee - end
+		
 		return "OK";
 	}
 	

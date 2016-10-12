@@ -33,6 +33,16 @@ public interface EzEmailUserAdminService {
 	public int updateUserPassword(String userEmailAddress, String newPassword) throws Exception;
 
 	/**
+	 * 현재 암호를 확인한 후 새암호로 설정한다.
+	 * @param userEmailAddress 새암호를 설정하고자 하는 User Account의 Email 주소
+	 * @param curPassword 현재 암호
+	 * @param newPassword 새암호
+	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
+	 * @throws Exception
+	 */
+	public int checkAndUpdateUserPassword(String userEmailAddress, String curPassword, String newPassword) throws Exception;
+	
+	/**
 	 * 지정한 사용자의 암호(Encrypt된)를 반환한다.
 	 * @param userEmailAddress 암호를 반환하고자 하는 User Account의 Email 주소
 	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환

@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.util.Properties;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -32,8 +31,6 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
 		String passwordParam = "password=" + URLEncoder.encode(password, "UTF-8");
 		String inputParams = userIdParam + "&" + passwordParam;
-
-		logger.debug("inputParams=" + inputParams);
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/addUser";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
@@ -100,8 +97,6 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		String passwordParam = "password=" + URLEncoder.encode(newPassword, "UTF-8");
 		String inputParams = userIdParam + "&" + passwordParam;
 
-		logger.debug("inputParams=" + inputParams);
-
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateUserPassword";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
@@ -126,6 +121,39 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return reasonCode;		
 	}
 
+	@Override
+	public int checkAndUpdateUserPassword(String userEmailAddress, String curPassword, String newPassword) throws Exception {
+        logger.debug("checkAndUpdateUserPassword started. userEmailAddress=" + userEmailAddress);
+
+        String userIdParam = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+        String curPasswordParam = "curPassword=" + URLEncoder.encode(curPassword, "UTF-8");
+        String newPasswordParam = "newPassword=" + URLEncoder.encode(newPassword, "UTF-8");
+        String inputParams = userIdParam + "&" + curPasswordParam + "&" + newPasswordParam;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkAndUpdateUserPassword";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("checkAndUpdateUserPassword ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return reasonCode;      	    
+	}
+	
 	@Override
 	public String getEncryptedUserPassword(String userEmailAddress) throws Exception {
 		logger.debug("getEncryptedUserPassword started. userEmailAddress=" + userEmailAddress);
