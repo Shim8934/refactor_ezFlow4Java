@@ -371,8 +371,6 @@ public class EzAddressController{
 			String sUserNM = xmldom.getElementsByTagName("USERNM").item(0).getTextContent();
 			String sUserNM2 = xmldom.getElementsByTagName("USERNM2").item(0).getTextContent();
 			
-			System.out.println("folderType : " + folderType);
-			
 			// ownerId가 없으면 디비에서 구하기.
 			if (ownerId.trim().equals("")) {
 				if (folderId.equals("0")) {
@@ -729,7 +727,6 @@ public class EzAddressController{
 	public String addressConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		System.out.println(userInfo.getId());
 		String pListType = ezAddressService.getListType(userInfo.getId());
 		if (pListType == null) {
 			pListType = "card";
@@ -1194,10 +1191,6 @@ public class EzAddressController{
 			}
 			else {
 				addressList = new ArrayList<AddressInfoVO>();
-			}
-			
-			for (AddressInfoVO vo : addressList) {
-				System.out.println(vo);
 			}
 			
 			StringBuilder sb = new StringBuilder();

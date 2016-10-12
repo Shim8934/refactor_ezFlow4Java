@@ -491,7 +491,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		Address[] addresses = orgMessage.getAllRecipients();
 		        		for (Address address : addresses) {
-		        			System.out.println(address);
 		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
