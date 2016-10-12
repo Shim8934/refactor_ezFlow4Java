@@ -130,14 +130,15 @@
 	             
 			  <div class="set2">
 					<article class="login_logo"><img src="/images/kr/login/logo.gif" alt="ezEKP그룹웨어" width="417" height="80"></article>
-	                <article class="login_banner">
+					<!-- 2016-10-12 지정석 / IE11세팅, 유저가이드 필요할 때 까지 주석 -->
+	                <!-- <article class="login_banner">
 		                <dl>
 		                	<dd><img src="/images/kr/login/banner01.gif" width="140" height="55" alt="User Guide" onclick="setting_click()" /></dd>
 		                </dl>
 		                <dl>
 		                	<dd><img src="/images/kr/login/banner02.gif" width="140" height="55" alt="IE Setting" /></dd>
 		                </dl>
-	                </article>
+	                </article> -->
 			  </div>
 			  <address><span>COPYRIGHT(C) KAONI. ALL RIGHTS RESERVED.</span></address>
 	            <div style="color:white;font-size:large;text-align:center;"></div>
