@@ -1491,7 +1491,7 @@ function SaveAprLineList() {
             window.returnValue = pAprLineXml;
             window.close();
         } else {
-            alert("결재선이 저장되지 않았습니다. \n\n 다시 확인하여 주십시요!");
+            alert(strLang326);
         }
     }
 }
@@ -1516,7 +1516,7 @@ function APRLINEXMLParsing() {
     if (!pDraftUser && !pReDraftAprLineFlag) {
         var pAlertContent = "" + strLang327 + "<br>" + strLang328 + "";
         OpenAlertUI(pAlertContent);
-        return "FALSE"
+        return "FALSE";
     }
 
     if (!pDraftUser && !pReDraftAprLineFlag)

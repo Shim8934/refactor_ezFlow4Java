@@ -15,7 +15,7 @@ function getDocNumber(pDeptID, pPrefix) {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getCabinetSN.do",
     		data : {
@@ -27,7 +27,7 @@ function getDocNumber(pDeptID, pPrefix) {
     		}
     	});
 
-        var dataNodes = GetChildNodes(result);
+        var dataNodes = GetChildNodes(loadXMLString(result));
         var SN = getNodeText(dataNodes[0]);
 
         if (SN == "") {
@@ -81,7 +81,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/rollbackCabinetSN.do",
     		data : {
@@ -94,7 +94,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     		}
     	});
     	
-        var dataNodes = GetChildNodes(result);
+        var dataNodes = GetChildNodes(loadXMLString(result));
         rtnval = getNodeText(dataNodes[0]);
         field.textContent = fractionsymbol;
 

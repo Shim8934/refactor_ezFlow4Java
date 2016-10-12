@@ -89,7 +89,7 @@
 	
 	                listview.DataBind("OrganListView");
 	
-	                if (!CrossYN() && NonActiveX == "NO")
+	                if (!CrossYN())
 	                    window.returnValue = "cancel";
 	
 	            } catch (ErrMsg) {
@@ -156,7 +156,7 @@
 	        	
 	            $.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
+	        		dataType : "text",
 	        		async : false,
 	        		url : "/ezApprovalG/setJijung.do",
 	        		data : {
@@ -173,7 +173,7 @@
 	        			receivedDeptName2 : trim_Cross(pCurSelRow[0].getAttribute("DATA13"))
 	        		},
 	        		success: function(xml){
-	        			result = xml;
+	        			result = loadXMLString(xml);
 	        		}        			
 	        	});
 	            
@@ -198,7 +198,7 @@
 	            else {
                 	$.ajax({
                 		type : "POST",
-                		dataType : "xml",
+                		dataType : "text",
                 		async : true,
                 		url : "/ezOrgan/getSearchList.do",
                 		data : {
@@ -208,7 +208,7 @@
                 			type   : "user"
                 		},
                 		success: function(xml){
-                			event_displayUserList(xml);
+                			event_displayUserList(loadXMLString(xml));
                 		}        			
                 	});
 	            }
@@ -227,7 +227,7 @@
 	    var parameter = pAlertContent;
 	    var url = "/ezApprovalG/ezAprAlert.do";
 	
-	    if (CrossYN() || NonActiveX == "YES") {
+	    if (CrossYN()) {
 	        ezapralert_cross_dialogArguments[0] = parameter;
 	        if (CompleteFunction != undefined)
 	            ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -254,7 +254,7 @@
 	function displayUserList(DeptID) {
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : true,
 			url : "/ezOrgan/getDeptMemberList.do",
 			data : {
@@ -264,7 +264,7 @@
 					type 	 : "user"
 					},
 			success: function(xml){
-				event_displayUserList(xml);
+				event_displayUserList(loadXMLString(xml));
 			}        			
 		});
 		

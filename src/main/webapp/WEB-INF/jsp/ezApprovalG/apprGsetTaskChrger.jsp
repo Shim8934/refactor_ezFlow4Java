@@ -174,7 +174,7 @@
     }
     function AddRow_Cross(selRow) {
         var pparsingXML = "<LISTVIEWDATA><HEADERS>";
-        pparsingXML = pparsingXML + "<HEADER><NAME>성명</NAME><WIDTH>30</WIDTH></HEADER>";;
+        pparsingXML = pparsingXML + "<HEADER><NAME><spring:message code='ezApprovalG.t229'/></NAME><WIDTH>30</WIDTH></HEADER>";;
         pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
         pparsingXML = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE>";
         pparsingXML = pparsingXML + "<DATA1>" + GetAttribute(selRow, "DATA2") + "</DATA1>";

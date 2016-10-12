@@ -365,7 +365,7 @@ function getEndFormID(pDocID)
 	    	
 	        $.ajax({
 	    		type : "POST",
-	    		dataType : "xml",
+	    		dataType : "text",
 	    		async : false,
 	    		url : "/ezApprovalG/getDocData.do",
 	    		data : {
@@ -374,7 +374,7 @@ function getEndFormID(pDocID)
 	    			sel   : "FormID"
 	    		},
 	    		success: function(xml){
-	    			result = xml;
+	    			result = loadXMLString(xml);
 	    		}        			
 	    	});
 	        
@@ -445,9 +445,9 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

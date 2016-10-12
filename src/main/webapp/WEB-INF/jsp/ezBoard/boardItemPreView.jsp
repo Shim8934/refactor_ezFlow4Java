@@ -23,11 +23,11 @@
 		        };
 		    }
 		    window.onload = function () {
-		        var WriterName = "${userInfo.displayName1}";
+		        var WriterName = "${userInfo.displayName}";
 		        var WriteDate = window.opener.GetStartDate();
 		        var pEndDate = window.opener.GetEndDate();
-		        var WriterDeptName = "${userInfo.deptName1}";
-		        var WriterTitle = "${userInfo.title1}";
+		        var WriterDeptName = "${userInfo.deptName}";
+		        var WriterTitle = "${userInfo.title}";
 		        var WriterPhone = "${userInfo.phone}";
 		        var pUse_Editor = "${useEditor}";
 		        var Title = window.opener.document.getElementById('txtTitle').value;
@@ -52,6 +52,7 @@
 		                var a = document.createElement("A");
 		
 		                if (CrossYN()) {
+alert(1230);
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
 		                }

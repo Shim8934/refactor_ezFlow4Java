@@ -11,8 +11,8 @@
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript" src="/js/escapenew.js"></script>

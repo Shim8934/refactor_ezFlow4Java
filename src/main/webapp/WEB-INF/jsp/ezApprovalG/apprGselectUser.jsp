@@ -25,7 +25,7 @@
 		    var NonActiveX = "YES";
 		    
 		    window.onload = function () {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            document.getElementById("OrgListView").style.width = "220px";
 		            document.getElementById("OrgListView").style.height = "195px";
 		            document.getElementById("SelUserList").style.width = "150px";

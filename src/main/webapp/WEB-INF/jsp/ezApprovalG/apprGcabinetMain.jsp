@@ -773,7 +773,7 @@
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/reqDelayCabEndY.do",
     		data : {
@@ -782,7 +782,7 @@
     				flag : Flag
     				},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
         
@@ -864,9 +864,9 @@
     var ezapropinion_cross_dialogArguments = new Array();
     function OpenInformationUI(pInformationContent, CompleteFunction) {
         var parameter = pInformationContent;
-        var url = "/myoffice/ezApprovalG/ezAPROPINION_Cross.aspx";
+        var url = "/ezApprovalG/ezAprOpinion.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapropinion_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -898,7 +898,7 @@
             para[0] = g_SelCabXml;
             para[1] = ListTypeFlag;
 
-            if (CrossYN() || NonActiveX == "YES") {
+            if (CrossYN()) {
                 var url = "/ezApprovalG/regRecord.do?SelCabXml=" + g_SelCabXml + "&TypeFlag=" + ListTypeFlag;
 
                 var wWeight = "";
@@ -1056,12 +1056,12 @@
         }
     }
 
-        var ezapropinion_cross_dialogArguments = new Array();
+    var ezapropinion_cross_dialogArguments = new Array();
     function OpenInformationUI(pInformationContent, CompleteFunction) {
         var parameter = pInformationContent;
         var url = "/ezApprovalG/ezAprOpinion.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapropinion_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapropinion_cross_dialogArguments[1] = CompleteFunction;

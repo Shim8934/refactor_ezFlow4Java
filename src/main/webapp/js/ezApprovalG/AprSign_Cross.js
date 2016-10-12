@@ -14,7 +14,7 @@
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : tUrl,
 		data : {
@@ -25,7 +25,7 @@
 		}        			
 	});
 
-    Resultxml = result;
+    Resultxml = loadXMLString(result);
     CheckImageExist(Resultxml);
 }
 

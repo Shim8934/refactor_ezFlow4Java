@@ -112,7 +112,7 @@
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;

@@ -90,7 +90,7 @@
   				});       
         	}
         	function Priority_UP() {
-            	if (navigator.userAgent.indexOf("MSIE") != -1) {
+            	if (!CrossYN()) {
                 	if (_RowObject == null) {
                 		alert('<spring:message code="ezBoard.t0015" />');
                     	return;
@@ -107,7 +107,7 @@
     	                }
         	        }
             	}
-            	else if (navigator.userAgent.indexOf("MSIE") == -1) {
+            	else if (CrossYN()) {
                 	if (_RowObject == null) {
                 		alert('<spring:message code="ezBoard.t0015" />');
                         	return;

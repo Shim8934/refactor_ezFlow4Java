@@ -86,14 +86,14 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getCodeList.do",
 		    		data : {
 		    			companyID : CompanyID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		        
@@ -129,7 +129,7 @@
 		        var Val = selRegisterType.value;
 		        if (Val == 5 || Val == 6) {
 		            window.dialogHeight = "596px";
-		            if (CrossYN() || NonActiveX == "YES")
+		            if (CrossYN())
 		                window.resizeTo(565, 690);
 		
 		            divAudioVisualDummy.style.display = "none";
@@ -147,7 +147,7 @@
 		        }
 		        else {
 		            window.dialogHeight = "420px";
-		            if (CrossYN() || NonActiveX == "YES")
+		            if (CrossYN())
 		                window.resizeTo(565, 460);
 		
 		            document.getElementById("divAudioVisualDummy").style.display = "";
@@ -426,7 +426,7 @@
 		        para[1] = g_CabinetID;
 		        var url = "/ezApprovalG/selectCabinetInTask.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 		

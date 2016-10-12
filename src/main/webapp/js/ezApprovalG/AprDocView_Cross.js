@@ -53,7 +53,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -78,7 +78,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

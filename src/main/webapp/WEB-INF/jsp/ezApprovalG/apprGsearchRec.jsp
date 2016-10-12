@@ -140,14 +140,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getCodeList.do",
 		    		data : {
 		    			companyID : CompanyID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	

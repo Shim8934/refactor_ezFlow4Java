@@ -6,7 +6,7 @@ function GetAprLineTempletList()
 		var result = "";
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/aprLineTempletList.do",
 			data : {
@@ -18,7 +18,7 @@ function GetAprLineTempletList()
 			}        			
 		});	
   
-		Resultxml     = result;
+		Resultxml     = loadXMLString(result);
 		ConnectFlag   = false;
 	}	
 	return Resultxml;
@@ -66,7 +66,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;

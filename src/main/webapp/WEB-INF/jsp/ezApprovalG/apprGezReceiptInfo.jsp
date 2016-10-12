@@ -21,7 +21,7 @@
 		        try {
 		            $.ajax({
 		        		type : "POST",
-		        		dataType : "xml",
+		        		dataType : "text",
 		        		async : false,
 		        		url : "/ezApprovalG/getReceiptinfo.do",
 		        		data : {
@@ -29,7 +29,7 @@
 		        				mode  : "APR"
 		        				},
 		        		success: function(xml){
-		        			 RtnVal = xml;
+		        			 RtnVal = loadXMLString(xml);
 		        		}        			
 		        	});
 		            
@@ -48,7 +48,7 @@
 		        var RtnVal = window.showModalDialog(url, parameter, feature);
 		    }
 		    function window_close() {
-		        if (CrossYN() || NonActiveX == "YES")
+		        if (CrossYN())
 		            parent.DivPopUpHidden();
 		        else
 		            window.close();

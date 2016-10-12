@@ -9,7 +9,7 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
 
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getForm.do",
 		data : {
@@ -30,7 +30,7 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
     listview.SetMulSelectable(false);                       
     listview.SetRowOnClick("lvtForm_onSel_Changed");
     listview.SetRowOnDblClick("lvtForm_onSel_DBclick");
-    listview.DataSource(xmlRtn);                            
+    listview.DataSource(loadXMLString(xmlRtn));                            
     listview.DataBind("divlvtForm");                           
 
     var selRow = listview.GetSelectedRows();
@@ -83,7 +83,7 @@ function InitFormCont() {
 
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getFormContainer.do",
 		data : {
@@ -98,6 +98,8 @@ function InitFormCont() {
     xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
 
     if (result != "") {
+    	result = loadXMLString(result);
+    	
         var xmlRtns = result.documentElement;
         var xmlRtn = result;
         for (var i = 0; i < SelectNodes(xmlRtn, "NODES/NODE").length ; i++) {
@@ -108,8 +110,13 @@ function InitFormCont() {
                 setNodeText(GetChildNodes(SelectNodes(xmlRtn, "NODES/NODE")[i])[0], "FALSE");
             }
         }
-        var Node = xmlTree.importNode(xmlRtns, true);
-        xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(Node);
+
+        if (CrossYN()) {
+        	var Node = xmlTree.importNode(xmlRtns, true);
+        	xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(Node);
+        } else {
+        	xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(xmlRtns);
+        }
     }
 
     document.getElementById('TreeView').innerHTML = "";
@@ -129,7 +136,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -154,7 +161,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

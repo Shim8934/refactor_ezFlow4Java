@@ -5149,4 +5149,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G 수신순번 겟 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getSusinSN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSusinSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("DOCID").item(0).getTextContent();
+		
+		String result = ezApprovalGService.getSusinSN(docID, userInfo.getCompanyID());
+		
+		return result;
+	}
 }

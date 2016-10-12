@@ -500,7 +500,7 @@
 		            else {
 	                	$.ajax({
 	                		type : "POST",
-	                		dataType : "xml",
+	                		dataType : "text",
 	                		async : true,
 	                		url : "/ezOrgan/getSearchList.do",
 	                		data : {
@@ -510,7 +510,7 @@
 	                			type   : "user"
 	                		},
 	                		success: function(xml){
-	                			event_displayUserList(xml);
+	                			event_displayUserList(loadXMLString(xml));
 	                		}        			
 	                	});
 		            }

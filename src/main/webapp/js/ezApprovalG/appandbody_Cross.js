@@ -8,7 +8,7 @@ function PrintClick(Type, DocID, Mode) {
     if (Mode != "")
         rtnVal = getdetail(DocID, Mode);
 
-    if ((CrossYN() || NonActiveX == "YES") || rtnVal == "close")
+    if ((CrossYN()) || rtnVal == "close")
         if (Mode != "")
             return;
 
@@ -38,7 +38,7 @@ function addOpinion(DocID, pFlag) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getOpinionInfo.do",
 		data : {
@@ -50,7 +50,7 @@ function addOpinion(DocID, pFlag) {
 		}        			
 	});
 
-    xmlrtn = result;
+    xmlrtn = loadXMLString(result);
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     if (Rows.length == 0)
         eopi = "false";
@@ -93,7 +93,7 @@ function addAttach(DocID, pFlag) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
@@ -105,7 +105,7 @@ function addAttach(DocID, pFlag) {
 		}        			
 	});
 	
-    xmlrtn = result;
+    xmlrtn = loadXMLString(result);
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     if (Rows.length == 0)
         eattach = "false";
@@ -141,7 +141,7 @@ function addLineInfo(DocID, pFlag) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getLineList.do",
 		data : {
@@ -153,7 +153,7 @@ function addLineInfo(DocID, pFlag) {
 		}        			
 	});
 
-    xmlrtn = result;
+    xmlrtn = loadXMLString(result);
 
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
     rtnString = "";
@@ -186,35 +186,35 @@ function getdetail(DocID, pFlag) {
     var textOpi = addOpinion(DocID, pFlag);
     var textAttatch = addAttach(DocID, pFlag);
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         temptextOpi = textOpi;
         temptextAttatch = textAttatch;
         tempDocID = DocID;
         temppFlag = pFlag;
     }
     var ret = OpenQuestionUI();
-    if ((CrossYN() || NonActiveX == "YES") || !ret)
+    if ((CrossYN()) || !ret)
         return;
 
     if (ret[0] == "0" && ret[1] == "0" && ret[2] == "0")
         return "close";
     var rtnVal = "";
-
+    
     if (ret[0] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ 의견 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textOpi;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[1] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ 첨부 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1129 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
-        rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ 결재선 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1130 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(DocID, pFlag);
         rtnVal = rtnVal + "</table>";
     }
@@ -227,7 +227,7 @@ function OpenQuestionUI() {
     var parameter = "";
     var url = "/ezApprovalG/ezprtQuestion.do?opinion=" + encodeURI(eopi) + "&attach=" + encodeURI(eattach);
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezprtquestion_cross_dialogArguments[0] = parameter;
         ezprtquestion_cross_dialogArguments[1] = OpenQuestionUI_Complete;
 
@@ -251,19 +251,19 @@ function OpenQuestionUI_Complete(ret) {
 
     if (ret[0] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ 의견 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextOpi;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[1] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ 첨부 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1129 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ 결재선 정보 ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1130 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
         rtnVal = rtnVal + "</table>";
     }

@@ -930,6 +930,17 @@
         ]]>
 	</select>
 	
+	<select id="EzApprovalG.getSusinSN" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				receivesn 
+        	FROM 
+        		EZAPPROVALG_$companyID$.TBAPRRECEIPTPROCESSINFO 
+       		WHERE  
+       			docid = #v_DOCID#
+        ]]>
+	</select>
+	
 	<select id="EzApprovalG.getDocInfoDState" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT

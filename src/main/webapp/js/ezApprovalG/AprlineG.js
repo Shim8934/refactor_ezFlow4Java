@@ -101,7 +101,7 @@ function InitListView() {
         
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/aprLineRequest.do",
     		data : {
@@ -115,6 +115,7 @@ function InitListView() {
     		}        			
     	});
 
+        result = loadXMLString(result);
         var NodeList = createXmlDom();
         NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW"); //xmlhttp.responseXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
         var nodeCnt;
@@ -3135,7 +3136,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction)
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -3160,7 +3161,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -3294,7 +3295,7 @@ function getDeptInfo_nodName(pDeptID,NodeName)
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -3307,7 +3308,7 @@ function getDeptInfo_nodName(pDeptID,NodeName)
 		}        			
 	});
 	
-	var dataNodes = GetChildNodes(result);
+	var dataNodes = GetChildNodes(loadXMLString(result));
 	var Rtnval = getNodeText(dataNodes[0]);
 				
 	return Rtnval;

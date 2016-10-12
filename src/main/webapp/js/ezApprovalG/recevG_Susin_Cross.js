@@ -714,7 +714,7 @@ function getDraftUserInfo() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezOrgan/getADInfos.do",
     		data : {
@@ -727,7 +727,7 @@ function getDraftUserInfo() {
     		}        			
     	});
     	
-        xmluserInfo = result;
+        xmluserInfo = loadXMLString(result);
 
     } catch (e) {
         alert("getDraftUserInfo()" + e.description);
@@ -1294,14 +1294,14 @@ function openSignUI() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getSignRequest.do",
     		data : {
     			userID : pUserID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
 
@@ -1361,7 +1361,7 @@ function GetAprDocFormID() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getDocData.do",
     		data : {
@@ -1370,7 +1370,7 @@ function GetAprDocFormID() {
     			sel   : "FormID"
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
         
@@ -1441,7 +1441,7 @@ function setSusinUpdataDocID() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/setSusinUpdateDocID.do",
     		data : {
@@ -1450,7 +1450,7 @@ function setSusinUpdataDocID() {
     			deptID   : RECEIPTDEPTID.innerText
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
         
@@ -1468,7 +1468,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -1493,7 +1493,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1518,14 +1518,14 @@ function getDocInfo() {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getDocInfo.do",
 		data : {
 			docID : pDocID
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
     
@@ -1602,14 +1602,14 @@ function getReceiveDocInfo() {
     	var result = "";
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getReceiveDocInfo.do",
     		data : {
     			docID : pDocID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
 
@@ -1696,7 +1696,7 @@ function setHeSongDocInfo() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/setHeSongDocInfo.do",
     		data : {
@@ -1709,7 +1709,7 @@ function setHeSongDocInfo() {
     			userName2 : arr_userinfo[12]
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
 
@@ -2016,7 +2016,7 @@ function SignCheck() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getSignInfo.do",
 		data : {
@@ -2029,7 +2029,8 @@ function SignCheck() {
 	
     if (result == "")
         return;
-
+    
+    result = loadXMLString(result);
     var NodeList;
     NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
     if (NodeList.length <= 0)

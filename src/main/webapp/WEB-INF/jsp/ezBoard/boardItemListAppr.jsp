@@ -208,7 +208,7 @@
 			        }
 			        $.ajax({
 						type : "POST",
-						dataType : "xml",
+						dataType : "text",
 						async : true,
 						url : url,
 						data : { boardType   : "A", 
@@ -218,7 +218,7 @@
 								 searchQuery : SQLPARADATA
 								},
 						success: function(xml){
-							getBoardList_after(xml);
+							getBoardList_after(loadXMLString(xml));
 						}     			
 					});
 		        }

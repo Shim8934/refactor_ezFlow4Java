@@ -95,7 +95,7 @@
 		            else {
 		                document.getElementById("bbtn_OpinionDel").style.display = "none";
 		            }
-		            if (!CrossYN() || NonActiveX == "NO")
+		            if (!CrossYN())
 		                window.returnValue = "cancel";
 		        }
 		        catch (e) {
@@ -140,7 +140,7 @@
 		    function btn_OpinionSave_onclick() {
 		        try {
 		            if (pDisplay == "Show") {
-		                if (CrossYN() || NonActiveX == "YES")
+		                if (CrossYN())
 		                    parent.DivPopUpHidden();
 		                else
 		                    window.close();

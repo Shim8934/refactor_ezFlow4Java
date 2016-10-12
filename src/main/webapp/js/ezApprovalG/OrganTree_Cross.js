@@ -74,7 +74,7 @@ function OrganSearch(pSearchList, pCellList, pPropList, pClass) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getSearchList.do",
 		data : {
@@ -88,7 +88,7 @@ function OrganSearch(pSearchList, pCellList, pPropList, pClass) {
 		}        			
 	});
 	
-    return result;
+    return loadXMLString(result);
 }
 
 function DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass) {

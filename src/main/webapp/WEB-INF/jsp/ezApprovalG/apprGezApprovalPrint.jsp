@@ -21,7 +21,7 @@
 	            myVar = setInterval(function () { DocumentComplate() }, 2000);
 	        }
 	        function DocumentComplate() {
-	            if (navigator.userAgent.indexOf("MSIE") > 0 && NoneActiveX == "NO") {
+	            if (!CrossYN() && NoneActiveX == "NO") {
 	                preview_print();
 	            }
 	            else

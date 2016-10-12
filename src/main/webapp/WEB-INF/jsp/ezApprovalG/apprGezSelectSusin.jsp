@@ -113,7 +113,7 @@ function GetEntryInfo(_DEPTID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/admin/ezOrgan/getEntryInfo.do",
 		data : {
@@ -122,7 +122,7 @@ function GetEntryInfo(_DEPTID) {
 			mode  : "dept"
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
     	
@@ -413,7 +413,7 @@ function ChangeSendStatus()
         var parameter = pAlertContent;
         var url = "/ezApprovalG/ezAprAlert.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapralert_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -434,7 +434,7 @@ function initListView(){
 	{
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/aprDeptRequest.do",
 			data : {
@@ -442,7 +442,7 @@ function initListView(){
 				mode  : "RES"
 			},
 			success: function(xml){
-				result = xml;
+				result = loadXMLString(xml);
 			}        			
 		});
 		
@@ -663,12 +663,12 @@ function searchUserList()
 		{
 		    $.ajax({
 		    	type : "POST",
-		    	dataType : "xml",
+		    	dataType : "text",
 		    	url : "/ezOrgan/getSearchList.do",
 		    	async : false,
 		    	data : {search : "displayname::" + strSearch + ";;extensionAttribute2::"+p_CompanyID , cell : "displayname", prop : "extensionAttribute2;extensionAttribute3;displayname;displayname2", type : "group"},
 		    	success : function(result){	
-		    		event_displayUserList(result);
+		    		event_displayUserList(loadXMLString(result));
 		    	},
 		    	error : function(error){
 		    		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);

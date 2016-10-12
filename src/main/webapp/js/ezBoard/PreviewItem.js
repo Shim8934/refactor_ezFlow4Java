@@ -319,9 +319,7 @@ function event_ItemPreviewRead_photo() {
             if (document.getElementById("PreViewBottom") != null){
             	document.getElementById("PreViewBottom").style.display = "none";
             }
-            var result = xmlhttp.responseXML;
-            
-            if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
+            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
                 alert(strLang73);
                 return;
             }
@@ -381,9 +379,8 @@ function event_ItemPreviewRead() {
             if (document.getElementById("PreViewBottom") != null){
             	document.getElementById("PreViewBottom").style.display = "";
             }
-            var result = xmlhttp.responseXML;
      
-            if (SelectSingleNodeValue(result.getElementsByTagName("NODE"), "DATA") == "NO") {
+            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
                 alert(strLang73);
                 return;
             }
@@ -425,7 +422,7 @@ function previewItemSet() {
         document.getElementById('ifrmPreViewH').style.display = "";
         document.getElementById('ifrmPreViewW').style.display = "";
     }
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
     	var boardType = "";
     	
     	if(pMode == "temp"){

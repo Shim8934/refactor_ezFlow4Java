@@ -254,7 +254,7 @@
         	
         	$.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/admin/ezOrgan/getEntryInfo.do",
         		data : {
@@ -263,7 +263,7 @@
         			mode  : "dept"
         		},
         		success: function(xml){
-        			result = xml;
+        			result = loadXMLString(xml);
         		}        			
         	});
 	        	
@@ -1157,7 +1157,7 @@
 	        	var result = "";
 	        	$.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
+	        		dataType : "text",
 	        		async : false,
 	        		url : "/ezApprovalG/delAprDeptTempletList.do",
 	        		data : {
@@ -1166,7 +1166,7 @@
 	        				aprSN  : p_SelAprDeptTempletSN
 	        				},
 	        		success: function(xml){
-	        			result = xml;
+	        			result = loadXMLString(xml);
 	        		}        			
 	        	});
 	            var dataNodes = GetChildNodes(result);
@@ -1208,7 +1208,7 @@
 	        	
 	        	$.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
+	        		dataType : "text",
 	        		async : false,
 	        		url : "/ezApprovalG/getAprDeptTempletListInfo.do",
 	        		data : {
@@ -1217,7 +1217,7 @@
 	        				aprSN  : p_CheckAprDeptTempletSN
 	        				},
 	        		success: function(xml){
-	        			result = xml;
+	        			result = loadXMLString(xml);
 	        		}        			
 	        	});
 	

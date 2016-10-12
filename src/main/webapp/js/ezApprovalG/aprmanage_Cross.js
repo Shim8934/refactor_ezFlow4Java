@@ -35,7 +35,7 @@ function getDocList() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getAprDocList.do",
 		data : {
@@ -51,7 +51,7 @@ function getDocList() {
 				searchQuery  : SQLPARADATA
 				},
 		success: function(xml){
-			getDocList_after(xml);
+			getDocList_after(loadXMLString(xml));
 		}        			
 	});	
 
@@ -237,7 +237,7 @@ function getReceivedDocList(p_FormCd) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getReceivedDocList.do",
 		data : {
@@ -252,7 +252,7 @@ function getReceivedDocList(p_FormCd) {
 				searchQuery : SQLPARADATA
 				},
 		success: function(xml){
-			getReceivedDocList_after(xml);
+			getReceivedDocList_after(loadXMLString(xml));
 		}
 	});
 
@@ -367,7 +367,7 @@ function getSendOutDocList() {
 
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getSendOutDocList.do",
 		data : {
@@ -380,7 +380,7 @@ function getSendOutDocList() {
 				orderOption : OrderOption
 				},
 		success: function(xml){
-			getSendOutDocList_after(xml);
+			getSendOutDocList_after(loadXMLString(xml));
 		}        			
 	});
     
@@ -578,7 +578,7 @@ function getAprLine(tr) {
 
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getLineList.do",
 		data : {
@@ -587,7 +587,7 @@ function getAprLine(tr) {
 				flag  : pFlag
 				},
 		success: function(xml){
-			getAprovSub_after(xml);
+			getAprovSub_after(loadXMLString(xml));
 		}        			
 	});
     
@@ -717,31 +717,15 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
     }
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {        
-        if (CrossYN() || NonActiveX == "YES") {
-        	openLocation = "/ezApprovalG/draftui.do?formURL=";
-        }
-        else
-        {
-            if (pUse_Editor == "") 
-                openLocation = "/myoffice/ezApprovalG/DraftUI/draftui.aspx?formURL=";
-            else
-                openLocation = "/myoffice/ezApprovalG/DraftUI/draftui_IE.aspx?formURL=";
-        }
+    	openLocation = "/ezApprovalG/draftui.do?formURL=";
 
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
     }
     else {
-        if (CrossYN() || NonActiveX == "YES") {
-            alert(strLang1103);
-            return;
-        }
-        else {
-            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDraftUI_HWP.aspx?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
-        }
+        alert(strLang1103);
+        return;
     }
 
     openwindow(openLocation, "", 890, 560);
@@ -766,6 +750,7 @@ function openApprovUI(allFlag) {
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
         }
         else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+        	//hwp 사용안함
             if (CrossYN() || NonActiveX == "YES") {
                 var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?docID=" + encodeURI(pArgument[0]);
                 openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
@@ -778,15 +763,7 @@ function openApprovUI(allFlag) {
             }
         }
         else {
-            if (CrossYN() || NonActiveX == "YES")
-                openLocation = "/ezApprovalG/approvui.do?docID=";
-            else
-            {
-                if (pUse_Editor == "TAGFREE")
-                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_TFI.aspx?docID=";
-                else
-                    openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui.aspx?docID=";
-            }
+            openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
             openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
@@ -854,7 +831,7 @@ function RemoveDoc(pDocID) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
@@ -866,7 +843,7 @@ function RemoveDoc(pDocID) {
 		}        			
 	});
 
-    var RtnVal = getNodeText(result.documentElement);
+    var RtnVal = getNodeText(loadXMLString(result).documentElement);
     if (RtnVal == "false") {
         var pAlertContent = strLang872;
         OpenAlertUI(pAlertContent);
@@ -940,6 +917,7 @@ function openViewDocInfo() {
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+        	//hwp 사용안함
             if (CrossYN() || NonActiveX == "YES") {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
             }
@@ -948,19 +926,13 @@ function openViewDocInfo() {
             }
         }
         else {
-            if (CrossYN() || NonActiveX == "YES")
-                openLocation = "/ezApprovalG/contDocView.do";
-            else {
-                if (pUse_Editor == "")
-                    openLocation = "/myoffice/ezApprovalG/formContainer/contDocView.aspx";
-                else
-                    openLocation = "/myoffice/ezApprovalG/formContainer/contDocView_IE.aspx";
-            }            
+            openLocation = "/ezApprovalG/contDocView.do";
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
     }
     else {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+        	//hwp 사용안함
             if (CrossYN() || NonActiveX == "YES") {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
             }
@@ -969,15 +941,7 @@ function openViewDocInfo() {
             }
         }
         else {
-            if (CrossYN() || NonActiveX == "YES") {
-            	openLocation = "/ezApprovalG/aprDocView.do";
-            }
-            else {
-                if (pUse_Editor == "")
-                    openLocation = "/myoffice/ezApprovalG/AprDocView.aspx";
-                else
-                    openLocation = "/myoffice/ezApprovalG/AprDocView_IE.aspx";
-            }
+        	openLocation = "/ezApprovalG/aprDocView.do";
         }
         openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
@@ -1005,39 +969,13 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             var pDocID = GetAttribute(pCurSelRow, "DATA1").trim();
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "mht" || g_RelayG_Type.toUpperCase() == "MHT") {
                 openLocation = "";
-                if (pCurSelRow.getAttribute("DATA15") == "001") {
-                    if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/ezApprovalG/recevGSusin.do";
-                    }
-                    else {
-                        if (pUse_Editor == "")
-                            openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG.aspx";
-                        else
-                            openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_IE.aspx";
-                    }
-                }
-                else {
-                    if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/ezApprovalG/recevGSusin.do";
-                    }
-                    else {
-                        if (pUse_Editor == "")
-                            openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_Susin.aspx";
-                        else
-                            openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_Susin_IE.aspx";
-                    }
-                }
+                openLocation = "/ezApprovalG/recevGSusin.do";
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             }
             else {
-                if (CrossYN() || NonActiveX == "YES") {
-                    alert(strLang1103);
-                    return;
-                }
-                else {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezRecevG_Susin_HWP.aspx?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
-                }
+                alert(strLang1103);
+                return;
             }
             openwindow(openLocation, "receive", 880, 550);
         }
@@ -1045,23 +983,11 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-                if (CrossYN() || NonActiveX == "YES") {
-                    alert(strLang1103);
-                    return;
-                }
-                else {
-                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezDeptRecevUI_HWP.aspx";
-                }
+                alert(strLang1103);
+                return;
             }
             else {
-                if (CrossYN() || NonActiveX == "YES")
-                    openLocation = "/ezApprovalG/recev.do";
-                else {
-                    if (pUse_Editor == "")
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG.aspx";
-                    else
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/recevG_IE.aspx";
-                }
+                openLocation = "/ezApprovalG/recev.do";
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
             }
             openwindow(openLocation, "receive", 880, 550);
@@ -1094,35 +1020,11 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         var pURL = GetAttribute(pCurSelRow, "DATA3");
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            if (CrossYN() || NonActiveX == "YES") {
-                alert(strLang1103);
-                return;
-            }
-            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezRecevG_Susin_HWP.aspx?DocID=" + encodeURI(pArgument[0]) + "&DraftFlag=" + encodeURI(pDraftFlag);
+            alert(strLang1103);
+            return;
         }
         else {
-            if (GetAttribute(pCurSelRow, "DATA15") == "001") {                
-                if (CrossYN() || NonActiveX == "YES")
-                    openLocation = "/ezApprovalG/recevGSusin.do";
-                else
-                {
-                    if (pUse_Editor == "")
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/RecevG.aspx";
-                    else
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/RecevG_IE.aspx";
-                }
-            }
-            else {
-                if (CrossYN() || NonActiveX == "YES")
-                    openLocation = "/ezApprovalG/recevGSusin.do?docID=" + encodeURI(pArgument[0]);
-                else
-                {
-                    if (pUse_Editor == "")
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/RecevG_Susin.aspx?DocID=" + encodeURI(pArgument[0]);
-                    else
-                        openLocation = "/myoffice/ezApprovalG/ReceivUI/RecevG_Susin_IE.aspx?DocID=" + encodeURI(pArgument[0]);
-                }
-            }
+            openLocation = "/ezApprovalG/recevGSusin.do";
 
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
@@ -1253,7 +1155,7 @@ function setHeSongDocInfo(pCurSelRow) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/setHeSongDocInfo.do",
 		data : {
@@ -1270,7 +1172,7 @@ function setHeSongDocInfo(pCurSelRow) {
 		}        			
 	});
 
-    var RtnVal = getNodeText(result.documentElement);
+    var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
     if (RtnVal == "FALSE") {
         var pAlertContent = strLang740;
@@ -1303,7 +1205,7 @@ function getAprDocAproveInfo(tr) {
 
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getTotalAttachInfo.do",
     		data : {
@@ -1325,7 +1227,7 @@ function getAprDocAproveInfo(tr) {
 
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getOpinionInfo.do",
     		data : {
@@ -1347,7 +1249,7 @@ function getAprDocAproveInfo(tr) {
 
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
@@ -1373,7 +1275,7 @@ function getAprDocAproveInfo(tr) {
     AprLine.SetMulSelectable(false);                        
     AprLine.SetTitleIdx(arrySubTab[pDocInfoValue]);
     AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");      
-    AprLine.DataSource(RtnVal);                             
+    AprLine.DataSource(loadXMLString(RtnVal));                             
     AprLine.DataBind("lvAprLine");
 }
 
@@ -1383,7 +1285,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -1420,7 +1322,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -2024,11 +1926,6 @@ function selFirstRow(Resultxml) {
 function getDataInfo(jobState) {
     var xmlpara = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-
-
     switch (jobState) {
         case "3":
         	var pFlag = "";
@@ -2041,7 +1938,7 @@ function getDataInfo(jobState) {
             	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : true,
         		url : "/ezApprovalG/getTotalAttachInfo.do",
         		data : {
@@ -2049,7 +1946,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(xml);
+        			getdoclistSub_after(loadXMLString(xml));
         		}        			
         	});
             break;
@@ -2065,7 +1962,7 @@ function getDataInfo(jobState) {
             	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : true,
         		url : "/ezApprovalG/getOpinionInfo.do",
         		data : {
@@ -2073,7 +1970,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(xml);
+        			getdoclistSub_after(loadXMLString(xml));
         		}        			
         	});
             break;
@@ -2089,7 +1986,7 @@ function getDataInfo(jobState) {
             	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/getLineList.do",
         		data : {
@@ -2097,7 +1994,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(xml);
+        			getdoclistSub_after(loadXMLString(xml));
         		}        			
         	});
             break;
@@ -2113,7 +2010,7 @@ function getDataInfo(jobState) {
             	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : true,
         		url : "/ezApprovalG/getReceiptinfo.do",
         		data : {
@@ -2121,7 +2018,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(xml);
+        			getdoclistSub_after(loadXMLString(xml));
         		}        			
         	});
             break;
@@ -2198,7 +2095,7 @@ function getSimsaDocList() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getReceivedDocList.do",
 		data : {
@@ -2213,7 +2110,7 @@ function getSimsaDocList() {
 				searchQuery : SQLPARADATA
 				},
 		success: function(xml){
-			getReceivedDocList_after(xml);
+			getReceivedDocList_after(loadXMLString(xml));
 		}        			
 	});
 }
@@ -2223,7 +2120,7 @@ function doCancel(pDocID, tempListType) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/doCancel.do",
 		data : {
@@ -2235,7 +2132,7 @@ function doCancel(pDocID, tempListType) {
 		}
 	});
 	
-    var RtnVal = getNodeText(result.documentElement);
+    var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
     if (RtnVal == "TRUE") {
         if (tempListType == "3") {
@@ -2278,7 +2175,7 @@ function cancelYN(pDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/doCanCelYN.do",
 		data : {
@@ -2286,7 +2183,7 @@ function cancelYN(pDocID) {
 			userID : pUserID
 		},
 		success: function(xml){
-			cancelYN_after(xml);
+			cancelYN_after(loadXMLString(xml));
 		}
 	});
 }
@@ -2305,7 +2202,7 @@ function cancelYN_after(xml) {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/doForceCancelYN.do",
     		data : {
@@ -2317,7 +2214,7 @@ function cancelYN_after(xml) {
     		}
     	});
     	
-        var RtnVal = getNodeText(result.documentElement);
+        var RtnVal = getNodeText(loadXMLString(result).documentElement);
         if (RtnVal == "TRUE")
             document.getElementById("tbtnforcecallback").style.display = "";
         else
@@ -2333,7 +2230,7 @@ function returnYN(pDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/gongRamDocInfo.do",
 		data : {
@@ -2344,7 +2241,7 @@ function returnYN(pDocID) {
 		}
 	});
 	
-    var RtnVal = getNodeText(result.documentElement);
+    var RtnVal = getNodeText(loadXMLString(result).documentElement);
     if (RtnVal == "NONE")
         document.getElementById("tbtnReturn").style.display = "";
     else
@@ -2375,7 +2272,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/removeDocCabinetInfo.do",
 		data : {
@@ -2390,7 +2287,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 		}
 	});
 	
-    var RtnVal = getNodeText(result.documentElement);
+    var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
     if (RtnVal == "TRUE") {
         if (FLAG == "")
@@ -2433,7 +2330,7 @@ function CheckFormConnFlag(pDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getFormConnFlag.do",
 		data : {
@@ -2445,7 +2342,7 @@ function CheckFormConnFlag(pDocID) {
 		}
 	});
 	
-    if (getNodeText(result.documentElement) == "Y")
+    if (getNodeText(loadXMLString(result).documentElement) == "Y")
         return true;
     else
         return false;
@@ -2496,7 +2393,7 @@ function getAprLineInfo(tr) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getLineList.do",
 		data : {
@@ -2508,7 +2405,7 @@ function getAprLineInfo(tr) {
 		}        			
 	});
 
-    return result;
+    return loadXMLString(result);
 }
 
 function check_presence() {
@@ -2557,7 +2454,7 @@ function MakeTmp2Ing(tmpDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/makeTmp2Ing.do",
 		data : {
@@ -2568,7 +2465,7 @@ function MakeTmp2Ing(tmpDocID) {
 		}
 	});
 	
-    return getNodeText(result.documentElement);
+    return getNodeText(loadXMLString(result).documentElement);
 }
 function openServerDraftUI(pDraftFlag, pCurSelRow) {
     var pArgument = new Array();
@@ -2596,20 +2493,8 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
 
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
-    if (CrossYN() || NonActiveX == "YES") {
-        openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-    }
-    else {
-        if (pUse_Editor == "TAGFREE") {
-            openLocation = "/myoffice/ezApprovalG/DraftUI/draftui_TFI.aspx?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        }
-        else {
-            openLocation = "/myoffice/ezApprovalG/DraftUI/draftui.aspx?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-        }
-    }
+    openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
 
-
-    
     openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 

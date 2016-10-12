@@ -186,12 +186,12 @@ function btn_searchUser_onclick()
 	{
 		  $.ajax({
 		    	type : "POST",
-		    	dataType : "xml",
+		    	dataType : "text",
 		    	url : "/ezOrgan/getSearchList.do",
 		    	async : false,
 		    	data : {search : "displayname::"+ strSearch + ";;extensionAttribute1::i=1" + ";;extensionAttribute1::i=1" , cell : "displayname;title;description;telephonenumber", prop : "Department;extensionAttribute4", type : "user"},
 		    	success : function(result){	
-		    		event_displayUserList(result);
+		    		event_displayUserList(loadXMLString(result));
 		    	},
 		    	error : function(error){
 		    		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
@@ -208,7 +208,7 @@ function btn_searchUser_onclick()
         var parameter = pAlertContent;
         var url = "/ezApprovalG/ezAprAlert.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapralert_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -240,12 +240,12 @@ function displayUserList(DeptID)
 {
     $.ajax({
     	type : "POST",
-    	dataType : "xml",
+    	dataType : "text",
     	url : "/ezOrgan/getSearchList.do",
     	async : false,
     	data : {search : "EXACT_Department::" + DeptID + ";;extensionAttribute1::i=1" , cell : "displayname;title;description;telephonenumber", prop : "Department;extensionAttribute4;displayname;title;description", type : "user"},
     	success : function(result){	
-    		event_displayUserList(result);
+    		event_displayUserList(loadXMLString(result));
 
     	},
     	error : function(error){

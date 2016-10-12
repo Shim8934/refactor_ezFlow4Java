@@ -100,14 +100,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getEndOpinionInfo.do",
 		    		data : {
 		    			docID : pDocID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}
 		    	});
 		
@@ -172,7 +172,7 @@
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -197,7 +197,7 @@
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -313,7 +313,7 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getSignInfo.do",
 		    		data : {
@@ -329,6 +329,7 @@
 		            SaveSignCheck();
 		            return;
 		        }
+		        result = loadXMLString(result);
 		        var NodeList;
 		        NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
 		        if (NodeList.length <= 0) {

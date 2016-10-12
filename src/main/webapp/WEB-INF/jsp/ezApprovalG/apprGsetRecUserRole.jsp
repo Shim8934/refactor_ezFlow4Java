@@ -8,8 +8,9 @@
 <title><spring:message code='ezApprovalG.t1155'/></title>
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></script>
@@ -377,12 +378,12 @@
         var xmlDOM = createXmlDom();
         $.ajax({
         	type : "POST",
-        	dataType : "xml",
+        	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
         	data : {search : selSearchType.value+ "::" +txtKeyword.value, cell : "displayName;title;description;company", prop : "department", type : "user"},
         	success : function(result){	
-        		xmlDOM = result;
+        		xmlDOM = loadXMLString(result);
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
                 if(adCount<0){
                 	  alert("<spring:message code='ezApprovalG.t1161'/>");

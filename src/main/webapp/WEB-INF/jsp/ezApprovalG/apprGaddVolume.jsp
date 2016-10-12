@@ -32,7 +32,7 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		        if (!CrossYN() && NonActiveX == "NO")
+		        if (!CrossYN())
 		            RetValue = window.dialogArguments;
 		        if (RetValue != null) {
 		            arrCabInfo[0] = RetValue[0];
@@ -68,7 +68,7 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getNewVolNo.do",
 		    		data : {
@@ -76,7 +76,7 @@
 		    			companyID  : CompanyID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 
@@ -113,7 +113,7 @@
 		        }
 		    }
 		    window.onbeforeunload = function() {
-		        if (!CrossYN() && NonActiveX == "NO") {
+		        if (!CrossYN()) {
 		            window.returnValue = rtnVal;
 		        }
 		    }

@@ -847,7 +847,7 @@ function getApprovInfo() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getApproveDocInfo.do",
     		data : {
@@ -860,8 +860,8 @@ function getApprovInfo() {
     		}
     	});
     	
+    	result = loadXMLString(result);
         var xmlpara = createXmlDom();
-
 
         pdocXML = SelectSingleNodeNew(result, "APROVEDATA/DOCINFO");
         var xmlString = getXmlString(pdocXML);
@@ -993,7 +993,7 @@ function getCurApproverAprLine() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/aprLineRequest.do",
 		data : {
@@ -1007,7 +1007,7 @@ function getCurApproverAprLine() {
 		}        			
 	});
     
-    Resultxml = result;
+    Resultxml = loadXMLString(result);
 
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     LastKyulSN = getLastSignSN(objNodes);
@@ -1837,7 +1837,7 @@ function getSusinSNInfo() {
     createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
 
-    xmlhttp.open("POST", "aspx/getSusinSN.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/getSusinSN.do", false);
     xmlhttp.send(xmlpara);
 
     if (xmlhttp.responseText != "") {
@@ -1950,7 +1950,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1974,7 +1974,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -2041,7 +2041,7 @@ function getLastOpinon() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getLastOpinonCotent.do",
 		data : {
@@ -2052,7 +2052,7 @@ function getLastOpinon() {
 		}
 	});
 
-    var objNodes = GetChildNodes(result.documentElement);
+    var objNodes = GetChildNodes(loadXMLString(result).documentElement);
     if (objNodes.length > 0)
         var content = getNodeText(objNodes[0]);
 
@@ -2125,7 +2125,7 @@ function SignCheck() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getSignInfo.do",
 		data : {
@@ -2138,6 +2138,8 @@ function SignCheck() {
 
     if (result == "" || result == null)
         return;
+    
+    result = loadXMLString(result);
 
     var NodeList;
     NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
@@ -2357,7 +2359,7 @@ function UpdateLineHistory() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/updateLineHistory.do",
 		data : {
@@ -2377,7 +2379,7 @@ function UpdateLineHistory() {
 		}        			
 	});
     
-    var DataNodes = GetChildNodes(result);
+    var DataNodes = GetChildNodes(loadXMLString(result));
     if (getNodeText(DataNodes[0]) == "TRUE") {
     }
     else {
@@ -2599,7 +2601,7 @@ function SendAckForExch(pType, pMode) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/sendAckforExch.do",
 		data : {
@@ -2631,7 +2633,7 @@ function getNextDocInfo() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getNextDocInfo.do",
     		data : {
@@ -2650,7 +2652,7 @@ function getNextDocInfo() {
         NextDocUserName2 = "";
         NextDocDeptID = "";
         if (result != "") {
-            var objNodes = GetChildNodes(result.documentElement);
+            var objNodes = GetChildNodes(loadXMLString(result).documentElement);
 
             if (objNodes.length > 0) {
                 NextDocID = getNodeText(objNodes[0]);

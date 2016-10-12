@@ -389,7 +389,7 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	var result = "";
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/addToAprDept.do",
 		data : {
@@ -398,7 +398,7 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 				aprSN  : p_CheckAprDeptTempletSN
 				},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 
@@ -452,7 +452,7 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 	var result = "";
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/delAprDeptTempletList.do",
 		data : {
@@ -461,7 +461,7 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 				aprSN  : p_SelAprDeptTempletSN
 				},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 	
@@ -522,7 +522,7 @@ function btn_AprDeptTempletSave_onclick(mode) {
             dialogValue[2] = templistviewsn;
             dialogValue[3] = templisttviewname;
         }
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             aprdepttempletname_cross_dialogArguments[0] = dialogValue;
             aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
 

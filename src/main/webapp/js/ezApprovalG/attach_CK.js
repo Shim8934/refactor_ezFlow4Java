@@ -3,7 +3,7 @@
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/attachRequest.do",
 		data : {
@@ -14,7 +14,7 @@
 		}        			
 	});
 	
-    Resultxml = result;
+    Resultxml = loadXMLString(result);
     var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
         pAttachSN = Number(SelectSingleNodeValue(GetLastChildNodes(NodeList[0], 2)[0], "DATA2")) + 1;
@@ -107,7 +107,7 @@ function SaveAttachListInfo(Attachxml) {
         OpenAlertUI(pAlertContent);
     }
     else {
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             CheckHistory(1);
             parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
             parent.DivPopUpHidden();
@@ -132,7 +132,7 @@ function getAttachFilePageNum(PageNum, DisplayName, CompleteFunction) {
     aprattachname_cross_dialogArguments[0] = dialogValue;
     aprattachname_cross_dialogArguments[1] = CompleteFunction;
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         DivPopUpShow(330, 230, windowName);
     }
     else {
@@ -216,7 +216,7 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     else
         var retValue = getAttachFilePageNum("1", pFileName, AddAttachFileInfoXmlParsing_Complete);
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         temppFileLocation = pFileLocation;
         temppFileSize = pFileSize;
         temppFileName = pFileName;
@@ -377,7 +377,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -402,7 +402,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -455,7 +455,7 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/updateAttachHistory.do",
 		data : {
@@ -476,7 +476,7 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 		}        			
 	});
 	
-    if (SelectSingleNodeValue(result, "RESULT") == "TRUE") {
+    if (SelectSingleNodeValue(loadXMLString(result), "RESULT") == "TRUE") {
     }
     else {
         var pAlertContent = strLang226;

@@ -306,6 +306,8 @@ public interface EzApprovalGService {
 	
 	public String checkAprLine(String docID, String mode, String userID, String companyID) throws Exception;
 	
+	public String getSusinSN(String docID, String companyID) throws Exception;
+	
 	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID) throws Exception;

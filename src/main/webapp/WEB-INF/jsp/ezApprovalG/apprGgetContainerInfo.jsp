@@ -466,14 +466,7 @@
 	                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 	            }
 	            else {
-	                if (CrossYN() || NonActiveX == "YES")
-	                    openLocation = "/ezApprovalG/contDocView.do";
-	                else {
-	                    if (pUse_Editor == "")
-	                        openLocation = "/myoffice/ezApprovalG/formContainer/contDocView.aspx";
-	                    else
-	                        openLocation = "/myoffice/ezApprovalG/formContainer/contDocView_IE.aspx";
-	                }                
+                    openLocation = "/ezApprovalG/contDocView.do";
 	            }
 	            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid);
 	            openwindow(openLocation, "", 880, 570);

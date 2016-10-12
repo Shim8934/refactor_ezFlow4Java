@@ -8,9 +8,9 @@
 <title><spring:message code='ezApprovalG.t889'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 
 <script ID="clientEventHandlersJS" type="text/javascript">
     var g_Flag, g_ID1, g_ID2;

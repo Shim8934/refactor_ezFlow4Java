@@ -340,7 +340,7 @@
 		
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/delayCabEndY.do",
 			data : {
@@ -350,7 +350,7 @@
 				cabClassList  : CabClassList
 			},
 			success: function(xml){
-				result = xml;
+				result = loadXMLString(xml);
 			}        			
 		});
 		
@@ -416,7 +416,7 @@
 		
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/getUncabinetedDocCount.do",
 			data : {
@@ -424,7 +424,7 @@
 				deptCode  : DeptID,
 			},
 			success: function(xml){
-				result = xml;
+				result = loadXMLString(xml);
 			}        			
 		});
 		
@@ -437,7 +437,7 @@
 		
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/chkIfNotArrangedCabExist.do",
 			data : {
@@ -445,7 +445,7 @@
 				deptCode  : DeptID,
 			},
 			success: function(xml){
-				result = xml;
+				result = loadXMLString(xml);
 			}        			
 		});
 		
@@ -482,7 +482,7 @@
 		
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezApprovalG/confirmClassfy.do",
 			data : {
@@ -490,7 +490,7 @@
 				deptCode  : pDeptCode,
 			},
 			success: function(xml){
-				result = xml;
+				result = loadXMLString(xml);
 			}        			
 		});
 		

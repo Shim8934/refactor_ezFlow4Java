@@ -273,7 +273,7 @@
 		        }
 		        $.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					async : true,
 					url : url,
 					data : { boardType   : pBoardType, 
@@ -285,7 +285,7 @@
 							 type 		 : type
 							},
 					success: function(xml){
-						getBoardList_after(xml);
+						getBoardList_after(loadXMLString(xml));
 					}        			
 				});	
 		    }
@@ -345,8 +345,13 @@
 		            strListInfo = "";
 		            var tempno = 0;
 		            for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-		                    if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim() > tempno){
-		                        tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
+		            	if (CrossYN()) {
+		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
+		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
+		                }
+		                else {
+		                    if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
+		                        tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
 		                }
 		            }
 		            tempno = tempno + "";

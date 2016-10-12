@@ -118,7 +118,7 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getCabinetSearch.do",
 		    		data : {
@@ -130,7 +130,7 @@
 		    			langType : "${userInfo.lang}"
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		        

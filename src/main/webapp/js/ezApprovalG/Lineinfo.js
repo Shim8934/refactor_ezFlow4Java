@@ -601,7 +601,7 @@ function isgetUser(DeptID) {
 	var rtnVal = true;
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
@@ -615,7 +615,7 @@ function isgetUser(DeptID) {
 		}        			
 	});
 
-    var nodes = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+    var nodes = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
     if (rtnVal) {
         nodeCnt = nodes.length;
 

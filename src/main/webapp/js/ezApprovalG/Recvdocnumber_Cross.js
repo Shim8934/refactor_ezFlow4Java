@@ -120,7 +120,7 @@ function getRecvDocNumber(pDeptID) {
         	
         	$.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/getCabinetSN.do",
         		data : {
@@ -128,7 +128,7 @@ function getRecvDocNumber(pDeptID) {
         			deptID : pDeptID
         		},
         		success: function(xml){
-        			result = xml;
+        			result = loadXMLString(xml);
         		}
         	});
 
@@ -153,7 +153,7 @@ function getRecvDocNumber(pDeptID) {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getCabinetSN.do",
     		data : {
@@ -161,7 +161,7 @@ function getRecvDocNumber(pDeptID) {
     			deptID : pDeptID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}
     	});
     	

@@ -843,7 +843,7 @@
 	            createcabinet_cross_dialogArguments[0] = para;
 	            createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;
 	
-	            if (CrossYN() || NonActiveX == "YES") {
+	            if (CrossYN()) {
 	                if (UserLang == "2" || UserLang == "3") {
 	                    DivPopUpShow(440, 450, url);
 	                }
@@ -965,10 +965,9 @@
 	        else
 	            rtnVal[7] = "";
 	
-	        if (CrossYN() || NonActiveX == "YES") {
-	        }
-	        else
+	        if (!CrossYN()) {
 	            window.returnValue = rtnVal;
+	        }
 	    }
 	    function initdatepicker() {
 	        var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
@@ -1015,7 +1014,7 @@
 	        }
 	
 	        var dialogValue = CurSelRow[0].cells[1].innerText;
-	        if (CrossYN() || NonActiveX == "YES") {
+	        if (CrossYN()) {
 	            aprdeptname_cross_dialogArguments[0] = dialogValue;
 	            aprdeptname_cross_dialogArguments[1] = btnaddressChange_Complete;
 	

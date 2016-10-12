@@ -64,7 +64,7 @@ function InitCategorySelection()
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskCategory.do",
 		data : {
@@ -77,7 +77,7 @@ function InitCategorySelection()
 		}        			
 	});
     
-	var xmlRtn = result;
+	var xmlRtn = loadXMLString(result);
 	var dataNodes = GetChildNodes(xmlRtn); 
 	var rtnValue = getNodeText(dataNodes[0]);
 	
@@ -103,7 +103,7 @@ function GetTaskMiddleCategory(pCode)
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskMiddleCategory.do",
 		data : {
@@ -116,7 +116,7 @@ function GetTaskMiddleCategory(pCode)
 		}        			
 	});
     
-	var xmlRtn = result;
+	var xmlRtn = loadXMLString(result);
 	var dataNodes = GetChildNodes(xmlRtn); 
 	var rtnValue = getNodeText(dataNodes[0]);
 
@@ -144,7 +144,7 @@ function GetTaskSubCategory(pCode, pSubCategoryCode)
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskSubCategory.do",
 		data : {
@@ -158,7 +158,7 @@ function GetTaskSubCategory(pCode, pSubCategoryCode)
 		}        			
 	});
     
-	var rtnXml = result;
+	var rtnXml = loadXMLString(result);
 	var dataNodes = GetChildNodes(rtnXml); 
 	var rtnValue = getNodeText(dataNodes[0]);
 	
@@ -323,7 +323,7 @@ function GetListInSubCateList(pCode) {
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskInSubCategory.do",
 		data : {
@@ -337,7 +337,7 @@ function GetListInSubCateList(pCode) {
 		}        			
 	});
     
-    return result;
+    return loadXMLString(result);
 }
 
 
@@ -345,7 +345,7 @@ function GetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCabinetSimpleList.do",
 		data : {
@@ -361,7 +361,7 @@ function GetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
 		}        			
 	});
 
-    return result;
+    return loadXMLString(result);
 }
 
 function GetSelIdxForSubCate(Rows, len, pSubCategoryCode)
@@ -380,7 +380,7 @@ function GetTaskListInSubCategory(pCode, pTaskCode)
 	var result = "";
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskInSubCategory.do",
 		data : {
@@ -394,7 +394,7 @@ function GetTaskListInSubCategory(pCode, pTaskCode)
 		}        			
 	});
     
-	var rtnXml = result;
+	var rtnXml = loadXMLString(result);
 	var dataNodes = GetChildNodes(rtnXml);
 	var retValue = getNodeText(dataNodes[0]);
 	
@@ -553,7 +553,7 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode)
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/findTaskList.do",
 		data : {
@@ -569,5 +569,5 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode)
 		}        			
 	});
 	
-	return result;
+	return loadXMLString(result);
 }

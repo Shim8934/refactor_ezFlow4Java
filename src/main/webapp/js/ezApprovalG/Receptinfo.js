@@ -93,7 +93,7 @@ function initReceptListView() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
@@ -101,7 +101,7 @@ function initReceptListView() {
 			mode  : pMode
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 
@@ -418,11 +418,9 @@ function AprDeptAdd_onclick(Type) {
                     OpenAlertUI(pAlertContent);
                     return;
                 }
-
                 var treeNode = new TreeNode();
                 treeNode.LoadFromID(nodeIdx);
                 var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, treeNode.GetNodeData("CN"));
-
                 //2015-05-08 추가 - KSK
                 if (GetEntryInfo(treeNode.GetNodeData("CN")) == "N") {
                     var pAlertContent = strLang1105;
@@ -736,7 +734,7 @@ function searchUserList2(search) {
         else {
     		$.ajax({
     			type : "POST",
-    			dataType : "xml",
+    			dataType : "text",
     			async : true,
     			url : "/ezOrgan/getSearchList.do",
     			data : {
@@ -746,7 +744,7 @@ function searchUserList2(search) {
     				type   : "user"
     			},
     			success: function(xml){
-    				event_displayUserList2(xml);
+    				event_displayUserList2(loadXMLString(xml));
     			}
     		});
         }
@@ -807,7 +805,7 @@ function btnSearchDept_onClick() {
 
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : false,
 			url : "/ezOrgan/getSearchList.do",
 			data : {
@@ -818,7 +816,7 @@ function btnSearchDept_onClick() {
 			},
 			success: function(xml){
 				document.getElementById("txtDeptName").focus();
-                xmlDOM = xml;
+                xmlDOM = loadXMLString(xml);
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
 			},
 	    	error : function(error){
@@ -845,7 +843,7 @@ function btnSearchDept_onClick() {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["deptid"] = "";
-            if (CrossYN() || NonActiveX == "YES") {
+            if (CrossYN()) {
                 checkname2_cross_dialogArguments[0] = rgParams;
                 checkname2_cross_dialogArguments[1] = btnSearchDept_onClick_Complete2;
 
@@ -872,7 +870,7 @@ function btnSearchDept_onClick() {
             document.getElementById("txtOuterDeptName").focus();
             return;
         }
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             searchorganglist_dialogArguments[0] = g_progresswin;
             searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
 
@@ -1967,7 +1965,7 @@ function btnAddAddress() {
     }
 
     var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         aprdeptaddressusername_cross_dialogArguments[0] = "";
         aprdeptaddressusername_cross_dialogArguments[1] = btnAddAddress_Complete;
 
@@ -2185,7 +2183,7 @@ var SelDivName = "";
 function InsertRecAll() {
     try {
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             var pAlertContent = T1361andT1362;
             var Ans = OpenInformationUI(pAlertContent, InsertRecAll_Complete);
         } else {
@@ -2622,7 +2620,7 @@ function GetEntryInfo(_DEPTID) {
     	var result = "";
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/admin/ezOrgan/getEntryInfo.do",
     		data : {
@@ -2634,9 +2632,8 @@ function GetEntryInfo(_DEPTID) {
     		}        			
     	});
     	
-        ReceiveDocument = SelectSingleNodeValueNew(result, "DATA/EXTENSIONATTRIBUTE11").trim();
+        ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/EXTENSIONATTRIBUTE11");
     } catch (e) {
-        alert(e.description);
     } 
     
     return ReceiveDocument;

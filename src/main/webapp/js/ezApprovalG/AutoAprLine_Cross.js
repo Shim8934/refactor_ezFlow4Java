@@ -12,7 +12,7 @@
         
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/aprLineRequest.do",
     		data : {
@@ -24,6 +24,8 @@
     			result = xml;
     		}        			
     	});
+        
+        result = loadXMLString(result);
         
         var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
         if (NodeList.length > 0) {

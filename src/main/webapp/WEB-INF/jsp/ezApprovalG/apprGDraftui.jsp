@@ -5,8 +5,6 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t30'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta http-equiv="Pragma" content="no-cache">
-		<meta http-equiv="Expires" content="0">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -212,7 +210,7 @@
 		        var Result = "";
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		data : {
 		    			formID : pFormID,
@@ -220,6 +218,7 @@
 		    		},
 		    		url : "/ezApprovalG/getFormDetail.do",
 		    		success: function(xml){
+		    			xml = loadXMLString(xml);
 			            if (xml.getElementsByTagName("FORMDOCTYPE").length > 0) {
 			                Result = xml.getElementsByTagName("FORMDOCTYPE").item(0).text;
 			            }
@@ -258,7 +257,7 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    GetExchInfo();
 		                    getDocInfo();
-		
+		                    
 		                    if (pHasOpinionYN == "Y") {
 		                        if (AprState == "<spring:message code='ezApprovalG.t49'/>")
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";

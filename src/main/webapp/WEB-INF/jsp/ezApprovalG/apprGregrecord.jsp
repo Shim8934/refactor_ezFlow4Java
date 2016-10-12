@@ -6,11 +6,11 @@
 <html>
 <head>
 <title><spring:message code='ezApprovalG.t1043'/></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/RegRecord_Cross.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/RecordInfo_Cross.js"></script>
@@ -337,12 +337,12 @@
 
 
             if (Val == 5) {
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     window.resizeTo(880, 780);
                 InitAVTypeTD(g_NodesPhotoAVType, tdAVType, "");
             }
             else if (Val == 6) {
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     window.resizeTo(880, 810);
                 InitAVTypeTD(g_NodesRcdgAVType, tdAVType, "");
             }
@@ -354,7 +354,7 @@
 
             if (Val == "1" || Val == "3" || Val == "5" || Val == "6")
             {
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     window.resizeTo(880, 710);
 
                 trDeliveryNo.style.display = "none";
@@ -363,7 +363,7 @@
             }
             else if (Val == "2" || Val == "4")
             {
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     window.resizeTo(880, 710);
 
                 trDeliveryNo.style.display = "";
@@ -371,7 +371,7 @@
                 trAprMemberTitle.style.display = "none";
             }
             else {
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     window.resizeTo(880, 720);
 
                 trDeliveryNo.style.display = "";

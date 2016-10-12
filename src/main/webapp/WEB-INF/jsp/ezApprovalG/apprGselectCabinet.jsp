@@ -344,7 +344,7 @@
 	    }
 	
 	    window.onbeforeunload = function () {
-	        if (!CrossYN() && NonActiveX == "NO")
+	        if (!CrossYN())
 	            window.returnValue = rtnVal;
 	    };
 	    function GetSelCabInfoXml() {

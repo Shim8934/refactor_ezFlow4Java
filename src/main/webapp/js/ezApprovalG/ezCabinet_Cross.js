@@ -883,7 +883,7 @@ function GetHearderXml() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getLVHearderInfo.do",
 		data : {
@@ -896,7 +896,7 @@ function GetHearderXml() {
 		}        			
 	});
 	
-    var rtnXml = result;
+    var rtnXml = loadXMLString(result);
     var dataNodes = GetChildNodes(rtnXml);
 
     if (getNodeText(dataNodes[0]) == "FALSE") {
@@ -1164,28 +1164,11 @@ function ViewDoc_onclick_Complete(Rtn) {
             var openLocation = "";
             
             if (g_uFlag == "m03") {
-                if (CrossYN() || NonActiveX == "YES")
-                    openLocation = "/ezApprovalG/contDocView.do";
-                else {
-                    if (pUse_Editor == "")
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
-                    else
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
-                }
+                openLocation = "/ezApprovalG/contDocView.do";
                 openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
             }
             else {
-                if (CrossYN() || NonActiveX == "YES") {
-                    openLocation = "/ezApprovalG/contDocView.do";
-                }
-                else {
-                    if (pUse_Editor == "") {
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView.aspx";
-                    }
-                    else {
-                        openLocation = "/myoffice/ezApprovalG/FormContainer/contDocView_IE.aspx";
-                    }
-                }
+                openLocation = "/ezApprovalG/contDocView.do";
                 openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
             }
             openwindow(openLocation, "", 880, 570);
@@ -1224,7 +1207,7 @@ function CheckAprLine(pDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/checkAprLineUser.do",
 		data : {
@@ -1238,7 +1221,7 @@ function CheckAprLine(pDocID) {
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     return getNodeText(dataNodes[0]);
 
 }
@@ -1316,7 +1299,7 @@ function GetUserRecRight(pRecID, pSepAttNo, pUserID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getUserRecRight.do",
 		data : {
@@ -1330,7 +1313,7 @@ function GetUserRecRight(pRecID, pSepAttNo, pUserID) {
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {
@@ -1354,7 +1337,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
 
     var url = "/ezApprovalG/searchRec.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         searchrec_cross_dialogArguments[0] = para;
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 

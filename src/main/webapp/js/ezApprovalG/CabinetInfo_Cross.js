@@ -3,7 +3,7 @@
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCabinetSimpleList.do",
 		data : {
@@ -19,7 +19,7 @@
 		}        			
 	});
     
-    var rtnXml = result;
+    var rtnXml = loadXMLString(result);
 
     var iSeledtedIdx = 0;
     if (result == "FALSE") {
@@ -66,7 +66,7 @@ function GetCabinetClassInfo(pCabID) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCabinetInfo.do",
 		data : {
@@ -79,7 +79,7 @@ function GetCabinetClassInfo(pCabID) {
 		}        			
 	});
     
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtnXml = getNodeText(dataNodes[0]);
 
     if (rtnXml == "FALSE") {
@@ -97,7 +97,7 @@ function NewVolume(pCabID, pCabClassNo, opentype, CompleteFunction) {
 
     var url = "/ezApprovalG/addVolume.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         addvolume_cross_dialogArguments[0] = para;
         if (CompleteFunction == undefined)
             addvolume_cross_dialogArguments[1] = NewVolume_Complete;
@@ -138,7 +138,7 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/addNewVolume.do",
 		data : {
@@ -151,7 +151,7 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 		}        			
 	});
     
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {
@@ -165,7 +165,7 @@ function EndCabProduce(pCabClassNo, pExpYear, pFlag) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/endCabProduce.do",
 		data : {
@@ -179,7 +179,7 @@ function EndCabProduce(pCabClassNo, pExpYear, pFlag) {
 		}        			
 	});
     
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn != "TRUE")

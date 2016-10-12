@@ -24,7 +24,7 @@
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+		    var browserIE = (!CrossYN()) ? true : false;
 		</script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var InitTreeVal = "";	

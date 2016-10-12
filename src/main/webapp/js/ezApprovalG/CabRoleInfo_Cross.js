@@ -3,7 +3,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined) {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -31,7 +31,7 @@ function ISCabCharger(pCabClassNo, pUserID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/iSCabCharger.do",
 		data : {
@@ -44,7 +44,7 @@ function ISCabCharger(pCabClassNo, pUserID) {
 		}        			
 	});
 	
-    var ResultXML = result;
+    var ResultXML = loadXMLString(result);
     var rtnVal = getNodeText(GetChildNodes(ResultXML)[0]);
 
     if (rtnVal == "FALSE" || rtnVal == "") {

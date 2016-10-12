@@ -28,7 +28,7 @@ function getDataInfo() {
     }
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : pUrl,
 		data : {
@@ -36,7 +36,7 @@ function getDataInfo() {
 				mode  : "END"
 				},
 		success: function(xml){
-			getdoclistSub_after(xml);
+			getdoclistSub_after(loadXMLString(xml));
 		}        			
 	});
 }
@@ -377,7 +377,7 @@ function CheckFormConnFlag(pDocID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getFormConnFlag.do",
 		data : {
@@ -388,7 +388,7 @@ function CheckFormConnFlag(pDocID) {
 			result = xml;
 		}
 	});
-    if (getNodeText(result.documentElement) == "Y")
+    if (getNodeText(loadXMLString(result).documentElement) == "Y")
         return true;
     else
         return false;

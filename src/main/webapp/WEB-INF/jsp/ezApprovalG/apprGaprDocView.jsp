@@ -104,7 +104,7 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/gongRamUpdate.do",
 		    		data : {
@@ -112,7 +112,7 @@
 		    			userID: ListSusin
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		        

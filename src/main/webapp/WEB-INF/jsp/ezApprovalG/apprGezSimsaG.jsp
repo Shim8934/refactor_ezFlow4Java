@@ -169,7 +169,7 @@
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -194,7 +194,7 @@
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapropinion_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -444,7 +444,7 @@
 			    	
 		    		$.ajax({
 			    		type : "POST",
-			    		dataType : "xml",
+			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezApprovalG/sendOfferReject.do",
 			    		data : {
@@ -452,7 +452,7 @@
 			    			userID : pUserID
 			    		},
 			    		success: function(xml){
-			    			result = xml;
+			    			result = loadXMLString(xml);
 			    		}        			
 			    	});
 		    		
@@ -486,7 +486,7 @@
 		    	
 	    		$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/sendOfferAprove.do",
 		    		data : {
@@ -498,7 +498,7 @@
 		    			userName2: arr_userinfo[12]
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	 
@@ -522,7 +522,7 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/saveEndFile.do",
 		    		data : {
@@ -530,7 +530,7 @@
 		    			html  : mhtBody
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		        
@@ -555,14 +555,14 @@
 		    	
 	    		$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/admin/ezApprovalG/getSealList.do",
 		    		data : {
 		    			flag : "LIST"
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 	    		
@@ -781,7 +781,7 @@
 		    	
 	    		$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/admin/ezApprovalG/getDeptSealList.do",
 		    		data : {
@@ -789,7 +789,7 @@
 		    			deptID  : arr_userinfo[4]
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 	    		

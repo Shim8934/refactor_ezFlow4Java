@@ -48,7 +48,7 @@
 	                document.getElementById("bbtn_OpinionAdd").style.display = "none";
 	                document.getElementById("bbtn_OpinionDel").style.display = "none";
 	            }
-	            if (!CrossYN() && NonActiveX == "NO")
+	            if (!CrossYN())
 	                window.returnValue = "cancel";
 	        };
 	        function DisplayFirstOpinionInfo() {
@@ -68,14 +68,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getEndOpinionInfo.do",
 		    		data : {
 		    			docID : pDocID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}
 		    	});
 		    	

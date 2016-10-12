@@ -236,7 +236,7 @@
 					AttachFileListCancel();
 				}
 			  
-				if (CrossYN() || NonActiveX == "YES") {
+				if (CrossYN()) {
 				    parent.DivPopUpHidden();
 				}
 				else {
@@ -351,7 +351,7 @@
 					{
 						DeleteFileAtServer_true(pDeleteFile[i]);
 					}
-					if (CrossYN() || NonActiveX == "YES") {
+					if (CrossYN()) {
 					    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
 					    parent.DivPopUpHidden();
 					}
@@ -381,7 +381,7 @@
 			        btn_AttachAdd.disabled = false;
 			    }
 			    else {
-			        if (CrossYN() || NonActiveX == "YES") {
+			        if (CrossYN()) {
 			            AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation);
 			        }
 			        else {
@@ -426,7 +426,7 @@
 			    if (pAttachUserID.toLowerCase() == pUserID.toLowerCase()) {
 			        var retValue = getAttachFilePageNum(GetAttribute(pCurSelRow[0], "DATA9"), GetChildNodes(pCurSelRow[0])[1].innerHTML, ATTACH_onDblclick_Complete);
 			        if (retValue != undefined) {
-			            if ((!CrossYN() || NonActiveX == "NO") && retValue[0] == "OK") {
+			            if ((!CrossYN()) && retValue[0] == "OK") {
 			                SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
 			                pCurSelRow[0].childNodes[1].innerHTML = retValue[2];
 			                pCurSelRow[0].childNodes[3].innerHTML = retValue[1];

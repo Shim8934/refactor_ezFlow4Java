@@ -72,7 +72,7 @@ function GetCabinetClassInfo(pCabID) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCabinetInfo.do",
 		data : {
@@ -85,7 +85,7 @@ function GetCabinetClassInfo(pCabID) {
 		}        			
 	});
 
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtnXml = getNodeText(dataNodes[0]);
 
     if (rtnXml == "FALSE") {
@@ -386,7 +386,7 @@ function NewVolume(pCabID, pCabClassNo) {
     para[1] = pCabClassNo;
 
     var url = "/ezApprovalG/addVolume.do";
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         addvolume_cross_dialogArguments[0] = para;
         addvolume_cross_dialogArguments[1] = NewVolume_Complete;
         DivPopUpShow(360, 310, url);
@@ -414,7 +414,7 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/addNewVolume.do",
 		data : {
@@ -427,7 +427,7 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 		}        			
 	});
     
-    var dataNodes = GetChildNodes(result);
+    var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
     if (rtn == "FALSE") {
@@ -449,7 +449,7 @@ function CabinetSearch_onclick() {
         
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getCabinetSearchAll.do",
     		data : {
@@ -465,7 +465,7 @@ function CabinetSearch_onclick() {
     		}        			
     	});
         
-        var rtnXml = result;
+        var rtnXml = loadXMLString(result);
         var iSeledtedIdx = 0;
         if (SelectSingleNodeValue(rtnXml, "RESULT") == "FALSE") {
             alert(linealt17);
@@ -503,7 +503,7 @@ function MyCabinet_List() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezApprovalG/getMyTaskCode.do",
 		data : {
@@ -511,7 +511,7 @@ function MyCabinet_List() {
 			userID    : arr_userinfo[1]
 		},
 		success: function(xml){
-			MyCabinet_ini(xml);
+			MyCabinet_ini(loadXMLString(xml));
 		}        			
 	});
 }

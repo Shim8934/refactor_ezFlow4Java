@@ -44,7 +44,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTotalAttachInfo.do",
 		data : {
@@ -56,7 +56,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 		}        			
 	});
 
-    var xmlRtn = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+    var xmlRtn = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 
     if (xmlRtn.length > 0) {
         var strAttach = " &nbsp ";
@@ -99,7 +99,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 else
                     fileImage = "/images/attach-small.gif";
 
-                if (CrossYN() || NonActiveX == "YES")
+                if (CrossYN())
                     strTarget = "target=\''";
 
                 var protocol = window.location.protocol;
@@ -130,17 +130,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                 }
                 else {
-                    if (CrossYN() || NonActiveX == "YES") {
-                        openLocation = "/ezApprovalG/contDocView.do";
-                    }
-                    else {
-                        if (pUse_Editor == "") {
-                            openLocation = "/myoffice/ezApprovalG/formContainer/contDocView.aspx";
-                        }
-                        else {
-                            openLocation = "/myoffice/ezApprovalG/formContainer/contDocView.aspx";
-                        }
-                    }
+                    openLocation = "/ezApprovalG/contDocView.do";
                     openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=";
                     strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                     strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
@@ -192,7 +182,7 @@ function OpenAttachAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;

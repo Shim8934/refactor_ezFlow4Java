@@ -14,7 +14,7 @@ function ConvertAprLineState(pAprLineSate, pConvertType)
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCodeData.do",
 		data : {
@@ -27,7 +27,7 @@ function ConvertAprLineState(pAprLineSate, pConvertType)
 		}        			
 	});
   
-  	var dataNodes = GetChildNodes(result); 
+  	var dataNodes = GetChildNodes(loadXMLString(result)); 
     var ret = getNodeText(dataNodes[0]);
     return ret; 	
 }
@@ -50,7 +50,7 @@ function ConvertAprLineType(pAprLineType , pConvertType)
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCodeData.do",
 		data : {
@@ -63,7 +63,7 @@ function ConvertAprLineType(pAprLineType , pConvertType)
 		}        			
 	});
    	
-   	var dataNodes = GetChildNodes(result); 
+   	var dataNodes = GetChildNodes(loadXMLString(result)); 
     var ret = getNodeText(dataNodes[0]);
     return ret;
 }

@@ -9,8 +9,8 @@
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
@@ -87,7 +87,7 @@
 		        starttime = new Date().getTime();
 		    	$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					async : false,
 					url : "/ezBoard/getBoardList.do",	        			
 					data : { boardType : pBoardType, 
@@ -96,7 +96,7 @@
 							 orderCell : OrderCell, 
 							 orderOption : OrderOption},
 					success: function(xml){
-						getBoardList_after(xml);
+						getBoardList_after(loadXMLString(xml));
 					}        			
 				});	
 		    }
@@ -132,11 +132,18 @@
 		            makePageSelPage();
 
 		            var xmlDoc;
-	                var xmlLIST = createXmlDom();
-	                var nodeToImport = xmlLIST.importNode(listNode, true);
-	                xmlLIST.appendChild(nodeToImport);
+		            
+		            if (CrossYN()) {
+		                var xmlLIST = createXmlDom();
+		                var nodeToImport = xmlLIST.importNode(listNode, true);
+		                xmlLIST.appendChild(nodeToImport);
 
-	                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+		                xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+		            } else {
+		                xmlDoc = createXmlDom();
+		                xmlDoc.appendChild(listNode);
+		            }
+		            
 		            if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
 
 		            var DocList = new ListView();

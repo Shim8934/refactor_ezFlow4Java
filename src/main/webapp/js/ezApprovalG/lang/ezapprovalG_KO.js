@@ -1295,3 +1295,5 @@ var strLang1125 = "기";
 var strLang1126 = "안";
 var strLang1127 = "합";
 var strLang1128 = "의";
+var strLang1129 = "첨부 정보";
+var strLang1130 = "결재선 정보";

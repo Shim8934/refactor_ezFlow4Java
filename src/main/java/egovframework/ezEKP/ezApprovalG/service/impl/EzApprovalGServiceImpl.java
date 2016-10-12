@@ -1503,6 +1503,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getSusinSN(String docID, String companyID) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		
+		String rtnVal = ezApprovalGDAO.getSusinSN(map);
+		
+		return "<DATA>" + rtnVal + "</DATA>";
+	}
+
+	@Override
 	public String getSecurityType(String selected, String companyID, String lang) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6249,16 +6261,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnXML.append("<ITEMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMCODE").item(0).getTextContent())) + "</ITEMCODE>");
 			rtnXML.append("<ITEMNAME>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME").item(0).getTextContent())) + "</ITEMNAME>");
 			rtnXML.append("<KEYWORD>" + makeXMLString(makeListField(docXML.getElementsByTagName("KEYWORD").item(0).getTextContent())) + "</KEYWORD>");
-			rtnXML.append("<SPECIALRECORDCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent())) + "</SPECIALRECORDCODE>");
-			rtnXML.append("<PUBLICITYCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent())) + "</PUBLICITYCODE>");
-			rtnXML.append("<LIMITRANGE>" + makeXMLString(makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent())) + "</LIMITRANGE>");
+			rtnXML.append("<SPECIALRECORDCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim())) + "</SPECIALRECORDCODE>");
+			rtnXML.append("<PUBLICITYCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim())) + "</PUBLICITYCODE>");
+			rtnXML.append("<LIMITRANGE>" + makeXMLString(makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim())) + "</LIMITRANGE>");
 			rtnXML.append("<PAGENUM>" + makeXMLString(makeListField(docXML.getElementsByTagName("PAGENUM").item(0).getTextContent())) + "</PAGENUM>");
-			rtnXML.append("<CABINETID>" + makeXMLString(makeListField(docXML.getElementsByTagName("CABINETID").item(0).getTextContent())) + "</CABINETID>");
-			rtnXML.append("<TASKCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent())) + "</TASKCODE>");
-			rtnXML.append("<DOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent())) + "</DOCNUMCODE>");
-			rtnXML.append("<ORGDOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent())) + "</ORGDOCNUMCODE>");
-			rtnXML.append("<SEPERATEATTACHXML>" + makeXMLString(makeListField(docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent())) + "</SEPERATEATTACHXML>");
-			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent())) + "</SUMMARY>");
+			rtnXML.append("<CABINETID>" + makeXMLString(makeListField(docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim())) + "</CABINETID>");
+			rtnXML.append("<TASKCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent().trim())) + "</TASKCODE>");
+			rtnXML.append("<DOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim())) + "</DOCNUMCODE>");
+			rtnXML.append("<ORGDOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim())) + "</ORGDOCNUMCODE>");
+			rtnXML.append("<SEPERATEATTACHXML>" + makeXMLString(makeListField(docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim())) + "</SEPERATEATTACHXML>");
+			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent().trim())) + "</SUMMARY>");
 			rtnXML.append("<SECURITYAPPROVAL>" + makeXMLString(makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent())) + "</SECURITYAPPROVAL>");
             rtnXML.append("<ITEMNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "</ITEMNAME2>");
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");

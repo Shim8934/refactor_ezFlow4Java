@@ -751,6 +751,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.getApprovalPWD2", map);
 	}
 	
+	public String getSusinSN(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getSusinSN", map);
+	}
+	
 	public int getUserRecRight(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getUserRecRight", map);
 		return (int) map.get("v_RtnVal");

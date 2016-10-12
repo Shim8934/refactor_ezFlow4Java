@@ -333,7 +333,7 @@
 	    	
 	        $.ajax({
 	    		type : "POST",
-	    		dataType : "xml",
+	    		dataType : "text",
 	    		async : false,
 	    		url : "/ezApprovalG/getUncompleteDocCount.do",
 	    		data : {
@@ -342,7 +342,7 @@
 	    				cabinetID : pCabinetID
 	    				},
 	    		success: function(xml){
-	    			result = xml;
+	    			result = loadXMLString(xml);
 	    		}        			
 	    	});
 

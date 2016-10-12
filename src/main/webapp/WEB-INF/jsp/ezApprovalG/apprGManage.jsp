@@ -196,9 +196,11 @@
 		    }
 		
 		    function setBujaeOff() {
+		    	var result = "";
+		    	
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
@@ -411,14 +413,7 @@
 		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp")
 		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 		                else {
-		                    if (CrossYN() || NonActiveX == "YES")
-		                        openLocation = "/ezApprovalG/contDocView.do";
-		                    else {
-		                        if (pUse_Editor == "")
-		                            openLocation = "./formContainer/contDocView.aspx";
-		                        else
-		                            openLocation = "./formContainer/contDocView_IE.aspx";
-		                    }
+	                        openLocation = "/ezApprovalG/contDocView.do";
 		                    openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		                }
 		                openwindow(openLocation, "", 880, 570);
@@ -508,15 +503,7 @@
 		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
 		            }
 		            else {
-		                if (CrossYN() || NonActiveX == "YES")
-		                    openLocation = "/ezApprovalG/contDocView.do";
-		                else
-		                {
-		                    if (pUse_Editor == "")
-		                        openLocation = "./formContainer/contDocView.aspx";
-		                    else
-		                        openLocation = "./formContainer/contDocView_IE.aspx";
-		                }
+	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=";
 		            openwindow(openLocation, "", 880, 570);
@@ -623,7 +610,7 @@
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                }
 		                else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                    if (CrossYN() || NonActiveX == "YES") {
+		                    if (CrossYN()) {
 		                        alert(strLang1103);
 		                        return;
 		                    }
@@ -729,7 +716,7 @@
 		
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
-		                if (CrossYN() || NonActiveX == "YES") {
+		                if (CrossYN()) {
 		                    tempDocID = DocID;
 		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		                }
@@ -742,7 +729,7 @@
 		            }
 		            else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-		                if (CrossYN() || NonActiveX == "YES") {
+		                if (CrossYN()) {
 		                    tempDocID = DocID;
 		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		                }
@@ -995,18 +982,7 @@
 		            }
 		        }
 		        else {
-		
-		            if (CrossYN() || NonActiveX == "YES") {
-		                openLocation = "/ezApprovalG/ezSimsaG.do";
-		            }
-		            else {
-		                if (pUse_Editor == "") {
-		                    openLocation = "/myoffice/ezApprovalG/enforce/ezSimsaG.aspx";
-		                }
-		                else {
-		                    openLocation = "/myoffice/ezApprovalG/enforce/ezSimsaG_IE.aspx";
-		                }
-		            }
+	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
 		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;

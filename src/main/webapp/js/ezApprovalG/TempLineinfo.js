@@ -115,7 +115,7 @@ function btn_SaveAprLineTemplet_onclick()
 	    dialogValue[3] = "";
 	    p_CheckAprLineTempletSN = "";
 	    pAprLineTempletFlag = false;
-	    if (CrossYN() || NonActiveX == "YES") {
+	    if (CrossYN()) {
 	        aprlinetempletname_cross_dialogArguments[0] = dialogValue;
 	        aprlinetempletname_cross_dialogArguments[1] = btn_SaveAprLineTemplet_onclick_Complete;
 	        DivPopUpShow(360, 220, windowName);
@@ -172,7 +172,7 @@ function CreateNewAprLineTemplet(p_AprLineTempletName) {
     var RtnVal = getNodeText(dataNodes[0]);
     if (RtnVal == "TRUE") {
         OpenAlertUI(strLang814, CreateNewAprLineTemplet_Complete);
-        if (!CrossYN() || NonActiveX == "NO")
+        if (!CrossYN())
             InitAprlineTemplet();
     } else {
         OpenAlertUI(strLang131);
@@ -217,7 +217,7 @@ function btn_DelAprLineTemplet_onclick()
 	var p_SelAprLineTempletSN;
 	var pInformationContent = linealt7;
 	var Ans = OpenInformationUI(pInformationContent, btn_DelAprLineTemplet_onclick_Complete);
-	if (!CrossYN() || NonActiveX == "NO") {
+	if (!CrossYN()) {
 	    if (Ans) {
 	        p_SelAprLineTempletSN = ListViewLen[0].getAttribute("DATA1");
 	        DelAprLineTempletList(p_SelAprLineTempletSN);
@@ -240,7 +240,7 @@ function DelAprLineTempletList(p_SelAprLineTempletSN) {
 	var result = "";
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/delAprLineTempletList.do",
 		data : {
@@ -249,7 +249,7 @@ function DelAprLineTempletList(p_SelAprLineTempletSN) {
 				aprLineSN: p_SelAprLineTempletSN
 				},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 	
@@ -288,7 +288,7 @@ function btn_ModifyToAprLine_onclick() {
         dialogValue[1] = pFormID;
         dialogValue[2] = p_CheckAprLineTempletSN;
         dialogValue[3] = p_CheckAprLineTempletName;
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             aprlinetempletname_cross_dialogArguments[0] = dialogValue;
             aprlinetempletname_cross_dialogArguments[1] = btn_ModifyToAprLine_onclick_Complete;
 
@@ -357,7 +357,7 @@ function AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/addToAprLine.do",
 		data : {
@@ -366,7 +366,7 @@ function AddToAprLineFromAprLineTemplet(p_CheckAprLineTempletSN) {
 				aprSN	 : p_CheckAprLineTempletSN
 				},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 

@@ -40,7 +40,8 @@
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
 		        else if (pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase() == "hwp") {
-		            if (CrossYN() || NonActiveX == "YES") {
+		        	//hwp사용안함
+		            if (CrossYN()) {
 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
 		            }
 		            else {
@@ -48,7 +49,7 @@
 		            }
 		        }
 		        else {
-		            if (CrossYN() || NonActiveX == "YES") {
+		            if (CrossYN()) {
 		                pUrl = "DocViewer_CK.aspx?DocHref=" + escapenew(Arguments[0]);
 		            }
 		            else {
@@ -107,14 +108,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getDocHistory.do",
 		    		data : {
 		    			docID : pDocID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	
@@ -130,14 +131,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getLineHistory.do",
 		    		data : {
 		    			docID : pDocID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	
@@ -154,14 +155,14 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getAttachHistory.do",
 		    		data : {
 		    			docID : pDocID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	
@@ -178,7 +179,7 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getLineHistoryDetail.do",
 		    		data : {
@@ -186,7 +187,7 @@
 		    			changeSN : pChangeSN
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		    	
@@ -271,7 +272,7 @@
 		    }
 		
 		    function close_Click() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            parent.DivPopUpHidden();
 		        }
 		        else {

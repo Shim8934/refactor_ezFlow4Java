@@ -115,7 +115,7 @@
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;

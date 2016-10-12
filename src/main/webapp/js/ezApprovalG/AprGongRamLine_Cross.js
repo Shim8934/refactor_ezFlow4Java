@@ -95,7 +95,7 @@ function getGongRamDocInfo() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/gongRamDocInfo.do",
     		data : {
@@ -106,7 +106,7 @@ function getGongRamDocInfo() {
     		}
     	});
     	
-        pGongRamDocID = getNodeText(GetChildNodes(result)[0]);
+        pGongRamDocID = getNodeText(GetChildNodes(loadXMLString(result))[0]);
 
         if (pGongRamDocID == "NONE")
             pGongRamDocID = "";
@@ -129,7 +129,7 @@ function TreeViewNodeClick() {
 function displayUserList(DeptID) {
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
@@ -141,7 +141,7 @@ function displayUserList(DeptID) {
 		success: function(xml){
 			var listview = new ListView();
             listview.LoadFromID("DivUserList");
-            listview.DataSource(xml);
+            listview.DataSource(loadXMLString(xml));
             listview.RowDataBind();
 		},
 		error: function(request) {
@@ -613,7 +613,7 @@ function UpdateLineHistory(_DOCID) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/updateLineHistory.do",
 		data : {

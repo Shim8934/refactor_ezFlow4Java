@@ -57,7 +57,7 @@
 		            }
 		        }
 		
-		        if (!CrossYN() && NonActiveX == "NO")
+		        if (!CrossYN())
 		            document.getElementById("cabinetdiv").style.height = "";
 		
 		
@@ -147,7 +147,7 @@
 		    }
 		    window.onbeforeunload = onunload;
 		    function onunload() {
-		        if (!CrossYN() && NonActiveX == "NO") {
+		        if (!CrossYN()) {
 		            window.returnValue = rtnVal;
 		        }
 		    }

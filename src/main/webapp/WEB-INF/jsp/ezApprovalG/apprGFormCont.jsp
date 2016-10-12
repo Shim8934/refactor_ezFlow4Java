@@ -336,7 +336,7 @@
 		        
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getForm.do",
 		    		data : {
@@ -346,7 +346,7 @@
 		    				searchName : _searchName
 		    				},
 		    		success: function(xml){
-		    			xmlRtn = xml;
+		    			xmlRtn = loadXMLString(xml);
 		    		}        			
 		    	});
 		

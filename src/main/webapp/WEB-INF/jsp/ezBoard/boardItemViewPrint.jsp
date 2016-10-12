@@ -81,7 +81,7 @@
 		    };
 		
 		    function DocumentComplate() {
-		        if (navigator.userAgent.indexOf("MSIE") > 0) {
+		        if (!CrossYN()) {
 		            preview_print();
 		        }
 		        else{

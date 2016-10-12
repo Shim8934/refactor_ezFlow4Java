@@ -25,7 +25,7 @@
 		        if (p_AprLineTempletName == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
 		            OpenAlertUI(pAlertContent);
-		            if (!CrossYN() && NonActiveX == "NO")
+		            if (!CrossYN())
 		                document.getElementById("TxtAprLineTempletName").focus();
 		
 		        } else {
@@ -74,7 +74,7 @@
 		        if (g_TemplateName != "")
 		            document.getElementById("TxtAprLineTempletName").value = g_TemplateName;
 		
-		        if (!CrossYN() && NonActiveX == "NO")
+		        if (!CrossYN())
 		            window.returnValue = "cancel";
 		
 		        document.getElementById("TxtAprLineTempletName").focus();
@@ -101,7 +101,7 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t384'/></h1>
-		<h2>저장할 결재선 이름을 입력하십시오. (한글7자이내)</h2>
+		<h2><spring:message code='ezApprovalG.t2107'/></h2>
 		<div class="nobox">
 		<input type="text" class="text" style="width:100%" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
 		</div>		

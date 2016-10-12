@@ -102,7 +102,7 @@ function GetAprDocFormID() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getDocData.do",
     		data : {
@@ -111,7 +111,7 @@ function GetAprDocFormID() {
     			sel   : "FormID"
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
         
@@ -200,7 +200,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -225,7 +225,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -247,22 +247,20 @@ function OpenInformationUI_Complete() {
 
 function getDocInfo() {
 	var result = "";
-	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getDocInfo.do",
 		data : {
 			docID : pDocID
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
     
     xmldoc = result;
-
     var objNodes = GetChildNodes(xmldoc.documentElement);
 
     if (objNodes) {
@@ -278,14 +276,14 @@ function getReceiveDocInfo() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getReceiveDocInfo.do",
     		data : {
     			docID : pDocID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}        			
     	});
         
@@ -354,7 +352,7 @@ function setBtnEnable() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {

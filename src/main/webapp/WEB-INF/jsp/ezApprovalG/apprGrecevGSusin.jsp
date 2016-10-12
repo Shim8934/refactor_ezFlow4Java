@@ -672,7 +672,7 @@
 		            
 		            $.ajax({
 		        		type : "POST",
-		        		dataType : "xml",
+		        		dataType : "text",
 		        		async : false,
 		        		url : "/ezApprovalG/aprLineRequest.do",
 		        		data : {
@@ -681,7 +681,7 @@
 		        				formID   : pFormID
 		        				},
 		        		success: function(xml){
-		        			result = xml;
+		        			result = loadXMLString(xml);
 		        		}        			
 		        	});
 		            
@@ -1056,14 +1056,14 @@
 		        	
 		        	$.ajax({
 		        		type : "POST",
-		        		dataType : "xml",
+		        		dataType : "text",
 		        		async : false,
 		        		url : "/ezApprovalG/gongRamDocInfo.do",
 		        		data : {
 		        			docID : pDocID
 		        		},
 		        		success: function(xml){
-		        			result = xml;
+		        			result = loadXMLString(xml);
 		        		}
 		        	});
 		        	

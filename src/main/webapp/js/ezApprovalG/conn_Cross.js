@@ -236,7 +236,7 @@ function makeKeyValue(pkeyNodes, flag) {
 }
 function callNoneUIASP(pqueryString, pkeyNodes) {
     var xmlpara = createXmlDom();
-    var objRoot = makeKeyValue(pkeyNodes, "A")
+    var objRoot = makeKeyValue(pkeyNodes, "A");
     xmlpara.appendChild(objRoot);
 
     xmlhttp.open("POST", pqueryString, false);
@@ -247,11 +247,11 @@ function callNoneUIASP(pqueryString, pkeyNodes) {
 function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var xmlsend = createXmlDom();
     var xmlpara = createXmlDom();
-    var objRoot = makeKeyValue(pkeyNodes, "A")
+    var objRoot = makeKeyValue(pkeyNodes, "A");
     xmlsend.appendChild(objRoot);
 
     var url = pqueryString;
-    var feature = pconnString
+    var feature = pconnString;
     parameter = window.showModalDialog(url, xmlsend, feature);
 
     xmlpara = parameter;
@@ -262,13 +262,18 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
     var xmlpara = createXmlDom();
     var fields = message.GetFieldsList();
 
-    var objRoot = makeKeyValue(pkeyNodes, "A")
-    var objRootToImport = xmlsend.importNode(objRoot, true);
-
-    xmlsend.appendChild(objRootToImport);
+    var objRoot = makeKeyValue(pkeyNodes, "A");
+    
+    if (CrossYN()) {
+    	var objRootToImport = xmlsend.importNode(objRoot, true);
+    	
+    	xmlsend.appendChild(objRootToImport);
+    } else {
+    	xmlsend.appendChild(objRoot);
+    }
 
     var url = pqueryString;
-    var feature = pconnString
+    var feature = pconnString;
     parameter = window.showModalDialog(url, xmlsend, feature);
     xmlpara = parameter;
     return xmlpara;
@@ -281,7 +286,7 @@ function getKeyValue(fieldID, num) {
     else
         fields = message.Get_ConnFieldList();
 
-    if (num != "") fieldID = num + fieldID
+    if (num != "") fieldID = num + fieldID;
     var field = message.GetListItem(fields, fieldID);
     rtnVal = "";
     if (field && field != null) {
@@ -322,8 +327,8 @@ function setData(pobjXml, currTD) {
 
     var offset = 1;
 
-    var rows, row, rowBefore, nfield, fieldName, tblid, tblObject, tblRow
-    var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR
+    var rows, row, rowBefore, nfield, fieldName, tblid, tblObject, tblRow;
+    var tblinfoNodes, currTR, currTRidx, cellnode, cellidx, isinsTR;
     flag = "false";
 
     var xmlTbl = createXmlDom();
@@ -375,7 +380,7 @@ function setData(pobjXml, currTD) {
         window.close();
     }
 
-    var tblRowIdx = 0
+    var tblRowIdx = 0;
     rows = GetChildNodes(xmlData.documentElement);
     if (rows.length > 0) {
         for (i = 0; i < rows.length; i++) {
@@ -422,7 +427,7 @@ function setData(pobjXml, currTD) {
                         fieldName = GetAttribute(row[k], "name");
                         if (!fieldName) fieldName = GetAttribute(row[k], "fname");
 
-                        cellidx = parseInt(GetAttribute(tblid, fieldName))
+                        cellidx = parseInt(GetAttribute(tblid, fieldName));
                         cellnode = currTR.cells[cellidx];
                         if (cellnode) {
                             cellnode.innerText = getNodeText(row[k]);
@@ -442,14 +447,14 @@ function setData(pobjXml, currTD) {
                     if (GetAttribute(tblid, "color2"))
                         color2 = GetAttribute(tblid, "color2");
                     else
-                        color2 = "white"
+                        color2 = "white";
 
                     isinsTR = false;
 
                     currTR = tblObject.rows[tblRowIdx];
                     if (currTR) {
                         if (currTR.getAttribute("header")) {
-                            currTR = tblObject.rows[tblRowIdx + offset]
+                            currTR = tblObject.rows[tblRowIdx + offset];
                             if (currTR) {
                                 var k;
                                 for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
@@ -501,22 +506,22 @@ function setData(pobjXml, currTD) {
                                     newRow.bgColor = color2;
 
                                 for (idx = 0; idx < currTR.cells.length; idx++) {
-                                    attVal = currTR.cells[idx].getAttribute("processkey")
+                                    attVal = currTR.cells[idx].getAttribute("processkey");
                                     if (attVal) newRow.cells[idx].setAttribute("processkey", attVal)
 
-                                    attVal = currTR.cells[idx].getAttribute("processchange")
+                                    attVal = currTR.cells[idx].getAttribute("processchange");
                                     if (attVal) newRow.cells[idx].setAttribute("processchange", attVal)
 
-                                    attVal = currTR.cells[idx].getAttribute("lastnext")
+                                    attVal = currTR.cells[idx].getAttribute("lastnext");
                                     if (attVal) newRow.cells[idx].setAttribute("lastnext", attVal);
 
-                                    attVal = currTR.cells[idx].getAttribute("EnterTab")
+                                    attVal = currTR.cells[idx].getAttribute("EnterTab");
                                     if (attVal) newRow.cells[idx].setAttribute("EnterTab", attVal);
 
-                                    attVal = currTR.cells[idx].getAttribute("rowspan")
+                                    attVal = currTR.cells[idx].getAttribute("rowspan");
                                     if (attVal) newRow.cells[idx].setAttribute("rowspan", attVal);
 
-                                    attVal = currTR.cells[idx].getAttribute("colspan")
+                                    attVal = currTR.cells[idx].getAttribute("colspan");
                                     if (attVal) newRow.cells[idx].setAttribute("colspan", attVal);
 
                                     try {

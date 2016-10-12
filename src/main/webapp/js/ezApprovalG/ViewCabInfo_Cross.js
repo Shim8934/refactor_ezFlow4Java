@@ -120,7 +120,7 @@ function View_OriginCabInfo() {
 
     View_OriginCabInfo_dialogArguments[0] = para;
 
-    var url = "/myoffice/ezApprovalG/ezCabinet/ViewCabInfo_Cross.aspx";
+    var url = "/ezApprovalG/viewCabInfo.do";
     var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(672, 600));
     try { OpenWin.focus(); } catch (e) { }
 }
@@ -134,7 +134,7 @@ function InitTransInfo() {
     if (g_TransFlag == "0")
         InsValueIntoTD(tdTransfer, strLang704);
     else if (g_TransFlag == "1")
-        document.getElementById("tdTransfer").innerHTML = strLang705 + "<Input type='button' class='btn' value='" + strLang706 + "' style='width:80;' LANGUAGE=javascript onclick='return View_OriginCabInfo()'>"
+        document.getElementById("tdTransfer").innerHTML = strLang705 + "<Input type='button' class='btn' value='" + strLang706 + "' style='width:80;' LANGUAGE=javascript onclick='return View_OriginCabInfo()'>";
     else if (g_TransFlag == "2")
         InsValueIntoTD(tdTransfer, strLang707);
     else

@@ -153,7 +153,7 @@ function InitListView() {
     	var result = "";
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/aprLineRequest.do",
     		data : {
@@ -166,7 +166,7 @@ function InitListView() {
     			result = xml;
     		}        			
     	});
-                
+    	result = loadXMLString(result);
         var NodeList = createXmlDom();
         
         NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
@@ -303,7 +303,7 @@ var xmlhttpUserlist;
 function displayUserList(DeptID) {
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
@@ -313,7 +313,7 @@ function displayUserList(DeptID) {
 				type 	 : "user"
 				},
 		success: function(xml){
-			event_displayUserList(xml);
+			event_displayUserList(loadXMLString(xml));
 		}        			
 	});
 }
@@ -386,7 +386,7 @@ function searchUserList(search)
 	{
 		$.ajax({
 			type : "POST",
-			dataType : "xml",
+			dataType : "text",
 			async : true,
 			url : "/ezOrgan/getSearchList.do",
 			data : {
@@ -396,7 +396,7 @@ function searchUserList(search)
 				type   : "user"
 			},
 			success: function(xml){
-				event_displayUserList(xml);
+				event_displayUserList(loadXMLString(xml));
 			}    			
 		});
 	}

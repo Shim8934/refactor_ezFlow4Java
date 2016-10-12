@@ -14,7 +14,7 @@ function GetAprDeptXML()
 {
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
@@ -25,7 +25,7 @@ function GetAprDeptXML()
 		}        			
 	});
     
-  	APRDEPTXML = result;
+  	APRDEPTXML = loadXMLString(result);
 	
 	for (i=0; i<APRDEPTXML.getElementsByTagName("DATA3").length; i++)
 	{

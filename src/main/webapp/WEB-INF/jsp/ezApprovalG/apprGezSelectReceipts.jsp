@@ -39,7 +39,7 @@
         
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getReceiptinfo.do",
     		data : {
@@ -47,7 +47,7 @@
     				mode  : "END"
     				},
     		success: function(xml){
-    			 RtnVal=xml;
+    			 RtnVal=loadXMLString(xml);
     		}        			
     	});
         var listview = new ListView();                          
@@ -73,7 +73,7 @@
         }
         
         listview.DataBind("lvSelReceipt");
-        if (!CrossYN() && NonActiveX == "NO")
+        if (!CrossYN())
             window.returnValue = param;
     }
     var ezapralert_cross_dialogArguments = new Array();
@@ -81,7 +81,7 @@
         var parameter = pAlertContent;
         var url = "/ezApprovalG/ezAprAlert.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapralert_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -537,7 +537,7 @@
             document.getElementById("txtOuterDeptName").focus();
             return;
         }
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             searchorganglist_dialogArguments[0] = g_progresswin;
             searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
 

@@ -160,14 +160,14 @@
 		        
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/getCodeList.do",
 		    		data : {
 		    			companyID : CompanyID
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		}        			
 		    	});
 		
@@ -412,7 +412,7 @@
 		                para[i] = arrTask[i];
 		            var url = "/ezApprovalG/createCabinet.do";
 		
-		            if (CrossYN() || NonActiveX == "YES") {
+		            if (CrossYN()) {
 		                createcabinet_cross_dialogArguments[0] = para;
 		                createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;
 		
@@ -464,7 +464,7 @@
 				
 				$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					url : "/admin/ezApprovalG/getTaskInfo.do",
 					async : false,
 					data : {
@@ -473,7 +473,7 @@
 							companyID : CompanyID
 							},
 					success : function (result) {
-						tempRet = result;
+						tempRet = loadXMLString(result);
 					}
 				});
 		

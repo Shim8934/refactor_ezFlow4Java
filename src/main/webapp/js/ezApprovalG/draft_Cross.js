@@ -883,7 +883,7 @@ function ConvertDocType(pDocType) {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCodeData.do",
 		data : {
@@ -896,14 +896,14 @@ function ConvertDocType(pDocType) {
 		}        			
 	});
 
-    return SelectSingleNodeValue(result, "RESULT");
+    return SelectSingleNodeValue(loadXMLString(result), "RESULT");
 }
 function ConvertDocState(pDocState) {
 	var result = "";
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getCodeData.do",
 		data : {
@@ -916,7 +916,7 @@ function ConvertDocState(pDocState) {
 		}        			
 	});
 
-    return SelectSingleNodeValue(result, "RESULT");
+    return SelectSingleNodeValue(loadXMLString(result), "RESULT");
 }
 
 var getformcont_cross_dialogArguments = new Array();
@@ -1111,7 +1111,7 @@ function getDraftUserInfo() {
     try {
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezOrgan/getADInfos.do",
     		data : {
@@ -1120,7 +1120,7 @@ function getDraftUserInfo() {
     			cate  : "user"
     		},
     		success: function(xml){
-    			xmluserInfo = xml;
+    			xmluserInfo = loadXMLString(xml);
     		}        			
     	});
     } catch (e) {
@@ -1499,7 +1499,7 @@ function openAaprDocAttachUI() {
         var parameter = pDocID;
         var url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
 
@@ -1681,7 +1681,7 @@ function openSignUI() {
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getSignRequest.do",
     		data : {
@@ -1694,7 +1694,7 @@ function openSignUI() {
     	
         var SignNodeList;
 
-        SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+        SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 
         if (SignNodeList.length != 0) {
             var parameter = pUserID;
@@ -1760,7 +1760,7 @@ function GetAprDocFormID() {
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getAprDocFormID.do",
     		data : {
@@ -1771,7 +1771,7 @@ function GetAprDocFormID() {
     		}        			
     	});
 
-        pFormID = SelectSingleNodeValueNew(result, "DATA/FORMID");
+        pFormID = SelectSingleNodeValueNew(loadXMLString(result), "DATA/FORMID");
     } catch (e) {
         alert("GetAprDocFormID()" + e.description);
     }
@@ -1934,7 +1934,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -1959,7 +1959,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1979,23 +1979,23 @@ function OpenInformationUI_Complete() {
     DivPopUpHidden();
 }
 function getDocInfo() {
+alert(50);
 	var result = "";
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getDocInfo.do",
 		data : {
 			docID : pDocID
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 	
     xmldoc = result;
-
     var objNodes = xmldoc.documentElement.childNodes;
     if (objNodes) {
         pOrgDocID = SelectSingleNodeValueNew(result, "DATA/ORGDOCID");
@@ -2009,7 +2009,6 @@ function getDocInfo() {
         tempKeyword = SelectSingleNodeValueNew(result, "DATA/KEYWORD");
         tempItemCode = SelectSingleNodeValueNew(result, "DATA/ITEMCODE");
         tempItemName = SelectSingleNodeValueNew(result, "DATA/ITEMNAME");
-
         pSummery = SelectSingleNodeValueNew(result, "DATA/SUMMARY");
         pSpecialRecordCode = SelectSingleNodeValueNew(result, "DATA/SPECIALRECORDCODE");
         pPublicityCode = SelectSingleNodeValueNew(result, "DATA/PUBLICITYCODE");
@@ -2017,7 +2016,6 @@ function getDocInfo() {
         pPageNum = SelectSingleNodeValueNew(result, "DATA/PAGENUM");
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
         TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
-
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
     }
 }
@@ -2207,7 +2205,7 @@ function CheckMem(DeptID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -2220,14 +2218,14 @@ function CheckMem(DeptID) {
 		}        			
 	});
 
-    return getXmlString(result);
+    return getXmlString(loadXMLString(result));
 }
 function getDeptSymbol(DeptID, DeptName) {
 	var result = "";
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -2240,7 +2238,7 @@ function getDeptSymbol(DeptID, DeptName) {
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result.documentElement);
+    var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
     var RtnVal = getNodeText(dataNodes[0]);
 
     if (RtnVal == "") {
@@ -2255,7 +2253,7 @@ function getDeptSendName(DeptID) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -2268,7 +2266,7 @@ function getDeptSendName(DeptID) {
 		}        			
 	});
 	
-    return trim(SelectSingleNodeValue(result, "EXTENSIONATTRIBUTE5"));
+    return trim(SelectSingleNodeValue(loadXMLString(result), "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
     var strCmd, display_Value;
@@ -2445,7 +2443,7 @@ function putSignXML(SignXML) {
 function UndoDoc() {
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/undoDoc.do",
 		data : {
@@ -2480,7 +2478,7 @@ function getHistory() {
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             DivPopUpShow(wWeight, wHeight, wfileLocation);
         }
         else {
@@ -2545,7 +2543,7 @@ function UpdateLineHistory() {
     
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/updateLineHistory.do",
 		data : {
@@ -2565,7 +2563,7 @@ function UpdateLineHistory() {
 		}        			
 	});
     
-    var DataNodes = GetChildNodes(result);
+    var DataNodes = GetChildNodes(loadXMLString(result));
     var rtnVal = getNodeText(DataNodes[0]);
     if (rtnVal == "TRUE") {
     }
@@ -2580,7 +2578,7 @@ function getOpinionCount() {
         
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getOpinionCount.do",
     		data : {
@@ -2593,7 +2591,7 @@ function getOpinionCount() {
     		}        			
     	});
         
-        var tempValue = parseInt(getXmlString(result))
+        var tempValue = parseInt(getXmlString(loadXMLString(result)));
         if (tempValue > 0) {
             return true;
         }

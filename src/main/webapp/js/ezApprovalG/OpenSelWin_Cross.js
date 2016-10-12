@@ -74,7 +74,7 @@ function SelectUser(pCabClassNo, pDeptCode) {
 
     var url = "/ezApprovalG/selectUser.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         selectuser_cross_dialogArguments[0] = para;
         selectuser_cross_dialogArguments[1] = SelectUsert_Complete;
 
@@ -103,7 +103,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapropinion_cross_dialogArguments[1] = CompleteFunction;

@@ -57,7 +57,7 @@ function InitCategorySelection() {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskCategory.do",
 		data : {
@@ -70,7 +70,7 @@ function InitCategorySelection() {
 		}        			
 	});
     
-    var xmlRtn = result;
+    var xmlRtn = loadXMLString(result);
     var dataNodes = GetChildNodes(xmlRtn);
     var rtnValue = getNodeText(dataNodes[0]);
 
@@ -93,7 +93,7 @@ function GetTaskMiddleCategory(pCode) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskMiddleCategory.do",
 		data : {
@@ -106,7 +106,7 @@ function GetTaskMiddleCategory(pCode) {
 		}        			
 	});
     
-    var xmlRtn = result;
+    var xmlRtn = loadXMLString(result);
     var dataNodes = GetChildNodes(xmlRtn);
     var rtnValue = getNodeText(dataNodes[0]);
 
@@ -134,7 +134,7 @@ function GetTaskSubCategory(pCode, pSubCategoryCode) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskSubCategory.do",
 		data : {
@@ -148,7 +148,7 @@ function GetTaskSubCategory(pCode, pSubCategoryCode) {
 		}        			
 	});
     
-    var rtnXml = result;
+    var rtnXml = loadXMLString(result);
     var dataNodes = GetChildNodes(rtnXml);
     var rtnValue = getNodeText(dataNodes[0]);
 
@@ -201,7 +201,7 @@ function GetTaskListInSubCategory(pCode, pTaskCode) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getTaskInSubCategory.do",
 		data : {
@@ -215,7 +215,7 @@ function GetTaskListInSubCategory(pCode, pTaskCode) {
 		}        			
 	});
     
-    var rtnXml = result;
+    var rtnXml = loadXMLString(result);
     var dataNodes = GetChildNodes(rtnXml);
     var retValue = getNodeText(dataNodes[0]);
 
@@ -312,7 +312,7 @@ function OpenTaskFindWin(opentype, CompleteFunction) {
     var para = new Array();
     var url = "/ezApprovalG/findTask.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         findtask_cross_dialogArguments[0] = para;
         if (CompleteFunction == undefined){
         	findtask_cross_dialogArguments[1] = OpenTaskFindWin_Complete;
@@ -356,7 +356,7 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
 	
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/findTaskList.do",
 		data : {
@@ -374,5 +374,5 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
 		}        			
 	});
     
-    return result;
+    return loadXMLString(result);
 }

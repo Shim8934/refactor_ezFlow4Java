@@ -805,7 +805,7 @@ function getDraftUserInfo()
   try{
   	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -814,7 +814,7 @@ function getDraftUserInfo()
 			cate  : "user"
 		},
 		success: function(xml){
-			xmluserInfo = xml;
+			xmluserInfo = loadXMLString(xml);
 		}        			
 	});
   	
@@ -830,7 +830,7 @@ function getDeptSymbol(DeptID, DeptName)
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezOrgan/getADInfos.do",
 		data : {
@@ -849,7 +849,7 @@ function getDeptSymbol(DeptID, DeptName)
 	}
 	else
 	{
-		return getNodeText(GetChildNodes(result.documentElement)[0]);
+		return getNodeText(GetChildNodes(loadXMLString(result).documentElement)[0]);
 	}
 }
 
@@ -1358,7 +1358,7 @@ function SaveDraftDocInfo()
         	
         	$.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/getSignRequest.do",
         		data : {
@@ -1369,7 +1369,7 @@ function SaveDraftDocInfo()
         		}        			
         	});
         	
-            SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW"); 
+            SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW"); 
             if(SignNodeList.length != 0 || signOption == "YES")     
             { 
                 var parameter = pUserID;
@@ -1439,7 +1439,7 @@ function SaveDraftDocInfo()
         	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/getAprDocFormID.do",
         		data : {
@@ -1450,7 +1450,7 @@ function SaveDraftDocInfo()
         		}        			
         	});
             
-            pFormID = getNodeText(GetChildNodes(result)[0]);
+            pFormID = getNodeText(GetChildNodes(loadXMLString(result))[0]);
 
         }catch(e){
             alert("GetAprDocFormID : " + e.description);
@@ -1526,7 +1526,7 @@ function SaveDraftDocInfo()
         	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/setSusinUpdateDocID.do",
         		data : {
@@ -1539,7 +1539,7 @@ function SaveDraftDocInfo()
         		}        			
         	});
 
-            return getNodeText(GetChildNodes(result)[0]);
+            return getNodeText(GetChildNodes(loadXMLString(result))[0]);
 
         }
         catch(e){
@@ -1646,7 +1646,7 @@ function SaveDraftDocInfo()
         var parameter = pAlertContent;
         var url = "/ezApprovalG/ezAprAlert.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapralert_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
@@ -1671,7 +1671,7 @@ function SaveDraftDocInfo()
         var parameter = pInformationContent;
         var url = "/ezApprovalG/ezAprOpinion.do";
 
-        if (CrossYN() || NonActiveX == "YES") {
+        if (CrossYN()) {
             ezapropinion_cross_dialogArguments[0] = parameter;
             if (CompleteFunction != undefined)
                 ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -1699,7 +1699,7 @@ function SaveDraftDocInfo()
     	
         $.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getDocInfo.do",
     		data : {
@@ -1710,7 +1710,7 @@ function SaveDraftDocInfo()
     		}        			
     	});
 
-        xmldoc = result;
+        xmldoc = loadXMLString(result);
 
         var objNodes = xmldoc.documentElement.childNodes;
         if (objNodes) {
@@ -1753,14 +1753,14 @@ function SaveDraftDocInfo()
         	
             $.ajax({
         		type : "POST",
-        		dataType : "xml",
+        		dataType : "text",
         		async : false,
         		url : "/ezApprovalG/getReceiveDocInfo.do",
         		data : {
         			docID : pDocID
         		},
         		success: function(xml){
-        			result = xml;
+        			result = loadXMLString(xml);
         		}        			
         	});
             
@@ -1947,14 +1947,14 @@ function SaveDraftDocInfo()
     	
     	$.ajax({
     		type : "POST",
-    		dataType : "xml",
+    		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/getLastOpinonCotent.do",
     		data : {
     			docID : pDocID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     		}
     	});
     	

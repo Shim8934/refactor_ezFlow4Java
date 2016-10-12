@@ -345,7 +345,7 @@ function getDataInfo() {
     }
     $.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : true,
 		url : pUrl,
 		data : {
@@ -353,7 +353,7 @@ function getDataInfo() {
 				mode  : "END"
 				},
 		success: function(xml){
-			getdoclistSub_after(xml);
+			getdoclistSub_after(loadXMLString(xml));
 		}        			
 	});
 }
@@ -612,7 +612,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != "") {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;

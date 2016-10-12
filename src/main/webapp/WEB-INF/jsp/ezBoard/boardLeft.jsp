@@ -15,9 +15,9 @@
 	        var SSUserID = "${userInfo.id}";
 	        var SSUserName = "${userInfo.name}";
 	        var SSDeptID = "${userInfo.deptID}";
-	        var SSDeptName = "${userInfo.deptName1}";
+	        var SSDeptName = "${userInfo.deptName}";
 	        var SSCompanyID = "${userInfo.companyID}";
-	        var SSCompanyName = "${userInfo.companyName1}";
+	        var SSCompanyName = "${userInfo.companyName}";
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";
 	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
@@ -329,7 +329,7 @@
 		    	var returnXML = "";
 		    	$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					async : false,
 					url : "/ezBoard/getMyBoardsConfig.do",	        			
 					data : { rootTreeID : pRootTreeID, 
@@ -338,7 +338,7 @@
 						returnXML = xml;
 					}        			
 				});	
-		    	return returnXML;
+		    	return loadXMLString(returnXML);
 		    }
 		    var tempID;
 		    var clickFlag = false;

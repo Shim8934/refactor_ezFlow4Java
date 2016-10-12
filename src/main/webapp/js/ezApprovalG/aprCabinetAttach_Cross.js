@@ -85,7 +85,7 @@ function AttachList() {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getAttachInfo.do",
 		data : {
@@ -101,7 +101,7 @@ function AttachList() {
     DocList.SetMulSelectable(true);
     DocList.SetRowOnClick("lvTDoc_onSel_Click");
     DocList.SetRowOnDblClick("lvTDoc_onSel_DBclick");
-    DocList.DataSource(result);
+    DocList.DataSource(loadXMLString(result));
     DocList.DataBind("lvTDoc");
     if (DocList.GetRowCount() > 0)
         DocList.SetSelectFlag(true);
@@ -178,7 +178,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || NonActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
             ezapralert_cross_dialogArguments[1] = CompleteFunction;

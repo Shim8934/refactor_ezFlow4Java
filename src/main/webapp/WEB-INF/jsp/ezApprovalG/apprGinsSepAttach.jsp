@@ -43,7 +43,7 @@
 		                RetValue = window.dialogArguments;
 		            }
 		        }
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
@@ -63,7 +63,7 @@
 		            document.getElementById("trChangeCabinet").style.display = "none";
 		        }
 		        InitListView(g_SepAttchLVXml);
-		        if (!CrossYN() && NonActiveX == "NO") {
+		        if (!CrossYN()) {
 		            rtnVal[0] = "FALSE";
 		            window.dialogHeight = "380px";
 		            window.returnValue = rtnVal;
@@ -137,7 +137,7 @@
 		
 		        var url = "/ezApprovalG/regSepAttach.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
@@ -301,7 +301,7 @@
 		
 		            var url = "/ezApprovalG/regSepAttach.do";
 		
-		            if (CrossYN() || NonActiveX == "YES") {
+		            if (CrossYN()) {
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
@@ -466,7 +466,7 @@
 		        }
 		    }
 		    window.onbeforeunload = function () {
-		        if (!CrossYN() && NonActiveX == "NO")
+		        if (!CrossYN())
 		            window.returnValue = rtnVal;
 		    }
 		</script>

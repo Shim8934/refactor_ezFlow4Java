@@ -193,7 +193,7 @@
     function btnPrint_onclick() {
 
         document.getElementById("saveExcelData").value = getXmlString(Resultxml);
-        if (navigator.userAgent.indexOf("MSIE") > 0)
+        if (!CrossYN())
             document.getElementById("userAgent").value = "MSIE";
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();

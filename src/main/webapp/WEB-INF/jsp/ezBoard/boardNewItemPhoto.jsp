@@ -10,7 +10,8 @@
 	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
 	     </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -437,7 +438,6 @@
 	            var imgFileSize = getNodeText(GetChildNodes(nodes[i])[3]);
 	            var imgUniqueID = getNodeText(GetChildNodes(nodes[i])[6]);
 	
-	            ///Upload_BoardSTD/TempUploadFile/{91E9F4D0-D034-464b-ABA7-04307DCAD1BF}.jpg
 	            addimageline(imgFileName, localFileName, imgUniqueID, imgFileSize);
 	        }
 	

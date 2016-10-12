@@ -69,7 +69,7 @@
 		    function getAprLine(tempDocID) {
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezApprovalG/getLineList.do",
 		    		data : {
@@ -77,14 +77,14 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(xml);
+		    			getAprovSub_after(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }
 		    function getEndLine(tempDocID) {
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezApprovalG/getLineList.do",
 		    		data : {
@@ -92,14 +92,14 @@
 		    				mode  : "END"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(xml);
+		    			getAprovSub_after(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }
 		    function getAprOpinion(tempDocID) {
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezApprovalG/getOpinionInfo.do",
 		    		data : {
@@ -107,14 +107,14 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(xml);
+		    			getAprovSub_after(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }
 		    function getEndOpinion(tempDocID) {
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezApprovalG/getOpinionInfo.do",
 		    		data : {
@@ -122,7 +122,7 @@
 		    				mode  : "END"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(xml);
+		    			getAprovSub_after(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }
@@ -247,7 +247,7 @@
 		    function GongRamInfo_onClick() {
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezApprovalG/getLineList.do",
 		    		data : {
@@ -255,7 +255,7 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(xml);
+		    			getAprovSub_after(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }

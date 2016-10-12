@@ -617,11 +617,16 @@ function DisplayTaskList_Admin(Resultxml) {
 
     var xmlDoc
     if (PageSize < 0) {
-        var xmlLIST = createXmlDom();
-        var nodeToImport = xmlLIST.importNode(ListViewData, true);
-        xmlLIST.appendChild(nodeToImport);
-
-        xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+    	if (CrossYN()) {
+    		var xmlLIST = createXmlDom();
+    		var nodeToImport = xmlLIST.importNode(ListViewData, true);
+    		xmlLIST.appendChild(nodeToImport);
+    		
+    		xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+    	} else {
+    		xmlDoc = createXmlDom();
+    		xmlDoc = loadXMLString(ListViewData);
+    	}
 
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();

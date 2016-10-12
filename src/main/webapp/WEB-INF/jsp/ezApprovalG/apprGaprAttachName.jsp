@@ -101,7 +101,7 @@
 		        ret[1] = txtPageNum.value;
 		        ret[2] = txtDisplayName.value;
 		
-		        if (!CrossYN() || NonActiveX == "NO")
+		        if (!CrossYN())
 		            window.returnValue = ret;
 		
 		        txtPageNum.focus();
@@ -111,7 +111,7 @@
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            ezapralert_cross_dialogArguments[0] = parameter;
 		            if (CompleteFunction != undefined)
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
