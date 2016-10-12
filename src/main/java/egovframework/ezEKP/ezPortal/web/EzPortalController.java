@@ -17,6 +17,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +34,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
@@ -69,6 +72,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPortalController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzPortalController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -119,6 +125,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		try {
 			String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID());
+			
 			Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 			
 			String pUserThemeUID = "";
@@ -419,10 +426,12 @@ public class EzPortalController extends EgovFileMngUtil {
 					strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme);
 					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
+					logger.debug("strHTML=" + strHTML);
 				} else {
 					strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme);
 					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID));
+					logger.debug("strHTML=" + strHTML);
 				}
 			}
 			if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
@@ -669,11 +678,13 @@ public class EzPortalController extends EgovFileMngUtil {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
+					logger.debug("strHTML="+strHTML);
 				} else {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
+					logger.debug("strHTML="+strHTML);
 				}
 			}
 			
