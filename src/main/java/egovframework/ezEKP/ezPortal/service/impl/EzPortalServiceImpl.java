@@ -1504,12 +1504,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				String menuitemWindowOption = result.get(i).getWindowOption();
 				String menuitemNormalImagePath = result.get(i).getNormalImagePath();
 
-				if (!menuitemImageUID.trim().equals("") && !menuitemNormalImagePath.trim().equals("")) {
+				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
 					sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
 				} else {
 					sb.append("<li ");
 					
-					if (!menuitemLinkURL.trim().equals("")) {
+					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
                         sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
 						sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
