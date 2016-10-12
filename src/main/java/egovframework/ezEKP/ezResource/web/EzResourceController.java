@@ -15,6 +15,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPortal.web.EzPortalController;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -61,6 +64,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzResourceController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzResourceController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -329,7 +335,8 @@ public class EzResourceController extends EgovFileMngUtil {
 					}
 				}
 				reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept);
-
+				logger.debug("getScheduleXML=" + reVal);
+				
 				Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				
 				for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
@@ -491,6 +498,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			 e.printStackTrace();
 		}
+			logger.debug("reVal="+reVal.toString());
 			return reVal.toString();
 		}
 	
@@ -520,11 +528,13 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()); 
-
+		logger.debug("adminFg="+adminFg);
+		
 		//brdNm = brdNm.replace("chr(38)", "&");
 		String childBrd = ezResourceService.getItemList(loginCookie,brdID);
 		
 		List<ResGetItemListVO> list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
+		logger.debug("getBrdMainList="+list);
 		brdCount = list.size();
 		
 		for (int i=0; i<brdCount; i++) {
@@ -1241,6 +1251,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			saveApproveFlag = getSchedule.getApproveFlag();
 			
 			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum));
+			logger.debug("repDateTimes="+repDateTimes);
 			
 			if (repDateTimes != null) {
 				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());
@@ -1525,6 +1536,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			saveApproveFlag = getSchedule.getApproveFlag();
 			
 			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum));
+			logger.debug("repDateTimes="+repDateTimes);
 			
 			if (repDateTimes != null) {
 				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());

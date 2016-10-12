@@ -15,6 +15,8 @@ import java.util.TimeZone;
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -45,6 +47,7 @@ import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
 import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
 import egovframework.ezEKP.ezResource.vo.ResRecParamVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.ezEKP.ezResource.web.EzResourceController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -53,6 +56,9 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceService")
 public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements EzResourceService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzResourceServiceImpl.class);
+	
 	@Resource(name="EzResourceDAO")
 	private EzResourceDAO ezResourceDAO;
 	
@@ -767,14 +773,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
 
 			if (returnRepetitionDom != null) {
+				logger.debug("returnRepetitionDom="+returnRepetition);
 				for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 					 reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
 					 reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 					 reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 					
 					String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate);
-	
-					if (!returnRepDateTimes.trim().equals("")) {
+					logger.debug("getRepDeteTimes="+returnRepDateTimes);
+					
+					if (returnRepDateTimes != null && !returnRepDateTimes.trim().equals("")) {
 						Document returnRepDateTimesDom = commonUtil.convertStringToDocument(returnRepDateTimes);
 
 						for (int j=0; j<returnRepDateTimesDom.getElementsByTagName("f_sDate").getLength(); j++) {
@@ -868,10 +876,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public String getRepDeteTimes(String companyID, String num, String ownerID, String sDate, String eDate) throws Exception {
 
-
 		String returnStr = "";
 		try {
+			logger.debug("ownerID="+ownerID);
+			logger.debug("companyID="+companyID);
+			logger.debug("num="+num);
 			ResGetRepDateTimesVO getRepDateTimes = getRepDateTimes(ownerID, companyID, Integer.parseInt(num));
+			logger.debug("getRepDateTimes="+getRepDateTimes);
 			if (getRepDateTimes != null) {
 				String startDateTime = getRepDateTimes.getStartDateTime();
 				String endDateTime = getRepDateTimes.getEndDateTime();
@@ -933,7 +944,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		logger.debug("getRepDeteTimes="+returnStr.toString());
 		return returnStr.toString();
 	}
 	
