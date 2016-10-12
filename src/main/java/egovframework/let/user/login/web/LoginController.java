@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.LocaleResolver;
@@ -55,6 +56,9 @@ public class LoginController {
 
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
     /** LoginService */
 	@Resource(name = "loginService")
@@ -194,6 +198,7 @@ public class LoginController {
 				loginService.insertLog(resultVO);
 				
 				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone;
+				logger.debug("cInfo : " + cInfo);
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
@@ -236,15 +241,19 @@ public class LoginController {
     }
     
     @RequestMapping(value = "/user/login/setPassword.do")
-    public void setPassword() throws Exception{
-    	List<String> userIDList = loginService.getUserIDList();
+    public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+    	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	for (int k = 0; k < userIDList.size(); k++) {
-    		logger.info("setPassword.do::userID = " + userIDList.get(k));
+    	if (userInfo.getId().equals("masteradmin")) {
+    		List<String> userIDList = loginService.getUserIDList();
     		
-    		String pwd = EgovFileScrty.encryptPassword(userIDList.get(k) + "1!", userIDList.get(k));
-    		
-    		loginService.updatePassword(userIDList.get(k), pwd);
+    		for (int k = 0; k < userIDList.size(); k++) {
+    			logger.info("setPassword.do::userID = " + userIDList.get(k));
+    			
+    			String pwd = EgovFileScrty.encryptPassword(userIDList.get(k) + "1!", userIDList.get(k));
+    			
+    			loginService.updatePassword(userIDList.get(k), pwd);
+    		}
     	}
     }
     
