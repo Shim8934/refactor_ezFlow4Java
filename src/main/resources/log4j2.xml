@@ -22,6 +22,9 @@
         <Logger name="org.springframework" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
+        <Logger name="org.springframework.web.servlet.DispatcherServlet" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>        
         <Root level="ERROR">
             <AppenderRef ref="console" />
         </Root>
