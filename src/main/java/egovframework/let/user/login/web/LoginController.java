@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -232,6 +233,19 @@ public class LoginController {
     	}
     	
     	return "redirect:/user/login/login.do"; 
+    }
+    
+    @RequestMapping(value = "/user/login/setPassword.do")
+    public void setPassword() throws Exception{
+    	List<String> userIDList = loginService.getUserIDList();
+    	
+    	for (int k = 0; k < userIDList.size(); k++) {
+    		logger.info("userID = " + userIDList.get(k));
+    		
+    		String pwd = EgovFileScrty.encryptPassword(userIDList.get(k) + "1!", userIDList.get(k));
+    		
+    		loginService.updatePassword(userIDList.get(k), pwd);
+    	}
     }
     
 }

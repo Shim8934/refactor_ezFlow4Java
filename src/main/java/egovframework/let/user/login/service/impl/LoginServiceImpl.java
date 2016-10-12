@@ -1,5 +1,7 @@
 package egovframework.let.user.login.service.impl;
 
+import java.util.List;
+
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -132,6 +134,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		// TODO Auto-generated method stub
 		loginDAO.insertLog(vo);
 	}
-    
-    
+
+
+	@Override
+	public List<String> getUserIDList() throws Exception {
+		return loginDAO.getUserIDList();
+	}
+
+
+	@Override
+	public void updatePassword(String userID, String pwd) throws Exception {
+		LoginVO pwVO = new LoginVO();
+		
+		pwVO.setId(userID);
+		pwVO.setPassword(pwd);
+		
+		loginDAO.updatePassword(pwVO);
+	}
+
 }

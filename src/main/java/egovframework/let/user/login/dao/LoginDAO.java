@@ -1,6 +1,8 @@
 package egovframework.let.user.login.dao;
 
 
+import java.util.List;
+
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -73,4 +75,9 @@ public class LoginDAO extends EgovAbstractDAO {
     public void insertLog(LoginVO vo) throws Exception {
     	update("loginDAO.insertLog", vo);
     }
+
+	@SuppressWarnings("unchecked")
+	public List<String> getUserIDList() throws Exception{
+		return (List<String>) list("loginDAO.getUserIDList");
+	}
 }

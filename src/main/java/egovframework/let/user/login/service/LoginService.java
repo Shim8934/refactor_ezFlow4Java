@@ -1,5 +1,7 @@
 package egovframework.let.user.login.service;
 
+import java.util.List;
+
 import egovframework.let.user.login.vo.LoginVO;
 
 
@@ -52,5 +54,9 @@ public interface LoginService {
 	public void updateUser(LoginVO vo) throws Exception;
 	
 	public void insertLog(LoginVO vo) throws Exception;
+
+	public List<String> getUserIDList() throws Exception;
+
+	public void updatePassword(String userID, String pwd) throws Exception;
 
 }

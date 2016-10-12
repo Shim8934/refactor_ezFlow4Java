@@ -59,6 +59,20 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="loginDAO.getUserIDList" resultClass="String">
+		<!-- 모든회원 -->		
+		<![CDATA[
+			SELECT 
+				cn
+		  	FROM 
+		  		ezHrMaster.TBLUSERMASTER
+		  	WHERE
+		  		cn != 'masteradmin'	 	
+		  	AND
+          		cn IS NULL	 				 
+		]]>
+	</select>
+	
 	<insert id="loginDAO.insertLog" parameterClass="loginVO">
 		<![CDATA[
 			INSERT INTO ezStatistics.TBL_CONNECTION_INFO(
