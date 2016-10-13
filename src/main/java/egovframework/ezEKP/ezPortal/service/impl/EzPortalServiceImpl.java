@@ -760,9 +760,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
              
 			 String strPage = sb.toString();
 			 sb = null;
-			 if (mode.equals("view")) {
-				 updateCacheValue(topMenuID, getAccessList(userInfo), strPage);
-			 }
+			 
+			 try {
+				 if (mode.equals("view")) {
+					 updateCacheValue(topMenuID, getAccessList(userInfo), strPage);
+				 }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			 
 			 return strPage;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1807,10 +1813,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             	} else {
             		sb.append("</div>");
             	}
-            	if (pMode.equals("view")) {
-            		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString());
-            	}
-
+            	
+            	try {
+            		if (pMode.equals("view")) {
+                		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString());
+                	}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            	
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2507,7 +2518,6 @@ System.out.println();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pCN", pCN);
 		String result = ezPortalDAO.ezAclCheck(map);
-		
 		String cnACL = result;
 		String totalAdmin = "0";
 		String companyAdmin = "0";
