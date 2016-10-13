@@ -2656,16 +2656,16 @@ function NameChange_onClick() {
     rgParams["g_EditNameDialog"] = "";
 
     if (this != null) {
-        GetMailAddresses(TrimText(ReplaceText(event.target.textContent, ";", "")));
+        GetMailAddresses(TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", "")));
         rgParams["addrBook"] = m_addrBook;
-        rgParams["g_DisplayName"] = TrimText(ReplaceText(event.target.textContent, ";", ""));
-        rgParams["g_EmailAddress"] = event.target.getAttribute("email");
+        rgParams["g_DisplayName"] = TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", ""));
+        rgParams["g_EmailAddress"] = (event.target ? event.target : event.srcElement).getAttribute("email");
         rgParams["cmd"] = "JustThis";
         checkname_cross_dialogArguments = new Array();
         checkname_cross_dialogArguments[0] = rgParams;
         checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
         checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = event.target.parentElement;
+        checkname_cross_dialogArguments[3] = (event.target ? event.target : event.srcElement).parentElement;
         
         if (!CrossYN()) {
             EzHTTPTrans.style.display = "none";
