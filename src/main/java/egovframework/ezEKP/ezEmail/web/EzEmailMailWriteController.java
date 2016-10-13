@@ -529,17 +529,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                attach = attachXmlList.toString();				                
 						}
 		        		
-		        		if (orgMessage.getHeader("X-Priority") != null) {
-		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
-		        			if (tempImportance.equals("1")) {
-		        				importance = "2";
-		        			} else if (tempImportance.equals("5")) {
-		        				importance = "0";
-		        			} else {
-		        				importance = "1";
-		        			}
-		        		}
-		        		
 		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
 		                
 		                //TODO: Sensitivity?
@@ -776,6 +765,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                	bodyValue = "<body free>" + bodyValue + "</body>";
 		                }
 		        	}
+		        	
+		        	if (orgMessage.getHeader("X-Priority") != null) {
+	        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+	        			if (tempImportance.equals("1")) {
+	        				importance = "2";
+	        			} else if (tempImportance.equals("5")) {
+	        				importance = "0";
+	        			} else {
+	        				importance = "1";
+	        			}
+	        		}
+		        	
 				}
 	        	        	
 				orgFolder.close(true);

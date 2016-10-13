@@ -17,7 +17,7 @@
 		    var _OpenerObject;
 		    var RuleItemID;
 		    var RulePriority;
-		    var ReturnFunction
+		    var ReturnFunction;
 		    window.onload = function () {
 		        try{
 		            _OpenerObject = opener.mail_detailinboxrule_cross_dialogArguments[0];
@@ -865,7 +865,7 @@
 		        if (!CrossYN()) {
 		            if (Xmlhttp.responseXML.text == "OK") {
 		                alert("<spring:message code='ezEmail.t134' />");
-		                window.returnValue = "OK";
+		                ReturnFunction("OK");
 		                window.close();
 		            }
 		            else

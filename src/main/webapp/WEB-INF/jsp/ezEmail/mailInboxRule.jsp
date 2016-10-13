@@ -523,7 +523,7 @@
 		            return;
 		        }
 		        mail_detailinboxrule_cross_dialogArguments[0] = _RowObject;
-		        mail_detailinboxrule_cross_dialogArguments[1] = New_InboxRule_Complete;
+		        mail_detailinboxrule_cross_dialogArguments[1] = Detail_InboxRule_Complete;
 		        var OpenWin = window.open("/ezEmail/mailDetailInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
