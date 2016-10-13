@@ -528,7 +528,11 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 				
 			}
-
+			
+			//jgw 관리자체크
+			boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
+			model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
+			
 			model.addAttribute("pageID", pageID);
 			model.addAttribute("parentPageID", parentPageID);
 			model.addAttribute("editMode", editMode);
@@ -545,12 +549,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("skinExist", skinExist);
 			model.addAttribute("script1", script1);
 			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return "/ezPortal/portalTopMenu";
+		return "/ezPortal/portalTopMenuTest";
 	}
 	
 	
@@ -1626,7 +1629,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
 		
-		return "/ezPortal/portalEnvironmentMain";
+		return "/ezPortal/portalEnvironmentMainTest";
 	}
 	
 	/**
