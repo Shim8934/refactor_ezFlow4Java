@@ -11,6 +11,8 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -60,6 +62,9 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
 public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPortalService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzPortalServiceImpl.class);
+	
 	@Resource(name="EzPortalDAO")
 	private EzPortalDAO ezPortalDAO;
 	
@@ -1433,7 +1438,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
 		try {
 			List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID);
-			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<article class='utmenu'>\n");
 			sb.append("<ul>\n");
@@ -1444,11 +1448,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)) == false) {
 					continue;
 				}
-				
+				logger.debug("getUtilMenuHtml="+result.get(i));
 				String menuitemDisplayName = result.get(i).getDisplayName();
 				String menuitemImageUID = result.get(i).getImageUId();
 				String menuitemLinkURL = result.get(i).getLinkURL();
 				String menuitemLinkLocation = result.get(i).getLinkLocation();
+				if (menuitemLinkLocation == null) {
+					menuitemLinkLocation = "";
+				}
+				logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
 				String menuitemWindowOption = result.get(i).getWindowOption();
 				
 				if (i == result.size() - 1) {
