@@ -35,7 +35,7 @@
 			var strContentLocation = "${boardItem.contentLocation}";
 			var strAttachList = "${boardItem.attachments}";
 			var SSUserID = "${userInfo.id}";
-			var SSUserName = "${userInfo.displayName1}";
+			var SSUserName = "${userInfo.displayName}";
 			var	Access_FG = "${boardInfo.access_FG}";
 			var	BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
 			var	ListView_FG = "${boardInfo.listView_FG}";

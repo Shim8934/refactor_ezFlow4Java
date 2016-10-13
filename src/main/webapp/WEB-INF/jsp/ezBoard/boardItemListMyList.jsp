@@ -605,7 +605,7 @@
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
-		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		
 		    function window_reload() {

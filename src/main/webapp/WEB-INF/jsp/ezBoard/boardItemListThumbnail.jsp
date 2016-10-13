@@ -901,11 +901,11 @@
 		    }
 		    function ReservationItem_onclick() {
 		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
-		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		    function search_onclick() {
-		        var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
-		        window.location.href = "SearchBoardItem_Cross.aspx?BoardID=" + pBoardID + "&BoardType=" + pBoardType + "&OrgBoardParameters=" + encodeURI(OrgBoardParameters);
+		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+		        window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
 		    }
 		
 		    function window_reload() {

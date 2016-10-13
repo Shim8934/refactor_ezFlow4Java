@@ -911,12 +911,12 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			function ReservationItem_onclick() {
-			    var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
-			    window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(OrgBoardParameters) + "&boardType=" + pBoardType;
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+			    window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 			}
 			function search_onclick() {
-			    var OrgBoardParameters = "Page=" + CurPage + "&BoardID=" + pBoardID + "&SortBy=&BoardType=" + pBoardType;
-			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + encodeURI(OrgBoardParameters);
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
 			}
 		
 			function window_reload() {

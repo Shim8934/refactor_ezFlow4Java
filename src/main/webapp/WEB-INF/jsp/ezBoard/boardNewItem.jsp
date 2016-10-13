@@ -1639,7 +1639,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 330) / 2;
 		        var pLeft = (pwidth - 610) / 2;
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=355,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
 	        //추가항목 관련 Function 추가

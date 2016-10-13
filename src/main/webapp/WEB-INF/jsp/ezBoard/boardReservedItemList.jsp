@@ -15,7 +15,7 @@
 		<script>
 			var pOrgBoardParameters = "${orgBoardParameters}";
 			var SSUserID = "${userInfo.id}";
-			var SSUserName = "${userInfo.displayName1}";
+			var SSUserName = "${userInfo.displayName}";
 			var CurPage = "${page}";
 			var totalPage = "${totalPage}";
 			var strListInfo = "";
@@ -124,8 +124,9 @@
 		        window.location.href = "/ezBoard/boardReservedItemList.do?page=" + CurPage + "&sortBy=" + SortBy + "&boardType=" + "${boardType}" + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		    }
 		    function BoardItemList() {
-		        if ("${boardType}" == "0" || "${boardType}" == "1" || "${boardType}" == "2")
+		        if ("${boardType}" == "0" || "${boardType}" == "1" || "${boardType}" == "2"){
 		            window.location.href = "/ezBoard/boardItemList.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
+		        }
 		        else if ("${boardType}" == "3")
 		            window.location.href = "/ezBoard/BoardItemListPhoto.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
 		          else if ("${boardType}" == "4")
@@ -274,7 +275,7 @@
 		    }
 		
 		    function getBoardList() {
-		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + encodeURI(ReplaceString(pOrgBoardParameters)) + "&page=" + CurPage + "&sortBy=" + pSortBy;
+		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + ReplaceString(pOrgBoardParameters) + "&page=" + CurPage + "&sortBy=" + pSortBy;
 		    }
 		
 		    function ReplaceString(pOrgString) {

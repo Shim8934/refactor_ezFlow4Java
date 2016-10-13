@@ -606,7 +606,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 일반,포토,새 게시판리스트 호출 Method
 	 */
 	@RequestMapping(value= {"/ezBoard/boardItemList_new.do", "/ezBoard/boardItemList.do", "/ezBoard/boardItemListPhoto.do"})
-	public String boardItemList(HttpServletRequest request, LoginVO loginVO,BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String boardItemList(HttpServletRequest request, LoginVO loginVO, BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		String use_ocs = config.getProperty("config.USE_OCS"); 
         String use_Editor = config.getProperty("config.EDITOR"); 
         String use_IE11Browser = config.getProperty("config.IE11EDITOR");
@@ -619,7 +619,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		loginVO = commonUtil.userInfo(loginCookie);
 		
-		BoardPropertyVO boardInfo = getBoardInfo(pBoardID,loginVO);
+		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, loginVO);
 		
 		if (boardPropertyVO.getAdminType() == null) {
 			boardInfo.setAdminType("");
@@ -4879,9 +4879,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
-			boardInfo.setBoardName(boardInfo.getBoardName1());
-		} else {
+		if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
 			boardInfo.setBoardName(boardInfo.getBoardName2());
 		}
 		
@@ -4889,7 +4887,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning"; 
 		}
 		uploadFilePath = config.getProperty("upload_board.ROOT");
-		strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		strNow = EgovDateUtil.getTodayTime();
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);

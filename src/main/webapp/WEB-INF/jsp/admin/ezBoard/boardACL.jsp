@@ -621,6 +621,26 @@
 	            }
 	            window.location.reload();
 	        }
+	        function goBoardList() {
+	            if (pType == "3") {
+	                if(pParentNeed == "Y")
+	                    location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	                else
+	                    location.href = "/ezBoard/boardItemListPhoto.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	            }
+	            else if (pType == "4") {
+	                if (pParentNeed == "Y")
+	                    location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	                else
+	                    location.href = "/ezBoard/boardItemListThumbnail.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	            }
+	            else {
+	                if(pParentNeed == "Y")
+	                    location.href = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	                else
+	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURI(pBoardName) + "&boardType=" + pType;
+	            }
+	        }
 			function UnderBoardCopy() {
 			    var listview = new ListView();
 			    listview.LoadFromID("AccessListView");

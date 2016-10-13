@@ -52,7 +52,6 @@
 		                var a = document.createElement("A");
 		
 		                if (CrossYN()) {
-alert(1230);
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
 		                }

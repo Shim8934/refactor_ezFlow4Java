@@ -1979,7 +1979,6 @@ function OpenInformationUI_Complete() {
     DivPopUpHidden();
 }
 function getDocInfo() {
-alert(50);
 	var result = "";
 	
 	$.ajax({
