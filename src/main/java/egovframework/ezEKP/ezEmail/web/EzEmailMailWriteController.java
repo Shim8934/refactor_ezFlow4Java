@@ -295,6 +295,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
 		
+		if (pMailSenderNM == null) {
+			pMailSenderNM = "";
+		}
+		
 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
 		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
 		for (String pSenderNM : senderList) {
