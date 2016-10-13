@@ -28,15 +28,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -54,6 +58,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzCommonDAO")
 	private EzCommonDAO ezCommonDAO;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 	
 	@Override
 	public String getContentInfo(String type, String itemID) throws Exception {
@@ -671,10 +677,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             		in = new FileInputStream(file);
 				} catch (Exception e) {
 					try {
+						logger.debug("not found image(" + m_ImageList[i].replace("&amp;", "&") + ") :::" + e.getMessage());
 						File file = new File(m_ImageList[i].replace("&amp;", "&"));
 						in = new FileInputStream(file);
 						// 이미지 못찾을떄 사진없음 이미지 보여주기
 					} catch (FileNotFoundException e2) {
+						logger.debug("change default image" + e2.getMessage());
+						
 						in = new FileInputStream(realPath + "/images/default_pic.jpg");
 					}
 				}

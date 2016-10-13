@@ -124,7 +124,6 @@ public class LoginController {
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-		
 		//DB에서 lang 값 가져옴
 		String lang = ezCommonService.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
 		String timeZone = ezCommonService.selectUserGetTimeZone(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
@@ -242,12 +241,12 @@ public class LoginController {
     @RequestMapping(value = "/user/login/setPassword.do")
     public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception{
     	userInfo = commonUtil.userInfo(loginCookie);
-    	
+
     	if (userInfo.getId().equals("masteradmin")) {
     		List<String> userIDList = loginService.getUserIDList();
     		
     		for (int k = 0; k < userIDList.size(); k++) {
-    			logger.info("setPassword.do::userID = " + userIDList.get(k));
+    			logger.info("setPassword.do::userID = " + userIDList.get(k) + " :: Set Password Complete");
     			
     			String pwd = EgovFileScrty.encryptPassword(userIDList.get(k) + "1!", userIDList.get(k));
     			

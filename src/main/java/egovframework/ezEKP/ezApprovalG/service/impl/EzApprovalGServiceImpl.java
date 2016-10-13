@@ -4007,7 +4007,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signInfo2 = "";
 		String signText2 = "";
 		String signAdd = "";
-		
+		//TODO 代 코드화?
 		if (!userID.equals(orgUID)) {
 			proxySign = "代 ";
 		}

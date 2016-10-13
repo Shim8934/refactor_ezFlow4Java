@@ -114,7 +114,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzBoardController.class);
 	
 	/**
 	 * 게시판 메인화면 호출 Method
@@ -645,7 +645,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID);
         
-        if (boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
+        if (boardProperty != null && boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
         	use_oneLineCount = "YES";
         } else {
         	use_oneLineCount = "NO";

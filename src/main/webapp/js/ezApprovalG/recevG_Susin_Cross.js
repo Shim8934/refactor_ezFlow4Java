@@ -468,7 +468,12 @@ function SendDraftMappingSign(ret) {
 
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
-            field.textContent = field.textContent + PositionText;
+            setNodeText(field , getNodeText(field) + PositionText);
+        }
+
+        var field = message.GetListItem(fields, pseumyungdatecell);
+        if (field) {
+            setNodeText(field , s);
         }
 
         if (CurAprType == strAprType16)  
@@ -477,9 +482,9 @@ function SendDraftMappingSign(ret) {
             if (field) {
                 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
                     field.innerHTML = strLang7 + OpinionText + strimg;
 
@@ -535,10 +540,13 @@ function SendDraftMappingSign(ret) {
             if (field) {
                 
                 if (ret != "NAME") {
-                    strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(ret) + "' border=0 embedding='1' ";
+                    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 
+                    if (message.GetListItem(fields, pseumyungdatecell))
+                        OpinionText = "";
+                    
                     if (CurAprType == strAprType4)
                         OpinionText = strLangAprType4 + OpinionText;
 
@@ -555,6 +563,10 @@ function SendDraftMappingSign(ret) {
                 else {
                     if (field) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
+                        
+                        if (message.GetListItem(fields, pseumyungdatecell))
+                            OpinionText = "";
+                        
                         if (CurAprType == strAprType4)
                             OpinionText = strLangAprType4 + OpinionText;
                         field.innerHTML = OpinionText + strimg;
@@ -584,7 +596,7 @@ function UndoSignInfo(signInfo) {
             for (cnt = 0; cnt < signInfo.length; cnt++) {
                 field = message.GetListItem(fields, signInfo[cnt]);
                 if (field)
-                    field.textContent = " ";
+                	setNodeText(field, " ");
             }
         }
     } catch (e) {
@@ -2074,9 +2086,9 @@ function putSignXML(SignXML) {
 
                         var strimg;
                         if (img.length >= 1) {
-                            strimg = "<img src='" + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
+                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             //message.BodySetAttribute(SignName, img[0]);
                         }
 

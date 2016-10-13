@@ -98,9 +98,8 @@ function AprrovMappingSign(ret) {
     if (getOpinionCount()) {
         PositionText = "(" + strLang5 + "";
     }
-
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-        OpinionText = getSignDate() + "<br>";
+        OpinionText = getSignDate() + "<br/>";
     }
 
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
@@ -220,7 +219,7 @@ function AprrovMappingSign(ret) {
 
         if (field) {
             var psingTD = field;
-            var SContent = strLang4 + "<br>" + arr_userinfo[2];
+            var SContent = strLang4 + "<br/>" + arr_userinfo[2];
             psingTD.innerHTML = SContent;
             signInfo[signCnt] = signID;
 
@@ -290,7 +289,6 @@ function AprrovMappingSign(ret) {
                     var strimg;
 
                     var FilePath = encodeURI(ret);
-
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
@@ -388,7 +386,7 @@ function AprrovMappingSign(ret) {
                         strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 
                     var contents = "";
                     if (!message.GetListItem(fields, seumyungdateID)) {
@@ -1382,7 +1380,7 @@ function ReAprLineSingMapping(ret) {
     var count = objNodes.length;
     field = message.GetListItem(fields, "refer");
     if (field) {
-        field.textContent = " ";
+    	setNodeText(field, " ");
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
     }
@@ -1390,7 +1388,7 @@ function ReAprLineSingMapping(ret) {
     for (i = 1; i < fields.length; i++) {
         field = message.GetListItem(fields, "gongram" + i);
         if (field) {
-            field.textContent = " ";
+        	setNodeText(field, " ");
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
@@ -1433,22 +1431,22 @@ function ReAprLineSingMapping(ret) {
         lastKyuljiwee = OrderJobtitle[LastSignSN];
         var field = message.GetListItem(fields, "lastKyuljikwee");
         if (field)
-            field.textContent = lastKyuljiwee;
+        	setNodeText(field , lastKyuljiwee);
 
         var field = message.GetListItem(fields, "lastKyulName");
         if (field)
-            field.textContent = lastKyulName;
+        	setNodeText(field , lastKyulName);
     }
     else {
         lastKyulName = OrderName[LastSignSN];
         lastKyuljiwee = OrderJobtitle[LastSignSN];
         var field = message.GetListItem(fields, "slastKyuljikwee");
         if (field)
-            field.textContent = lastKyuljiwee;
+        	setNodeText(field , lastKyuljiwee);
 
         var field = message.GetListItem(fields, "slastKyulName");
         if (field)
-            field.textContent = lastKyulName;
+        	setNodeText(field , lastKyulName);
     }
 
     var hapyuiCnt = 1;
@@ -1485,7 +1483,7 @@ function ReAprLineSingMapping(ret) {
         fieldname = "refer";
         field = message.GetListItem(fields, fieldname);
         if (field) {
-            field.textContent = refer;
+        	setNodeText(field , refer);
         }
     }
     var susinSN = "";
@@ -1496,7 +1494,7 @@ function ReAprLineSingMapping(ret) {
         fieldname = susinSN + "jikwe" + i;
         field = message.GetListItem(fields, fieldname);
         if (field) {
-            field.textContent = " ";
+        	setNodeText(field, " ");
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
@@ -1512,7 +1510,7 @@ function ReAprLineSingMapping(ret) {
         fieldname = susinSN + "seumyungdate" + i;
         field = message.GetListItem(fields, fieldname);
         if (field) {
-            field.textContent = " ";
+        	setNodeText(field, " ");
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
@@ -1525,7 +1523,7 @@ function ReAprLineSingMapping(ret) {
                 name = susinSN + "habyui" + i;
                 field = message.GetListItem(fields, name);
                 if (field) {
-                    field.textContent = " ";
+                	setNodeText(field, " ");
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
@@ -1533,7 +1531,7 @@ function ReAprLineSingMapping(ret) {
                 fieldname = susinSN + "habyuisign" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    field.textContent = " ";
+                	setNodeText(field, " ");
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
@@ -1541,7 +1539,7 @@ function ReAprLineSingMapping(ret) {
                 fieldname = susinSN + "habyuipositon" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    field.textContent = " ";
+                	setNodeText(field, " ");
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
@@ -1549,7 +1547,7 @@ function ReAprLineSingMapping(ret) {
                 fieldname = susinSN + "habyuidate" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    field.textContent = " ";
+                	setNodeText(field, " ");
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
@@ -1598,11 +1596,11 @@ function ReAprLineSingMapping(ret) {
                     fieldname = susinSN + "jikwe" + idx;
                     field = message.GetListItem(fields, fieldname);
                     if (field) {
-                        field.textContent = OrderJobtitle[i];
+                    	setNodeText(field , OrderJobtitle[i]);
                         if (OrderSuggester[i] == "Y")
-                            field.textContent = strLang75 + field.textContent;
+                        	setNodeText(field , strLang75 + getNodeText(field));
                         if (OrderReporter[i] == "Y")
-                            field.textContent = strLang76 + field.textContent;
+                        	setNodeText(field , strLang76 + getNodeText(field));
                     }
 
                     fieldname = susinSN + "sign" + idx;
@@ -1617,7 +1615,6 @@ function ReAprLineSingMapping(ret) {
 
             if (pDraftFlag == "HABYUI" && (LastSignSN == 1 ||  LastSignSN == i)) {
                 for (k = 1; k < 10; k++) {
-                    //if(pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU") 
                     if (pDraftFlag == "SUSIN")
                         signID = pSusinSN + "sign" + k;
                     else
@@ -1633,17 +1630,17 @@ function ReAprLineSingMapping(ret) {
             fieldname = susinSN + "jikwe" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.textContent = OrderJobtitle[i];
+            	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                    field.textContent = strLang75 + field.textContent;
+                	setNodeText(field , strLang75 + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                    field.textContent = strLang76 + field.textContent;
+                	setNodeText(field , strLang76 + getNodeText(field));
             }
 
             fieldname = susinSN + "sign" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field && pDraftFlag == "HABYUI") {
-                field.textContent = OrderName[i];
+            	setNodeText(field , OrderName[i]);
             }
             idx = idx + 1;
         }
@@ -1652,7 +1649,7 @@ function ReAprLineSingMapping(ret) {
             fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.textContent = OrderDept[i];
+            	setNodeText(field , OrderDept[i]);
             }
 
             fieldname = susinSN + "habyuisign" + hidx;
@@ -1663,11 +1660,11 @@ function ReAprLineSingMapping(ret) {
             fieldname = susinSN + "habyuipositon" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.textContent = OrderJobtitle[i];
+            	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                    field.textContent = strLang75 + field.textContent;
+                	setNodeText(field , strLang75 + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                    field.textContent = strLang76 + field.textContent;
+                	setNodeText(field , strLang76 + getNodeText(field));
             }
             hidx = hidx + 1;
         }
@@ -1676,26 +1673,34 @@ function ReAprLineSingMapping(ret) {
     if (field == message.GetListItem(fields, "lineapr")) {
         if (idx > 5) {
             message.GetListItem(fields, "lineapr").style.display = "";
-            for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++)
-                message.GetListItem(fields, "lineapr").children[i].style.display = "";
+            for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++) {
+                if(message.GetListItem(fields, "lineapr").children[i] != undefined)
+                    message.GetListItem(fields, "lineapr").children[i].style.display = "";
+            }
         }
         else {
             message.GetListItem(fields, "lineapr").style.display = "";
-            for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++)
-                message.GetListItem(fields, "lineapr").children[i].style.display = "none";
+            for (i = 0; i < message.GetListItem(fields, "lineapr").childNodes.length; i++) {
+                if (message.GetListItem(fields, "lineapr").children[i] != undefined)
+                    message.GetListItem(fields, "lineapr").children[i].style.display = "none";
+            }
         }
     }
 
     if (field == message.GetListItem(fields, "linehab")) {
         if (hidx > 5) {
             message.GetListItem(fields, "linehab").style.display = "";
-            for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++)
-                message.GetListItem(fields, "linehab").children[i].style.display = "";
+            for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++) {
+                if(message.GetListItem(fields, "linehab").children[i] != undefined)
+                    message.GetListItem(fields, "linehab").children[i].style.display = "";
+            }
         }
         else {
             message.GetListItem(fields, "linehab").style.display = "";
-            for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++)
-                message.GetListItem(fields, "linehab").children[i].style.display = "none";
+            for (i = 0; i < message.GetListItem(fields, "linehab").childNodes.length; i++) {
+                if (message.GetListItem(fields, "linehab").children[i] != undefined)
+                    message.GetListItem(fields, "linehab").children[i].style.display = "none";
+            }
         }
     }
 
@@ -1835,7 +1840,7 @@ function getSusinSNInfo() {
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
 
     xmlhttp.open("POST", "/ezApprovalG/getSusinSN.do", false);
     xmlhttp.send(xmlpara);
@@ -2184,7 +2189,7 @@ function putSignXML(SignXML) {
                         var strimg;
                         if (img.length >= 1) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
-                            strimg = "<img src='" + "/ezApprovalG/approvalGSign.do?fileName=" + filename + "' border=0 embedding='1' ";
+                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
                             strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             //message.BodySetAttribute(SignName, img[0]);

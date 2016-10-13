@@ -602,7 +602,7 @@ function SendDraftMappingSign(ret)
 	//positiontext = getopinioncount();
 
 	if ( LastSignSN == "1") 
-		signposition = SignCount;
+		signposition = 1;
 	else if (DraftLastFlag)		
 	{
 		putJunkyulSign("sign" + signposition);
@@ -681,8 +681,7 @@ function SendDraftMappingSign(ret)
 	{
 	  	if(field)
 	  	{
-	  		//서명
-	  		field.textContent = arr_userinfo[3];//CKEDITOR-원본 : field.value = arr_userinfo[3] + PositionText;
+	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
 			SignType[signCnt] = "TEXT";
@@ -695,8 +694,7 @@ function SendDraftMappingSign(ret)
 	{
 	  	if(field)
 	  	{
-	  		//부서명
-	  		field.textContent = arr_userinfo[3];//CKEDITOR-원본 : field.value = arr_userinfo[3] + PositionText;
+	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
 			SignType[signCnt] = "TEXT";
@@ -710,7 +708,7 @@ function SendDraftMappingSign(ret)
 	field = message.GetListItem(fields, pseumyungdatecell);//CKEDITOR-원본 : field = fields.item(pseumyungdatecell)
 	if(field)
 	{
-		field.textContent = s;//CKEDITOR-원본 : field.value = s;
+		setNodeText(field , s);
 		//사인정보를 저장한다.(Undo용)
 		signInfo[signCnt] = pseumyungdatecell;
 		SignType[signCnt] = "TEXT";
@@ -738,7 +736,7 @@ function UndoSignInfo(signInfo)
 	  	{
 	  		field = message.GetListItem(fields, signInfo[cnt]);//CKEDITOR-원본 : field = fields.item(signInfo[cnt])
 	  		if(field)
-	  			field.textContent = "";//CKEDITOR-원본 : field.value = " ";
+	  			setNodeText(field, "");
 	  	}
 	}
   }catch(e){
