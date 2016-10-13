@@ -68,91 +68,38 @@
 	            }
 	        }
 	        function btn_click() {
-	            if (CrossYN()) {
-	                var params = new Array();
-	                params["email"] = new Array();
-	                params["link"] = new Array();
-	                var arrAddr = document.getElementsByName('addr');
-	                var arrLink = document.getElementsByName('content');
-	                var idx = 0;
-	                var bSel = false;
-	                var count = document.getElementById("msg").childNodes.length;
-	                if (typeof (count) == "undefined") count = 0;
-	                if (document.getElementById("msg").childNodes.item(0).childNodes.item(0).childNodes.item(0).getAttribute("Email") != null) {
-	                    {
-	                        for (var i = 0 ; i < count ; i++) {
-	                            if (arrAddr.item(i).checked) {
-	                                params[idx] = arrAddr.item(i).getAttribute("Email");
-	
-	                                bSel = true;
-	                                idx++;
-	                            }
-	                        }
-	                    }
-	                }
-	                params["link"] = arrKeyword;
-	                idx = 0;
-	                if (!bSel) {
-	                    alert('<spring:message code="ezEmail.t346" />');
-	                    return;
-	                }
-	                Ret = params;
-	                ReturnFunction(Ret);
-	                if(!DivPopup)
-	                    window.close();
-	            }
-	            else {
-	                var params = new Array();
-	                params["email"] = new Array();
-	                params["link"] = new Array();
-	                var arrAddr = msg.all("addr");
-	                var arrLink = msg.all("content");
-	                var idx = 0;
-	                var bSel = false;
-	                if (arrAddr != null) {
-	                    if (typeof (arrAddr.length) == "undefined") {
-	                        if (arrAddr.checked) {
-	                            params["email"][0] = arrAddr.addr;
-	                            bSel = true;
-	                        }
-	                    }
-	                    else {
-	                        for (var i = 0 ; i < arrAddr.length ; i++) {
-	                            if (arrAddr[i].checked) {
-	                                params["email"][idx] = arrAddr[i].addr;
-	
-	                                bSel = true;
-	                                idx++;
-	                            }
-	                        }
-	                    }
-	                }
-	                idx = 0;
-	                if (arrLink != null) {
-	                    if (typeof (arrLink.length) == "undefined") {
-	                        if (arrLink.checked) {
-	                            params["link"][0] = arrLink.addr;
-	                            bSel = true;
-	                        }
-	                    }
-	                    else {
-	                        for (var i = 0 ; i < arrLink.length ; i++) {
-	                            if (arrLink[i].checked) {
-	                                params["link"][idx] = arrLink[i].addr;
-	
-	                                bSel = true;
-	                                idx++;
-	                            }
-	                        }
-	                    }
-	                }
-	                if (!bSel) {
-	                    alert("<spring:message code='ezEmail.t346' />");
-	                    return;
-	                }
-	                window.returnValue = params;
-	                window.close();
-	            }
+                var params = new Array();
+                params["email"] = new Array();
+                params["link"] = new Array();
+                var arrAddr = document.getElementsByName('addr');
+                var arrLink = document.getElementsByName('content');
+                var idx = 0;
+                var bSel = false;
+                var count = document.getElementById("msg").childNodes.length;
+                if (typeof (count) == "undefined") count = 0;
+                if (document.getElementById("msg").childNodes.item(0).childNodes.item(0).childNodes.item(0).getAttribute("Email") != null) {
+                    {
+                        for (var i = 0 ; i < count ; i++) {
+                            if (arrAddr.item(i).checked) {
+                                params[idx] = arrAddr.item(i).getAttribute("Email");
+
+                                bSel = true;
+                                idx++;
+                            }
+                        }
+                    }
+                }
+                params["link"] = arrKeyword;
+                idx = 0;
+                if (!bSel) {
+                    alert('<spring:message code="ezEmail.t346" />');
+                    return;
+                }
+                Ret = params;
+                ReturnFunction(Ret);
+                if(!DivPopup) {
+                    window.close();
+                }
 	        }
 	        function btn_cancel() {
 	            if (DivPopup)

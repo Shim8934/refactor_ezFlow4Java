@@ -147,10 +147,15 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">    CKEDITOR.replace('editor1', { fullPage: false });</script>
 		<script type="text/javascript">
-		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofofficeck.do") > -1)
+			if (!CrossYN()) {
+				CKEDITOR.config.toolbar = 'NODRAGIMAGE';
+			}			
+		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofofficeck.do") > -1) {
 		        CKEDITOR.config.toolbar = 'NOIMAGE';
-		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1)
+		    }
+		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
 		        CKEDITOR.config.toolbar = 'NODRAGIMAGE';
+		    }
 			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />" + CKEDITOR.instances.editor1.config.font_names;

@@ -136,12 +136,6 @@
 		        }		        
 		    }
 		    
-	        window.onbeforeunload = function () {
-                if (!CrossYN()) {
-                    parent.EzHTTPTrans.style.display = "";
-                }                   	            
-	        }
-		    
 		    function cancel() {
 		        if (ReturnFunction != null) {
 		            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
@@ -157,149 +151,70 @@
 		            window.close();
 		    }
 		
-		    if (!CrossYN()) {
-		        window.onunload = function () {
-		            if (deliverySend.checked == true && dialogArguments["replyReadTime"] == "2") {
-		                deliverySend.checked = false;
-		                alert("<spring:message code='ezEmail.t354' />");
-		            }
-		        }
-		    }
-		
 		    function responseSend_onClick() {
-		        if (CrossYN()) {
-		            if (document.getElementById("responseSendid").checked == true)
-		                RetValue["replySendTime"] = "1";
-		            else
-		                RetValue["replySendTime"] = "0";
-		        }
-		        else {
-		            if (document.getElementById("responseSendid").checked == true)
-		                dialogArguments["replySendTime"] = "1";
-		            else
-		                dialogArguments["replySendTime"] = "0";
-		        }
+	            if (document.getElementById("responseSendid").checked == true) {
+	                RetValue["replySendTime"] = "1";
+	            } else {
+	                RetValue["replySendTime"] = "0";
+	            }
 		    }
 		
 		    function responseRead_onClick() {
-		        if (CrossYN()) {
-		            if (document.getElementById("responseReadid").checked == true) {
-		                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
-		                document.getElementById("responseReadid").disabled = false;
-		            }
-		            else {
-		                RetValue["replyReadTime"] = "0";
-		            }
-		        }
-		        else {
-		            if (document.getElementById("responseReadid").checked == true) {
-		                dialogArguments["replyReadTime"] = document.getElementById("responseReadType").value
-		                document.getElementById("responseReadid").disabled = false;
-		            }
-		            else {
-		                dialogArguments["replyReadTime"] = "0";
-		            }
-		        }
+	            if (document.getElementById("responseReadid").checked == true) {
+	                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
+	                document.getElementById("responseReadid").disabled = false;
+	            }
+	            else {
+	                RetValue["replyReadTime"] = "0";
+	            }
 		    }
 		
 		    function msgCCDisplay_onClick() {
-		        if (CrossYN()) {
-		            RetValue["showMsgCC"] = msgCCDisplay.checked;
-		            if (typeof (RetValue["tagMsgCC"]) != "undefined") {
-		                if (msgCCDisplay.checked == true) {
-		                    RetValue["tagMsgCC"].style.display = "block";
-		                    RetValue["tagMsgCCu"].style.display = "block";
-		
-		                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
-		                        RetValue["tagMsgCC2"].style.display = "block";
-		                }
-		                else {
-		                    RetValue["tagMsgCC"].style.display = "none";
-		                    RetValue["tagMsgCCu"].style.display = "none";
-		
-		                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
-		                        RetValue["tagMsgCC2"].style.display = "none";
-		                }
-		            }
-		        }
-		        else {
-		            dialogArguments["showMsgCC"] = msgCCDisplay.checked;
-		            if (typeof (dialogArguments["tagMsgCC"]) != "undefined") {
-		                if (msgCCDisplay.checked == true) {
-		                    dialogArguments["tagMsgCC"].style.display = "block";
-		                    dialogArguments["tagMsgCCu"].style.display = "block";
-		
-		                    if (typeof (dialogArguments["tagMsgCC2"]) != "undefined" && dialogArguments["tagMsgCC2"] != null)
-		                        dialogArguments["tagMsgCC2"].style.display = "block";
-		                }
-		                else {
-		                    dialogArguments["tagMsgCC"].style.display = "none";
-		                    dialogArguments["tagMsgCCu"].style.display = "none";
-		
-		                    if (typeof (dialogArguments["tagMsgCC2"]) != "undefined" && dialogArguments["tagMsgCC2"] != null)
-		                        dialogArguments["tagMsgCC2"].style.display = "none";
-		                }
-		            }
-		        }
+	            RetValue["showMsgCC"] = msgCCDisplay.checked;
+	            if (typeof (RetValue["tagMsgCC"]) != "undefined") {
+	                if (msgCCDisplay.checked == true) {
+	                    RetValue["tagMsgCC"].style.display = "block";
+	                    RetValue["tagMsgCCu"].style.display = "block";
+	
+	                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
+	                        RetValue["tagMsgCC2"].style.display = "block";
+	                }
+	                else {
+	                    RetValue["tagMsgCC"].style.display = "none";
+	                    RetValue["tagMsgCCu"].style.display = "none";
+	
+	                    if (typeof (RetValue["tagMsgCC2"]) != "undefined" && RetValue["tagMsgCC2"] != null)
+	                        RetValue["tagMsgCC2"].style.display = "none";
+	                }
+	            }
 		    }
 		
 		    function msgBCCDisplay_onClick() {
-		        if (CrossYN()) {
-		            RetValue["showMsgBCC"] = msgBCCDisplay.checked;
-		            if (typeof (RetValue["tagMsgBCC"]) != "undefined") {
-		                if (msgBCCDisplay.checked == true) {
-		                    RetValue["tagMsgBCC"].style.display = "block";
-		                    RetValue["tagMsgBCCu"].style.display = "block";
-		
-		                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
-		                        RetValue["tagMsgBCC2"].style.display = "block";
-		                }
-		                else {
-		                    RetValue["tagMsgBCC"].style.display = "none";
-		                    RetValue["tagMsgBCCu"].style.display = "none";
-		
-		                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
-		                        RetValue["tagMsgBCC2"].style.display = "none";
-		                }
-		            }
-		        }
-		        else {
-		            dialogArguments["showMsgBCC"] = msgBCCDisplay.checked;
-		            if (typeof (dialogArguments["tagMsgBCC"]) != "undefined") {
-		                if (msgBCCDisplay.checked == true) {
-		                    dialogArguments["tagMsgBCC"].style.display = "block";
-		                    dialogArguments["tagMsgBCCu"].style.display = "block";
-		
-		                    if (typeof (dialogArguments["tagMsgBCC2"]) != "undefined" && dialogArguments["tagMsgBCC2"] != null)
-		                        dialogArguments["tagMsgBCC2"].style.display = "block";
-		                }
-		                else {
-		                    dialogArguments["tagMsgBCC"].style.display = "none";
-		                    dialogArguments["tagMsgBCCu"].style.display = "none";
-		
-		                    if (typeof (dialogArguments["tagMsgBCC2"]) != "undefined" && dialogArguments["tagMsgBCC2"] != null)
-		                        dialogArguments["tagMsgBCC2"].style.display = "none";
-		                }
-		            }
-		        }
+	            RetValue["showMsgBCC"] = msgBCCDisplay.checked;
+	            if (typeof (RetValue["tagMsgBCC"]) != "undefined") {
+	                if (msgBCCDisplay.checked == true) {
+	                    RetValue["tagMsgBCC"].style.display = "block";
+	                    RetValue["tagMsgBCCu"].style.display = "block";
+	
+	                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
+	                        RetValue["tagMsgBCC2"].style.display = "block";
+	                }
+	                else {
+	                    RetValue["tagMsgBCC"].style.display = "none";
+	                    RetValue["tagMsgBCCu"].style.display = "none";
+	
+	                    if (typeof (RetValue["tagMsgBCC2"]) != "undefined" && RetValue["tagMsgBCC2"] != null)
+	                        RetValue["tagMsgBCC2"].style.display = "none";
+	                }
+	            }
 		    }
 		
 		    function important_onChange() {
-		        if (!CrossYN()) {
-		            dialogArguments["important"] = important.selectedIndex.toString();
-		        }
-		        else if (CrossYN()) {
-		            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
-		        }
+		    	RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
 		    }
 		
 		    function postType_onChange() {
-		        if (!CrossYN()) {
-		            dialogArguments["bodyType"] = postType.selectedIndex.toString();
-		        }
-		        else if (CrossYN()) {
-		            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
-		        }
+		        RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
 		    }
 		
 		    function GetStartDate() {
@@ -309,40 +224,21 @@
 		    }
 		
 		    function confirm() {
-		        if (CrossYN()) {
-		            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
-		            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
-		
-		            if (document.getElementById("responseSendid").checked == true)
-		                RetValue["replySendTime"] = "1";
-		            else
-		                RetValue["replySendTime"] = "0";
-		
-		            if (document.getElementById("responseReadid").checked == true) {
-		                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
-		                document.getElementById("responseReadid").disabled = false;
-		            }
-		            else {
-		                RetValue["replyReadTime"] = "0";
-		            }
-		        }
-		        else {
-		            dialogArguments["important"] = document.getElementById('important').selectedIndex.toString();
-		            dialogArguments["bodyType"] = document.getElementById('postType').selectedIndex.toString();
-		
-		            if (document.getElementById("responseSendid").checked == true)
-		                dialogArguments["replySendTime"] = "1";
-		            else
-		                dialogArguments["replySendTime"] = "0";
-		
-		            if (document.getElementById("responseReadid").checked == true) {
-		                dialogArguments["replyReadTime"] = document.getElementById("responseReadType").value
-		                document.getElementById("responseReadid").disabled = false;
-		            }
-		            else {
-		                dialogArguments["replyReadTime"] = "0";
-		            }
-		        }
+	            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
+	            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
+	
+	            if (document.getElementById("responseSendid").checked == true)
+	                RetValue["replySendTime"] = "1";
+	            else
+	                RetValue["replySendTime"] = "0";
+	
+	            if (document.getElementById("responseReadid").checked == true) {
+	                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
+	                document.getElementById("responseReadid").disabled = false;
+	            }
+	            else {
+	                RetValue["replyReadTime"] = "0";
+	            }
 		
 		        if (deliverySend.checked == true) {
 		            var now = new Date();
@@ -354,37 +250,18 @@
 		            }
 		        }
 		
-		        if (CrossYN()) {
-		            if (deliverySend.checked == true) {
-		                RetValue["delaySendDate"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
-		            }
-		            else
-		                RetValue["delaySendDate"] = "";
+	            if (deliverySend.checked == true) {
+	                RetValue["delaySendDate"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	            }
+	            else
+	                RetValue["delaySendDate"] = "";
+	
+	            RetValue["bodyType"] = bodyType.selectedIndex.toString();
 		
-		            RetValue["bodyType"] = bodyType.selectedIndex.toString();
-		        }
-		        else {
-		            if (deliverySend.checked == true) {
-		                dialogArguments["delaySendDate"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
-		            }
-		            else
-		                dialogArguments["delaySendDate"] = "";
-		
-		            dialogArguments["bodyType"] = bodyType.selectedIndex.toString();
-		        }
-		
-		        if (CrossYN()) {
-		            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
-		                alert("<spring:message code='ezEmail.t354' />");
-		                return;
-		            }
-		        }
-		        else {
-		            if (deliverySend.checked == true && dialogArguments["replyReadTime"] == "2") {
-		                alert("<spring:message code='ezEmail.t354' />");
-		                return;
-		            }
-		        }
+	            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
+	                alert("<spring:message code='ezEmail.t354' />");
+	                return;
+	            }
 		
 		        if (ReturnFunction != null)
 		            ReturnFunction(RetValue);
@@ -393,18 +270,11 @@
 		    }
 		
 		    function SecurityMail_onClick() {
-		        if (CrossYN()) {
-		            if (SecurityMail.checked == true)
-		                RetValue["SecurityMail"] = "Security";
-		            else
-		                RetValue["SecurityMail"] = "Normal";
-		        }
-		        else {
-		            if (SecurityMail.checked == true)
-		                dialogArguments["SecurityMail"] = "Security";
-		            else
-		                dialogArguments["SecurityMail"] = "Normal";
-		        }
+	            if (SecurityMail.checked == true) {
+	                RetValue["SecurityMail"] = "Security";
+	            } else {
+	                RetValue["SecurityMail"] = "Normal";
+	            }
 		    }
 		
 		    function ReservedSend(obj) {
