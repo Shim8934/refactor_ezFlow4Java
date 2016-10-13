@@ -1301,7 +1301,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					if (imageOverImagePath != null) {
 						sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"" + " name=\'" + pContentsUID + "'");
 					}
-					if (imageLinkURL != null && !imageLinkURL.equals("")) {
+					if (imageLinkURL != null && !imageLinkURL.trim().equals("")) {
 						sb.append(" style='cursor:pointer'");
 						sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
 						sb.append(", \"" + imageLinkLocation + "\"");
