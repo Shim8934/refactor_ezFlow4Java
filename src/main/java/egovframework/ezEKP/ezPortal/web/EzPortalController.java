@@ -553,7 +553,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		return "/ezPortal/portalTopMenuTest";
+		return "/ezPortal/portalTopMenu";
 	}
 	
 	
@@ -1629,7 +1629,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
 		
-		return "/ezPortal/portalEnvironmentMainTest";
+		return "/ezPortal/portalEnvironmentMain";
 	}
 	
 	/**
