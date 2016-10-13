@@ -612,8 +612,6 @@ public class EzAddressController{
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		
-		
-		
 		return "ezAddress/addressReadGroup";
 	}
 	

@@ -2768,12 +2768,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String userTimeSet = "";
 		String setLocalTime = "";
-		String nonActiveX = "YES";
 		boolean outMailReadCheck = false;
 		
 		model.addAttribute("userTimeSet", userTimeSet);
 		model.addAttribute("setLocalTime", setLocalTime);
-		model.addAttribute("nonActiveX", nonActiveX);
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		

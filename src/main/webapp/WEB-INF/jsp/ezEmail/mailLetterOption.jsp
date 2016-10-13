@@ -27,7 +27,6 @@
 	
 			var g_timezone = "${userTimeSet}";
 		    var nowDateTime = "${setLocalTime}";
-		    var NonActiveX = "${nonActiveX}";
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -100,24 +99,9 @@
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
 		
-		        if (!CrossYN()) {
-		            if (NonActiveX == "YES") {
-		                document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
-		                document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
-		                document.getElementById("bodyType").selectedIndex = parseInt(rgParams.bodyType);
-		            }
-		            else {
-		                important.selectedIndex = parseInt(rgParams["important"]);
-		                postType.selectedIndex = parseInt(rgParams["postType"]);
-		                bodyType.selectedIndex = parseInt(rgParams["bodyType"]);
-		            }
-		        }
-		        else if (CrossYN()) {
-		            document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
-		            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
-		            document.getElementById("bodyType").selectedIndex = parseInt(rgParams.bodyType);
-		        }
-		
+	            document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
+	            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
+	            document.getElementById("bodyType").selectedIndex = parseInt(rgParams.bodyType);
 		
 		        if (rgParams["replySendTime"] == "1") {
 		            document.getElementById("responseSendid").checked = true;
@@ -173,7 +157,7 @@
 		            window.close();
 		    }
 		
-		    if (!CrossYN() && NonActiveX == "NO") {
+		    if (!CrossYN()) {
 		        window.onunload = function () {
 		            if (deliverySend.checked == true && dialogArguments["replyReadTime"] == "2") {
 		                deliverySend.checked = false;
@@ -183,7 +167,7 @@
 		    }
 		
 		    function responseSend_onClick() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            if (document.getElementById("responseSendid").checked == true)
 		                RetValue["replySendTime"] = "1";
 		            else
@@ -198,7 +182,7 @@
 		    }
 		
 		    function responseRead_onClick() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            if (document.getElementById("responseReadid").checked == true) {
 		                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
 		                document.getElementById("responseReadid").disabled = false;
@@ -219,7 +203,7 @@
 		    }
 		
 		    function msgCCDisplay_onClick() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            RetValue["showMsgCC"] = msgCCDisplay.checked;
 		            if (typeof (RetValue["tagMsgCC"]) != "undefined") {
 		                if (msgCCDisplay.checked == true) {
@@ -260,7 +244,7 @@
 		    }
 		
 		    function msgBCCDisplay_onClick() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            RetValue["showMsgBCC"] = msgBCCDisplay.checked;
 		            if (typeof (RetValue["tagMsgBCC"]) != "undefined") {
 		                if (msgBCCDisplay.checked == true) {
@@ -325,7 +309,7 @@
 		    }
 		
 		    function confirm() {
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
 		            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
 		
@@ -370,7 +354,7 @@
 		            }
 		        }
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            if (deliverySend.checked == true) {
 		                RetValue["delaySendDate"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		            }
@@ -389,7 +373,7 @@
 		            dialogArguments["bodyType"] = bodyType.selectedIndex.toString();
 		        }
 		
-		        if (CrossYN() || NonActiveX == "YES") {
+		        if (CrossYN()) {
 		            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
 		                alert("<spring:message code='ezEmail.t354' />");
 		                return;
