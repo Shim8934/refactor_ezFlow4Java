@@ -373,7 +373,7 @@
 		{CALL EZCOMMUNITY.EZSP_MYCOMMUNITYITEM_GET(#v_COPNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.mainPageGet5"					parameterClass="String"		resultClass="CommunityMyCommunityVO">
+	<procedure id="EzCommunityDAO.mainPageGet5"					parameterClass="String"		resultClass="CommunityMyCommunityVO"  remapResults="true">
 		{CALL EZCOMMUNITY.EZSP_MAIN_PAGE_GET5(#v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
