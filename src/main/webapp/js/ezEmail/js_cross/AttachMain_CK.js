@@ -213,7 +213,8 @@ function AppendFileAttachInfo(ret) {
                         objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
                         objTr.setAttribute("_big", is_big);
                         objTr.setAttribute("_itemid", ServerFile);
-
+                        objTr.setAttribute("_filesize", fileSize);
+                        
                         var objTd = document.createElement("TD");
                         objTd.style.textAlign = "center";
 
@@ -266,6 +267,7 @@ function AppendFileAttachInfo(ret) {
                             objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
                             objTr.setAttribute("_big", is_big);
                             objTr.setAttribute("_itemid", ServerFile);
+                            objTr.setAttribute("_filesize", fileSize);
                             var objTd = document.createElement("TD");
                             objTd.style.textAlign = "center";
 

@@ -63,7 +63,7 @@
 		        var filecnt = file.length;
 		        var bigFileCheck = false;
 		        for (var i = 0; i < filelist.length; i++) {
-		            if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize) {
+		            if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
@@ -142,7 +142,6 @@
 		        oTable.className = "sublist";
 		
 		        var objTr = document.createElement("TR");
-		
 		        var objTh = document.createElement("TH");
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 		            objTh.style.width = "24px";
@@ -158,17 +157,11 @@
 		
 		        var objTh2 = document.createElement("TH");
 		        objTh2.style.width = "87%";
-		        if(CrossYN())
-		            objTh2.textContent = "<spring:message code='ezEmail.t725' />";
-		        else
-		            objTh2.innerText = "<spring:message code='ezEmail.t725' />";
+		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
 		        var objTh3 = document.createElement("TH");
-		        if(CrossYN())
-		            objTh3.textContent = "<spring:message code='ezEmail.t726' />";
-		        else
-		            objTh3.innerText = "<spring:message code='ezEmail.t726' />";
+		        setNodeText(objTh3, "<spring:message code='ezEmail.t726' />");
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
 		
@@ -195,7 +188,7 @@
 		            for (var i = 0; i < filecnt - 1; i++) {
 		                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
 		
-		                if (filelistnode.getAttribute("VALUE") == "" || filelistnode.getAttribute("VALUE") == null) {
+		                if (GetAttribute(filelistnode, "VALUE") == "" || GetAttribute(filelistnode, "VALUE") == null) {
 		                    var node = SelectNodes(tempxmldom, "ROOT/NODES/NODE")[j];
 		                    filelistnode.setAttribute("VALUE", SelectSingleNodeValue(node, "PUPLOADSN"));
 		                    filelistnode.setAttribute("NEWFILE", "Y");
@@ -228,7 +221,7 @@
 		            for (var i = 0; i < filecnt - 1; i++) {
 		                var filelistnode = document.getElementById("filelist").childNodes[i + 1];
 		
-		                if (filelistnode.getAttribute("VALUE") == "" || filelistnode.getAttribute("VALUE") == null) {
+		                if (GetAttribute(filelistnode, "VALUE") == "" || GetAttribute(filelistnode, "VALUE") == null) {
 		                    var node = SelectNodes(tempxmldom, "ROOT/NODES/NODE")[j];
 		                    filelistnode.setAttribute("VALUE", SelectSingleNodeValue(node, "PUPLOADSN"));
 		                    filelistnode.setAttribute("NEWFILE", "Y");
@@ -257,8 +250,8 @@
 		    function SetAttachItemLink(filepath, url,big,itemid) {
 		        var TRRows = document.getElementById("lstAttachLink").getElementsByTagName("TR");
 		        for (var i = 0; i < TRRows.length; i++) {
-		            if (TRRows.item(i).getAttribute("value") != null && TRRows.item(i).getAttribute("value") != "") {
-		                if (TRRows.item(i).getAttribute("value") == filepath) {
+		            if (GetAttribute(TRRows.item(i), "value") != null && GetAttribute(TRRows.item(i), "value") != "") {
+		                if (GetAttribute(TRRows.item(i), "value") == filepath) {
 		                    TRRows.item(i).childNodes.item(1).setAttribute("_href", url);
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
@@ -268,7 +261,7 @@
 		        }
 		    }
 		    function FileDownload(obj) {
-		        window.parent.DownloadAttach(obj.getAttribute("_href"));
+		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
 		    }
 		    function uploadFailed(evt) {
 		        alert("There was an error attempting to upload the file.");
@@ -300,46 +293,33 @@
 		
 		    function btnfiledel() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
-		        var hasAttachment = false;
-		        var xmlStr = "<FILE>";
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
-		                var pAttachDelSN;
+		            	var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
-						
-		                var pItemID = document.getElementById("filelist").childNodes[i].getAttribute("_itemid");
-		                var pISBig = document.getElementById("filelist").childNodes[i].getAttribute("_big");
-		                if (pISBig != "Y") {
-		                	hasAttachment = true;
-		                	xmlStr += "<ROW>";
-		                	xmlStr += "<ATTACHID><![CDATA[" + pItemID + "]]></ATTACHID>";
-		                	xmlStr += "<BIGYN><![CDATA[" + pISBig + "]]></BIGYN>";
-		                	xmlStr += "</ROW>";
-		                } else {
-		                	window.parent.DelAttachFileAtList2(document.getElementById("filelist").childNodes[i]);
-		                }
+		                window.parent.DelAttachFileAtList(document.getElementById("filelist").childNodes[i]);
 		                
-		                var delfilesize;
-		                if(CrossYN())
-		                    delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent.replace('KB', '');
-		                else
-		                    delfilesize = document.getElementById("filelist").childNodes[i].lastChild.innerText.replace('KB', '');
-		
-		                filesize -= delfilesize;
-		                file.splice(i - 1, 1);
+		                var delfilesize = GetAttribute(document.getElementById("filelist").childNodes[i], "_filesize");
+		                if (delfilesize == "") {
+		                    delfilesize = 0;
+		                }
+
+		                if (GetAttribute(document.getElementById("filelist").childNodes[i], "_big") == "Y") {
+		                    bigfilesize -= delfilesize;
+		                    bigfile.splice(i - 1, 1);
+		                } else {
+		                    filesize -= delfilesize;
+		                    file.splice(i - 1, 1);
+		                }                
+		                
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
 		                i--;
 		                filecnt--;
 		            }
 		        }
-		        
-		        if (hasAttachment) {
-		        	window.parent.DelAttachFileAtList3(xmlStr);
-		        }
-		        
 		    }
 			
 		    function checkall() {
@@ -385,7 +365,10 @@
 		    function fileupload2(fileXml) {
 		        var fd = new FormData();
 		        isfileup = true;
-		
+				
+		        if (!filesizecheck(fileXml))
+		            return;
+		        
 		        var newid = window.parent.g_newid;
 		        fd.append("maxsize", window.parent.FtotSizeAttachSize);
 		        fd.append("cnt", window.parent.bigtrue);
@@ -404,6 +387,57 @@
 		        xhr2.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
+		    
+		    function filesizecheck(fileXml) {
+		        var attachFileXml = fileXml;
+		        
+		        var tempfilesize = 0;
+		        var tempbigfilesize = 0;
+
+		        var bigFileCheck = false;
+
+		        for (var i = 0; i < attachFileXml.getElementsByTagName("ROW").length ; i++) {
+		            var filelistsize = Number(getNodeText(attachFileXml.getElementsByTagName("DATA6").item(i)));
+
+		            if (filelistsize / 1024 / 1024 > window.parent.BigSizeAttachMBSize) {
+		                bigFileCheck = true;
+		                tempbigfilesize += filelistsize;
+		            }
+		            else {
+		                tempfilesize += filelistsize;
+		            }
+		        }
+
+		        if (isbigyn == "Y") {
+		            bigFileCheck = true;
+		        }
+
+		        if (bigFileCheck)
+		            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+
+		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
+		            if ("${ userinfo.lang }" == "2")
+		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+		            else
+		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		            return false;
+		        }
+
+		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
+		            if ("${ userinfo.lang }" == "2")
+		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
+		            else
+		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
+		            return false;
+		        }
+
+		        filesize += tempfilesize;
+		        bigfilesize += tempbigfilesize;
+
+		        return true;
+
+		    }
+		    
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
