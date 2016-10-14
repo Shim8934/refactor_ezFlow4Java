@@ -1418,7 +1418,7 @@
 		        var wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
 		        var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
 
-		        window.open("/ezPersonal/personSearch.do?searchString=" + document.getElementById('input_search').value, "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status=no, toolbar=no, menubar=no,location=no, resizable=0");
+		        window.open("/ezPersonal/personSearch.do?searchString=" + encodeURI(document.getElementById('input_search').value), "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status=no, toolbar=no, menubar=no,location=no, resizable=0");
 
 		        document.getElementById('input_search').value = '';
 		    }
