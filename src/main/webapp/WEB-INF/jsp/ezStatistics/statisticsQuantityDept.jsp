@@ -269,7 +269,7 @@
                         var _Td = document.createElement("TD");
 
                         var mon = parseInt(i + 1);
-                        if (i < 10)
+                        if (mon < 10)
                             mon = "0" + mon;
 
                         var date = start + mon;
