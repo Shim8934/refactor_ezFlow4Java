@@ -703,8 +703,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String strUid = request.getParameter("uid");
 		long uid = strUid != null ? Long.parseLong(strUid) : 0;
 		String contentId = request.getParameter("contentId");
-		if(contentId != null){
-			contentId = URLDecoder.decode(contentId, "UTF-8");
+		
+		if (contentId != null) {
 			contentId = EgovStringUtil.getHtmlStrCnvr(contentId);
 		}	
 		
