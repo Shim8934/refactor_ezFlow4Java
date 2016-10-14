@@ -2826,7 +2826,7 @@
                     alert(strLang197);
                     return;
                 }
-                var emailMatch = new RegExp(/^[^/@]{1,12}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,12}/g);
+                var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
                 if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
                     alert(strLang198);
                     return;

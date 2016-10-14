@@ -858,7 +858,7 @@
 	                    return;
 	                }
 	
-	            var emailMatch = new RegExp(/^[^/@]{1,12}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,12}/g);
+	            var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
 	            if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
 	                alert("<spring:message code='ezAddress.t1100' />");
 	                return;
