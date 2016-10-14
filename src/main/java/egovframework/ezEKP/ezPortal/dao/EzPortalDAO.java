@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
+import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPortalDAO")
@@ -136,13 +137,13 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalMenuItemItemsMenuItemsVO> useTopMenuID2 (Map<String, Object> map) {
-		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalDAO.useTopMenuID2", map);
+	public List<PortalUseTopMenuID2VO> useTopMenuID2 (Map<String, Object> map) {
+		return (List<PortalUseTopMenuID2VO>) list("EzPortalDAO.useTopMenuID2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalMenuItemItemsMenuItemsVO> useTopMenuID (Map<String, Object> map) {
-		return (List<PortalMenuItemItemsMenuItemsVO>) list("EzPortalDAO.useTopMenuID", map);
+	public List<PortalUseTopMenuID2VO> useTopMenuID (Map<String, Object> map) {
+		return (List<PortalUseTopMenuID2VO>) list("EzPortalDAO.useTopMenuID", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -395,6 +396,19 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	public void updateUseFlagDefault(Map<String, Object> map) {
 		update("EzPortalDAO.updateUseFlagDefault", map);
 	}
+	
+	public void ezCkAdminACL2(Map<String, Object> map) {
+		if (map.get("v_pACL").equals("3")) {
+			//삭제 쿼리 실행
+			delete("EzPortalDAO.ezCkAdminACL2", map);
+		} else {
+			//체크 쿼리 실행
+			update("EzPortalDAO.ezCkAdminACL2", map);
+		}
+		
+	}
+	
+	
 	
 	
 }

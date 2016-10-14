@@ -688,6 +688,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalDAO.ezCkAdminACL2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_EZCK_ADMINACL2(#v_pACL#, #v_pRESULT#,#v_pACCESSID#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

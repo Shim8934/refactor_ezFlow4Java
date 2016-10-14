@@ -2843,6 +2843,26 @@ System.out.println("retXML:"+retXML);
 		return retXML;
 	}
 	
+	public String ezCkAdminACL(String pCN, String pPageID, String pACL, String userLang) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pOWNERPAGEID", pPageID);
+		map.put("v_pLANG", userLang);
+		
+		String result = ezPortalDAO.ezCkAdminACL(map);
+		
+		if (result == null || result.equals("")) {
+			result = " ";
+		}
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_pACL", pACL);
+		map1.put("v_pRESULT", result);
+		map1.put("v_pACCESSID", pCN);
+		ezPortalDAO.ezCkAdminACL2(map1);
+		
+		return "OK";
+	}
+	
 }
 
 

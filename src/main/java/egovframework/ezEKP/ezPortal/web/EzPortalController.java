@@ -501,10 +501,12 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 				//권한체크
 				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
-
+				logger.debug("ezAclCheck="+result);
 				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
-
-				if (result.equals("3")) {
+				logger.debug("ezCKAdminACL="+ezCKAdminACL);
+				logger.debug("pageID="+pageID);
+				
+			/*	if (result.equals("3")) {
 					//삭제 쿼리 실행
 					if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
 						ezPortalService.deleteTBLPortalACL(ezCKAdminACL, userInfo.getId());
@@ -517,7 +519,11 @@ public class EzPortalController extends EgovFileMngUtil {
 					} else {
 						ezPortalService.updateTBLPortalACL(ezCKAdminACL, userInfo.getId());
 					}
-				}
+				}*/
+				
+				
+					//체크, 삭제 쿼리 실행
+				ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang());
 				
 				strHTML = strHTML.replace("table-layout:fixed;", "");
 				
