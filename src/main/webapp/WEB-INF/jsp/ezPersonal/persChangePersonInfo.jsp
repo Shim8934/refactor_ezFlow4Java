@@ -224,6 +224,8 @@
 		            if (xmlHTTP.responseText == "OK") {
 		                alert("<spring:message code='ezPersonal.t197'/>");
 			            window.top.location.href = '/user/login/login.do';
+		            } else if (xmlHTTP.responseText == "CHKERROR") {    
+		                alert("<spring:message code='ezPersonal.t946'/>");
 			        } else {
 			            alert("<spring:message code='ezPersonal.t198'/>");
 			        }
