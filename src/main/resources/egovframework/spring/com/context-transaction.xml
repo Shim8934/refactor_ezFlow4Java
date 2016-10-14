@@ -13,7 +13,7 @@
 	
 	<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
-			<tx:method name="*" rollback-for="Exception" isolation="READ_COMMITTED" />
+			<tx:method name="*" rollback-for="Exception" />
 		</tx:attributes>
 	</tx:advice>
     
