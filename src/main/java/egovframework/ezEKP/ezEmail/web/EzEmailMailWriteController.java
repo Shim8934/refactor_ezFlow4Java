@@ -1297,13 +1297,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				NodeList fileNodes = xmldom.getElementsByTagName("FILE");
 				
 				if (hasAttachFile && uid != 0) {
+				    // 임시 보관함에 있는 메시지를 가져온다.
 					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
+					
 					if (oldMessage != null) {
 						if (oldMessage.getContent() instanceof Multipart) {
 							Multipart mp = (Multipart)oldMessage.getContent();
 							int count = mp.getCount();
 							BodyPart p = null;
 							
+							// 임시 보관함에 있는 메시지가 multipart/related일 때는 새롭게 related 파트로 구성한 다음
+							// 새 메시지의 서브 파트로 추가한다.
 							if (oldMessage.isMimeType("multipart/related")) {
 								Multipart relatedPart = new MimeMultipart("related");
 								
@@ -2078,59 +2082,86 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							for (int i = 0; i < count; i++) {
 								p = mp.getBodyPart(i);
 								
-								// this case means it's editing an existing message in Drafts
-								if (p.isMimeType("multipart/related")) {
-									hasAttach = true;
-									
-									logger.debug("relatedPart=" + relatedPart);
-									if (relatedPart == null) {
-										relatedPart = new MimeMultipart("related");
-									}
-									// new related part is already created by the above routine
-									// for adding new in-line images.
-									else {
-										relatedPart.removeBodyPart(0);
-									}
-									
-									Multipart relatedPartContent = (Multipart)p.getContent();
-									int relatedPartCount = relatedPartContent.getCount();
-									BodyPart relatedSubPart = null;
-									
-									for (int j = 0; j < relatedPartCount; j++) {
-										relatedSubPart = relatedPartContent.getBodyPart(j);
-										
-										if (relatedSubPart instanceof MimePart) {
-											if (((MimePart)relatedSubPart).getContentID() != null) {
-												relatedPart.addBodyPart(relatedSubPart);						
-											}
-										}				
-									}
-									
-									String bodyContent = content.getContent().toString();
-									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
-									content.setContent(bodyContent, "text/html; charset=utf-8");
-									relatedPart.addBodyPart(content, 0);
-									
-									removeUnusedInlineImagePart(relatedPart);
-								}
-								else if (p.getDisposition() != null) { 
-									mixedPart.addBodyPart(p);
-									if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
-										hasAttach = true;
-									}
-								}
-								else if (p.isMimeType("message/*")) {
-									mixedPart.addBodyPart(p);
-									hasAttach = true;
-								}							
-								else {
-									// there are cases where an in-line image part doesn't have
-									// a Content-Disposition header, but has a Content-ID header.
-									if (p instanceof MimePart) {
-										if (((MimePart)p).getContentID() != null) {
-											mixedPart.addBodyPart(p);			
-										}
-									}												
+								while (true) {
+    								if (p.isMimeType("multipart/related")) {
+    									hasAttach = true;
+    									
+    									logger.debug("relatedPart=" + relatedPart);
+    									if (relatedPart == null) {
+    										relatedPart = new MimeMultipart("related");
+    									}
+    									// new related part is already created by the above routine
+    									// for adding new in-line images.
+    									else {
+    										relatedPart.removeBodyPart(0);
+    									}
+    									
+    									Multipart relatedPartContent = (Multipart)p.getContent();
+    									int relatedPartCount = relatedPartContent.getCount();
+    									BodyPart relatedSubPart = null;
+    									
+    									for (int j = 0; j < relatedPartCount; j++) {
+    										relatedSubPart = relatedPartContent.getBodyPart(j);
+    										
+    										if (relatedSubPart instanceof MimePart) {
+    											if (((MimePart)relatedSubPart).getContentID() != null) {
+    												relatedPart.addBodyPart(relatedSubPart);						
+    											}
+    										}				
+    									}
+    									
+    									String bodyContent = content.getContent().toString();
+    									bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
+    									content.setContent(bodyContent, "text/html; charset=utf-8");
+    									relatedPart.addBodyPart(content, 0);
+    									
+    									removeUnusedInlineImagePart(relatedPart);
+    								}
+    								// multipart/alternative 파트 안에 multipart/related 파트가 있는 경우에 대한 처리
+    								else if (p.isMimeType("multipart/alternative")) {
+                                        Multipart alternativePartContent = (Multipart)p.getContent();
+                                        int alternativePartCount = alternativePartContent.getCount();
+                                        BodyPart alternativeSubPart = null;
+                                        boolean isRelatedFound = false;
+                                        
+                                        for (int j = 0; j < alternativePartCount; j++) {
+                                            alternativeSubPart = alternativePartContent.getBodyPart(j);
+                                            
+                                            if (alternativeSubPart instanceof MimePart) {
+                                                if (alternativeSubPart.isMimeType("multipart/related")) {
+                                                    isRelatedFound = true;
+                                                    break;
+                                                }
+                                            }               
+                                        }						
+                                        
+                                        if (isRelatedFound) {
+                                            // p를 발견된 related 파트로 변경하여 루프의 시작 부분에 있는 related 파트 처리 부분으로 제어를 옮긴다.
+                                            p = alternativeSubPart;
+                                            continue;
+                                        }
+                                    }								
+    								else if (p.getDisposition() != null) { 
+    									mixedPart.addBodyPart(p);
+    									if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+    										hasAttach = true;
+    									}
+    								}
+    								else if (p.isMimeType("message/*")) {
+    									mixedPart.addBodyPart(p);
+    									hasAttach = true;
+    								}							
+    								else {
+    									// there are cases where an in-line image part doesn't have
+    									// a Content-Disposition header, but has a Content-ID header.
+    									if (p instanceof MimePart) {
+    										if (((MimePart)p).getContentID() != null) {
+    											mixedPart.addBodyPart(p);			
+    										}
+    									}												
+    								}
+    								
+    								break;
 								}
 							}
 							
@@ -2144,7 +2175,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								}							
 								message.setContent(mixedPart);							
 							}
-							// this case means it's editing an existing message in Drafts.
 							else if (oldMessage.isMimeType("multipart/related")) {
 								logger.debug("relatedPart=" + relatedPart);
 								
