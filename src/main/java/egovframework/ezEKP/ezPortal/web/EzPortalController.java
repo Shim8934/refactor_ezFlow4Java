@@ -34,7 +34,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
@@ -50,7 +49,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
@@ -1800,18 +1798,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (useTopMenuIDXml.equals("<DATA></DATA>")) {
 			useTopMenuIDXml = ezPortalService.useTopMenuID(userInfo.getCompanyID(), "Y", pUserThemeUID);
 		}
-		
+logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
 		
 		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
-
+		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
 		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {
 			myTopUID = xmlDomTop.getElementsByTagName("UID").item(0).getTextContent().trim();
 		}
 
 		for (int i=0; i<xmlDom1.getElementsByTagName("UID").getLength(); i++) {
 			if (xmlDom1.getElementsByTagName("PARENTUID").item(i).getTextContent() != null && xmlDom.getElementsByTagName("PARENTUID").item(i).getTextContent().trim().equals(myTopUID)) {
-				homeUID = xmlDom1.getElementsByTagName("UID").item(i).getTextContent().trim();
+				homeUID = xmlDom1.getElementsByTagName("UID_").item(i).getTextContent().trim();
 				parentUID = xmlDom1.getElementsByTagName("PARENTUID").item(i).getTextContent().trim();
 				imageUID = xmlDom1.getElementsByTagName("IMAGEUID").item(i).getTextContent().trim();
 				linkURL = xmlDom1.getElementsByTagName("LINKURL").item(i).getTextContent().trim();
@@ -1819,14 +1817,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (homeUID == null || homeUID.equals("")) {
-			homeUID = xmlDom1.getElementsByTagName("UID").item(0).getTextContent().trim();
+			homeUID = xmlDom1.getElementsByTagName("UID_").item(0).getTextContent().trim();
 			parentUID = xmlDom1.getElementsByTagName("PARENTUID").item(0).getTextContent().trim();
 			imageUID = xmlDom1.getElementsByTagName("IMAGEUID").item(0).getTextContent().trim();
 			linkURL = xmlDom1.getElementsByTagName("LINKURL").item(0).getTextContent().trim();
 		}
 		
-		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL).trim();
-		
+		logger.debug("homeUID="+homeUID);
+		logger.debug("parentUID="+parentUID);
+		logger.debug("imageUID="+imageUID);
+		logger.debug("linkURL="+linkURL);
+		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL);
+		logger.debug("useStartPage="+useStartPage);
 		String deptPath = userInfo.getDeptPathCode();
 		for (int ch = 0; ch < deptPath.split("\\,").length; ch++) {
 			if (ch ==0) {

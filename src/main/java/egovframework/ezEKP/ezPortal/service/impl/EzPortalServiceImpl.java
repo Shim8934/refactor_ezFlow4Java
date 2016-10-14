@@ -56,6 +56,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
+import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -1187,7 +1188,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String getUserInfo (String pUserID, String langStr) {
 		try {
 			PortalTBLUserInfoVO result = topGetUserInfo2(pUserID, langStr);
-
 			String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 
 			if (resultXML.equals("<DATA></DATA>")) {
@@ -1451,6 +1451,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String lastLogout = "";
 
 			for (int i=0; i<result.size(); i++) {
+				logger.debug("uID="+result.get(i).getuID());
+				logger.debug("accessID="+getAccessList(userInfo));
 				if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)) == false) {
 					continue;
 				}
@@ -2624,14 +2626,16 @@ System.out.println();
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pLANG", pLang);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
-		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalDAO.useTopMenuID2(map);
+		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID2(map);
 		
 		String useTopMenuIDXml = "";
 		useTopMenuIDXml += "<DATA>";
-		for (PortalMenuItemItemsMenuItemsVO result : list) {
+		for (PortalUseTopMenuID2VO result : list) {
 			useTopMenuIDXml += commonUtil.getQueryResult(result);
 		}
 		useTopMenuIDXml += "</DATA>";
+		
+		logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		return useTopMenuIDXml;
 	}
 	
@@ -2640,11 +2644,11 @@ System.out.println();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
-		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalDAO.useTopMenuID(map);
+		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID(map);
 		
 		String useTopMenuIDXml = "";
 		useTopMenuIDXml += "<DATA>";
-		for (PortalMenuItemItemsMenuItemsVO result : list) {
+		for (PortalUseTopMenuID2VO result : list) {
 			useTopMenuIDXml += commonUtil.getQueryResult(result);
 		}
 		useTopMenuIDXml += "</DATA>";

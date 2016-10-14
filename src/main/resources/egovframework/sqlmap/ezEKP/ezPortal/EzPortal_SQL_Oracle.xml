@@ -32,6 +32,7 @@
 	<typeAlias  alias="PortalImagePortletVO" 								type="egovframework.ezEKP.ezPortal.vo.PortalImagePortletVO"/>
 	<typeAlias  alias="PortalMyPortalListVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO"/>
 	<typeAlias  alias="PortalNewMyPortalPageListVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO"/>
+	<typeAlias  alias="PortalUseTopMenuID2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO"/>
 	
 	<resultMap class="PortalTBLTopMenuItemsVO" id="portalTBLTopMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -621,13 +622,13 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalMenuItemItemsMenuItemsVO">
+	<procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_TOPMENUID2(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pLANG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalMenuItemItemsMenuItemsVO">
+	<procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_TOPMENUID(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

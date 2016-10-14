@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,6 +68,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPortalAdminController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzPortalAdminController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -375,6 +380,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (commonUtil.checkAdmin(loginCookie)) {
 			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName());
+			logger.debug("ezAclCheck="+result);
 			String returnXML = "";
 			
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
@@ -2063,7 +2069,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_pPUID", "203");
 			map.put("v_pPAGEID", pageID);
 			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = commonUtil.getQueryResult(result);
+			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2075,7 +2081,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
 			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map1);
-			String xmlStr1 = commonUtil.getQueryResult(result1);
+			String xmlStr1 = "<DATA>"+commonUtil.getQueryResult(result1)+"</DATA>";
 			Document xmlDom2 = commonUtil.convertStringToDocument(xmlStr1);
 			
 			if (xmlDom2.getElementsByTagName("ALIGN").getLength() > 0) {

@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -31,11 +33,15 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
+import egovframework.ezEKP.ezPortal.web.EzPortalController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalAdminService")
 public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements EzPortalAdminService  {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzPortalAdminServiceImpl.class);
+	
 	@Resource(name="EzPortaAdminDAO")
 	private EzPortalAdminDAO ezPortalAdminDAO;
 	
@@ -308,6 +314,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	public String saveTopMenu (String pPageID, String pParentPageID, String pUserID, String pUserName, String pXML, String pCompanyID) throws Exception {
 		int i=0, j=0;
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		logger.debug("saveTopMenuXML="+pXML);
 		String displayName = "";
 		String displayName2 = "";
 		String width = "0";
@@ -335,7 +342,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String pArrParam = "";
 		
 		int result = ezPortalAdminDAO.saveTopMenu(pPageID);
-		
+		logger.debug("saveTopMenu="+String.valueOf(result));
 		String pThemeUID = "";
 
 		if (result > 0) {
@@ -393,7 +400,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						map1.put("v_pPAGEUID", pPageID);
 						map1.put("v_pPARENTPAGEUID", pParentPageID);
 						result = ezPortalAdminDAO.saveTopMenu3(map1);
-						
+						logger.debug("saveTopMenu3="+String.valueOf(result));
 						if (result > 0) {
 							Map<String, Object> map2 = new HashMap<String, Object>();
 							map2.put("menuItemType", menuItemType);
@@ -432,7 +439,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						map1.put("v_pUID", menuItemUID);
 						map1.put("v_pPAGEUID", menuItemPageUID);
 						map1.put("v_pCOLUMNPOS", i + 1);
-						ezPortalAdminDAO.saveTopMenu4(map1);
+						previousRowPos = ezPortalAdminDAO.saveTopMenu4(map1);
+						logger.debug("saveTopMenu4="+String.valueOf(previousRowPos));
 					}
 				}
 			}
@@ -480,6 +488,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				depth = 1;
 			} else {
 				depth = ezPortalAdminDAO.saveTopMenu5(pParentPageID) + 1;
+				logger.debug("saveTopMenu5="+String.valueOf(depth));
 			}
 			
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
@@ -543,6 +552,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						map3.put("v_pPAGEUID", menuItemPageUID);
 						map3.put("v_pCOLUMNPOS", i + 1);
 						previousRowPos = ezPortalAdminDAO.saveTopMenu6(map3);
+						logger.debug("saveTopMenu6="+String.valueOf(previousRowPos));
 					}
 				}
 			}
