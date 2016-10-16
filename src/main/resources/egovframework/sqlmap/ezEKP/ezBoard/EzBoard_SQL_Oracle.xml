@@ -401,7 +401,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.photoListUpdate" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_PHOTOLISTUPDATE(#v_ImageID#, #v_BoardID#, #v_FilePath#, #v_FileContent#)}
+		{CALL EZBOARDSTD.EZSP_PHOTOLISTUPDATE(#v_ImageID#, #v_BoardID#, #v_FilePath#, #v_FileContent#, #v_OFileName#)}
 	</procedure>
 	
 	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">

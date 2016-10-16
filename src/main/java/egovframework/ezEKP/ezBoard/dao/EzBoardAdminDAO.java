@@ -206,7 +206,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.deleteACL", map);		
 	}
 	public void trunkBoard() throws Exception{
-		delete("EzBoardAdminDAO.trunkBoard", "");
+		delete("EzBoardAdminDAO.trunkBoard");
 	}
 
 

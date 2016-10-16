@@ -191,7 +191,7 @@ public interface EzBoardService {
 	
 	public void setNotiOrder(String itemID) throws Exception;
 	
-	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg) throws Exception;
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName) throws Exception;
 
 	public void updateCopyItem(String itemID) throws Exception;
 	

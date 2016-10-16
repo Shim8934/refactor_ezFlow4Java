@@ -226,12 +226,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg) throws Exception {
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ImageID", imageID);
 		map.put("v_BoardID", boardID);
 		map.put("v_FilePath", file_Path);
 		map.put("v_FileContent", content);
+		map.put("v_OFileName", oFileName);
 		ezBoardDAO.photoListUpdate(map);
 		
 		if(mainFg.equals("Y")){

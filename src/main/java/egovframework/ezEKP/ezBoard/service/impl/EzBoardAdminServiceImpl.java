@@ -304,6 +304,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pBoardListCount", pBoardListCount);
 		
 		ezBoardAdminDAO.saveBoardOrder(map);
+		
+		trunkBoard();
 	}
 
 	@Override
@@ -419,6 +421,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public void saveACL(Map<String, Object> map) throws Exception {
 		ezBoardAdminDAO.saveACL(map);
+		
+		trunkBoard();
 	}
 
 	@Override

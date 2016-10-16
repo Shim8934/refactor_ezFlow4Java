@@ -222,7 +222,7 @@
 				boardid,
 				boardname,
 				boardname2,
-				'' as treevieworder,
+				treevieworder,
 				'' as boardcolor,
 				'' as gubun,
 				'' as boardgroupacl
@@ -230,6 +230,8 @@
 				ezBoardSTD.TBL_Board_BoardInfo
 			WHERE
 				parentboardid = #parentBoardID#
+			ORDER BY 
+				treevieworder
 		]]>
 	</select>	
 	
@@ -346,30 +348,38 @@
 		]]>					
 	</update>
 	
-	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">		
-		DELETE FROM 
-			ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
-		WHERE
-			backgroundid = #backgroundID#			
+	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">
+		<![CDATA[		
+			DELETE FROM 
+				ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
+			WHERE
+				backgroundid = #backgroundID#
+		]]>			
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteAttribute" parameterClass="java.lang.String">
-		DELETE FROM 
-			ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE		
-		WHERE
-			boardid = #boardID#			
+		<![CDATA[
+			DELETE FROM 
+				ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE		
+			WHERE
+				boardid = #boardID#
+		]]>			
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteHeader" parameterClass="java.lang.String">
-		DELETE FROM 
-			ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		
-		WHERE
-			boardid = #boardID#			
+		<![CDATA[
+			DELETE FROM 
+				ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		
+			WHERE
+				boardid = #boardID#
+		]]>			
 	</delete>
 	
 	<delete id="EzBoardAdminDAO.trunkBoard">
-		TRUNCATE TABLE 
-			ezBoardSTD.TBL_BOARD_TREECACHE		
+		<![CDATA[
+			DELETE FROM
+				ezBoardSTD.TBL_BOARD_TREECACHE
+		]]>
 	</delete>
 
 </sqlMap>

@@ -94,7 +94,8 @@
 
                     rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
                     imgFileName = getNodeText(GetChildNodes(nodes[0])[0]);
-                    ImagePath = "tempUploadFile\\" + imgFileName;
+                    orgFileName = getNodeText(GetChildNodes(nodes[0])[7]);
+                    ImagePath = "tempUploadFile/" + imgFileName;
 
                 } else {
                     if (pFlag == "Y" && !document.getElementById("mainFG").disabled) pMod = "FLAG";
@@ -115,6 +116,7 @@
                 strXML += "<CONTENT>" + content + "</CONTENT>";
                 strXML += "<MAINFG>" + pFlag + "</MAINFG>";
                 strXML += "<ITEMID>" + pItemID + "</ITEMID>";
+                strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
                 strXML += "</NODE>";
                 strXML += "</DATA>";
 
@@ -144,6 +146,7 @@
 	            var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
 	
 	            var imgFileName = getNodeText(GetChildNodes(nodes[0])[0]);
+
 	            document.getElementsByTagName("IMG")[0].src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgFileName);
 	        }
 	

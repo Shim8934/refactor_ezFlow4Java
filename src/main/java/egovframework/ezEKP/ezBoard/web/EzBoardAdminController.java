@@ -246,8 +246,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pBoardIDList = request.getParameter("boardList");
 
 		ezBoardAdminService.saveBoardOrder(pBoardIDList);
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
 	}
 	
 	/**
@@ -902,8 +900,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		// save 서비스 구현
 		ezBoardAdminService.saveACL(map);
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
 
 		return "OK";
 	}

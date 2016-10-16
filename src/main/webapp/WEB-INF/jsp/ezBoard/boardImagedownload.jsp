@@ -79,7 +79,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height: 70px;">
+	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height: 410px;">
 	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
 	                	<c:set var="fileName" value="${fn:split(fileName, ';')}"/>
