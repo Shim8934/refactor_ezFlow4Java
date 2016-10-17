@@ -1172,17 +1172,12 @@ function PCMultiDownload() {
 }
 function PC_Eml_FileDownload() {
     if (PcSaveArrayList[suffix].getAttribute("_href") != null) {
-        var tmp = PcSaveArrayList[suffix].outerHTML.replaceAll('&nbsp', ' ');
-        tmp = tmp.substring(tmp.indexOf('_subject=\"'), tmp.length - 1);
-        tmp = tmp.replaceAll("_subject=\"", "");
-        tmp = tmp.substring(0, tmp.indexOf('\"'));
         var pItemID = PcSaveArrayList[suffix].getAttribute("_href");
-        if (tmp.indexOf("&lt;br/&gt;&lt;span id='_mailpreview'") != -1) // 추가 (safari)
-            tmp = tmp.substring(0, tmp.indexOf("&lt;br/&gt;&lt;span id='_mailpreview'"));
-        var pItemSubject = tmp + ".eml";
+        var pItemSubject = ConvertEntityReferenceToChar(GetAttribute(PcSaveArrayList[suffix], "_subject"));// + ".eml";
+        pItemSubject = ReplaceText(pItemSubject, "\\.", "") + ".eml";
         var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURIComponent(pItemSubject);
         AttachDownFrame.location.href = fullpath;
-        AttachDownFrame.target = "_blank"
+        AttachDownFrame.target = "_blank";
         suffix++;
         PCMultiDownload();
     }
