@@ -28,8 +28,9 @@
 	    	var CurPage = "1";
 
 	    	document.onselectstart = function () { return false; };
-	    	window.onload = function () {
-				if (navigator.userAgent.indexOf('Firefox') != -1) {
+	    	
+	     	 window.onload = function () {
+	 			if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 	    	        document.body.style.WebkitUserSelect = 'none';
 	        	    document.body.style.khtmlUserSelect = 'none';
@@ -64,15 +65,11 @@
 	            	treeView.SetNodeClick("TreeViewNodeClick");
 	            	treeView.DataSource(xmlTree);
 	            	treeView.DataBind("TreeView");
-
-	            	if (strSearch != "") {
-		                document.getElementById('keyword').value = strSearch;
-	            	    search_click("search");
-	            	}
+					
 		        } catch (ErrMsg) {
 	            	alert(" TreeViewinitialize : " + ErrMsg.description);
 	        	}
-	    	}
+	    	}  
 	    	
 	    	function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
@@ -133,17 +130,24 @@
 	  					} ,
 	      				success : function(xml) {
 	 		                event_displayUserList(xml);
+	 		                
+	 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+	 		               	if (strSearch != "") {
+	 			            	document.getElementById('keyword').value = strSearch;
+	 							search_click("search"); 
+	 		              	}
 	  					},
 	  					error : function(jqXHR, textStatus, errorThrown) {
 	  						alert(error);
 	  					}
 	  				});   
+	        	 
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
-	     		
 		        if (xml != null) {
     	            pListXML_Info = xml;
+    	            xml = null;
                 	pSeach = false;
                 	DisplayUserImageList();
                 	makePageSelPage();
@@ -390,11 +394,11 @@
 	                    	}
 
 	                    	var M_TR_TD3 = document.createElement("TD");
-	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+							M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                    	M_TR_TD3.style.width = "80px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
-		                    M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+							M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 		                    
 	                    	M_TR.appendChild(M_TR_TD1);
 	                    	M_TR.appendChild(M_TR_TD2);
@@ -469,7 +473,6 @@
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
 					dataType : "xml",
-					async : false,
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
@@ -478,7 +481,6 @@
 						type : "user"
 					} ,
    					success : function(xml) {
-   						pListXML_Info = xml;
    						event_displayUserList2(xml);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
@@ -503,7 +505,6 @@
                     	DisplayUserImageList();
                     	makePageSelPage();
                 	}
-	                pListXML_Info = null;
 	    	    }
 	    	}
 	    	function SelectReceiverWindow(Title, selectedWindow) {
@@ -535,7 +536,6 @@
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
 					dataType : "xml",
-					async : false,
 					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
    					success : function(result) {
    						xmlDOM = result
@@ -573,7 +573,7 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 	                	checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(540, 460));
-	             	   try { OpenWin.focus(); } catch (e) { }
+	             	    OpenWin.focus();
 	            	} else {
 	                	window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 
@@ -604,12 +604,10 @@
 		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 		            if (g_xmlHTTP.statusText == "OK") {
 	    	            if (!bSearch) {
-	        	            try {
-	            	            if (CrossYN())
-	                    	        opener.opener.top.organview = g_xmlHTTP.responseXML;
-	                	        else
-	                        	    window.dialogArguments["window"].opener.top.organview = g_xmlHTTP.responseXML;
-	                    	} catch (e) { }
+            	            if (CrossYN())
+                    	        opener.opener.top.organview = g_xmlHTTP.responseXML;
+                	        else
+                        	    window.dialogArguments["window"].opener.top.organview = g_xmlHTTP.responseXML;
 	                	}
 
 		                var treeXML = loadXMLFile("/xml/organtree_config.xml");
@@ -788,30 +786,33 @@
 	    	function movePage(newPage) {
 		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	            	CurPage = newPage;
-	            	if(issearch)
+	            	if(issearch) {
 		                search_click();
-	            	else
+	            	} else {
 		                displayUserList();
+	            	}
 	        	}
 	    	}
 	    	function prevPage_onclick() {
 		        newPage = parseInt(CurPage) - 1;
 	        	if (newPage > 0) {
 		            CurPage = newPage;
-	            	if (issearch)
+	            	if (issearch) {
 		                search_click();
-	            	else
+	            	} else {
 		                displayUserList();
+	            	}
 	        	}
 	    	}
 	    	function nextPage_onclick() {
 		        newPage = parseInt(CurPage) + 1;
 	        	if (newPage <= parseInt(totalPage)) {
 		            CurPage = newPage;
-	            	if (issearch)
+	            	if (issearch) {
 		                search_click();
-	            	else
+	            	} else {
 		                displayUserList();
+	            	}
 	        	}
 	    	}
 		</script>
