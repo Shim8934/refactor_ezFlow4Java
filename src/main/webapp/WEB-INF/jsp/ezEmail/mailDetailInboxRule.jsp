@@ -620,7 +620,7 @@
 		        inboxRuleCon1.value = "";
 		        Conitems.innerHTML = "";
 		    }
-		    function pop_confrim() {
+		    function pop_confirm() {
 		        var _exp = "";
 		        var _value = "";
 		        var _displaynames = "";
@@ -637,28 +637,12 @@
 		        }
 		        for (var i = 0; i < Conitems.children.length; i++) {
 		            if (_exp == "") {
-		
-		                if (!CrossYN()) {
-		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent)) + "\"";
-		                    _value = MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
-		                }
-		                else if (CrossYN()) {
-		                    _exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
-		                    _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));
-		                }
+		            	_exp = "\"" + MakeXMLString(TrimText(Conitems.children.item(i).textContent)) + "\"";
+	                    _value = MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		            else {
-		                if (!CrossYN()) {
-		
-		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.childNodes.item(i).textContent))) + "\"";
-		                    _value += ";" + MakeXMLString(TrimText(Conitems.childNodes.item(i).textContent));
-		
-		                }
-		                else if (CrossYN()) {
-		
-		                    _exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
-		                    _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
-		                }
+		            	_exp += "" + strLang235 + "" + MakeXMLString(TrimText(MakeXMLString(Conitems.children.item(i).textContent))) + "\"";
+	                    _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		        }
 		        if (_curCellObj != null) {
@@ -1084,7 +1068,7 @@
 	</div>
 	<div id="mainmenu" style="margin-left:150px;">
 	<ul id="tb_Parent">
-	  <li><span onClick="pop_confrim();"><img src="/images/ImgIcon/mtg-accept.png" style="margin-top:-3px;text-align:center" height="16" /><spring:message code='ezEmail.t38' /></span></li>
+	  <li><span onClick="pop_confirm();"><img src="/images/ImgIcon/mtg-accept.png" style="margin-top:-3px;text-align:center" height="16" /><spring:message code='ezEmail.t38' /></span></li>
 	  <li><span onClick="pop_cancel();"><img src="/images/ImgIcon/mtg-decline.png" style="margin-top:-3px;text-align:center"  height="16"  /><spring:message code='ezEmail.t39' /></span></li>
 	  </ul>        
 	</div>
