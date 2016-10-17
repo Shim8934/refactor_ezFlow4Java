@@ -146,7 +146,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (pUserThemeUID == null || pUserThemeUID.equals("")) {
 						String commentHtml = "<!DOCTYPE html><HTML>" +
 								"<HEAD>" +
-                                "<link href=\"/css/" + egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
+                                "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
                                 "<style type='text/css'>" +
                                 "<!--" +
                                 ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
@@ -844,7 +844,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (pageID == null || pageID.equals("")) {
 				String commentHtml = "<!DOCTYPE html><HTML>" +
                         "<HEAD>" +
-                        "<link href=\"/css/" + egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
+                        "<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
                         "<style type='text/css'>" +
                         "<!--" +
                         ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
