@@ -202,13 +202,13 @@
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActFcnt++;
 		                    break;
-		                /* case "READ":
+		                case "READ":
 		                    ActObj.selectedIndex = 5;
 		                    ActObj.item(5).checked = true;
 		                    ActObj.nextSibling.innerHTML = "<span style='font-family:dotum'><nobr><u>" + strLang341 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
 		                    ActObj.nextSibling.setAttribute("value", spltAct[i]);
-		                    break; */
+		                    break;
 		                case "IMPORTANCE":
 		                    ActObj.selectedIndex = 5;
 		                    ActObj.item(5).checked = true;
