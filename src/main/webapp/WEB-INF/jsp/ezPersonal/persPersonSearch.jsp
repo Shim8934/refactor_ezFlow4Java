@@ -24,11 +24,12 @@
 	    	var strLang39 = "<spring:message code='ezPersonal.t10000'/>";
 	    	var strLang40 = "<spring:message code='ezPersonal.t10001'/>";
 	    	var strSearch = "${searchString}";
+
 	    	var CurPage = "1";
 
 	    	document.onselectstart = function () { return false; };
 	    	window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+				if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 	    	        document.body.style.WebkitUserSelect = 'none';
 	        	    document.body.style.khtmlUserSelect = 'none';
@@ -72,6 +73,7 @@
 	            	alert(" TreeViewinitialize : " + ErrMsg.description);
 	        	}
 	    	}
+	    	
 	    	function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -139,12 +141,13 @@
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
+	     		
 		        if (xml != null) {
     	            pListXML_Info = xml;
                 	pSeach = false;
                 	DisplayUserImageList();
                 	makePageSelPage();
-		        }
+		        } 
 		    } 
 		    var m_strColorSelect = "#DBE1E7";
 	    	var m_strColorOver = "#f4f5f5";
@@ -452,7 +455,6 @@
 		    }
 	    	var issearch = false;
 	    	function search_click(type) {
-
 		        if (keyword.value == "") {
 	            	alert("<spring:message code='ezPersonal.t61'/>");
 	            	keyword.focus();
@@ -476,7 +478,6 @@
 						type : "user"
 					} ,
    					success : function(xml) {
-//alert("333");
    						pListXML_Info = xml;
    						event_displayUserList2(xml);
 					},
@@ -502,6 +503,7 @@
                     	DisplayUserImageList();
                     	makePageSelPage();
                 	}
+	                pListXML_Info = null;
 	    	    }
 	    	}
 	    	function SelectReceiverWindow(Title, selectedWindow) {
@@ -541,7 +543,7 @@
 	                	adCount = row.length;
 						},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code="ezResource.t2"/>" + textStatus);
+						alert("<spring:message code='ezResource.t2'/>" + textStatus);
 						xmlDOM = null;
 					}
 				}); 
