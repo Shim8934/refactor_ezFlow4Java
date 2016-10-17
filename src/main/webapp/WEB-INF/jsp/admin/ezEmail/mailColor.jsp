@@ -44,11 +44,11 @@
 	            parameter[0] = document.getElementById(Name + "Value").value;
 	            if (CrossYN()) {
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
-	                var OpenWin = window.open("/admin/ezEmail/manyColor.do?refresh5=", "manyColor", GetOpenWindowfeature(294, 260));
+	                var OpenWin = window.open("/ezCommon/manyColor.do?refresh5=", "manyColor", GetOpenWindowfeature(294, 260));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	            else {
-	                var retValue = window.showModalDialog("/admin/ezEmail/manyColor.do?refresh5=", "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");
+	                var retValue = window.showModalDialog("/ezCommon/manyColor.do?refresh5=", "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");
 	                if (typeof (retValue) != "undefined" && retValue != null) {
 	                    document.getElementById(Name + "Value").innerText = retValue;
 	                    document.getElementById(Name).style.backgroundColor = retValue;

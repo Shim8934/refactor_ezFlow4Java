@@ -440,14 +440,6 @@ public class EzEmailAdminController {
 	}
 	
 	/**
-	 * 메일 색상선택 화면 호출 함수
-	 */
-	@RequestMapping(value="/admin/ezEmail/manyColor.do")
-	public String manyColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		return "admin/ezEmail/manyColor";
-	}
-	
-	/**
 	 * 메일 색상설정 저장 실행 함수
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailSaveColor.do")

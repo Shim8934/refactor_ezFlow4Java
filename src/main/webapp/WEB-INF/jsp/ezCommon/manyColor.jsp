@@ -10,9 +10,9 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
-		    
-		    $(document).ready(function(){
-		    	try {
+		    window.onload = function()
+		    {
+		        try {
 		            ReturnFunction = parent.manycolor_dialogArguments[1];
 		        } catch (e) {
 		            try {
@@ -21,27 +21,31 @@
 		                
 		            }
 		        }
-		        document.getElementById("selColor").innerText = "#ffffff";
-		        document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").innerText;
-		    });
-		    
-		    function select_color(e) {
-		        if (window.ActiveXObject) {
-		            document.getElementById("selColor").innerText = event.srcElement.title;
-		            document.getElementById("selColorShow").style.backgroundColor = event.srcElement.title;
-		        } else {
-		            document.getElementById("selColor").innerText = e.target.title;
-		            document.getElementById("selColorShow").style.backgroundColor = e.target.title;
-		        }
-		    }
-		    function ok_onclick() {
-		        if (ReturnFunction != null)
-		            ReturnFunction(document.getElementById("selColor").innerText);
+		
+				selColor.value = "#ffffff";
+				document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
+			}
+			
+			function select_color(e)
+			{
+			    if (window.ActiveXObject) {
+				    selColor.value = event.srcElement.title;
+				    document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
+				}
+				else {
+				    selColor.value = e.target.title;
+				    document.getElementById("selColorShow").style.backgroundColor = document.getElementById("selColor").value;
+				}
+			}
+		
+			function ok_onclick()
+			{
+			    if (ReturnFunction != null)
+		            ReturnFunction(selColor.value);
 		        else
-		            window.returnValue = document.getElementById("selColor").innerText;
-		        
-		        window.close();
-		    }
+		            window.returnValue = selColor.value;
+				window.close();
+			}
 	    </script>
 	</head>
 	<body class="popup">
