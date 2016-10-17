@@ -516,15 +516,15 @@ public class EzEmailMenuController {
 		String filename = request.getParameter("filename");
 		filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);
 		
-		filename = filename.replaceAll("\\*", "");
-		filename = filename.replaceAll("%7C", "");
-		filename = filename.replaceAll("%5C", "");
-		filename = filename.replaceAll("%3A", "");
-		filename = filename.replaceAll("%22", "");
-		filename = filename.replaceAll("%3C", "");
-		filename = filename.replaceAll("%3E", "");
-		filename = filename.replaceAll("%3F", "");
-		filename = filename.replaceAll("/", "");
+		filename = filename.replaceAll("\\*", "_");
+		filename = filename.replaceAll("%7C", "_");
+		filename = filename.replaceAll("%5C", "_");
+		filename = filename.replaceAll("%3A", "_");
+		filename = filename.replaceAll("%22", "_");
+		filename = filename.replaceAll("%3C", "_");
+		filename = filename.replaceAll("%3E", "_");
+		filename = filename.replaceAll("%3F", "_");
+		filename = filename.replaceAll("/", "_");
 		
 		IMAPAccess ia = null;
 		try {
