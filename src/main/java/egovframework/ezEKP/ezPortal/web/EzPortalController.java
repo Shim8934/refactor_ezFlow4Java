@@ -1050,7 +1050,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 			
 			lastLogin = ezOrganService.getLastLogin(userInfo.getId());
-			lastLogin = EgovDateUtil.convertDate(lastLogin, "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD HH:mm", "");
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 			
 			//전자설문
 			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));
