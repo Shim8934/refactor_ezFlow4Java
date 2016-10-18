@@ -23,10 +23,6 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
 	
-	public String wpCountLoginTime(String userID) throws Exception{
-		return (String) select("EzCommonDAO.wpCountLoginTime", userID);
-	}
-	
 	public String selectUserGetLang(String userID) throws Exception{
 		return (String) select("EzCommonDAO.selectUserGetLang", userID);
 	}
