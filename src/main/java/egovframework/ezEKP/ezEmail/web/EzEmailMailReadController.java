@@ -1186,7 +1186,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					if (message.getReceivedDate() != null) {
-						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd a h:mm:ss");
+						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
 						pReciveDT = sdFormat.format(message.getReceivedDate());
 					}
 					
