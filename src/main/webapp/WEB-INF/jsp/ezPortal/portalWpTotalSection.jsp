@@ -708,7 +708,7 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
-		            var getFormCont_Cross = window.open(url, "getFormCont_Cross", GetOpenWindowfeature(713, 570));
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
 		            try { getFormCont_Cross.focus(); } catch (e) {
 		            }
 		        }
@@ -754,26 +754,31 @@
 		                    return;
 		                }
 		                else {
-		                    var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
+		                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
+		                    var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		            }
 		            else {
 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+		                    //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+		                	var openLocation = "/ezApprovalG/draftui.do";
 		                }
 		                else {
 		                    if (pUse_IE11Browser == "CK")
-		                        openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+		                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+		                    	var openLocation = "/ezApprovalG/draftui.do";
 		                    else {
 		                        if (pUse_Editor == "")
-		                            openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
+		                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
+		                        	var openLocation = "/ezApprovalG/draftui.do";
 		                        else {
-		                            openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx";
+		                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
+		                        	var openLocation = "/ezApprovalG/draftui.do";
 		                        }
 		                    }
 		                }
-		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&DraftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&DocState=" + escape(pArgument[5]) + "&ListType=1" + "&AprState=" + escape(pArgument[6]);
+		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
 		                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 		            }
 		            openwindow(openLocation, "", 890, 620);
