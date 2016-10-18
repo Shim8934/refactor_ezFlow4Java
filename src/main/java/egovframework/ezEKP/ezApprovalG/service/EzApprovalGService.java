@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,7 +43,7 @@ public interface EzApprovalGService {
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
 
 	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang) throws Exception;
-
+	
 	public String getDocType(String selected, String companyID, String lang) throws Exception;
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang) throws Exception;
@@ -373,5 +374,7 @@ public interface EzApprovalGService {
 	public String getRecSCInfo(Document xmlDom, String lang, LoginVO userInfo)throws Exception;
 	
 	public String makeContainer(String deptID, String containerType, String companyID) throws Exception;
+	
+	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang) throws Exception;
 
 }

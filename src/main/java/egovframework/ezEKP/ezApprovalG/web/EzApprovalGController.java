@@ -5165,4 +5165,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G 결재할문서 개수 가져오기 Method
+	 */	
+	@RequestMapping(value = "/ezApprovalG/getWebPartCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getWebPartCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String pFlag = doc.getElementsByTagName("FLAG").item(0).getTextContent();
+		
+		int result = ezApprovalGService.getWebPartListCount(pFlag, userInfo.getId(), userInfo.getDeptID(), "", "", "", userInfo.getCompanyID(), userInfo.getLang());
+		
+		return "<DATA><RESULT>"+result+"</RESULT></DATA>";
+	}
 }

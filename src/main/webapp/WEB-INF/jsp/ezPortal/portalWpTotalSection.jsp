@@ -231,6 +231,11 @@
 		        yourClock();
 
 		        try { top.onresize() } catch (e) { }
+		        
+		        //
+		        getnewapprovalcount();
+		        //
+		        
 			}
 
 
@@ -398,7 +403,7 @@
 			{
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
 				if (("<%=userApprovalG%>") == ("YES"))
-				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApprovalG/WebPartFolder/getWebPartCount.aspx", true);
+				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
 				else
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApproval/WebPartFolder/getWebPartCount.aspx", true);
 			    xmlHttp_getnewapprovalcount_total.onreadystatechange = event_newapprovalcount;
@@ -418,10 +423,12 @@
 					{
 						try {
 //							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
-		                    if(browserIE)
+		                    if(browserIE) {
 		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
-		                    else
+		                    } else {
+alert(xmlHttp_getnewapprovalcount_total.responseXML);		                    	
 		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
+		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e)
 						{

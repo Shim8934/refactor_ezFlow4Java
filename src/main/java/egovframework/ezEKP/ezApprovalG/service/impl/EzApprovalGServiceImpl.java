@@ -17427,4 +17427,31 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		return maxContainerID;
 	}
+
+	@Override
+	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang) throws Exception {
+		userIDS = "'" + makeRightField(userID) + "'";
+		String proxyOption = "";
+		
+		if (listType.equals("1")) {
+			proxyOption = getIsUse("A23", "001", companyID, lang);
+			if (proxyOption.equals("1")) {
+				userIDS = getProxyUser(userID, lang);
+			}
+		}
+		
+		deptIDS = getDocManageDeptInfo(deptID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LISTTYPE", listType);
+		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_USERIDS", userIDS);
+		map.put("v_DEPTIDS", deptIDS);
+		map.put("v_USERFLAG", userFlag);
+		map.put("companyID", companyID);
+		return ezApprovalGDAO.getWebPartListCount(map);
+	}
+	
+	
 }

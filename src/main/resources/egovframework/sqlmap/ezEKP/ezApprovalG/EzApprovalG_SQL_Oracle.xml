@@ -653,6 +653,10 @@
 		{CALL EZAPPROVALG_$companyID$.SPROLLBACKSN(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_CurSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
+	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int">
+		{CALL EZAPPROVALG_$companyID$.EZSP_GETWEBPARTLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+	</procedure>
+	
 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
 	</procedure>
