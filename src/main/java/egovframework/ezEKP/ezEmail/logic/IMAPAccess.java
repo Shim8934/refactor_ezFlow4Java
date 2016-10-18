@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.logic;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.mail.imap.IMAPStore;
+import com.sun.mail.util.MailSSLSocketFactory;
 
 import egovframework.com.cmm.EgovMessageSource;
 
@@ -65,19 +67,31 @@ public class IMAPAccess {
 		this.connectionTimeout = connectionTimeout;
 	}
 	
-	private Store getStore(){
-		if(store != null){
+	private Store getStore() {
+		if (store != null) {
 			return store;
 		}
+		
 		try {
 			Properties properties = new Properties();
 			properties.put("mail.imap.host", host);
+			properties.put("mail.imaps.host", host);
 			properties.put("mail.imap.port", port);
-
+			properties.put("mail.imaps.port", port);
+			
+			if (port.equals("993")) {
+    			MailSSLSocketFactory sf = new MailSSLSocketFactory();
+    			sf.setTrustAllHosts(true); 
+    			properties.put("mail.imaps.ssl.trust", "*");
+    			properties.put("mail.imaps.ssl.socketFactory", sf);
+			}
+			
 			//If set to true, failure to create a socket using the specified socket factory class will 
 			//cause the socket to be created using the java.net.Socket class. Defaults to true.
 			properties.setProperty("mail.imap.socketFactory.fallback", "false");
+			properties.setProperty("mail.imaps.socketFactory.fallback", "false");
 			properties.setProperty("mail.imap.socketFactory.port", port);
+			properties.setProperty("mail.imaps.socketFactory.port", port);
 			
 			// these properties are required to be set to false, otherwise
 			// big mail body part(in-line image, attachment, etc) fetching may be very slow.
@@ -85,18 +99,30 @@ public class IMAPAccess {
 			properties.setProperty("mail.imaps.partialfetch", "false");
 			
 			properties.put("mail.imap.connectiontimeout", connectionTimeout);
+			properties.put("mail.imaps.connectiontimeout", connectionTimeout);
 			properties.put("mail.imap.timeout", timeout);
+			properties.put("mail.imaps.timeout", timeout);			
 			
 			Session session = Session.getInstance(properties);
 
-			store = session.getStore("imap");
+			// IMAPS의 Well-Known Port인 993일 때는 imaps를 사용한다.
+			if (port.equals("993")) {
+			    store = session.getStore("imaps");
+			} else {
+			    store = session.getStore("imap");
+			}
+			
 			store.connect(userName, password);
 		} catch (NoSuchProviderException e) {
 			logger.error("Error get store from session: " + e.getMessage());
 			e.printStackTrace();
-		}catch (MessagingException e) {
+		} catch (MessagingException e) {
 			logger.error("Error connect store: " + e.getMessage());
-		}
+		} catch (GeneralSecurityException e) {
+		    logger.error("GeneralSecurityException: " + e.getMessage());
+            e.printStackTrace();
+        }
+		
 		return store;
 	}
 
