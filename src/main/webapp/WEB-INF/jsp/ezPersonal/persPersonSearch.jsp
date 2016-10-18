@@ -531,14 +531,14 @@
 	        	}
 	        	
 		        var xmlDOM = createXmlDom();
-		        
 	        	 $.ajax({
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
 					dataType : "xml",
+					async : false,
 					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
    					success : function(result) {
-   						xmlDOM = result
+   						xmlDOM = result;
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
 	                	adCount = row.length;
 						},
