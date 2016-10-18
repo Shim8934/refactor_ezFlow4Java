@@ -181,11 +181,13 @@
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezBoard/saveBoardProperty.do",
+	            	async : false,
 	            	data : { boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(), boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		     itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter, boardColor:brd_color, portlet:portlet, backGround:background,
 	            		     formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG, apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
+	            		parent.window.location.reload();
 	            	}	            		
 	            });	            
 	        }			

@@ -3469,9 +3469,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < xmlDom.getElementsByTagName("ID").getLength(); k++) {
 			if (k == 0) {
-				cabIDList += xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim();
+				cabIDList += "'" + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim() + "' ";
 			} else {
-				cabIDList += ", " + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim();
+				cabIDList += ", '" + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim() + "' ";
 			}
 		}
 		

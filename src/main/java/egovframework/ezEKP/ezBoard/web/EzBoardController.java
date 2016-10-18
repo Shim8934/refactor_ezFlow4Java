@@ -3921,9 +3921,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4")) {
+		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && (boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
 			result = "<RESULT>anonyboard</RESULT>";
-        } else if (boardInfo.getAttributeYN().equals("Y")) {
+        } else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
         	result = "<RESULT>attributeextension</RESULT>";
         } else {
             result = "<RESULT>normalboard</RESULT>";
@@ -4056,7 +4056,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         for (int i = 0; i < attachmentList.size(); i++) {
             orgFilePath = attachmentList.get(i);
-
+            orgFilePath = path.replace(config.getProperty("upload_board.ROOT"), "") + orgFilePath;
+            
             String fileName = "";
             fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
             fileName = "{" + UUID.randomUUID() + "}_" + fileName;
@@ -4064,7 +4065,7 @@ public class EzBoardController extends EgovFileMngUtil{
             destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
 
             if (returnString.equals("")) {
-            	returnString += destBoardID + "/uploadFile/" + fileName;
+            	returnString += destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
             } else {
             	returnString = returnString + ";" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
             }
