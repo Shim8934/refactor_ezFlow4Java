@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -1049,6 +1050,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 			
 			lastLogin = ezOrganService.getLastLogin(userInfo.getId());
+			lastLogin = EgovDateUtil.convertDate(lastLogin, "YYYY-MM-DD HH:mm:ss", "YYYY-MM-DD HH:mm", "");
 			
 			//전자설문
 			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));
