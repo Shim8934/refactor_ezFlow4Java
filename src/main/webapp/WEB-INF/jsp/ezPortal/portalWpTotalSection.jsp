@@ -425,8 +425,7 @@
 //							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
 		                    if(browserIE) {
 		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
-		                    } else {
-alert(xmlHttp_getnewapprovalcount_total.responseXML);		                    	
+		                    } else {		                    	
 		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
