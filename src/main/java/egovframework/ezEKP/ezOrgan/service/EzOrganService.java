@@ -42,6 +42,8 @@ public interface EzOrganService {
 	
 	public String getProxyUserInfo(String userID) throws Exception;
 	
+	public String getLastLogin(String userID) throws Exception;
+	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;

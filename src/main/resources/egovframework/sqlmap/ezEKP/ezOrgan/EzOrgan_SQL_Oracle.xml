@@ -363,4 +363,15 @@
 				mail = #email#
 		]]>
 	</select>
+	
+	<select id="EzOrganDAO.getLastLogin" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT 
+				lastLogin 
+	      	FROM 
+	      		ezHrmaster.TBLUSERMASTER 
+	      	WHERE  
+	      		cn = #userID#
+	     ]]> 
+	</select>
 </sqlMap>

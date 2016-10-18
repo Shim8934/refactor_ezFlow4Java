@@ -14,8 +14,6 @@ public interface EzCommonService {
 
 	public String getContentInfo(String type, String itemID) throws Exception;
 	
-	public String wpCountLoginTime(String userID) throws Exception;
-	
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
 	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request, Locale locale) throws Exception;

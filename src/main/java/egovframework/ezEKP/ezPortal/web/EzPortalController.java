@@ -1048,7 +1048,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 			
-			lastLogin = ezCommonService.wpCountLoginTime(userInfo.getId());
+			lastLogin = ezOrganService.getLastLogin(userInfo.getId());
 			
 			//전자설문
 			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));

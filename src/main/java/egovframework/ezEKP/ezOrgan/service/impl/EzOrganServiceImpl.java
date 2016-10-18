@@ -1086,6 +1086,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 			return result;
 	}
 
+	@Override
+	public String getLastLogin(String userID) throws Exception {
+		return ezOrganDAO.getLastLogin(userID);
+	}
+	
 	
 }
 

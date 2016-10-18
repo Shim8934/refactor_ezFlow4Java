@@ -18,10 +18,6 @@
 		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommonDAO.wpCountLoginTime" parameterClass="String" resultClass="String">
-		{CALL ezCommon.EZSP_WPCONT_LOGINTIME(#v_pUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
 	<select id="EzCommonDAO.selectUserGetLang" parameterClass="String" resultClass="String">
 		<![CDATA[
 			SELECT 

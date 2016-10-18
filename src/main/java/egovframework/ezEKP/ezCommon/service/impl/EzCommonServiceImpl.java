@@ -182,11 +182,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
 	}
 	
-	@Override
-	public String wpCountLoginTime(String userID) throws Exception {
-		return ezCommonDAO.wpCountLoginTime(userID);
-	}
-
 	public String getProperFileName(String pOrgFileName, String pOrgFileExt, String pIsUTF8) throws Exception{
 		int length = 0;
         int lengthLimit = 10000;

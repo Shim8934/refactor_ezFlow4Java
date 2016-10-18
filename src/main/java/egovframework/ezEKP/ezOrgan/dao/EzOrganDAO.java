@@ -83,6 +83,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getEncPassword(Map<String, Object> map) throws Exception{
 		return (String) select("EzOrganDAO.getEncPassword", map);
 	}
+	
+	public String getLastLogin(String userID) throws Exception{
+		return (String) select("EzOrganDAO.getLastLogin", userID);
+	}
 
 	public int deptSubDeptCnt(String deptID) throws Exception{
 		// TODO Auto-generated method stub
