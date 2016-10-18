@@ -616,7 +616,7 @@
 
 		                var left = (width - wWeight) / 2;
 		                var top = (heigth - wHeight) / 2;
-		                window.open("/myoffice/ezaddress/address_write.aspx?ownerid=" + escape("${userInfo.id}") + "&folderid=&foldertype=", "",
+		                window.open("/ezAddress/addressWrite.do?ownerid=" + escape("${userInfo.id}") + "&folderid=&foldertype=", "",
 		                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
 
