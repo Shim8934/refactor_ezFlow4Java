@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1251,9 +1253,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		NodeList bigs = xmldom.getElementsByTagName("BIG");
 		boolean hasAttachFile = false;
+		
 		if (bigs != null) {
-			for (int i=0; i<bigs.getLength(); i++) {
+			for (int i=0; i < bigs.getLength(); i++) {
 				if (bigs.item(i).getTextContent().equals("N")) {
+				    // 일반첨부파일이 있는 경우
 					hasAttachFile = true;
 					break;
 				}
@@ -1282,6 +1286,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (hasAttachFile) {
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 						id+"@"+config.getProperty("config.DomainName"), password);
+				
+				// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
 				newMessage = sa.createMimeMessage();
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1290,17 +1296,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				// 임시 보관함 폴더 오픈 
 				folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 				folder.open(Folder.READ_WRITE);
+				
+				// 첨부파일 Part들을 삽입할 Multipart를 생성한다.
 				multipart = new MimeMultipart();
 			}
 			
 			if (cmd.equals("ADD")) {
 				NodeList fileNodes = xmldom.getElementsByTagName("FILE");
 				
+				// 임시 보관함에 이미 기존 메시지가 있는 경우, 해당 메시지의 파트들을 새 메시지에 병합한다.
 				if (hasAttachFile && uid != 0) {
 				    // 임시 보관함에 있는 메시지를 가져온다.
 					Message oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
 					if (oldMessage != null) {
+					    // 기존 메시지가 Multipart인 경우 처리
 						if (oldMessage.getContent() instanceof Multipart) {
 							Multipart mp = (Multipart)oldMessage.getContent();
 							int count = mp.getCount();
@@ -1309,6 +1319,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							// 임시 보관함에 있는 메시지가 multipart/related일 때는 새롭게 related 파트로 구성한 다음
 							// 새 메시지의 서브 파트로 추가한다.
 							if (oldMessage.isMimeType("multipart/related")) {
+							    logger.debug("oldMessage is multipart/related");
+							    
 								Multipart relatedPart = new MimeMultipart("related");
 								
 								for (int i = 0; i < count; i++) {
@@ -1319,8 +1331,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								MimeBodyPart wrap = new MimeBodyPart();
 								wrap.setContent(relatedPart);
 								multipart.addBodyPart(wrap, 0);
-							}
-							else {
+							} else if (oldMessage.isMimeType("multipart/alternative")) {
+							    logger.debug("oldMessage is multipart/alternative");
+							    
+                                Multipart alternativePart = new MimeMultipart("alternative");
+                                
+                                for (int i = 0; i < count; i++) {
+                                    p = mp.getBodyPart(i);
+                                    alternativePart.addBodyPart(p);
+                                }
+                                
+                                MimeBodyPart wrap = new MimeBodyPart();
+                                wrap.setContent(alternativePart);
+                                multipart.addBodyPart(wrap, 0);							    
+							} else {
 								for (int i = 0; i < count; i++) {
 									p = mp.getBodyPart(i);
 									multipart.addBodyPart(p);
@@ -1328,16 +1352,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 						}
 						
+						// 기존 메시지의 모든 헤더를 적용한다.
 						Enumeration<Header> e = oldMessage.getAllHeaders();
 						while(e.hasMoreElements()){
 							Header header = e.nextElement();
 							newMessage.setHeader(header.getName(), header.getValue());
 						}
 						
+						// 기존 메시지를 제거한다.
 						oldMessage.setFlag(Flags.Flag.DELETED, true);
 					}
 				}
 				
+				// 새로 업로드된 파일들을 새 메시지에 추가한다.
 				for (int i=0; i<fileNodes.getLength(); i++) {
 					Node subNode = fileNodes.item(i);
 					NodeList childNodes = subNode.getChildNodes();
@@ -1345,8 +1372,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					String path = childNodes.item(1).getTextContent();
 					String bigBool = childNodes.item(2).getTextContent();
 					
+					// 일반첨부파일의 경우
 					if (hasAttachFile && bigBool.equals("N")) {
+					    // 첨부파일을 삽입할 Part를 생성한다.
 						BodyPart messageBodyPart = new MimeBodyPart();
+						
 				        File f = new File(pDirTempPath + commonUtil.separator + path);
 				        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 				        messageBodyPart.setDataHandler(new DataHandler(source));
@@ -1360,8 +1390,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        encodedFileName = MimeUtility.fold(0, encodedFileName);
 				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"" + encodedFileName + "\"");
 				        
+				        // 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
 				        String contentType = "application/octet-stream";
 				        
+				        // 첨부파일의 Content-Type을 구한다.
 				        if (Files.probeContentType(f.toPath()) != null) {
 				        	contentType = Files.probeContentType(f.toPath());
 				        } else {
@@ -1371,6 +1403,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        }
 				        
 				        messageBodyPart.setHeader("Content-Type", contentType);
+				        
+				        // Multipart에 첨부파일 Part를 삽입한다.
 				        multipart.addBodyPart(messageBodyPart);
 						
 				        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
@@ -1399,6 +1433,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 				}
 	    		
+                // 처리가 완료된 일반첨부파일 원본 파일들을 삭제한다.				
 				for (int i=0; i<fileNodes.getLength(); i++) {
 					Node subNode = fileNodes.item(i);
 					NodeList childNodes = subNode.getChildNodes();
@@ -1644,11 +1679,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userId = "";
-		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		if (userIdnPw !=null && userIdnPw.get(0) != null) {
-			userId = userIdnPw.get(0);
-		}
+		String userId = id;
+
 		//OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
 		//userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		
@@ -1687,11 +1719,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String realPath = config.getProperty("data_root");
 		String stateName = "";
 		
+		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
 		
+		// 클라이언트로부터 전달된 요청 패러메터들을 추출한다.
 		if (root.getElementsByTagName("URL") != null) {
 			tempNode = root.getElementsByTagName("URL").item(0);
 			if (tempNode != null) {
@@ -1845,10 +1879,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				id+"@"+config.getProperty("config.DomainName"), password);
+		
+		// MIME Message를 생성한다.
 		MimeMessage message = sa.createMimeMessage();
 		
 		String pResult = null;
 		IMAPAccess ia = null;
+		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
@@ -1909,35 +1946,61 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			logger.debug("cmd=" + cmd + ",simpleMime=" + simpleMime);
 			
+	        Multipart alternativePart = null;
+	        
 			// 메일 본문 및 타입
 			MimeBodyPart content = new MimeBodyPart();
+			
+			// simpleMime의 값이 1인 경우는 Plain Text 형식이다.
 			if (simpleMime.equals("1")) {
+			 // 메일을 발송하는 경우
 	            if (!cmd.toUpperCase().equals("SAVE")) {
+	                // 예약 메일의 경우
 	                if (!delaySendTime.equals("")) {
 	                	message.setContent(textBody, "text/plain; charset=utf-8");
 	                	content.setContent(textBody, "text/plain; charset=utf-8");
+	                // 지금 발송하는 경우
 	                } else {
 	                	message.setContent(textBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/plain; charset=utf-8");
 	                	content.setContent(textBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/plain; charset=utf-8");
 	                }
+	             // 임시 보관함에 저장하는 경우    
 	            } else {
 	            	message.setContent(textBody, "text/plain; charset=utf-8");
 	            	content.setContent(textBody, "text/plain; charset=utf-8");
 	            }
+	        // HTML 형식의 경우
 	        } else {
+	            // 메일을 발송하는 경우
 	            if (!cmd.toUpperCase().equals("SAVE")) {
+	                // 예약 메일의 경우
 	                if (!delaySendTime.equals("")) {
 	                	message.setContent(htmlBody, "text/html; charset=utf-8");
 	                	content.setContent(htmlBody, "text/html; charset=utf-8");
+	                // 지금 발송하는 경우
 	                } else {
 	                	message.setContent(htmlBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/html; charset=utf-8");
 	                	content.setContent(htmlBody.replaceAll("div id=\"MailSign\"", "div id=\"MailSignSent\""), "text/html; charset=utf-8");
 	                }
+	            // 임시 보관함에 저장하는 경우
 	            } else {
 	            	message.setContent(htmlBody, "text/html; charset=utf-8");
 	            	content.setContent(htmlBody, "text/html; charset=utf-8");
 	            }
 	
+	            // multipart/alternative로 구성한다.
+                alternativePart = new MimeMultipart("alternative");
+	            
+                // text/plain 파트를 구성한다.
+	            MimeBodyPart textPlainPart = new MimeBodyPart();
+	            textPlainPart.setText(textBody, "utf-8");	
+	            
+	            // text/plain 파트를 추가한다.
+	            alternativePart.addBodyPart(textPlainPart);
+	            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
+	            alternativePart.addBodyPart(content);
+	            
+	            message.setContent(alternativePart);
 	        }
 			
 			// 보안메일
@@ -1946,7 +2009,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        }
 			
 			// 메일 중요도
-			switch (importance) {
+			switch (importance) { // 2: High, 1: Normal, 0: Low
 	            case "0": message.setHeader("X-Priority", "5");
 	                break;
 	            case "1": message.setHeader("X-Priority", "3");
@@ -1977,22 +2040,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        message.setSentDate(Calendar.getInstance().getTime());
 	        
 	        //User-Agent 설정
-	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
 	        
 	        //inline image 처리
 	        MimeMultipart relatedPart = null;
+	        Set<String> contentIdSet = new HashSet<String>();
 	        
+	        // simpleMime의 값이 1인 아닌 경우는 HTML 형식이다.
 	        if (!simpleMime.equals("1")) {
 	        	// getElementsByTagName always returns non-null object even if
 	        	// the tag doesn't exist, so its length must be checked.
 	        	NodeList imageNameList = root.getElementsByTagName("IMAGENAME");
 	        	NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
 	        	
+	        	// 새롭게 추가된 이미지가 있으면 이미지를 파트로 추가하고 Related Part로 구성한다.
 		        if (imageNameList != null && imageNameList.getLength() > 0
 		        		&& imagePathList != null && imagePathList.getLength() > 0) {
 		        	String imageName = "";
 		            String imagePath = "";
 		        	
+		            // Related Part를 생성한다.
 		            relatedPart = new MimeMultipart("related");
 		            
 		        	for (int i=0; true; i++) {
@@ -2006,11 +2073,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            	if (!imageName.trim().equals("") && !imagePath.trim().equals("")) {
 		                	//TODO: embedding제거
 		            		
+		            	    // 이미지 파일의 Path를 구한다.
 		                	imagePath = new URL(imagePath).getPath();
 		                	String pDirPath = realPath + imagePath;
 		                	
 		        	        File f = new File(pDirPath);
+		        	        
 		        	        if (f.exists()) {	            		
+		        	            // 본문 내용에 있는 image tag의 src 속성의 값을 content id 형식으로 변경한다.
 			                	String cid = imageName + "@12345678.87654321";
 			                	String strContent = content.getContent().toString();
 			                	int index = strContent.indexOf("src=\"" + imageName);
@@ -2019,29 +2089,45 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                	}
 			                	content.setContent(strContent, "text/html; charset=utf-8");
 		                		        	        
+			                	// 이미지 파일을 추가할 Mime Body Part를 생성한다.
 			                	MimeBodyPart messageBodyPart = new MimeBodyPart();
 			                	
 			        	        FileDataSource source = new FileDataSource(f);
 			        	        messageBodyPart.setDataHandler(new DataHandler(source));
 			        	        messageBodyPart.setFileName(imageName);
 			        	        
+			        	        // 이미지 파일의 Default Content-Type은 application/octet-stream 로 설정한다.
 			        	        String contentType = "application/octet-stream";
 			        	        
+			        	        // 이미지 파일의 Content-Type을 구한다.
 			        	        if (Files.probeContentType(f.toPath()) != null) {
 			        	        	contentType = Files.probeContentType(f.toPath());
 			        	        }
 			        	        
 			        	        messageBodyPart.setHeader("Content-Type", contentType);
-			        	        messageBodyPart.setContentID("<" + cid + ">");
+			        	        String cidWithBrackets = "<" + cid + ">";
+			        	        messageBodyPart.setContentID(cidWithBrackets);
 			        	        messageBodyPart.setDisposition(Part.INLINE);
 			        	        
+			        	        contentIdSet.add(cidWithBrackets);
+			        	        logger.debug("cidWithBrackets=" + cidWithBrackets);
+			        	        
+			        	        // Related Part에 이미지 Part를 추가한다.
 			        	        relatedPart.addBodyPart(messageBodyPart);
 		        	        }
 		                }
 		            }
 		        	
+		        	// Related Part의 첫 부분에 본문 Part를 삽입한다.
 		        	relatedPart.addBodyPart(content, 0);
-		        	message.setContent(relatedPart);
+		        	
+		        	// Alternative의 두 번째 파트에 기존 HTML 파트를 제거하고 Related Part를 삽입한다.
+		        	alternativePart.removeBodyPart(1);
+                    MimeBodyPart wrap = new MimeBodyPart();
+                    wrap.setContent(relatedPart);
+		        	alternativePart.addBodyPart(wrap, 1);
+		        	
+		        	message.setContent(alternativePart);
 				}
 	        }
 	        
@@ -2054,41 +2140,60 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        
 	        // merge the existing message in the Drafts folder into a new message.
 	        Message oldMessage = null;
+	        
+            // 임시 보관함에 있는 메시지가 있는 경우 해당 메시지와 병합 작업을 수행한다.	        
 	        if (!url.trim().equals("")) {
 	        	uid = Long.parseLong(url);
 	        
 	        	MimeMultipart mixedPart = new MimeMultipart();
 				
 				if (uid != 0) {
+				    // 임시 보관함에 있는 기존 메시지를 불러온다.
 					oldMessage = ((IMAPFolder)folder).getMessageByUID(uid);
 					
 					if (oldMessage != null) {
 						// copy existing headers that are needed.
 						String[] headers = oldMessage.getHeader("References");
+						
 						if (headers != null) {
 							message.setHeader("References", headers[0]);
 						}
+						
 						headers = oldMessage.getHeader("In-Reply-To");
 						if (headers != null) {
 							message.setHeader("In-Reply-To", headers[0]);
 						}
 						
+						// 기존 메시지가 Multipart 메시지일 경우의 처리
 						if (oldMessage.getContent() instanceof Multipart) {
+						    // 기존 메시지의 Multipart를 불러온다.
 							Multipart mp = (Multipart)oldMessage.getContent();
 							int count = mp.getCount();
 							BodyPart p = null;
 							boolean hasAttach = false;
 							
+							// Multipart의 각 Part별 처리를 수행한다.
 							for (int i = 0; i < count; i++) {
 								p = mp.getBodyPart(i);
 								
 								while (true) {
+								    // Part가 Related Part일 경우의 처리
     								if (p.isMimeType("multipart/related")) {
+    								    logger.debug("Part is multipart/related");
+    								    
     									hasAttach = true;
     									
     									logger.debug("relatedPart=" + relatedPart);
+    									
     									if (relatedPart == null) {
     										relatedPart = new MimeMultipart("related");
+    										    							
+    										if (alternativePart != null) {
+        					                    MimeBodyPart wrap = new MimeBodyPart();
+        					                    wrap.setContent(relatedPart);
+        					                    alternativePart.removeBodyPart(1);
+        					                    alternativePart.addBodyPart(wrap, 1);
+    										}
     									}
     									// new related part is already created by the above routine
     									// for adding new in-line images.
@@ -2096,16 +2201,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     										relatedPart.removeBodyPart(0);
     									}
     									
-    									Multipart relatedPartContent = (Multipart)p.getContent();
-    									int relatedPartCount = relatedPartContent.getCount();
-    									BodyPart relatedSubPart = null;
+    									// 기존 메시지의 Related Part와 병합한다.
+    									Multipart existingRelatedPart = (Multipart)p.getContent();
+    									int existingRelatedPartCount = existingRelatedPart.getCount();
+    									BodyPart existingRelatedSubPart = null;
     									
-    									for (int j = 0; j < relatedPartCount; j++) {
-    										relatedSubPart = relatedPartContent.getBodyPart(j);
+    									for (int j = 0; j < existingRelatedPartCount; j++) {
+    									    existingRelatedSubPart = existingRelatedPart.getBodyPart(j);
     										
-    										if (relatedSubPart instanceof MimePart) {
-    											if (((MimePart)relatedSubPart).getContentID() != null) {
-    												relatedPart.addBodyPart(relatedSubPart);						
+    										if (existingRelatedSubPart instanceof MimePart) {
+    										    String contentId = ((MimePart)existingRelatedSubPart).getContentID();
+    										    logger.debug("Existing ContentId=" + contentId);
+    										    
+    											if (contentId != null && !contentIdSet.contains(contentId)) {
+    											    logger.debug("Adding ContentId=" + contentId);
+    											    
+    												relatedPart.addBodyPart(existingRelatedSubPart);						
     											}
     										}				
     									}
@@ -2117,18 +2228,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     									
     									removeUnusedInlineImagePart(relatedPart);
     								}
-    								// multipart/alternative 파트 안에 multipart/related 파트가 있는 경우에 대한 처리
+    								// Part가 Alternative Part일 경우의 처리
     								else if (p.isMimeType("multipart/alternative")) {
-                                        Multipart alternativePartContent = (Multipart)p.getContent();
-                                        int alternativePartCount = alternativePartContent.getCount();
-                                        BodyPart alternativeSubPart = null;
+    								    logger.debug("Part is multipart/alternative");
+    								    
+    								    hasAttach = true;
+    								    
+                                        Multipart existingAlternativePart = (Multipart)p.getContent();
+                                        int existingAlternativePartCount = existingAlternativePart.getCount();
+                                        BodyPart existingAlternativeSubPart = null;
                                         boolean isRelatedFound = false;
                                         
-                                        for (int j = 0; j < alternativePartCount; j++) {
-                                            alternativeSubPart = alternativePartContent.getBodyPart(j);
+                                        for (int j = 0; j < existingAlternativePartCount; j++) {
+                                            existingAlternativeSubPart = existingAlternativePart.getBodyPart(j);
                                             
-                                            if (alternativeSubPart instanceof MimePart) {
-                                                if (alternativeSubPart.isMimeType("multipart/related")) {
+                                            if (existingAlternativeSubPart instanceof MimePart) {
+                                                // Alternative Part 안에 Related Part가 있는 경우에 대한 처리
+                                                if (existingAlternativeSubPart.isMimeType("multipart/related")) {
                                                     isRelatedFound = true;
                                                     break;
                                                 }
@@ -2137,47 +2253,62 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                                         
                                         if (isRelatedFound) {
                                             // p를 발견된 related 파트로 변경하여 루프의 시작 부분에 있는 related 파트 처리 부분으로 제어를 옮긴다.
-                                            p = alternativeSubPart;
+                                            p = existingAlternativeSubPart;
                                             continue;
                                         }
                                     }								
+                                    // there are cases where an in-line image part doesn't have
+                                    // a Content-Disposition header, but has a Content-ID header.    								
+    								else if (p instanceof MimePart 
+    								        && ((MimePart)p).getContentID() != null) {
+    								    String contentId = ((MimePart)p).getContentID();
+    								    logger.debug("Existing ContentId=" + contentId);
+    								    
+    								    if (!contentIdSet.contains(contentId)) {
+    								        logger.debug("Adding ContentId=" + contentId);
+    								        
+    								        mixedPart.addBodyPart(p);
+    								    }
+    								}
     								else if (p.getDisposition() != null) { 
     									mixedPart.addBodyPart(p);
+    									
+    									// 첨부파일 파트인 경우
     									if (p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
     										hasAttach = true;
     									}
     								}
+    								// Part가 message 인 경우, 즉 메일이 첨부된 경우
     								else if (p.isMimeType("message/*")) {
+    								    logger.debug("Part is message");
+    								    
     									mixedPart.addBodyPart(p);
     									hasAttach = true;
     								}							
-    								else {
-    									// there are cases where an in-line image part doesn't have
-    									// a Content-Disposition header, but has a Content-ID header.
-    									if (p instanceof MimePart) {
-    										if (((MimePart)p).getContentID() != null) {
-    											mixedPart.addBodyPart(p);			
-    										}
-    									}												
-    								}
     								
     								break;
 								}
 							}
 							
+							// 기존 메시지에 첨부파일이 있거나 Alternative Part 혹은 Related Part가 있는 경우의 처리
 							if (hasAttach) {
-								if (relatedPart != null) {
+								if (alternativePart != null) {
 									MimeBodyPart wrap = new MimeBodyPart();
-									wrap.setContent(relatedPart);
+									wrap.setContent(alternativePart);
 									mixedPart.addBodyPart(wrap, 0);
 								} else {
 									mixedPart.addBodyPart(content, 0);
 								}							
+								
 								message.setContent(mixedPart);							
 							}
+							// 기존 메시지가 Related Part일 경우의 처리
 							else if (oldMessage.isMimeType("multipart/related")) {
+							    logger.debug("oldMessage is multipart/related");
 								logger.debug("relatedPart=" + relatedPart);
 								
+								// 새로 추가되는 이미지 파트들을 추가한다.
+								// 기존 메시지의 이미지 파트들은 위에서 이미 mixedPart에 추가되어 있다.
 								// a new related part is already created by the above routine
 								// for adding new in-line images.						
 								if (relatedPart != null) {
@@ -2190,6 +2321,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									}
 								}
 								
+								// 기존 메시지가 Related Part인 경우는 첨부파일이 없는 경우이므로 mixed가 아니다.
 								// this mixedPart is actually a related part.
 								mixedPart.setSubType("related");
 								
@@ -2200,7 +2332,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 								removeUnusedInlineImagePart(mixedPart);
 								
-								message.setContent(mixedPart);							
+                                if (alternativePart != null) {
+                                    MimeBodyPart wrap = new MimeBodyPart();
+                                    wrap.setContent(mixedPart);
+                                    alternativePart.removeBodyPart(1);
+                                    alternativePart.addBodyPart(wrap, 1);                                                                               
+                                } else {
+                                    message.setContent(mixedPart);
+                                }
 							}
 						}					
 					}
@@ -2373,27 +2512,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        }
 	        
 	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제(스케줄러로 지우기로함.)
-//	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-//	        if (imagePathList != null && imagePathList.getLength() > 0) {
-//	            String imagePath = "";
-//	            
-//	        	for (int i=0; true; i++) {
-//	            	if (imagePathList.item(i) == null) {
-//	            		break;
-//	            	}
-//	            	
-//	            	imagePath = imagePathList.item(i).getTextContent();
-//	            	
-//	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
-//	                	imagePath = new URL(imagePath).getPath();
-//	                	String pDirPath = realPath + imagePath;
-//	            		File f = new File(pDirPath);
-//	            		if (f.exists()) {
-//	            			f.delete();
-//	            		}
-//	            	}
-//	        	}
-//	        }
+	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+	        if (imagePathList != null && imagePathList.getLength() > 0) {
+	            String imagePath = "";
+	            
+	        	for (int i=0; true; i++) {
+	            	if (imagePathList.item(i) == null) {
+	            		break;
+	            	}
+	            	
+	            	imagePath = imagePathList.item(i).getTextContent();
+	            	
+	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
+	                	imagePath = new URL(imagePath).getPath();
+	                	String pDirPath = realPath + imagePath;
+	            		File f = new File(pDirPath);
+	            		if (f.exists()) {
+	            			f.delete();
+	            		}
+	            	}
+	        	}
+	        }
 	        
 	        folder.close(true);
 	        // sendmail_2010변환 끝

@@ -814,6 +814,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
 
             var mhtBody = "";
+            /* dhlee: mhtBody는 TEXTBODY로서 항상 Plain Text를 전송하도록 한다.
             if (m_rgParams4PostOption["bodyType"] != 1) {
                 mhtBody = message.GetEditorContent();
                 mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
@@ -821,13 +822,14 @@ function Save_onClick_Complete(ReturnValue) {
 //                mhtBody = ConvertHTMLtoMHT(mhtBody);
             }
             else {
+            */
                 var div_ = document.createElement("DIV");
                 div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
                 mhtBody = div_.textContent;
                 mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
                 mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
                 mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-            }
+//            }
 
             createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", mhtBody.replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", MakeFromAddress(document.getElementById("eFrom").value));
