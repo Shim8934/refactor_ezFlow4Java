@@ -2512,27 +2512,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        }
 	        
 	        //file system의 inline image 파일 삭제 - 경로가 upload_common인 파일만 삭제(스케줄러로 지우기로함.)
-	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
-	        if (imagePathList != null && imagePathList.getLength() > 0) {
-	            String imagePath = "";
-	            
-	        	for (int i=0; true; i++) {
-	            	if (imagePathList.item(i) == null) {
-	            		break;
-	            	}
-	            	
-	            	imagePath = imagePathList.item(i).getTextContent();
-	            	
-	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
-	                	imagePath = new URL(imagePath).getPath();
-	                	String pDirPath = realPath + imagePath;
-	            		File f = new File(pDirPath);
-	            		if (f.exists()) {
-	            			f.delete();
-	            		}
-	            	}
-	        	}
-	        }
+//	        NodeList imagePathList = root.getElementsByTagName("IMAGEPATH");
+//	        if (imagePathList != null && imagePathList.getLength() > 0) {
+//	            String imagePath = "";
+//	            
+//	        	for (int i=0; true; i++) {
+//	            	if (imagePathList.item(i) == null) {
+//	            		break;
+//	            	}
+//	            	
+//	            	imagePath = imagePathList.item(i).getTextContent();
+//	            	
+//	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
+//	                	imagePath = new URL(imagePath).getPath();
+//	                	String pDirPath = realPath + imagePath;
+//	            		File f = new File(pDirPath);
+//	            		if (f.exists()) {
+//	            			f.delete();
+//	            		}
+//	            	}
+//	        	}
+//	        }
 	        
 	        folder.close(true);
 	        // sendmail_2010변환 끝
