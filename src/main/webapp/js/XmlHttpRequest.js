@@ -855,7 +855,7 @@ function GetbrowserLanguage() {
 }
 
 function GetCKEditerHeader() {
-    return "<HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
 }
     // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
@@ -908,8 +908,8 @@ function GetOpenWindowfeature(popUpW, popUpH) {
     width = parseInt(width) - pleftpos;
     left = pleftpos / 2;
     top = heigth / 2;
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no";
-    return feature
+    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+    return feature;
 }
 
 function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {

@@ -36,11 +36,9 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
-import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
-import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -257,7 +255,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         m_strMHT.append("Content-Type: Multipart/related;" + System.lineSeparator());
         m_strMHT.append("  boundary=\"" + m_strBoundary + "\"" + System.lineSeparator());
         m_strMHT.append("From: Kaoni MHT Component(UTF-8)" + System.lineSeparator());
-        m_strMHT.append("Subject:  HTML to Mime-HTML" + System.lineSeparator());
+        m_strMHT.append("Subject: HTML to Mime-HTML" + System.lineSeparator());
         m_strMHT.append("Date: " + getDate() + System.lineSeparator());
         m_strMHT.append(System.lineSeparator() + System.lineSeparator());
         
@@ -630,7 +628,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
         m_strMHT.append("Content-Type: Text/HTML" + System.lineSeparator());
         m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-        m_strMHT.append("Content-Location: file://C:" + commonUtil.separator + "test.html" + System.lineSeparator());
+        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.htm" + System.lineSeparator());
         m_strMHT.append(System.lineSeparator());
         
         byte[] arr = strHtml.getBytes("UTF-8");
@@ -638,7 +636,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
         m_strMHT.append(strMhtBase64 + System.lineSeparator());
         m_strMHT.append("--" + m_strBoundary);
-        
     }
 	
 	/**
@@ -801,7 +798,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         if (strHTML.trim().length() > 0) {
         	return strHTML;
         } else {
-        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type><META name=GENERATOR content=\"MSHTML 8.00.7601.17622\"></HEAD><STYLE title=ezform_style_1>P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
+        	return "<HTML><HEAD><TITLE></TITLE><META content=\"text/html; charset=utf-8\" http-equiv=Content-Type></HEAD><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; *font-size:x-small; } </STYLE><BODY></BODY></HTML>";
         }
 	}
 	

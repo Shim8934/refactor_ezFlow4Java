@@ -165,20 +165,20 @@
 		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
 		            document.getElementById("AddDel").style.display = "";
 
-		            for (var i = 1; i < (pCassNo.split("|").length + 1) ; i++) {
+		            for (var i = 1; i < (pCassNo.split("@").length + 1) ; i++) {
 		                if (i > 1) {
 		                    oRow = document.getElementById("CAS_NO_LIST").insertRow(-1);
 		                    oRow.style.backgroundColor = "#FFFFFF";
 		                    oCell01 = oRow.insertCell(-1);
 		                    oCell01.align = "left";
 		                    oCell01.valign = "middle";
-		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" value= " + pCassNo.split("|")[(i - 1)] + " name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />"
+		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" value= " + pCassNo.split("@")[(i - 1)] + " name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />"
 		                }
 		                else {
-		                    document.getElementById("cas_no1").value = pCassNo.split("|")[(0)];
+		                    document.getElementById("cas_no1").value = pCassNo.split("@")[(0)];
 		                }
 		            }
-		            document.getElementById("cnt").value = pCassNo.split("|").length;
+		            document.getElementById("cnt").value = pCassNo.split("@").length;
 		        }
 		    }
 
@@ -278,11 +278,11 @@
 		        for (var i = 1; i < (cnt + 1) ; i++) {
 		            if (document.getElementById("cas_no" + i)) {
 		                if (document.getElementById("cas_no" + i).value.trim() != "") {
-		                    if (document.getElementById("cas_no" + i).value.indexOf("|") > -1) {
+		                    if (document.getElementById("cas_no" + i).value.indexOf("@") > -1) {
 		                        ret = "false ";
 		                        break;
 		                    }
-		                    ret += document.getElementById("cas_no" + i).value.trim() + "|";
+		                    ret += document.getElementById("cas_no" + i).value.trim() + "@";
 		                }
 		            }
 		        }
@@ -617,7 +617,7 @@
 		        listview.AddDataRow(objTr, Resultxml);
 
 		        ChangedHeader = true;
-		        alert("<spring:message code='ezBoard.t999063'/>")
+		        alert("<spring:message code='ezBoard.t999063'/>");
 		    }
 
 		    function CheckDuplication(pString, pID, pCell) {
@@ -714,10 +714,10 @@
 		        createNodeAndInsertText(xmlpara, objRoot, "BOARDID", pBoardID);
 
 		        //ITEMID는 필수.
-		        createNodeAndInsertText(xmlpara, objRoot, "NAME1", "CHECK");
-		        createNodeAndInsertText(xmlpara, objRoot, "NAME2", "CHECK");
-		        createNodeAndInsertText(xmlpara, objRoot, "WIDTH", "20");
-		        createNodeAndInsertText(xmlpara, objRoot, "COLNAME", "ITEMID");
+// 		        createNodeAndInsertText(xmlpara, objRoot, "NAME1", "CHECK");
+// 		        createNodeAndInsertText(xmlpara, objRoot, "NAME2", "CHECK");
+// 		        createNodeAndInsertText(xmlpara, objRoot, "WIDTH", "20");
+// 		        createNodeAndInsertText(xmlpara, objRoot, "COLNAME", "ITEMID");
 
 		        for (var i = 0; i < tr.length; i++) {
 		            if (CrossYN()) {
@@ -755,7 +755,7 @@
 		                Retval = false
 		                break;
 		            }
-		            TableCols = tr[i].getAttribute("DATA1") + "|";
+		            TableCols = tr[i].getAttribute("DATA1") + "@";
 		        }
 		        return Retval;
 		    }
@@ -810,7 +810,7 @@
 		    }
 	    </script>
 	</head>
-	<body class="popup" style="overflow-x:hidden">		
+	<body class="popup" style="overflow-x:hidden;">		
 		<xml id="ExtensionList" style="display:none">
 			<LISTVIEWDATA>
 				<HEADERS>

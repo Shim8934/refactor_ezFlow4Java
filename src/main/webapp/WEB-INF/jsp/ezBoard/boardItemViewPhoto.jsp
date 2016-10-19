@@ -1202,7 +1202,7 @@
 		            <tr>
 		                <th ><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="7">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; height:30px;" >${boardItem.mainContent}</div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;" >${boardItem.mainContent}</div>
 		                </td>
 		            </tr>
 		          </table>

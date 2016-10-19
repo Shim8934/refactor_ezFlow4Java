@@ -126,8 +126,7 @@
 			    else {
 			        PhotoBoard = "Y";
 			    }
-			    try {
-			    } catch (e) { }
+	
 			    if (pReservedItem != "true") document.getElementById("reservation_date").style.display = "none";
 			    if ((pMode == "modify" || pMode == "temp" || pMode == "boardContent" || pMode == "boardAttach") && strAttachments != "") {
 			        pAttachListXml = MakeAttachList();
@@ -156,21 +155,29 @@
 			        btn_PostDate_Clear();
 			    } else {
 			        if (pReservedItem != "true") $("#Sdatepicker").datepicker('setDate', "");
-			
+
 			        if(pMode != "boardContent" && pMode != "boardAttach")
 			        {
 			            //추가항목
 			            try {
 			            	if("${fn:length(boardAttributeListVO)}" > 0){
-			            		$.each(["${boardAttributeListVO}"],function(VOIndex, VO){
-			            			if(VO.colType == "radio"){
-			            				SetRadioVal(VO.tableCol, ConvMakeXMLString(VO.tableCol));
-			            			}else if(VO.colType == "text"){
-			            				document.getElementById(VO.tableCol).value = ConvMakeXMLString(VO.tableCol);
-			            			}else if(VO.colType == "check"){
-			            				SetCheckVal(VO.tableCol, ConvMakeXMLString(VO.tableCol));
+			    				var colType = new Array();
+			    				var tableCol = new Array();
+			    				
+			    				<c:forEach items="${boardAttributeListVO}" var = "item" >
+			    					colType.push("${item.colType}");
+			    					tableCol.push("${item.tableCol}");
+			    				</c:forEach>
+			    				
+			    				for (var i = 0; i < colType.length;i++){
+			            			if(colType[i] == "radio") {
+			            				SetRadioVal(tableCol[i], ConvMakeXMLString(tableCol[i]));
+			            			} else if(colType[i] == "text") {
+			            				document.getElementById(tableCol[i]).value = ConvMakeXMLString(tableCol[i]);
+			            			} else if(colType[i] == "check") {
+			            				SetCheckVal(tableCol[i], ConvMakeXMLString(tableCol[i]));
 			            			}
-			            		});
+			    				}
 			            	}
 			            }
 			            catch (e) { }
@@ -425,13 +432,24 @@
 		        }
 		
 		        //추가항목
-				var list = "${boardAttributeListVO}";
-		        $.each([list],function(VOIndex, VO){
-		        	if(VO.must == "Y"){
-		        		if(VO.colType == "radio"){
-		        			if(GetRadioVal(VO.tableCol) == ""){
+				var must = new Array();
+				var colType = new Array();
+				var colName1 = new Array();
+				var tableCol = new Array();
+				
+				<c:forEach items="${boardAttributeListVO}" var = "item" >
+					colType.push("${item.colType}");
+					must.push("${item.must}");
+					colName1.push("${item.colName1}");
+					tableCol.push("${item.tableCol}");
+				</c:forEach>
+				
+				for (var i = 0; i < colType.length;i++){
+					if(must[i] == "Y"){
+		        		if(colType[i] == "radio"){
+		        			if(GetRadioVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.colName1 + strLang79);
+	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
 		        		}else if(VO.colType == "text"){
@@ -447,11 +465,13 @@
 	                            return;
 		        			}
 		        		}
-		        	}
-		        });
+		        	}	
+				}
+
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
+		        
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
@@ -657,15 +677,25 @@
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 
-		        $.each(["${boardAttributeListVO}"],function(VOIndex, VO){
-		        	if(VO.colType == "radio"){
-		        		saveData.VO.tableCol = GetRadioVal(VO.tableCol);
-		        	}else if(VO.colType == "text"){
-		        		saveData.VO.tableCol = document.getElementById(VO.tableCol).value;
-		        	}else if(VO.colType == "check"){
-		        		saveData.VO.tableCol = GetCheckVal(VO.tableCol);
+		        
+				var colType = new Array();
+				var tableCol = new Array();
+				
+				<c:forEach items="${boardAttributeListVO}" var = "item" >
+					colType.push("${item.colType}");
+					tableCol.push("${item.tableCol}");
+				</c:forEach>
+				
+				for (var i = 0; i < colType.length;i++){
+		        	if(colType[i] == "radio") {
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetRadioVal(tableCol[i]));
+		        	} else if(colType[i] == "text") {
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,document.getElementById(tableCol[i]).value);
+		        	} else if(colType[i] == "check") {
+		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase() ,GetCheckVal(tableCol[i]));
 		        	}
-		        });
+				}
+
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
@@ -1815,8 +1845,8 @@
              					<c:choose>
              						<c:when test="${boardAttributeVO.colType == 'radio'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${boardAttributeVO.value.split('|').length}" step="1" varStatus="status">
-							                    <input type="radio" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('|')[status.index]}" />${boardAttributeVO.value.split('|')[status.index]}
+						                	<c:forEach begin="0" end="${fn:length(boardAttributeVO.value.split('@')) - 1}" step="1" varStatus="status">
+							                    <input type="radio" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('@')[status.index]}" />${boardAttributeVO.value.split('@')[status.index]}
 						                	</c:forEach>
 						                </td>
              						</c:when>
@@ -1827,8 +1857,8 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${boardAttributeVO.value.split('|').length}" step="1" varStatus="status">
-							                    <input type="checkbox" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('|')[status.index]}" />${boardAttributeVO.value.split('|')[status.index]}
+						                	<c:forEach begin="0" end="${fn:length(boardAttributeVO.value.split('@')) - 1}" step="1" varStatus="status">
+							                    <input type="checkbox" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('@')[status.index]}" />${boardAttributeVO.value.split('@')[status.index]}
 						                	</c:forEach>
 						                </td>
              						</c:when>

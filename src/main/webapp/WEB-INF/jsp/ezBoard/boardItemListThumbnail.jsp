@@ -117,6 +117,7 @@
 		    var endtime;
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
+		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';

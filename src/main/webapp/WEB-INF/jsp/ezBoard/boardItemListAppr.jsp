@@ -581,7 +581,6 @@
 		    }
 		
 		    function checkBox_checkAll(obj) {
-		
 		        var SelList = new ListView();
 		        SelList.LoadFromID("BoardList");
 		        var oArrRows = SelList.GetSelectedRows();
@@ -844,7 +843,7 @@
 	            alert("<spring:message code='ezBoard.t57'/>");
 	            return;
 	        }
-	
+	        
 	        var strItemList = "";
 	        arrList = strListInfo.split(";");
 	        for (i = 0; i < arrList.length - 1; i++) {
@@ -852,12 +851,12 @@
 	        }
 	        
 	        if (pFlag == "C") {
-	            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strListInfo + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+	            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        else {
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strListInfo + "&mode=" + pFlag, false);
+	            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
 	            xmlhttp.send();
 	
 	            if (xmlhttp.responseText == "OK") {
@@ -869,7 +868,7 @@
 	                if (CurPage == totalPage) {
 	                    var SelList = new ListView();
 	                    SelList.LoadFromID("BoardList");
-	                    var DeleteCount = strListInfo.split(';').length - 1;
+	                    var DeleteCount = strItemList.split(';').length - 1;
 	                    if (SelList.GetRowCount() == DeleteCount) {
 	                        CurPage = CurPage - 1;
 	                    }
