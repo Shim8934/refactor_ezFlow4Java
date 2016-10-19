@@ -136,4 +136,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void delSliderImage(String v_SLIDERID) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELSLIDERIMAGE", v_SLIDERID);
 	}
+	
+	public void deleteQuickLinkID(String quickLinkID) throws Exception {
+		delete("EzPersonalAdmin.deleteQuickLinkID", quickLinkID);
+	}
 }

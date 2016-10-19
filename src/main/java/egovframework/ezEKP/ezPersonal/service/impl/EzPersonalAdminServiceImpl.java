@@ -202,6 +202,10 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL"); 
 		}
 		
+		if (pMode.equals("modify")) {
+			ezPersonalAdminDAO.deleteQuickLinkID(pQuickLinkID);
+		}
+		
 		for (int i = 0; i < doc.getElementsByTagName("node").getLength(); i++) {
 			String accessName = doc.getElementsByTagName("node").item(i).getChildNodes().item(0).getTextContent();
 			String accessID = doc.getElementsByTagName("node").item(i).getChildNodes().item(1).getTextContent();

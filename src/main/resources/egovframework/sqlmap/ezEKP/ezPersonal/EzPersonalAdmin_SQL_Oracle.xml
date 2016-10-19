@@ -196,4 +196,13 @@
 		]]>	
 	</procedure>
 	
+	<delete id="EzPersonalAdmin.deleteQuickLinkID" parameterClass="String">
+		<![CDATA[
+			DELETE
+				 EZPERSONAL.TBLQUICKLINK_ACL
+			WHERE
+				QUICKLINKID = #quickLinkID#
+		]]>
+	</delete>
+	
 </sqlMap>
