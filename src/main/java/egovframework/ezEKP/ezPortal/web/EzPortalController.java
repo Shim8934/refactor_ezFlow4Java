@@ -1563,53 +1563,39 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pAccessID = userInfo.getId() + "," + reversePath + "everyone";
 		
 		for (int j=0; j<pAccessID.split("\\,").length; j++) {
-			PersonalGetQuickLinkMenuVO getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim());
-
-			if (getQuickLinkMenu != null) {
+			List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim());
+			for (int k=0; k<getQuickLinkMenu.size(); k++) {
 				boolean TF = true;
-				if (getQuickLinkMenu != null && getQuickLinkMenu.getView_Flag().equals("N")) {
-					noViewArrayID[noViewCnt] = getQuickLinkMenu.getQuickLinkID();
+				if (getQuickLinkMenu.get(k) != null && getQuickLinkMenu.get(k).getView_Flag().equals("N")) {
+					noViewArrayID[noViewCnt] = getQuickLinkMenu.get(k).getQuickLinkID();
 					noViewCnt++;
 				} else {
 					for (int z=0; z < noViewCnt; z++) {
-						if (noViewArrayID != null && noViewArrayID[z].equals(getQuickLinkMenu.getQuickLinkID())) {
+						if (noViewArrayID != null && noViewArrayID[z].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
 							TF = false;
 							break;
 						}
 					}
-					
+						
 					for (int i=0; i < cnt; i++) {
-						if (arrayID[i] != null && arrayID[i].equals(getQuickLinkMenu.getQuickLinkID())) {
+						if (arrayID[i] != null && arrayID[i].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
 							TF = false;
 							break;
 						}
 					}
 
 					if (TF) {
-						arrayID[cnt] = getQuickLinkMenu.getQuickLinkID();
+						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
 						cnt ++;
-						result.append("<ROW>");
-						
-						for (Field field : getQuickLinkMenu.getClass().getDeclaredFields()) {
-							field.setAccessible(true);
-							String data = String.valueOf(field.get(getQuickLinkMenu));
-							
-							if(data == null || data.equals(null) || data.equals("null")){
-								data = "";
-							}	
-							result.append("<" + field.getName().toUpperCase() + ">");
-							result.append(commonUtil.cleanValue(data));
-							result.append("</" + field.getName().toUpperCase() + ">");
-						}
-						result.append("</ROW>");
+						result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
 					}
 				}
 			}
 		}
 		result.append("</DATA>");
+		logger.debug("quickLinkXML="+result.toString());
 		return result.toString();
 	}
-	
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수

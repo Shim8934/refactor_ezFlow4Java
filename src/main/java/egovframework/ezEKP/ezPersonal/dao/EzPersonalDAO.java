@@ -58,6 +58,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalGetWebPartVO>) list("EzPersonalDAO.getUserWebPart", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID) {
+		return (List<PersonalGetQuickLinkMenuVO>) list("EzPersonalDAO.getQuickLinkMenu", accessID);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
 	}
@@ -68,10 +73,6 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq) {
 		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
-	}
-	
-	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) {
-		return (PersonalGetQuickLinkMenuVO) select("EzPersonalDAO.getQuickLinkMenu", accessID);
 	}
 	
 	public String getPassword (String cn) {

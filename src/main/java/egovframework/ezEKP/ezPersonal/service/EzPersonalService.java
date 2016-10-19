@@ -25,13 +25,13 @@ public interface EzPersonalService {
 	
 	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL) throws Exception;
 	
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID) throws Exception;
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
 	
 	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq) throws Exception;
-	
-	public PersonalGetQuickLinkMenuVO getQuickLinkMenu (String accessID) throws Exception;
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
 

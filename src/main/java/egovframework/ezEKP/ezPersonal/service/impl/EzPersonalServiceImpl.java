@@ -178,7 +178,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public PersonalGetQuickLinkMenuVO getQuickLinkMenu(String accessID) throws Exception {
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu(String accessID) throws Exception {
 		return ezPersonalDAO.getQuickLinkMenu(accessID);
 	}
 	
