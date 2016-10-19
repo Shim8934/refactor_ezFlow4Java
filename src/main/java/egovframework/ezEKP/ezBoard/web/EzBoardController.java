@@ -2592,7 +2592,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("MAINCONTENT")) + "</DATA12>");
+					resultXML.append("<DATA12>" + boardListItem.get(j).get("MAINCONTENT") + "</DATA12>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue(boardListItem.get(j).get("TITLE").toString()) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
