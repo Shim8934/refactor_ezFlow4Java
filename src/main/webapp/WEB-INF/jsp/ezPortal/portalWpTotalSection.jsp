@@ -554,7 +554,7 @@
 						window.open("/myoffice/main/index_myoffice.aspx?funCode=4", "main");
 						break;
 				    case "ModInfo":
-				        window.open("/myoffice/main/index_environment.aspx?funCode=1", "main");
+				        window.open("/ezPortal/environmentMain.do?funCode=1", "main");
 				        break;
 					
 				}
@@ -597,16 +597,16 @@
 		                    var left = (width - wWeight) / 2;
 		                    var top = (heigth - wHeight) / 2;
 		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/myoffice/ezschedule/schedule_write_Cross.aspx?defaultid=0", "",
+		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
 		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                    }
 		                    else {
 		                        if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                            window.open("/myoffice/ezschedule/schedule_write_Cross.aspx?defaultid=0", "",
+		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
 		                                     "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                        }
 		                        else {
-		                            window.open("/myoffice/ezschedule/schedule_write_IE.aspx?defaultid=0", "",
+		                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
 		                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                        }
 		                    }
