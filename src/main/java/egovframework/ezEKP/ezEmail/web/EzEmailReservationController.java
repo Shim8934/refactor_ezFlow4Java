@@ -429,6 +429,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
 		model.addAttribute("subject", subject);
+		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
 		model.addAttribute("body", body);
 		model.addAttribute("attachCK", attachCK);
 		model.addAttribute("pCDOMessageID", pCDOMessageID);

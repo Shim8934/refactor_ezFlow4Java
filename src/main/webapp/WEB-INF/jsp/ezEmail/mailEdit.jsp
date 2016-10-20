@@ -760,7 +760,7 @@
 		          </tr>
 		          <tr>
 		            <th style="text-align:center"><spring:message code='ezEmail.t98' /></th>
-		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${subject}" TABINDEX="4" style="WIDTH:99%"></td>
+		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${encodedSubject}" TABINDEX="4" style="WIDTH:99%"></td>
 		          </tr>
 		        </table>
 		        <div id="messageBody" mbody="${body}" style="DISPLAY:none"></div>
