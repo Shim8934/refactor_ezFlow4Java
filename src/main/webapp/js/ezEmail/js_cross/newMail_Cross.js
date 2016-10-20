@@ -1071,14 +1071,24 @@ function event_SaveonClick() {
                 }
                 else {
                     if (event_SaveonClick.savemode == "tempsave") {
+                        var prevUrl = g_url;
+                        
                         if (!CrossYN()) {
                             g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
                         }
                         else if (CrossYN()) {
                         	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
-//                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
                         }
 
+                        if (Org_cmd == "EDIT") {
+                            // 메시지가 새롭게 생성되었으므로 새 메시지의 UID로 인라인 다운로드 링크를 변경한다.
+                            var curValue = "&amp;uid=" + prevUrl + "&amp;"
+                            var newValue = "&amp;uid=" + g_url + "&amp;"
+                            var re = new RegExp(curValue, "g");
+                            g_originalHTML = g_originalHTML.replace(re, newValue);
+                            message.SetEditorContent(g_originalHTML);
+                        }
+                        
                         g_orgurl = g_url;
                         g_saveHttp = null;
                         g_cmd = "EDIT";
