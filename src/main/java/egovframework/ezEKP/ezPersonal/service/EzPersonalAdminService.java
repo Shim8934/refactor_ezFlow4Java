@@ -68,7 +68,7 @@ public interface EzPersonalAdminService {
 
 	void deleteSlider(String sliderID) throws Exception;
 
-	
+	void delQuickLink(String quickLinkID) throws Exception;
 
 	
 

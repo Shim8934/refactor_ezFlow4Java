@@ -482,6 +482,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	public void deleteSlider(String sliderID) throws Exception {
 		ezPersonalAdminDAO.delSliderImage(sliderID);
 	}
+	
+	@Override
+	public void delQuickLink(String quickLinkID) throws Exception {
+		ezPersonalAdminDAO.delQuickLink(quickLinkID);
+	}
 
 	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

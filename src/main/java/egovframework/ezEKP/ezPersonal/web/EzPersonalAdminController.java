@@ -1021,4 +1021,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			return "ERROR";
 		}
 	}
+	
+	/**
+	 * 초기화면 QuickLink 삭제 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String  delQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		Document doc = commonUtil.convertStringToDocument(data);
+System.out.println("quickLinkID:"+doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent());
+		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent());
+		return "OK";
+	}
 }

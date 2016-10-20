@@ -140,4 +140,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void deleteQuickLinkID(String quickLinkID) throws Exception {
 		delete("EzPersonalAdmin.deleteQuickLinkID", quickLinkID);
 	}
+	
+	public void delQuickLink(String quickLinkID) throws Exception {
+		delete("EzPersonalAdmin.delQuickLink", quickLinkID);
+	}
+	
+	
 }

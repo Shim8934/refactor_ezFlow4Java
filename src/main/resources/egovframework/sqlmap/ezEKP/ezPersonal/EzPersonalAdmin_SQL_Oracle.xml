@@ -196,6 +196,12 @@
 		]]>	
 	</procedure>
 	
+	<procedure id="EzPersonalAdmin.delQuickLink"			parameterClass="String">
+		<![CDATA[
+			{CALL EZPERSONAL.EZSP_DELQUICKLINK(#v_QUICKLINKID#)}
+		]]>	
+	</procedure>
+	
 	<delete id="EzPersonalAdmin.deleteQuickLinkID" parameterClass="String">
 		<![CDATA[
 			DELETE
