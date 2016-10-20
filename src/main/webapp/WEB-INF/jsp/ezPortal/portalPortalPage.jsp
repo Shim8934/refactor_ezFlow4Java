@@ -423,8 +423,8 @@
 							strXML += "<TYPE>0</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
-							strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
-							strXML += "<DISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</DISPLAYNAME>";
+							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							strXML += "<PORTLETDISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</PORTLETDISPLAYNAME>";
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
@@ -440,8 +440,8 @@
 							strXML += "<TYPE>1</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
-							strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
-							strXML += "<DISPLAYNAME>" + tdsub_item.getAttribute("pageuid") + "</DISPLAYNAME>";
+							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							strXML += "<PORTLETDISPLAYNAME>" + tdsub_item.getAttribute("pageuid") + "</PORTLETDISPLAYNAME>";
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";
@@ -615,7 +615,6 @@
 		    // 영역 선택시 처리selectcell
 
 		function selectcell(e) {
-alert("??");
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    if (Element.getAttribute("id") == "") return;
@@ -899,7 +898,7 @@ alert("??");
 		    } else {
 				var ret = window.showModalDialog("/ezPortal/portletSearch.do", pGubunFlag, "dialogHeight:410px; dialogWidth:350px; status:no;scroll:auto; help:no; edge:sunken");
 				if (typeof(ret) == "undefined") return;
-alert("ret:"+ret);
+
 				if (CheckDuplicate(ret[0])) {
 					alert("<spring:message code='ezPortal.t293'/>");
 					return;
@@ -1383,7 +1382,7 @@ alert("ret:"+ret);
 			strHTML += "<TD id='td0" + GetGUID().substr(0,3) + "' vAlign=top><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>";
 			strHTML += "<TBODY><TR style='WIDTH: 100%; HEIGHT: 10px' onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR></tbody>";
 			strHTML += "</table></td></tr></table>";
-alert(strHTML);
+
 			//alert(eval(selectedCell).children[0].children[0].children.length);
 			var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 			newrow.style.width = "100%";
