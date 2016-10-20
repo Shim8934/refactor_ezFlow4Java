@@ -5661,6 +5661,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 게시판 게시판트리 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/writeBoardSelect.do")
+	public String writeBoardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String useEditor = config.getProperty("config.EDITOR");
+		
+		model.addAttribute("useEditor", useEditor);
+		
+		return "ezBoard/boardWriteSelect";
+	}
+	
+	/**
 	 * 게시판 게시판정보 표출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardInfo.do", produces = "text/xml; charset=utf-8")

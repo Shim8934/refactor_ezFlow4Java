@@ -660,7 +660,7 @@
 
 		                var left = (width - wWeight) / 2;
 		                var top = (heigth - wHeight) / 2;
-		                window.open("/ezBoard/writeBoardSelectModal.do", "",
+		                window.open("/ezBoard/writeBoardSelect.do", "",
 		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
 		        }
