@@ -950,6 +950,14 @@ function MailSend_Hidden_Progress() {
 
 function event_SaveonClick() {
     if (g_saveHttp != null && g_saveHttp.readyState == 4) {
+    	if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
+        	alert(strLang367);
+            MailSend_Hidden_Progress();
+            g_saveHttp = null;
+            MailStatus = "NO";
+            return false;
+        }
+    	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
         if (!CrossYN()) {
