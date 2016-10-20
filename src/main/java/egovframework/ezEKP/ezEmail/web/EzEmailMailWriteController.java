@@ -2178,7 +2178,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								
 								while (true) {
 								    // Part가 Related Part일 경우의 처리
-    								if (p.isMimeType("multipart/related")) {
+    								if (alternativePart != null && p.isMimeType("multipart/related")) {
     								    logger.debug("Part is multipart/related");
     								    
     									hasAttach = true;
@@ -2188,12 +2188,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     									if (relatedPart == null) {
     										relatedPart = new MimeMultipart("related");
     										    							
-    										if (alternativePart != null) {
-        					                    MimeBodyPart wrap = new MimeBodyPart();
-        					                    wrap.setContent(relatedPart);
-        					                    alternativePart.removeBodyPart(1);
-        					                    alternativePart.addBodyPart(wrap, 1);
-    										}
+    					                    MimeBodyPart wrap = new MimeBodyPart();
+    					                    wrap.setContent(relatedPart);
+    					                    alternativePart.removeBodyPart(1);
+    					                    alternativePart.addBodyPart(wrap, 1);
     									}
     									// new related part is already created by the above routine
     									// for adding new in-line images.
@@ -2229,7 +2227,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     									removeUnusedInlineImagePart(relatedPart);
     								}
     								// Part가 Alternative Part일 경우의 처리
-    								else if (p.isMimeType("multipart/alternative")) {
+    								else if (alternativePart != null && p.isMimeType("multipart/alternative")) {
     								    logger.debug("Part is multipart/alternative");
     								    
     								    hasAttach = true;
@@ -2307,39 +2305,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							    logger.debug("oldMessage is multipart/related");
 								logger.debug("relatedPart=" + relatedPart);
 								
-								// 새로 추가되는 이미지 파트들을 추가한다.
-								// 기존 메시지의 이미지 파트들은 위에서 이미 mixedPart에 추가되어 있다.
-								// a new related part is already created by the above routine
-								// for adding new in-line images.						
-								if (relatedPart != null) {
-									relatedPart.removeBodyPart(0);
-									
-									BodyPart relatedSubPart = null;
-									for (int i = 0; i < relatedPart.getCount(); i++) {
-										relatedSubPart = relatedPart.getBodyPart(i);
-										mixedPart.addBodyPart(relatedSubPart);
-									}
-								}
-								
-								// 기존 메시지가 Related Part인 경우는 첨부파일이 없는 경우이므로 mixed가 아니다.
-								// this mixedPart is actually a related part.
-								mixedPart.setSubType("related");
-								
-								String bodyContent = content.getContent().toString();
-								bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);							
-								content.setContent(bodyContent, "text/html; charset=utf-8");							
-								mixedPart.addBodyPart(content, 0);
-								
-								removeUnusedInlineImagePart(mixedPart);
-								
-                                if (alternativePart != null) {
+                                if (alternativePart != null) {								
+    								// 새로 추가되는 이미지 파트들을 추가한다.
+    								// 기존 메시지의 이미지 파트들은 위에서 이미 mixedPart에 추가되어 있다.
+    								// a new related part is already created by the above routine
+    								// for adding new in-line images.						
+    								if (relatedPart != null) {
+    									relatedPart.removeBodyPart(0);
+    									
+    									BodyPart relatedSubPart = null;
+    									for (int i = 0; i < relatedPart.getCount(); i++) {
+    										relatedSubPart = relatedPart.getBodyPart(i);
+    										mixedPart.addBodyPart(relatedSubPart);
+    									}
+    								}
+    								
+    								// 기존 메시지가 Related Part인 경우는 첨부파일이 없는 경우이므로 mixed가 아니다.
+    								// this mixedPart is actually a related part.
+    								mixedPart.setSubType("related");
+    								
+    								String bodyContent = content.getContent().toString();																
+                                    bodyContent = convertDownloadInlineImageURLtoCid(bodyContent);                          
+                                    content.setContent(bodyContent, "text/html; charset=utf-8");                            
+                                    mixedPart.addBodyPart(content, 0);
+                                    
+                                    removeUnusedInlineImagePart(mixedPart);
+                                                                        
                                     MimeBodyPart wrap = new MimeBodyPart();
                                     wrap.setContent(mixedPart);
                                     alternativePart.removeBodyPart(1);
                                     alternativePart.addBodyPart(wrap, 1);                                                                               
-                                } else {
-                                    message.setContent(mixedPart);
-                                }
+                                } 
 							}
 						}					
 					}
