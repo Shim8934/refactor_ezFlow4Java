@@ -124,7 +124,7 @@
 	
 	            xmlhttp = null;
 	            xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "aspx/DelQuickLink.aspx", false);
+	            xmlhttp.open("POST", "/admin/ezPersonal/delQuickLink.do", false);
 	            xmlhttp.send(xmlpara);
 	
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {
