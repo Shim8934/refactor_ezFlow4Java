@@ -576,7 +576,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 					}
 				}
 				
-				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.valueOf(temp));
+				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
 			
 			subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);

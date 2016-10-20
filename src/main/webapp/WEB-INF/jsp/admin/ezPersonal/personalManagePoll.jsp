@@ -117,7 +117,7 @@
 		        var left = (width - 455) / 2;
 		        var top = (heigth - 400) / 2;
 		
-		        window.open("/admin/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
+		        window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 		    }
 		    
 		    function company_change() {
