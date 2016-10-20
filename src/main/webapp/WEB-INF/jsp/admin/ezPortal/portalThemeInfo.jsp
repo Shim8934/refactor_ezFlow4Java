@@ -196,7 +196,6 @@
             }
         }
         function returnvalue(strXML) {
-alert(strXML);
             var xml = loadXMLString(strXML);
             var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
             for (i = 0; i < nodes.length; i++) {
