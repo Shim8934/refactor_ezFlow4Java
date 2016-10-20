@@ -372,10 +372,17 @@ function download_mail() {
 var address_foldermanage_dialogArguments = new Array();
 function func_addaddr(stype) {
     var ret;
-    address_foldermanage_dialogArguments[1] = func_addaddr_Complete;
+    address_foldermanage_dialogArguments[1] = timedCall_func_addaddr_Complete;
     address_foldermanage_dialogArguments[3] = stype;
     DivPopUpShow(450, 500, "/ezAddress/addressFolderManage.do?mode=Show");
 }
+
+function timedCall_func_addaddr_Complete(ret) {
+	setTimeout(function() {
+		func_addaddr_Complete(ret);
+	}, 1000);
+}
+
 function func_addaddr_Complete(ret) {
     try {
         DivPopUpHidden();
