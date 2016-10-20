@@ -91,7 +91,7 @@ public class EzEmailMailListController {
 			Locale locale,
 			HttpServletRequest request,
 			Model model) throws Exception {
-		logger.debug("showMailList started");
+		logger.debug("showMailList started.");
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
@@ -157,7 +157,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
 		
-		logger.debug("showMailList ended");
+		logger.debug("showMailList ended.");
 		
 		return "ezEmail/mailList";
 	}
@@ -168,7 +168,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("getMailList started");		
+		logger.debug("getMailList started.");		
 		logger.debug("bodyData=" + bodyData);
 		
 		// get user credentials
@@ -498,7 +498,6 @@ public class EzEmailMailListController {
 		      
 			folder.close(false);
 			
-//			String returnData = "<maillist><contentrange>0-29</contentrange><response><href><![CDATA[AAMkAGJiNjA1ZTYwLWU3NjItNDA1Yi05NWNhLWU0MjdjYTYwODhiYwBGAAAAAAD0DJQBik2KSIR3MR2XIUsMBwAC5Z0TOjuhQ5Z/reykkEsxAAAAAAEMAAAC5Z0TOjuhQ5Z/reykkEsxAAAZAx8FAAA=]]></href><fromemail><![CDATA[]]></fromemail><importance><![CDATA[1]]></importance><flag><![CDATA[0]]></flag><attach><![CDATA[0]]></attach><sender><![CDATA[ 이동호(iPhone) ]]></sender><subject><![CDATA[Re: Local Delivery 문제 해결]]></subject><receivedt><![CDATA[2016-02-17 18:12]]></receivedt><size><![CDATA[9962]]></size><read><![CDATA[1]]></read><contentclass><![CDATA[IPM.Note]]></contentclass></response><response><href><![CDATA[AAMkAGJiNjA1ZTYwLWU3NjItNDA1Yi05NWNhLWU0MjdjYTYwODhiYwBGAAAAAAD0DJQBik2KSIR3MR2XIUsMBwAC5Z0TOjuhQ5Z/reykkEsxAAAAAAEMAAAC5Z0TOjuhQ5Z/reykkEsxAAAZAx8EAAA=]]></href><fromemail><![CDATA[]]></fromemail><importance><![CDATA[2]]></importance><flag><![CDATA[0]]></flag><attach><![CDATA[0]]></attach><sender><![CDATA[Microsoft Outlook]]></sender><subject><![CDATA[사서함이 거의 꽉 찼습니다.]]></subject><receivedt><![CDATA[2016-02-17 18:07]]></receivedt><size><![CDATA[10299]]></size><read><![CDATA[0]]></read><contentclass><![CDATA[IPM.Note.StorageQuotaWarning.Warning]]></contentclass></response><response><href><![CDATA[AAMkAGJiNjA1ZTYwLWU3NjItNDA1Yi05NWNhLWU0MjdjYTYwODhiYwBGAAAAAAD0DJQBik2KSIR3MR2XIUsMBwAC5Z0TOjuhQ5Z/reykkEsxAAAAAAEMAAAC5Z0TOjuhQ5Z/reykkEsxAAAZAx8DAAA=]]></href><fromemail><![CDATA[]]></fromemail><importance><![CDATA[1]]></importance><flag><![CDATA[0]]></flag><attach><![CDATA[0]]></attach><sender><![CDATA[이동호]]></sender><subject><![CDATA[읽음: Local Delivery 문제 해결]]></subject><receivedt><![CDATA[2016-02-17 17:30]]></receivedt><size><![CDATA[10803]]></size><read><![CDATA[1]]></read><contentclass><![CDATA[REPORT.IPM.Note.IPNRN]]></contentclass></response><response><href><![CDATA[AAMkAGJiNjA1ZTYwLWU3NjItNDA1Yi05NWNhLWU0MjdjYTYwODhiYwBGAAAAAAD0DJQBik2KSIR3MR2XIUsMBwAC5Z0TOjuhQ5Z/reykkEsxAAAAAAEMAAAC5Z0TOjuhQ5Z/reykkEsxAAAZAx8BAAA=]]></href><fromemail><![CDATA[]]></fromemail><importance><![CDATA[1]]></importance><flag><![CDATA[0]]></flag><attach><![CDATA[1]]></attach><sender><![CDATA[이동호]]></sender><subject><![CDATA[FW: 폼빌더 사용자 매뉴얼]]></subject><receivedt><![CDATA[2016-02-16 17:57]]></receivedt><size><![CDATA[2783134]]></size><read><![CDATA[1]]></read><contentclass><![CDATA[REPLY]]></contentclass></response><CONTENTRANGE><![CDATA[rows;0;29;total;4;BoxTCount;4;BoxUCount;1;]]></CONTENTRANGE></maillist>";
 			returnData = sb.toString();
 			
 		} catch (Exception e) {
@@ -509,7 +508,7 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		logger.debug("getMailList ended");
+		logger.debug("getMailList ended.");
 		
 		return returnData;		
 	}
@@ -523,7 +522,7 @@ public class EzEmailMailListController {
 			@RequestParam("cmd") String cmd,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
-		logger.debug("mailDelete started");
+		logger.debug("mailDelete started.");
 		logger.debug("cmd=" + cmd);
 		logger.debug("bodyData=" + bodyData);
 		
@@ -592,7 +591,8 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		logger.debug("mailDelete ended");
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailDelete ended.");
 		
 		return returnData;				
 	}
@@ -604,17 +604,17 @@ public class EzEmailMailListController {
 	@ResponseBody
 	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {
+		logger.debug("mailMoveCopyMessage started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		IMAPAccess ia = null;
 		
 		try {
-		
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String userId = userIdAndPassword.get(0);
 			String password = userIdAndPassword.get(1);
-			
-			logger.debug("bodyData=" + bodyData);
 			
 			Document doc = commonUtil.convertStringToDocument(bodyData);
 			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
@@ -661,6 +661,9 @@ public class EzEmailMailListController {
 			}
 		}
 		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailMoveCopyMessage ended.");
+		
 		return returnValue;
 	}
 	
@@ -672,7 +675,7 @@ public class EzEmailMailListController {
 	public String mailSetFlag(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
-		logger.debug("mailSetFlag started");
+		logger.debug("mailSetFlag started.");
 		logger.debug("bodyData=" + bodyData);
 		
 		String returnData = "";
@@ -735,7 +738,8 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		logger.debug("mailSetFlag ended");
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailSetFlag ended.");
 		
 		return returnData;				
 	}
@@ -749,7 +753,7 @@ public class EzEmailMailListController {
 	public String mailSetReadChange(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
-		logger.debug("mailSetReadChange started");
+		logger.debug("mailSetReadChange started.");
 		logger.debug("bodyData=" + bodyData);
 
 		// get user credentials
@@ -801,7 +805,8 @@ public class EzEmailMailListController {
 			}
 		}	
 		
-		logger.debug("mailSetReadChange ended");
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailSetReadChange ended.");
 		
 		return returnData;				
 	}
@@ -812,8 +817,11 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie,
-			HttpServletRequest request, Locale locale, Model model) throws Exception {
-		Document xmldom = commonUtil.convertRequestToDocument(request);
+			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("mailGetFromEmail started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String itemId = xmldom.getElementsByTagName("ITEMID").item(0).getTextContent();
 		
 		long uid = 0;
@@ -828,12 +836,14 @@ public class EzEmailMailListController {
 		
 		if (uid == 0 || folderPath == null || folderPath.trim().equals("")) {
 			logger.error("cannot get request data");
+			logger.debug("mailGetFromEmail ended.");
 			return "ERROR";
 		}
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
+		
 		IMAPAccess ia = null;
 		String resultData = "ERROR";
 		try {
@@ -864,6 +874,9 @@ public class EzEmailMailListController {
 			}
 		}
 		
+		logger.debug("resultData=" + resultData);
+		logger.debug("mailGetFromEmail ended.");
+		
 		return resultData;
 	}
 	
@@ -881,17 +894,20 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailRequestDenial.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailRequestDenial(@CookieValue("loginCookie") String loginCookie,
-			HttpServletRequest request, Locale locale, Model model) throws Exception {
+			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("mailRequestDenial started.");
+		
 		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userInfo.get(0);
-		Document xmldom = commonUtil.convertRequestToDocument(request);
 		
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
 		
 		if (nodes == null || nodes.getLength() == 0) {
 			logger.error("cannot get request data");
+			logger.debug("mailRequestDenial ended.");
 			return returnData;
 		}
 		
@@ -933,6 +949,9 @@ public class EzEmailMailListController {
 		if (object.get("resultCode") != null) {
 			returnData = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
         }
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailRequestDenial ended.");
 		
 		return returnData;
 	}

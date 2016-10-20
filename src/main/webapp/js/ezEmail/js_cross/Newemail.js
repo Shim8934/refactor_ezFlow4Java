@@ -1174,7 +1174,7 @@ function PC_Eml_FileDownload() {
     if (PcSaveArrayList[suffix].getAttribute("_href") != null) {
         var pItemID = PcSaveArrayList[suffix].getAttribute("_href");
         var pItemSubject = ConvertEntityReferenceToChar(GetAttribute(PcSaveArrayList[suffix], "_subject"));// + ".eml";
-        pItemSubject = ReplaceText(pItemSubject, "\\.", "") + ".eml";
+        pItemSubject = ReplaceText(pItemSubject, "\\.", "_") + ".eml";
         var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURIComponent(pItemSubject);
         AttachDownFrame.location.href = fullpath;
         AttachDownFrame.target = "_blank";
