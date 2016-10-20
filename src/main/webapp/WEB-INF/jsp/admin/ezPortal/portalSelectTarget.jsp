@@ -411,7 +411,7 @@
 	                M_TR_DIV.setAttribute("class", "pic");
 	                if (M_TR.getAttribute("_DATA9") != "") {
 	                    var M_TR_IMG = document.createElement("IMG");
-	                    M_TR_IMG.setAttribute("SRC", "/Upload_Personal/Photo/" + M_TR.getAttribute("_DATA9"));
+	                    M_TR_IMG.setAttribute("SRC", "/files/upload_personal/photo/" + M_TR.getAttribute("_DATA9"));
 	                    M_TR_IMG.setAttribute("width", "90px");
 	                    M_TR_IMG.setAttribute("height", "90px");
 	                    M_TR_DIV.appendChild(M_TR_IMG);
@@ -450,7 +450,7 @@
 	                    Sub_TD3.style.textAlign = "left";
 	                    var Sub_TD3_Img = document.createElement("IMG");
 	                    Sub_TD3_Img.setAttribute("class", "icon");
-	                    Sub_TD3_Img.setAttribute("src", "/images/Organtree/icon_hp.gif");
+	                    Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
 	                    Sub_TD3.appendChild(Sub_TD3_Img);
 	                    Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
 	                    Sub_TR3.appendChild(Sub_TD3);
@@ -460,7 +460,7 @@
 	                    Sub_TD4.style.textAlign = "left";
 	                    var Sub_TD4_Img = document.createElement("IMG");
 	                    Sub_TD4_Img.setAttribute("class", "icon");
-	                    Sub_TD4_Img.setAttribute("src", "/images/Organtree/icon_mail.gif");
+	                    Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
 	                    Sub_TD4.appendChild(Sub_TD4_Img);
 	                    Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
 	                    Sub_TR4.appendChild(Sub_TD4);
