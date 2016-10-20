@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.security.PrivateKey;
+import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -2592,7 +2594,20 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + boardListItem.get(j).get("MAINCONTENT") + "</DATA12>");
+					
+					//2016-10-20 CLOB 데이터를 hashMap으로 받을때, clob을 string으로 바꾸는 작업 추가
+					StringBuffer strOut = new StringBuffer();
+					String str = "";
+					Clob clob = (Clob) boardListItem.get(j).get("MAINCONTENT");
+					if (clob != null) {
+						BufferedReader br = new BufferedReader(clob.getCharacterStream());
+						while ((str = br.readLine()) != null) {
+							strOut.append(str);
+						}
+					}
+					
+					//resultXML.append("<DATA12>" + boardListItem.get(j).get("MAINCONTENT") + "</DATA12>");
+					resultXML.append("<DATA12>" + strOut.toString() + "</DATA12>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue(boardListItem.get(j).get("TITLE").toString()) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
