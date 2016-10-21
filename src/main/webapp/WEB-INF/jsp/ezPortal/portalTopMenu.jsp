@@ -132,7 +132,7 @@
 
 		    var agentObj;
 		    i_icd2.SetDocumentDisp(window.document);
-		    i_icd2.xmlURL = "http://" + document.location.hostname + "/admin/ezPortal/componentListTransfer.do";
+		    i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
 		    i_icd2.CheckVersion();
 		    var nCount = i_icd2.nNeedDownload;
 		    if (nCount) {
@@ -1419,7 +1419,6 @@
 		        var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
 
 		        window.open("/ezPersonal/personSearch.do?searchString=" + encodeURI(document.getElementById('input_search').value), "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status=no, toolbar=no, menubar=no,location=no, resizable=0");
-
 		        document.getElementById('input_search').value = '';
 		    }
 		}
