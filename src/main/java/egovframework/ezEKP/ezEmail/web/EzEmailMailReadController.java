@@ -1167,6 +1167,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
 	
 					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+                        String[] messageIds = message.getHeader("Message-ID");
+                        
+                        if (messageIds != null) {
+                            logger.debug("Message-ID=" + messageIds[0]);
+                        } else {
+                            logger.debug("No Message-ID");
+                        }
+					    
 						// send an MDN to the sender.
 						if (!ezEmailUtil.hasMDNSentFlag(message)) {
 							logger.debug("MDNSentFlag isn't set.");
