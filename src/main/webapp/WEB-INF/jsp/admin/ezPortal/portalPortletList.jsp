@@ -234,13 +234,14 @@
                 <a class="imgbtn"><span onClick="btnSearch_onClick()"><spring:message code='ezPortal.t252'/></span></a></td>
 		</tr>
 	</table>
-	<%
-		int intPage = request.getParameter("intPage") == null ? 0 : Integer.parseInt(request.getParameter("intPage"));
-		int totalPage = request.getParameter("totalPage") == null ? 0 : Integer.parseInt(request.getParameter("totalPage"));
-	%>
 	
-<div class="page"><img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" <% if (intPage != 1) { %>style="cursor:pointer"<% } %>> <spring:message code='ezPortal.t253'/><%= totalPage %><spring:message code='ezPortal.t254'/>
-  <input type="text"name="txt_PageInputNum" style="width:30px" value='<%= intPage %>' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
+	<%
+			int intPage = (request.getParameter("intPage") != null && !request.getParameter("intPage").equals(""))?Integer.parseInt(request.getParameter("intPage")) : 0;
+			int totalPage = (request.getParameter("totalPage") != null && !request.getParameter("totalPage").equals(""))?Integer.parseInt(request.getParameter("totalPage")) : 0;
+		%>
+	
+<div class="page"><img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" <% if (intPage != 1) { %>style="cursor:pointer"<% } %>> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+  <input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
   <img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')" <% if (intPage != totalPage) { %>style="cursor:pointer"<% } %>></div>
 
 		<table class="mainlist" style="width:100%">	
