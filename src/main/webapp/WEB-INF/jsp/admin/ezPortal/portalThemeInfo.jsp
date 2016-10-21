@@ -148,7 +148,8 @@
         function changeNormalImage() {
             //if (CrossYN() || (pNoneActiveX=="YES")) {
                 ImageState = "Normal";
-                document.getElementById('mode').value = "PHOTO";
+                document.getElementById('mode').value = "Theme";
+                //document.getElementById('mode').value = "PHOTO";
                 document.form.file1.click();
             //}
             /*else {
@@ -204,7 +205,8 @@
                         alert(strLang6);
                         return;
                     }
-                    if (document.getElementById('mode').value == "PHOTO") {
+                    if (document.getElementById('mode').value == "Theme") {
+                    //if (document.getElementById('mode').value == "PHOTO") {
                         if (ImageState == "Normal") {
                             if (navigator.userAgent.indexOf("Firefox") != -1) {
                             	txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
@@ -474,7 +476,7 @@
  	   <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
 	    <input type="hidden" name="boardid" id="boardid" />
 	    <input type="hidden" name="maxsize" id="maxsize" />
-	    <input type="hidden" name="mode" id="mode" value="PHOTO"/>
+	    <input type="hidden" name="mode" id="mode"/>
 	    <input type="hidden" name="cnt" id="cnt" />
 	    <input type="hidden" name="mailgubun" id="mailgubun" />
 	</form>
