@@ -62,7 +62,8 @@
 		}
 
 		function changeNormalImage() {
-	        document.getElementById('mode').value = "PHOTO";
+			//2016-10-21 mode PHOTO -> Logo로 변경
+	        document.getElementById('mode').value = "Logo";
 	        document.form.file1.click();
 		   
 		}
@@ -82,11 +83,10 @@
 			g_Dirty = true;
 		}
 		
-		function Save()
-		{
+		function Save() {
 			var strXML = "<DATA>";
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/Upload_Portal"));
-			if (normalImgPath.indexOf("/Upload_Portal") == -1) normalImgPath = "";
+			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
 			
 			strXML += "<OLDFILENAME></OLDFILENAME>";
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(document.getElementById("txtDisplayName").value) + "</DISPLAYNAME>";
@@ -214,7 +214,7 @@
 		// 로고 삭제
 		function Delete(pFileName) {
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "SaveLogoImage.aspx?pageid=" + pageid + "&uid=" + uid + "&OLDFILENAME=" + escape(pFileName) + "&mode=DEL", false);
+			xmlhttp.open("POST", "/admin/ezPortal/saveLogoImage.do?pageID=" + pageid + "&uID=" + uid + "&oldFileName=" + escape(pFileName) + "&mode=DEL", false);
 			xmlhttp.send();
 			xmlhttp = null;
 		}
@@ -245,7 +245,8 @@
 		                alert(strLang6);
 		                return;
 		            }
-		            if (document.getElementById('mode').value == "PHOTO") {
+		            //2016-10-21 mode PHOTO -> Logo로 변경
+		            if (document.getElementById('mode').value == "Logo") {
 		                if (navigator.userAgent.indexOf("Firefox") != -1)
 		                    txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                else
@@ -314,7 +315,7 @@
                         <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
                         <input type="hidden" name="boardid" id="boardid" />
                         <input type="hidden" name="maxsize" id="maxsize" />
-                        <input type="hidden" name="mode" id="mode" />
+                        <input type="hidden" name="mode" id="mode" value="Logo"/>
                         <input type="hidden" name="cnt" id="cnt" />
                         <input type="hidden" name="mailgubun" id="mailgubun" />
                     </form>
