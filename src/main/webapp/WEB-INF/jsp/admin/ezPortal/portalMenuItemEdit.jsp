@@ -357,7 +357,8 @@
 
 		function changeOverImage() {
 		        ImageState = "Over";
-		        document.getElementById('mode').value = "PHOTO";
+		        document.getElementById('mode').value = "Menu";
+		        //document.getElementById('mode').value = "PHOTO";
 		        document.form.file1.click();
 		  
 		}
