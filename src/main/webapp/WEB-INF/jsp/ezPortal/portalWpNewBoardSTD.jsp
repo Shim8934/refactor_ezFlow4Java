@@ -159,7 +159,7 @@
 							orderCell 	 : "", 
 							orderOption : ""
 	    	        	},
-	    	        	success : function(xml){		        		
+	    	        	success : function(xml){
 	    	        		getBoardList_after(xml);
 	    	        	},
 	    	        	error : function(error){
@@ -185,7 +185,6 @@
 		                var listHTML = "";
 		                var xmldom = createXmlDom();
 		                xmldom = xml;
-
 		                var RowCnt = xmldom.getElementsByTagName("ROW").length;
 
 		                if (RowCnt > 0) {
@@ -205,7 +204,6 @@
 		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(3));
 		                        else
 		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
-
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
 		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
 		                        listHTML += "<dd id='content' class='txt'></dd>";
