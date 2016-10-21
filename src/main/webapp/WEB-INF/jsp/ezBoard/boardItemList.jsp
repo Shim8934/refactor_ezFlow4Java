@@ -90,7 +90,6 @@
 		    if (url != "")
 		        window.location.href = url;
 		
-		
 		    var previewType = "TEXT";
 		    var clickPreviweType = "TEXT";
 		    var CurrentHeight = 0;
@@ -445,12 +444,12 @@
 		
 		    }
 		    function chk_onselect(obj) {
-		
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += obj.id.split(",")[0] + ";";
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, obj.id.split(",")[0] + ";", "");
 		        }
+		        
 		        listEventCheckbox = true;
 		    }
 		    var BlockSize = 10;

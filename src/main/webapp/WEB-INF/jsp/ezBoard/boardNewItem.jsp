@@ -661,7 +661,7 @@
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
 		            }
 		        }
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
+// 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", Base64.encode(strBody));
 
 		        if (gubun == "2")
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
@@ -696,7 +696,7 @@
 		        	}
 				}
 
-		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
+		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun + "&content=" + encodeURIComponent(strBody), false);
 		        xmlhttp.send(xmlDom);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;

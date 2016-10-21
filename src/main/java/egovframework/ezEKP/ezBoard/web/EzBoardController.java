@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +12,8 @@ import java.io.StringReader;
 import java.security.PrivateKey;
 import java.sql.Clob;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -3172,12 +3173,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/saveItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveItem(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlData, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveItem(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
 		String pMode = "";
         String gubun = "";
+        String content = "";
         String realPath = request.getServletContext().getRealPath("");
         
         if (request.getParameter("mode") != null) {
@@ -3186,8 +3188,11 @@ public class EzBoardController extends EgovFileMngUtil{
         if (request.getParameter("guBun") != null) {
         	gubun = request.getParameter("guBun");
         }
+        if (request.getParameter("content") != null) {
+        	content = request.getParameter("content");
+        }
         Document doc = commonUtil.convertStringToDocument(xmlData.toString());
-        
+
         String attachList = "";
         String smallName = "";
         String title = "";
@@ -3234,11 +3239,11 @@ public class EzBoardController extends EgovFileMngUtil{
                         pMode = "New";
                         doc.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
                     }
-                    ret = insertNewItem(doc, pMode, realPath, userInfo);
+                    ret = insertNewItem(doc, pMode, realPath, userInfo, content);
                 }
             }
         } else {
-            ret = insertNewItem(doc, pMode, realPath, userInfo);
+            ret = insertNewItem(doc, pMode, realPath, userInfo, content);
         }
 
         return "<RESULT>" + ret + "</RESULT>";
@@ -3247,7 +3252,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시물저장 실행 Method
 	 */
-	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception{
+	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo, String content) throws Exception{
 		BoardListVO boardListVO = new BoardListVO();
 
 		boolean saveMHTResult = false;
@@ -3292,8 +3297,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 		
+		
 		if (!pMode.equals("copy")) {
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			boardListVO.setMainContent(content);
 			boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 		} else {
 			boardListVO.setParentWriteDate("SYSDATE");
@@ -3392,67 +3398,57 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 mht저장 실행 Method
 	 */
-	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) {
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
 		String docPath = "";
 		String mhtFilePath = "";
+		boolean ret = true;
 		
         if (strType.equals("BOARD")) {
             strHTML = strHTML.replace("'", "''");
         }
+        
 		docPath = strFilePath + commonUtil.separator + strBoardID;
 		mhtFilePath = strMHTFilename + ".mht";
 		
+		String stordFilePathReal = docPath + commonUtil.separator + "doc";
+		
+		File file = new File(realPath + docPath);
+		
+		if (!file.exists()) {
+			boolean _flag = file.mkdirs();
+			file = new File(realPath + stordFilePathReal);
+			file.mkdirs();
+			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file.mkdirs();
+			
+			if (!_flag) {
+			    throw new IOException("Directory creation Failed ");
+			}
+		}
+		
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = docPath + commonUtil.separator + "doc";
+		
 		try {
-		    stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-		    File cFile = new File(realPath + docPath);
-		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdir();
-				cFile = new File(realPath + stordFilePathReal);
-				cFile.mkdir();
-				cFile = new File(realPath + docPath + commonUtil.separator + "uploadFile");
-				cFile.mkdir();
-				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
-				}
-		    }
-	
-		    bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
-	
-		    int bytesRead = 0;
-		    byte[] buffer = new byte[BUFF_SIZE];
-	
-		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-		    	bos.write(buffer, 0, bytesRead);
-		    }
-		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
-			return false;
-		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
-			return false;
+			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+			ret = true;
 		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
-			return false;
+			ret = false;
 		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
+			bos.close();
+			stream.close();
 		}
-		return true;
+		
+		return ret;
 	}
 
 	/**
@@ -4056,7 +4052,7 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("</NODE>");
         sb.append("</NODES>");
 
-        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo, "");
         
         if (result.equals("OK")) {
         	ezBoardService.updateCopyItem(destItemID);
@@ -4256,7 +4252,7 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("</NODE>");
         sb.append("</NODES>");
 
-        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo, "");
         
         if (result.equals("OK")) {
         	ezBoardService.updateMoveItem(destItemID, orgItemID);

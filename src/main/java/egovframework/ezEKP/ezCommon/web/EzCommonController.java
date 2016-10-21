@@ -383,7 +383,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
         		literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
         		literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(System.lineSeparator(), "<BR>");
+        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
         	}
         } else {
         	literalEmail = email;

@@ -238,7 +238,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
             }
 
-            m_strMHT.append("--" + System.lineSeparator());
+            m_strMHT.append("--" + commonUtil.CRLF);
             
             return m_strMHT.toString();
         } else {
@@ -251,13 +251,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String makeHeader(StringBuilder m_strMHT) throws Exception{
 		String m_strBoundary = createBoundary();
-        m_strMHT.append("MIME-Version: 1.0" + System.lineSeparator());
-        m_strMHT.append("Content-Type: Multipart/related;" + System.lineSeparator());
-        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"" + System.lineSeparator());
-        m_strMHT.append("From: Kaoni MHT Component(UTF-8)" + System.lineSeparator());
-        m_strMHT.append("Subject: HTML to Mime-HTML" + System.lineSeparator());
-        m_strMHT.append("Date: " + getDate() + System.lineSeparator());
-        m_strMHT.append(System.lineSeparator() + System.lineSeparator());
+        m_strMHT.append("MIME-Version: 1.0" + commonUtil.CRLF);
+        m_strMHT.append("Content-Type: Multipart/related;" + commonUtil.CRLF);
+        m_strMHT.append("  boundary=\"" + m_strBoundary + "\"" + commonUtil.CRLF);
+        m_strMHT.append("From: Kaoni MHT Component(UTF-8)" + commonUtil.CRLF);
+        m_strMHT.append("Subject: HTML to Mime-HTML" + commonUtil.CRLF);
+        m_strMHT.append("Date: " + getDate() + commonUtil.CRLF);
+        m_strMHT.append(commonUtil.CRLF + commonUtil.CRLF);
         
         return m_strBoundary;
     }
@@ -290,7 +290,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String strDate = "";
         String strweek = "";
         String strMonth = "";
-        String amPm = "";
         
         int week = calendar.get(Calendar.DAY_OF_WEEK);
         
@@ -359,13 +358,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 strMonth = "Dec";
                 break;
         }
-        if (calendar.get(Calendar.AM_PM) == 1) {
-        	amPm = "PM";
-        } else {
-        	amPm = "AM";
-        }
-	
-        strDate = strweek + ", " + calendar.get(Calendar.DATE) + " " + strMonth + " " + calendar.get(Calendar.YEAR) + " " + amPm + " " + calendar.get(Calendar.HOUR)+":"+calendar.get(Calendar.MINUTE)+":"+calendar.get(Calendar.SECOND);
+        
+        strDate = strweek + ", " + calendar.get(Calendar.DATE) + " " + strMonth + " " + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND);
 
         return strDate;
     }
@@ -625,16 +619,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 html 인코딩 실행 Method
 	 */
 	private void doHtmlEncoding(String strHtml, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
-        m_strMHT.append("--" + m_strBoundary + System.lineSeparator());
-        m_strMHT.append("Content-Type: Text/HTML" + System.lineSeparator());
-        m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.htm" + System.lineSeparator());
-        m_strMHT.append(System.lineSeparator());
+        m_strMHT.append("--" + m_strBoundary + commonUtil.CRLF);
+        m_strMHT.append("Content-Type: Text/HTML" + commonUtil.CRLF);
+        m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+        m_strMHT.append("Content-Location: file://c:" + commonUtil.separator + "test.htm" + commonUtil.CRLF);
+        m_strMHT.append(commonUtil.CRLF);
         
         byte[] arr = strHtml.getBytes("UTF-8");
         String strMhtBase64 = Base64.encodeBase64String(arr);
         
-        m_strMHT.append(strMhtBase64 + System.lineSeparator());
+        m_strMHT.append(strMhtBase64 + commonUtil.CRLF);
         m_strMHT.append("--" + m_strBoundary);
     }
 	
@@ -644,10 +638,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private void doImageEncoding(String[] m_ImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
         for (int i = 0; i < m_ImageList.length; i++) {
-            m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
-            m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif" + System.lineSeparator());
-            m_strMHT.append(System.lineSeparator());
+            m_strMHT.append(commonUtil.CRLF + "Content-Type: Image/gif" + commonUtil.CRLF);
+            m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+            m_strMHT.append("Content-Location: file:///C:/IMAGE" + (i + 1) + ".gif" + commonUtil.CRLF);
+            m_strMHT.append(commonUtil.CRLF);
             //이미지 본문 영역
 
             String strTemp = m_ImageList[i].substring(0, 4);
@@ -703,7 +697,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             in.close();
             byteOutStream.close();
             
-            m_strMHT.append(strImageData + System.lineSeparator());
+            m_strMHT.append(strImageData + commonUtil.CRLF);
             m_strMHT.append("--" + m_strBoundary);
             
         }
@@ -714,10 +708,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++) {
-            m_strMHT.append(System.lineSeparator() + "Content-Type: Image/gif" + System.lineSeparator());
-            m_strMHT.append("Content-Transfer-Encoding: base64" + System.lineSeparator());
-            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif" + System.lineSeparator());
-            m_strMHT.append(System.lineSeparator());
+            m_strMHT.append(commonUtil.CRLF + "Content-Type: Image/gif" + commonUtil.CRLF);
+            m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
+            m_strMHT.append("Content-Location: file:///C:/BACKGROUNDIMAGE" + (i + 1) + ".gif" + commonUtil.CRLF);
+            m_strMHT.append(commonUtil.CRLF);
             //이미지 본문 영역
             
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
@@ -750,7 +744,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             in.close();
             byteOutStream.close();
             
-            m_strMHT.append(strImageData + System.lineSeparator());
+            m_strMHT.append(strImageData + commonUtil.CRLF);
             m_strMHT.append("--" + m_strBoundary);
         }
     }
@@ -821,8 +815,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				for (int i = 1; i < m_Mimechunk.length; i++) {
-					String[] strMimeChunk = m_Mimechunk[i].split(System.lineSeparator() + System.lineSeparator());
-					String[] strMime_info_p = strMimeChunk[0].trim().split(System.lineSeparator());
+					String[] strMimeChunk = m_Mimechunk[i].split(commonUtil.CRLF + commonUtil.CRLF);
+					String[] strMime_info_p = strMimeChunk[0].trim().split(commonUtil.CRLF);
 					String[] strMime_info_tupe = strMime_info_p[0].split(": ");
 					
 					if (strMime_info_tupe[0].equals("Content-Type")) {
@@ -919,7 +913,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	        while (line != null) {
 	            sb.append(line);
-	            sb.append(System.lineSeparator());
+	            sb.append(commonUtil.CRLF);
 	            line = br.readLine();
 	        }
 	        strMhtData = sb.toString();

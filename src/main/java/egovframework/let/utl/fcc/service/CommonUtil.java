@@ -99,6 +99,8 @@ public class CommonUtil {
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
+	public final String CRLF = "\r\n";
+	
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
 	public LoginVO userInfo(String loginCookie){
