@@ -143,14 +143,17 @@ public class LoginController {
 			// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)
 			returnValue = acceptLanguage.substring(0, 2);
 			
-			if (acceptLanguage.substring(0, 2).equals("ko")) {
+			if (acceptLanguage.substring(0, 2).equalsIgnoreCase("ko")) {
 				lang = "1";
-			} else if (acceptLanguage.substring(0, 2).equals("en")) {
+			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("en")) {
 				lang = "2";
-			} else if (acceptLanguage.substring(0, 2).equals("ja")) {
+			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("ja")) {
 				lang = "3";
-			} else {
+			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("zh")){
 				lang = "4";
+			} else {
+				//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+				lang = config.getProperty("config.primary");
 			}
 			
 			Map<String,Object> map = new HashMap<String, Object>();
