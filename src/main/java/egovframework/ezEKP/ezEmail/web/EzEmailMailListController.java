@@ -186,7 +186,7 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		
-		logger.debug("folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
+		logger.debug("userId=" + userId + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
 						+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		
 		String returnData = "";
