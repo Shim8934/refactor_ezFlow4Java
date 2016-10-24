@@ -133,9 +133,10 @@ function displayUserList(DeptID) {
 		async : true,
 		url : "/ezOrgan/getDeptMemberList.do",
 		data : {
-				deptID   : DeptID, 
-				cell 	 : "displayname;Description;Title;telephonenumber",
-				prop     : "department;extensionAttribute4;displayname;description;title",
+				deptID   : DeptID,
+				cell 	 : "displayName;description;title;telephoneNumber",
+				//cell 	 : "displayname;Description;Title;telephonenumber",
+				prop     : "department;extensionAttribute4;displayName;description;title",
 				type 	 : "user"
 				},
 		success: function(xml){
