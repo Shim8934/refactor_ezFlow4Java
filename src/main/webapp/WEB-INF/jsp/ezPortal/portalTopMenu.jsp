@@ -99,10 +99,10 @@
 					
 			    	//IE9 일때만 ActiveX 설치하게 설정
 					if (userAgent.indexOf("Trident/5.0") > 0) {
-						var objectNode = document.getElementById("objectDiv");
-				    	 objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
-				    	 var objectProgressNode = document.getElementById("objectProgressDiv");
-				    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
+						//var objectNode = document.getElementById("objectDiv");
+				    	 //objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+				    	 //var objectProgressNode = document.getElementById("objectProgressDiv");
+				    	 //objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
 				    	 GetObject();
 				    	 ezNotieSetting();
 				    	 
@@ -131,7 +131,7 @@
 		    var agentObj;
 			    i_icd2.SetDocumentDisp(window.document);
 				try {
-			    	i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";	
+			    	i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";
 				    i_icd2.CheckVersion();
 				    var nCount = i_icd2.nNeedDownload;
 				    if (nCount) {
@@ -1528,9 +1528,9 @@
 	</head>
 		<%String browser = (String)request.getHeader("User-Agent"); %>	
 		<body <% if (!mode.equals("view")) {%> class="mainbody"  <%} %>>
-		<%-- <%if (browser.indexOf("Trident/5.0") > 0 || browser.indexOf("Trident/6.0") > 0){ %>  
+		<c:if test="${isCrossBrowser != true}">
 			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
-		<%} %> --%> 
+		</c:if>  
 		<div id="objectDiv"></div>
 		<%if (!mode.equals("view")) { %>	      
 		<!-- 메뉴 -->
@@ -1599,7 +1599,9 @@
 		${script1}
 	
 	<div id="objectProgressDiv"></div>
-	<!-- <iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe> -->
+	<c:if test="${isCrossBrowser != true}">
+		<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
+	</c:if>
 	<iframe id=ifmpopup style="display:none" src=""></iframe>
 	</body>
 </html>

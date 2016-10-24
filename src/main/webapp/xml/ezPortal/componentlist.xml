@@ -3,27 +3,14 @@
   	<activex>
 		<url os="all" size="183">DOWNLOADSERVER/files/component/ezDHTMLEditor.ent</url>
 		<clsid>75C3B556-E712-42CD-9B21-CF5B86CC7425</clsid>
-		<version>1,0,1,8</version>
-		<compressed>ocx</compressed>
-		<type>inproc</type>
-	</activex>
-	<!--<activex>
-		<url os="all" size="104">DOWNLOADSERVER/binary/component/ezMail4Client.ocx</url>
-		<clsid>D969B2C0-F76B-4E63-971F-CB794B9B9513</clsid>
-		<version>1,0,0,177</version>
-		<type>inproc</type>
-	</activex>-->
-  	<activex>
-		<url os="all" size="19">DOWNLOADSERVER/files/component/ezSignImage.ent</url>
-		<clsid>13F49D22-7625-4947-BE80-999C0C122483</clsid>
-		<version>1,0,0,5</version>
+		<version>1,0,1,10</version>
 		<compressed>ocx</compressed>
 		<type>inproc</type>
 	</activex>
 	<activex>
-		<url os="all" size="324">DOWNLOADSERVER/files/component/pzFormProc_utf8.ent</url>
+		<url os="all" size="339">DOWNLOADSERVER/files/component/pzFormProc_utf8.ent</url>
 		<clsid>999C3A80-04F3-44B7-8815-36ADF2319B98</clsid>
-		<version>1,8,0,33</version>
+		<version>1,8,0,50</version>
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
@@ -44,7 +31,7 @@
  	<activex>
 		<url os="all" size="140">DOWNLOADSERVER/files/component/ezMhtFormat.ent</url>
 		<clsid>241828DA-76FC-412D-8FFC-099704F25959</clsid>
-		<version>1,0,1,19</version>
+		<version>1,0,1,20</version>
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
@@ -55,13 +42,6 @@
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
-	<activex>
-		<url os="all" size="90">DOWNLOADSERVER/files/component/ezNotification.ent</url> 
-  		<clsid>none</clsid> 
-  		<version>1,0,3,12</version> 
-		<compressed>exe</compressed>
-  		<type>generalexe</type> 
-  	</activex>    	
 	<activex>
 		<url os="all" size="43">DOWNLOADSERVER/files/component/ezHwpProcessor.ent</url> 
   		<clsid>1D50E26E-E51E-4153-93DD-D08745457090</clsid> 
@@ -124,4 +104,11 @@
 		<compressed>dll</compressed>
 		<type>inproc</type> 
 	</activex>
+	<activex>
+		<url os="all" size="90">DOWNLOADSERVER/files/component/ezNotificationR.ent</url> 
+  		<clsid>none</clsid> 
+  		<version>2,0,3,12</version> 
+		<compressed>exe</compressed>
+  		<type>generalexe</type> 
+  	</activex>  
 </components>

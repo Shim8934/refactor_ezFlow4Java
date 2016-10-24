@@ -49,6 +49,7 @@
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
+            <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
