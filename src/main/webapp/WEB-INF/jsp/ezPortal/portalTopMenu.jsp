@@ -101,11 +101,13 @@
 					if (userAgent.indexOf("Trident/5.0") > 0) {
 						var objectNode = document.getElementById("objectDiv");
 				    	 objectNode.innerHTML = "<OBJECT id='i_icd2' style='DISPLAY: none' codeBase='/files/ezIcd2.cab#version=1,0,0,13' data='data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=='classid='CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900' VIEWASTEXT></OBJECT>";
+				    	 var objectProgressNode = document.getElementById("objectProgressDiv");
+				    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
 				    	 GetObject();
 				    	 ezNotieSetting();
 				    	 
-				    	 var objectProgressNode = document.getElementById("objectProgressDiv");
-				    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>";
+				    	 /* var objectProgressNode = document.getElementById("objectProgressDiv");
+				    	 objectProgressNode.innerHTML = "<iframe id=if_Progress style='display:none' src='/ezPortal/progress.do'></iframe>"; */
 				    	 
 					}
 			        
