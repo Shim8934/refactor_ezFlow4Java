@@ -3,12 +3,13 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -49,10 +50,12 @@ import egovframework.ezEKP.ezPortal.vo.PortalMyPortalListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalNewMyPortalPageListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalACLVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTBLPortletBoardVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -538,6 +541,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
 			model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
 			
+			//브라우저체크
+			String browser = ClientUtil.getClientInfo(req, "browser");
+			boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+			
+			model.addAttribute("isCrossBrowser", isCrossBrowser);
 			model.addAttribute("pageID", pageID);
 			model.addAttribute("parentPageID", parentPageID);
 			model.addAttribute("editMode", editMode);
@@ -2247,7 +2255,7 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		logger.debug("downloadServer="+result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
 	
@@ -2295,4 +2303,74 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		
 		return "/ezPortal/portalImagePortlet";
 	}
+	
+	/**
+	 * 포탈 - boardPortlet 실행 함수
+	 */
+	@RequestMapping(value = "/ezPortal/boardPortlet.do")
+	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		try {
+			String uID = "";
+			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+				uID = req.getParameter("uID");
+			}
+			String pCreatorId = "";
+			String pBoardID = "";
+			String pItemCount = "";
+			String pItemFields = "";
+			String gubunFlag = "";
+			String pMoveURL = "";
+			String pUserID = userInfo.getId();
+			
+			if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
+				pUserID = req.getParameter("userID");
+			}
+			
+			Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
+
+			if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
+				gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+
+				if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
+					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
+					
+					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+						pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
+						pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+						pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+					}
+				} else {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("v_UID", uID);
+					map.put("v_CREATORID", pUserID);
+					PortalTBLPortletBoardVO result = ezPortalService.boardPortlet(map);
+					String resultXML = commonUtil.getQueryResult(result);
+					Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
+					
+					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+						pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
+						pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+						pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+					}
+				}
+			}
+			
+			if (pBoardID == null || pBoardID.equals("")) {
+				resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t275", locale) + "</font>");
+			} else {
+				if (gubunFlag.equals("2")) {
+					pMoveURL = "/ezPortal/boardListClass.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID + "&pClassID=" + pUserID;
+				} else {
+					pMoveURL = "/ezBoard/boardListPortal.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID;
+				}
+			}
+			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
+			resp.getWriter().write("<body onload='window_onload()'></body>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 }
