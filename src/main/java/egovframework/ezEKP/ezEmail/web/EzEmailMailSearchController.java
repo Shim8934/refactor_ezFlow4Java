@@ -79,7 +79,7 @@ public class EzEmailMailSearchController {
 			Locale locale,
 			HttpServletRequest request,
 			Model model) throws Exception {
-		logger.debug("mailSearchView started");
+		logger.debug("mailSearchView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -133,7 +133,7 @@ public class EzEmailMailSearchController {
 		model.addAttribute("addHour", addHour);
 		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
 		
-		logger.debug("mailSearchView ended");
+		logger.debug("mailSearchView ended.");
 		
 		return "ezEmail/mailSearchView";		
 	}
@@ -145,13 +145,16 @@ public class EzEmailMailSearchController {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSearch(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("mailSearch started");		
+		logger.debug("mailSearch started.");		
 		logger.debug("bodyData=" + bodyData);
 
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
+		
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		
@@ -163,20 +166,16 @@ public class EzEmailMailSearchController {
 		String prop = doc.getElementsByTagName("PORP").item(0).getTextContent();
 		String orderBy = doc.getElementsByTagName("ORDERBY").item(0).getTextContent();
 		
-		logger.debug("mailFolder=" + mailFolder + ",keyword=" + keyword + ",category=" + category + ",startDate=" + startDate
-						+ ",endDate=" + endDate + ",prop=" + prop + ",orderBy=" + orderBy);
-		
 		SimpleDateFormat sdfForParsing = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
 		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
 		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
-		logger.debug("startDateObj=" + startDateObj + ",endDateObj=" + endDateObj);
 		
 		String returnData = "";
 		IMAPAccess ia = null;
 		
 		try {
 		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+				userEmail, password, egovMessageSource, locale);
 						
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA><ROWS>");
@@ -196,7 +195,7 @@ public class EzEmailMailSearchController {
 				topLevelFolderNames.add(tmpFolder.getName());
 			}
 			
-			logger.debug("topLevelFolderNames=" + topLevelFolderNames);		
+			logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
 			
 			for (String folderName : topLevelFolderNames) {
 				Folder tmpFolder = ia.getFolder(folderName);
@@ -413,7 +412,7 @@ public class EzEmailMailSearchController {
 			}
 		}
 		
-		logger.debug("mailSearch ended");
+		logger.debug("mailSearch ended.");
 		
 		return returnData;		
 	}
@@ -428,7 +427,7 @@ public class EzEmailMailSearchController {
 			@RequestParam("cmd") String cmd,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
-		logger.debug("mailDelete started");
+		logger.debug("mailDelete started.");
 		logger.debug("cmd=" + cmd);
 		logger.debug("bodyData=" + bodyData);
 		
@@ -480,7 +479,7 @@ public class EzEmailMailSearchController {
 			}
 		}
 				
-		logger.debug("mailDelete ended");
+		logger.debug("mailDelete ended.");
 		
 		return returnData;
 	}
@@ -492,6 +491,8 @@ public class EzEmailMailSearchController {
 	@ResponseBody
 	public String mailMoveCopyMessageS(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {
+		logger.debug("mailMoveCopyMessageS started.");
+		
 		String returnValue = "OK";
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
@@ -548,6 +549,8 @@ public class EzEmailMailSearchController {
 				ia.close();
 			}
 		}
+		
+		logger.debug("mailMoveCopyMessageS ended.");
 		
 		return returnValue;
 	}

@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -121,6 +122,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailDeleteReservedMail.do")
 	@ResponseBody
 	public String mailDeleteReservedMail(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDeleteReservedMail started.");
+		
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
 		ezEmailService.deleteMailReserved(messageId);
 
@@ -131,8 +134,11 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 		if (f.exists()) {
 			f.delete();
+			logger.debug(pDirPath + commonUtil.separator + messageId + ".eml deleted.");
 		}
 
+		logger.debug("mailDeleteReservedMail ended.");
+		
 		return "";
 	}
 
@@ -141,6 +147,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailEdit.do")
 	public String mailEdit(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailEdit started.");
+		
 		String cmd = "";
 		String senderInfo = "";
 		String importance = "1";
@@ -188,8 +196,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String attachCK = "";
 		String showDisplay = "";
 		String serverName = config.getProperty("config.ServerName") != null ? config.getProperty("config.ServerName") : "";
-		
 		long uid = 0;
+		
 		// get user credentials
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdnPw.get(0);
@@ -222,6 +230,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			//예약발송 시간 30분 전에는 수정 불가
 			if (reservedSaveTime.before(currentTime)) { 
 				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000090", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000090", locale));
+				logger.debug("mailEdit ended.");
 				return "ezEmail/mailMessage";
 			}
 
@@ -276,12 +286,16 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 				
 			} else {
 				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
+				logger.debug("mailEdit ended.");
 				return "ezEmail/mailMessage";
 			}
 			
 
 		} else {
 			model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
+			logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
+			logger.debug("mailEdit ended.");
 			return "ezEmail/mailMessage";
 		}
 
@@ -423,7 +437,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
         
         pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
     		+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
-
+        
+        String browser = ClientUtil.getClientInfo(request, "browser");
+        boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+        
 		model.addAttribute("from", from);
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
@@ -472,15 +489,13 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("strSelectHtml", strSelectHtml);
 		model.addAttribute("showDisplay", showDisplay);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		//TODO: delete
 		model.addAttribute("domainName", config.getProperty("config.DomainName"));
 		
-        String browser = ClientUtil.getClientInfo(request, "browser");
-        boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+        logger.debug("mailEdit ended.");
         
-        model.addAttribute("isCrossBrowser", isCrossBrowser);
-		
 		return "ezEmail/mailEdit";
 	}
 	
@@ -489,8 +504,12 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/reservedMailCheck.do")
 	@ResponseBody
-	public String reservedMailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+	public String reservedMailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("reservedMailCheck started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String returnValue = "<DATA>MAIL-NOT-EXISTS</DATA>";
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
 		String messageId  = "";
 		Node tempNode = null;
@@ -505,11 +524,14 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		if (messageId != null && !messageId.equals("")) {
 			MailReservationVO vo = ezEmailService.checkReservedMail(messageId);
 			if (vo.getSubject() != null) {
-				return "<DATA>MAIL-EXISTS</DATA>";
+				returnValue = "<DATA>MAIL-EXISTS</DATA>";
 			}
 		}
 		
-		return "<DATA>MAIL-NOT-EXISTS</DATA>";
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("reservedMailCheck ended.");
+		
+		return returnValue;
 	}
 	
 }

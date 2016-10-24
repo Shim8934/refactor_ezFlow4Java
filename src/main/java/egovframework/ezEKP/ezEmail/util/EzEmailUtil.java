@@ -354,7 +354,8 @@ public class EzEmailUtil {
 		String filecnt = "0";
 		String isAttach = "";
 		
-		logger.debug("##content type##" + part.getContentType() + ", ##disposition##" + part.getDisposition());
+		logger.debug("contentType=" + part.getContentType());
+		logger.debug("disposition=" + part.getDisposition());
 		
 		if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
 			String filename = part.getFileName();
@@ -536,8 +537,11 @@ public class EzEmailUtil {
 			Part p = null;
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
-				logger.debug("contentType=" + p.getContentType());
-				if(!p.isMimeType("text/plain")){
+				
+				if (p.isMimeType("text/plain")) {
+					logger.debug("contentType=" + p.getContentType());
+					logger.debug("disposition=" + p.getDisposition());
+				} else {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
@@ -571,12 +575,12 @@ public class EzEmailUtil {
 					isAttach = "OK";
 				}
 			}
-		} else if(part.isMimeType("multipart/related")){
+		} else if (part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
-			for(int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				if(!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))){
+				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
@@ -585,12 +589,15 @@ public class EzEmailUtil {
 					if(tempList.get(4).equals("OK")){
 						isAttach = "OK";
 					}
+				} else {
+					logger.debug("contentType=" + p.getContentType());
+					logger.debug("disposition=" + p.getDisposition());
 				}
 			}
-		} else if(part.isMimeType("multipart/*")){
+		} else if (part.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
-			for(int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
 				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
 				htmlBody += tempList.get(0);
@@ -601,7 +608,7 @@ public class EzEmailUtil {
 					isAttach = "OK";
 				}
 			}
-		} else if(part.isMimeType("message/rfc822")){
+		} else if (part.isMimeType("message/rfc822")) {
 			Message nestedMessage = (Message)part.getContent();
 			
 			double size = part.getSize();
@@ -638,7 +645,7 @@ public class EzEmailUtil {
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
-	public Message[] searchFolder(
+	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
 			final String searchValue,
@@ -1061,6 +1068,8 @@ public class EzEmailUtil {
      * JMocha Gateway Server로 HTTP POST로 요청을 보내고 그 결과를 반환한다. 
 	 */
 	public String getWebServiceResult(String urlString, String inputParams) throws Exception {
+		logger.debug("urlString=" + urlString);
+		
 		String result = null;
 		
 		URL url = new URL(urlString);

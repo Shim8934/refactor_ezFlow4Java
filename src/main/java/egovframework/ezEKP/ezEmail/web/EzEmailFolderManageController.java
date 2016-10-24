@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -96,10 +97,13 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
 	@ResponseBody
-	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailMakeFolder started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
-		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
 		
 		String url = "";
@@ -124,13 +128,16 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		String userId = userIdnPw.get(0);
 		String password  = userIdnPw.get(1);
 		
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
+		
 		IMAPAccess ia = null;
 		try {
 			
 	        switch (cmd) {
 	            case "NEW": 
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+	            			userEmail, password, egovMessageSource, locale);
 	            	if (!name.equals("") && !url.equals("")) {
 	            		ia.createFolder(name, url);
 	            	}
@@ -254,6 +261,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			}
 		}
         
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailMakeFolder ended.");
+		
 		return returnValue;
 	}
 }

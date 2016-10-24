@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -93,14 +94,20 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetReceiveList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailGetReceiveList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailGetReceiveList started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
+		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
+		
 		String returnValue = "";
 		
-		Document xmldom = commonUtil.convertRequestToDocument(request);
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String uidStr = xmldom.getElementsByTagName("MESSAGEID").item(0).getTextContent();
 		uidStr = uidStr.split("/")[1];
 		long uid = Long.parseLong(uidStr); 
@@ -108,33 +115,34 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
-			if (message != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
+			if (message == null) {
+				logger.error("Message not found. uid=" + uid);
+			} else {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
+				logger.debug("messageId = " + messageId);
+				
 				String outerReadCheck = "NONE"; //외부용 관련 변수
 				
 				//TODO: 외부용 메일 처리
-	//			if (message.ExtendedProperties.Count > 0)
-	//            {
-	//                OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
-	//            }
-				
-				StringBuilder sb = new StringBuilder();
-				sb.append("<DATA>");
+//				if (message.ExtendedProperties.Count > 0) {
+//              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
+//          	}
 				
 				//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
-				String userId = id + "@" + config.getProperty("config.DomainName");
-				String userId2 = id + "@" + config.getProperty("config.DomainName");
-				logger.debug("messageId = " + messageId);
+				String userId = userEmail;
+				String userId2 = userEmail;
+				
 				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, userId2, messageId, outerReadCheck);
-				
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
-				
 				List<String> tempMailList = new ArrayList<String>();
 				
 				//수신table에서 가져옴
@@ -202,7 +210,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						
 						tempMailList.add(email);
 					}
-					
 				}
 				
 				//회수table에서 가져옴
@@ -226,13 +233,16 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 				
 				sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
-				sb.append("</DATA>");
-				returnValue = sb.toString();
+				
 			}
 			
 	        folder.close(true);
 	        
+	        sb.append("</DATA>");
+			returnValue = sb.toString();
+	        
 		} catch (MessagingException e) {
+			returnValue = "<DATA>ERROR</DATA>";
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -240,9 +250,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (!returnValue.contains("DATA")) {
-			returnValue = "<DATA>ERROR</DATA>";
-		}
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailGetReceiveList ended.");
 		
 		return returnValue;
 	}
@@ -252,15 +261,20 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailCancelSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String strError = "";
+	public String mailCancelSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailCancelSend started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String localServerName = config.getProperty("config.COMPUTERNAME");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		Document xmldom = commonUtil.convertRequestToDocument(request);
+		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
+		
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
@@ -268,6 +282,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		//넘어온 folderPath가 보낸편지함이 아닐경우
 		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+			logger.debug(egovMessageSource.getMessage("ezEmail.t99000108", locale));
+			logger.debug("mailCancelSend ended.");
 			return egovMessageSource.getMessage("ezEmail.t99000108", locale);
 		}
 		
@@ -276,30 +292,35 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			pEachCancel = xmldom.getElementsByTagName("EMAILADDRESS").item(0).getTextContent();
 			pEachCancel = URLDecoder.decode(pEachCancel, "UTF-8");
 		}
-		
-		String emailAddress = id + "@" + config.getProperty("config.DomainName");
+		logger.debug("pEachCancel=" + pEachCancel);
 		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
 			if (message == null) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000109", locale));
+				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.t99000109", locale);
 			}
 			
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
-			if (!from.equals(emailAddress)) {
+			if (!from.equals(userEmail)) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000110", locale));
+				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.t99000110", locale);
 			}
 			
 			int maxRecAllCount = 500;
 			Address[] addresses = message.getAllRecipients();
 			if (addresses.length > maxRecAllCount) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000111", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.t99000112", locale));
+				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.t99000111", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.t99000112", locale);
 			}
 			
@@ -309,7 +330,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
 			String createDate = sdFormat.format(message.getSentDate());
 			
-			String isInsert = ezEmailService.checkDoubleMailReceive(emailAddress, subject, createDate, internetMessageId, localServerName);
+			String isInsert = ezEmailService.checkDoubleMailReceive(userEmail, subject, createDate, internetMessageId, localServerName);
 			logger.debug("isInsert = " + isInsert);
 			
 			if (pEachCancel.equals("NO")) {
@@ -335,10 +356,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 				
 				if (isInsert == null) {
-					isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
+					isInsert = ezEmailService.insertMailReceiveInfo(userEmail, subject, createDate, internetMessageId, localServerName, "");
 				}
 				
 				if (innerAddresses.size() == 0) {
+					logger.debug(egovMessageSource.getMessage("ezEmail.t99000113", locale));
+					logger.debug("mailCancelSend ended.");
 					return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 				}
 				
@@ -367,7 +390,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				}
 				
 				if (isInsert == null) {
-					isInsert = ezEmailService.insertMailReceiveInfo(emailAddress, subject, createDate, internetMessageId, localServerName, "");
+					isInsert = ezEmailService.insertMailReceiveInfo(userEmail, subject, createDate, internetMessageId, localServerName, "");
 				}
 				
 				if (innerAddresses.size() == 0) {
@@ -391,6 +414,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				ia.close();
 			}
 		}
+		
+		logger.debug("mailCancelSend ended.");
 		
 		return "OK";
 	}

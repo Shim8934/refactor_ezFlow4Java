@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -111,10 +112,13 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailGetDistribution.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String mailGetDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailGetDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailGetDistribution started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnData = "";
 		
-		Document doc = commonUtil.convertRequestToDocument(request);
+		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		
 		try {
@@ -168,7 +172,10 @@ public class EzEmailAdminController {
 			returnData = "ERROR";
 			e.printStackTrace();
 		}
-
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailGetDistribution ended.");
+		
 		return returnData;
 	}
 	
@@ -197,8 +204,11 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailSaveDistributionList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String mailSaveDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		Document doc = commonUtil.convertRequestToDocument(request);
+	public String mailSaveDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailSaveDistributionList started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
@@ -277,6 +287,9 @@ public class EzEmailAdminController {
 			result = "GROUP_ID";
 		}
 		
+		logger.debug("result=" + result);
+		logger.debug("mailSaveDistributionList ended.");
+		
 		return result;
 	}
 	
@@ -285,10 +298,12 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailViewDistributionList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String mailViewDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailViewDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailViewDistributionList started.");
+		
 		String returnData = "";
 		
-		Document doc = commonUtil.convertRequestToDocument(request);
+		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String domain = config.getProperty("config.DomainName");
 		
@@ -365,6 +380,9 @@ public class EzEmailAdminController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		logger.debug("mailViewDistributionList ended.");
+		
 		return returnData;
 	}
 	
@@ -373,8 +391,11 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailDelDistributionList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String mailDelDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		Document doc = commonUtil.convertRequestToDocument(request);
+	public String mailDelDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailDelDistributionList started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String domain = config.getProperty("config.DomainName");
 		String result = "ERROR";
@@ -400,6 +421,9 @@ public class EzEmailAdminController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		logger.debug("result=" + result);
+		logger.debug("mailDelDistributionList ended.");
 		
 		return result;
 	}
@@ -444,11 +468,14 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailSaveColor.do")
 	@ResponseBody
-	public String mailSaveColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailSaveColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailSaveColor started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-			Document doc = commonUtil.convertRequestToDocument(request);
+			Document doc = commonUtil.convertStringToDocument(bodyData);
 			String importanceColor = doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
 			String inColor = doc.getElementsByTagName("INCOLOR").item(0).getTextContent();
 			String outColor = doc.getElementsByTagName("OUTCOLOR").item(0).getTextContent();
@@ -459,6 +486,9 @@ public class EzEmailAdminController {
 			returnValue = "ERROR:" + e.getMessage();
 			e.printStackTrace();
 		}
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailSaveColor ended.");
 		
 		return returnValue;
 	}

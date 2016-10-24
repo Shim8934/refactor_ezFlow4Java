@@ -1012,6 +1012,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailInterUploadXCK(MultipartHttpServletRequest request) throws Exception{
+		logger.debug("mailInterUploadXCK started.");
+		
 		String strXML = "";
 		String strXML2 = "";
 		String folderDate = "";
@@ -2542,13 +2544,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         
 		} catch (Exception e) {
 			pResult = e.getMessage();
-			logger.error("exception!!!!");
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();
 			}
 		}
+		
+		logger.debug("pResult=" + pResult);
 		
 		return "<DATA>" + pResult + "</DATA>";
 	}

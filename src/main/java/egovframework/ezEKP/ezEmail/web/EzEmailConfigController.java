@@ -115,6 +115,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailConfig.do")
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailConfig started.");
+		
 		String userEditor = "";
 		String userIE11Browser = "";
 		String noneActiveX = "YES";
@@ -132,7 +134,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("blockedSenders", blockedSenders);
-
+		
+		logger.debug("mailConfig ended.");
+		
 		return "ezEmail/mailConfig";
 	}
 
@@ -141,6 +145,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGeneral.do")
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailGeneral started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
 
@@ -173,7 +179,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				mailSendObject += "<option value='" + senderList[i] + "'>" + senderList[i] + "</option>";
 			}
 		}
-
+		
+		logger.debug("listCount=" + listCount + ",previewMode=" + previewMode  + ",previewHListSize=" + previewHListSize
+				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
+				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject);
+		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
 		model.addAttribute("previewHListSize", previewHListSize);
@@ -183,7 +193,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("refreshInterval", refreshInterval);
 		model.addAttribute("keepDeleteLength", keepDeleteLength);
 		model.addAttribute("mailSendObject", mailSendObject);
-
+		
+		logger.debug("mailGeneral ended.");
+		
 		return "ezEmail/mailGeneral";
 	}
 
@@ -198,7 +210,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			@RequestBody String bodyData, 
 			Locale locale, 
 			Model model) throws Exception {
-		logger.debug("mailGeneralSave started");		
+		logger.debug("mailGeneralSave started.");		
 		logger.debug("bodyData=" + bodyData);
 
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
@@ -253,7 +265,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 
 		logger.debug("rtnValue=" + rtnValue);
-
+		logger.debug("mailGeneralSave ended.");
+		
 		return rtnValue;
 	}
 
@@ -263,10 +276,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetUse(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailGetUse started.");
+		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
+		
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
 		
 		IMAPAccess ia = null;
 		
@@ -276,7 +294,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
 			
@@ -327,7 +345,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		sb.append(String.format("<BAR2>%d</BAR2>", 211 - mailPercent * 2));
 		sb.append("</ROW>");
 		sb.append("</DATA>");
-				
+		
+		logger.debug("returnData=" + sb.toString());
+		logger.debug("mailGetUse ended.");
+		
 		return sb.toString();
 	}
 
@@ -337,6 +358,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoForward.do")
 	public String mailAutoForward(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAutoForward stated.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String userEmail = userId + "@" + config.getProperty("config.DomainName");
 
@@ -345,7 +368,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userId", userId);
 		model.addAttribute("userEmail", userEmail);
 		model.addAttribute("forwardAddress", forwardAddress);
-
+		
+		logger.debug("userEmail=" + userEmail + ",forwardAddress=" + forwardAddress);
+		logger.debug("mailAutoForward ended.");
+		
 		return "ezEmail/mailAutoForward";
 	}
 
@@ -356,7 +382,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("mailAutoForwardSave started");		
+		logger.debug("mailAutoForwardSave started.");		
 		logger.debug("bodyData=" + bodyData);
 
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
@@ -380,8 +406,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 
 		String returnData = "<RESULT>" + strResult + "</RESULT>";
-
-		logger.debug("mailAutoForwardSave ended");
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailAutoForwardSave ended.");
 
 		return returnData;		
 	}
@@ -393,7 +420,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
-		logger.debug("mailAutoForwardDelete started");		
+		logger.debug("mailAutoForwardDelete started.");		
 		logger.debug("bodyData=" + bodyData);
 
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
@@ -402,8 +429,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String strResult = deleteMailForwardAddress(userEmail);
 
 		String returnData = "<RESULT>" + strResult + "</RESULT>";
-
-		logger.debug("mailAutoForwardDelete ended");
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailAutoForwardDelete ended.");
 
 		return returnData;		
 	}	
@@ -412,6 +440,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * JMocha Gateway Server에 메일 자동 전달 설정 요청을 보내는 함수
 	 */	
 	private String setMailForwardAddress(String userEmail, String forwardAddress) {
+		logger.debug("setMailForwardAddress started.");
+		
 		String result = "Error";
 
 		try {
@@ -435,7 +465,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		logger.debug("result=" + result);
+		logger.debug("setMailForwardAddress ended.");
+		
 		return result;
 	}
 
@@ -443,6 +476,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * JMocha Gateway Server로부터 메일 자동 전달 설정을 읽는 함수
 	 */		
 	private String getMailForwardAddress(String userEmail) {
+		logger.debug("getMailForwardAddress started.");
+		
 		String result = "";
 
 		try {
@@ -473,7 +508,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		logger.debug("result=" + result);
+		logger.debug("getMailForwardAddress ended.");
+		
 		return result;
 	}
 
@@ -481,6 +519,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * JMocha Gateway Server에 메일 자동 전달 삭제 요청을 보내는 함수
 	 */	
 	private String deleteMailForwardAddress(String userEmail) {
+		logger.debug("deleteMailForwardAddress started.");
+		
 		String result = "Error";
 
 		try {
@@ -503,7 +543,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		logger.debug("result=" + result);
+		logger.debug("deleteMailForwardAddress ended.");
+		
 		return result;
 	}
 
@@ -512,6 +555,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailSignatureCK.do")
 	public String mailSignatureCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSignatureCK started.");
+		
 		String signState = "0";
 		String signature1 = "";
 		String signature2 = "";
@@ -542,14 +587,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("signature3 : " + signature3);
 		logger.debug("serverName : " + serverName);
 		logger.debug("userId : " + userId);
-
+		
 		model.addAttribute("signState", signState);
 		model.addAttribute("signature1", signature1);
 		model.addAttribute("signature2", signature2);
 		model.addAttribute("signature3", signature3);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userId);
-
+		
+		logger.debug("mailSignatureCK ended.");
+		
 		return "ezEmail/mailSignatureCK";
 	}
 
@@ -558,8 +605,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailSignSave.do")
 	@ResponseBody
-	public String mailSignSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+	public String mailSignSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailSignSave started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
 		Node tempNode = null;
 
@@ -601,7 +651,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		}
 
 		ezEmailService.setMailSignature(pUserID, pUseFlag, pContent1, pContent2, pContent3);
-
+		
+		logger.debug("mailSignSave ended.");
+		
 		return "";
 	}
 
@@ -619,6 +671,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezEmail/ckUpload.do")
 	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("ckUpload started.");
+		
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 
@@ -645,9 +699,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			width = bi.getWidth();
 			height = bi.getHeight();
 		}
-
-		model.addAttribute("imgPath", (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
-
+		
+		String imgPath = (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/");
+		
+		model.addAttribute("imgPath", imgPath);
+		
+		logger.debug("imgPath=" + imgPath);
+		logger.debug("ckUpload ended.");
+		
 		return "ezEmail/ckUpload";
 	}
 
@@ -657,6 +716,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDelete.do")
 	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAutoDelete started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		List<MailDeleteVO> list = ezEmailService.getMailDelete(userId);
 
@@ -665,9 +726,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				vo.setDeleteUnread("checked");
 			}
 		}
-
+		
 		model.addAttribute("list", list);
-
+		
+		logger.debug("mailAutoDelete ended.");
+		
 		return "ezEmail/mailAutoDelete";
 	}
 
@@ -685,7 +748,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
 	@ResponseBody
 	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
-
+		logger.debug("mailAutoDeleteAdd started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
@@ -694,10 +758,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-
+		
+		logger.debug("userId=" + userId + ",path=" + path + ",expireTime=" + expireTime
+				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
+		
 		ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
-
+		
+		logger.debug("mailAutoDeleteAdd redirect '/ezEmail/mailAutoDelete.do'.");
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
+		
 		return "";
 	}
 
@@ -707,14 +776,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
 	@ResponseBody
 	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
-
+		logger.debug("mailAutoDeleteDelete started.");
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
 		String itemSeqStr = request.getParameter("itemseq") == null ? "" : request.getParameter("itemseq");
 		int itemSeq = itemSeqStr.equals("") ? 0 : Integer.parseInt(itemSeqStr);
-
+		
+		logger.debug("userId=" + userId + ",itemSeq=" + itemSeq);
+		
 		ezEmailService.deleteMailDelete(userId, itemSeq);
-
+		
+		logger.debug("mailAutoDeleteDelete redirect '/ezEmail/mailAutoDelete.do'.");
+		
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
 		return "";
 	}
@@ -741,7 +814,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-
+		logger.debug("mailSetInboxRule started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
 		String mode = request.getParameter("mode");
@@ -857,7 +931,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailSetInboxRule ended.");
+		
 		return returnValue;
 	}
 
@@ -866,12 +943,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		logger.debug("mailGetInboxRule started.");
+		
 		String returnValue = "Error";
 
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInboxRule", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1021,7 +1102,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 			returnValue = commonUtil.convertDocumentToString(doc);
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailGetInboxRule ended.");
+		
 		return returnValue;
 	}
 
@@ -1031,12 +1115,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailDeleteInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDeleteInboxRule started.");
+		
 		String returnValue = "Error";
 
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String ruleId = doc.getElementsByTagName("RULEID").item(0).getTextContent();
 
 		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteInboxRule", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1045,7 +1133,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailDeleteInboxRule ended.");
+		
 		return returnValue;
 	}
 
@@ -1055,6 +1146,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRulePriority(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSetRulePriority started.");
+		
 		String returnValue = "Error";
 
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -1067,7 +1160,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		inputParams += "&aPriority=" + URLEncoder.encode(aPriority, "UTF-8");
 		inputParams += "&bRuleId=" + URLEncoder.encode(bRuleId, "UTF-8");
 		inputParams += "&bPriority=" + URLEncoder.encode(bPriority, "UTF-8");
-
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRulePriority", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1076,7 +1170,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailSetRulePriority ended.");
+		
 		return returnValue;
 	}
 
@@ -1086,6 +1183,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRuleStatus(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSetRuleStatus started.");
+		
 		String returnValue = "Error";
 
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -1094,7 +1193,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		String inputParams = "ruleId=" + URLEncoder.encode(ruleId, "UTF-8");
 		inputParams += "&status=" + URLEncoder.encode(status, "UTF-8");
-
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setRuleStatus", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1103,7 +1203,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (object.get("resultCode") != null) {
 			returnValue = "<DATA><![CDATA[" + object.get("resultCode").toString() + "]]></DATA>";
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailSetRuleStatus ended.");
+		
 		return returnValue;
 	}
 
@@ -1111,7 +1214,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 자동분류 룰 자세히보기 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailDetailInboxRule.do")
-	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		return "ezEmail/mailDetailInboxRule";
 	}
 
@@ -1119,7 +1222,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
-	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		logger.debug("mailOutOfOfficeCK started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gOofState = "disabled";
@@ -1135,6 +1240,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		userId = userId + "@" + config.getProperty("config.DomainName");
 
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getOutOfOffice", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1157,7 +1264,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			gStartDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 0, 1, 0, "yyyy-MM-dd HH:mm");
 			gEndDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 1, 0, 0, "yyyy-MM-dd HH:mm");
 		}
-
+		
+		logger.debug("gOofState=" + gOofState + ",gStartDate=" + gStartDate + ",gEndDate=" + gEndDate
+				 + ",gExternalAudience=" + gExternalAudience + ",gInternal=" + gInternal + ",gExternal=" + gExternal);
+		
 		model.addAttribute("gOofState", gOofState);
 		model.addAttribute("gStartDate", gStartDate);
 		model.addAttribute("gEndDate", gEndDate);
@@ -1165,7 +1275,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gInternal", gInternal);
 		model.addAttribute("gExternal", gExternal);
 		model.addAttribute("userLang", userLang);
-
+		
+		logger.debug("mailOutOfOfficeCK ended.");
+		
 		return "ezEmail/mailOutOfOfficeCK";
 	}
 
@@ -1175,6 +1287,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do")
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailOutOfOfficeSave started.");
+		
 		String returnValue = "ERROR";
 
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -1196,8 +1310,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		sb.append("&internal=" + URLEncoder.encode(internal, "UTF-8"));
 		sb.append("&external=" + URLEncoder.encode(external, "UTF-8"));
 		sb.append("&externalAudience=" + URLEncoder.encode(externalAudience, "UTF-8"));
+		
 		String inputParams = sb.toString();
-
+		logger.debug("inputParams=" + inputParams);
+		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/setOutOfOffice", inputParams);
 
 		JSONParser parser = new JSONParser();
@@ -1206,7 +1322,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (object.get("resultCode") != null) {
 			returnValue = object.get("resultCode").toString();
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailOutOfOfficeSave ended.");
+		
 		return returnValue;
 
 	}
@@ -1216,10 +1335,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailPop3.do")
 	public String mailPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailPop3 started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
 		String publicModulus = egovFileScrty.getPbm();
-
+		String publicExponent = "10001";
+		
 		String infoXML = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -1253,11 +1375,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		sb.append("</DATA>");
 		infoXML = sb.toString();
-
+		
 		model.addAttribute("infoXML", infoXML);
 		model.addAttribute("publicModulus", publicModulus);
-		model.addAttribute("publicExponent", "10001");
-
+		model.addAttribute("publicExponent", publicExponent);
+		
+		logger.debug("infoXML=" + infoXML);
+		logger.debug("publicModulus=" + publicModulus);
+		logger.debug("publicExponent=" + publicExponent);
+		logger.debug("mailPop3 ended.");
+		
 		return "ezEmail/mailPop3";
 	}
 
@@ -1276,10 +1403,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailPop3Connect.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
+	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailPop3Connect started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "<DATA>ERROR</DATA>";
 
-		Document doc = commonUtil.convertStringToDocument(ret);
+		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String server = doc.getElementsByTagName("SERVER").item(0).getTextContent();
 		String port = doc.getElementsByTagName("PORT").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
@@ -1306,7 +1436,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pa.close();
 			}
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
+		logger.debug("mailPop3Connect ended.");
+		
 		return returnValue;
 	}
 
@@ -1314,12 +1447,16 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 외부메일 확인 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailGetPop3.do")
-	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response, @RequestBody String ret) throws Exception{
-
+	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("mailGetPop3 started.");
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String userId = userInfo.get(0);
 		String password  = userInfo.get(1);
-
+		
+		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		logger.debug("userEmail=" + userEmail);
+		
 		response.setContentType("text/html; charset=utf-8");
 
 		PrintWriter out = response.getWriter();
@@ -1361,13 +1498,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 			out.close();
 			
+			logger.debug("<BR> " + egovMessageSource.getMessage("ezEmail.t504", locale)
+			+ "<BR>" + egovMessageSource.getMessage("ezEmail.t505", locale) + " > "
+			+ egovMessageSource.getMessage("ezEmail.t506", locale));
+			
+			logger.debug("mailGetPop3 ended.");
 			return;
 		}
 		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			for (MailPOP3VO vo : pop3Settinglist) {
 				String boxId = vo.getSaveTo();
@@ -1393,7 +1535,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t494", locale) + boxName
 						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t495", locale));
 				out.flush();
-	
+				
+				logger.debug("<BR><BR>" + egovMessageSource.getMessage("ezEmail.t492", locale) + host + ", "
+						+ egovMessageSource.getMessage("ezEmail.t493", locale) + dId
+						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t494", locale) + boxName
+						+ "<BR>" + egovMessageSource.getMessage("ezEmail.t495", locale));
+				
 				POP3Access pa = null;
 	
 				try {
@@ -1401,6 +1548,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					if (!pa.checkConnect()) {
 						out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.t99000091", locale));
 						out.flush();
+						
+						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.t99000091", locale));
 					} else {
 						final Folder folder = pa.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
 	
@@ -1449,9 +1598,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
 						out.flush();
 						
+						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t498", locale) + mailCount 
+								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
+						
 						if (newCount > 40) {
 							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
 							out.flush();
+							
+							logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
 							
 							messages = Arrays.copyOfRange(messages, 0, 40);
 						}
@@ -1465,9 +1619,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 								if (i%10 == 0) {
 									if (messages.length < i + 10) {
 										out.write("<BR>" + (i+1) + " - " + messages.length + egovMessageSource.getMessage("ezEmail.t501", locale));
+										logger.debug("<BR>" + (i+1) + " - " + messages.length + egovMessageSource.getMessage("ezEmail.t501", locale));
 									}
 									else {
 										out.write("<BR>" + (i+1) + " - " + (i+10) + egovMessageSource.getMessage("ezEmail.t501", locale));
+										logger.debug("<BR>" + (i+1) + " - " + (i+10) + egovMessageSource.getMessage("ezEmail.t501", locale));
 									}
 									out.flush();
 								}
@@ -1487,8 +1643,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						} catch (MessagingException e) {
 							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
 							+ egovMessageSource.getMessage("ezEmail.t502", locale));
-							e.printStackTrace();
 							out.flush();
+							
+							logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
+							+ egovMessageSource.getMessage("ezEmail.t502", locale));
+							
+							e.printStackTrace();
 						} finally {
 							if (innerFolder != null) {
 								innerFolder.close(true);
@@ -1501,6 +1661,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				} catch (Exception e) {
 					out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 					out.flush();
+					
+					logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
+					
 					e.printStackTrace();
 				} finally {
 					if (pa != null) {
@@ -1513,6 +1676,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 			out.flush();
+			
+			logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
+			
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -1527,8 +1693,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "forscroll.scrollIntoView(false);"
 				+ "</script></body>");
 		out.flush();
-
 		out.close();
+		
+		logger.debug("mailGetPop3 ended.");
 	}
-
+	
 }
