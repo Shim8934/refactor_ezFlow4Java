@@ -708,7 +708,7 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
-		<div id="layer_popup" style="width:504px;z-index:6000;display:none;position:absolute;top:100px;left:100px;text-align:center;vertical-align:middle;background-color:#ffffff;">
+		<div id="layer_popup" style="width:524px;z-index:6000;display:none;position:absolute;top:100px;left:100px;text-align:center;vertical-align:middle;background-color:#ffffff;">
 			<div id="addpopup" class="popupwrap1">
 				<div class="popupwrap3">
 					<h1><spring:message code='ezAddress.t2003' /></h1>
@@ -774,7 +774,7 @@
 								</select>
 							</th>
 							<td style="text-align:left">
-								<input type="text" name="search_text" id="search_text" class="textarea" style="width:350px" onkeypress="return search_keypress()" >
+								<input type="text" name="search_text" id="search_text" class="textarea" style="width:100%" onkeypress="return search_keypress()" >
 							</td>
 						</tr>
 					</table>
