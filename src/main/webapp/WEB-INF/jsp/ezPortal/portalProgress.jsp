@@ -23,7 +23,7 @@
 					i_icd.CheckVersion();
 					i_totalSize = i_icd.nTotalKByte;
 					i_totalDownload = i_icd.nNeedDownload;
-					
+
 					if ( i_totalDownload ) {	
 						i_icd.UpdateComponent();
 					} else {
