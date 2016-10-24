@@ -1,4 +1,3 @@
-/* top */
 body, h1{margin:0;padding:0}
 a,input, textarea, select, h1, h2, ul, li, .page, table, th, .txt, .point, .box, .leftbody, .message, .nobox, .mainbody, div, .notice, username{
 	font-size:9pt;
@@ -109,7 +108,6 @@ white-space:nowrap}
 .u_help{background:url(/images_en/main/u_help.gif) no-repeat;width:31px; height:12px; cursor:pointer}
 .u_logout{background:url(/images_en/main/u_logout.gif) no-repeat;width:39px; height:12px; cursor:pointer}
 
-/* admin top */
 .admin_top{margin:0}
 .admin_top h1{
 	background:url(/images/admin/top_admin.gif) no-repeat;
@@ -145,7 +143,6 @@ white-space:nowrap}
 #adminmenu li.on span{background:url('/images/admin/top_select.gif') no-repeat bottom center;}
 .adminsub{background-color:#f5f5f5;height:25px}
 
-/* personal  */
 .personal{width:157px;background-image:url(/images/main/personal_bg.gif);margin-left:5px}
 .time{background:url(/images_en/main/personal_top.gif);FONT-SIZE: 8pt; color: #DCEEF7; font-family: Verdana;font-weight:bold;height:26px;padding-top:35px;padding-bottom:5px; text-align:center; }
 .personal ul{margin:5px 0 0 10px;width:137px}
@@ -158,7 +155,6 @@ white-space:nowrap}
 .personal ul li.count{margin-left:100px;margin-top:-19px;padding-right:5px;}
 .personal .p_bottom{background-image:url(/images/main/personal_bottom.gif);margin:0px;padding:4px; }
 
-/* my kms */
 .my_kms h1{background:url(/images_en/main/my_knowledge.gif) no-repeat;width:157px;height:22px; margin:0;margin-left:5px;}
 .my_kms ul{
 	margin:0;
@@ -169,7 +165,6 @@ white-space:nowrap}
 .my_kms ul li{margin:0;text-align:right;vertical-align:bottom; list-style:none;padding-top:33px;width:75px;font-weight:bold}
 .my_kms li.mil{margin-top:-47px; margin-left:80px}
 
-/* calendar */
 .calendar{border:1px solid #B2CBF3;margin-left:5px;width:157px;height:200px;text-align:center;padding:2px 0;}
 .calctrlleftNavButton, .calctrlRightNavButton, .calctrlMonthDisplayName{background-color:#e4eefd}
 .calctrlTitle{border-bottom:1px solid #e4eefd;}
@@ -181,7 +176,6 @@ white-space:nowrap}
 .rightYearButton{background-image:url(/images/main/maincalendar_nnext.jpg); }
 
 
-/* quickmenu */
 .quicklink {
 text-align:center;
 	width: 155px;
@@ -201,7 +195,6 @@ text-align:center;
 .adddel{background:url(/images_en/main/btn_adddel.gif) no-repeat center; height:22px; cursor:pointer}
 
 
-/* survey */
 .knowledge_box, .banner, .poll_box, .best{margin-left:10px;width:156px; table-layout:fixed}
 .poll_box {font:9pt, arial;
 border:1px solid #bbd2f3;padding:3px;background-colr:#f4f8fe}
@@ -229,7 +222,6 @@ border:1px solid #bbd2f3;padding:3px;background-colr:#f4f8fe}
 }
 
 
-/* best sawon */
 .best, .best img{border:1px solid #D5DADE; width:156px;padding:2px 0}
 .best img{margin:2px;width:42px}
 .best_sawon{
@@ -253,7 +245,6 @@ border:1px solid #bbd2f3;padding:3px;background-colr:#f4f8fe}
 	color:#666666
 }
 
-/* notice */
 .notice{margin-top:5px;width:334px;}
 .notice h1{
 	background:url('/images/main/notice_title.gif') no-repeat left top;
@@ -266,7 +257,6 @@ border:1px solid #bbd2f3;padding:3px;background-colr:#f4f8fe}
 	height:18px;
 	background:url(/images/main/portlet_dot01.gif) no-repeat 5px 5px;}
 	
-/* portlet */
 #divWebpart{margin-top:10px;clear:both}
 #leftwebpart{width:265px;}
 #rightwebpart{width:320px}
@@ -315,12 +305,10 @@ border:1px solid #bbd2f3;padding:3px;background-colr:#f4f8fe}
 .mailportlet h1{display:none}
 .mailportlet .portletlist{clear:both;width:310px; border-top:none;height:18px;background:none;}
 
-/* banner */
 .banner1{background:url(/images_en/main/banner_01.gif) no-repeat;margin-bottom:4px; cursor:pointer; width:156px;height:41px;margin-left:10px;}
 .banner2{background:url(/images_en/main/banner_02.gif) no-repeat;margin-bottom:4px; cursor:pointer; width:156px;height:41px;margin-left:10px;}
 .banner3{background:url(/images_en/main/banner_03.gif) no-repeat;margin-bottom:4px; cursor:pointer; width:156px;height:41px;margin-left:10px;}
 
-/* login */
 .layout{ width:765px; height: 536px; margin:0 auto; margin-top:60px; background: url(/images_en/login/back.jpg) no-repeat left;}
 .layout h1 {padding-top:40px; padding-left:12px;background:url(/images/login/logo.gif) no-repeat; width:186px; height:40px}
 .login h2{font:xx-small;margin:0; background:url(/images_en/login/login.gif) no-repeat;width:228px; height:44px}

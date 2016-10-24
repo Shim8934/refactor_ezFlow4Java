@@ -6,6 +6,10 @@ input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, 
 	text-decoration: none;
 	ime-mode:active;
 }
+input {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
 a{	
 	font-family: 'Gulim', 'arial', 'verdana';
 	color: #393939;
@@ -17,7 +21,9 @@ span {
 	font-family: 'Gulim', 'arial', 'verdana';
 	text-decoration: none;}
 	
-ul, li, h1, h2, h3, h4, h5, h6, body {margin:0}
+/*ul, li, h1, h2, h3, h4, h5, h6, body { margin:0 }*/
+ul, li { margin-top:0; margin-bottom:0px; }
+h1, h2, h3, h4, h5, h6, body { margin:0; }
 h2 {margin:2px 0}
 .margin ul, li{ MARGIN:auto; }
 .margin table { border-collapse: separate; } 
@@ -48,7 +54,6 @@ th{
 }
 
 A:hover{COLOR: #0B790E; text-decoration:none}
-/*img{border: 0px;}*/
 .point{
 	color: #CC3300;
 	font-weight: bold ;
@@ -160,9 +165,6 @@ form{display:inline;margin:0}
 .leftbody #iconul li{
 	border-bottom: 1px solid #dedede;
 	background:#fff;
-	/*list-style-type:none;
-	list-style-position: inside;
-	list-style-image:  url('/images/left/left_dot02.gif');*/
 	padding:7px 5px 6px 20px;
 	cursor:pointer;
 }
@@ -178,7 +180,6 @@ form{display:inline;margin:0}
 	border-bottom: 1px solid #aeabab;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
-	/*padding: 3px 5px 4px 20px;*/
 	height:33px;
 	line-height:33px;
 	word-break:keep-all;
@@ -200,7 +201,6 @@ form{display:inline;margin:0}
 	border-bottom: 0px;
 	cursor: pointer;
 	background: url('/images/kr/left/icon_setup.gif') no-repeat 20px 8px;
-	/*padding: 3px 5px 4px 20px;*/
 	height:33px;
 	line-height:33px;
 	word-break:keep-all;
@@ -251,7 +251,6 @@ form{display:inline;margin:0}
 .left_diary{background:url(/images/left/left_diary.jpg) left top no-repeat ;width:170px; height: 40px;}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top no-repeat ;width:170px; height: 40px;}
 
-/*tasktime*/
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}
 .tasktime .button_on { background:url(/images/main/time_btn.gif) no-repeat; width:50px; height:20px; float:right; padding:0 ;margin:6px 96px}	
@@ -270,9 +269,6 @@ form{display:inline;margin:0}
 	font-weight:bold;
 	padding-left:5px;
 	margin:16px 0px 24px;
-	/* background-image:url('/images/title.gif');
-	background-repeat:no-repeat;
-	background-position:left center; */
 	left:7px;
 	color:#333;
 	height:20px;
@@ -384,41 +380,24 @@ form{display:inline;margin:0}
 #addrmenu2 ul li.off span{
 	color:#3a3a3a
 }
-
-
 .page {
 	padding: 10px 0px 0px 10px;
 	white-space:nowrap;
 	word-break:keep-all;
 	position:absolute;
 	right:10px;top:0
-/* 관리자/초기화면/공지사항, Quick Poll 에서 깨짐
-float: right;
-	padding: 10px 0px 0px 10px;
-	white-space:nowrap;
-	word-break:keep-all;
-*/
 }
-
 .page img{cursor:pointer}
 .page input{
 	border: 1px solid #999;
 	width: 30px;
 	height: 18px;
 }
-
-
 .popup {
 	background: url('/images/kr/cm/popup_bg.gif') #ffffff repeat-x left top ;
 	padding:5px 10px 10px;
 	margin:0
 }
-/* 20130614백업
-.popup {
-	background: url('/images/p_icon.jpg') repeat-x left top ;
-	padding:5px 10px 10px;
-	margin:0
-} */
 .layout {
 	width: 100%;
 	height: 100%;
@@ -468,9 +447,6 @@ float: right;
 #menu ul .bar {background:none !important; border:0;cursor:default;height:15px; padding:0px 5px;}
 #menu ul .bar .checkbox { margin:0px; margin:0px 5px 0px 10px; width:13px;height:13px;vertical-align:middle; }
 
-/*
-submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
-*/
 #submenu {
 	display:block;
 	padding-left:35px;
@@ -498,11 +474,7 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	background-color:#fffbdb;
 	background-image:none;}
 #submenu ul li.off, #submenu ul li.off{background-color:#d1e6f9}
-/*
-.popup li.sel{padding:0; background:none;border:0;}
-.sel select{height:18px}
-.bar{ vertical-align:top;background:none; border:0;padding-left:0;padding-right:0;cursor:default;}
-*/
+
 .popup h1{
 	font-size:11pt;
 	font-weight:bold;
@@ -547,7 +519,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	padding:0px 2px 0px 2px;
 	background: #FFF;
 	border:1px solid #b6b6b6;
-	/*height:23px; */
 	height:29px;
 	word-break:break-all;
 	
@@ -560,8 +531,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 
 .content input { vertical-align:middle;}
 .content td table td, .popuplist td table td{border:none;}
-
-/* content2 css 20110830 */
 
 .content2 th{
     text-align:left;
@@ -722,14 +691,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 #listview th, #listview td, #listview table{padding:2px;margin:0;border:1px solid #bdbdbd;}
 #listview, .popuplist #listview  table, .popuplist #listview th, .popuplist #listview td,  .content #listview table, .content #listview th, .content #listview td{border:1px solid #bdbdbd;}
 
-/* 0614테입블색수정백업
-.listview {background-color:#fff;border:1px solid #b6b6b6;}
-.listview th, .listview td, .listview table{padding:2px;margin:0;border:1px solid #b6b6b6;}
-.listview, .popuplist .listview  table, .popuplist .listview th, .popuplist .listview td,  .content .listview table, .content .listview th, .content .listview td{border:1px solid #b6b6b6;}
-#listview, div .listview {background-color:#fff;border:1px solid #b6b6b6;}
-#listview th, #listview td, #listview table{padding:2px;margin:0;border:1px solid #b6b6b6;}
-#listview, .popuplist #listview  table, .popuplist #listview th, .popuplist #listview td,  .content #listview table, .content #listview th, .content #listview td{border:1px solid #b6b6b6;}
-*/
 .datepicker, .datepicker_time, .datepicker_date, .datepicker1{width:95px;}
 .listview2{ behavior:url(/myoffice/ezKMS/controls/listview/listview.htc);}
 .listview3{ behavior:url(/myoffice/ezKMS/controls/listview/listview_search.htc);}
@@ -746,7 +707,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	line-height:55px;
 	background:url('/images/admin/lefttitle_bg.gif') repeat-x ;
 }
-/* survey */
 .poll, .question{
 	border:2px solid #ececec; 
 	width:100%;
@@ -810,7 +770,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .cop_main{background:url(/images/comm/com_main.jpg) no-repeat;
 	width:560px;height:115px}
 .cop_search{border:1px solid #BFD265;
-	/* background:url(/images/com/title_search.jpg) left; */
 	background-color:#D5E77E;
 	background-repeat:no-repeat;
 	padding-left:137px;
@@ -836,7 +795,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 #ezFormProc_div ul{display:list-item; list-style-type:disc; list-style-position:inside}
 #ezFormProc_div ol{display:list-item; list-style:decimal;margin:auto}
 #ezFormProc_div h1, #ezFormProc_div h2, h3, h4, h5, h6{color: #000000;font-weight:bold;MARGIN:auto;}
-/*#ezFormProc_div H1 {Font-Size: 32px; background:none;padding:0;margin:0} */
 #ezFormProc_div H1 {Font-Size: 32px;background:none;padding:0;} 
 #ezFormProc_div H2 {Font-size: 24px;}
 #ezFormProc_div H3 {font-size: 18px;}
@@ -846,26 +804,13 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 
 #arrow_right{margin-bottom:2px;}
 
-/* 달력 흰색 보더 */
 #Table4 tr td{border-right:1px solid #fff;}
 .monthlyDayHeader{border-bottom:1px solid #fff;}
 
-/* 게시판 left 명 일자로 만들기 */
 .node_div{white-space:nowrap; width:100%;}
 
 
 
-/*  
-.divDailyScrolling {
-    background-color: white;
-    font-size: 0;
-    height: 100%;
-    overflow: auto;
-    position: relative;
-    width: 100%;
-}
-*/
-/* cross_20110720 = margin */
 
 .mt1{margin-top:1px;}
 .mt2{margin-top:2px;}
@@ -910,8 +855,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .ml8{margin-left:8px;}
 .ml9{margin-left:9px;}
 .ml10{margin-left:10px;}
-
-/* cross_20110720 = padding  */
 
 .pt1{padding-top:1px;}
 .pt2{padding-top:2px;}
@@ -958,7 +901,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .pl10{padding-left:10px;}
 
 
-/*  20130326-adminezStatics  */
 .tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family: 'gulim', 'arial', 'verdana';} 
 .tstyle1 th {
 	padding:5px;
@@ -1051,8 +993,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
 
 
-/* 자원관리 테이블 */
-
 .table_layout 
 { 
 	table-layout:fixed;
@@ -1075,18 +1015,7 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	overflow:hidden;
 
 }
-/*.table_layout th 20130415 원본
-{
 
-	height:25px;
-	font-weight:bold; 
-	background:url(/images/th_bg.gif) repeat-x left bottom; 
-	border-left:1px solid #dddddd; 
-	border-right:1px solid #dddddd; 
-	color:#003f7d;
-	overflow:hidden;
-
-}*/
 .weektd_01
 {
 
@@ -1111,7 +1040,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .todaytd_01
 {
 	border:1px solid #dddddd;  
-	/* background:#ffffff; */
 	background:#F8F8F8;
 	color:#003f7d;
 	font-weight:bold;
@@ -1125,7 +1053,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	
 }
 
-/* 20130214 content_table02 css수정 */
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
@@ -1146,13 +1073,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-
-
-
-
-
-/* 20130405 추가 */
-
 .mainlist_depth{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
 .mainlist_depth tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist_depth tr th.title{width:100%; text-align:left;}
@@ -1165,7 +1085,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 
 .gray_line { border-bottom:1px #aeabab solid ; height:1px;}
 
-/* 20130612 추가 */
 #layer_popup { 
 	z-index:1000; 
 	margin:0px; 
@@ -1189,7 +1108,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 }
 #layer_popup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 
-/* 20130809 추가 */
 #layer_popup .popupwrap3 {
 	position:relative;
 	padding:10px;
@@ -1202,7 +1120,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 #x_close  em {display:none;}
 
 
-/* list_element */
 .list_element,.list_element th,.list_element td {
 	border:0;
 }
@@ -1232,7 +1149,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 }
 .btnimg { cursor:pointer;}
 
-/* pagenavi */
 .pagenavi {
 	margin:0px ; padding:5px 0;line-height:normal;text-align:center
 }
@@ -1241,7 +1157,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	display:inline-block;
 	cursor:pointer;
 	border:1px solid #cccccc; 
-	/*width:19px;*/
 	height:19px;
 	margin:0px 2px;
 	padding:0px 6px 0px 5px;
@@ -1275,7 +1190,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	
 }
 
-/* popup_noti */
 .popup_noti {
 	width:330px; 
 	margin:0px; 
@@ -1400,7 +1314,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	 display:block;
 }
 
-/* popup_guide */
 .popupguide_wrap {
 	position:relative;
 	border:1px solid #d7d4d5;
@@ -1457,7 +1370,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .border_gray { border:1px solid #bdbdbd; padding:-1px 0px 0px 0px; margin:0px;}
 .border_gray table { margin:-1px 0px 0px 0px; }
 
-/* organ_liststyle1 */
 .icon_btn {cursor:pointer;}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
 .organwrap td {border:0px !important; padding:0px; }
@@ -1486,7 +1398,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .td_gray {background:#e6e6e6;}
 
 
-/* popup_notice CSS */
 .popup_notice{height:100%;}
 .popup_notice .bg_noticeCL{height:100%; background:url(/images/kr/cm/bg_noticeCL.gif) repeat-y left top;}
 .popup_notice .bg_noticeCR{height:100%; background:url(/images/kr/cm/bg_noticeCR.gif) repeat-y right top;}
@@ -1527,13 +1438,11 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	padding-top:7px;
 }
 
-/* 커뮤니티 메인Start */
 .main_community{padding:15px 20px 0px 20px;}
 .main_communityTop{table-layout:fixed; height:205px; overflow:hidden;}
 .main_communityContent{table-layout:fixed; margin:22px 0px 0px 0px;}
 
 
-/* left_community */
 #left .community_lt {
 	position:relative;
 	margin: -1px 0px 0px 0px;
@@ -1562,7 +1471,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 	cursor:pointer;
 }
 
-/* community_noti */
 #left .list_communitynoti {
 	margin:0px ;
 	padding:5px 0px 0px 0px; 
@@ -1632,7 +1540,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 }
 
 
-/* todayCommunity */
 .contents_todayCommunity{overflow:hidden;}
 .contents_todayCommunity h1{}
 .contents_todayCommunity .todayCommunity{position:relative;}
@@ -1654,7 +1561,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .contents_todayCommunity .todayCommunity_text{ margin:7px 0px 0px 0px; padding:10px 20px; background:#ecf1f9; border:1px dotted #cdcdcd; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_text span{display:inline-block; font-size:12px; color:#666; line-height:1.5; height:38px; overflow:hidden;}
 
-/* newCommunity */
 .contents_newCommunity{}
 .newCommunity_title{list-style:none; margin:0; padding:0px 0px 0px 3px; height:29px; background:url(../images/kr/community/bg_newCommunityBg.gif) repeat-x;}
 .newCommunity_title li{float:left; width:164px; height:29px;}
@@ -1670,7 +1576,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .newCommunity_listLayout .newCommunity_list dd{float:none; margin:0; padding:0; color:#676767; overflow:hidden; line-height:1.5; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .newCommunity_listLayout .newCommunity_list dd span{font-weight:bold; color:#0c0c0c; line-height:2;}
 
-/* contents_tabpartTitle */
 .contents_tabpartTitle{border-top:1px solid #41506e; border-right:1px solid #bebebe; border-bottom:1px solid #bebebe; border-left:1px solid #bebebe;}
 .contents_tabpartTitle .tabpartTitle{list-style:none; margin:0; padding:0; background:url(../images/kr/community/bg_tabpartBg.gif) repeat-x; overflow:hidden;}
 .contents_tabpartTitle .tabpartTitle li{float:left; width:49.9%; height:32px; line-height:3; background:url(../images/kr/community/bg_tabpartBg.gif) repeat-x; border-right:1px solid #bebebe; text-align:center; font-weight:bold; color:#656565; cursor:pointer;}
@@ -1680,7 +1585,6 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .contents_tabpartTitle .tabpartTitle li.on span .icon_tabpart{display:inline-block; position:absolute; left:-28px; top:8px; width:19px; height:19px; background:url(../images/kr/community/icon_tabpart.png) no-repeat; overflow:hidden;}
 
 
-/* tabpartMycommunity */
 .tabpartMycommunity{}
 .tabpartMycommunity .tabpartMycommunityTitle{padding:15px 0px 5px 0px; margin:0; overflow:hidden; width:100%;}
 .tabpartMycommunity .tabpartMycommunityTitle dt{float:left; width:75%; height:20px; line-height:20px; background:url(../images/kr/community/icon_tabpartTitle.png) no-repeat 2px 50%; padding:0px 0px 0px 26px; font-size:13px; font-weight:bold; color:#333333;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
@@ -1735,30 +1639,21 @@ submenu항목이 없어서 menu를 복사하여 submenu로 만들어줌
 .right_tabpartList01 dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 0px; background:url(../images/kr/community/btn_community01R.gif) no-repeat right top; color:#fff; cursor:pointer;}
 
 
-/* 20130809 추가 */
-/* receiver */
 .receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 15px !important; background:url(../images/kr/cm/tltype01_bgl.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #565b66; }
 .receiver_tltype01 span {background:url(../images/kr/cm/tltype01_bgr.gif) no-repeat right; font-size:12px; font-weight:bold; color:#fff; height:28px;display:inline-block;padding:0px 25px 0px 0px;}
 
 .receiver_tltype02 {height:28px!important;  padding:0px 0px 0px 15px!important;  background:url(../images/kr/cm/tltype02_bgl.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #9a9a9a; }
 .receiver_tltype02 span {background:url(../images/kr/cm/tltype02_bgr.gif) no-repeat right; font-size:12px; font-weight:bold; color:#fff; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border-left:1px solid #bdbdbd; border-right:1px solid #bdbdbd; border-bottom:1px solid #bdbdbd; }
-/*
-.receiver_list {margin:0px ; padding:0px; list-style:none;}
-.receiver_list li {height:24px; line-height:24px; border-bottom:1px solid #ebebed; background:#fff; padding:0px 5px; display:block;white-space:nowrap; font-size:12px; }
-*/
 
 .receiver_list{border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
 
 
-/* 201308012 주소록추가 */
 .address_wordmenu {margin:0px 0px 10px 0px; height:20px; padding:0px; list-style:none;}
 .address_wordmenu li {float:left; height:20px; line-height:20px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 0px; display:inline-block; cursor:pointer;}
 .address_wordmenu li span { display:block; height:20px; background:url(../images/kr/cm/btn_function_right.gif) right no-repeat; padding:0px 4px 0px 0px;}
-
-
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_boxlist .back { border: 1px solid #a5a3a3; height:138px; background:url(../images/kr/cm/address_boxbg02.gif) right bottom; vertical-align:top;}
@@ -1782,27 +1677,19 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939;}
 .address_onboxlist .point_txt { color:#0168c7;}
-
-
-/* 20130704추가 그레이th-border-bottom progressbar */
 .sublist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:3px 4px 4px; border-bottom:1px solid #b6b6b6; background:url(../images/kr/progress/th_bg3.gif) #fff repeat-x bottom;}
 .sublist tr th.title{width:100%; text-align:left;}
-
 .sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
 .sublist tr td img{vertical-align:middle;}
 .sublist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .sublist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
-
-/* 20130704추가 progressbar */
 .progarea {float:right; position:relative; width:320px; height:15px;display:inline-block; margin:3px 0px 0px 0px;	 }
 .prog_bar {width:280px;height:12px; background:url(../images/kr/progress/progressbar_bg.gif) no-repeat; text-align:left;  margin:0px;  padding:0px;display:inline-block; vertical-align:top;}
 .prog_bar span {display:block;height:12px;background:url(../images/kr/progress/progressbar.gif) 0 no-repeat;font-size:0}
 .progarea .prog_num {position:absolute;top:0px;right:0px;font-size:9pt;color:#696868;}
 .progarea .prog_num strong { color:#017bec; margin-right:3px;}
 
-/* select_theme 20140326 */
 .textbox { border:1px solid #dddada; background:#fafafa; padding:15px 10px; margin:0px 0px 15px 0px ; font-size:12px;}
 .select_themebox {clear:both; overflow:hidden;}
 .select_themebox dl { float:left; display:inline-block; width:191px; height:200px; margin:0px 25px 25px 0px; background:url(../images/sub/sc_themebg1.gif) no-repeat; cursor: pointer;}
@@ -1824,7 +1711,6 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .theme_sublist td { border-bottom:1px solid #cbc9c9; background:#fff; text-align:left;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;} 
 .theme_img { width:175px; height:140px; border:1px solid #ccc;vertical-align: middle;text-align: center;}
 
-/* admin statistics */
 .statistics_select { width:460px; height:206px;background:url(../images/admin/statistics_selectimg.gif) no-repeat 0px 10px; overflow:hidden;}
 .statistics_txt { margin:60px 0px 0px 220px; padding:0px; font-size:12px; text-align:left ;line-height:160%;}
 .statistics_txt  dt { font-size:14px; font-weight:bold; margin:0px; padding:0px; color:#004a87;}
@@ -1832,7 +1718,6 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .statistics_nodata { width:460px; height:206px;background:url(../images/admin/statistics_nodataimg.gif) no-repeat 0px 10px; overflow:hidden;}
 
 
-/* workprogress */
 .workprogress {width:70px;height:9px;margin:2px 5px 0 0;background:url(../images/icon/workgraph_bg.gif) 0 0 no-repeat;font-size:0; display:inline-block;}
 .workprogress .bar{display:block;height:9px;background:url(../images/icon/workgraph_bar.gif) 0 0 repeat-x;font-size:0}
 
@@ -1843,7 +1728,6 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .additiontext { margin:0px; padding:0px; font-size:12px; line-height:18px;  float:left; }
 .gray_textbox { border:1px solid #dddada; background:#fafafa; padding:5px 10px; margin:0px 0px 15px 0px ;   vertical-align:middle; clear:both;}
 
-/* 20140724 Admin */
 .adminSystem{padding:33px 0px 0px 15px;}
 .adminSystem .SystemUL{margin:0; padding:0; list-style:none; overflow:hidden;}
 .adminSystem .SystemUL li{float:left; padding:0px 25px 12px 0px;}
@@ -1926,7 +1810,6 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     -moz-border-radius-topright: 5px;
     -moz-border-radius-bottomleft: 5px;
     -moz-border-radius-bottomright: 5px;
-    /*background: url('/images/kr/cm/popup_bg2.gif');*/
     background: #ffffff;
     box-shadow: 0 0 3px 3px #333333;
     padding: 2px 2px;
@@ -1949,9 +1832,6 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
   height:100%;
   cursor:pointer;
   opacity:0;
-  /*filter:alpha(opacity=0);
-  transform:scale(10,1);
-  transform-origin:100% 0;*/
 }
 .file-btn span{
   display:inline-block;
@@ -1965,3 +1845,63 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
   vertical-align:top;
   line-height:20px;
 }
+
+
+.content_property{overflow:hidden;}
+.content_property table{border-collapse:collapse; border-spacing:0;}
+.content_property table tr{border-collapse:collapse; border-spacing:0;}
+.content_property table td{border-collapse:collapse; border-spacing:0;}
+.content_property .tabTitle{height:30px; background:#e4eaf5; border:1px solid #d2d7e1; text-align:center; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
+.content_property .tabList{border-right:1px solid #d2d7e1; border-left:1px solid #d2d7e1;}
+.content_property .tabList table{}
+.content_property .tabList table td{height:25px; border-bottom:1px solid #ccc; cursor:pointer; padding:0px 5px 0px 5px;}
+
+
+.content_property .tabTitle:hover{background:#8b9099; color:#fff;}
+.content_property .tabList table td:hover{background:#c7d7ed;}
+
+.content_propertyInfo{margin:10px 0px 0px 0px;}
+.content_propertyInfo table{border-collapse:collapse; border-spacing:0;}
+.content_propertyInfo table td{height:25px; border:1px solid #ccc;}
+.content_propertyInfo table td .inputLayout{display:block; padding:0px 4px 0px 5px;}
+.content_propertyInfo table td .selectLayout{display:block; padding:0px 4px 0px 5px;}
+
+.content_propertyInfo table td #mainmenu{
+	clear: both;
+	margin:0; padding:0;
+	}
+.content_propertyInfo table td #mainmenu ul{
+	overflow:hidden; 
+	padding:3px 0px;
+	margin:0;
+	margin-bottom:0px !important;
+	width:86px;
+	}
+.content_propertyInfo table td #mainmenu ul li{margin:0px 0px 0px 5px;}
+.content_propertyInfo table td #mainmenu li, #mainmenu li.off{
+	display:block;
+	float:left;
+	margin:0 1px 0 1px;
+	height:28px;
+	background:url('../images/kr/cm/btn_default_offleft.gif') no-repeat top left;
+	padding-left:5px;
+	cursor:pointer;
+	line-height:27px;
+}
+.content_propertyInfo table td #mainmenu li span, #mainmenu li span.off{
+	display:block;
+	float:left;
+	background:url('../images/kr/cm/btn_default_offright.gif') no-repeat top right;
+	height:28px;
+	padding-right:5px;
+	font:12px gulim;
+	letter-spacing:-1;
+	padding-top:7px;
+}
+
+.content_propertyInfo table td #mainmenu li span img, #mainmenu li span.off img{vertical-align:middle;}
+
+.content_propertyInfo table td #mainmenu li.on{background:url('../images/kr/cm/btn_default_onleft.gif') no-repeat top left;}
+.content_propertyInfo table td #mainmenu li.on span{background:url('../images/kr/cm/btn_default_onright.gif') no-repeat top right; color:#fff;}
+.content_propertyInfo table td #mainmenu li.dis{background:url('../images/i_onleft.gif') no-repeat top left;}
+.content_propertyInfo table td #mainmenu li.dis span{background:url('../images/i_onright.gif') no-repeat top right;}
