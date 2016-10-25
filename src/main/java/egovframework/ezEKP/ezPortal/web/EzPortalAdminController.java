@@ -912,6 +912,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("strHtml", strHtml);
 			model.addAttribute("portletCategoryXML", portletCategoryXML);
 			model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
+			model.addAttribute("portalGubun", portalGubun);
 			model.addAttribute("noneActiveX", noneActiveX);
 			
 			return "/admin/ezPortal/portalPortletList";
