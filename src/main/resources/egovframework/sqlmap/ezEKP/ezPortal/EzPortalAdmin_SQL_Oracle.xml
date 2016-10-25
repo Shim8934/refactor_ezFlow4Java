@@ -363,6 +363,12 @@
 		]]>
 	</procedure>
 	
+	<procedure id="EzPortalAdminDAO.savePortalPage4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SAVEPORTALPAGE4(#v_pPORTLET_PAGEUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+	
 	<procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -390,12 +396,6 @@
 	<procedure id="EzPortalAdminDAO.savePortalPage3" parameterClass="String" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SAVEPORTALPAGE3(#pPortletUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure>
-	
-	<procedure id="EzPortalAdminDAO.savePortalPage4" parameterClass="String" resultClass="Integer">
-		<![CDATA[
-			{CALL EZPORTAL.EZSP_SAVEPORTALPAGE4(#pPortletPageUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -713,7 +713,7 @@
 	<delete id="EzPortalAdminDAO.deletePortalPageCache" parameterClass="String">
 		<![CDATA[
 			DELETE 
-				EZPORTAL.TBL_PORTALPAGE_GENERAL
+				EZPORTAL.TBL_PORTALPAGE_CACHE
 			WHERE
 				 PORTALPAGEID = #pPageID# 
 		]]>

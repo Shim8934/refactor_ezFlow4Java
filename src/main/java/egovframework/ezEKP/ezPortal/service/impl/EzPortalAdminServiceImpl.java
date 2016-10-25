@@ -631,7 +631,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType) {
 		int i=0;
 		int j=0;
-
+		logger.debug("pXML="+pXML);
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		String displayName = "";
 		String displayName2 = "";
@@ -667,7 +667,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String pTableViewOption = "";
 		
 		int result = ezPortalAdminDAO.savePortalPage(pPageID);
-		
+		logger.debug("savePortalPage="+String.valueOf(result));
 		if (pType.equals("MYPORTAL")) {
 			width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
 			height = xmlDom.getElementsByTagName("HEIGHT").item(0).getTextContent().trim();
@@ -679,11 +679,14 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
 			pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
 			pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
-			
+			logger.debug("width="+width);
 			if (pParentPageID.toLowerCase().equals("top")) {
 				depth = 1;
 			} else {
-				result = ezPortalAdminDAO.savePortalPage7(pParentPageID);
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("pParentPageID", pParentPageID);
+				result = ezPortalAdminDAO.savePortalPage7(map);
+				logger.debug("savePortalPage7="+String.valueOf(result));
 				depth = result + 1;
 			}
 			
@@ -717,12 +720,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
 					portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
 					portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
-					portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+					portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 					
 					PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
-					portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+					portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
 					portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
 					portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
 					portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
@@ -760,8 +763,6 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						map2.put("v_pPCOLUMNPOS", String.valueOf(i+1));
 						previousRowPos = ezPortalAdminDAO.savePortalPage8(map2);
 					}
-					
-					
 				}
 			}
 		} else {
@@ -802,12 +803,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
 						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
 						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
-						portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
-						
+						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+						logger.debug("portletDisplayName="+portletDisplayName);
 						PortalPortletGeneralVO widthDom =  ezPortalAdminDAO.getPortletProperties(portletUID);
 						portletWidth = String.valueOf(widthDom.getWidth());
 						
-						portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
 						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
 						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
 						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
@@ -823,9 +824,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						
 						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 							if (portletType.equals("1")) {
-								depth = ezPortalAdminDAO.savePortalPage3(portletUID);
+								Map<String, Object> map1 = new HashMap<String, Object>();
+								map1.put("pPortletUID", portletUID);
+								depth = ezPortalAdminDAO.savePortalPage3(map1);
 							} else {
-								depth = ezPortalAdminDAO.savePortalPage4(portletPageUID);
+								Map<String, Object> map1 = new HashMap<String, Object>();
+								map1.put("v_pPORTLET_PAGEUID", portletPageUID);
+								depth = ezPortalAdminDAO.savePortalPage4(map1);
 							}
 							
 							for (int k=0; k<depth; k++) {
@@ -840,6 +845,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							map3.put("v_pPPARENTPAGEID", pParentPageID);
 							map3.put("v_pPORTLET_OWNERPAGEUID", portletOwnerPageUID);
 							result = ezPortalAdminDAO.savePortalPage5(map3);
+							logger.debug("savePortalPage5="+String.valueOf(result));
 							
 							if (result > 0) {
 								Map<String, Object> map4 = new HashMap<String, Object>();
@@ -885,6 +891,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							map6.put("v_PPORTLET_PAGEUID", portletPageUID);
 							map6.put("v_pPCOLUMNPOS", String.valueOf(i+1));
 							previousRowPos = ezPortalAdminDAO.savePortalPage6(map);
+							logger.debug("savePortalPage6="+String.valueOf(previousRowPos));
 						}
 					} 
 				}
@@ -897,9 +904,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				pArrParam = "";
 				for (i = 0; i<arr.length; i++) {
 					if (i==0) {
-						pArrParam += ": v_" + String.valueOf(i);
+						pArrParam += "v_" + String.valueOf(i);
 					} else {
-						pArrParam += ", : v_" + String.valueOf(i);
+						pArrParam += ", v_" + String.valueOf(i);
 					}
 				}
 				
@@ -918,10 +925,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				}
 				
 				Map<String, Object> map8 = new HashMap<String, Object>();
-				map8.put("strUIDList", strUIDList);
+				map8.put("strUIDList", strUIDList.replace("'", ""));
 				map8.put("pageUID", pPageID);
 				map8.put("parentPageUID", pParentPageID);
 				map8.put("callingPageID", pCallingPageID);
+				
 				ezPortalAdminDAO.deletePortalPageItems(map8);
 				ezPortalAdminDAO.deletePortalPageCache(pPageID);
 			} else {
@@ -939,7 +947,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				if (pParentPageID.toLowerCase().equals("top")) {
 					depth = 1;
 				} else {
-					depth = ezPortalAdminDAO.savePortalPage7(pParentPageID) + 1;
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("pParentPageID", pParentPageID);
+					depth = ezPortalAdminDAO.savePortalPage7(map) + 1;
 				}
 				
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
@@ -972,12 +982,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
 						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
 						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
-						portletDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						
 						PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
-						portletHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
 						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
 						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
 						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();

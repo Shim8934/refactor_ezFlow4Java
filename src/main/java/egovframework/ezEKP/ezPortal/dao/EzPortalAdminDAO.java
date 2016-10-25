@@ -145,48 +145,59 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (int)select("EzPortalAdminDAO.saveTopMenu5", pUID);
 	}
 	
-	public int savePortalPage7 (String pParentPageID) {
-		return (int)select("EzPortalAdminDAO.savePortalPage7", pParentPageID);
+	public int savePortalPage7 (Map<String, Object> map) {
+		select("EzPortalAdminDAO.savePortalPage7", map);
+		return (int)map.get("v_pCount");
 	}
 	
-	public int savePortalPage3 (String pPortletUID) {
-		return (int)select("EzPortalAdminDAO.savePortalPage3", pPortletUID);
+	public int savePortalPage3 (Map<String, Object> map) {
+		select("EzPortalAdminDAO.savePortalPage3", map);
+		return (int)map.get("v_pCount");
 	}
 	
-	public int savePortalPage4 (String pPortletPageUID) {
-		return (int)select("EzPortalAdminDAO.savePortalPage4", pPortletPageUID);
+	public int savePortalPage4 (Map<String, Object> map) {
+		select("EzPortalAdminDAO.savePortalPage4", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int savePortalPage5 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.savePortalPage5", map);
+		select("EzPortalAdminDAO.savePortalPage5", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int savePortalPage6 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.savePortalPage6", map);
+		select("EzPortalAdminDAO.savePortalPage6", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int savePortalPage8 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.savePortalPage8", map);
+		select("EzPortalAdminDAO.savePortalPage8", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int savePortalPage2 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.savePortalPage2", map);
+		select("EzPortalAdminDAO.savePortalPage2", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int saveTopMenu3 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu3", map);
+		select("EzPortalAdminDAO.saveTopMenu3", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int saveTopMenu4 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu4", map);
+		select("EzPortalAdminDAO.saveTopMenu4", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int saveTopMenu6 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu6", map);
+		select("EzPortalAdminDAO.saveTopMenu6", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int searchPortalPageCount2 (Map<String, Object> map) {
-		return (int)select("EzPortalAdminDAO.searchPortalPageCount2", map);
+		select("EzPortalAdminDAO.searchPortalPageCount2", map);
+		return (int)map.get("v_pCount");
 	}
 	
 	public int getItemsCount (Map<String, Object> map) {

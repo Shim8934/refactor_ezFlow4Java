@@ -250,7 +250,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈  테마만들기 이미지업로드 표출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletImageUpload.do")
-	public String portletImageUpload(MultipartHttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+	public String portletImageUpload(MultipartHttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int cnt = 1;
@@ -272,10 +272,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String mode = "";
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 			mode = req.getParameter("mode");
+			logger.debug("mode="+mode);
 			//mode = "Theme";
 		}
 		String pBoardID = mode;
-		
+		logger.debug("pBoardID="+pBoardID);
 		if (req.getFiles("file1") != null) {
 			for (int i=0; i<cnt; i++) {
 				String fileName = req.getFiles("file1").get(i).getOriginalFilename();
@@ -292,7 +293,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + pBoardID;
-		
+		logger.debug("pServerPath="+pServerPath);
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 			pDirPath = pDirPath + commonUtil.separator;
 		}
@@ -885,7 +886,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			recordCnt = ezPortalAdminService.searchPortletCount(pSearchString, portalGubun, portalPageGubun, userInfo.getCompanyID());
 			totalPage = (recordCnt - 1) / listPageSize + 1;
-			
+			logger.debug("intPage="+intPage);
+			logger.debug("totalPage="+totalPage);
 			int pStartRow = 0;
 			int pEndRow = 0;
 			pStartRow = intPage * listPageSize - listPageSize + 1;
@@ -1411,7 +1413,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_pPUID", "201");
 			map.put("v_pPAGEID", pageID);
 			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = commonUtil.getQueryResult(result);
+			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -1749,7 +1751,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_pPUID", "202");
 			map.put("v_pPAGEID", pageID);
 			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = commonUtil.getQueryResult(result);
+			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
