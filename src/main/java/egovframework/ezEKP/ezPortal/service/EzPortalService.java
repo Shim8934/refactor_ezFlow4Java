@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPortal.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
@@ -99,6 +100,8 @@ public interface EzPortalService {
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) throws Exception;
 	
 	public PortalImagePortletVO imagePortlet (String pUID) throws Exception;
+	
+	public PortalTBLPortletBoardVO boardPortlet (Map<String, Object> map) throws Exception;
 	
 	public String getTopMenuConfigItem (String itemName, String uID) throws Exception;
 	

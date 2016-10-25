@@ -316,9 +316,9 @@
 	</resultMap>
 	
 	<resultMap class="PortalTBLPortletBoardVO" id="portalTBLPortletBoardVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="uID"							column="UID_"						columnIndex="1"		nullValue=""/>
 		<result property="creatorID"					column="CREATORID"				columnIndex="2"/>
-		<result property="userType"					column="USERTYPE"				columnIndex="3"/>
+		<result property="userType"					column="USERTYPE"				columnIndex="3"		nullValue=""/>
 		<result property="boardID"					column="BOARDID"					columnIndex="4"/>
 		<result property="itemCount"				column="ITEMCOUNT"				columnIndex="5"/>
 		<result property="itemFields"					column="ITEMFIELDS"				columnIndex="6"/>
@@ -589,6 +589,12 @@
 	<procedure id="EzPortalDAO.urlPortlet" parameterClass="Map"  resultMap="portalUrlPortletVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_URLPORTLET(#v_UID#, #v_CREATORID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalDAO.boardPortlet" parameterClass="Map"  resultMap="portalTBLPortletBoardVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_BOARDPORTLET(#v_UID#, #v_CREATORID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
