@@ -118,7 +118,7 @@
 		function btnSearch_onClick()
 		{
 		    var pSearchString = TrimText(ReplaceText(document.getElementById("SearchString").value, "'", ""));
-		    window.location.href = "/admin/ezPortal/portletList.do?pSearchString=" + escape(pSearchString) + "&portalGubun=" + PortalGubun.value + "&portalPageGubun=" + g_PortalPageGubun;
+		    window.location.href = "/admin/ezPortal/portletList.do?pSearchString=" + encodeURI(pSearchString) + "&portalGubun=" + PortalGubun.value + "&portalPageGubun=" + g_PortalPageGubun;
 		}
 		
 		function entercheck()

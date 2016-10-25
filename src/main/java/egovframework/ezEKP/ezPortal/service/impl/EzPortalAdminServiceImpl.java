@@ -1124,10 +1124,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
 		} else {
 			map.put("v_pGUBUNFLAG", 100);
-			map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
-			map.put("v_pDISPLAYNAME", pDisplayName);
-			map.put("v_pCOMPANYID", pCompanyID);
 		}
+		map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
+		map.put("v_pDISPLAYNAME", pDisplayName);
+		map.put("v_pCOMPANYID", pCompanyID);
 		
 		int recordCnt = ezPortalAdminDAO.searchPortletCount2(map);
 		return recordCnt;
@@ -1139,12 +1139,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
 		} else {
 			map.put("v_pGUBUNFLAG", 100);
-			map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
-			map.put("v_pDISPLAYNAME", pDisplayName);
-			map.put("v_pCOMPANYID", pCompanyID);
-			map.put("v_pSTARTROW", pStartRow);
-			map.put("v_pENDROW", pEndRow);
 		}
+		map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
+		map.put("v_pDISPLAYNAME", pDisplayName);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pSTARTROW", pStartRow);
+		map.put("v_pENDROW", pEndRow);
 		
 		List<PortalSearchPortlet2VO> list = ezPortalAdminDAO.searchPortlet2(map);
 		String result = "<DATA>";

@@ -885,6 +885,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			portletCategoryXML.replace("\"", "\\\"");
 			
 			recordCnt = ezPortalAdminService.searchPortletCount(pSearchString, portalGubun, portalPageGubun, userInfo.getCompanyID());
+			logger.debug("recordCnt="+recordCnt);
 			totalPage = (recordCnt - 1) / listPageSize + 1;
 			logger.debug("intPage="+intPage);
 			logger.debug("totalPage="+totalPage);
@@ -893,6 +894,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pStartRow = intPage * listPageSize - listPageSize + 1;
 			pEndRow = intPage * listPageSize;
 			
+			logger.debug("pSearchString="+pSearchString);
 			String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			String strHtml = "";
