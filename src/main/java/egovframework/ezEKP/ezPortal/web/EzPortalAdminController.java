@@ -2186,7 +2186,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			for (int i=0; i<result.size(); i++) {
 				xmlStr += commonUtil.getQueryResult(result.get(i));
 			}
-			xmlStr = "</DATA>";
+			xmlStr += "</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2202,7 +2202,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			for (int i=0; i<result1.size(); i++) {
 				xmlStr1 += commonUtil.getQueryResult(result1.get(i));
 			}
-			xmlStr1 = "</DATA>";
+			xmlStr1 += "</DATA>";
 			xmlDom = commonUtil.convertStringToDocument(xmlStr1);
 			
 			if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
