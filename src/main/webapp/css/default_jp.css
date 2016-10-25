@@ -1,20 +1,24 @@
 ﻿
 input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
 	font-size:12px;
-	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;
+	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
 }
+input {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
 a{	
-	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;
+	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
 }
 span {
 	font-size:12px;
-	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', 'Meiryo UI ', Arial, sans-serif;
+	font-family:Meiryo UI , Dotum, Arial, Helvetica, sans-serif;
 	text-decoration: none;}
 	
 ul, li, h1, h2, h3, h4, h5, h6, body {margin:0}
@@ -35,7 +39,7 @@ table, th, td {
 	empty-cells: show;
 	padding:0;margin:0;
 	font-size:12px;
-	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック','Meiryo UI ', Arial, sans-serif;
+	font-family:Meiryo UI , Dotum, Arial, Helvetica, sans-serif;
 }
 th{
 	white-space: nowrap;
@@ -692,7 +696,7 @@ form{display:inline;margin:0}
 .left_admin{
     font-size:16px;
 	font-weight:bold;
-	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;
+	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
 	color:#4e5973;
 	text-align:left;
 	padding-top:12px;
@@ -888,7 +892,7 @@ form{display:inline;margin:0}
 .pl10{padding-left:10px;}
 
 
-.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;} 
+.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;} 
 .tstyle1 th {
 	padding:5px;
 	border-left: 0px;
@@ -952,7 +956,7 @@ form{display:inline;margin:0}
 .tstyle2 td table td {border-bottom:0px solid #ffffff; border-right:0px solid #ffffff;padding:1px;}
 
 
-.tstyle3 {table-layout:fixed;border:1px solid #b6b6b6;font-size:12px; 	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;} 
+.tstyle3 {table-layout:fixed;border:1px solid #b6b6b6;font-size:12px; 	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;} 
 .tstyle3 th {
 	padding: 5px;
 	border-left: 0px;
@@ -976,8 +980,8 @@ form{display:inline;margin:0}
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/Myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:15px; height:16px;}
-.icon_02{background:url(/Myoffice/ezResource/ResSch/Calendar/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
+.icon_01{background:url(/images/icon_resource_no.png) no-repeat left top; padding-left:15px; height:16px;}
+.icon_02{background:url(/images/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
 
 
 .table_layout 
@@ -1039,21 +1043,21 @@ form{display:inline;margin:0}
 	border:1px solid #dddddd;
 }
 
-.mainlist{table-layout:fixed; border:0 none !important;	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
 .mainlist tr td img{vertical-align:middle;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
-.mainlist_free{table-layout:fixed; border:0 none !important;	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist_free{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 .mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-.mainlist_depth{table-layout:fixed; border:0 none !important;	font-family:'Meiryo UI ','Meiryo UI ', 'ＭＳ Ｐゴシック', Arial, sans-serif; font-size:12px;}
+.mainlist_depth{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif; font-size:12px;}
 .mainlist_depth tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist_depth tr th.title{width:100%; text-align:left;}
 .mainlist_depth tr th.left {border-left:1px solid #b6b6b6;}
@@ -1353,7 +1357,7 @@ form{display:inline;margin:0}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
 .organwrap td {border:0px !important; padding:0px; }
 .organwrap .pictd { vertical-align:top; margin:0px; padding:3px; background:#f0f0f0;}
-.organwrap .pic { width:90px; height:90px; border:1px solid #ccc!important; overflow:hidden; background:url(/images/OrganTree/porson_noimg.gif) ;}
+.organwrap .pic { width:90px; height:90px; border:1px solid #ccc!important; overflow:hidden; background:url(/images/organtree/porson_noimg.gif) ;}
 .organwrap .pic img { border:0px !important;}
 .organinfo {border:0px !important;table-layout:fixed; width:100%;}
 .organinfo  td {border:1px solid #ccc;font-size:12px; border:0px !important; padding:2px 10px !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
