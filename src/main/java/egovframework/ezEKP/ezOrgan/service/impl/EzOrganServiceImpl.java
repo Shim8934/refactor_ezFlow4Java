@@ -267,7 +267,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
-        for (int i = 0; i < memberCount2; i++){
+        for (int i = 0; i < memberCount2; i++) {
             memberlist2.append(memberInfo2[i]);
         }
         memberlist2.append("</ROWS></LISTVIEWDATA>");
@@ -387,7 +387,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 }
             }
 
-            nodeInfo.append("<CELL><VALUE>" + cellvalue + "</VALUE>");
+            nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
 
             if (i == 0){
                 String strNode = "";
