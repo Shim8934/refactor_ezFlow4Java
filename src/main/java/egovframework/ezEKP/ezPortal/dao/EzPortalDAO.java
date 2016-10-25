@@ -205,6 +205,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalUrlPortletVO) select("EzPortalDAO.urlPortlet", map);
 	}
 	
+	public PortalTBLPortletBoardVO boardPortlet (Map<String, Object> map) {
+		return (PortalTBLPortletBoardVO) select("EzPortalDAO.urlPortlet", map);
+	}
+	
 	public PortalPortletGeneralVO getPorletProperties (Map<String, Object> map) {
 		return (PortalPortletGeneralVO) select("EzPortalDAO.getPorletProperties", map);
 	}
