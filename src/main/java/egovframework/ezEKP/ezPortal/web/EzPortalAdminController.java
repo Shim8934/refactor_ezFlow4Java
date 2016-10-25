@@ -1154,12 +1154,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_URL", moveUrl);
 			ezPortalAdminService.savePortletSubProperty(map);
 		} else if (portletType.equals("2")) {
-			String realPath = req.getServletContext().getRealPath("");
+			String realPath = commonUtil.getRealPath(req);
 			// html 포틀릿
 			uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 			displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 			pContent = xmlDom.getElementsByTagName("CONTENT").item(0).getTextContent();
-			mhtFilePath = "/files/upload_portal/mht/" + uID + ".mht";
+			//mhtFilePath = "/files/upload_portal/mht/" + uID + ".mht";
+			mhtFilePath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "mht" + commonUtil.separator + uID + ".mht";
 			bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator, realPath);
 
 			if (bResult == true) {
@@ -1216,7 +1217,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String docPath = "";
 		String mhtFilePath = "";
 		try {
-			docPath = realPath + strFilePath + "\\mht";
+			docPath = realPath + strFilePath + commonUtil.separator +"mht";
 
 			if (!new File(docPath).exists()) {
 				File dir = new File(docPath);
