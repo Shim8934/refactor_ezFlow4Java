@@ -57,7 +57,7 @@
 		// 메인메뉴 변경
 		function menu_change() {
 			if (layoutList.options.selectedIndex != -1 && menuList.options.selectedIndex != -1)
-				location.href = "/admin/ezPortal/subMenuItemsEdit.do?pageID=" + layoutList.options[layoutList.options.selectedIndex].value + "&uid=" + menuList.options[menuList.options.selectedIndex].value;
+				location.href = "/admin/ezPortal/subMenuItemsEdit.do?pageID=" + layoutList.options[layoutList.options.selectedIndex].value + "&uID=" + menuList.options[menuList.options.selectedIndex].value;
 		}
 		
 		// 선택
