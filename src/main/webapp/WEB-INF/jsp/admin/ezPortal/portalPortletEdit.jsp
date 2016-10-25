@@ -757,7 +757,7 @@
 			
 			if (ImgPath == "") return;
 			
-			window.open("image_view.aspx?image_name=" + encodeURI(ImgPath), "", "width=300,height=300,resizable=1"+GetOpenPosition(300, 300));
+			window.open("/admin/ezPortal/imageView.do?imageName=" + encodeURI(ImgPath), "", "width=300,height=300,resizable=1"+GetOpenPosition(300, 300));
 		}
 		
 		var FormEditor	= null;

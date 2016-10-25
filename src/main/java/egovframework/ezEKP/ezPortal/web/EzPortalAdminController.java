@@ -2217,7 +2217,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 					listStr += commonUtil.getQueryResult(list.get(i));
 				}
 				listStr += "</DATA>";
-
+				logger.debug("메인,서브가 모두 존재할 때 list="+listStr);
 				xmlDom = commonUtil.convertStringToDocument(listStr);
 				
 				if (parentUID == null) {
@@ -2449,13 +2449,38 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 관리자 포탈 포탈페이지 초기화 실행 함수  // 
+	 * 관리자 포탈 포탈페이지 초기화 실행 함수   
 	 */
 	@RequestMapping(value = "/admin/ezPortal/resetPortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String resetPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		
 		return "";
+	}
+	
+	/**
+	 * 관리자 포틀릿 미리보기 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/imageView.do")
+	public String imageView(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String imageName = "";
+		if (req.getParameter("imageName") != null && !req.getParameter("imageName").equals("")) {
+			imageName = req.getParameter("imageName");
+		}
+		
+		//해당 이미지가 존재하는지 체크
+		String realPath = req.getServletContext().getRealPath("");
+		File file = new File(realPath + config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
+        
+		if (!file.exists()) {
+			imageName = "";
+		}
+		
+		model.addAttribute("imageName", imageName);
+		
+		return "/admin/ezPortal/portalImageView";
+		
 	}
 	
 }
