@@ -213,7 +213,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalTBLTopMenuItemsVO loadPositionSettings(Map<String, Object> map) throws Exception {
+	public List<PortalTBLTopMenuItemsVO> loadPositionSettings(Map<String, Object> map) throws Exception {
 		return ezPortalAdminDAO.loadPositionSettings(map);
 	}
 	

@@ -26,9 +26,9 @@ public interface EzPortalAdminService {
 	
 	public List<PortalGetPortletParametersVO> getMenuItemParameters (String pUID) throws Exception;
 	
-	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID) throws Exception;
+	public List<PortalTBLTopMenuItemsVO> loadPositionSettings (Map<String, Object> map) throws Exception;
 	
-	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) throws Exception;
+	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID) throws Exception;
 	
 	public PortalPortletGeneralVO getPortletProperties (String pUID) throws Exception;
 	

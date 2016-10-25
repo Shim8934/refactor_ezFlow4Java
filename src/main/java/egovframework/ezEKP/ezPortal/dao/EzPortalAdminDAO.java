@@ -93,6 +93,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (List<PortalGetPortletParametersVO>) list("EzPortalAdminDAO.getMenuItemParameters", pUID); 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortalTBLTopMenuItemsVO> loadPositionSettings (Map<String, Object> map) {
+		return (List<PortalTBLTopMenuItemsVO>)list("EzPortalAdminDAO.loadPositionSettings", map);
+	}
+	
 	public PortalUseThemeCheckVO useThemeCheck(String uID) {
 		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", uID);
 	}
@@ -103,10 +108,6 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public PortalMenuItemItemsImageVO logoEdit (Map<String, Object> map) {
 		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.logoEdit", map);
-	}
-	
-	public PortalTBLTopMenuItemsVO loadPositionSettings (Map<String, Object> map) {
-		return (PortalTBLTopMenuItemsVO)select("EzPortalAdminDAO.loadPositionSettings", map);
 	}
 	
 	public PortalMenuItemItemsMenuItemsVO loadMenuItemConfig (Map<String, Object> map) {

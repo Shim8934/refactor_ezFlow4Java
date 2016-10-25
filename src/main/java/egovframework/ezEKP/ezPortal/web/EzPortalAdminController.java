@@ -1412,8 +1412,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "201");
 			map.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = "<DATA>";
+			for (int i=0; i<result.size(); i++) {
+				xmlStr += commonUtil.getQueryResult(result.get(i));
+			}
+			xmlStr += "</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -1629,8 +1633,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPUID", "201");
 		map.put("v_pPAGEID", pageID);
-		PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-		String xmlStr = commonUtil.getQueryResult(result);
+		List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
+		String xmlStr = "<DATA>";
+		for (int i=0; i<result.size(); i++) {
+			xmlStr += commonUtil.getQueryResult(result.get(i));
+		}
+		xmlStr += "</DATA>";
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -1750,8 +1758,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "202");
 			map.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = "<DATA>";
+			for (int i=0; i<result.size(); i++) {
+				xmlStr += commonUtil.getQueryResult(result.get(i));
+			}
+			xmlStr += "</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2070,8 +2082,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "203");
 			map.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+			List<PortalTBLTopMenuItemsVO> list1 = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = "<DATA>";
+			for (int i=0; i<list1.size(); i++) {
+				xmlStr += commonUtil.getQueryResult(list1.get(i));
+			}
+			xmlStr += "</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2082,8 +2098,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map1);
-			String xmlStr1 = "<DATA>"+commonUtil.getQueryResult(result1)+"</DATA>";
+			List<PortalTBLTopMenuItemsVO> result1 = ezPortalAdminService.loadPositionSettings(map1);
+			String xmlStr1 = "<DATA>";
+			for (int i=0; i<result1.size(); i++) {
+				xmlStr1 += commonUtil.getQueryResult(result1.get(i));
+			}
+			xmlStr1 += "</DATA>";
 			Document xmlDom2 = commonUtil.convertStringToDocument(xmlStr1);
 			
 			if (xmlDom2.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2161,8 +2181,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "203");
 			map.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result = ezPortalAdminService.loadPositionSettings(map);
-			String xmlStr = commonUtil.getQueryResult(result);
+			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
+			String xmlStr = "<DATA>";
+			for (int i=0; i<result.size(); i++) {
+				xmlStr += commonUtil.getQueryResult(result.get(i));
+			}
+			xmlStr = "</DATA>";
 			Document xmlDom1 = commonUtil.convertStringToDocument(xmlStr);
 			
 			if (xmlDom1.getElementsByTagName("ALIGN").getLength() > 0) {
@@ -2173,9 +2197,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
-			PortalTBLTopMenuItemsVO result1 = ezPortalAdminService.loadPositionSettings(map1);
-			xmlStr = commonUtil.getQueryResult(result1);
-			xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			List<PortalTBLTopMenuItemsVO> result1 = ezPortalAdminService.loadPositionSettings(map1);
+			String xmlStr1 = "<DATA>";
+			for (int i=0; i<result1.size(); i++) {
+				xmlStr1 += commonUtil.getQueryResult(result1.get(i));
+			}
+			xmlStr1 = "</DATA>";
+			xmlDom = commonUtil.convertStringToDocument(xmlStr1);
 			
 			if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
 				subAreaExist = "YES";
