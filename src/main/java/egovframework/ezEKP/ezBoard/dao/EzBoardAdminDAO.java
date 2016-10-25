@@ -80,15 +80,18 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		
 		int ret = (int) map.get("v_pCount");
 		
-		if(ret > 0 ){
+		if (ret > 0 ) {
 			return "OK";
-		}else{
+		} else {
 			return "NO";
 		}
 	}	
 
 	public int checkIfLeafBoard(Map<String, Object> map) throws Exception{		
-		return (int) select("EzBoardAdminDAO.checkIfLeafBoard", map);
+		select("EzBoardAdminDAO.checkIfLeafBoard", map);
+		int ret = (int) map.get("v_pCount");
+		
+		return ret;
 	}
 	
 	public int checkForm(Map<String, Object> map) throws Exception{

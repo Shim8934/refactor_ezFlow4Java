@@ -57,9 +57,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
-	@Autowired
-	private EzBoardController ezBoardController;
-
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
 
@@ -257,7 +254,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		String upperBoardID = request.getParameter("upperBoardID");
-		String boardTree = ezBoardController.getBoardTree(upperBoardID,	user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
+		String boardTree = ezBoardService.getBoardTree(upperBoardID,	user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
 
 		return boardTree;
 	}
@@ -274,7 +271,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
 		
-		String boardTree = ezBoardController.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
+		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {
@@ -300,8 +297,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 
 		ezBoardAdminService.deleteBoard(boardID);
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
 	}
 
 	/**
@@ -534,8 +529,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String newBoardGroupID = request.getParameter("newBoardGroupID");
 
 		ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID);
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
 	}
 
 	/**
@@ -587,48 +580,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do")
 	public void saveBoardProperty(HttpServletResponse response,	BoardPropertyVO boardPropertyVO) throws Exception {
-		String boardID = boardPropertyVO.getBoardID();
-		ezBoardAdminService.saveBoardProperty(boardPropertyVO);		
-		
-		if (boardPropertyVO.getPortlet() != null) {
-			if (boardPropertyVO.getPortlet().equals("Y")) {
-				ezBoardAdminService.saveBoardProperty_port(boardID);
-			}
-		}
-		
-		if (boardPropertyVO.getApprFlag() != null) {			
-			
-			if (boardPropertyVO.getApprFlag().equals("Y")) {
-				String[] flag = boardPropertyVO.getApprUserList().split(";");				
-				
-				for (int i=0; i < flag.length; i++) {
-					String apprUserID = flag[i];
-					String pMode = "DEL";
-					
-					if (i != 0) {
-						pMode = "";
-					}					
-					ezBoardAdminService.saveBoardProperty_appr(boardID, apprUserID, pMode);
-				}
-				
-				if (boardPropertyVO.getOrgApprFlag() != null) {
-					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
-						ezBoardAdminService.apprProperty_info(boardID, "Y");
-					}
-				}
-			} else {
-				String pMode = "DEL";				
-				ezBoardAdminService.saveBoardProperty_appr(boardID, "", pMode);
-				
-				if (boardPropertyVO.getOrgApprFlag() != null) {
-					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
-						ezBoardAdminService.apprProperty_info(boardID, "N");
-					}
-				}
-			}
-		}		
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
+		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 	}
 	
 	/**
@@ -911,13 +863,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String deleteACL(@RequestBody String data, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		Document doc = commonUtil.convertStringToDocument(data);
-
-		for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-			ezBoardAdminService.deleteACL(doc.getElementsByTagName("BOARDID").item(i).getTextContent(),	doc.getElementsByTagName("TARGETID").item(i).getTextContent());
-		}
-		// board_treechache 테이블 trunk
-		ezBoardAdminService.trunkBoard();
-
+		
+		ezBoardAdminService.deleteACL(doc);
+		
 		return "OK";
 	}
 

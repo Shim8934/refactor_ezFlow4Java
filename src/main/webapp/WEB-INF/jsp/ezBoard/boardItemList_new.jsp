@@ -203,6 +203,7 @@
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		        }
 		        catch (e) {
+		        	alert(1000);
 		            alert("getBoardList_after : " + e.description);
 		        }
 		    }

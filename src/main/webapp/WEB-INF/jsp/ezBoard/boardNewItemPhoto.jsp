@@ -83,7 +83,7 @@
 	            var imagecount = "";
 	            var imageid = "";
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                imagecount = imgpath.split("/").length - 1;
 	                imageid = imgpath.split("/")[imagecount];
 	                tmpContents = new Array();
@@ -154,7 +154,7 @@
 	            else
 	                xmldom_attachlist = pAttachListXml;
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                if (xmldom_attachlist == false) {
 	                    xmldom_attachlist = null;
 	                    return "";
@@ -200,7 +200,7 @@
 	                return;
 	            }
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                for (var i = 0; i < bodycount; i++) {
 	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
 	                    filename += document.getElementsByName('imgView')[i].title + ";";
@@ -461,21 +461,60 @@
 	
 	    //사진추가
 	    function btn_PhotoAttachAdd() {
-	        pAttachListXml = "";
-	        if (pNoneActiveX == "YES") {
-	            document.getElementById('mode').value = "PICTURE";
+	    	pAttachListXml = "";
+	    	
+	        if (CrossYN()) {
+	        	document.getElementById('mode').value = "PICTURE";
 	            document.form.file1.click();
-	        }
-	        else {
-                document.getElementById('mode').value = "PICTURE";
-                document.form.file1.click();
+	        } else {
+	            if (isdad || CrossYN()) {
+	            	document.getElementById('mode').value = "PICTURE";
+	                document.form.file1.click();
+	            } else {
+alert(111);
+// 	            	document.getElementById('mode').value = "PICTURE";
+	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                ezUtil.UseUTF8 = true;
+
+	                var file = ezUtil.OpenLoadDlgMultiNew("", "");
+	                if (!file)
+	                    return;
+
+	                g_fileList = file.split("|");
+
+	                var fileSize = 0;
+	                for (var i = 0; i < g_fileList.length - 1; i++) {
+	                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
+	                        alert("" + strLang6 + "");
+	                        return;
+	                    }
+	                    
+	                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
+	                    if (temp.length > 111) {
+	                        alert("" + strLang7 + "");
+	                        return;
+	                    }
+	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
+	                    
+	                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
+	                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+	                        return;
+	                    }
+	                }
+	                ezUtil = null;
+
+	                var fileNamelist = "";
+	                var fileName = "";
+	                saveItemBoardId = pBoardID;
+	                show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
+	            }
 	        }
 	    }
 	
 	    //사진삭제
 	    function btn_PhotoAttachDel()
 	    {
-	        if (isdad || pNoneActiveX == "YES") {
+	        if (isdad || CrossYN()) {
 	            var xmlhttp = createXMLHttpRequest();
 	            var uniqueIDs = "";
 	            var fd = new FormData();
@@ -790,6 +829,7 @@
 	  </tr>
 	    <tr>
 	    <td style="display:none;">
+	    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 	    <div id="lstAttachLink">&nbsp;</div>
 	    </td>
 	    </tr>

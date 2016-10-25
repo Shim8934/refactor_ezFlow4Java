@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -21,7 +23,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
+import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -35,6 +40,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name = "EzBoardAdminService")
+	private EzBoardAdminService ezBoardAdminService;
+
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 
 	@Override
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
@@ -1131,7 +1145,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<LISTVIEWDATA>");
 		sb.append("<ROWS>");
 		
-		BoardConfigVO pCount = getPersonalCount(pUserID);
+//		BoardConfigVO pCount = getPersonalCount(pUserID);
 		
 		int startRow = 1;
 		int endRow = 0;
@@ -1206,8 +1220,126 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public String portalPageItemEdit(String boardID) throws Exception {
 		return ezBoardDAO.portalPageItemEdit(boardID);
 	}
-	
-	
-	
 
+	/**
+	 * 게시판 트리 표출 Method
+	 */
+	@Override
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception {
+		int count = 0;
+        String strForbiddenBoardIDList = "";				
+        String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID);
+        
+        if (retValue != null && retValue.length() > 30) {
+    		return retValue;
+        }
+        
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
+        List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
+        
+        for (int i = 0; i < pAccessID.split(",").length; i++) {
+            String boardID = "";
+            
+            if (pMode == 0) {
+            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID);            
+            } else {
+            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pUserID, pMode, pSelectBy, pExcludeBoardID);            
+            }
+            
+            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID);
+            
+            if (boardTreeList.size() > 0) {
+                for (int r = 0; r < boardTreeList.size(); r++) {
+            		boardID = boardTreeList.get(r).getBoardId().split(",")[0];
+        			strForbiddenBoardIDList += boardID.trim();
+                }
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        
+        if (pSubFlag == 1) {
+        	result.append("<NODES>");
+        } else {
+        	result.append("<TREEVIEWDATA>");
+        }
+        
+        for (int i = 0; i < brdBoardTreeList.size(); i++) {
+        	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
+                	continue;
+                }
+            }
+        	result.append("<NODE>");
+        	if (pRootBoardID.equals("top")) {
+        		if (pStrLang.equals("")) {
+        			result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></VALUE>");
+        		} else {
+        			result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></VALUE>");
+        		}        	
+        	} else {
+        		if (pStrLang.equals("")) {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
+        		} else {
+        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
+        		}        	
+        	}
+            result.append("<STYLE><![CDATA[]]></STYLE>");
+            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
+            
+            if (pRootBoardID.equals("top")) {
+            	if (pStrLang.equals("")) {
+            		result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></DATA2>");
+            	} else {
+            		result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></DATA2>");
+            	}            
+            } else {
+            	if (pStrLang.equals("")) {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
+            	} else {
+            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
+            	}            
+            }
+            result.append("<DATA3>" + pRootBoardID + "</DATA3>");
+            result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
+            result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
+            result.append("<EXPANDED>FALSE</EXPANDED>");
+            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId()) + "</ISLEAF>");
+
+            if (count == 0 && pSubFlag != 1) {
+            	result.append("<SELECT>TRUE</SELECT>");
+            }
+            result.append("</NODE>");
+            
+            count++;
+        }
+        
+        if (pSubFlag == 1) {
+        	result.append("</NODES>");
+        } else {
+        	result.append("</TREEVIEWDATA>");
+        }
+        
+        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString());
+
+        return result.toString();
+	}
+
+	/**
+	 * 게시판 트리하위여부 표출 Method
+	 */
+	public String checkIfLeafBoard(String pBoardID) {
+		try {
+	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID);
+	        
+	        if (ret > 0) {
+	        	return "FALSE";
+	        } else {
+	        	return "TRUE";
+	        }
+		} catch(Exception ex) {
+			return "FALSE";
+		}
+	}
 }

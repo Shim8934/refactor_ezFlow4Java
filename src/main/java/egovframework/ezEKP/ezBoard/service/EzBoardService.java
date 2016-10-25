@@ -125,6 +125,8 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID) throws Exception;
 	
+	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang) throws Exception;
+	
 	public int getReservedItemListCount(String userID) throws Exception;
 	
 	public int getNewItemListCount(String userID) throws Exception;

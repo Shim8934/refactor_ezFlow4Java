@@ -40,10 +40,13 @@
 		
 			function ok_onclick()
 			{
-			    if (ReturnFunction != null)
+			    if (ReturnFunction != null){
 		            ReturnFunction(selColor.value);
-		        else
+			    	
+			    } else {
 		            window.returnValue = selColor.value;
+			    }
+			       
 				window.close();
 			}
 	    </script>

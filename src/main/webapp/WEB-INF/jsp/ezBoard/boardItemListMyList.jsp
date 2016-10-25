@@ -315,6 +315,7 @@
 		                strListInfo = "";
 		            }
 		            catch (e) {
+		            	alert(200);
 		                alert("getBoardList_after : " + e.description);
 		            }
 		        }
@@ -498,11 +499,15 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp;
-		
+		        
 		        arrList = strListInfo.split(";");
 		        for (var i = 0; i < arrList.length - 1; i++) {
 		            xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + document.getElementById(arrList[i] + ";").parentElement.parentElement.getAttribute("DATA1") + "&itemList=" + arrList[i].split(",")[0] + ";", false);
+		            try {
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + "&itemList=" + arrList[i].split(",")[0] + ";", false);
+					} catch (e) {
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + document.getElementById(arrList[i] + "," + SSUserID + ";").parentNode.parentNode.getAttribute("DATA1") + "&itemList=" + arrList[i].split(",")[0] + ";", false);
+					}
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -525,10 +530,8 @@
 		    }
 		
 		    function event_HeaderCheckBoxClick(obj) {
-		
 		        var SelList = new ListView();
 		        SelList.LoadFromID("BoardList");
-		
 		        if (obj.checked) {
 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
@@ -699,7 +702,11 @@
 	            arrList = strListInfo.split(";");
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
-	                strBoardItemList += document.getElementById(arrList[i] + ";").parentElement.parentElement.getAttribute("DATA1") + ";";
+	                try {
+		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+					} catch (e) {
+		                strBoardItemList += document.getElementById(arrList[i] + "," + SSUserID + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+					}
 	            }
 	            arrList = null;
 	            
@@ -732,7 +739,11 @@
 	            arrList = strListInfo.split(";");
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
-	                strBoardItemList += document.getElementById(arrList[i] + ";").parentElement.parentElement.getAttribute("DATA1") + ";";
+	                try {
+		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+					} catch (e) {
+		                strBoardItemList += document.getElementById(arrList[i] + "," + SSUserID + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+					}
 	            }
 	            arrList = null;
 	

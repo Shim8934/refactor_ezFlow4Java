@@ -8,12 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.security.PrivateKey;
 import java.sql.Clob;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +23,6 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +43,6 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -63,7 +57,6 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
-import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -186,7 +179,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
-
 			redirectBoardID  = request.getParameter("boardID");
 
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
@@ -226,7 +218,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	pMode = 1;
         }
         //Library 연결 부분 Method화
-        String resultXML = getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang));
+        String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang));
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
 
@@ -241,126 +233,6 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("applyFlag",applyFlag);
         
 		return "ezBoard/boardLeft";
-	}
-	
-	/**
-	 * 게시판 트리 표출 Method
-	 */
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception{
-		int count = 0;
-        String strForbiddenBoardIDList = "";				
-        String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID);
-        
-        if (retValue != null && retValue.length() > 30) {
-    		return retValue;
-        }
-        
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
-        List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
-        
-        for (int i = 0; i < pAccessID.split(",").length; i++) {
-            String boardID = "";
-            
-            if (pMode == 0) {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID);            
-            } else {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pUserID, pMode, pSelectBy, pExcludeBoardID);            
-            }
-            
-            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID);
-            
-            if (boardTreeList.size() > 0) {
-                for (int r = 0; r < boardTreeList.size(); r++) {
-            		boardID = boardTreeList.get(r).getBoardId().split(",")[0];
-        			strForbiddenBoardIDList += boardID.trim();
-                }
-            }
-        }
-
-        StringBuilder result = new StringBuilder();
-        
-        if (pSubFlag == 1) {
-        	result.append("<NODES>");
-        } else {
-        	result.append("<TREEVIEWDATA>");
-        }
-        
-        for (int i = 0; i < brdBoardTreeList.size(); i++) {
-        	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
-                if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
-                	continue;
-                }
-            }
-        	result.append("<NODE>");
-        	if (pRootBoardID.equals("top")) {
-        		if (pStrLang.equals("")) {
-        			result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></VALUE>");
-        		} else {
-        			result.append("<VALUE><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></VALUE>");
-        		}        	
-        	} else {
-        		if (pStrLang.equals("")) {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></VALUE>");
-        		} else {
-        			result.append("<VALUE><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></VALUE>");
-        		}        	
-        	}
-            result.append("<STYLE><![CDATA[]]></STYLE>");
-            result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
-            
-            if (pRootBoardID.equals("top")) {
-            	if (pStrLang.equals("")) {
-            		result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "]]></DATA2>");
-            	} else {
-            		result.append("<DATA2><![CDATA[" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "]]></DATA2>");
-            	}            
-            } else {
-            	if (pStrLang.equals("")) {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName() + "]]></DATA2>");
-            	} else {
-            		result.append("<DATA2><![CDATA[" + brdBoardTreeList.get(i).getBoardName2() + "]]></DATA2>");
-            	}            
-            }
-            result.append("<DATA3>" + pRootBoardID + "</DATA3>");
-            result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
-            result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
-            result.append("<EXPANDED>FALSE</EXPANDED>");
-            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId()) + "</ISLEAF>");
-
-            if (count == 0 && pSubFlag != 1) {
-            	result.append("<SELECT>TRUE</SELECT>");
-            }
-            result.append("</NODE>");
-            
-            count++;
-        }
-        
-        if (pSubFlag == 1) {
-        	result.append("</NODES>");
-        } else {
-        	result.append("</TREEVIEWDATA>");
-        }
-        
-        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString());
-
-        return result.toString();
-	}
-
-	/**
-	 * 게시판 트리하위여부 표출 Method
-	 */
-	public String checkIfLeafBoard(String pBoardID) throws Exception{
-		try{
-	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID);
-	        if (ret > 0) {
-	        	return "FALSE";
-	        } else {
-	        	return "TRUE";
-	        }
-		}catch(Exception ex) {
-			return "FALSE";
-		}
 	}
 	
 	/**
@@ -758,11 +630,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	boardInfo.setExpireDays(strProp.getItemExpires());
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
-//		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
+		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
 		    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"", "&quot;"));
-//		    } else {
+		    } else {
 		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
-//		    }
+		    }
+		    
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());
@@ -1705,7 +1578,6 @@ public class EzBoardController extends EgovFileMngUtil{
         List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getThumbnailList(boardListVO, boardVO);
 		
         int dlength = boardThumbnailList.size();
-        //XML 생성 수정요망
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
@@ -2311,7 +2183,6 @@ public class EzBoardController extends EgovFileMngUtil{
         List<HashMap<String, Object>> boardList = ezBoardService.getNewItemList(boardListVO);
         
         int dlength = boardList.size();
-        //XML 생성 수정요망
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
@@ -2366,7 +2237,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					resultXML.append("<DATA12>" + boardList.get(j).get("MAINCONTENT") + "</DATA12>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -2638,6 +2509,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
 	    String pExcludeBoardID = " ";
+	    
 	    if (req.getParameter("rootBoardID") != null && !req.getParameter("rootBoardID").equals("")) {
 	    	pRootBoardID = req.getParameter("rootBoardID");
 	    }
@@ -2660,18 +2532,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	pMode = 1;
 	    }
 	
-	    String strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()));
+	    String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()));
 
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder builder = factory.newDocumentBuilder();
-	    Document doc = builder.parse(new InputSource(new StringReader(strXML)));
+	    Document doc = commonUtil.convertStringToDocument(strXML);
 	    NodeList nList = doc.getElementsByTagName("NODE");
 	    
 	    if (!strXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 	        if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString().equals("YES")) {
-            	
             	BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
             	int intCount = 0;
+            	
 	            if (nList != null) {
 	            	for (int i = 0; i < nList.getLength(); i++) {
 	            		Node node = nList.item(i);
@@ -2691,14 +2561,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	            			intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 	            		}
 	            		String strName = "";
-	            		if (intCount != 0)
+	            		
+	            		if (intCount != 0) {
 	            			strName = "(" + intCount + ")";
+	            		}
 	            		node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);
 	            	}
 	            }
 	        }
 	    } else {
-	    	doc = builder.parse(new InputSource(new StringReader("<RESULT>ERROR</RESULT>")));
+	    	doc = commonUtil.convertStringToDocument("<RESULT>ERROR</RESULT>");
 	    }
 	    
 	    String output = commonUtil.convertDocumentToString(doc);
@@ -2727,6 +2599,7 @@ public class EzBoardController extends EgovFileMngUtil{
         map.put("pBoardListCount",pBoardListCount);
         map.put("pBoardList",pBoardList);
         map.put("pDelBoardListCount",pDelBoardListCount);
+        
         ezBoardService.setListOrder(pUserID, map);
         
 		return map;
@@ -2744,6 +2617,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		modelMap.addAttribute("pBoardList",pBoardList);
 		modelMap.addAttribute("tabUsed",tabUsed);
+		
         ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed);
         
         return "json";
@@ -3495,6 +3369,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
                     filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
                     File fileinfo = new File(realPath + filePath2);
+                    
                     if (!fileinfo.exists()) {
                     	FileUtils.moveFile(file, fileinfo);
                     }
@@ -3512,8 +3387,10 @@ public class EzBoardController extends EgovFileMngUtil{
                 filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
                 	
                 File fileinfo = new File(realPath + filePath2);
-                if (!fileinfo.exists())
+                
+                if (!fileinfo.exists()) {
                 	FileUtils.moveFile(file, fileinfo);
+                }
                 file = null;
             }
             temp = strAttachments.split(";")[i].split("}_");
@@ -3526,6 +3403,7 @@ public class EzBoardController extends EgovFileMngUtil{
             ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName);
             temp = null;
         }
+        
         return true;
 	}
 	
@@ -3544,8 +3422,8 @@ public class EzBoardController extends EgovFileMngUtil{
         String[] resultUpload = new String[cnt];
         String[] sGUID = new String[cnt];
         String[] pUploadSN = new String[cnt];
-
         String useExtension = config.getProperty("config.USE_FileExtension");
+        
         for (int i = 0; i < cnt; i++) {
             resultUpload[i] = "false";
             sGUID[i] = UUID.randomUUID().toString();
@@ -3576,11 +3454,13 @@ public class EzBoardController extends EgovFileMngUtil{
 
         String pDirPath = config.getProperty("upload_board.ROOT");
         pDirPath = realPath + pDirPath;
+        
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
         File file = new File(pDirPath);
         File file2 = new File(pDirPath + pBoardID + commonUtil.separator + "uploadFile");
+        
         if (!file.exists()) {
         	file.mkdir();
         	file2.mkdir();
@@ -3598,6 +3478,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     } else {
                         String pAttachPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator;
                         File fTemp = new File(pAttachPath);
+                        
                         if (!file.exists()) {
                         	fTemp.mkdir();
                         }
@@ -3834,6 +3715,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		}
+		
 		for (int i = 0; i < itemList.split(";").length; i++) {
 			String tempItem = itemList.split(";")[i].split(",")[0];
 			itemIDs += tempItem + ";";
@@ -3860,23 +3742,29 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/copyBoardItem.do")
 	public String copyBoardItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		String itemIDList = "";
-		String boardID = "";
+		String boardIDs = "";
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		itemIDList = request.getParameter("itemIDList");
-		boardID = request.getParameter("boardID");
+		boardIDs = request.getParameter("boardID");
 		
-		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		if (!boardInfo.getRead_FG().equals("true")) {
-			return "main/warning";
-		}
-		if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-			if (!boardInfo.getBoardGroupAdmin_FG().equals("true")) {
+		String[] boardID = boardIDs.split(";");
+		
+		for (int k = 0; k < boardID.length - 1; k++) {
+			BoardPropertyVO boardInfo = getBoardInfo(boardID[k], userInfo);
+			
+			if (!boardInfo.getRead_FG().equals("true")) {
 				return "main/warning";
+			}
+			
+			if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+				if (!boardInfo.getBoardGroupAdmin_FG().equals("true")) {
+					return "main/warning";
+				}
 			}
 		}
 		model.addAttribute("itemIDList", itemIDList);
-		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardID", boardIDs);
 		
 		return "ezBoard/boardCopyItem";
 	}
@@ -3978,7 +3866,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	public String copyItem(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception{
 		String result = "";
-		BoardListVO boardLisitVO = ezBoardService.getCopyItem(orgItemID,orgBoardID);
+		BoardListVO boardLisitVO = ezBoardService.getCopyItem(orgItemID, orgBoardID);
 		//MHT 파일위치 변경
 		boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
 		boardLisitVO.setStartDate("");
@@ -4106,6 +3994,7 @@ public class EzBoardController extends EgovFileMngUtil{
         destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
 
         File file = new File(path + commonUtil.separator + destBoardID);
+        
         if (!file.exists()) {
             file.mkdir();
             new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
@@ -4132,9 +4021,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardID = request.getParameter("boardID");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
 		if (!boardInfo.getRead_FG().equals("true")) {
 			return "main/warning";
 		}
+		
 		if (!boardInfo.getBoardAdmin_FG().equals("true")) {
 			if (!boardInfo.getBoardGroupAdmin_FG().equals("true")) {
 				return "main/warning";
@@ -4211,6 +4102,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		List<String> attachmentList = ezBoardService.getCopyItemAttach(orgItemID);
 		String attachments = "";
+		
 		if (attachmentList != null) {
 			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move");
 		}
@@ -5294,7 +5186,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	sb.append("<IMAGECOUNT>" + photoViewList.get(k).getImageCount() +"</IMAGECOUNT>");
         	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() +"</IMAGEID>");
         	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() +"</FILEPATH>");
-        	sb.append("<FILECONTENT>" + photoViewList.get(k).getFileContent() +"</FILECONTENT>");
+        	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) +"</FILECONTENT>");
         	sb.append("<FLAG>" + photoViewList.get(k).getFlag() +"</FLAG>");
         	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() +"</IMAGENAME>");
         	
@@ -5537,6 +5429,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	return "OK";
         } else {
         	ezBoardService.setMainImageID(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "1");
+        	
         	return "OK";
         }
 	}

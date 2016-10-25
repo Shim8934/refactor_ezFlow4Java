@@ -88,6 +88,7 @@
                 var rtnMode;
                 var imgFileName;
                 var ImagePath;
+                var orgFileName = "";
                 
                 if (ImgaeReturnXml != "") {
                     nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
@@ -113,7 +114,7 @@
                 else
                     strXML += "<FILEPATH><![CDATA[" + ImagePath + "]]></FILEPATH>";
                 
-                strXML += "<CONTENT>" + content + "</CONTENT>";
+                strXML += "<CONTENT><![CDATA[" + content + "]]></CONTENT>";
                 strXML += "<MAINFG>" + pFlag + "</MAINFG>";
                 strXML += "<ITEMID>" + pItemID + "</ITEMID>";
                 strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";

@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
@@ -23,10 +24,10 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -314,6 +315,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pBoardID", boardID);
 		
 		ezBoardAdminDAO.deleteBoard(map);
+		
+		trunkBoard();
 	}
 
 	@Override
@@ -361,10 +364,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
         map.put("v_pNewBoardGroupID", newBoardGroupID);
         
 		ezBoardAdminDAO.moveBoard(map);
+		
+		trunkBoard();
 	}
 
 	@Override
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception {
+		String boardID = boardPropertyVO.getBoardID();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", boardPropertyVO.getBoardID());
@@ -386,6 +392,46 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		
 		ezBoardAdminDAO.saveBoardProperty(map);
+		
+		if (boardPropertyVO.getPortlet() != null) {
+			if (boardPropertyVO.getPortlet().equals("Y")) {
+				saveBoardProperty_port(boardID);
+			}
+		}
+		
+		if (boardPropertyVO.getApprFlag() != null) {			
+			
+			if (boardPropertyVO.getApprFlag().equals("Y")) {
+				String[] flag = boardPropertyVO.getApprUserList().split(";");				
+				
+				for (int i=0; i < flag.length; i++) {
+					String apprUserID = flag[i];
+					String pMode = "DEL";
+					
+					if (i != 0) {
+						pMode = "";
+					}					
+					saveBoardProperty_appr(boardID, apprUserID, pMode);
+				}
+				
+				if (boardPropertyVO.getOrgApprFlag() != null) {
+					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
+						apprProperty_info(boardID, "Y");
+					}
+				}
+			} else {
+				String pMode = "DEL";				
+				saveBoardProperty_appr(boardID, "", pMode);
+				
+				if (boardPropertyVO.getOrgApprFlag() != null) {
+					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
+						apprProperty_info(boardID, "N");
+					}
+				}
+			}
+		}		
+		// board_treechache 테이블 trunk
+		trunkBoard();
 	}
 
 	@Override
@@ -426,16 +472,19 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public void deleteACL(String boardID, String targetID) throws Exception {
+	public void deleteACL(Document doc) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_pBoardID", boardID);
-		map.put("v_pAccessID", targetID);
-
-		ezBoardAdminDAO.deleteACL(map);
+		for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+			map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());
+			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());
+			
+			ezBoardAdminDAO.deleteACL(map);
+		}
+		
+		trunkBoard();
 	}
 
-	@Override
 	public void trunkBoard() throws Exception {
 		ezBoardAdminDAO.trunkBoard();
 	}	

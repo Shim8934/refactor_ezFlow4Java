@@ -39,7 +39,7 @@
 	                	data : { boardList : strBoardList },
 	                	success : function(){
                				alert("<spring:message code='ezBoard.t79'/>");
-               				parent.window.location.reload();
+               				parent.board_menu.window.location.reload();
 	                	},
 	                	error : function(){
 	                		alert("<spring:message code='ezBoard.t80'/>");

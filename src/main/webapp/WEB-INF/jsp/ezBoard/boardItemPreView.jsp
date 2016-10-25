@@ -37,10 +37,11 @@
 		
 		            var _tempList = document.createElement("table");
 		            var _tempList2 = document.createElement("div");
-		
+alert(window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML);
 		            _tempList.innerHTML = window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML;
 		
 		            var tmeptr = _tempList.getElementsByTagName("TR");
+
 		            for (var i = 1; i < tmeptr.length; i++) {
 		                var span = document.createElement("SPAN");
 		                var input = document.createElement("INPUT");

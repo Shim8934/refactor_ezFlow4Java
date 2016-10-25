@@ -187,9 +187,14 @@
 	            		     formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG, apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
-	            		parent.window.location.reload();
+	            		
+	            		if ("${adminType}" == "y") {
+	            			parent.parent.board_menu.window.location.reload();
+	            		} else {
+	            			parent.board_menu.window.location.reload();
+	            		}
 	            	}	            		
-	            });	            
+	            });
 	        }			
 			function chkPermanent_onclick() {
 	            if (chkPermanent.checked) {

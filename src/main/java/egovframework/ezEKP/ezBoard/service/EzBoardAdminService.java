@@ -3,13 +3,15 @@ package egovframework.ezEKP.ezBoard.service;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 
 public interface EzBoardAdminService {
 	
@@ -83,10 +85,8 @@ public interface EzBoardAdminService {
 
 	public void saveACL(Map<String, Object> map) throws Exception;
 
-	public void deleteACL(String boardID, String targetID) throws Exception;
+	public void deleteACL(Document doc) throws Exception;
 
-	public void trunkBoard() throws Exception;
-	
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
 	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;
