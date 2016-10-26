@@ -42,11 +42,11 @@
 		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
 	</resultMap>
 	
-	<resultMap class="ResGetItemListVO" 				id="resGetItemListVO">
-		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
-		<result property="brdNm"					column="BRD_NM"					columnIndex="2"/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="3"/>
-	</resultMap>
+	<!-- <resultMap class="ResGetItemListVO" 				id="resGetItemListVO">
+		<result property="brdID"					column="BRD_ID"					columnIndex="1"			nullValue=""/>
+		<result property="brdNm"					column="BRD_NM"					columnIndex="2"			nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="3"			nullValue="0"/>
+	</resultMap> -->
 	
 	<resultMap class="ResGetScheduleListVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
@@ -331,7 +331,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultMap="resGetItemListVO">
+	<procedure id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultClass="ResGetItemListVO">
 		<![CDATA[
 			{CALL EZRESOURCE.EZSP_GETBRDMAINLIST(#v_BRD_ID#, #v_COMPANY#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

@@ -2127,7 +2127,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		try {
 			ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID);
 
-			String strXML = commonUtil.getQueryResult(resGetAdminFlag);
+			String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
 			if(xmlDom.getElementsByTagName("ROW") != null) {
@@ -2152,10 +2152,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public String getItemList(@CookieValue("loginCookie") String loginCookie,String brdID) throws Exception {
 		String childBrd = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		List<ResGetItemListVO> list = getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
 		
 		for(int i=0; i<list.size(); i++) {
-			childBrd += list.get(i).getBrdID()+"/"+list.get(i).getBrdNm()+"/"+list.get(i).getApproveFlag()+",";
+			childBrd += list.get(i).getBrd_ID()+"/"+list.get(i).getBrd_Nm()+"/"+list.get(i).getApproveFlag()+",";
 		}
 		
 		return childBrd;
@@ -2983,6 +2984,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			//String firstStartDateTime = getYearMonthDay(recParam.getRecStartDateTime());
 			String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
+			logger.debug(firstStartDateTime);
 			//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
 			String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
 			ResRecDurationVO recDuration = new ResRecDurationVO();
@@ -3034,8 +3036,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			if (isDup) {
 				return isDup;
 			}
-					
+			
+			logger.debug("getRecStartDateTime="+recParam.getRecStartDateTime());
 			String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
+			logger.debug("firstStartDateTime="+firstStartDateTime);
 			//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
 			
 			String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));

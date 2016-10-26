@@ -532,13 +532,14 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
 		String childBrd = ezResourceService.getItemList(loginCookie,brdID);
-		
-		List<ResGetItemListVO> list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
-		logger.debug("getBrdMainList="+list);
+		logger.debug("childBrd="+childBrd);
+		 
+		List<ResGetItemListVO>	list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang());
+
 		brdCount = list.size();
 		
 		for (int i=0; i<brdCount; i++) {
-			childBrd += list.get(i).getBrdID() + "/" + list.get(i).getBrdNm() + "/" + list.get(i).getApproveFlag() + ",";
+			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + ",";
 		}
 		
 		model.addAttribute("childBrd", childBrd);
