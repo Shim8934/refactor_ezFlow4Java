@@ -34,48 +34,48 @@
 		        var Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		
 		        if (gubun != 3) {
-		
-		            var _tempList = document.createElement("table");
-		            var _tempList2 = document.createElement("div");
-alert(window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML);
-		            _tempList.innerHTML = window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML;
-		
-		            var tmeptr = _tempList.getElementsByTagName("TR");
-
-		            for (var i = 1; i < tmeptr.length; i++) {
-		                var span = document.createElement("SPAN");
-		                var input = document.createElement("INPUT");
-		                input.type = "checkbox";
-		
-		                var img = document.createElement("IMG");
-		                img.src = "/images/email/mail_006.gif";
-		
-		                var a = document.createElement("A");
-		
-		                if (CrossYN()) {
+		        	if (CrossYN()) {
+			            var _tempList = document.createElement("table");
+			            var _tempList2 = document.createElement("div");
+			            
+			            _tempList.innerHTML = window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML;
+			            
+			            var tmeptr = _tempList.getElementsByTagName("TR");
+	
+			            for (var i = 1; i < tmeptr.length; i++) {
+			                var span = document.createElement("SPAN");
+			                var input = document.createElement("INPUT");
+			                input.type = "checkbox";
+			
+			                var img = document.createElement("IMG");
+			                img.src = "/images/email/mail_006.gif";
+			
+			                var a = document.createElement("A");
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
-		                }
-		                else {
-		                    var filename = GetChildNodes(tmeptr[i])[1].innerText;
-		                    var filesize = GetChildNodes(tmeptr[i])[2].innerText;
-		                }
-		                a.innerHTML = filename + " (" + filesize + ")";
-		
-		                var br = document.createElement("BR");
-		
-		                span.appendChild(input);
-		                span.appendChild(img);
-		                span.appendChild(a);
-		                span.appendChild(br);
-		
-		                _tempList2.appendChild(span);
-		            }
-		            var AttachHTML = _tempList2.outerHTML;
-		
-		            AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
-		            AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
-		            document.getElementById('lstAttachLink').innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
+		                    
+			                a.innerHTML = filename + " (" + filesize + ")";
+			
+			                var br = document.createElement("BR");
+			
+			                span.appendChild(input);
+			                span.appendChild(img);
+			                span.appendChild(a);
+			                span.appendChild(br);
+			
+			                _tempList2.appendChild(span);
+			            }
+			            var AttachHTML = _tempList2.outerHTML;
+			
+			            AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
+			            AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
+			            document.getElementById('lstAttachLink').innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
+		        	} else {
+		        		var AttachHTML = window.opener.lstAttachLink.innerHTML;
+		                AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
+		                AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
+		                lstAttachLink.innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
+		        	}
 		        }
 		        if (gubun != "2") document.getElementById('WriteUserNM').innerHTML = WriterName;
 		        else document.getElementById('WriteUserNM').innerHTML = window.opener.document.getElementById('txtNickName').value;

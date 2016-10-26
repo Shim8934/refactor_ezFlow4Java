@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezBoard.web;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Panel;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -62,6 +65,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -2855,6 +2859,8 @@ public class EzBoardController extends EgovFileMngUtil{
         String docID = "";
         String boardType = "";
         String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
         requestURL = requestURL.substring(1, requestURL.length() - 3);
         
@@ -3014,6 +3020,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("boardType", boardType);
         model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
+	    model.addAttribute("isCrossBrowser", isCrossBrowser);
         
 		return requestURL;
 	}
@@ -3054,7 +3061,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pMode = "";
         String gubun = "";
         String content = "";
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         
         if (request.getParameter("mode") != null) {
         	pMode = request.getParameter("mode");
@@ -3390,6 +3397,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 
                 if (!fileinfo.exists()) {
                 	FileUtils.moveFile(file, fileinfo);
+                	file.delete();
                 }
                 file = null;
             }
@@ -3415,7 +3423,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String uploadItemAttach(MultipartHttpServletRequest request) throws Exception{
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
 		int cnt = multiFile.size();
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
         Long[] fileSize = new Long[cnt];
         String[] fileLocation = new String[cnt];
@@ -3462,8 +3470,8 @@ public class EzBoardController extends EgovFileMngUtil{
         File file2 = new File(pDirPath + pBoardID + commonUtil.separator + "uploadFile");
         
         if (!file.exists()) {
-        	file.mkdir();
-        	file2.mkdir();
+        	file.mkdirs();
+        	file2.mkdirs();
         }
 
         for (int i = 0; i < cnt; i++) {
@@ -3480,7 +3488,7 @@ public class EzBoardController extends EgovFileMngUtil{
                         File fTemp = new File(pAttachPath);
                         
                         if (!file.exists()) {
-                        	fTemp.mkdir();
+                        	fTemp.mkdirs();
                         }
                         writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
                         fileLocation[i] = pAttachPath + pUploadSN[i] + "_" + pFileName[i];
@@ -3511,6 +3519,219 @@ public class EzBoardController extends EgovFileMngUtil{
     }
 	
 	/**
+	 * 게시판 게시물첨부(IE9) 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/itemAttachFile.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String itemAttachFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnVal = "";
+		String guid = "";
+		String fileTitle = "";
+		String ext = "";
+		String prefix = "";
+		String useExtension = config.getProperty("config.USE_FileExtension");
+		
+		if (request.getParameter("guid") != null) {
+			guid = request.getParameter("guid");
+		}
+		if (request.getParameter("name") != null) {
+			fileTitle = request.getParameter("name");
+		}
+		if (request.getParameter("ext") != null) {
+			ext = request.getParameter("ext");
+		}
+		if (request.getParameter("prefix") != null) {
+			prefix = request.getParameter("prefix");
+		}
+		
+		String boardID = prefix;
+		String uploadSN = "{" + guid + "}";
+		String fileName = fileTitle + "." + ext;
+		
+		if (request.getParameter("filename") != null) {
+			fileName = request.getParameter("filename");
+		}
+		
+		fileName = fileName.replace("+", "%2b");
+        fileName = fileName.replace(";", "%3b");
+        fileName = fileName.replace("~", "%7e");
+        fileName = fileName.replace("=", "%3d");
+        
+        String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+        
+        if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+        	returnVal = "denied";
+        } else {
+        	if (!new File(dirPath + "tempUploadFile").exists()) {
+        		new File(dirPath + "tempUploadFile").mkdirs();
+        	}
+        	
+        	if (!new File(dirPath + boardID).exists()) {
+        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        		new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+        	} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        	}
+        	
+        	String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
+        	
+            InputStream stream = null;
+            OutputStream bos = null;         
+            
+            try {
+                stream = request.getInputStream();
+                bos = new FileOutputStream(attachPath);
+                long fileSize = 0;
+                int bytesRead = 0;
+                byte[] buffer = new byte[BUFF_SIZE];
+        
+                while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+                    bos.write(buffer, 0, bytesRead);
+                    fileSize += bytesRead;
+                }
+            } catch (Exception e) {
+                throw e;                
+            } finally {
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (Exception ignore) {
+                    }
+                }
+            }
+            returnVal = "OK_" + uploadSN;
+        }
+        
+		return returnVal;
+	}
+	
+	/**
+	 * 포토게시판 게시물첨부(IE9) 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/itemAttachFilePhoto.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String itemAttachFilePhoto(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnVal = "";
+		String guid = "";
+		String fileTitle = "";
+		String ext = "";
+		String prefix = "";
+		
+		if (request.getParameter("guid") != null) {
+			guid = request.getParameter("guid");
+		}
+		if (request.getParameter("name") != null) {
+			fileTitle = request.getParameter("name");
+		}
+		if (request.getParameter("ext") != null) {
+			ext = request.getParameter("ext");
+		}
+		if (request.getParameter("prefix") != null) {
+			prefix = request.getParameter("prefix");
+		}
+		
+		String boardID = prefix;
+		String uploadSN = "{" + guid + "}";
+		String fileName = fileTitle + "." + ext;
+		
+		fileName = fileName.replace("+", "%2b");
+		fileName = fileName.replace(";", "%3b");
+		fileName = fileName.replace("~", "%7e");
+		fileName = fileName.replace("=", "%3d");
+		
+		String fileExt = "";
+		
+		if (fileName.length() > 4) {
+			fileExt = fileName.substring(fileName.length() - 4).toLowerCase();
+		}
+		
+		String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+		
+		if (!new File(dirPath + "tempUploadFile").exists()) {
+			new File(dirPath + "tempUploadFile").mkdirs();
+		}
+		
+		if (!new File(dirPath + boardID).exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		}
+		
+		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "." + ext;
+		String mapPath = dirPath + "tempUploadFile" + commonUtil.separator;
+		
+		InputStream stream = null;
+		OutputStream bos = null;         
+		
+		try {
+			stream = request.getInputStream();
+			bos = new FileOutputStream(attachPath);
+			long fileSize = 0;
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+				fileSize += bytesRead;
+			}
+		} catch (Exception e) {
+			throw e;                
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+				}
+			}
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+				}
+			}
+		}
+		
+		File imageFile = new File(attachPath);	
+		
+		int nImgWidth = 0;
+		int nImgHeight = 0;
+		
+		if (imageFile.exists()) {			
+			BufferedImage bi = ImageIO.read(imageFile);			    
+			nImgWidth = bi.getWidth();
+			nImgHeight = bi.getHeight();
+			int nWidth = 0, nHeight = 0;
+			
+            if (nImgWidth > nImgHeight) {
+                nWidth = 200;
+                nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+            } else {
+                nHeight = 200;
+                nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+            }
+            
+            BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+            ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + fileExt));
+		}
+		
+		returnVal = "OK_" + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + uploadSN + fileExt;
+		
+		return returnVal;
+	}
+	
+	/**
 	 * 게시판 첨부파일가져오기 표출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getItemAttachments.do", produces = "text/plain; charset=utf-8")
@@ -3520,7 +3741,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String pTitle = "";
         String pConLocation = "";
         String pMode = "";
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
         
         pItemID = request.getParameter("itemID");
         pTitle = request.getParameter("title");
@@ -3634,7 +3855,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
 		String attID = request.getParameter("attID");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		
 		if (attID != null && !attID.equals("")) {
 			downFile(request, response, realPath + filePath, attID);
@@ -3672,7 +3893,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = "";
 		String itemIDs = "";
 		String docPath = "";
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		itemList = request.getParameter("itemList");
@@ -3847,7 +4068,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orgBoardID = "";
 		String destBoardID = "";
 		String uploadFilePath = config.getProperty("upload_board.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		
 		orgItemIDList = request.getParameter("orgItemIDList");
@@ -4050,7 +4271,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orgBoardID = "";
 		String destBoardID = "";
 		String uploadFilePath = config.getProperty("upload_board.ROOT");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		
 		orgItemIDList = request.getParameter("orgItemIDList");
@@ -4782,6 +5003,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
 		String boardType = request.getParameter("bType");
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		String uploadFilePath = "";
 		String strNow = "";
 		
@@ -4806,6 +5029,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("strNow", strNow);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "ezBoard/boardNewItemPhoto";
 	}
@@ -4820,7 +5044,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String pFileLimit = request.getParameter("fileLimit");
 		String uniqueIDs = request.getParameter("uniqueIDs");
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		String dirPath = "";
 		String serverPath = "";
 		String resultUpload = "";
@@ -4899,14 +5123,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				fileName = fileName.replace(";", "%3b");
 				
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
-				String guid = UUID.randomUUID().toString();
+				String guid = "{" + UUID.randomUUID().toString() + "}";
 				
 				uniqueName = guid + "." + extension;
 				thumbnailName = "s_" + guid + "." + extension;
 				
 				writeUploadedFile(multiFile.get(i), uniqueName, serverPath);
 				fileLocation = uniqueName;
-				File imageFile = new File(serverPath + commonUtil.separator + uniqueName);	
+				File imageFile = new File(serverPath + uniqueName);	
 				
 				int nImgWidth = 0;
 				int nImgHeight = 0;
@@ -4926,7 +5150,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     }
                     BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
                     bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-                    ImageIO.write(bufferedImage, extension, new File(serverPath + commonUtil.separator + thumbnailName));
+                    ImageIO.write(bufferedImage, extension, new File(serverPath + thumbnailName));
 				}
 				resultUpload = "true";
 
@@ -4980,7 +5204,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String guBun = request.getParameter("guBun");
         String itemIDs = "";
         String[] itemID = null;
-        String realPath = request.getServletContext().getRealPath("");
+        String realPath = commonUtil.getRealPath(request);
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
@@ -5169,7 +5393,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
 		String g_ImageUrl = "";
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page"));
 		int pStartRow = (page - 1) * imageCnt + 1;
@@ -5259,7 +5483,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String[] filePaths = boardListVO.getFilePath().split(";");
         String[] fileContents = boardListVO.getFileContent().split(";:;");
         String[] imageName = boardListVO.getImageNames().split(";");
-        String uploadFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT");
+        String uploadFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT");
         
         savecount = boardListVO.getImageID().split(";").length;
         boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
@@ -5368,7 +5592,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	return "OK";
         } else if (mod.equals("Mod")) {
-        	String uploadFilePath = request.getServletContext().getRealPath("") + config.getProperty("upload_board.ROOT");
+        	String uploadFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT");
         	String mainFg = doc.getElementsByTagName("MAINFG").item(0).getTextContent();
         	
         	boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
@@ -5955,7 +6179,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String boardID = xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent();
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = commonUtil.getRealPath(request);
 		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
 		
 		String[] fileName = new String[cnt];

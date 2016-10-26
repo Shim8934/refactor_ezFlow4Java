@@ -1060,12 +1060,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for(int i = 0; i < boardListVO.getImageCount(); i++){
 			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
-			strFilePath = boardListVO.getBoardID() + "/uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
+			strFilePath = boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
 			File mvFile = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
-				file.delete();
 			}
 			
 			map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());

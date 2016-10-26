@@ -12,8 +12,15 @@
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+   	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <script type="text/javascript">
@@ -211,14 +218,14 @@
 	                {
 	                    var checkreuslt = document.getElementById("addimagecontent").childNodes[i].childNodes[0].childNodes[0].childNodes[0].childNodes[0];
 	                    var checkreuslts = document.getElementById("addimagecontent").childNodes[i].childNodes[0].childNodes[0].childNodes[2].childNodes[0];
-	                    //경로
-	                    file += document.getElementById(checkreuslt.value).getAttribute('name') + "|";
-	                    //내용
-	                    content += checkreuslts.value + ";:;";
-	
-	                    var imagenamelength = document.getElementById(checkreuslt.value).getAttribute('name').lastIndexOf("\\");
-	                    //사진실제이름
-	                    filename += document.getElementById(checkreuslt.value).getAttribute('name').substring(imagenamelength + 1, imagenamelength.length) + ";";
+	                    
+	                    file += GetAttribute(document.getElementById(checkreuslt.value),'name') + "|";
+	                    
+	                    content += checkreuslts.value + "\\";
+
+	                    var imagenamelength = GetAttribute(document.getElementById(checkreuslt.value),'name').lastIndexOf("\\");
+	                    
+	                    filename += GetAttribute(document.getElementById(checkreuslt.value),'name').substring(imagenamelength + 1, imagenamelength.length) + ";";
 	                }
 	            }
 			
@@ -437,7 +444,7 @@
 	            var localFileName = getNodeText(GetChildNodes(nodes[i])[2]);
 	            var imgFileSize = getNodeText(GetChildNodes(nodes[i])[3]);
 	            var imgUniqueID = getNodeText(GetChildNodes(nodes[i])[6]);
-	
+
 	            addimageline(imgFileName, localFileName, imgUniqueID, imgFileSize);
 	        }
 	
@@ -471,8 +478,6 @@
 	            	document.getElementById('mode').value = "PICTURE";
 	                document.form.file1.click();
 	            } else {
-alert(111);
-// 	            	document.getElementById('mode').value = "PICTURE";
 	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 	                ezUtil.UseUTF8 = true;
 
@@ -545,7 +550,7 @@ alert(111);
 	        var attachXml = "<LISTVIEWDATA><ROWS>";
 	        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
 	            attachXml += "<ROW><CELL>";
-	            attachXml += "<DATA1>" + "/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	            attachXml += "<DATA1>" + "/files/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
 	            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
 	            attachXml += "<DATA3></DATA3>";
 	            attachXml += "<DATA4></DATA4>";
@@ -721,7 +726,11 @@ alert(111);
 	    }
 	    </script>
 	</head>
-	
+	<c:if test="${!isCrossBrowser}">
+		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+		    Append_AttachAdd(filename);
+		</script>
+	</c:if>
 	<body class="popup" onload="javascript:window_onload()">
 	    <table border="0" class="layout">
 	        <tr>
@@ -829,7 +838,9 @@ alert(111);
 	  </tr>
 	    <tr>
 	    <td style="display:none;">
-	    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+	    <c:if test="${!isCrossBrowser}">
+		    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+	    </c:if>
 	    <div id="lstAttachLink">&nbsp;</div>
 	    </td>
 	    </tr>

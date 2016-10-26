@@ -26,8 +26,15 @@
 	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js?ver_0.4"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js?ver_0.4"></script>
+		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 	    <script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
@@ -96,6 +103,12 @@
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var idDatepicker_Temp = "";
 		    var _T1_Temp = "";
+		    
+		    if (!"${isCrossBrowser}") {
+			    var objMHT = new ActiveXObject("MhtFormat.Convert");
+			    var objMHTRead = new ActiveXObject("MhtFormat.Convert");
+		    } 
+		    
 		    var NewGuid = "${newGuid}";
 			var mgubun = "";
 			var attachxml = "";
@@ -115,6 +128,11 @@
 		            document.getElementById("pUseBackGroundTR").style.display = "none";
 		        }
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+				
+				if (!"${isCrossBrowser}") {
+			        document.all.EzHTTPTrans.SetBigLang = "${userInfo.lang}" == "1" ? 1 : 0;
+			        document.all.EzHTTPTrans.UseDbCl = true;
+				}
 				
 			    if (pMode == "reply")
 			        if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -303,7 +321,6 @@
 		            $.datepicker.setDefaults($.datepicker.regional['ko']);
 		        });
 		    }else{
-		    	
 		        $(function () {
 		            $.datepicker.regional['en'] = {
 		                dateFormat: 'yy-mm-dd',
@@ -578,10 +595,16 @@
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT", MakeXMLString(document.getElementById("txtAbstract").value));
-	            if (attachxml != "")
-	                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
-	            else
-	                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
+		        
+		        if (CrossYN()) {
+		            if (attachxml != "") {
+		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", attachxml);
+		            } else {
+		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
+		            }
+		        } else {
+	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
+		        }
 
 		        if (pMode == "new" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
@@ -1289,27 +1312,7 @@
 		        document.getElementById('mode').value = "ATT";
 		        document.form.file1.click();
 		    }
-		    function btn_AttachAdd_onclick() {
-		        if (document.form.file1.value != "") {
-		            if (document.getElementById('mode').value == "PHOTO") {
-		                if (document.getElementById("form").file1.files.length < 7) {
-		                    document.getElementById('txtPhotoFile').value = document.form.file1.value;
-		                }
-		                else
-		                    alert(strLang23);
-		            }
-		            document.getElementById("boardid").value = pBoardID;
-		            document.getElementById("maxsize").value = parseInt(AttachLimit) * 1024 * 1024;
-		            document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-		            var frm = document.getElementById('form');
-		            frm.action = "/myoffice/ezBoardSTD/interASP/upload.aspx";
-		            frm.submit();
-		            document.form.file1.value = "";
-		        }
-		        else {
-		            alert("<spring:message code='ezCommunity.lhj07'/>");
-		        }
-		    }
+		    
 		    var fileSize = 0;
 		    function returnvalue(strXML) {
 		        var xml = loadXMLString(strXML);
@@ -1342,6 +1345,7 @@
 		        else
 		            AttachFileInfo(strXML);
 		    }
+		    
 		    var firstnode = true;
 		    function Tab1_NewTabIni(pTabNodeID) {
 		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
@@ -1717,6 +1721,11 @@
 	            }
 	        }
 	    </script>
+	    <c:if test="${!isCrossBrowser}">
+	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+			    Append_AttachAdd(filename);
+			</script>
+	    </c:if>
 	</head>
 	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
 	    <table class="layout" style="width: 100%;">
@@ -2085,17 +2094,44 @@
 	                </div>
 	            </td>
 	        </tr>
-			<c:choose>
-				<c:when test="${boardInfo.guBun != '3'}">
-			        <tr>
-			            <td style="height: 146px">
-			                <br />
-			                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
-			                <input type="hidden" name="mode" id="mode" />
-			            </td>
-			        </tr>
-				</c:when>
-			</c:choose>
+	    	<c:if test="${!isCrossBrowser}">
+				<c:choose>
+					<c:when test="${boardInfo.guBun != '3'}">
+				      <tr>
+				        <td height="20" valign="top" style="padding-top:10px">
+				          <table class="file" style="height:100px">
+				            <form name="multicheck">
+				              <tr>
+				                <th><spring:message code='ezBoard.t292' /></th>
+				                <td class="pos1" style="height:100px">                
+				                    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans");</SCRIPT>
+				                    <div id="lstAttachLink" style="display:none">&nbsp;</div>                
+				                </td>
+				                <td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezBoard.t440' /></span></a><br><a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezBoard.t441' /></span></a></td>
+				              </tr>
+				            </form>
+				          </table>
+				        </td>
+				      </tr>
+					</c:when>
+					<c:otherwise>
+						<SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+					</c:otherwise>
+				</c:choose>
+	    	</c:if>
+	    	<c:if test="${isCrossBrowser}">
+				<c:choose>
+					<c:when test="${boardInfo.guBun != '3'}">
+				        <tr>
+				            <td style="height: 146px">
+				                <br />
+				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
+				                <input type="hidden" name="mode" id="mode" />
+				            </td>
+				        </tr>
+					</c:when>
+				</c:choose>
+	    	</c:if>
 	    </table>
 	    <input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
