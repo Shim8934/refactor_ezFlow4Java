@@ -6272,5 +6272,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		return boardXML;
 	}
 	
+	/**
+	 * 게시판 게시판트리(boardPortlet) 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/boardSelect.do")
+	public String boardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		String useEditor = config.getProperty("config.EDITOR");
+		
+		model.addAttribute("useEditor", useEditor);
+		
+		return "ezBoard/boardBoardSelect";
+	}
+	
 	
 } 
