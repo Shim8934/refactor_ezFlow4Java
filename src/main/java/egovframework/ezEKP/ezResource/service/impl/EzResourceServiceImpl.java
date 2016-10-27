@@ -1389,11 +1389,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 								}
-							} 
-						} else {
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							} else {
+								tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							}
 						}
 					} else {
 						int count1 = 1;
@@ -1696,12 +1696,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 									} else {
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
-								}
-							} 
-						} else {
-							tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-							tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								} 
+							} else {
+								tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+							}
 						}
 					} else {
 						int count1 = 1;
@@ -2555,7 +2555,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			try {
 				resGetSchedule = getSchedule(Integer.parseInt(num), ownerID, companyID);
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 			if (resGetSchedule != null) {
 				orgGresFlag = resGetSchedule.getGresFlag();
@@ -2623,7 +2623,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 		return true;
