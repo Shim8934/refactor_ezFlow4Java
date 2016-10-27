@@ -265,7 +265,7 @@
 	            	document.frmEndPoll.submit();
 	        	}
 	    	}
-			var g_BrdID = "${qstListVO.brdId}";
+			var g_BrdID = "${qstListVO.brdID}";
 	    	function menuQst_List() {
 		        var szUrl = "qstList.do?${ReceveStr2}";
 		        window.location.href = szUrl;
@@ -467,13 +467,13 @@
             	<a class="imgbtn"><span onclick="fun_cancel();"><spring:message code='ezQuestion.t38' /></span></a>
         	</div>
         	<div id="hidField" style="display:none">
-	            <input type="hidden" name="brd_id" id="brd_id" value="${qstListVO.brdId}" /> 
+	            <input type="hidden" name="brd_id" id="brd_id" value="${qstListVO.brdID}" /> 
     	        <input type="hidden" name="item_no" id="item_no" value="${qstUserPollItemVO.itemNo}" /> 
         	    <input type="hidden" name="hidanonymity" id="hidanonymity" value="${qstUserPermissionVO.publicFlg}" /> 
             	<input type="hidden" name="hidopenResult" id="hidopenResult" value="${qstUserPermissionVO.publicResultFlg}" /> 
             	<input type="hidden" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" /> 
             	<input type="hidden" name="hidendpoll" id="hidendpoll" value="${qstUserPermissionVO.endFlg}" /> 
-            	<input type="hidden" name="brd_id2" id="brd_id2" value="${qstListVO.brdId}" /> 
+            	<input type="hidden" name="brd_id2" id="brd_id2" value="${qstListVO.brdID}" /> 
             	<input type="hidden" name="brd_nm" id="brd_nm" value="${ezQuestionVO.brdNm}" /> 
             	<input type="hidden" name="brd_postterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" />        
             	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${qstUserPollItemVO.pollStartDate}" />
@@ -485,7 +485,7 @@
         	</div>
 		</form> 
     	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 
-        	<input type="hidden" value="${qstListVO.brdId}" name="brd_id"/> 
+        	<input type="hidden" value="${qstListVO.brdID}" name="brd_id"/> 
         	<input type="hidden" value="${qstListVO.itemNo}" name="item_no" /> 
         	<input type="hidden" value="1" name="hidEndPoll" /> 
         	<input type="hidden" value="${receve}" name="Receve_str2" /> 
