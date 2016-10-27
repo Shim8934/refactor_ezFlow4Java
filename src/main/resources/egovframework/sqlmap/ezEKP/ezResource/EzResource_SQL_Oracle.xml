@@ -42,12 +42,6 @@
 		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
 	</resultMap>
 	
-	<!-- <resultMap class="ResGetItemListVO" 				id="resGetItemListVO">
-		<result property="brdID"					column="BRD_ID"					columnIndex="1"			nullValue=""/>
-		<result property="brdNm"					column="BRD_NM"					columnIndex="2"			nullValue=""/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="3"			nullValue="0"/>
-	</resultMap> -->
-	
 	<resultMap class="ResGetScheduleListVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
