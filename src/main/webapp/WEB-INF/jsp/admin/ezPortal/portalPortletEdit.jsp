@@ -708,10 +708,10 @@
 		function SelectBoard() {		    
 		    if (CrossYN()) {
 		        boardselect_cross_dialogArguments[1] = SelectBoard_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "BoardSelect_Cross", GetOpenWindowfeature(275, 435));
+		        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(275, 435));
 		        try { OpenWin.focus(); } catch (e) { }
 		    } else {
-		        var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
+		        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
 		        //var ret = window.showModalDialog("/myoffice/ezCommunity/CopyBoardItem.aspx", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken");
 		        if (typeof(ret) != "undefined")
 		        {

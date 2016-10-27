@@ -6276,11 +6276,39 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시판트리(boardPortlet) 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardSelect.do")
-	public String boardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String boardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = config.getProperty("config.EDITOR");
+		String useIE11Browser = config.getProperty("config.IE11EDITOR");
+		String noneActiveX = "YES";
+		
+		if (req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0 && useIE11Browser.equals("CK")) {
+			useIE11Browser = "CL";
+		}
+		
+		String pRootBoardID = "top";
+		String pSubFlag = "0";
+		int pSelectBy = 0;
+		String pExcludeBoardID = " ";
+		
+		String boardGroupAdminFG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		
+		int pMode = 0;
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
+			pMode = 0;
+		} else {
+			pMode = 1;
+		}
+		
+		String retXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()));
+		
+		
+		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
+			retXML = "<RESULT>ERROR</RESULT>";
+		}
 		
 		model.addAttribute("useEditor", useEditor);
-		
+		model.addAttribute("noneActiveX", noneActiveX);
 		return "ezBoard/boardBoardSelect";
 	}
 	

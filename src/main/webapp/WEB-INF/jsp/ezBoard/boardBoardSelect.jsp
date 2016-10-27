@@ -69,14 +69,15 @@
 		            return;
 		        }
 		        
-		        if (CheckIfCanWrite(SelectedBoardID)) {
-		            alert("<spring:message code='ezBoard.t349'/>");
-		            return;
-		        }
+		        if (CheckIfAnonyBoard(SelectedBoardID)) {
+		    		alert("<spring:message code='ezBoard.t349'/>");
+		    		return;
+		    	}
 		        
-       			ret = SelectedBoardID;
+       			ret[0] = SelectedBoardID;
+       			ret[2] = SelectedBoardName;
        			isselected = true;
-       			opener.BoardSelect_Cross_dialogArgument[1](ret);
+       			opener.boardselect_cross_dialogArguments[1](ret);
        			window.close();
 		    }
 
@@ -88,8 +89,7 @@
 				return false;
 			}
 			
-			function CheckIfCanWrite(pBoardID)
-			{
+			function CheckIfCanWrite(pBoardID) {
 				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
@@ -97,8 +97,7 @@
 				return false;
 			}
 			
-			function window_onload()
-			{
+			function window_onload() {
 				var xmlDom_treeview = createXMLHttpRequest();
 			    xmlDom_treeview.open("GET", "/xml/organtree_config2.xml", false);
 				xmlDom_treeview.send();
@@ -107,12 +106,10 @@
 			        var treeView = new TreeView();
 			        treeView.SetConfig(xmlDom_treeview.responseXML);
 			    }
-			
 				DisplayTopBoard();
 			}
 	
-			function TreeCtrl_onNodeExpanded(pNodeID,pTreeID) 
-			{
+			function TreeCtrl_onNodeExpanded(pNodeID,pTreeID) {
 				var xmlRtn = createXmlDom();
 			    var TreeIdx = pNodeID;	
 				var treeNode = new TreeNode();
@@ -120,14 +117,10 @@
 			    
 			    xmlRtn = GetSubBoard(treeNode.GetNodeData("DATA1"), "1")
 			    
-			    if(SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0)
-				{
-				    if(CrossYN())
-				    {
+			    if(SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+				    if(CrossYN()) {
 					    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-					}
-					else
-					{
+					} else {
 					    xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
 					}
 				}
@@ -136,21 +129,18 @@
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 			}
 			
-			function TreeCtrl_onNodeClick(pNodeID,pTreeID)  
-			{
+			function TreeCtrl_onNodeClick(pNodeID,pTreeID)  {
 				var treeNode = new TreeNode();
 			    treeNode.LoadFromID(pNodeID);
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");	
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			}
 			
-			function DisplayTopBoard()
-			{
+			function DisplayTopBoard() {
 				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
 				xmlhttp.send();
 				
-				if(xmlhttp.responseXML.text != "ERROR")
-				{
+				if(xmlhttp.responseXML.text != "ERROR") {
 					MakeTopBoardView(xmlhttp.responseText)
 				}
 			}
@@ -233,7 +223,7 @@
 			
 			window.onunload = function () {
 			    if (!isselected)
-			        opener.BoardSelect_Cross_dialogArgument[1]("");
+			        opener.boardselect_cross_dialogArguments[1]("");
 			}
 		</script>
 	</head>
