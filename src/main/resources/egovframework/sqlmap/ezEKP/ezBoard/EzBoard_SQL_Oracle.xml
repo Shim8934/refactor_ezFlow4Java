@@ -430,7 +430,7 @@
 	</procedure>
 	
 	<procedure id="EzBoardDAO.portalPageItemEdit" parameterClass="String" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_PORTALPAGEITEM_EDIT(#boardID#)}
+		{CALL EZBOARDSTD.EZSP_PORTALPAGEITEM_EDIT(#boardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="String" resultClass="BoardPropertyVO">
