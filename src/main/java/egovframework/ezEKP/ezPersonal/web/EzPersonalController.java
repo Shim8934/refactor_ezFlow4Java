@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -58,6 +61,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzPersonalController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzPersonalController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -876,9 +882,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		userInfo.setOffset(timeZone);
 		userInfo.setLang(lang);
-		
+		logger.debug("timeZone="+timeZone);
+		logger.debug("lang="+lang);
 		String result = ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
-		
 		
 		if (result != null && result.equals("OK")) {
 			if (lang != null &&lang.equals("1")) {

@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezPortal.service.impl.EzPortalServiceImpl;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -935,7 +936,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
-	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
+	public void insertTblUserLocalInfo(String userID, String timeZone, String lang) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("timeZone", timeZone);
+		map.put("lang", lang);
 		ezCommonDAO.insertTblUserLocalInfo(map);
 	}
 
@@ -948,6 +953,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.deleteUserLLocalInfo(map);
 	
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		logger.debug("pUserID="+pUserID);
+		logger.debug("timeZone="+userInfo.getOffset());
+		logger.debug("lang="+userInfo.getLang());
 		map1.put("userID", pUserID);
 		map1.put("timeZone", userInfo.getOffset());
 		map1.put("lang", userInfo.getLang());

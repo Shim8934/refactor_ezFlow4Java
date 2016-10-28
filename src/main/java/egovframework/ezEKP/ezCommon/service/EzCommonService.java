@@ -34,6 +34,6 @@ public interface EzCommonService {
 	
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception;
+	public void insertTblUserLocalInfo(String userID, String timeZone, String lang) throws Exception;
 
 }

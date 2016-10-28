@@ -156,11 +156,9 @@ public class LoginController {
 				lang = config.getProperty("config.primary");
 			}
 			
-			Map<String,Object> map = new HashMap<String, Object>();
-			map.put("userID", _uid);
-			map.put("timeZone", "235|+09:00");
-			map.put("lang", lang);
-			ezCommonService.insertTblUserLocalInfo(map);
+			logger.debug("userID="+_uid);
+			logger.debug("lang="+lang);
+			ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
 		}
 		//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
 		locale = new Locale(returnValue);
