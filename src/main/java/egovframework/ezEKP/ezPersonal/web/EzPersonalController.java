@@ -882,6 +882,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		userInfo.setOffset(timeZone);
 		userInfo.setLang(lang);
+		logger.debug("userID="+userInfo.getId());
 		logger.debug("timeZone="+timeZone);
 		logger.debug("lang="+lang);
 		String result = ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
