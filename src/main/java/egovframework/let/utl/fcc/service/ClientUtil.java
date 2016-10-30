@@ -83,7 +83,8 @@ public class ClientUtil {
 	            	 result = "IE9";
 	             else if (agent.indexOf("Trident/6.0") > 0)
 	            	 result = "IE10";
-	             else if (agent.indexOf("Trident/7.0") > 0)
+	             // Windows 10에서 Trident/8.0으로 전송되는 경우가 발생하여 추가함.  
+	             else if (agent.indexOf("Trident/7.0") > 0 || agent.indexOf("Trident/8.0") > 0)
 	            	 result = "IE11";
 	         }else{
 	             if (agent.indexOf("Edge") > 0)
