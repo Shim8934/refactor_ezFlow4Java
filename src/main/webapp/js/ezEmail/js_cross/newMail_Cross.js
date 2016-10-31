@@ -1150,6 +1150,13 @@ function on_keydown(e) {
         }
     }
 }
+
+function onblurOnRecipientInputField(value) {
+    if (value != null && value != '') {
+        NameCertify_onClick(null);
+    }
+}
+
 var NameCertify_onClick_returnFunction;
 function NameCertify_onClick(returnFunction) {
     if (document.getElementById("MsgTo").value == "" && document.getElementById("MsgCC").value == "" && document.getElementById("MsgBCC").value == "") {
