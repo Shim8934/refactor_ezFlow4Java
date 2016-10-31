@@ -197,8 +197,9 @@
 		                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));
 		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA10").item(0));
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-		                        if (FboardType == "" && FboardMainContent != "")
+		                        if (FboardType == "" && FboardMainContent != "") {
 		                            FboardType = "3";
+		                        }
 		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer'>";
 		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
 		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(3));
@@ -221,11 +222,15 @@
 		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
 
 		                            var boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA10").item(0));
-
+		                          //2016-10-31
+		                          //boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
+		                            var boardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+			                        if (boardType == "" && boardMainContent != "") {
+			                            boardType = "3";
+			                        }
 		                            listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + boardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        }
 		                        listHTML += "</ul>";
-
 		                        document.getElementById("BoardList").innerHTML = listHTML;
 		                        if (FboardType != "4" && FboardType != "3") {
 		                            if (FboardMainContent != "") {
@@ -252,6 +257,7 @@
 		                }
 		            }
 		            catch (e) {
+		            	alert(e);
 		            }
 		        }
 
@@ -261,13 +267,14 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 
-		            if (pType == "3" || pType == "4")
+		            if (pType == "3" || pType == "4") {
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-		            else {
-		                if (CrossYN() || pNoneActiveX == "YES")
-		                    window.open("/ezBoard/boardItemView.do?ShowAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                else
-		                    window.open("/ezBoard/boardItemView.do?ShowAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            } else {
+		                if (CrossYN() || pNoneActiveX == "YES") {
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                } else {
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                }
 		            }
 		        }
 
@@ -296,7 +303,7 @@
 		            createNodeInsert(xmlpara, objNode, "PARAMETER");
 		            createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoardSTD);
 		            createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
-		            xmlhttp_getContent_NewBoardSTD.open("POST", "/myoffice/ezBoardSTD/aspx/Get_ItemInfo.aspx", true);
+		            xmlhttp_getContent_NewBoardSTD.open("POST", "/ezBoard/getItemInfo.do", true);
 		            xmlhttp_getContent_NewBoardSTD.onreadystatechange = getContent_after;
 		            xmlhttp_getContent_NewBoardSTD.send(xmlpara);
 		        }
