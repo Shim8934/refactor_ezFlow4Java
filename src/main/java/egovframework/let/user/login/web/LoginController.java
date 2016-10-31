@@ -122,14 +122,24 @@ public class LoginController {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
+		
+		if (_uid == null || _uid.equals("")) {
+		    logger.debug("invalid _uid=" + _uid);
+		    
+		    return "";
+		}
+		
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+		
 		//DB에서 lang 값 가져옴
-		String lang = ezCommonService.selectUserGetLang(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
-		String timeZone = ezCommonService.selectUserGetTimeZone(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID()));
-
+		String lang = ezCommonService.selectUserGetLang(_uid);
+		String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
+		
 		String acceptLanguage = request.getHeader("Accept-Language");
 		String returnValue = "";
+
+        logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
 		
 		if (lang != null &&lang.equals("1")) {
 			returnValue = "ko";
@@ -141,15 +151,30 @@ public class LoginController {
 			returnValue = "zh";
 		} else {
 			// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)
-			returnValue = acceptLanguage.substring(0, 2);
+		    if (acceptLanguage != null) {
+		        returnValue = acceptLanguage.substring(0, 2);
+		    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+		    } else {
+		        String primary = config.getProperty("config.primary");
+		        
+		        if (primary.equals("1")) {
+		            returnValue = "ko";
+		        } else if (primary.equals("2")) {
+		            returnValue = "en";
+		        } else if (primary.equals("3")) {
+		            returnValue = "ja";
+		        } else if (primary.equals("4")) {
+		            returnValue = "zh";
+		        }		        
+		    }
 			
-			if (acceptLanguage.substring(0, 2).equalsIgnoreCase("ko")) {
+			if (returnValue.equalsIgnoreCase("ko")) {
 				lang = "1";
-			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("en")) {
+			} else if (returnValue.equalsIgnoreCase("en")) {
 				lang = "2";
-			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("ja")) {
+			} else if (returnValue.equalsIgnoreCase("ja")) {
 				lang = "3";
-			} else if (acceptLanguage.substring(0, 2).equalsIgnoreCase("zh")){
+			} else if (returnValue.equalsIgnoreCase("zh")){
 				lang = "4";
 			} else {
 				//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
@@ -160,6 +185,7 @@ public class LoginController {
 			logger.debug("lang="+lang);
 			ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
 		}
+		
 		//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
 		locale = new Locale(returnValue);
 		localeResolver.setLocale(request, response, locale);
@@ -178,10 +204,10 @@ public class LoginController {
         	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
 			int diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
 			//0보다 작아지면 패스워드 변경기한 Expired
-			if(diff <= 0){
+			if (diff <= 0) {
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
-			}else{
+			} else {
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				//IP Address,  마지막 login시간 저장
@@ -211,7 +237,7 @@ public class LoginController {
 	        	//return "redirect:/cmm/main/mainPage.do";
 	        	return "redirect:/ezPortal/portalMain.do";
 			}
-        }else{
+        } else {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
         }        
