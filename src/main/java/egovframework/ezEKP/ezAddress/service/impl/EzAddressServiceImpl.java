@@ -150,7 +150,11 @@ public class EzAddressServiceImpl implements EzAddressService {
 		return ezAddressDAO.getAddressList(map);
 	}
 	
-	public String makeRightField(String pOrgStr) {
+	private String makeRightField(String pOrgStr) {
+		if (pOrgStr == null) {
+			return null;
+		}
+		
 		return pOrgStr.replace("'", "''").replace("\0", "");
 	}
 

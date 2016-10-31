@@ -15,7 +15,6 @@
 	        var pFolderID = "${pFolderId}";
 	        var pFolderType = "${pFolderType}";
 	        var pOwerID = "${pOwerId}";
-	        var admin = "${pAdmin}";
 	        var deptAdmin = "${deptAdmin}";
 	        var compAdmin = "${compAdmin}";
 	        var pCurrentPage = "1";
@@ -62,6 +61,14 @@
 	            if (CrossYN() || (pNoneActiveX == "YES")) {
 	                document.getElementById("importaddress").style.display = "none";
 	                document.getElementById("exportaddress").style.display = "none";
+	                document.getElementById("importaddress_Cross").style.display = "";
+	                document.getElementById("exportaddress_Cross").style.display = "";
+	            }
+	            else {
+	                document.getElementById("importaddress").style.display = "";
+	                document.getElementById("exportaddress").style.display = "";
+	                document.getElementById("importaddress_Cross").style.display = "none";
+	                document.getElementById("exportaddress_Cross").style.display = "none";
 	            }
 	            Window_onresize();
 	            Get_AddressList();
@@ -577,6 +584,87 @@
 	            if (window.event.keyCode == "13")
 	                search_start();
 	        }
+	        function check_click(obj) {
+	            if (document.getElementById(obj).checked != true)
+	                document.getElementById(obj).checked = true;
+	            else
+	                document.getElementById(obj).checked = false;
+	        }
+	        var xmlHTTP = createXMLHttpRequest();
+	        function crossexport() {
+	            var pURL = "/ezAddress/excelExport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
+	            saveExcel.location.href = pURL;
+
+	            setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5001' />");
+	            document.getElementById("Div1").style.display = "";
+	            document.getElementById("loadingLayer").style.display = "";
+	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
+	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
+
+	            setTimeout("CheckReadState()", 500);
+	        }
+	        function CheckReadState() {
+	            var pURL = "/ezAddress/excelExport.do";
+	            xmlHTTP.open("POST", pURL, false);
+	            xmlHTTP.onreadystatechange = event_CrossExport;
+	            xmlHTTP.send();
+	        }
+	        function event_CrossExport() {
+	            if (xmlHTTP.readyState == 4 && xmlHTTP != null) {
+	                if (xmlHTTP.status == 200) {
+	                    document.getElementById("Div1").style.display = "none";
+	                    document.getElementById("loadingLayer").style.display = "none";
+					}
+	            }
+	        }
+	        function crossImport() {
+	        	if (deptAdmin != "Y" && pFolderType == "D") {
+	        		alert("<spring:message code='ezAddress.t1' />");
+	                return;
+	            }
+	            else if (compAdmin != "Y" && pFolderType == "C") {
+	            	alert("<spring:message code='ezAddress.t1' />");
+	                return;
+	            }
+	        	
+	            document.getElementById("file1").click();
+	        }
+	        function btn_AttachAdd_onclick() {
+	            var tempname = document.form.file1.value;
+	        	if (tempname == "") {
+		            return;
+	            }
+	        	
+	            var last = tempname.split(".").length;
+	            var extension = tempname.split(".")[last - 1];
+
+	            if (extension.toUpperCase() != "CSV") {
+	                alert("<spring:message code='ezAddress.t179' />");
+	                return;
+	            }
+				
+	            document.getElementById("Div1").style.display = "";
+	            document.getElementById("loadingLayer").style.display = "";
+	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
+	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
+	            
+		        var frm = document.getElementById('form');
+		        frm.action = "/ezAddress/excelImport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
+		        frm.submit();
+	        }
+	        function UploadComplete(result) {
+	        	document.form.file1.value = "";
+	        	document.getElementById("Div1").style.display = "none";
+		        document.getElementById("loadingLayer").style.display = "none";
+		        
+		        if (result == "OK") {
+		        	alert("<spring:message code='ezAddress.t178' />");
+		        } else {
+		        	alert("<spring:message code='ezAddress.t181' />");
+		        }
+		        
+		        window.location.reload();
+		    }
 	    </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -587,6 +675,10 @@
 				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
 				<li id="importaddress"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
 				<li id="exportaddress"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
+				
+				<li id="importaddress_Cross"><span onclick="crossImport()"><spring:message code='ezAddress.t210' /></span></li>
+        		<li id="exportaddress_Cross"><span onclick="crossexport()"><spring:message code='ezAddress.t143' /></span></li>
+				
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezAddress.t142' /></span></li>
@@ -794,5 +886,12 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="Div1">&nbsp;</div>
+	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="loadtxt"><spring:message code='ezAddress.t5000' /></span></span></span>
+	    <iframe id=saveExcel name=saveExcel style="display:none"></iframe>
+	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAddress/excelImport.do" target="ifrm">
+	        <input type="file" name="file1" id="file1" accept=".csv" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;"/>
+	    </form>
 	</body>
 </html>
