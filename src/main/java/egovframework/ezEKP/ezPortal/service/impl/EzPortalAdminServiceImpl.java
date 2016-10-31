@@ -8,12 +8,16 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -375,7 +379,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					menuItemType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
 					menuItemUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
 					menuItemPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
-					menuItemDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+//2016-10-31
+					menuItemDisplayName = xmlDom.getElementsByTagName("ROW").item(j).getChildNodes().item(4).getTextContent();
 					menuItemWidth = "0";
 					menuItemHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
 					menuItemCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
@@ -418,6 +423,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							ezPortalAdminDAO.updateTblTopMenuItems(map2);
 						} else {
 							Map<String, Object> map2 = new HashMap<String, Object>();
+							logger.debug("menuItemUID="+menuItemUID);
 							map2.put("uID", menuItemUID);
 							map2.put("pageUID", pPageID);
 							map2.put("parentPageID", pParentPageID);
@@ -511,19 +517,48 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("companyID", pCompanyID);
 			map.put("themeUID", pThemeUID);
 			ezPortalAdminDAO.insertTblTopMenuGeneral(map);
-
+			
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
-				for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
-					menuItemType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
-					menuItemUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
-					menuItemPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
-					menuItemDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+				NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+logger.debug("nodesLength="+nodes.getLength());
+				for (j=0; j<nodes.getLength(); j++) {
+				//for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
+					logger.debug("rowLength="+xmlDom.getElementsByTagName("ROW").getLength());
+					
+					NodeList nodesMenuItemType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
+					menuItemType = nodesMenuItemType.item(j).getTextContent();
+					//menuItemType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
+					NodeList nodesMenuItemUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/UID", xmlDom, XPathConstants.NODESET);
+					menuItemUID = nodesMenuItemUID.item(j).getTextContent();
+					//menuItemUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
+					NodeList nodesMenuItemPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
+					menuItemPageUID = nodesMenuItemPageUID.item(j).getTextContent();
+					//menuItemPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+					NodeList nodesMenuItemDisplayName = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/DISPLAYNAME", xmlDom, XPathConstants.NODESET);
+					menuItemDisplayName = nodesMenuItemDisplayName.item(j).getTextContent();
+					
+					//menuItemDisplayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(j).getTextContent().trim();
+					//2016-10-31
+					//DISPLAYNAME이 ROW위에, ROW안에 두개 있어서 ROW밑에 있는 DISPLAYNAME 탐색 수정
+					//menuItemDisplayName = xmlDom.getElementsByTagName("ROW").item(j).getChildNodes().item(4).getTextContent();
 					menuItemWidth = "0";
-					menuItemHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
-					menuItemCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
-					menuItemCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
-					menuItemCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
-					menuItemRootPageID = xmlDom.getElementsByTagName("ROOTPAGEID").item(j).getTextContent().trim();
+					NodeList nodesMenuItemHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/HEIGHT", xmlDom, XPathConstants.NODESET);
+					menuItemHeight = nodesMenuItemHeight.item(j).getTextContent();
+					//menuItemHeight = xmlDom.getElementsByTagName("HEIGHT").item(j).getTextContent().trim();
+					NodeList nodesMenuItemCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
+					menuItemCanRemove = nodesMenuItemCanRemove.item(j).getTextContent();
+					//menuItemCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
+					NodeList nodesMenuItemCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
+					menuItemCanResize = nodesMenuItemCanResize.item(j).getTextContent();
+					//menuItemCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
+					NodeList nodesMenuItemCanReplace = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREPLACE", xmlDom, XPathConstants.NODESET);
+					menuItemCanReplace = nodesMenuItemCanReplace.item(j).getTextContent();
+					//menuItemCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
+					NodeList nodesMenuItemRootPageID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/ROOTPAGEID", xmlDom, XPathConstants.NODESET);
+					menuItemRootPageID = nodesMenuItemRootPageID.item(j).getTextContent();
+					//menuItemRootPageID = xmlDom.getElementsByTagName("ROOTPAGEID").item(j).getTextContent().trim();
 
 					if (pPageID.toLowerCase().trim().equals(menuItemPageUID.toLowerCase().trim()) || menuItemType.equals("1")) {
 						for (int k=0; k<depth; k++) {
@@ -532,6 +567,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						rowPos = previousRowPos + interval * (j+1);
 						interval = 100000;
 						Map<String, Object> map2 = new HashMap<String, Object>();
+						logger.debug("menuItemUID2="+menuItemUID);
+						logger.debug("menuItemType="+menuItemType);
 						map2.put("uID", menuItemUID);
 						map2.put("pageUID", pPageID);
 						map2.put("parentPageID", pParentPageID);
