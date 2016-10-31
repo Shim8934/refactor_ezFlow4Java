@@ -722,7 +722,7 @@
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" onKeyPress="return on_keydown()" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
+		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
@@ -736,7 +736,7 @@
 		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" TABINDEX="2" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
@@ -748,7 +748,7 @@
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
-		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" TABINDEX="3" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>
