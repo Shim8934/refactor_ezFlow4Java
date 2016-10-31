@@ -3241,10 +3241,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String returnValue = "";
         try {
             
-            String field = "STYPE, AddressID, SNAME, SEMAIL, SCOMPANY, SDEPT, STITLE";
+            String pIdList = "'" + userInfo.getCompanyID() + "', '" + userInfo.getDeptID() + "', '" + userInfo.getId() + "'";
+        	String field = "STYPE, AddressID, SNAME, SEMAIL, SCOMPANY, SDEPT, STITLE";
             pFilter = "SNAME LIKE '%" + pFilter + "%'";
             
-            List<AddressInfoVO> addressInfoList = ezAddressService.getSearchList("'" + userInfo.getCompanyID() + "', '" + userInfo.getDeptID() + "'", "", pFilter, field, 0, 100, 0);
+            List<AddressInfoVO> addressInfoList = ezAddressService.getSearchList(pIdList, "", pFilter, field, 0, 100, 0);
             
             StringBuilder sb = new StringBuilder();
             
