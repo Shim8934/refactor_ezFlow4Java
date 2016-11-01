@@ -38,7 +38,7 @@
 		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
 		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"			nullValue=""/>
 		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
 		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
 		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
@@ -359,7 +359,7 @@
 	
 	<procedure id="EzPortalAdminDAO.loadSubMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
-			{CALL EZPORTAL.EZSP_LOADSUBMENUITEMCONFIG2(#v_UID#, #v_PAGEID#, #v_PSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZPORTAL.EZSP_LOADSUBMENUITEMCONFIG2(#v_UID#, #v_PAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -474,6 +474,12 @@
 	<procedure id="EzPortalAdminDAO.menuItemEdit"  resultClass="PortalTBLBuiltInParametersVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_MENUITEM_EDIT(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure>
+	
+	<procedure id="EzPortalAdminDAO.subMenuItemEdit1"  resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			{CALL EZPORTAL.EZSP_SUBMENUITEM_EDIT1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	

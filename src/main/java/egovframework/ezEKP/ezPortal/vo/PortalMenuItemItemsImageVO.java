@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezPortal.vo;
 
 public class PortalMenuItemItemsImageVO {
 	/** */
-	private String uID;
+	private String uID_;
 	/** */
 	private String ownerPageID;
 	/** */
@@ -28,11 +28,11 @@ public class PortalMenuItemItemsImageVO {
 	/** */
 	private String windowOption;
 	
-	public String getuID() {
-		return uID;
+	public String getuID_() {
+		return uID_;
 	}
-	public void setuID(String uID) {
-		this.uID = uID;
+	public void setuID_(String uID_) {
+		this.uID_ = uID_;
 	}
 	public String getOwnerPageID() {
 		return ownerPageID;

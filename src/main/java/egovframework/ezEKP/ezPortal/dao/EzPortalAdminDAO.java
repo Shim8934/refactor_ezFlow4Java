@@ -74,6 +74,11 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 () {
+		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.subMenuItemEdit1"); 
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PortalLoadLogoItemsVO> loadLogoItems (String pPageID) {
 		return (List<PortalLoadLogoItemsVO>) list("EzPortalAdminDAO.loadLogoItems", pPageID); 
 	}

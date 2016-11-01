@@ -274,7 +274,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return ezPortalAdminDAO.getPortletProperties(pUID);
 	}
 	
-	
+	@Override
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1() throws Exception {
+		return ezPortalAdminDAO.subMenuItemEdit1();
+	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
 		int indexOfDot = fileName.lastIndexOf(".");
@@ -522,7 +525,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 				NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
-logger.debug("nodesLength="+nodes.getLength());
+				logger.debug("nodesLength="+nodes.getLength());
 				for (j=0; j<nodes.getLength(); j++) {
 				//for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
 					logger.debug("rowLength="+xmlDom.getElementsByTagName("ROW").getLength());
@@ -1550,6 +1553,7 @@ logger.debug("nodesLength="+nodes.getLength());
 	}
 	
 	public String saveSubMenuItemConfig (String pXML, String pPageID) {
+		logger.debug("pXML="+pXML);
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		String imgUID = xmlDom.getElementsByTagName("IMGUID").item(0).getTextContent();
@@ -1589,7 +1593,7 @@ logger.debug("nodesLength="+nodes.getLength());
 		if (skin == null || skin.equals("")) {
 			skin = "0";
 		}
-		map.put("v_PSKINNUM", Integer.parseInt(skin));
+		map.put("v_PSKIN", Integer.parseInt(skin));
 		map.put("v_PNEWID", UUID.randomUUID().toString());
 		map.put("v_IMAGETYPE", "2");
 		map.put("v_EMPTYPUID", "");

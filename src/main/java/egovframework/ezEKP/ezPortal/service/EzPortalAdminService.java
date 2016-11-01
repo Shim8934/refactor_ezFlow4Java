@@ -20,6 +20,8 @@ public interface EzPortalAdminService {
 	
 	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
 	
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 () throws Exception;
+	
 	public List<PortalMenuItemItemsMenuItemsVO> loadMenuItems (String pUID, String pPageID) throws Exception;
 	
 	public List<PortalMenuItemItemsMenuItemsSVO> loadSubMenuItems (String pParentUID, String pPageID) throws Exception;
