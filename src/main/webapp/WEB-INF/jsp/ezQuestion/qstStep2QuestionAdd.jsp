@@ -714,7 +714,7 @@
                 		var tmpText = "";
                 		var lastindex = SelectNodes(xmlDom, "ATTACH/ROW").length;
                 		for (var count=0; count<lastindex; count++) {
-                    		var pTitle  = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "TITLE");
+                    		var pTitle  = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE");
                     		tmpText += pTitle + ";";
                 		}
                 		xmlDom = null;

@@ -25,6 +25,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +49,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPortal.service.impl.EzPortalAdminServiceImpl;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -83,6 +86,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzQuestionController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzQuestionController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -935,6 +941,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(req.getParameter("DataXML") != null) {
 			pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
+			logger.debug("pDataXML="+pDataXML);
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
 			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
 		
@@ -943,12 +950,18 @@ public class EzQuestionController extends EgovFileMngUtil {
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
 					pQstAnsInfo = doc.getElementsByTagName("ATTACH").item(0).getTextContent();
 					
-					int pAttachCnt = doc.getElementsByTagName("ROW").getLength();
+					XPath xpath = XPathFactory.newInstance().newXPath();
+					
+					NodeList nodes = (NodeList)xpath.evaluate("//ROW/ATTACH/ROW", doc, XPathConstants.NODESET);
+					logger.debug("nodesLength="+nodes.getLength());
+					
+					int pAttachCnt = nodes.getLength();
+					
 					for(int i=0; i<pAttachCnt; i++) {
-						if(pQstAttach != "") {
+						if(pQstAttach != null && !pQstAttach.equals("")) {
 							pQstAttach += ";";
 						}
-						pQstAttach += doc.getElementsByTagName("TITLE").item(i).getTextContent();
+						pQstAttach += doc.getElementsByTagName("ATTACHTITLE").item(i).getTextContent();
 					}
 				}
 			}
@@ -1228,8 +1241,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			qstCompleteVO.setMultiSelect(multiSelect);
 			
 			ezQuestionService.insertQuestion(qstCompleteVO);
-			
-	/*		if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+	//		
+			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				int qstAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
 				for(int qa=0; qa < qstAttachCnt; qa++) {
 					String attachType = doc.getElementsByTagName("TYPE").item(qa).getTextContent();
@@ -1244,13 +1257,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstCompleteVO3.setQuesNo(v_quesNo);
 					qstCompleteVO3.setAnswerNo(0);
 					qstCompleteVO3.setAttachNo(qa);
-					qstCompleteVO3.setAttachName(doc.getElementsByTagName("TITLE").item(qa).getTextContent());
+					qstCompleteVO3.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(qa).getTextContent());
 					qstCompleteVO3.setAttachURL(tmpAttachUrl);
 					qstCompleteVO3.setAttachType(attachType);
 					ezQuestionService.pollSaveAttach(qstCompleteVO3);
 				}
 			}
-			*/
+	//		
 			//////////////////////
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
@@ -1386,8 +1399,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pFileName = pFileName.replace(";", "%3b");
 			
 			String pDirPath = config.getProperty("upload_board.UPLOADQUESTION");
-			String qDirPath = req.getServletContext().getRealPath("");
-
+			String qDirPath = commonUtil.getRealPath(req);
 			File temp = new File(qDirPath);
 			if(!temp.exists()) {
 				temp.mkdirs();
