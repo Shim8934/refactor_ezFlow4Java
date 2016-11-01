@@ -2348,7 +2348,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			} else if (pType.equals("2")) {
 				PortalTBLPortletHtmlPageVO result = getTBLPortletHtmlPage(pUID);
 				resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
-System.out.println();
 			} else if (pType.equals("3")) {
 				PortalTBLPortletImageVO result = getTBLPortletImage(pUID);
 				resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";

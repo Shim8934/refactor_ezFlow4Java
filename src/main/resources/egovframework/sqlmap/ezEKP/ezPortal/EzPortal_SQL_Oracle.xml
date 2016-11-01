@@ -188,22 +188,6 @@
 		<result property="themeNm4"				column="THEMENM4"				columnIndex="26"/>
 	</resultMap>
 	
-	<resultMap class="PortalMenuItemItemsImageVO" id="portalMenuItemItemsImageVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="2"/>
-		<result property="skinNum"					column="SKINNUM"				columnIndex="3"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
-		<result property="imageType"				column="IMAGETYPE"				columnIndex="6"/>
-		<result property="normalImagePath"		column="NORMALIMAGEPATH"	columnIndex="8"/>
-		<result property="overImagePath"			column="OVERIMAGEPATH"		columnIndex="9"/>
-		<result property="imageWidth"				column="IMAGEWIDTH"			columnIndex="10"/>
-		<result property="imageHeight"				column="IMAGEHEIGHT"			columnIndex="11"/>
-		<result property="linkURL"					column="LINKURL"					columnIndex="12"/>
-		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="13"/>
-		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
-	</resultMap>
-	
 	<resultMap class="PortalTopLoadGetParametersVO" id="portalTopLoadGetParametersVO">
 		<result property="paramName"				column="PARAMNAME"			columnIndex="1"/>
 		<result property="paramValue"				column="PARAMVALUE"			columnIndex="2"/>
@@ -478,7 +462,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getImageHtml" parameterClass="Map" resultMap="portalMenuItemItemsImageVO">
+	<procedure id="EzPortalDAO.getImageHtml" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETIMAGEHTML(#v_pUID#, #v_pPARENTUID#, #v_pSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
