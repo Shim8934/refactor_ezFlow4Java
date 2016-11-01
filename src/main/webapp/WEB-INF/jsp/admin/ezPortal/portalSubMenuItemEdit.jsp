@@ -57,14 +57,13 @@
 			xmlhttp = null;
 		}
 		
-		function Save()
-		{
+		function Save() {
 			var strXML = "<DATA>";
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/Upload_Portal"));
-			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/Upload_Portal"));
+			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
 			
-			if (normalImgPath.indexOf("/Upload_Portal") == -1) normalImgPath = "";
-			if (overImgPath.indexOf("/Upload_Portal") == -1) overImgPath = "";
+			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(txtDisplayName.value) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(txtDisplayName2.value) + "</DISPLAYNAME2>";
 			strXML += "<NORMALIMAGE>" + normalImgPath + "</NORMALIMAGE>";
@@ -326,7 +325,7 @@
 		function changeNormalImage() {
 		    //if (CrossYN() || (pNoneActiveX=="YES")) {
 		        ImageState = "Normal";
-		        document.getElementById('mode').value = "PHOTO";
+		        document.getElementById('mode').value = "SubMenu";
 		        document.form.file1.click();
 		   /* }
 		    else {
@@ -361,7 +360,7 @@
 		function changeOverImage() {
 		    //if (CrossYN() || (pNoneActiveX == "YES")) {
 		        ImageState = "Over";
-		        document.getElementById('mode').value = "PHOTO";
+		        document.getElementById('mode').value = "SubMenu";
 		        document.form.file1.click();
 		    /*}
 		    else {
@@ -396,7 +395,7 @@
 
 		function btn_AttachAdd_onclick() {
 		    if (document.form.file1.value != "") {
-		        if (document.getElementById('mode').value == "PHOTO") {
+		        if (document.getElementById('mode').value == "SubMenu") {
 		            if (document.getElementById("form").file1.files.length < 2) {
 		            }
 		            else
@@ -419,7 +418,7 @@
 		                alert(strLang6);
 		                return;
 		            }
-		            if (document.getElementById('mode').value == "PHOTO") {
+		            if (document.getElementById('mode').value == "SubMenu") {
 		                if (ImageState == "Normal") {
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
 		                        txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
@@ -510,7 +509,7 @@
 						<%String normalImagePath = (String)request.getAttribute("normalImagePath"); %>
 						<% if (normalImagePath != null && !normalImagePath.trim().equals("")) { %>
 						<td id="tdNormalImage">
-							&nbsp;<img id="txtNormalImage" src="<%= normalImagePath%>"></td>
+							&nbsp;<img id="txtNormalImage" src="${normalImagePath}"></td>
 						<% } else { %>
 						<td id="tdNormalImage">
 							&nbsp;<img id="txtNormalImage" src="" style="display: none"></td>
@@ -536,7 +535,7 @@
 					<%String overImagePath = (String)request.getAttribute("overImagePath"); %>
 					<% if (overImagePath != null && !overImagePath.trim().equals("")) { %>
 						<td>
-							&nbsp;<img id="txtOverImage" src="<%= overImagePath %>"></td>
+							&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
 						<% } else { %>
 						<td id="tdOverImage">
 							&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
@@ -835,7 +834,7 @@
                         <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
                         <input type="hidden" name="boardid" id="boardid" />
                         <input type="hidden" name="maxsize" id="maxsize" />
-                        <input type="hidden" name="mode" id="mode" value="PHOTO"/>
+                        <input type="hidden" name="mode" id="mode" />
                         <input type="hidden" name="cnt" id="cnt" />
                         <input type="hidden" name="mailgubun" id="mailgubun" />
                     </form>
