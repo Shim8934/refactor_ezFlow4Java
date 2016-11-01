@@ -2214,7 +2214,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			xmlStr1 += "</DATA>";
 			xmlDom = commonUtil.convertStringToDocument(xmlStr1);
-			
+			logger.debug("subMenuXml="+xmlStr1);
 			if (xmlDom.getElementsByTagName("ALIGN").getLength() > 0) {
 				subAreaExist = "YES";
 			}
