@@ -1816,6 +1816,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String windowOption = "";
 		String displayName = "";
 		String displayName2 = "";
+		String menuType = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -1836,6 +1837,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				parentUID = req.getParameter("parentUID");
 			}
 			uID = ezPortalAdminService.createNewMenuItem(parentUID, pageID);
+		} else {
+			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
+				menuType = req.getParameter("parentUID");
+			}
 		}
 		
 		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1");
@@ -1907,6 +1912,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("menuType", menuType);
 		
 		return "/admin/ezPortal/portalMenuItemEdit";
 		

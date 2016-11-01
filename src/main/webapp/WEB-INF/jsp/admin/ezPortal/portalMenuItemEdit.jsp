@@ -57,7 +57,7 @@
 		    var strXML = "<DATA>";
 
 		    if (pmode == "new") {
-		        if (txtNormalImage.src.indexOf("/files/upload_portal") == -1 && txtOverImage.src.indexOf("/files/upload_porta") > -1) {
+		        if (txtNormalImage.src.indexOf("/files/upload_portal") == -1 && txtOverImage.src.indexOf("/files/upload_portal") > -1) {
 		            alert("<spring:message code='ezPortal.t10000'/>");
 		            return;
 		        }
@@ -427,7 +427,7 @@
 	<div id="menu">
 		<ul>
 			<li id ="saevbtn"><span onclick="Save()"><spring:message code='ezPortal.t62'/></span></li>
-            <c:if test="${mode == 'edit'}">
+            <c:if test="${mode == 'edit' && menuType == '203'}">
             	<li id ="Li1"><span onclick="SubMenus()"><spring:message code='ezPortal.t216'/></span></li>
             </c:if>
 		</ul>
