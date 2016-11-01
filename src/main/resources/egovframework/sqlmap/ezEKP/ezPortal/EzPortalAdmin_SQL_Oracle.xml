@@ -16,24 +16,6 @@
 	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
 	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 		type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
 	
-	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
-		<result property="portletType"				column="PORTLET_TYPE"			columnIndex="4"/>
-		<result property="url"							column="URL"						columnIndex="5"/>
-		<result property="maxUrl"						column="MAXURL"					columnIndex="6"/>
-		<result property="showTitleBar"				column="SHOWTITLEBAR"		columnIndex="7"/>
-		<result property="userType"					column="USERTYPE"				columnIndex="8"/>
-		<result property="height"						column="HEIGHT"					columnIndex="9"/>
-		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="10"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="11"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="12"/>
-		<result property="usePotalGubun"			column="USEPOTALGUBUN"		columnIndex="13"/>
-		<result property="width"						column="WIDTH"					columnIndex="14"/>
-		<result property="frameType"				column="FRAMETYPE"				columnIndex="15"/>
-	</resultMap> 
-	
 	<resultMap class="PortalMenuItemItemsMenuItemsVO" id="portalMenuItemItemsMenuItemsVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
 		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
@@ -441,7 +423,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalAdminDAO.getPortletProperties" parameterClass="String"  resultMap="portalPortletGeneralVO" remapResults="true">
+	<procedure id="EzPortalAdminDAO.getPortletProperties" parameterClass="String"  resultClass="PortalPortletGeneralVO" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

@@ -254,7 +254,7 @@
 		<result property="portletType"				column="PORTLETTYPE"			columnIndex="5"/>
 		<result property="displayName"				column="DISPLAYNAME"			columnIndex="6"/>
 		<result property="width"						column="WIDTH"					columnIndex="7"/>
-		<result property="height"						column="HEIGHT"					columnIndex="8"/>
+		<result property="height"						column="HEIGHT"					columnIndex="8"			nullValue="0"/>
 		<result property="rowPos"						column="ROWPOS"					columnIndex="9"/>
 		<result property="columnPos"				column="COLUMNPOS"			columnIndex="10"/>
 		<result property="canRemove"				column="CANREMOVE"			columnIndex="11"/>
@@ -268,24 +268,6 @@
 		<result property="rightMargin"				column="RIGHTMARGIN"			columnIndex="19"		nullValue="0"/>
 		<result property="mandatory"				column="MANDATORY"			columnIndex="20"/>
 	</resultMap>
-	
- 	<resultMap class="PortalPortletGeneralVO" id="portalPortletGeneralVO">
-		<result property="uID"							column="UID_"						columnIndex="1"/>
-		<result property="displayName"				column="DISPLAYNAME"			columnIndex="2"/>
-		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="3"/>
-		<result property="portletType"				column="PORTLET_TYPE"			columnIndex="4"/>
-		<result property="url"							column="URL"						columnIndex="5"/>
-		<result property="maxUrl"						column="MAXURL"					columnIndex="6"/>
-		<result property="showTitleBar"				column="SHOWTITLEBAR"		columnIndex="7"/>
-		<result property="userType"					column="USERTYPE"				columnIndex="8"/>
-		<result property="height"						column="HEIGHT"					columnIndex="9"/>
-		<result property="gubunFlag"				column="GUBUNFLAG"				columnIndex="10"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="11"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="12"/>
-		<result property="usePotalGubun"			column="USEPOTALGUBUN"		columnIndex="13"/>
-		<result property="width"						column="WIDTH"					columnIndex="14"/>
-		<result property="frameType"				column="FRAMETYPE"				columnIndex="15"/>
-	</resultMap> 
 	
 	<resultMap class="PortalUrlPortletVO" id="portalUrlPortletVO">
 		<result property="uID"							column="UID_"						columnIndex="1"/>
@@ -582,7 +564,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getPorletProperties" parameterClass="Map"  resultMap="portalPortletGeneralVO" >
+	<procedure id="EzPortalDAO.getPorletProperties" parameterClass="Map"  resultClass="PortalPortletGeneralVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -660,7 +642,7 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.searchPortletCheckRight2" parameterClass="Map" resultMap="portalPortletGeneralVO">
+	<procedure id="EzPortalDAO.searchPortletCheckRight2" parameterClass="Map" resultClass="PortalPortletGeneralVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SEARCHPORTLETCHECKRIGHT2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pENDROW#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>

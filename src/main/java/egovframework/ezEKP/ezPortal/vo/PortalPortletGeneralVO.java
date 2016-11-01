@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezPortal.vo;
 
 public class PortalPortletGeneralVO {
 	/** */
-	private String uID;
+	private String uID_;
 	/** */
 	private String displayName;
 	/** */
@@ -32,11 +32,11 @@ public class PortalPortletGeneralVO {
 	/** */
 	private String frameType;
 	
-	public String getuID() {
-		return uID;
+	public String getuID_() {
+		return uID_;
 	}
-	public void setuId(String uID) {
-		this.uID = uID;
+	public void setuId_(String uID_) {
+		this.uID_ = uID_;
 	}
 	public String getDisplayName() {
 		return displayName;

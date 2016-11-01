@@ -2760,9 +2760,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow -1) {
 				if (pMode.equals("view")) {
-					if (checkViewRightBln(list.get(i).getuID(), getAccessList(userInfo)) == true) {
+					if (checkViewRightBln(list.get(i).getuID_(), getAccessList(userInfo)) == true) {
 						retXML += "<ROW>";
-                        retXML += "<UID_>" + list.get(i).getuID().trim() + "</UID_>";
+                        retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
                         retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
                         if (list.get(i).getPortletType() == 1) {
@@ -2783,9 +2783,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         retXML += "</ROW>";
 					}
 				} else if (pMode.equals("edit")) {
-					if (checkEditRightBln(list.get(i).getuID(), getAccessList(userInfo)) == true) {
+					if (checkEditRightBln(list.get(i).getuID_(), getAccessList(userInfo)) == true) {
 						retXML += "<ROW>";
-                        retXML += "<UID_>" + list.get(i).getuID().trim() + "</UID_>";
+                        retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
                         retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
                         if (list.get(i).getPortletType() == 1) {

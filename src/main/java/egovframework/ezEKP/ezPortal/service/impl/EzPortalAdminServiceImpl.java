@@ -37,7 +37,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO;
-import egovframework.ezEKP.ezPortal.web.EzPortalController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -668,7 +667,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType) {
+	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType) throws Exception {
 		int i=0;
 		int j=0;
 		logger.debug("pXML="+pXML);
@@ -717,6 +716,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent().trim();
 			pUserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 			pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+			//테마추가
 			pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
 			pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
 			logger.debug("width="+width);
@@ -755,21 +755,30 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 
 			ezPortalAdminDAO.insertTblPortalPageGeneral(map);
 			
+			XPath xpath = XPathFactory.newInstance().newXPath();
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
-				for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
-					portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
-					portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
-					portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+				NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+				for (j=0; j<nodes.getLength(); j++) {
+					NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
+					portletType = nodesPortletType.item(j).getTextContent();
+					NodeList nodesPortletUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/UID", xmlDom, XPathConstants.NODESET);
+					portletUID = nodesPortletUID.item(j).getTextContent();
+					NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
+					portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 					portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 					
 					PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
 					portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
-					portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
-					portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
-					portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
-					portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
+					NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
+					portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
+					NodeList nodesPortletCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
+					portletCanResize = nodesPortletCanResize.item(j).getTextContent();
+					NodeList nodesPortletCanReplace = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREPLACE", xmlDom, XPathConstants.NODESET);
+					portletCanReplace = nodesPortletCanReplace.item(j).getTextContent();
+					NodeList nodesPortletOwnerPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/OWNERPAGEUID", xmlDom, XPathConstants.NODESET);
+					portletOwnerPageUID = nodesPortletOwnerPageUID.item(j).getTextContent();
 					
 					if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 						for (int k=0; k<depth; k++) {
@@ -837,24 +846,37 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				map.put("pPageID", pPageID);
 				ezPortalAdminDAO.updatePortalPageGeneral(map);
 				
+				XPath xpath = XPathFactory.newInstance().newXPath();
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 					previousRowPos = 0;
-					for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
-						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
-						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
-						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+					//////////////////////////
+					NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+					for (j=0; j<nodes.getLength(); j++) {
+						/////////
+						NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
+						portletType = nodesPortletType.item(j).getTextContent();
+						NodeList nodesPortletUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/UID", xmlDom, XPathConstants.NODESET);
+						portletUID = nodesPortletUID.item(j).getTextContent();
+						NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
+						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
-						logger.debug("portletDisplayName="+portletDisplayName);
-						PortalPortletGeneralVO widthDom =  ezPortalAdminDAO.getPortletProperties(portletUID);
-						portletWidth = String.valueOf(widthDom.getWidth());
+						
+						PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
+						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
-						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
-						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
-						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
-						portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
-						portletPrevPageID = xmlDom.getElementsByTagName("PREVPAGEID").item(j).getTextContent().trim();
-						
+						NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
+						portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
+						NodeList nodesPortletCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
+						portletCanResize = nodesPortletCanResize.item(j).getTextContent();
+						NodeList nodesPortletCanReplace = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREPLACE", xmlDom, XPathConstants.NODESET);
+						portletCanReplace = nodesPortletCanReplace.item(j).getTextContent();
+						NodeList nodesPortletOwnerPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/OWNERPAGEUID", xmlDom, XPathConstants.NODESET);
+						portletOwnerPageUID = nodesPortletOwnerPageUID.item(j).getTextContent();
+						NodeList nodesPortletPrevPageID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PREVPAGEID", xmlDom, XPathConstants.NODESET);
+						portletPrevPageID = nodesPortletPrevPageID.item(j).getTextContent();
+						/////////
+						////////////////
 						if (portletPrevPageID != null && !portletPrevPageID.equals("")) {
 							Map<String, Object> map2 = new HashMap<String, Object>();
 							map2.put("v_pPORTLET_PREVPAGEID", portletPrevPageID);
@@ -981,6 +1003,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent().trim();
 				pUserID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 				pUserName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
+				//테마추가
 				pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
 				pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
 				
@@ -1017,21 +1040,32 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 
 				ezPortalAdminDAO.insertTblPortalPageGeneral(map9);
 				
+				XPath xpath = XPathFactory.newInstance().newXPath();
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
-					for (j=0; j<xmlDom.getElementsByTagName("ROW").getLength(); j++) {
-						portletType = xmlDom.getElementsByTagName("TYPE").item(j).getTextContent().trim();
-						portletUID = xmlDom.getElementsByTagName("UID").item(j).getTextContent().trim();
-						portletPageUID = xmlDom.getElementsByTagName("PAGEUID").item(j).getTextContent().trim();
+					NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+					for (j=0; j<nodes.getLength(); j++) {
+						//////
+						NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
+						portletType = nodesPortletType.item(j).getTextContent();
+						NodeList nodesPortletUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/UID", xmlDom, XPathConstants.NODESET);
+						portletUID = nodesPortletUID.item(j).getTextContent();
+						NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
+						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						
 						PortalPortletGeneralVO widthDom2 =  ezPortalAdminDAO.getPortletProperties(portletUID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
-						portletCanRemove = xmlDom.getElementsByTagName("CANREMOVE").item(j).getTextContent().trim();
-						portletCanResize = xmlDom.getElementsByTagName("CANRESIZE").item(j).getTextContent().trim();
-						portletCanReplace = xmlDom.getElementsByTagName("CANREPLACE").item(j).getTextContent().trim();
-						portletOwnerPageUID = xmlDom.getElementsByTagName("OWNERPAGEUID").item(j).getTextContent().trim();
+						NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
+						portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
+						NodeList nodesPortletCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
+						portletCanResize = nodesPortletCanResize.item(j).getTextContent();
+						NodeList nodesPortletCanReplace = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREPLACE", xmlDom, XPathConstants.NODESET);
+						portletCanReplace = nodesPortletCanReplace.item(j).getTextContent();
+						NodeList nodesPortletOwnerPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/OWNERPAGEUID", xmlDom, XPathConstants.NODESET);
+						portletOwnerPageUID = nodesPortletOwnerPageUID.item(j).getTextContent();
+						//////
 
 						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 							for (int k=0; k<depth; k++) {
