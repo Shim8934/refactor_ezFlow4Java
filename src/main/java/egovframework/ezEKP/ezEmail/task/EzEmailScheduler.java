@@ -133,13 +133,13 @@ public class EzEmailScheduler {
 	 */
 	@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
-		logger.debug("10분 주기로 호출이 됩니다.");
+		logger.debug("reservedMailSend scheduler started.");
 		Locale locale = Locale.getDefault();
 
 		//DB에 있는 예약발송리스트 가져와서 Loop
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		for (MailReservationVO vo : list) {
-			
+			logger.debug(vo.toString());
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
 			try {
@@ -163,8 +163,14 @@ public class EzEmailScheduler {
 							userId + "@"+config.getProperty("config.DomainName"), password);
 	
 					MimeMessage message = sa.readMimeMessage(fis);
-					Transport.send(message);
-	
+					
+					//SentDate 재설정
+			        message.setSentDate(Calendar.getInstance().getTime());
+					logger.debug("sentDate=" + message.getSentDate().toString());
+			        
+			        Transport.send(message);
+			        logger.debug("Succeed in sending the reserved message.");
+			        
 					//보낸편지함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
@@ -173,15 +179,20 @@ public class EzEmailScheduler {
 						folder.open(Folder.READ_WRITE);
 						folder.appendMessages(new Message[]{message});
 						folder.close(true);
+						logger.debug("Succeed in saving a message in sent folder.");
 					}
 	
 					//파일시스템의 eml파일 삭제
 					f.delete();
+					logger.debug("Succeed in deleting EML file.");
+				} else {
+					logger.debug("Cannot find file. filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				}
 	
 				//DB에서 삭제
 				ezEmailService.deleteMailReserved(vo.getMessageId());
-			
+				logger.debug("Succeed in deleting data from DB.");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -194,6 +205,8 @@ public class EzEmailScheduler {
 			}
 			
 		}
+		
+		logger.debug("reservedMailSend scheduler ended.");
 	}
 
 	/**
