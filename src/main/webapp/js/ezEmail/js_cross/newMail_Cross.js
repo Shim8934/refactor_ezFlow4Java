@@ -1266,7 +1266,7 @@ function GetMailAddresses(name) {
     var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
     var row;
     for (count = 0; count < contactList.length; count++) {
-        if (SelectSingleNodeValue(contactList[count], "STYLE") == "P") {
+        if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
             m_addrBook["type"][count + adCount] = "email";
             try {
                 m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
