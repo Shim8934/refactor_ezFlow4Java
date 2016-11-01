@@ -8,12 +8,12 @@ CKEDITOR.plugins.setLang( 'simpleuploads', 'ko',
         nonAcceptedExtension: '파일 유형이 올바르지 않습니다. 올바른 파일만 사용하십시오.\r\n%0',
 
 		// The file isn't an accepted type for images
-		nonImageExtension: 'You must select an image',
+		nonImageExtension: '이미지 파일을 선택해 주십시오.',
 
 		// The width of the image is over the allowed maximum
-		imageTooWide: 'The image is too wide',
+		imageTooWide: '이미지 가로 크기가 너무 큽니다.',
 
 		// The height of the image is over the allowed maximum
-		imageTooTall: 'The image is too tall'
+		imageTooTall: '이미지 높이가 너무 큽니다.'
     }
 );
