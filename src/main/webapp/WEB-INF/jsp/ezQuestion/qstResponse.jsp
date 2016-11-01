@@ -326,12 +326,10 @@
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t325" /></th>
-<script>alert("${qstUserPollItemVO.responseCnt}");</script>
 		    <td><c:out value="${qstUserPollItemVO.responseCnt}"/> <spring:message code="ezQuestion.t326" /><c:out value="${qstUserPollItemVO.readCnt}"/> ] </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t327" /></th>
-<script>alert("${qstUserPollItemVO.content}");</script>
 		    <td><c:out value="${qstUserPollItemVO.content}"/> </td>
 		  </tr>
 		</table>
