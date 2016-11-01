@@ -1510,6 +1510,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/excelExport.do")
 	public void addressExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String folderId = request.getParameter("folderid");
 		String folderType = request.getParameter("foldertype");
 		String ownerId = request.getParameter("ownerid");
@@ -1525,8 +1527,13 @@ public class EzAddressController{
 		CSVWriter csvWriter = null;
 		
 		try {
-			//TODO: user lang 보고 charset 정하기.
-			writer = new OutputStreamWriter(response.getOutputStream(), "euc-kr");
+			String charset = "euc-kr";
+			if (userInfo.getLang().equals("3")) {
+				charset = "euc-jp";
+			}
+			
+			writer = new OutputStreamWriter(response.getOutputStream(), charset);
+			
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headArray = new String[87];
@@ -1653,7 +1660,6 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/excelImport.do")
 	public String addressImport(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception {		
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         
 		String folderId = request.getParameter("folderid");
@@ -1675,9 +1681,14 @@ public class EzAddressController{
         List<String[]> csvList = null;
         
         try {
-        	
 	        stream = multiFile.get(0).getInputStream();
-	        reader = new InputStreamReader(stream, "euc-kr");
+	        
+	        String charset = "euc-kr";
+			if (userInfo.getLang().equals("3")) {
+				charset = "euc-jp";
+			}
+			
+	        reader = new InputStreamReader(stream, charset);
 	        csvReader = new CSVReader(reader);
 	        csvList = csvReader.readAll();
 	        
@@ -1806,7 +1817,6 @@ public class EzAddressController{
         	String sHomeAddr = "";
         	String sMemo = "";
         	
-        	System.out.println("userInfo.lang=" + userInfo.getLang());
         	if (userInfo.getLang().equals("2")) { //영어권
         		if (nameIndex != -1) {
             		if (addressArr[nameIndex] != null) {
