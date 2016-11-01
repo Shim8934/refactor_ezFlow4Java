@@ -1782,7 +1782,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				mainHTML += "</tr>";
 			}
 			
-			model.addAttribute("logoAreaExist", utilAreaExist);
+			model.addAttribute("utilAreaExist", utilAreaExist);
 			model.addAttribute("mainHTML", mainHTML);
 			model.addAttribute("pageID", pageID);
 			model.addAttribute("layoutList", layoutList);
@@ -2363,6 +2363,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID);
+		logger.debug("strXML="+strXML);
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
 			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
@@ -2384,7 +2385,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID);
 		
-		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.subMenuItemEdit1();
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
 		
@@ -2420,6 +2421,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("param", param);
 		model.addAttribute("imageWidth", imageWidth);
 		model.addAttribute("imageHeight", imageHeight);
+		logger.debug("normalImagePath="+normalImagePath);
+		logger.debug("overImagePath="+overImagePath);
 		model.addAttribute("normalImagePath", normalImagePath);
 		model.addAttribute("overImagePath", overImagePath);
 		model.addAttribute("linkURL", linkURL);
@@ -2447,7 +2450,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 			pageID = req.getParameter("pageID");
 		}
-		
+		logger.debug("xmlStr="+xmlStr);
 		String ret = ezPortalAdminService.saveSubMenuItemConfig(xmlStr, pageID);
 		return ret;
 	}
