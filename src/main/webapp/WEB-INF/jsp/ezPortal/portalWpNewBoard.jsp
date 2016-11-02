@@ -71,7 +71,7 @@
         	function getBoardList_NewBoard() {
                 $.ajax({
     	        	type : "POST",
-    	        	dataType : "xml",
+    	        	dataType : "text",
     	        	url : "/ezBoard/getBoardList.do",
     	        	data : {
     	        		boardType   : "1", 
@@ -80,8 +80,8 @@
 						orderCell 	 : "", 
 						orderOption : ""
     	        	},
-    	        	success : function(xml){		        		
-    	        		getBoardList_NewBoard_after(xml);
+    	        	success : function(xml){
+    	        		getBoardList_NewBoard_after(loadXMLString(xml));
     	        	},
     	        	error : function(error){
     	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
@@ -117,7 +117,6 @@
                         listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>";
 
                         var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
-
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
                         listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.gif' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
