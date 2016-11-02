@@ -45,7 +45,7 @@
 		<result property="postDate"					column="POST_DATE"					columnIndex="11"/>
 		<result property="updateDate"				column="UPDATE_DATE"				columnIndex="12"/>
 		<result property="endDate"					column="END_DATE"					columnIndex="13"/>
-		<result property="postTerm"					column="POST_TERM"					columnIndex="14"/>
+		<result property="postTerm"					column="POST_TERM"					columnIndex="14"	nullValue="0"/>
 		<result property="itemRef"					column="ITEM_REF"					columnIndex="15"/>
 		<result property="itemLevel"				column="ITEM_LEVEL"					columnIndex="16"/>
 		<result property="itemStep"					column="ITEM_STEP"					columnIndex="17"/>
