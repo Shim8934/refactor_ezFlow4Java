@@ -550,6 +550,7 @@
         		}
 		
         		if(pEditIndex != "") {
+alert(pEditIndex);
              		window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
         		} else {
             		window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));
@@ -642,7 +643,7 @@
         		var useragentstr = navigator.userAgent;
         		if (useragentstr.indexOf(_MSIE) != -1) {
             		var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
-            		var szUr = "qstAttachNonActX.do?idName=" + pID;
+            		var szUrl = "/ezQuestion/qstAttachNonActX.do?idName=" + pID;
             		var rv = window.showModalDialog(szUrl, rgParams, szParam);
             		if (rgParams["m_Return"] == "OK") {
                 		if (pID == "A") {
@@ -677,7 +678,7 @@
             		}
         		} else {
             		if ((g_windowReference == null) || (g_windowReference.closed == true)) {
-                		var szUrl = "qstAttachNonActX.do?idName=" + pID;
+                		var szUrl = "/ezQuestion/qstAttachNonActX.do?idName=" + pID;
                 		g_windowReference = window.open("","AttachAdd","height=370px,width=500px,resizable=no,center=yes" + GetOpenPosition(500, 370));                
                 		document.AttachAdd.m_AttachInfo.value = rgParams["m_AttachInfo"];
                 		document.AttachAdd.m_AttachType.value = pID;
