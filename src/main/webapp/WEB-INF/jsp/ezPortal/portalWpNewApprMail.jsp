@@ -228,7 +228,7 @@
         	if ("<%=userApprovalG%>" == "YES") {
         	      $.ajax({
       	        	type : "POST",
-      	        	dataType : "xml",
+      	        	dataType : "text",
       	        	url : "/ezApprovalG/getPortletAprDocList.do",
       	        	data : {
       	        		pListTypeName   : pListTypeValue, 
@@ -244,7 +244,7 @@
       	        		subQuery : ""
       	        	},
       	        	success : function(xml){		        		
-      	        		getDocList_after(xml);
+      	        		getDocList_after(loadXMLString(xml));
       	        	},
       	        	error : function(error){
       	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
@@ -253,7 +253,7 @@
         	} else {
         		 $.ajax({
        	        	type : "POST",
-       	        	dataType : "xml",
+       	        	dataType : "text",
        	        	url : "/ezApproval/getPortletAprDocList.do",
        	        	data : {
        	        		pListTypeName   : pListTypeValue, 
@@ -268,8 +268,8 @@
        	        		searchQuery : "",
        	        		subQuery : ""
        	        	},
-       	        	success : function(xml){		        		
-       	        		getDocList_after(xml);
+       	        	success : function(xml){
+       	        		getDocList_after(loadXMLString(xml));
        	        	},
        	        	error : function(error){
        	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
