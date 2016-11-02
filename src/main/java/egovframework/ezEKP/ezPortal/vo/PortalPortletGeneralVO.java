@@ -8,7 +8,7 @@ public class PortalPortletGeneralVO {
 	/** */
 	private String displayName2;
 	/** */
-	private int portletType;
+	private int portlet_Type;
 	/** */
 	private String url;
 	/** */
@@ -50,11 +50,11 @@ public class PortalPortletGeneralVO {
 	public void setDisplayName2(String displayName2) {
 		this.displayName2 = displayName2;
 	}
-	public int getPortletType() {
-		return portletType;
+	public int getPortlet_Type() {
+		return portlet_Type;
 	}
-	public void setPortletType(int portletType) {
-		this.portletType = portletType;
+	public void setPortlet_Type(int portlet_Type) {
+		this.portlet_Type = portlet_Type;
 	}
 	public String getUrl() {
 		return url;

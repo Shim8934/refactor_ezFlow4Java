@@ -937,12 +937,13 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
-
+			logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID));
 			if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 				gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
 				if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
+					logger.debug("getPortletSubProperties="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
+					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
 					
 					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
 						//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();

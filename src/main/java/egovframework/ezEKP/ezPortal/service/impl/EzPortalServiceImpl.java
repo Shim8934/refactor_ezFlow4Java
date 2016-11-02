@@ -2335,7 +2335,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "<DATA><DATA/>";
 		}
 	}
 	
@@ -2358,7 +2358,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "<DATA><DATA/>";
 		}
 	}
 	
@@ -2765,16 +2765,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
                         retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
-                        if (list.get(i).getPortletType() == 1) {
+                        if (list.get(i).getPortlet_Type() == 1) {
                         	retXML += "<TYPE>URL 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 2) {
+                        if (list.get(i).getPortlet_Type() == 2) {
                         	retXML += "<TYPE>HTML 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 3) {
+                        if (list.get(i).getPortlet_Type() == 3) {
                         	retXML += "<TYPE>이미지 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 4) {
+                        if (list.get(i).getPortlet_Type() == 4) {
                         	retXML += "<TYPE>게시판 포틀릿</TYPE>";
                         }
 
@@ -2788,16 +2788,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
                         retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
-                        if (list.get(i).getPortletType() == 1) {
+                        if (list.get(i).getPortlet_Type() == 1) {
                         	retXML += "<TYPE>URL 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 2) {
+                        if (list.get(i).getPortlet_Type() == 2) {
                         	retXML += "<TYPE>HTML 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 3) {
+                        if (list.get(i).getPortlet_Type() == 3) {
                         	retXML += "<TYPE>이미지 포틀릿</TYPE>";
                         }
-                        if (list.get(i).getPortletType() == 4) {
+                        if (list.get(i).getPortlet_Type() == 4) {
                         	retXML += "<TYPE>게시판 포틀릿</TYPE>";
                         }
 
