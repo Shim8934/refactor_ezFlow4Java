@@ -150,7 +150,7 @@
 		            xmlhttp_getBoardList_NewBoardSTD.send(xmlpara); */
 		            $.ajax({
 	    	        	type : "POST",
-	    	        	dataType : "xml",
+	    	        	dataType : "text",
 	    	        	url : "/ezBoard/getBoardList.do",
 	    	        	data : {
 	    	        		boardType   : "1", 
@@ -160,13 +160,12 @@
 							orderOption : ""
 	    	        	},
 	    	        	success : function(xml){
-	    	        		getBoardList_after(xml);
+	    	        		getBoardList_after(loadXMLString(xml));
 	    	        	},
 	    	        	error : function(error){
 	    	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
 	    	        	}
-	    	        	});
-		            
+	    	        });
 		        }
 
 		        function getBoardList_after(xml) {
