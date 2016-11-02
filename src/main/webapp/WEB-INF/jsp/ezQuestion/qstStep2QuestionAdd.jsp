@@ -550,7 +550,6 @@
         		}
 		
         		if(pEditIndex != "") {
-alert(pEditIndex);
              		window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
         		} else {
             		window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));

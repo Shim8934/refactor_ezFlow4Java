@@ -978,8 +978,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 					
 					for(int i=0; i<pCnt; i++) {
 						pSelectOption += "<option value=\"" +doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "\" ";
-						if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-							pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
+						XPath xpath = XPathFactory.newInstance().newXPath();
+						NodeList nodes = (NodeList)xpath.evaluate("//ROW/ANSWER["+(i+1)+"]/ATTACH", doc, XPathConstants.NODESET);
+						if(nodes.getLength() > 0) {
+						//if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
+							
+							pSelectOption += "AnsInfo=\"" + nodes.item(0).getChildNodes() + "\">";
+							//pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
 						} else {
 							pSelectOption += ">";
 						}
@@ -988,7 +993,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
-				pEditIndex = String.valueOf(req.getParameter("dataIndex"));
+				pEditIndex = String.valueOf(req.getParameter("DataIndex"));
 			}
 		}
 		
