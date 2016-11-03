@@ -127,21 +127,21 @@
 		    {
 			    if (CrossYN()) {
 			        address_zip_select_dialogArguments[1] = zip_find_Complete;
-			        var OpenWin = window.open("/ezAddress/address_zip_select.do", "address_zip_select", GetOpenWindowfeature(655, 420));
-			        try { OpenWin.focus(); } catch (e) { }
+			        var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
 			    }
 			    else {
-			        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 420));
+			        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
+			        
 			        if (typeof (Para) != "undefined" || Para == "") {
 			            document.getElementById("txtZipcode").value = Para[0];
-			            document.getElementById("txtAddress").value = Para[1] + " " + Para[2] + " " + Para[3];
+			            document.getElementById("txtAddress").value = Para[1];
 			        }
 			    }
 			}
 			function zip_find_Complete(Para) {
-			    if (typeof (Para) != "undefined" || Para == "") {
+				if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
 			        document.getElementById("txtZipcode").value = Para[0];
-			        document.getElementById("txtAddress").value = Para[1] + " " + Para[2] + " " + Para[3];
+			        document.getElementById("txtAddress").value = Para[1];
 			    }
 			}
 
