@@ -407,7 +407,7 @@
 	            address_zip_select_dialogArguments[0] = "";
 	            address_zip_select_dialogArguments[1] = GetPostCode_Complete;
 	            //DivPopUpShow(655, 420, "/myoffice/ezAddress/address_zip_select.aspx");
-	            DivPopUpShow(655, 420, "/ezAddress/address_zip_select.do");
+	            var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
 		        /* }else {
 		            var Para = window.showModalDialog("/myoffice/ezAddress/address_zip_select.aspx", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 420));
 		            if (typeof (Para) != "undefined" || Para == "") {
@@ -419,9 +419,9 @@
 		    function GetPostCode_Complete(Para) {
 		        DivPopUpHidden();
 
-		        if (typeof (Para) != "undefined" || Para == "") {
-		            ZipCode.value = Para[0];
-		            HomeAddr.value = Para[1] + " " + Para[2] + " " + Para[3];
+		        if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
+		        	ZipCode.value = Para[0];
+		            HomeAddr.value = Para[1];
 		        }
 		    }
 		    var personpicture_cross_dialogArguments = new Array();
