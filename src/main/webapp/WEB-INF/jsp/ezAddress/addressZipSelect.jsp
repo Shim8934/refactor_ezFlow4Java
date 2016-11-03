@@ -279,18 +279,23 @@
 	        function SearchAddress_KeyPress(evt) {
 	            if (window.event) {
 	                if (window.event.keyCode == 13) {
-	                    SearchAddress();
+	                	resetCurPageAndSearchAddress();
 	                    event.returnValue = false;
 	                }
 	            }
 	            else {
 	                if (evt.keyCode == "13") {
-	                    SearchAddress();
+	                	resetCurPageAndSearchAddress();
 	                }
 	            }
 	        }
 
 	        function ChangeSubtitle() {
+	        }
+	        
+	        function resetCurPageAndSearchAddress() {
+	        	CurPage = 1;
+	        	SearchAddress();
 	        }
 	    </script>
 	</head>
@@ -315,7 +320,7 @@
 	                </td>
 	                <td style="border:0px">
 	                    <div class="searchWrap" style="padding-left:4px">
-			            	<div class="searchDesignBtn" onclick="SearchAddress()">
+			            	<div class="searchDesignBtn" onclick="resetCurPageAndSearchAddress()">
 			                	<input type="image" <spring:message code='ezPersonal.t5004' /> id="btnImgSrch" alt="<spring:message code='ezPersonal.t83' />"><img <spring:message code='ezPersonal.t5004' /> id="searchingBtnImg" style="display:none;" alt="<spring:message code='ezPersonal.t83' />">
 			            	</div>
 	                    	<div class="searchDesign">
