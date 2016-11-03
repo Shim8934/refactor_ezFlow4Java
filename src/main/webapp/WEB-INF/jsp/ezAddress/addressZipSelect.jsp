@@ -299,7 +299,7 @@
 	        }
 	    </script>
 	</head>
-	<body class="popup">
+	<body class="popup" style="overflow:hidden">
 	    <h1><spring:message code='ezPersonal.t5003' /></h1>
 	    <div id="close">
 	        <ul>
