@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -114,4 +115,19 @@ public class EzAddressDAO extends EgovAbstractDAO {
 	public SubTreeInfoVO getFolderInfo(Map<String, Object> map) throws Exception{
 		return (SubTreeInfoVO) select("EzAddressDAO.getFolderInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getZipCodeSido() throws Exception{
+		return (List<String>) list("EzAddressDAO.getZipCodeSido");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AddressZipCodeVO> getAddressZipCodeList(Map<String, Object> map) throws Exception{
+		return (List<AddressZipCodeVO>) list("EzAddressDAO.getAddressZipCodeList", map);
+	}
+	
+	public int getAddressZipCodeCount(Map<String, Object> map) throws Exception{
+		return (Integer) select("EzAddressDAO.getAddressZipCodeCount", map);
+	}
+	
 }

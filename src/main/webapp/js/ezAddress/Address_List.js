@@ -89,6 +89,7 @@ function Get_SearchAddressList() {
     createNodeAndInsertText(xmlDom, objNode, "FILTER", filter);
     createNodeAndInsertText(xmlDom, objNode, "PAGE", pCurrentPage);
     xmlHTTPAddressList.open("POST", "/ezAddress/addressGetSearchList.do", true);
+    xmlHTTPAddressList.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
     try { ShowMailProgress(); } catch (e) {}

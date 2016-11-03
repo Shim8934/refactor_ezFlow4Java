@@ -333,29 +333,23 @@
 		    }
 		    var address_zip_select_dialogArguments = new Array();
 		    function zip_find(whichto) {
+		    	if (whichto == "0")
+		            IsComZip = true;
+		        else
+		            IsComZip = false;
 		        address_zip_select_dialogArguments[1] = zip_find_Complete;
-		        address_zip_select_dialogArguments[3] = whichto;
-		        var OpenWin = window.open("/ezAddress/address_zip_select.do", "address_zip_select", GetOpenWindowfeature(655, 420));
-		        try { OpenWin.focus(); } catch (e) { }
+		        var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
 		    }
 		    function zip_find_Complete(Para) {
-		        if (typeof (Para) != "undefined" && Para[0] != "cancel") {
-		            if (address_zip_select_dialogArguments[3] == 0) {
+		        if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
+		            if (IsComZip) {
 		                document.getElementById("TextComZip").value = Para[0];
-		                if (Para[4] == "") {
-		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
-		                } else {
-		                	document.getElementById("TextComAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + Para[4];
-		                }
+		                document.getElementById("TextComAddr").value = Para[1];
 		                document.getElementById("TextComAddr").focus();
 		            }
 		            else {
 		                document.getElementById("TextHomeZip").value = Para[0];
-		                if (Para[4] == "") {
-		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3];
-		                } else {
-		                	document.getElementById("TextHomeAddr").value = Para[1] + " " + Para[2] + " " + Para[3] + Para[4];
-		                }
+		                document.getElementById("TextHomeAddr").value = Para[1];
 		                document.getElementById("TextHomeAddr").focus();
 		            }
 		        }

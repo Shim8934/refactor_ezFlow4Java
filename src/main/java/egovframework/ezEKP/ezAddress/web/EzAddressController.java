@@ -35,8 +35,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
-import egovframework.ezEKP.ezEmail.web.EzEmailMailWriteController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -73,12 +73,50 @@ public class EzAddressController{
 	 * 주소록 우편번호 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/ezAddress/address_zip_select.do")
-	public String address_zip_select(Model model) throws Exception {		
-		String lang = config.getProperty("config.primary");
+	public String address_zip_select(Model model) throws Exception {
+		List<String> sidoList = ezAddressService.getZipCodeSido();
 		
-		model.addAttribute("lang", lang);
+		StringBuilder sb = new StringBuilder();
+		for (String str : sidoList) {
+			sb.append("<option value='" + str + "'>" + str + "</option>");
+		}
+		
+		model.addAttribute("sido", sb.toString());
 		
 		return "ezAddress/addressZipSelect";
+	}
+	
+	/**
+	 * 도로명 주소 검색 실행 함수
+	 */
+	@RequestMapping(value = "/ezAddress/addressZipCodeList.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String addressZipCodeList(HttpServletRequest request) throws Exception {
+		Document xmldom = commonUtil.convertRequestToDocument(request);
+		String sido = xmldom.getElementsByTagName("SIDO").item(0).getTextContent();
+		String keyword = xmldom.getElementsByTagName("KEYWORD").item(0).getTextContent();
+		String page = xmldom.getElementsByTagName("PAGE").item(0).getTextContent();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		
+		List<AddressZipCodeVO> ZipCodeList = ezAddressService.getAddressZipCodeList(sido, keyword, Integer.parseInt(page));
+		int totalCount = ezAddressService.getAddressZipCodeCount(sido, keyword);
+		
+		for (AddressZipCodeVO vo : ZipCodeList) {
+			sb.append("<ROW>");
+			sb.append("<ZIPCODE>" + vo.getZipCode() + "</ZIPCODE>");
+			sb.append("<DORO>" + vo.getDoro() + "</DORO>");
+			sb.append("<JIBUN>" + vo.getJibun() + "</JIBUN>");
+			sb.append("<ROWNUM>" + vo.getRnum() + "</ROWNUM>");
+			sb.append("</ROW>");
+		}
+		
+		sb.append("<TOTALCOUNT>" + totalCount + "</TOTALCOUNT>");
+		
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 	
 	/**
@@ -1719,7 +1757,6 @@ public class EzAddressController{
             return "ezAddress/addressImportComplete";
         }
         
-     	//TODO: 도로명 주소 적용
         int nameIndex = -1;
         int lastNameIndex = -1;
         int companyIndex = -1;

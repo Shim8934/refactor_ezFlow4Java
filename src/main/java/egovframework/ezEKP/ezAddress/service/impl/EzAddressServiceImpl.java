@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezAddress.dao.EzAddressDAO;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
 
@@ -406,6 +407,34 @@ public class EzAddressServiceImpl implements EzAddressService {
 		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
 		
 		return ezAddressDAO.getFolderInfo(map);
+	}
+
+	@Override
+	public List<String> getZipCodeSido() throws Exception {
+		return ezAddressDAO.getZipCodeSido();
+	}
+
+	@Override
+	public List<AddressZipCodeVO> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception {
+		int startRow = (pPage - 1) * 20 + 1;
+        int endRow = pPage * 20;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PSIDO", pSido);
+		map.put("v_PKEYWORD", pKeyword);
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		
+		return ezAddressDAO.getAddressZipCodeList(map);
+	}
+
+	@Override
+	public int getAddressZipCodeCount(String pSido, String pKeyword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PSIDO", pSido);
+		map.put("v_PKEYWORD", pKeyword);
+		
+		return ezAddressDAO.getAddressZipCodeCount(map);
 	}
 
 }
