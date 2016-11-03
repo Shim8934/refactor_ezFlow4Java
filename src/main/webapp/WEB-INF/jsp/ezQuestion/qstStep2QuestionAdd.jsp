@@ -51,7 +51,7 @@
 	            		if (Ques_Answer.input_Ans[i].getAttribute("ansinfo") != null) {
 	                		var m_AttachInfo = { "type": new Array(), "attachTitle": new Array(), "href": new Array() };
 			                m_AttachInfo["type"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("TYPE")[0]);
-	                		m_AttachInfo["attachTitle"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("TITLE")[0]);
+	                		m_AttachInfo["attachTitle"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("ATTACHTITLE")[0]);        ///
 	                		m_AttachInfo["href"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("HREF")[0])
 			                Ques_Answer.input_Ans[i].AnsInfo = m_AttachInfo;
 	    		            m_AttachInfo = null;
@@ -63,11 +63,11 @@
 	        		if (pDataXml != "") {
 	            		if (SelectNodes(xml, "ROW/ATTACH/ROW").length > 0) {
 	                		for (var i = 0; i < SelectNodes(xml, "ROW/ATTACH/ROW") .length; i++) {
-	                    		td_Question.innerHTML += getNodeText(xml.getElementsByTagName("TITLE")[i]);
+	                    		td_Question.innerHTML += getNodeText(xml.getElementsByTagName("ATTACHTITLE")[i]);            /////
 	                    		m_AttachInfo["type"][i] = getNodeText(xml.getElementsByTagName("TYPE")[i]);
-	                    		m_AttachInfo["attachTitle"][i] = getNodeText(xml.getElementsByTagName("TITLE")[i]);
+	                    		m_AttachInfo["attachTitle"][i] = getNodeText(xml.getElementsByTagName("ATTACHTITLE")[i]);           ////////
 	                    		m_AttachInfo["href"][i] = getNodeText(xml.getElementsByTagName("HREF")[i]);
-	                    		if (i != xml.getElementsByTagName("TITLE").length - 1)
+	                    		if (i != xml.getElementsByTagName("ATTACHTITLE").length - 1)        //////////
 	                        		td_Question.innerHTML += ";";
 	                		}
 	                		Ques_Answer.txtQuestion.AnsInfo = m_AttachInfo;
@@ -567,7 +567,7 @@
                 		for (var jj = 0 ; jj < attachcnt ; jj++) {
                     		objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TYPE", objInfo.type[jj]);
-                    		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TITLE", objInfo.attachTitle[jj]);
+                    		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "ATTACHTITLE", objInfo.attachTitle[jj]);         ////////
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "HREF", objInfo.href[jj]);
                 		}
             		}

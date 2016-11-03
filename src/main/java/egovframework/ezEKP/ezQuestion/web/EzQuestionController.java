@@ -1039,6 +1039,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstComplete.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String qstComplete(@RequestBody String xmlDoc ,HttpServletRequest req,@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, QstCompleteVO qstCompleteVO) throws Exception  {
+		logger.debug("xmlDoc="+xmlDoc);
 		Document doc = commonUtil.convertStringToDocument(xmlDoc);
 		loginVO = commonUtil.userInfo(loginCookie);
 		

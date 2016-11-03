@@ -10,7 +10,7 @@
 			<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
 			<script type="text/javascript" src="/js/mouseeffect.js"></script>
 			<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 				var pID = "${idName}";
 			    var pType = "";
 			    var pInitFlag = "";
@@ -188,9 +188,6 @@
 			    }
 			    function Save_Onclick() {
 			        if (document.all("input_Value").length > 0) {
-			        	 
-					     
-			        	
 			            if (CrossYN()) {
 			                window.opener.AttachComplete_NonIE(pAttachType, pAttachMode, GetInfoList(), pAttachModeIndex);
 			            } else {
@@ -254,146 +251,144 @@
 			        }
 			        return false;
 			    }
-			    //function TempFileOpen_onClick(thisObj) {
-			    //    Attach_Upload.QstType.value = pType;
-			    //    if (typeof (thisObj.files[0].fileName) != "undefined") {
-			    //        txt_AttachPath.value = thisObj.files[0].fileName;
-			    //    }
-			    //    else {
-			    //        var input = document.getElementById("cmuds");
-			    //        txt_AttachPath.value = input.value;
-			    //    }
-			    //    fileup = false;
-			    //    Attach_Upload.submit();
-			    //}
-			    //function UploadFilePath(FilePath) {
-			    //    document.all.AttachPath.value = FilePath;
-			    //    fileup = true;
-			    //}
-
+			    
 			    function TempFileOpen_onClick(thisObj) {
 			        Attach_Upload.QstType.value = pType;
-			        var input = document.getElementById("cmuds");
-			        document.all("txt_AttachPath").value = input.value;
-			        fileup = false;
+
+			        var imgPath = "";
 			        if (CrossYN()) {
-			            Attach_Upload.submit();
+			        	var input = document.getElementById("cmuds");
+			            document.all("txt_AttachPath").value = input.value;
 			        } else {
-			            if (document.Attach_Upload.cmuds.value != "") {
-			                var fd = new FormData();
-			                for (var i = 0; i < document.getElementById("Attach_Upload").cmuds.files.length; i++) {
-			                    fd.append("cmuds", document.getElementById("Attach_Upload").cmuds.files[i]);
-			                }
-			                fd.append("QstType", pType);
-			                xhr = new XMLHttpRequest();
-			                xhr.addEventListener("load", UploadFilePath, false);
-			                xhr.open("POST", "attachFileNonActXDad.do?mode=IE");
-			                xhr.send(fd);
-			            }
+			        	thisObj.select();
+				        var selectionRange = document.selection.createRangeCollection()[0];
+			            imgPath = selectionRange.text.toString();
+			            var input = document.getElementById("cmuds");
+				        document.all("txt_AttachPath").value = imgPath;
+				        
 			        }
+			        fileup = false;
+			        
+			        if (CrossYN()) {
+			        	Attach_Upload.submit();			        	
+			        } else {
+			        	Attach_Upload.submit();
+			        /*     if (document.Attach_Upload.cmuds.value != "") {
+			            	var fd = new FormData();
+							for (var i = 0; i < document.getElementById("Attach_Upload").cmuds.files.length; i++) {
+			            		fd.append("cmuds", document.getElementById("Attach_Upload").cmuds.files[i]);
+			            	}
+			            	fd.append("QstType", pType);
+			            	xhr = new XMLHttpRequest();
+			            	xhr.addEventListener("load", UploadFilePath, false);
+			            	xhr.open("POST", "/ezQuestion/attachFileNonActX.do?mode=IE");
+			            	xhr.send(fd);
+						} */
+					}
 			    }
 
 			    function UploadFilePath(FilePath) {
 			        if(CrossYN()) {
 			            document.all.AttachPath.value = FilePath;
 			        } else {
-			            document.all.AttachPath.value = FilePath.target.responseText
+			        	document.all.AttachPath.value = FilePath;
+			            //document.all.AttachPath.value = FilePath.target.responseText
 			        }
 			        fileup = true;
 			    }
 			    
-				</script>
+		</script>
 	</head>
 	<body class="popup">
 		<form id="Form1" method="post" action="">
-        <div id="menu">
-            <ul><li><span onclick="javascript:Save_Onclick();"><spring:message code='ezQuestion.t163' /></span></li></ul>
-        </div>
-        <div id="close">
-            <ul><li><span onclick="javascript:fun_QuesCancel();"><spring:message code='ezQuestion.t88' /></span></li></ul>
-        </div>
-        <script type="text/javascript">
-            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-            selToggleList(document.getElementById("close"), "ul", "li", "0");
-        </script>
-        <table class="content" style="margin-bottom:4px">
-            <tr>
-                <th><spring:message code='ezQuestion.t164' /></th>
-                <td>
-                    <select id="sel_Type" onChange="TypeDetermination()">
-                        <option value="1" selected="selected"><spring:message code='ezQuestion.t165' /></option>
-                        <option value="6"><spring:message code='ezQuestion.t166' /></option>
-                        <option value="2"><spring:message code='ezQuestion.t167' /></option>
-                        <option value="7"><spring:message code='ezQuestion.t168' /></option>
-                        <option value="5"><spring:message code='ezQuestion.t169' /></option>
-                        <option value="3"><spring:message code='ezQuestion.t170' /></option>
-                        <option value="4">URL<spring:message code='ezQuestion.t171' /></option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-        <div style="display:none" id="tr_TypeValueE">
-            <table class="content">
-                <tr>
-                    <th><spring:message code='ezQuestion.t172' /></th>
-                    <td colspan="2"><input type="text" size="9" maxlength="32" style="WIDTH:100%" name="txt_TitleE" id="txt_TitleE"></td>
-                </tr>
-                <tr>
-                    <th><spring:message code='ezQuestion.t154' /></th>
-                    <td class="pos1">
-                        <input type="text" size="9" maxlength="50" style="WIDTH:100%" name="txt_AttachPath" id="txt_AttachPath" readonly="readonly" />
-                        <input type="text" name="AttachPath" style="display:none" />        
-                    </td>
-                    <td class="pos2">
-                        <a class="imgbtn"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div style="display:none" id="tr_TypeValueM">
-            <table class="content">
-                <tr>
-                    <th>URL <spring:message code='ezQuestion.t53' /></th>
-                    <td><input type="text" size="9" maxlength="50" style="WIDTH:100%" name="txt_TitleM" id="txt_TitleM" />        </td>
-                </tr>
-                <tr>
-                    <th>URL</th>
-                    <td>
-                        <span>http://</span><input type="text" size="9" maxlength="500" style="WIDTH:90%" name="txt_URL" id="txt_URL">
-                        <br />
-                        <span class="point">* <spring:message code='ezQuestion.t174' /></span>
-                        <br />
-                        <font color="#6e6e6e">(<spring:message code='ezQuestion.t175' /></font>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div style="display:inline" id="tr_AddList">
-            <table width="100%" class="content" style="margin-top:4px">
-                <tr>
-                    <td align="center">
-                        <a class="imgbtn"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
-                        <a class="imgbtn"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px"></select>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </form>
-    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-    <form method="post" action="attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="width:1px; height:1px;">
-        <input type="file" name="cmuds" id="cmuds" accept="image/*" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
-        <input type="text" name="QstType" style="display:none" />
-    </form>
-    <form method="post" action="attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none">
-        <input type="text" name="QstIndex_delFile" />
-        <input type="text" name="QstType_delFile" />
-        <input type="text" name="QstPath_delFile" />
-    </form>
+	        <div id="menu">
+	            <ul><li><span onclick="javascript:Save_Onclick();"><spring:message code='ezQuestion.t163' /></span></li></ul>
+	        </div>
+	        <div id="close">
+	            <ul><li><span onclick="javascript:fun_QuesCancel();"><spring:message code='ezQuestion.t88' /></span></li></ul>
+	        </div>
+	        <script type="text/javascript">
+	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
+	            selToggleList(document.getElementById("close"), "ul", "li", "0");
+	        </script>
+	        <table class="content" style="margin-bottom:4px">
+	            <tr>
+	                <th><spring:message code='ezQuestion.t164' /></th>
+	                <td>
+	                    <select id="sel_Type" onChange="TypeDetermination()">
+	                        <option value="1" selected="selected"><spring:message code='ezQuestion.t165' /></option>
+	                        <option value="6"><spring:message code='ezQuestion.t166' /></option>
+	                        <option value="2"><spring:message code='ezQuestion.t167' /></option>
+	                        <option value="7"><spring:message code='ezQuestion.t168' /></option>
+	                        <option value="5"><spring:message code='ezQuestion.t169' /></option>
+	                        <option value="3"><spring:message code='ezQuestion.t170' /></option>
+	                        <option value="4">URL<spring:message code='ezQuestion.t171' /></option>
+	                    </select>
+	                </td>
+	            </tr>
+	        </table>
+	        <div style="display:none" id="tr_TypeValueE">
+	            <table class="content">
+	                <tr>
+	                    <th><spring:message code='ezQuestion.t172' /></th>
+	                    <td colspan="2"><input type="text" size="9" maxlength="32" style="WIDTH:100%" name="txt_TitleE" id="txt_TitleE"></td>
+	                </tr>
+	                <tr>
+	                    <th><spring:message code='ezQuestion.t154' /></th>
+	                    <td class="pos1">
+	                        <input type="text" size="9" maxlength="50" style="WIDTH:100%" name="txt_AttachPath" id="txt_AttachPath" readonly="readonly" />
+	                        <input type="text" name="AttachPath" style="display:none" />        
+	                    </td>
+	                    <td class="pos2">
+	                        <a class="imgbtn"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+	        <div style="display:none" id="tr_TypeValueM">
+	            <table class="content">
+	                <tr>
+	                    <th>URL <spring:message code='ezQuestion.t53' /></th>
+	                    <td><input type="text" size="9" maxlength="50" style="WIDTH:100%" name="txt_TitleM" id="txt_TitleM" />        </td>
+	                </tr>
+	                <tr>
+	                    <th>URL</th>
+	                    <td>
+	                        <span>http://</span><input type="text" size="9" maxlength="500" style="WIDTH:90%" name="txt_URL" id="txt_URL">
+	                        <br />
+	                        <span class="point">* <spring:message code='ezQuestion.t174' /></span>
+	                        <br />
+	                        <font color="#6e6e6e">(<spring:message code='ezQuestion.t175' /></font>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+	        <div style="display:inline" id="tr_AddList">
+	            <table width="100%" class="content" style="margin-top:4px">
+	                <tr>
+	                    <td align="center">
+	                        <a class="imgbtn"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
+	                        <a class="imgbtn"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px"></select>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+	    </form>
+	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
+	    <form method="post" action="/ezQuestion/attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="width:1px; height:1px;">
+	        <input type="file" name="cmuds" id="cmuds" accept="image/*" onchange="javascript:TempFileOpen_onClick(this);" style="width:1px; height:1px;" />
+	        <input type="text" name="QstType" style="display:none" />
+	    </form>
+	    <form method="post" action="/ezQuestion/attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none">
+	        <input type="text" name="QstIndex_delFile" />
+	        <input type="text" name="QstType_delFile" />
+	        <input type="text" name="QstPath_delFile" />
+		</form>
 	</body>
 </html>	
 	
