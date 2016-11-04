@@ -879,6 +879,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						////////////////
 						if (portletPrevPageID != null && !portletPrevPageID.equals("")) {
 							Map<String, Object> map2 = new HashMap<String, Object>();
+							logger.debug("portletPrevPageID="+portletPrevPageID);
+							logger.debug("columnPos="+String.valueOf(i+1));
 							map2.put("v_pPORTLET_PREVPAGEID", portletPrevPageID);
 							map2.put("v_pCOLUMNPOS", String.valueOf(i+1));
 							ezPortalAdminDAO.savePortalPage2(map2);
