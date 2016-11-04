@@ -89,10 +89,14 @@
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml=document.getElementById("listQst").innerHTML;
-				for(i=0; i<nodes.length ;i++){
+
+				for(i=0; i<nodes.length; i++){
 					tableXml += "<option value='" + SelectSingleNodeValue(nodes[i], "QUESTION_NO") +"' anstype='"+SelectSingleNodeValue(nodes[i], "ANSWERTYPE")+"'>"+SelectSingleNodeValue(nodes[i], "QUESCONTENT")+"</option>"
 				}
-				document.getElementById("listQst").innerHTML = document.getElementById("listQst").innerHTML + tableXml;
+
+				//document.getElementById("listQst").innerHTML = document.getElementById("listQst").innerHTML + tableXml;
+				//$('listQst').append(document.getElementById("listQst").innerHTML + tableXml);
+				$("#listQst").html(tableXml);
 			}
 			
 			function menuQst_List() {
