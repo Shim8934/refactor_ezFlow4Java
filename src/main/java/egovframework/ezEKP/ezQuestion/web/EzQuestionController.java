@@ -675,6 +675,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			response.getWriter().flush();
         }
 		
+		logger.debug("brdID="+brdID);
+		logger.debug("itemNo="+itemNo);
 		qstResponseVO.setBrdID(Integer.parseInt(brdID));
 		qstResponseVO.setItemNo(Integer.parseInt(itemNo));
 		qstResponseVO.setResponseUserID(userID);
