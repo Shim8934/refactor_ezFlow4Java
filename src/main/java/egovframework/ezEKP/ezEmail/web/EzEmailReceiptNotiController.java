@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /**
@@ -145,11 +146,15 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 				List<String> tempMailList = new ArrayList<String>();
 				
+				LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+				
 				//수신table에서 가져옴
 				for (MailReadVO vo : readList) {
 					sb.append("<ROW>");
 					sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
 					sb.append("<READERNAME><![CDATA[" + vo.getReaderName() + "]]></READERNAME>");
+					
+					vo.setTimeZoneDate(loginInfo.getOffset());
 					sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
 					
 					String status = "";

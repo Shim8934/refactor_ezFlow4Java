@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +51,7 @@ import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 메일 리스트
@@ -466,8 +468,14 @@ public class EzEmailMailListController {
 				
 				// received date
 				Date receivedDate = message.getReceivedDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
-				sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", sdf.format(receivedDate)));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String receivedDateStr = sdf.format(receivedDate);
+				
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				receivedDateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+				
+				sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
 				
 				// size
 				sb.append(String.format("<size><![CDATA[%d]]></size>", message.getSize()));

@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
@@ -365,7 +366,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// received date
 					date = message.getReceivedDate();
 					if (date != null) {
-						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(date);
+						
+						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+						dateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
 					}
 					logger.debug("dateStr=" + dateStr);
 					

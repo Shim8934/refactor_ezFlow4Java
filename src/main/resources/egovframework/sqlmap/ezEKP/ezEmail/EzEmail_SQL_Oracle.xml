@@ -212,7 +212,7 @@
 	        FROM 
 	        	ezEmail.TBLRESERVEDMAIL 
 	       	WHERE  
-	       		senddate <= (SELECT SYSDATE FROM DUAL)
+	       		senddate <= (SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL)
        	]]>
 	</select>
 	

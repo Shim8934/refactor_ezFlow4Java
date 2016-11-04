@@ -2382,6 +2382,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        if (!delaySendTime.equals("")) {
 		        	//예약발송
+		        	LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		        	delaySendTime = EgovDateUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
+		        	
 		            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
 		        	
 		            // this deletion code block has been moved here because
@@ -3325,6 +3328,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("subject : " + subject);
 		logger.debug("sendDate : " + sendDate);
 		logger.debug("reservedId : " + reservedId);
+		
 		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
 			messageId = reservedId;
 			ezEmailService.updateReservedMail(messageId, subject, sendDate);

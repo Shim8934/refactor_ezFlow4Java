@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+
 public class MailReservationVO {
 	
 	private String messageId;
@@ -37,6 +39,10 @@ public class MailReservationVO {
 	}
 	public void setConnUrl(String connUrl) {
 		this.connUrl = connUrl;
+	}
+	
+	public void setTimeZoneDate(String offset) {
+		sendDate = EgovDateUtil.getDateStringInUTC(sendDate, offset, false);
 	}
 	
 	@Override

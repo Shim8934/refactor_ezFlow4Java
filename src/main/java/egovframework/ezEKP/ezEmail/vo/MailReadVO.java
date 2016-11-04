@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+
 public class MailReadVO {
 	
 	private String readDate;
@@ -23,6 +25,10 @@ public class MailReadVO {
 	}
 	public void setReaderName(String readerName) {
 		this.readerName = readerName;
+	}
+	
+	public void setTimeZoneDate(String offset) {
+		readDate = EgovDateUtil.getDateStringInUTC(readDate, offset, false);
 	}
 	
 	@Override
