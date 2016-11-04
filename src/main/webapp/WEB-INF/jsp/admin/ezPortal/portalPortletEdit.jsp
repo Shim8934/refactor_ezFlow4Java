@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
-		var portlet_type = "${prop.portletType}";
+		var portlet_type = "${prop.portlet_Type}";
 		var view_type = "${prop.showTitleBar}";
 		var uid = "${uID}";
 		var menuindex = "${menuIndex}";

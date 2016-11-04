@@ -989,7 +989,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			portletFrameType = prop.getFrameType();
 		}
 		
-		String portletType = String.valueOf(prop.getPortletType());
+		String portletType = String.valueOf(prop.getPortlet_Type());
 		String subData = ezPortalService.getPortletSubProperties(uID, portletType);
 
 		Document subProp = commonUtil.convertStringToDocument(subData);
