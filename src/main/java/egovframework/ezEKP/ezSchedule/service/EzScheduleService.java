@@ -24,6 +24,7 @@ public interface EzScheduleService {
 	List<PubScheSecVO> getPublicScheduleSec(String userId, String lang) throws Exception;
 	List<PubScheDeptVO> getPublicScheduleDept(String userId, String lang) throws Exception;
 	List<PubScheCumulerVO> getPublicScheduleCumuler(String userId, String lang) throws Exception;
+	public int getNewScheduleId() throws Exception;
 	public int getReceiveCount (String pUserId) throws Exception;
 	public int getInviteScheduleGroupCnt (String pUserId) throws Exception;
 

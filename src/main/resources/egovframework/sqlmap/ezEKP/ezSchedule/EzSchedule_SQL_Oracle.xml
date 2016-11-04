@@ -154,6 +154,23 @@
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_CUMULER(#v_USERID#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
+<!-- 
+	<procedure id="EzScheduleDAO.getNewScheduleId" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZPIMS.EZFN_GETNEWSCHEDULEID(#v_pScheduleId,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure>
+ -->
+ 	
+	<select id="EzScheduleDAO.getNewScheduleId" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				SEQ_INC_TBLSCHEDULE.NEXTVAL 
+			FROM 
+				dual;
+		]]>
+	</select>
+		
 	<procedure id="EzScheduleDAO.getReceiveCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPIMS.EZSP_GETRECEIVECOUNT(#v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}

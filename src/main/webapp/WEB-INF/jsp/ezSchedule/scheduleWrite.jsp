@@ -12,20 +12,24 @@
 	    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/schedule_write_Cross.js?ver=1.8"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js?ver=1.9"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
 		<!-- data picker-->
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 
 		<!-- time picker-->
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+        <c:if test="${isCrossBrowser != true}">
+        <script type="text/javascript" src="/js/ezEmail/js/kaoni_ActiveX.js"></script>
+        </c:if>  
 
 	    <script type="text/javascript">
 		    var userId			= "${userInfo.id}";
@@ -67,6 +71,7 @@
 		    var noneActiveX = "${noneActiveX}";
 		    var pCompanyAdmin = "${companyAdmin}";
 		    var pDeptAdmin = "${deptAdmin}";
+		    var use_exchange_pims = "${useExchange}";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -96,7 +101,7 @@
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
-	                if (scheduletype == "7")
+	                if (scheduleType == "7")
                     {
 		                document.getElementById("HolderEdit2").style.display = "none";
                     }
@@ -314,7 +319,7 @@
 		    
 		    var g_originalHTML = null;
 		    function DocumentComplete() {
-		        if ((scheduletype == "1" || scheduletype == "6") && "${content}" != "") {
+		        if ((scheduleType == "1" || scheduleType == "6") && "${content}" != "") {
 		            if (g_originalHTML == null) {
 		                message.SetEditorContent("${content}")
 		                g_originalHTML = message.GetEditorContent();
@@ -653,7 +658,7 @@
 		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
 		                        </c:when>
 		                        <c:otherwise>
-		                            <iframe id="message" class="viewbox" name="message" src="/ezEmail/mailCKEditor.do" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
+		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
 		                        </c:otherwise>
 	                        </c:choose>
 	                    </td>

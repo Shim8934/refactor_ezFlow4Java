@@ -103,6 +103,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
+	public int getNewScheduleId() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		return ezScheduleDAO.getNewScheduleId(map);
+	}
+
+	@Override
 	public int getReceiveCount(String pUserId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", pUserId);

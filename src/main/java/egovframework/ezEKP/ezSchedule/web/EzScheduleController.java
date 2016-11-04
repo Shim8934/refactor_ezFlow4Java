@@ -137,8 +137,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		String	funCode		= "";	// 일정관리 or 업무관리(3)
 		String	subCode		= "";	// 아직 모름	
-		int	defaultView;			// 일간, 주간, 월간
-		int	startDay;				// 일요일부터 또는 월요일부터
+		int	defaultView		= 1;	// 일간, 주간, 월간
+		int	startDay		= 7;	// 일요일부터 또는 월요일부터
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
@@ -150,8 +150,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId());
-		defaultView = schConfVO.getDefaultView();
-		startDay = schConfVO.getStartDay();
+		if (schConfVO != null) {
+			defaultView = schConfVO.getDefaultView();
+			startDay = schConfVO.getStartDay();
+		}
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
@@ -402,6 +404,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("hqList",		hqList);
         model.addAttribute("shareList",		shareList);
+        model.addAttribute("useExchange",	useExchange);
 		
 		return "/ezSchedule/scheduleMain";
 	}
@@ -461,6 +464,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         List<AttendantListVO> attendantList = null;
         List<AttachListVO> attachList = null;
         List<ScheduleGroupListVO> groupList = null;
+        String pDirPath = config.getProperty("upload_schedule.ROOT");
 
 		loginVO = commonUtil.userInfo(loginCookie);
 
@@ -571,7 +575,7 @@ public class EzScheduleController extends EgovFileMngUtil {
                 }
                 else if (scheduleInfo != null)
                 {
-                    contentPath = "/Upload_Schedule/" + scheduleInfo.getContentPath();
+                    contentPath = pDirPath + scheduleInfo.getContentPath();
                     startDateStringOrgin	= scheduleInfo.getStartDate();
                     endDateStringOrgin		= scheduleInfo.getEndDate();
                     hasAttach = scheduleInfo.getHasAttach();
@@ -809,6 +813,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        {
 	            _pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
 	        }
+	        else
+	        {
+	        	scheduleid = "" + ezScheduleService.getNewScheduleId();
+	        }
 	        String pattern = "";
 	
 	        String startdate	= doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
@@ -820,6 +828,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        String attachxml	= doc.getElementsByTagName("ATTACHLIST").item(0).getTextContent();
 	        String attendantxml	= doc.getElementsByTagName("ATTENDANTLIST").item(0).getTextContent();
 	        String changekey	= doc.getElementsByTagName("CHANGEKEY").item(0).getTextContent();
+	        String contentPath	= doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent();
+	        
+	        // repetition should be "". not " ". But "" is treated as null.
+	        if (repetition == null || repetition.equals("")) repetition = "R";
 	        
 	        // Test 필요
 	        String hasattach	= attachxml.length() > 0 ? "Y" : "N";
@@ -831,7 +843,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 	        if (pattern == "0")
 	        {
-	            repetition = "";
+	            repetition = "R";
 	        }
 	
 	        String domainName = null;
@@ -881,8 +893,20 @@ public class EzScheduleController extends EgovFileMngUtil {
 	                break;
 	        }
 	        
+            String pDirPath = config.getProperty("upload_schedule.ROOT");
+	        String contentpath = doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent(); 
+	        String pContentPath;
+	        if (contentpath == "") {
+	        	pContentPath = pDirPath + commonUtil.separator + scheduleid;
+	        }
+	        else
+	        {
+	        	pContentPath = contentpath;
+	        }
+
 	        // 일정 저장 또는 업데이트
 			ScheduleInfoVO schInfoVO = new ScheduleInfoVO();
+			schInfoVO.setScheduleId(scheduleid);
 			schInfoVO.setParentId("0");
 			schInfoVO.setOwnerId(ownerid);
 			schInfoVO.setOwnerName(ownername);
@@ -901,6 +925,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			schInfoVO.setHasAttach(hasattach);
 			schInfoVO.setHasComment(hascomment);
 			schInfoVO.setIsReadOnly(isreadonly);
+			schInfoVO.setIsPublic(ispublic);
 			schInfoVO.setDateType(datetype);
 			schInfoVO.setStartDate(startdate);
 			schInfoVO.setEndDate(enddate);
@@ -908,27 +933,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			schInfoVO.setRepetitionDel(repetitiondel);
 			schInfoVO.setTitle(title);
 			schInfoVO.setLocation(location);
-			schInfoVO.setContentPath(doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent());
+			schInfoVO.setContentPath(pContentPath);
 			schInfoVO.setGroupName(groupname);
 
-//			if (pMode.equals("modify")) {
-//				ezBoardService.brdUpdateItem(boardListVO, "BOARD");
-//			} else if (pMode.equals("temp")) {
-//				ezBoardService.brdNewItemTemp(boardListVO);
-//			} else {
-				ezScheduleService.scheduleNewItem(schInfoVO);
-//			}
-			
-//			if (scheduleid == "")
-//                result = InsertSchedule_DB(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, attendantxml, contentpath);
-//            else
-//                result = UpdateSchedule_DB(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentpath);
-//
-//            if(!result.equals(""))
-//                response.write("OK_"+result);
-//            else
-//                response.write(result);
-	        
 //	        // 첨부 파일 업로드
 //	        if (doc.getElementsByTagName("IMAGENAME").getLength() > 0)
 //	        {
@@ -956,12 +963,25 @@ public class EzScheduleController extends EgovFileMngUtil {
 //	            }
 //	        }
 //	        
-//        	String result = "";
-//            String contentpath = doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent(); 
-//            if (contentpath == "")
-//                contentpath = Server.MapPath("/Upload_Schedule/");
+
+//			if (pMode.equals("modify")) {
+//				ezBoardService.brdUpdateItem(boardListVO, "BOARD");
+//			} else if (pMode.equals("temp")) {
+//				ezBoardService.brdNewItemTemp(boardListVO);
+//			} else {
+				ezScheduleService.scheduleNewItem(schInfoVO);
+//			}
+			
+//			if (scheduleid == "")
+//                result = InsertSchedule_DB(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, attendantxml, contentpath);
 //            else
-//                contentpath = Server.MapPath(contentpath);
+//                result = UpdateSchedule_DB(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentpath);
+//
+//            if(!result.equals(""))
+//                response.write("OK_"+result);
+//            else
+//                response.write(result);
+	        
 	    }
 	    catch (Exception Ex)
 	    {

@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
 public class ScheduleInfoVO {
+	private String scheduleId;
+	
 	private String parentId;
 	
 	private String ownerId;
@@ -56,6 +58,20 @@ public class ScheduleInfoVO {
 	private String contentPath;
 
 	private String groupName;
+
+	/**
+	 * @return the scheduleId
+	 */
+	public String getScheduleId() {
+		return scheduleId;
+	}
+
+	/**
+	 * @param scheduleId the scheduleId to set
+	 */
+	public void setScheduleId(String scheduleId) {
+		this.scheduleId = scheduleId;
+	}
 
 	/**
 	 * @return the parentId
@@ -380,16 +396,16 @@ public class ScheduleInfoVO {
 	}
 
 	/**
-	 * @return the repetitionDelete
+	 * @return the repetitionDel
 	 */
 	public String getRepetitionDel() {
 		return repetitionDel;
 	}
 
 	/**
-	 * @param repetitionDelete the repetitionDelete to set
+	 * @param repetitionDel the repetitionDel to set
 	 */
-	public void setRepetitionDel(String repetitionDelete) {
+	public void setRepetitionDel(String repetitionDel) {
 		this.repetitionDel = repetitionDel;
 	}
 
@@ -448,4 +464,5 @@ public class ScheduleInfoVO {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
+
 }

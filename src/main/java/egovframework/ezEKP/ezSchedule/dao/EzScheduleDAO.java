@@ -70,6 +70,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		return (List<PubScheCumulerVO>) list("EzScheduleDAO.getPublicScheduleCumuler", map);
 	}
 
+	public int getNewScheduleId(Map<String, Object> map) {
+		select("EzScheduleDAO.getNewScheduleId", map);
+		return (int) map.get("v_pScheduleId");
+	}
+
 	public int getReceiveCount(Map<String, Object> map) {
 		select("EzScheduleDAO.getReceiveCount", map);
 		return (int) map.get("v_pCount");
