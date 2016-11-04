@@ -747,12 +747,20 @@
 		                else {
 		                    swidth = 510;
 		                    sheight = 500;
+		                    
+		                    pleft = (pwidth - swidth) / 2;
+				            ptop = (pheight - sheight) / 2;
+				            
 		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
 		            else {
 		                swidth = 380;
 		                sheight = 380;
+		                
+			            pleft = (pwidth - swidth) / 2;
+			            ptop = (pheight - sheight) / 2;
+			            
 		                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainimages").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 		            }
 		        }
@@ -875,7 +883,7 @@
 		    
 		            for(var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++)
 		            {
-		                pListImageContent += getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i])+ "\\";
+		                pListImageContent += getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i])+ ";:;";
 		                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]) + ";";
 		                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]) + ";";
 		                resultimage += getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[i]);
@@ -884,7 +892,7 @@
 		            ImageCount = xmldom.getElementsByTagName("ROW").length;
 		            var result = resultimage.split(";");
 		            var resultcount = result.length - 1;
-		            var imagecontet = pListImageContent.split("\\");
+		            var imagecontet = pListImageContent.split(";:;");
 		            var imageid = pImageID.split(";");
 		            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";            
 		            for(var i = 0; i < ImageCount; i++)
@@ -1028,7 +1036,7 @@
 		            var swidth;
 		            var sheight;
 		
-		            swidth = 440;
+		            swidth = 430;
 		            sheight = 500;
 		            
 		            var pwidth = window.screen.availWidth;

@@ -364,7 +364,7 @@ function ListView() {
 
             oTable.appendChild(oTHeader);
             oTable.appendChild(oTBody);
-
+            
             if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
 
                 /*if (_WidthFlag && _TableWidth > 835 && _titleIdx == null)
@@ -454,12 +454,11 @@ function ListView() {
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
-
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         
         for (var i = 0; i < oHeaders.length; i++) {
             var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
-            
+       
             if(strWidth != "0"){ //2011.07.05 Header의 width가 0이면 td를 만들지 않는다.
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
                 

@@ -50,7 +50,7 @@
 			function GetExtensionAttribute() {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/admin/ezBoard/getAttribute.do",
 		        	data : {boardID : pBoardID},
 		        	success : function(result){
@@ -61,6 +61,7 @@
 			            headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
 
 			            if (result != "") {
+			            	result = loadXMLString(result);
 			                if (CrossYN()) {			                	
 			                    var xmlRtn = result.getElementsByTagName("ROWS")[0];
 			                    var Node = headerData.importNode(xmlRtn, true);
@@ -87,7 +88,7 @@
 		    function GetBoardHeader(boardid) {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/admin/ezBoard/getBoardHeader.do",
 		        	data : {colType : pGubun, boardID : boardid},
 		        	success : function(result){
@@ -98,6 +99,7 @@
 						headerData = loadXMLString(XmlHeader.innerHTML.toUpperCase());
 						
 						if (result != "") {
+							result = loadXMLString(result);
 						    if (CrossYN()) {
 						        var xmlRtn = result.getElementsByTagName("ROWS")[0];
 						        var Node = headerData.importNode(xmlRtn, true);

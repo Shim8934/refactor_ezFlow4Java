@@ -405,7 +405,6 @@ function getAttachList(){
 function AppendFileAttachInfo(ret) {
     try {
         pAttachListXml = ret;
-
         if (PhotoBoard == "Y") return;
 
         var xmlAttach = createXmlDom();
@@ -423,8 +422,8 @@ function AppendFileAttachInfo(ret) {
             if (is_newfile != "DEL") {
                 var strName = replace(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "%3b", ";");
                 strName = replace(strName, "%2b", "+");
-
-                document.all.EzHTTPTrans.InsertFileList(strName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/downloadattach.aspx?filename=" + encodeURIComponent(strName) + "&filepath=" + encodeURIComponent(realFilePath) + "&regData=" + clientInformation.systemLanguage, "N", "N", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]));
+                
+                document.all.EzHTTPTrans.InsertFileList(strName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?fileName=" + encodeURIComponent(strName) + "&filePath=" + encodeURIComponent(realFilePath) + "&regData=" + clientInformation.systemLanguage, "N", "N", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]));
                 document.all.EzHTTPTrans.InsertFileInfo(realFileNM);
             }
         }
@@ -494,13 +493,13 @@ function AttachFileList()
     var xmldom_attachlist = createXmlDom();
 	var strRet = "";
 	var filepath = "";
-	
-	if (loadXMLString(pAttachListXml) == false) {
+
+	if (pAttachListXml == false) {
 		xmldom_attachlist = null;	
 		return "";
 	}
 
-	xmldom_attachlist = loadXMLString(pAttachListXml);
+	xmldom_attachlist = pAttachListXml;
 	
 	var xmldomNodes = xmldom_attachlist.selectNodes("LISTVIEWDATA/ROWS/ROW/CELL/DATA2");
 	
@@ -511,7 +510,7 @@ function AttachFileList()
 			strRet += filepath + ";";
 		} else {
 		    
-		    strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+		    strRet += getNodeText(xmldomNodes[i]) + ";";
 		}
 	}
 	xmldom_attachlist = null;

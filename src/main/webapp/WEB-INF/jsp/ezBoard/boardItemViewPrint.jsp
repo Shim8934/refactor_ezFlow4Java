@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<!-- 		<script type="text/javascript" src="/js/ezBoard/ErrorHandler_Cross.js"></script> -->
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -81,12 +80,12 @@
 		    };
 		
 		    function DocumentComplate() {
-		        if (!CrossYN()) {
-		            preview_print();
-		        }
-		        else{
+// 		        if (!CrossYN()) {
+// 		            preview_print();
+// 		        }
+// 		        else{
 		            window.print();
-		        }
+// 		        }
 		
 		        clearInterval(myVar);
 		    }
@@ -117,7 +116,7 @@
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = filepath.substr(89, filepath.length - 88);
+		            filename = filepath.substr(109, filepath.length - 108);
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")<br>";
 		        }
@@ -221,7 +220,8 @@
 		              <td style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		              <td id="ItemLevel" style="display:none"></td>
 		            </tr>
-		          </table></td>
+		          </table>
+		        </td>
 		      </tr>
 		</table>
 	</body>

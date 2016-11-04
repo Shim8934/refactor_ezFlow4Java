@@ -108,7 +108,6 @@ function AddAttachFileInfoXmlParsing(pfilename, pSaveFileName, pfilesize, pfilel
         var re = /&/g;
         var objXML = createXmlDom();
         var Rtnxml = createXmlDom();
-
         Rtnxml = loadXMLString(pAttachListXml);
         var objAttachNodes = Rtnxml.selectNodes("LISTVIEWDATA/ROWS/ROW");
         pstrXML = "<LISTVIEWDATA><HEADERS>";

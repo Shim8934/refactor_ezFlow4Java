@@ -311,7 +311,11 @@
 	
 	                createNodeAndInsertText(xmlpara, objNode, "PTREEID", newID);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME", "${boardInfo.boardName}");
-	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "${boardInfo.boardName2}");
+	                if ("${boardInfo.boardName2}" != null && "${boardInfo.boardName2}" != "") {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "${boardInfo.boardName2}");
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "${boardInfo.boardName}");
+	                }
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	                createNodeAndInsertText(xmlpara, objNode, "PMODE", "NEW");
 	                createNodeAndInsertText(xmlpara, objNode, "PBOARDID", pBoardID);

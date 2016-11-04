@@ -11,8 +11,15 @@
 	    </style>
         <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+   	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script> 
         <script type="text/javascript">
 	        var pListImagePath = "";
@@ -51,12 +58,18 @@
 	        }
 	        
 	        function uploadComplete() {
-		        document.getElementById("file1").value = "";
-		        returnvalue(xhr.responseText);
+	            if (CrossYN()) {
+	                document.getElementById("file1").value = "";
+	                returnvalue(xhr.responseText);
+	            }
+	            else {
+	                document.getElementById("file1").type = "text";
+	                document.getElementById("file1").type = "file";
+	                returnvalue(xhr.responseText);
+	            }
 		    }
 	
 	        function imagecheckAll(checked) {
-	
 	            for (var i = 0; i < pListCount; i++) {
 	
 	                if (checked)
@@ -84,61 +97,110 @@
 	            if (document.getElementById("mainFG").checked)
 	                pFlag = "Y";
 	
-                var nodes;
-                var rtnMode;
-                var imgFileName;
-                var ImagePath;
-                var orgFileName = "";
-                
-                if (ImgaeReturnXml != "") {
-                    nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
+	            if (CrossYN()) {
+	                var nodes;
+	                var rtnMode;
+	                var imgFileName;
+	                var ImagePath;
+	                var orgFileName = "";
+	                
+	                if (ImgaeReturnXml != "") {
+	                    nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
+	
+	                    rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
+	                    imgFileName = getNodeText(GetChildNodes(nodes[0])[0]);
+	                    orgFileName = getNodeText(GetChildNodes(nodes[0])[7]);
+	                    ImagePath = "tempUploadFile/" + imgFileName;
+	
+	                } else {
+	                    if (pFlag == "Y" && !document.getElementById("mainFG").disabled) pMod = "FLAG";
+	                }
+	                content = document.getElementById("getcontent").value;
+	
+	                var strXML = "";
+	                strXML = "<DATA>";
+	                strXML += "<NODE>";
+	                strXML += "<IMAGEID>" + pListImage + "</IMAGEID>";
+	                strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+	                if (ImagePath == undefined) {
+	                    strXML += "<FILEPATH></FILEPATH>";
+	                }
+	                else
+	                    strXML += "<FILEPATH><![CDATA[" + ImagePath + "]]></FILEPATH>";
+	                
+	                strXML += "<CONTENT><![CDATA[" + content + "]]></CONTENT>";
+	                strXML += "<MAINFG>" + pFlag + "</MAINFG>";
+	                strXML += "<ITEMID>" + pItemID + "</ITEMID>";
+	                strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
+	                strXML += "</NODE>";
+	                strXML += "</DATA>";
+	
+	                var xmlhttp = createXMLHttpRequest();
+	                var xmldom = createXmlDom();
+	
+	                xmldom.async = false;
+	                xmldom.preserveWhiteSpace = true;
+	                xmldom = loadXMLString(strXML);
+	
+	                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod, false);
+	                xmlhttp.send(xmldom);
+	
+	                if (xmlhttp.responseText == "OK") {
+	                    alert(strLang50);
+	                    window.opener.page_reload();
+	                    window.close();
+	                }
+	                else {
+	                    alert(strLang51);
+	                }
+	            } else {
+	                var file = "";
+	                var content = "";
+	                var filepath = "";
 
-                    rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
-                    imgFileName = getNodeText(GetChildNodes(nodes[0])[0]);
-                    orgFileName = getNodeText(GetChildNodes(nodes[0])[7]);
-                    ImagePath = "tempUploadFile/" + imgFileName;
+	                if (pMod == "Mod") {
+	                    content = document.getElementById("getcontent").value;
 
-                } else {
-                    if (pFlag == "Y" && !document.getElementById("mainFG").disabled) pMod = "FLAG";
-                }
-                content = document.getElementById("getcontent").value;
+	                    var ImagePath = "";
 
-                var strXML = "";
-                strXML = "<DATA>";
-                strXML += "<NODE>";
-                strXML += "<IMAGEID>" + pListImage + "</IMAGEID>";
-                strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
-                if (ImagePath == undefined) {
-                    strXML += "<FILEPATH></FILEPATH>";
-                }
-                else
-                    strXML += "<FILEPATH><![CDATA[" + ImagePath + "]]></FILEPATH>";
-                
-                strXML += "<CONTENT><![CDATA[" + content + "]]></CONTENT>";
-                strXML += "<MAINFG>" + pFlag + "</MAINFG>";
-                strXML += "<ITEMID>" + pItemID + "</ITEMID>";
-                strXML += "<OFILENAME>" + orgFileName + "</OFILENAME>";
-                strXML += "</NODE>";
-                strXML += "</DATA>";
+	                    if (document.getElementById("imagechange1").value != null && document.getElementById("imagechange1").value != "") {
+	                        file = document.getElementById("imagechange1").value + "|";                        
+	                        filepath = MakeXMLString(GetSmallUrl());
+	                        ImagePath = filepath.split(";")[0];
+	                    }
+	                    else
+	                        ImagePath = ListImages.substring(17, ListImages.length).split(";")[0].replace("/uploadFile/", "/tempUploadFile/s_");
 
-                var xmlhttp = createXMLHttpRequest();
-                var xmldom = createXmlDom();
+	                    var strXML = "";
+	                    strXML = "<DATA>";
+	                    strXML += "<NODE>";
+	                    strXML += "<IMAGEID>" + pListImage + "</IMAGEID>";
+	                    strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+	                    strXML += "<FILEPATH><![CDATA[" + imagefilepath + "]]></FILEPATH>";
+	                    strXML += "<CONTENT>" + content + "</CONTENT>";
+	                    strXML += "<MAINFG>" + pFlag + "</MAINFG>";
+	                    strXML += "<ITEMID>" + pItemID + "</ITEMID>";
+	                    strXML += "<OFILENAME>" + imagefilepath.substring(imagefilepath.indexOf("_") + 1, imagefilepath.indexOf(".")) + "</OFILENAME>";
+	                    strXML += "</NODE>";
+	                    strXML += "</DATA>";
 
-                xmldom.async = false;
-                xmldom.preserveWhiteSpace = true;
-                xmldom = loadXMLString(strXML);
+	                    var xmldom = createXmlDom();
+	                    xmldom = loadXMLString(strXML);
 
-                xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod, false);
-                xmlhttp.send(xmldom);
+	                    var xmlhttp = createXMLHttpRequest();
+	                    xmlhttp.open("POST", "/ezBoard/deleteImageItem.do?mod=" + pMod, false)
+	                    xmlhttp.send(xmldom);
 
-                if (xmlhttp.responseText == "OK") {
-                    alert(strLang50);
-                    window.opener.page_reload();
-                    window.close();
-                }
-                else {
-                    alert(strLang51);
-                }
+	                    if (xmlhttp.responseText == "OK") {
+	                        alert(strLang50);
+	                        window.opener.page_reload();
+	                        window.close();
+	                    }
+	                    else {
+	                        alert(strLang51);
+	                    }
+	                }
+	            }
 	        }
 	
 	        function returnvalue(strXML) {
@@ -182,10 +244,121 @@
 	        var g_fileList;
 	        var imagefilepath = "";
 	        function btn_PhotoChange() {
+	        	if (CrossYN()) {
 	                document.getElementById('mode').value = "PHOTO";
 	                document.form.file1.click();
+
+	            } else {
+	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                ezUtil.UseUTF8 = true;
+	                var file = "";
+
+	                file = ezUtil.OpenLoadDlgMultiNew("" + strLang22 + "", "");
+
+	                if (!file)
+	                    return;
+
+	                pAttachListXml = "";
+
+	                g_fileList = file.split("|");
+
+	                var fileSize = 0;
+
+	                if (g_fileList.length > 20) {
+	                    alert("" + strLang23 + "")
+	                    return;
+	                }
+
+	                if (g_fileList.length > 2) {
+	                    alert(strLang49);
+	                    return;
+	                }
+
+	                for (var i = 0; i < g_fileList.length - 1; i++) {
+	                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
+	                        alert("" + strLang6 + "");
+	                        return;
+	                    }
+	                    
+	                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
+
+	                    if (temp.length > 111) {
+	                        alert("" + strLang7 + "");
+	                        return;
+	                    }
+	                    
+	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
+
+	                    
+	                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
+	                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+	                        return;
+	                    }
+	                }
+
+	                ezUtil = null;
+	                var fileNamelist = "";
+	                var fileName = "";
+	        
+	                document.all.EzHTTPTrans.AddUploadFile("", "");
+	                for (var i = 0; i < g_fileList.length - 1; i++) {
+	                    try {
+	                        document.all.EzHTTPTrans.AddFilename(encodeURIComponent(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\") + 1)));
+	                        document.all.EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
+	                    }
+	                    catch (e) {
+	                        if (e.number == -2147352567)
+	                            alert("" + strLang12 + "");
+	                        else
+	                            alert(g_fileList[i] + " " + strLang13 + "" + "\n\n" + e.number + " - " + e.description);
+	                        return;
+	                    }
+	                }
+
+	                var RemotePath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezBoard/itemAttachFile.do";
+	                var nCount = document.all.EzHTTPTrans.StartUpload(RemotePath, "/upload_board", pBoardID, "", "");
+
+	                for (var i = 0; i < nCount; i++) {
+	                    var attachFileResult = document.all.EzHTTPTrans.GetReturn(i);
+	                    
+	                    var attachFilePath = attachFileResult.substr(0, attachFileResult.indexOf("/"));
+	                    var attachFilename = attachFileResult.substr(attachFileResult.indexOf("/") + 1);
+	                    attachFilename = attachFilename.substr(0, attachFilename.lastIndexOf("/"));
+
+	                    if (attachFilename.substr(0, 2) != "OK") {
+	                        try {
+	                            txtPhotoFile.value = "";
+	                        }
+	                        catch (e) {
+	                        }
+	                        alert(g_fileList[i] + " " + strLang24 + "");
+	                        txtPhotoFile.value = "";
+	                        return;
+	                    }
+	                    else {
+	                        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1"); 
+	                        ezUtil.UseUTF8 = true;
+	                        fileSize = ezUtil.GetFileSize(g_fileList[i]);
+	                        txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);	
+	                        ezUtil = null;
+	                        var Result = attachFilename.substr(3, attachFilename.length - 3);
+
+	                        imagefilepath = attachFilename.replace("OK_", "");
+	                        var imgFileName = imagefilepath.split('/')[0];
+	                        imagefilepath = "tempUploadFile/" + imgFileName;
+
+	                        var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + pBoardID + "&fileName=" + imgFileName;
+	                        document.getElementsByTagName("IMG")[0].src = imgSrc;
+	                    }
+	                }        
+	            }
 	        }
    		</script>
+   		<c:if test="${!isCrossBrowser}">
+	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+		        Append_AttachAdd(filename);
+			</script>
+   		</c:if>
 	</head>
 	<body class="popup" onLoad="window_onload()" style="overflow:hidden;">
 	    <table class="layout">
@@ -243,7 +416,10 @@
 	        </tr>
 	        <tr>
 	    <td style="display:none;">
-	    <div id="lstAttachLink">&nbsp;</div>
+	    	<c:if test="${!isCrossBrowser}">
+		    	<SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+	    	</c:if>
+	    	<div id="lstAttachLink">&nbsp;</div>
 	    </td>
 	  </tr>
 	    </table>

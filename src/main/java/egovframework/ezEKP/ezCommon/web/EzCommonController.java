@@ -254,7 +254,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 		
 		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
-	
+
 		if (imageFile.exists()) {			
 			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
 			width = bi.getWidth();
@@ -290,7 +290,6 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
 	}
-	
 	
 	/**
 	 * ID크릭시 사용자 정보화면 호출 Method

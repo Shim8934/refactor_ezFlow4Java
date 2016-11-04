@@ -1737,14 +1737,14 @@ function openSingUI(parameter) {
 	
 	$.ajax({
 		type : "POST",
-		dataType : "xml",
+		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/getSignRequest.do",
 		data : {
 			userID : pingUserID
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}
 	});
 

@@ -382,12 +382,12 @@
 			function getApprUserList() {
 				$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					url : "/ezBoard/get_apprUserList.do",
 					async : true,
 					data : {pBoardID : BoardID},
 					success : function(result){
-						makeApprUserList(result);
+						makeApprUserList(loadXMLString(result));
 					}
 				});
 			}			

@@ -98,10 +98,11 @@
 		    function displayUserList(DeptID) {            
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayName;description;title", type : "user"},
-		        	success : function(result){		        		
+		        	success : function(result){	
+		        		result = loadXMLString(result);
 		        		document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
@@ -402,12 +403,12 @@
 
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
 		        	success : function(result){	
-		        		xmlDOM = result;
+		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){

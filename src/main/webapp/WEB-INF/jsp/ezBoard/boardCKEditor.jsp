@@ -7,7 +7,6 @@
 		<script  type="text/javascript" src="/js/ckEditor/ckeditor.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
-		
 		    CKEDITOR.on( 'instanceReady', function( ev )
 		    {
 			    ExecuteCommand("maximize");

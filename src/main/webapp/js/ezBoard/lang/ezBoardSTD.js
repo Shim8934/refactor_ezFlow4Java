@@ -63,6 +63,7 @@ var strLang76 = "삭제 권한이 없습니다.";
 var strLang77 = "게시물을 선택해 주세요.";
 var strLang78 = "읽음 표시 하시겠습니까?";
 var strLang79 = "를(을) 선택하세요.";
+var strLang80 = "트리뷰의 ID가 지정되지 않았습니다.";
 
 
 

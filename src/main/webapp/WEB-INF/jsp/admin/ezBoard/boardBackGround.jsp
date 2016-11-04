@@ -7,9 +7,9 @@
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" language="javascript">
 			$(document).ready(function(){			
@@ -19,66 +19,44 @@
 					url: "/admin/ezBoard/getBackGroundImage.do",
 					data : { type: "ALL", backgroundID: "" },
 					success: function(result){		
-						var _html = "";
-			            try{
+			            var _html = "";
+			            try {
 			                var XmlNode = "";
 			                var XmlNodeText = "";
 			                XmlNodeText = result;
 			                XmlNode = loadXMLString(XmlNodeText);
 			                var countValue = 0;
 			                _html = "<table class='mainlist' style='width:100%;'>";
-			                
 			                if (SelectNodes(XmlNode, "DATA/ROW").length > 0) {
-			                    //if (CrossYN()) {
-			                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-			                            var _Value;
-			                            var tempi = i + 1;
-			                            _html += "<tr id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SAVEFILENAME")[0].textContent + "' backgroundid = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "BACKGROUNDID")[0].textContent + "' priority = '" + tempi
-			                                  + "' imgwidth = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0].textContent + "' imgheight = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0].textContent
-			                                  + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>"
-			                            if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1")
-			                                _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
-			                            else
-			                                _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' onclick='event_statuschange(this);'></td>";
-	
-			                            _html += "<td style='width:60%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ORGFILENAME")[0].textContent + "</td>";
-			                            _html += "<td style='width:32%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
-			                            _html += "</tr>";
-			                            _html += "</html>";
-			                            if (SelectNodes(XmlNode, "DATA").length == 0)
-			                                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + "ㅊ" + "</td></tr></table>";
-			                            else
-			                                document.getElementById("contentlist").innerHTML = _html;
-			                        }
-			                    //}
-			                    /*else {
-			                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-			                            var _Value;
-			                            var tempi = i + 1;
-			                            _html += "<tr id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SAVEFILENAME")[0].text + "' backgroundid = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "BACKGROUNDID")[0].text + "' priority = '" + tempi
-			                                  + "' imgwidth = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0].text + "' imgheight = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0].text
-			                                  + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-			                            if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].text == "1")
-			                                _html += "<td style='width:8%;padding-left:5px;'><input  type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
-			                            else
-			                                _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' onclick='event_statuschange(this);'></td>";
-	
-			                            _html += "<td style='width:60%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ORGFILENAME")[0].text + "</td>";
-			                            _html += "<td style='width:32%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].text + "</td>";
-			                            _html += "</tr>";
-			                            _html += "</html>";
-			                            if (SelectNodes(XmlNode, "DATA").length == 0)
-			                                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang53 + "</td></tr></table>";
+			                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+			                        var _Value;
+			                        var tempi = i + 1;
+			                        _html += "<tr id = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "SAVEFILENAME")[0]) + "' backgroundid = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "BACKGROUNDID")[0]) + "' priority = '" + tempi
+			                                + "' imgwidth = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0]) + "' imgheight = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0])
+			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>"
+			                        if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1")
+			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
+			                        else
+			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' onclick='event_statuschange(this);'></td>";
+
+			                        _html += "<td style='width:60%;color:gray;'>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ORGFILENAME")[0]) + "</td>";
+			                        _html += "<td style='width:32%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0]) + "</td>";
+			                        _html += "</tr>";
+			                        _html += "</html>";
+			                        if (SelectNodes(XmlNode, "DATA").length == 0)
+			                            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + "ㅊ" + "</td></tr></table>";
 			                        else
 			                            document.getElementById("contentlist").innerHTML = _html;
-			                    	}
-				                }*/
-				            }else {
+			                    }
+				            }
+				            else {
 				                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang53 + "</td></tr></table>";
-				            }	
-				        }catch (e) {
+				            }
+	
+				        }
+				        catch (e) {
 				            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang53 + "</td></tr></table>";
-				        }	
+				        }
 					}
 				});
 			});
@@ -313,7 +291,7 @@
                         		<th style="width:32%;"><span><spring:message code="ezBoard.t5007"/></span></th>
                     		</tr>
                 		</table>
-              			<div id="contentlist" name="contentlist" style="height:365px;overflow-y:auto;">
+              			<div id="contentlist" name="contentlist" style="height:353px;overflow-y:auto;">
                 			<table class="mainlist" style="width:100%;">
                     			<tr>
                         			<td style="text-align:center;">

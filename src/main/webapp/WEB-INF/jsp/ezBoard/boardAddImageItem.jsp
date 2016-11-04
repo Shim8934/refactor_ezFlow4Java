@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -9,8 +10,15 @@
 	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <script type="text/javascript">
 	        var pMode = "new";
@@ -39,8 +47,66 @@
 	        };
 	
 	        function btn_PhotoAttachAdd() {
-                document.getElementById('mode').value = "PHOTO";
-                document.form.file1.click();
+	            if (CrossYN()) {
+	                document.getElementById('mode').value = "PHOTO";
+	                document.form.file1.click();
+	            } else {
+	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                ezUtil.UseUTF8 = true;
+	                var file = "";
+	                if (pMode == "modify")	// " + strLang21 + "
+	                {
+	                    file = ezUtil.OpenLoadDlg("" + strLang22 + "", "");
+	                    if (file != "") {
+	                        file = file + "|";
+	                    }
+	                }
+	                else {
+	                    file = ezUtil.OpenLoadDlgMultiNew("" + strLang22 + "", "");
+	                }
+
+	                if (!file)
+	                    return;
+
+	                pAttachListXml = "";
+	                g_fileList = file.split("|");
+	                var fileSize = 0;
+	                if (pMode != "modify") {
+	                    if (g_fileList.length > 20) {
+	                        alert("" + strLang23 + "")
+	                        return;
+	                    }
+	                }
+
+	                for (var i = 0; i < g_fileList.length - 1; i++) {
+	                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
+	                        alert("" + strLang6 + "");
+	                        return;
+	                    }
+	                    //[2006.06.20] 파일명의 길이가 111byte를 초과할 경우 오류메시지 처리.
+	                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
+
+	                    if (temp.length > 111) {
+	                        alert("" + strLang7 + "");
+	                        return;
+	                    }
+	                    //2006.11.28 포토게시판은 게시물 건당 첨부파일 용량을 체크한다.
+	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
+
+	                    //게시판별로 설정되어 있는 첨부용량 제한
+	                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
+	                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+	                        return;
+	                    }
+	                    //var result = addimageline(g_fileList[i]);
+	                }
+
+	                ezUtil = null;
+	                txtPhotoFile.value = file;
+	                var fileNamelist = "";
+	                var fileName = "";
+	                show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
+	            }
 	        }
 	        
 	        function uploadComplete() {
@@ -99,30 +165,53 @@
 	            var imagecount = "";
 	            var imageid = "";
 	
-                imagecount = imgpath.split("/").length - 1;
-                imageid = imgpath.split("/")[imagecount];
+	            if (CrossYN()) {
+	                imagecount = imgpath.split("/").length - 1;
+	                imageid = imgpath.split("/")[imagecount];
+	
+	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
+	                    return "false";
+	
+	                var resultHTML = "<table width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
+	                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
+	                                 "<td><textarea id='getcontent' style='width:97%; height:80px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
+	
+	                var imagecontent = document.getElementById("addimagecontent");
+	
+	                imagecontent.innerHTML += resultHTML;
+	
+	                if (imagecontent != null && imagecontent != "") {
+	                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
+	                    document.getElementById(imageid).src = imgSrc;
+	                    bodycount = parseInt(bodycount) + 1;
+	                }
+	            } else {
+	                imagecount = imgpath.split("\\").length - 1;
+	                imageid = imgpath.split("\\")[imagecount];
 
-                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
-                    return "false";
+	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
+	                    return "false";
 
-                var resultHTML = "<table width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
-                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
-                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-                                 "<td><textarea id='getcontent' style='width:97%; height:80px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
+	                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
+	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
+	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #b6b6b6; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
+	                                     "</tr></table>";
 
-                var imagecontent = document.getElementById("addimagecontent");
+	                var imagecontent = document.getElementById("addimagecontent");
+	                imagecontent.innerHTML += resultHTML;
 
-                imagecontent.innerHTML += resultHTML;
-
-                if (imagecontent != null && imagecontent != "") {
-                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
-                    document.getElementById(imageid).src = imgSrc;
-                    bodycount = parseInt(bodycount) + 1;
-                }
+	                if (imagecontent != null && imagecontent != "") {
+	                    document.getElementById(imageid).src = localFileName;
+	                    bodycount = parseInt(bodycount) + 1;
+	                }
+	            }
 	        }
 	
 	        function btn_ImgAddOnclick() { 
 	            var bodycount = document.getElementById("addimagecontent").childNodes.length;
+	            var file = "";
 	            var content = "";
 	            var filename = "";
 	
@@ -131,10 +220,25 @@
 	                alert(strLang44);
 	                return;
 	            }
-                for (var i = 0; i < bodycount; i++) {
-                    content += document.getElementsByName('imgContent')[i].value + " ;:;";
-                    filename += document.getElementsByName('imgView')[i].title + ";";
-                }
+	            if (CrossYN()) {
+	                for (var i = 0; i < bodycount; i++) {
+	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
+	                    filename += document.getElementsByName('imgView')[i].title + ";";
+	                }
+	            } else {
+	                for (var i = 0; i < bodycount; i++) {
+	                    var checkreuslt = document.getElementById("addimagecontent").childNodes[i].childNodes[0].childNodes[0].childNodes[0].childNodes[0];
+	                    var checkreuslts = document.getElementById("addimagecontent").childNodes[i].childNodes[0].childNodes[0].childNodes[2].childNodes[0];
+	                    //경로
+	                    file += document.getElementById(checkreuslt.value).getAttribute("name") + "|";
+	                    //내용
+	                    content += MakeXMLString(checkreuslts.value + ";:;");
+
+	                    var imagenamelength = document.getElementById(checkreuslt.value).getAttribute("name").lastIndexOf("\\");
+	                    //사진실제이름
+	                    filename += document.getElementById(checkreuslt.value).getAttribute("name").substring(imagenamelength + 1, imagenamelength.length) + ";";
+	                }
+	            }
 	            
 	            var strXML = "";
 	            var pStartDate = "";
@@ -172,7 +276,7 @@
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 			    strXML += "</NODE>";
 			    strXML += "</NODES>";
-			    
+   
 	            xmldom.async = false;
 			    xmldom.preserveWhiteSpace = true;
 			    xmldom = loadXMLString(strXML);
@@ -281,7 +385,7 @@
 	                if (document.getElementsByName('checkmenuSub').length == 0)
 	                    txtPhotoFile.value = "";
 	
-	                xmlHTTP = null;
+	                xmlhttp = null;
 	
 	            } else {
 	                for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
@@ -295,6 +399,23 @@
 	                if (document.getElementsByName('checkmenuSub').length == 0)
 	                    txtPhotoFile.value = "";
 	            }
+	            
+	            var attachXml = "<LISTVIEWDATA><ROWS>";
+	            for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
+	                attachXml += "<ROW><CELL>";
+	                attachXml += "<DATA1>" + "/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	                attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
+	                attachXml += "<DATA3></DATA3>";
+	                attachXml += "<DATA4></DATA4>";
+	                attachXml += "<DATA5>Y</DATA5>";
+	                attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
+	                attachXml += "</CELL></ROW>";
+	            }
+	            attachXml += "</ROWS></LISTVIEWDATA>";
+
+	            var xmlDom = createXmlDom();
+	            xmlDom = loadXMLString(attachXml);
+	            pAttachListXml = xmlDom;
 	        }
 	
 	        //create guid
@@ -314,6 +435,11 @@
 	        //
 	    
 	    </script>
+	    <c:if test="${!isCrossBrowser}">
+		    <script  FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+			        Append_AttachAdd(filename);
+			</script>
+	    </c:if>
 	</head>
 	<body class="popup">
 	    <table class="layout" >
@@ -357,6 +483,9 @@
 	    <table>
 	        <tr style="display:none;">
 	            <td>
+	            	<c:if test="${!isCrossBrowser}">
+		            	<SCRIPT>  EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+	            	</c:if>
 	                <div id="lstAttachLink">&nbsp;</div>
 	            </td>
 	        </tr>

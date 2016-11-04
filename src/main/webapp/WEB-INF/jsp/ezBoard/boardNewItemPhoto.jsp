@@ -221,7 +221,7 @@
 	                    
 	                    file += GetAttribute(document.getElementById(checkreuslt.value),'name') + "|";
 	                    
-	                    content += checkreuslts.value + "\\";
+	                    content += checkreuslts.value + ";:;";
 
 	                    var imagenamelength = GetAttribute(document.getElementById(checkreuslt.value),'name').lastIndexOf("\\");
 	                    

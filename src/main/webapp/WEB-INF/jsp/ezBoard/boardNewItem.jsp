@@ -27,8 +27,8 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js?ver_0.4"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js?ver_0.4"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js?ver_0.52"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js?ver_0.52"></script>
 		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
@@ -150,19 +150,21 @@
 			        pAttachListXml = MakeAttachList();
 			        if (gubun != "3") {
 			            AppendFileAttachInfo(pAttachListXml);
-			            if (typeof (pAttachListXml) == "string")
-			                pAttachListXml = loadXMLString(pAttachListXml);
-			            else
-			                pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
-			
-			            var objAttachNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-
-			            for (var i = 0; i < objAttachNodes.length; i++) {
-			                if (pMode == "boardContent" || pMode == "boardAttach"){
-			                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
-			                }else{
-			                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
-			                }
+			            if ("${isCrossBrowser}") {
+				            if (typeof (pAttachListXml) == "string")
+				                pAttachListXml = loadXMLString(pAttachListXml);
+				            else
+				                pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
+				
+				            var objAttachNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
+	
+				            for (var i = 0; i < objAttachNodes.length; i++) {
+				                if (pMode == "boardContent" || pMode == "boardAttach"){
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                }else{
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                }
+				            }
 			            }
 			        }
 			        else {
@@ -684,7 +686,8 @@
 		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
 		            }
 		        }
-// 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", Base64.encode(strBody));
+
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody.replace(/\r\n/g, "@r!n@"));
 
 		        if (gubun == "2")
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
@@ -719,7 +722,7 @@
 		        	}
 				}
 
-		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun + "&content=" + encodeURIComponent(strBody), false);
+		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
 				if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 		            xmlhttp = null;
@@ -830,6 +833,7 @@
 		        }
 		        xmlhttp = null;
 		        xmlDom = null;
+		    	
 		    }
 		    function JSleep() {
 		    	return;
@@ -1570,7 +1574,7 @@
 	
 	                var img = document.createElement("IMG");
 	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
-	                img.width = 90;
+	                img.width = 108;
 	                img.height = 30;
 	                img.src = "<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")' />" + "/S_" + filepath;
 	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };

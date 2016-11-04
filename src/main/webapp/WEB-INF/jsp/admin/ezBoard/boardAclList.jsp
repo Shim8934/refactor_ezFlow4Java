@@ -156,12 +156,12 @@
 
 	        	$.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",	        			
 					data : { rootBoardID : pRootBoardID, subFlag : pSubFlag, selectFlag : "0"},
 					success: function(result){
-						ret = result;				
+						ret = loadXMLString(result);				
 					}
 				});
 	        	

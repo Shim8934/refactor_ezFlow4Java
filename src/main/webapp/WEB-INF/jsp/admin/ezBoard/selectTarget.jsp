@@ -5,16 +5,15 @@
 <html>
 	<head>
 		<title><spring:message code="ezBoard.t16" /></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree.js"></script>	    
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
+	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js?ver_0.1"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">
 			var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 		    var m_dlImg = { "normal": "/images/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -34,7 +33,7 @@
 		    var ReturnFunction;
 		    var RetValue;
 		    
-			$(document).ready(function(){			
+		    window.onload = function () {
 				try {
 		            RetValue = parent.selecttarget_cross_dialogArguments[0];
 		            ReturnFunction = parent.selecttarget_cross_dialogArguments[1];
@@ -60,39 +59,40 @@
 
 		        m_receiverTitleList = new Array(ToTitle);
 		        m_receiverWindowList = new Array(ListViewMsgTo);
-
+		        
+		        var listviewheader = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t35'/></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>")
 		        var listview = new ListView();
 		        listview.SetID("ListViewMsgToView");
 		        listview.SetMulSelectable(false);
 		        listview.SetRowOnClick("SelectReceiverWindow");
 		        listview.SetRowOnDblClick("DeleteReceiver");
-		        listview.DataSource(document.getElementById("listviewheader"));
+		        listview.DataSource(listviewheader);
 		        listview.DataBind("ListViewMsgTo");
-
+		        
+				var listviewheader2 = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t36' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t9' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t37' /></NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t38' /></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>");
 		        var listview5 = new ListView();
 		        listview5.SetID("OrganList");
 		        listview5.SetMulSelectable(false);
 		        listview5.SetRowOnDblClick("ListViewNodeDblClick");
-		        listview5.DataSource(document.getElementById("listviewheader2"));
+		        listview5.DataSource(listviewheader2);
 		        listview5.DataBind("OrganListView");
 
 		        applyCurrentData();
 
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID><c:out value='${deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID>" + "${deptID}" + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		        g_xmlHTTP.send(strQuery);
 
 		        m_selectedTree = TreeView;
-		        SelectReceiverWindow(${defaultwin}Title, ListViewMsg${defaultwin});
+		        SelectReceiverWindow(ToTitle, ListViewMsgTo);
 
 		        admin_OK.disabled = true;
 		        admin_NO.disabled = true;
 		        admin_OK.checked = false;
 		        admin_NO.checked = true;
-			});
+			};
 			
 			function TreeViewNodeClick(pNodeID, pTreeID) {						        	
 	            var treenode = new TreeNode();
@@ -103,20 +103,22 @@
 		        
 		    function displayUserList(DeptID) {
 		    	var xmlpara = createXmlDom();		        
-            
+		    	var listviewheader2 = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t36' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t9' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t37' /></NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t38' /></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>");
+		    	
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayName;description;title", type : "user"},
-		        	success : function(result){		        		
+		        	success : function(result){		 
+		        		result = loadXMLString(result);
 		        		document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
 		                listview.SetSelectFlag(false);
 		                listview.SetMulSelectable(false);
 		                listview.SetRowOnDblClick("ListViewNodeDblClick");
-		                listview.DataSource(document.getElementById("listviewheader2"));
+		                listview.DataSource(listviewheader2);
 		                listview.DataBind("OrganListView");
 		                listview.DataSource(result);
 		                listview.RowDataBind();
@@ -141,7 +143,7 @@
 		            if (g_xmlHTTP.statusText == "OK") {
 		                if (!bSearch) {
 		                    try {
-		                        RetValue["window"].opener.top.organview = getXmlString(g_xmlHTTP.responseXML);
+		                        RetValue["window"].opener.top.organview = g_xmlHTTP.responseText;
 		                    } catch (e) { }
 		                }
 
@@ -149,40 +151,33 @@
 		                document.getElementById('TreeView').innerHTML = "";
 
 		                var treeView = new TreeView();
-		                treeView.SetID("TreeViewList");
 		                treeView.SetConfig(xmlDom);
-		                treeView.SetNodeClick("TreeViewNodeClick");
+		                treeView.SetID("TreeViewList");
+		                treeView.SetUseAgency(true);
 		                treeView.SetRequestData("RequestData");
-		                treeView.DataSource(g_xmlHTTP.responseXML);
+		                treeView.SetNodeClick("TreeViewNodeClick");
+		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezBoard.t17' />" + g_xmlHTTP.statusText)
+		                alert("<spring:message code='ezBoard.t17' />" + g_xmlHTTP.statusText);
 		                g_xmlHTTP = null;
 		            }
 		        }
 		    }
 
 		    function applyCurrentData() {
-		        var xmldoc;
+		    	var xmldoc;
 		        xmldoc = loadXMLString(RetValue["selectTargetListXML"]);
 		        var i = 0;
 		        var username, useremail;
 		        var username2, boardGroupACL, dept;
 		        for (i = 0; i < GetElementsByTagName(xmldoc, "CN").length; i++) {
-		            if (CrossYN()) {
-		                username = GetElementsByTagName(xmldoc, "NAME")[i].textContent;
-		                username2 = GetElementsByTagName(xmldoc, "NAME2")[i].textContent;
-		                useremail = GetElementsByTagName(xmldoc, "CN")[i].textContent;
-		                boardGroupACL = GetElementsByTagName(xmldoc, "GROUP")[i].textContent;
-		                dept = GetElementsByTagName(xmldoc, "DEPT")[i].textContent;
-		            } else {
-		                username = GetElementsByTagName(xmldoc, "NAME")[i].text;
-		                username2 = GetElementsByTagName(xmldoc, "NAME2")[i].text;
-		                useremail = GetElementsByTagName(xmldoc, "CN")[i].text;
-		                boardGroupACL = GetElementsByTagName(xmldoc, "GROUP")[i].text;
-		                dept = GetElementsByTagName(xmldoc, "DEPT")[i].text;
-		            }
+		            username = getNodeText(GetElementsByTagName(xmldoc, "NAME")[i]);
+		            username2 = getNodeText(GetElementsByTagName(xmldoc, "NAME2")[i]);
+		            useremail = getNodeText(GetElementsByTagName(xmldoc, "CN")[i]);
+		            boardGroupACL = getNodeText(GetElementsByTagName(xmldoc, "GROUP")[i]);
+		            dept = getNodeText(GetElementsByTagName(xmldoc, "DEPT")[i]);
 		            pparsingXML2 = "";
 		            pparsingXML = "";
 		            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -238,13 +233,11 @@
 		            m_receiverTitleList[count].style.fontWeight = "normal";
 		            m_receiverWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
 		            m_receiverWindowList[count].normalColor = m_titleNoneSelectedColor;
-		            //ChangeRowsColor(m_receiverWindowList[count], m_titleNoneSelectedColor);
 		        }
-		        ${defaultwin}Title.style.fontWeight = "bold";
-		        ListViewMsg${defaultwin}.style.backgroundColor = m_titleSelectedColor;
-		        ListViewMsg${defaultwin}.normalColor = m_titleSelectedColor;
-		        //ChangeRowsColor(ListViewMsg${defaultwin}, m_titleSelectedColor);
-		        m_selectedWindow = ListViewMsg${defaultwin};
+		        ToTitle.style.fontWeight = "bold";
+		        ListViewMsgTo.style.backgroundColor = m_titleSelectedColor;
+		        ListViewMsgTo.normalColor = m_titleSelectedColor;
+		        m_selectedWindow = ListViewMsgTo;
 		        if (document.getElementById(Title)) {
 		            if (document.getElementById(Title).getAttribute("DATA4") == "DEPT") {
 		                admin_OK.disabled = false;
@@ -435,12 +428,12 @@
 
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
 		        	success : function(result){	
-		        		xmlDOM = result;
+		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){
@@ -450,42 +443,25 @@
 		        });		        
 		        
 		        if (adCount == 0) {
-		            alert("<spring:message code='ezBoard.t25'/>");
+		        	alert("<spring:message code='ezBoard.t25'/>");
 		            return;
-		        }else if (adCount == 1){
+		        }
+		        else if (adCount == 1) {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            
-		            if (CrossYN()){
-		                var strQuery = "<DATA><DEPTID>" + GetElementsByTagName(xmlDOM, "DATA3")[0].textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-		            }else{
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA3").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-		            }
+		            var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) +
+		                    "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
-		        }else{
+		        }
+		        else {
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
-		            
-		            if (CrossYN()){
-		                checkname2_cross_dialogArguments[0] = rgParams;
-		                checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
-		                try { checkName2_Cross.focus(); } catch (e) { }
-		            }else{
-		                var feature = "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-		                feature = feature + GetShowModalPosition(609, 352);
-		                window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, feature);
-
-		                if (rgParams["deptid"] != "") {
-		                    bSearch = true;
-		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
-		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-		                    g_xmlHTTP.send(strQuery);
-		                }
+		            checkname2_dialogArguments[0] = rgParams;
+		            checkname2_dialogArguments[1] = cnsearch_click_Complete;
+		            var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(609, 352));
+		            try { checkName2.focus(); } catch (e) {
 		            }
 		        }
 		    }

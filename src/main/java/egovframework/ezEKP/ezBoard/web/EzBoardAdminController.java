@@ -883,7 +883,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 
-		model.addAttribute("defaultwin", "To");
 		model.addAttribute("strXML", "");
 		model.addAttribute("topid", topid);
 		model.addAttribute("userLang", "");
