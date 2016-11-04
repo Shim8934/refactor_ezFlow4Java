@@ -891,5 +891,60 @@ public class EgovDateUtil {
 
 		return _timeStr;
 	}
-
+	
+	/**
+	 * <pre>
+	 * timeZoneToUTC가 true면 TimeZone Date 문자열을 UTC타임 Date 문자열로 바꿔서 반환한다.
+	 * timeZoneToUTC가 false면 UTC타임 Date 문자열을 TimeZone Date 문자열로 바꿔서 반환한다.
+	 * - dateStr 형식 : yyyy-MM-dd HH:mm:ss 또는 yyyy-MM-dd HH:mm 또는 yyyy-MM-dd
+	 * - offset 형식 : ex) 235|+09:00
+	 * </pre>
+	 */
+	public static String getDateStringInUTC(String dateStr, String offset, boolean timeZoneToUTC) {
+		LOGGER.debug("dateStr=" + dateStr + ", offset=" + offset);
+		
+		if (offset == null || offset.indexOf("|") == -1) {
+			LOGGER.error("Check the offset. Offset is null or offset format is wrong.");
+			return null;
+		}
+		
+		String pattern = "";
+		if (dateStr.length() == 16) {
+			pattern = "yyyy-MM-dd HH:mm";
+		} else if (dateStr.length() == 10) {
+			pattern = "yyyy-MM-dd";
+		} else {
+			pattern = "yyyy-MM-dd HH:mm:ss";
+		}
+		
+		String[] offsetArr = offset.split("\\|");
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		
+		if (timeZoneToUTC) {
+			format.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+		} else {
+			format.setTimeZone(TimeZone.getTimeZone("GMT"));
+		}
+		
+		Date date;
+		
+		try {
+			date = format.parse(dateStr);
+		} catch (ParseException e) {
+			LOGGER.error("Check the date format. yyyy-MM-dd HH:mm:ss or yyyy-MM-dd HH:mm");
+			return null;
+		}
+		
+		if (timeZoneToUTC) {
+			format.setTimeZone(TimeZone.getTimeZone("GMT"));
+		} else {
+			format.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+		}
+		
+		String resultDateStr = format.format(date);
+		
+		LOGGER.debug("resultDateStr=" + resultDateStr);
+		return resultDateStr;
+	}
+	
 }
