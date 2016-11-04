@@ -1065,7 +1065,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 	
@@ -1129,7 +1129,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 	
@@ -1156,7 +1156,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 	
@@ -1186,7 +1186,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 	
@@ -1201,7 +1201,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;	
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 		
@@ -1214,7 +1214,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;	
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA/>";
+			return "</DATA>";
 		}
 	}
 	
@@ -2335,7 +2335,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA><DATA/>";
+			return "<DATA></DATA>";
 		}
 	}
 	
@@ -2358,7 +2358,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			return resultXML;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "<DATA><DATA/>";
+			return "<DATA></DATA>";
 		}
 	}
 	
