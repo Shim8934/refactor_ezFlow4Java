@@ -185,7 +185,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
-		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		//java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date startDate;
 		Date endDate;
 		Date sysDate;
@@ -271,8 +272,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				response.getWriter().flush();
 			}else if(qstUserPermissionVO.getPublicResultFlg().equals("1")){
 				if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
+					response.getWriter().write("<script language='javascript' src='/js/XmlHttpRequest.js'></script>");
 					response.getWriter().write("<script language='javascript'>");
-					response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+					response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', GetOpenWindowfeature(330,205));");
 					response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdID=5';");
 					response.getWriter().write("</script>");
 					response.getWriter().flush();
@@ -293,8 +295,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				if(userID.equals(rsUserID) || adminYN == true){
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
+						response.getWriter().write("<script language='javascript' src='/js/XmlHttpRequest.js'></script>");
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("window.open('qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+						response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', GetOpenWindowfeature(330,205));");
 						response.getWriter().write("</script>");
 						response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdID=5';");
 						response.getWriter().write("</script>");
@@ -307,8 +310,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 					}
 				}else{
 					if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
+						response.getWriter().write("<script language='javascript' src='/js/XmlHttpRequest.js'></script>");
 						response.getWriter().write("<script language='javascript'>");
-						response.getWriter().write("window.open('qstMsgAdminConfirm.do?" + receve + "', '', 'height=205px,width=330px, status = no, toolbar=no, menubar=no,location=no, resizable=1');");
+						response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', GetOpenWindowfeature(330,205));");
 						response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdID=5';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();
