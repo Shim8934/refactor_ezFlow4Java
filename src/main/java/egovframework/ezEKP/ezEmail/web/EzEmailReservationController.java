@@ -106,7 +106,12 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String domainName = config.getProperty("config.DomainName");
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userId + "@" + domainName);
-
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		for (MailReservationVO vo : list) {
+			vo.setTimeZoneDate(userInfo.getOffset());
+		}
+		
 		model.addAttribute("draftUrl", draftUrl);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
