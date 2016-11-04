@@ -405,6 +405,7 @@
 					{
 						// 해당 tr내의 td
 						var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
+
 						try {
 							if (tdsub_item.id == "") continue;
 						} catch(e) { continue; }
@@ -417,8 +418,7 @@
 						
 					    // td안에 컨텐츠가 존재하는 경우
 						
-						if (tdsub_item.children.length > 0 && tdsub_item.children.item(0).id.toLowerCase().substr(0, 4) != "main")
-						{
+						if (tdsub_item.children.length > 0 && tdsub_item.children.item(0).id.toLowerCase().substr(0, 4) != "main") {
 							strXML += "<ROW>";
 							strXML += "<TYPE>0</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
@@ -429,13 +429,12 @@
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
 							strXML += "<OWNERPAGEUID>" + tdsub_item.getAttribute("ownerpageuid") + "</OWNERPAGEUID>";	
-							strXML += "<PREVPAGEID>" + prevPageID + "</PREVPAGEID>";					
+							strXML += "<PREVPAGEID>" + prevPageID + "</PREVPAGEID>";
 							strXML += "</ROW>";
 							prevPageID = "";
 						}
 						// td안에 테이블이 존재하는 경우
-						else
-						{
+						else {
 							strXML += "<ROW>";
 							strXML += "<TYPE>1</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
@@ -445,7 +444,7 @@
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";
-							strXML += "<OWNERPAGEUID>" + tdsub_item.getAttribute("ownerpageuid") + "</OWNERPAGEUID>";				
+							strXML += "<OWNERPAGEUID>" + tdsub_item.getAttribute("ownerpageuid") + "</OWNERPAGEUID>";
 							strXML += "<PREVPAGEID>" + prevPageID + "</PREVPAGEID>";				
 							strXML += "</ROW>";
 							
@@ -525,8 +524,9 @@
 			    if (pObject.getElementsByTagName("td").item(i).id.indexOf("sub") > -1)
 				{
 			        if (prevpageid != pObject.getElementsByTagName("td").item(i).pageuid) count++;
-			        prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");	
-					
+			        //2016-11-04
+			        //prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");	
+			        prevpageid = GetAttribute(pObject.getElementsByTagName("td").item(i), "pageuid");
 					// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
 			        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined")
 					{

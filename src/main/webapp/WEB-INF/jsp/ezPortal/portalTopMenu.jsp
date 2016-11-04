@@ -353,9 +353,9 @@
 		
 		function OpenEditWindow(pUID)
 		{
-		    if (pUID == "201") window.open("admin/edit/LogoArea_Edit.aspx?pageid=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
-		    if (pUID == "202") window.open("admin/edit/UtilMenuArea_Edit.aspx?pageid=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
-		    if (pUID == "203") window.open("admin/edit/MainMenuArea_Edit.aspx?pageid=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
+		    if (pUID == "201") window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
+		    if (pUID == "202") window.open("/admin/ezPortal/utilMenuAreaEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
+		    if (pUID == "203") window.open("/admin/ezPortal/mainMenuAreaEdit.do?pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 		    if (pUID == "205") window.open("admin/edit/SearchArea_Edit.aspx?pageid=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 		}
 		
