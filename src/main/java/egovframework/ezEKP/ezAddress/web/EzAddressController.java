@@ -87,6 +87,14 @@ public class EzAddressController{
 	}
 	
 	/**
+	 * 도로명 주소 팝업창 호출 함수 (Open API)
+	 */
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
+	public String addressZipCodePopup(Model model) throws Exception {
+		return "ezAddress/addressZipCodePopUp";
+	}
+	
+	/**
 	 * 도로명 주소 검색 실행 함수
 	 */
 	@RequestMapping(value = "/ezAddress/addressZipCodeList.do", produces="text/xml; charset=utf-8")
@@ -324,6 +332,7 @@ public class EzAddressController{
 		String userNM = userInfo.getDisplayName1();
 		String userNM2 = userInfo.getDisplayName2();
 		String rootAddressSelection = "";
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		
 		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
 		if (ownerId.trim().equals("")) {
@@ -369,6 +378,7 @@ public class EzAddressController{
 		model.addAttribute("userNM", userNM);
 		model.addAttribute("userNM2", userNM2);
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		
 		return "ezAddress/addressWrite";
 	}

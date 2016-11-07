@@ -21,6 +21,7 @@
 			var textEmail= "${textEmail}";
 		    var usernm = "${userNM}";
 		    var usernm2 = "${userNM2}";
+		    var useAddressOpenAPI = "${useAddressOpenAPI}";
 		    var xmlHttpAddressTree;
 		    window.onload = function () {
 				if(addressid == "")
@@ -333,12 +334,20 @@
 		    }
 		    var address_zip_select_dialogArguments = new Array();
 		    function zip_find(whichto) {
-		    	if (whichto == "0")
+		    	if (whichto == "0") {
 		            IsComZip = true;
-		        else
+		    	} else {
 		            IsComZip = false;
-		        address_zip_select_dialogArguments[1] = zip_find_Complete;
-		        var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+		    	}
+		        
+		        var OpenWin;
+		    	if (useAddressOpenAPI == "YES") {
+		    		address_zip_select_dialogArguments[1] = jusoCallBack;
+		    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+		    	} else {
+		        	address_zip_select_dialogArguments[1] = zip_find_Complete;
+			        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+		    	}
 		    }
 		    function zip_find_Complete(Para) {
 		        if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
@@ -354,6 +363,18 @@
 		            }
 		        }
 		    }
+		    function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+		    	if (IsComZip) {
+	                document.getElementById("TextComZip").value = zipNo;
+	                document.getElementById("TextComAddr").value = roadFullAddr;
+	                document.getElementById("TextComAddr").focus();
+	            }
+	            else {
+	                document.getElementById("TextHomeZip").value = zipNo;
+	                document.getElementById("TextHomeAddr").value = roadFullAddr;
+	                document.getElementById("TextHomeAddr").focus();
+	            }
+			}
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
