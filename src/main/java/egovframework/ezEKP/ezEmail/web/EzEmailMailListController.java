@@ -178,6 +178,8 @@ public class EzEmailMailListController {
 		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
 		
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -188,8 +190,9 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		
-		logger.debug("userId=" + userId + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-						+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
+		logger.debug("userId=" + userId + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
+		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		
 		String returnData = "";
 		
@@ -472,7 +475,6 @@ public class EzEmailMailListController {
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String receivedDateStr = sdf.format(receivedDate);
 				
-				LoginVO userInfo = commonUtil.userInfo(loginCookie);
 				receivedDateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
 				
 				sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
