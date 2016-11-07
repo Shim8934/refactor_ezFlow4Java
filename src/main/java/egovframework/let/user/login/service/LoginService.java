@@ -58,5 +58,7 @@ public interface LoginService {
 	public List<String> getUserIDList() throws Exception;
 
 	public void updatePassword(String userID, String pwd) throws Exception;
+	
+	public int getTenantId(String serverName) throws Exception;
 
 }

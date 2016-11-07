@@ -1,9 +1,12 @@
 package egovframework.let.user.login.dao;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 import org.springframework.stereotype.Repository;
@@ -80,4 +83,13 @@ public class LoginDAO extends EgovAbstractDAO {
 	public List<String> getUserIDList() throws Exception{
 		return (List<String>) list("loginDAO.getUserIDList");
 	}
+	
+    public TenantServerNameVO selectTenantServerName(String serverName) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();        
+        map.put("serverName", serverName);
+        
+        return (TenantServerNameVO)select("loginDAO.selectTenantServerName", map);
+    }
+ 
+	
 }

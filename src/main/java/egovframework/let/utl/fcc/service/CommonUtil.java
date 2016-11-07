@@ -107,11 +107,19 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
-			String userID = decData.split("///")[1];
-			String locale = decData.split("///")[5];
-			String lang = decData.split("///")[6];
-			String timeZone = decData.split("///")[7];
+			String[] decDataArray = decData.split("///");
 			
+			String serverName = decDataArray[0];
+			String userID = decDataArray[1];
+			String locale = decDataArray[5];
+			String lang = decDataArray[6];
+			String timeZone = decDataArray[7];
+			
+            String tenantIdStr = "0";
+            
+            if (decDataArray.length >= 9) {
+                tenantIdStr = decDataArray[8];	
+            }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
@@ -147,6 +155,9 @@ public class CommonUtil {
 			
 			user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);
+			
+			user.setServerName(serverName);
+			user.setTenantId(Integer.parseInt(tenantIdStr));
 			
 			return user;
 		}catch(Exception e){
