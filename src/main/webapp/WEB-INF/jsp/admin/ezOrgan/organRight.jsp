@@ -134,10 +134,11 @@
 				
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : cellContent, prop : "", type : typeContent},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
 		        		
 				        if (listOpt1.checked == true){
