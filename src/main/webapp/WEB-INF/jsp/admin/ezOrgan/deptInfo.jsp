@@ -43,12 +43,12 @@
 					
 					$.ajax({
 						type : "POST",
-						dataType : "xml",
+						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
 						data : {cn : DeptID.value, prop : "displayName;extensionAttribute9;extensionAttribute1;extensionAttribute2;extensionAttribute3;extensionAttribute4;extensionAttribute5;extensionAttribute6;extensionAttribute8;extensionAttribute10;extensionAttribute15;extensionAttribute11", pMode : "dept" },
 						success : function(result){
-							xmlDom = result;
+							xmlDom = loadXMLString(result);
 							DeptName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
 							DeptName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
 							OldDeptName2 = DeptName2.value.trim()
