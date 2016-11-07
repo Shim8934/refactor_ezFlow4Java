@@ -150,6 +150,12 @@ public class LoginController {
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
 			} else {
+			    String serverName = request.getServerName();
+			    int serverPort = request.getServerPort();
+			    int tenantId = loginService.getTenantId(serverName);
+			    
+			    logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+			    
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				//IP Address,  마지막 login시간 저장
@@ -225,7 +231,12 @@ public class LoginController {
 				localeResolver.setLocale(request, response, locale);
 				//
 				
-				String cInfo = config.getProperty("config.ServerName")+ "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone;
+				// 80 포트가 아닌 경우엔 포트 번호도 포함시킨다.
+				if (serverPort != 80) {
+				    serverName = serverName + ":" + serverPort;
+				}
+				
+				String cInfo = serverName + "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
 	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);

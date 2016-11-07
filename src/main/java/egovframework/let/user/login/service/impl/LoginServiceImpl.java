@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -151,5 +152,18 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		
 		loginDAO.updatePassword(pwVO);
 	}
+
+
+    @Override
+    public int getTenantId(String serverName) throws Exception {
+        int tenantId = -1;
+        TenantServerNameVO tenantServerNameVO = loginDAO.selectTenantServerName(serverName);
+        
+        if (tenantServerNameVO != null) {
+            tenantId = tenantServerNameVO.getTenantId();
+        }
+        
+        return tenantId;
+    }
 
 }

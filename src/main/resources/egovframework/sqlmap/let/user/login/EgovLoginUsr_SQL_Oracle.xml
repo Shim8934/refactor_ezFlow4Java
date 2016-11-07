@@ -27,6 +27,11 @@
 		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
 	</resultMap>	
 	
+    <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
+        <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
+        <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
+    </resultMap>    
+ 
 	<!-- 일반 로그인 -->
 	<select id="loginDAO.selectUser" resultMap="login">
 		<!-- 일반회원 -->		
@@ -109,4 +114,16 @@
 				cn = #id#									
 		]]>
 	</update>
+ 
+    <select id="loginDAO.selectTenantServerName" parameterClass="Map" resultMap="tenantServerName">
+        <![CDATA[
+            SELECT 
+                SERVER_NAME, TENANT_ID
+            FROM 
+                ezHrMaster.TBLTENANT_SERVERNAME 
+            WHERE  
+                SERVER_NAME = #serverName#
+        ]]>
+    </select>
+ 
 </sqlMap>

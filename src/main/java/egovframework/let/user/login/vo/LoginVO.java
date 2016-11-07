@@ -122,6 +122,12 @@ public class LoginVO implements Serializable{
 	/** 유저 tableViewOption*/
 	private String tableViewOption;
 	
+    /** 사용자가 속한 Tenant의 고유 ID */
+    private int tenantId = -1;
+    
+    /** 사용자가 접속한 서버의 이름(80 포트가 아닌 경우엔 포트번호도 포함) */
+    private String serverName;
+	
 	public String getId() {
 		return id;
 	}
@@ -401,5 +407,21 @@ public class LoginVO implements Serializable{
 	public void setTableViewOption(String tableViewOption) {
 		this.tableViewOption = tableViewOption;
 	}
+	
+    public int getTenantId() {
+        return tenantId;
+    }
+    
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
+    }
+    
+    public String getServerName() {
+        return serverName;
+    }
+    
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
 	
 }
