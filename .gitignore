@@ -2,5 +2,4 @@ target/
 
 #Eclipse Setting
 .classpath
-.project
 .settings/
