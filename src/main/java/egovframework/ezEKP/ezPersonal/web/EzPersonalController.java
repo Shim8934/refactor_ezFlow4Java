@@ -754,6 +754,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("txtInfo", pInfo);
@@ -776,6 +778,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("birthType", birthType);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("txtOldPassword", password);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		
 		return "/ezPersonal/persChangePersonInfo";
 	}

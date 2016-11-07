@@ -385,11 +385,14 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
 		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("checkID", checkID);
 		model.addAttribute("lang", lang);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
 		
 		return "admin/ezOrgan/userInfo";

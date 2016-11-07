@@ -25,7 +25,8 @@
 			var getBirthDay = "<c:out value='${birthDay}'/>";
 		    var ReturnFunction;
 		    var RetValue;
-	    	
+	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
+		    
 			$(document).ready(function(){
 				$("#txtBirth").datepicker({
 			        changeMonth: true,
@@ -402,19 +403,16 @@
 		    }
 		    var address_zip_select_dialogArguments = new Array();
 		    function GetPostCode() {
-		    	//2016-04-18 장진혁과장 -- Cross 선택으로 인한 주석처리
-		        //if (CrossYN()) {
-	            address_zip_select_dialogArguments[0] = "";
-	            address_zip_select_dialogArguments[1] = GetPostCode_Complete;
-	            //DivPopUpShow(655, 420, "/myoffice/ezAddress/address_zip_select.aspx");
-	            var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
-		        /* }else {
-		            var Para = window.showModalDialog("/myoffice/ezAddress/address_zip_select.aspx", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 420));
-		            if (typeof (Para) != "undefined" || Para == "") {
-		                ZipCode.value = Para[0];
-		                HomeAddr.value = Para[1] + " " + Para[2] + " " + Para[3];
-		            }
-		        } */
+		    	address_zip_select_dialogArguments[0] = "";
+		        
+		        var OpenWin;
+		    	if (useAddressOpenAPI == "YES") {
+		    		address_zip_select_dialogArguments[1] = jusoCallBack;
+		    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+		    	} else {
+		        	address_zip_select_dialogArguments[1] = GetPostCode_Complete;
+			        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+		    	}
 		    }
 		    function GetPostCode_Complete(Para) {
 		        DivPopUpHidden();
@@ -424,6 +422,11 @@
 		            HomeAddr.value = Para[1];
 		        }
 		    }
+		    function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+		    	DivPopUpHidden();
+	        	ZipCode.value = zipNo;
+	            HomeAddr.value = roadFullAddr;
+			}
 		    var personpicture_cross_dialogArguments = new Array();
 		    function btnPhoto_onclick() {
 		    	//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리

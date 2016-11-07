@@ -28,6 +28,7 @@
 		String userLang = (String)request.getAttribute("userLang"); 
 		%>
 		 var getBirthDay = "${birthDay}";
+		 var useAddressOpenAPI = "${useAddressOpenAPI}";
 		    $(function () {
 		        document.getElementById("TempCalImage").style.display = "none";
 		        $("#txtBirth").datepicker({
@@ -125,10 +126,16 @@
 		    var address_zip_select_dialogArguments = new Array();
 			function zip_find()
 		    {
-			    if (CrossYN()) {
-			        address_zip_select_dialogArguments[1] = zip_find_Complete;
-			        var OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
-			    }
+			    /* if (CrossYN()) { */
+			    	var OpenWin;
+			    	if (useAddressOpenAPI == "YES") {
+			    		address_zip_select_dialogArguments[1] = jusoCallBack;
+			    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+			    	} else {
+			        	address_zip_select_dialogArguments[1] = zip_find_Complete;
+				        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+			    	}
+			    /* }
 			    else {
 			        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
 			        
@@ -136,7 +143,7 @@
 			            document.getElementById("txtZipcode").value = Para[0];
 			            document.getElementById("txtAddress").value = Para[1];
 			        }
-			    }
+			    } */
 			}
 			function zip_find_Complete(Para) {
 				if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
@@ -144,7 +151,10 @@
 			        document.getElementById("txtAddress").value = Para[1];
 			    }
 			}
-
+			function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+				document.getElementById("txtZipcode").value = zipNo;
+				document.getElementById("txtAddress").value = roadFullAddr;
+			}
 			function change_press()
 			{
 				if (window.event.keyCode == "13")
