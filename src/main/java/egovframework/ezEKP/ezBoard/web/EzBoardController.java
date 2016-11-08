@@ -999,7 +999,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
                 }
-                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
                 if (i == 0) {
                 	resultXML.append("<DATA1>"+boardListItem.get(j).get("BOARDID")+"</DATA1>");
