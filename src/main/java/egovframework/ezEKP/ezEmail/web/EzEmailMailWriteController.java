@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -211,7 +212,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		userPrimary = loginInfo.getPrimary();
 		userLang = loginInfo.getLang();
-		//userTimeset = userInfo.getOffset();
+		userTimeset = loginInfo.getOffset();
 		
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
 		
@@ -673,8 +674,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            sb.append("<hr tabindex=\"-1\">");
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            
+			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( Z )");
+			            String offset = loginInfo.getOffset();
+			            if (offset == null || offset.indexOf("|") == -1) {
+			    			logger.error("Check the offset. Offset is null or offset format is wrong.");
+			    		} else {
+			    			String[] offsetArr = offset.split("\\|");
+			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+			    		}
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate())));
+			            
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            
@@ -2941,7 +2951,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userTimeSet = "";
+		String userTimeSet = userInfo.getOffset();
 		String setLocalTime = "";
 		boolean outMailReadCheck = false;
 		

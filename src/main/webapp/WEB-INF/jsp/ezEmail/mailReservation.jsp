@@ -65,15 +65,15 @@
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-		        if (CrossYN() || pNoneActiveX == "YES") {
+		        /*if (CrossYN() || pNoneActiveX == "YES") {*/
 		            window.open("/ezEmail/mailEdit.do?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID), "Mail_EDIT", feature);
-		        }
+		        /*}
 		        else {
 		            if (pUse_Editor == "")
 		                window.open("mail_edit.aspx?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID), "Mail_EDIT", feature);
 		            else
 		                window.open("mail_edit_IE.aspx?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID), "Mail_EDIT", feature);
-		        }
+		        }*/
 		    }
 		</script>
 	</head>

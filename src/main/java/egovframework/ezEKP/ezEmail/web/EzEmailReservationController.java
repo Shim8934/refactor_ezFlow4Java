@@ -208,6 +208,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String userId = userIdnPw.get(0);
 		String password  = userIdnPw.get(1);
 		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
 		stateName = UUID.randomUUID().toString();
 		folderDate = EgovDateUtil.getToday("");
 		useEditor = config.getProperty("config.EDITOR");
@@ -224,7 +226,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 			//messageId로 DB에 있는 정보 가져오기
 			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID).getSendDate();
-
+			
+			//utc에서 timezone으로 시간변경
+			pReservedSaveTime = EgovDateUtil.getDateStringInUTC(pReservedSaveTime, loginInfo.getOffset(), false);
+			
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, 30);
 			Date currentTime = cal.getTime();
@@ -327,14 +332,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		}
 		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), day, "yyyy-MM-dd");
 		
-		//TODO:lang(두번째 파라미터) 수정
-		
-		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		
 		userPrimary = loginInfo.getPrimary();
 		userLang = loginInfo.getLang();
-		//userTimeset = userInfo.getOffset(); //"235|+09:00"
+		userTimeset = loginInfo.getOffset();
 		
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));

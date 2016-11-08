@@ -1039,9 +1039,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					logger.debug("BCC=" + bccStr);
 					
+					// received date
 					date = message.getReceivedDate();
-					if(date != null){
-						dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
+					if (date != null) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(date);
+						
+						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+						dateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
 					}
 					logger.debug("dateStr=" + dateStr);
 					
@@ -1336,9 +1342,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					logger.debug("CC=" + pReciverCc);
 					
+					// received date
 					if (message.getReceivedDate() != null) {
 						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+						sdFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 						pReciveDT = sdFormat.format(message.getReceivedDate());
+						
+						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+						pReciveDT = EgovDateUtil.getDateStringInUTC(pReciveDT, loginInfo.getOffset(), false);
 					}
 					logger.debug("pReciveDT=" + pReciveDT);
 					
