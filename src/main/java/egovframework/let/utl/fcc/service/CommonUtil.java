@@ -51,7 +51,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -90,8 +90,8 @@ public class CommonUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
-	@Resource(name="EzCommonDAO")
-	private EzCommonDAO ezCommonDAO;
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
@@ -135,7 +135,13 @@ public class CommonUtil {
 			user.setSkinNum("1");
 			user.setRootPage(false);
 			
-			if (config.getProperty("config.primary").equals(lang)) {
+			String primaryLang = "";
+			
+			if (!tenantIdStr.equals("-1")) {
+				primaryLang = ezCommonService.getTenantConfig("PrimaryLang", Integer.parseInt(tenantIdStr)); 
+			}
+			
+			if (primaryLang.equals(lang)) {
 				user.setPrimary("1");
 			} else {
 				user.setPrimary("2");

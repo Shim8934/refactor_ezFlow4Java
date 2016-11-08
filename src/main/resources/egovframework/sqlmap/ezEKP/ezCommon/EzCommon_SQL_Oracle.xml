@@ -40,6 +40,19 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.getTenantConfig" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				EZHRMASTER.TBLTENANT_CONFIG
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				UPPER(property_name) = #property#
+		]]>
+	</select>
+	
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMON.TBLUSERLOCALINFO (

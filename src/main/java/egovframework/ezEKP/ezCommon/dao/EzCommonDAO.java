@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCommon.dao;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -31,11 +33,20 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return (String) select("EzCommonDAO.selectUserGetTimeZone", userID);
 	}
 	
+	public String getTenantConfig(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommonDAO.getTenantConfig", map);
+	}
+	
 	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
 		insert("EzCommonDAO.insertTblUserLocalInfo",map);
 	}
 	
 	public void deleteUserLLocalInfo(Map<String, Object> map) throws Exception {
 		delete("EzCommonDAO.deleteUserLLocalInfo",map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, String>> getTenantAllConfig(int tenantID) throws Exception{
+		return (List<HashMap<String, String>>) list("EzCommonDAO.getTenantAllConfig", tenantID);
 	}
 }

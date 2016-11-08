@@ -39,7 +39,6 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
-import egovframework.ezEKP.ezPortal.service.impl.EzPortalServiceImpl;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -935,6 +934,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		return ezCommonDAO.selectUserGetTimeZone(userID);
 	}
 	
+	@Override
+	public String getTenantConfig(String property, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("property", property.toUpperCase());
+		map.put("tenantID", tenantID);
+		
+		String propertyValue = ezCommonDAO.getTenantConfig(map);
+		
+		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		return propertyValue;
+	}
+
 	@Override
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

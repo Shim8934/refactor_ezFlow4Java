@@ -27,6 +27,8 @@ public interface EzCommonService {
 	
 	public String selectUserGetTimeZone(String userID) throws Exception;
 	
+	public String getTenantConfig(String property, int tenantID) throws Exception;
+	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	
 	public ApprovPWDVO getApprovPWD(String userID) throws Exception;
