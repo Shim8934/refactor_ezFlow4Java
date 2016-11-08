@@ -918,30 +918,24 @@ public class EgovDateUtil {
 		}
 		
 		String[] offsetArr = offset.split("\\|");
-		SimpleDateFormat format = new SimpleDateFormat(pattern);
 		
-		if (timeZoneToUTC) {
-			format.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
-		} else {
-			format.setTimeZone(TimeZone.getTimeZone("GMT"));
-		}
+		SimpleDateFormat userFormat = new SimpleDateFormat(pattern);
+		userFormat.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 		
-		Date date;
+		SimpleDateFormat utcFormat = new SimpleDateFormat(pattern);
+		utcFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
+		String resultDateStr = "";
 		try {
-			date = format.parse(dateStr);
+			if (timeZoneToUTC) {
+				resultDateStr = utcFormat.format(userFormat.parse(dateStr));
+			} else {
+				resultDateStr = userFormat.format(utcFormat.parse(dateStr));
+			}
 		} catch (ParseException e) {
 			LOGGER.error("Check the date format. yyyy-MM-dd HH:mm:ss or yyyy-MM-dd HH:mm");
 			return null;
 		}
-		
-		if (timeZoneToUTC) {
-			format.setTimeZone(TimeZone.getTimeZone("GMT"));
-		} else {
-			format.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
-		}
-		
-		String resultDateStr = format.format(date);
 		
 		LOGGER.debug("resultDateStr=" + resultDateStr);
 		return resultDateStr;

@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -1256,13 +1259,28 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			gInternal = resultObject.get("internal").toString();
 			gExternal = resultObject.get("external").toString();
 		}
-
+		
+		String offset = userInfo.getOffset();
+		
 		if (!gOofState.equals("scheduled")) {
-			String date = EgovDateUtil.getToday("-");
-			String hour = EgovDateUtil.getTodayTime().substring(11, 13);
-
+			//get UTC time
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String dateStr = sdf.format(new Date());
+			
+			//get user time from UTC time
+			dateStr = EgovDateUtil.getDateStringInUTC(dateStr, offset, false);
+			logger.debug("userCurrentTime=" + dateStr);
+			
+			String date = dateStr.substring(0, 10);
+			String hour = dateStr.substring(11, 13);
+			
 			gStartDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 0, 1, 0, "yyyy-MM-dd HH:mm");
 			gEndDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 1, 0, 0, "yyyy-MM-dd HH:mm");
+		} else {
+			//set user time from UTC time
+			gStartDate = EgovDateUtil.getDateStringInUTC(gStartDate, offset, false);
+			gEndDate = EgovDateUtil.getDateStringInUTC(gEndDate, offset, false);
 		}
 		
 		logger.debug("gOofState=" + gOofState + ",gStartDate=" + gStartDate + ",gEndDate=" + gEndDate
@@ -1301,7 +1319,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		userId = userId + "@" + config.getProperty("config.DomainName");
-
+		
+		//set UTC time
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		startDate = EgovDateUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = EgovDateUtil.getDateStringInUTC(endDate, offset, true);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
 		sb.append("&oofState=" + URLEncoder.encode(oofState, "UTF-8"));
