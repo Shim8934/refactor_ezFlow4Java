@@ -1341,4 +1341,5 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return "FALSE";
 		}
 	}
+
 }

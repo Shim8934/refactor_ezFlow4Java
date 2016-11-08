@@ -471,16 +471,16 @@
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(VO.colType == "text"){
-		        			if(document.getElementById(VO.tableCol).value == ""){
+		        		}else if(colType[i] == "text"){
+		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.comName1 + strLang79);
+	                            alert(comName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(VO.colType == "check"){
-		        			if(GetCheckVal(VO.tableCol) == ""){
+		        		}else if(colType[i] == "check"){
+		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(VO.colName1 + strLang79);
+	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
 		        		}
