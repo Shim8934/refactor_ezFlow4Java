@@ -299,7 +299,6 @@
 		            window.opener.refresh_onclick();
 		        } catch (e) {
 		        }
-		        window.close();
 		    }
 		
 				function btn_Reply_Onclick()
@@ -333,6 +332,7 @@
 		        };
 				function btnClose_onclick()
 				{
+					window.close();
 				    refresh_onclick();
 				}
 		
@@ -742,7 +742,6 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
-		                    window.close();
 		                }
 		                else {
 		                    swidth = 510;
@@ -1121,7 +1120,6 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
-		                window.close();
 		            }
 		        }
 		        function refresh_onclick() {
@@ -1129,7 +1127,6 @@
 		                window.opener.refresh_onclick();
 		            } catch (e) {
 		            }
-		            window.close();
 		        }
 		    //mouseWheel Event  END
 		        function btn_ReWrite() {
@@ -1184,10 +1181,10 @@
 		            <li ><span  onclick="btnClose_onclick()"><spring:message code='ezBoard.t12'/></span></li>
 		        </ul>
 		      </div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
+			<script type="text/javascript">
+				selToggleList(document.getElementById("menu"), "ul", "li", "0");
+				selToggleList(document.getElementById("close"), "ul", "li", "0");
+			</script>
 		    </td>
 		  </tr>
 		  <tr>

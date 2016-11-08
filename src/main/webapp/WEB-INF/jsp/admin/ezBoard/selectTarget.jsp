@@ -458,8 +458,8 @@
 		        else {
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
-		            checkname2_dialogArguments[0] = rgParams;
-		            checkname2_dialogArguments[1] = cnsearch_click_Complete;
+		            checkname2_cross_dialogArguments[0] = rgParams;
+		            checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
 		            var checkName2 = window.open("/admin/ezBoard/checkName.do", "checkName2", GetOpenWindowfeature(609, 352));
 		            try { checkName2.focus(); } catch (e) {
 		            }

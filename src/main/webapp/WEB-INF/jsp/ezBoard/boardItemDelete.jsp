@@ -23,7 +23,6 @@
 	        };
 	
 	        function btn_Delete_Onclick() {
-	
 	            for (var i = 0; i < ImageCount; i++) {
 	
 	                if (document.getElementById("check" + i).checked) {

@@ -62,7 +62,7 @@
 		    var fileinfo = "";
 		    function UploadComplete(filepath) {
 		        document.getElementById("previewtext").style.display = "none";
-		        document.getElementById("previewimg").style.display = "";
+		        document.getElementById("previewimg_div").style.display = "";
 		        fileinfo = filepath.split("|!|");
 		        document.getElementById("previewimg").src = fileinfo[0];
 		        document.getElementById("previewimg").outerHTML = document.getElementById("previewimg").outerHTML;
@@ -130,7 +130,9 @@
 			<tr>
 	            <td style="text-align:center;height:295px">
 	                <span id="previewtext" style="width:100%;height:100%"><spring:message code='main.t4009'/></span>
-	                <img id="previewimg" style="display:none;width:100%;height:100%" />
+	                <div id="previewimg_div" style="display:none;">
+		                <img id="previewimg" style="width:100%;height:100%" />
+	                </div>
 	            </td>
 	            <td style="vertical-align:top">
 	                <table style="vertical-align:top;width:230px" class="content">
