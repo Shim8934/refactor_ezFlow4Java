@@ -151,11 +151,12 @@
 		            
 		            $.ajax({
 			        	type : "POST",
-			        	dataType : "xml",
+			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
 			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user'},
-			        	success : function(result){	
+			        	success : function(xml){
+			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
@@ -187,10 +188,11 @@
 		    function displayUserList(DeptID) {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
@@ -534,11 +536,12 @@
 	            
 	            $.ajax({
 					type : "POST",
-					dataType : "xml",
+					dataType : "text",
 					url : "/admin/ezOrgan/getEntryInfo.do",
 					async : false,
 					data : {cn : UserID, prop : "extensionAttribute1", pMode : "user" },
-					success : function(result){
+					success : function(xml){
+						result=loadXMLString(xml);
 						xmlDom = result;
 		                var AclList = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
 		                
@@ -690,11 +693,12 @@
 		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group'},
-		        	success : function(result){	
+		        	success : function(xml){	
+		        		result=loadXMLString(xml);
 		        		xmlDOM = result;
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
@@ -797,11 +801,12 @@
 			    				
 				$.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
 		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());

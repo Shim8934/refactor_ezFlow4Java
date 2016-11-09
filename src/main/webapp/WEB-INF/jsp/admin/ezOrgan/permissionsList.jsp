@@ -47,10 +47,11 @@
 			function Permissions_List(type) {		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getPermissionsList.do",		        	
 		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		if (result.xml != "") {
 		                    if (result.documentElement.getElementsByTagName("TOTALCNT")[0] != null) {
 		                        totalCnt = getNodeText(result.documentElement.getElementsByTagName("TOTALCNT")[0]);

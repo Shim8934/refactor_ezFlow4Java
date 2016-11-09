@@ -135,12 +135,12 @@
 		            
 		            $.ajax({
 						type : "POST",
-						dataType : "xml",
+						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
 						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType", pMode : "user" },
 						success : function(result){
-							xmlDom = result;
+							xmlDom = loadXMLString(result);
 							document.getElementById("UserName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME1").trim();
 			                document.getElementById("UserName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
 			                document.getElementById("JobTitle").value = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE1").trim();

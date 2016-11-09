@@ -108,12 +108,12 @@
 		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "cn", type : 'group'},
 		        	success : function(result){	
-		        		xmlDOM = result;
+		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){

@@ -145,7 +145,7 @@
 		  	</tr>
 		</table>
 		<div class="btnposition">
-		    <a class="imgbtn"><span onClick="imgConfirm_onclick()"><spring:message code='ezOrgan.t246' /></span></a>
+		    <a class="imgbtn"><span onClick="imgConfirm_onclick();"><spring:message code='ezOrgan.t246' /></span></a>
 		    <a class="imgbtn"><span onClick="close_Click()"><spring:message code='ezOrgan.t111' /></span></a>
 		</div>		
 	</body>

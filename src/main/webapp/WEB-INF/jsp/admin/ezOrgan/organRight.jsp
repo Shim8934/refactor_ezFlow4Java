@@ -486,12 +486,12 @@
 				
 			    $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
 		        	success : function(result){	
-		        		xmlDOM = result;
+		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
 		        	},
 		        	error : function(error){
@@ -558,11 +558,12 @@
 			    				
 				$.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
 		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user"},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
 				        listview.LoadFromID("lvUserList");
 						

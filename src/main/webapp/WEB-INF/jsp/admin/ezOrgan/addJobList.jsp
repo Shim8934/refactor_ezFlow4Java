@@ -45,10 +45,11 @@
 		    function AddJob_List() {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getAddJobList.do",
 		        	data : {companyID : document.getElementById("ListCompany").value},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		var xmldom = result;
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
@@ -131,10 +132,11 @@
 		        
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "xml",
+		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getUserAddJobList.do",
 		        	data : {cn : listview.GetSelectedRows()[0].getAttribute("DATA1")},
-		        	success : function(result){
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
 		        		document.getElementById("AddJobList").innerHTML = "";
 		                var UserAddJobList = SelectNodes(result, "DATA/ROW");
 		                
