@@ -376,7 +376,7 @@ public class EzBoardController extends EgovFileMngUtil{
        String pCountFlag = req.getParameter("countFlag");
        String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang));
 
-       if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
+       if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
     	   Document doc = commonUtil.convertStringToDocument(resultXML);
     	   NodeList nList = doc.getElementsByTagName("NODE");
            String strName = "";
@@ -481,10 +481,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 일반,포토,새 게시판리스트 호출 Method
 	 */
 	@RequestMapping(value= {"/ezBoard/boardItemList_new.do", "/ezBoard/boardItemList.do", "/ezBoard/boardItemListPhoto.do"})
-	public String boardItemList(HttpServletRequest request, LoginVO loginVO, BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
-		String use_ocs = config.getProperty("config.USE_OCS"); 
-        String use_Editor = config.getProperty("config.EDITOR"); 
-        String use_IE11Browser = config.getProperty("config.IE11EDITOR");
+	public String boardItemList(HttpServletRequest request, LoginVO userInfo, BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+        String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
+        String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
         String use_oneLineCount = "";
         String pBoardID = boardPropertyVO.getBoardID();
         String pBoardName = boardPropertyVO.getBoardName();
@@ -492,9 +494,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
-		loginVO = commonUtil.userInfo(loginCookie);
 		
-		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, loginVO);
+		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
 		
 		if (boardPropertyVO.getAdminType() == null) {
 			boardInfo.setAdminType("");
@@ -543,7 +544,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
         model.addAttribute("boardID", pBoardID);
-        model.addAttribute("userInfo", loginVO);
+        model.addAttribute("userInfo", userInfo);
         model.addAttribute("use_ocs", use_ocs);
         model.addAttribute("use_Editor", use_Editor);
         model.addAttribute("use_IE11Browser", use_IE11Browser);
@@ -2534,7 +2535,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    NodeList nList = doc.getElementsByTagName("NODE");
 	    
 	    if (!strXML.substring(0, 5).toUpperCase().equals("ERROR")) {
-	        if (config.getProperty("config.USE_BOARD_LEFTMENU_COUNT").toString().equals("YES")) {
+	        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES")) {
             	BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
             	int intCount = 0;
             	
@@ -2680,8 +2681,8 @@ public class EzBoardController extends EgovFileMngUtil{
         String apprFlag = "Y";
         String extenLang = "1";
         String location = "";
-        String useOcs = config.getProperty("config.USE_OCS");
-        String useEditor = config.getProperty("config.EDITOR");
+        String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         String useIE11Browser = "";
         String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
@@ -2690,7 +2691,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	useIE11Browser = "CK";
         }
 
-        String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
+        String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
         String showAdjacent = request.getParameter("showAdjacent");
         String boardID = request.getParameter("boardID");
         String itemID = request.getParameter("itemID");
@@ -2703,7 +2704,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	return "main/warning";
         }
         BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-        String useEzKMS = config.getProperty("config.Use_ezKMS");
+        String useEzKMS = ezCommonService.getTenantConfig("Use_ezKMS", userInfo.getTenantId());
         
         if (!boardInfo.getRead_FG().equals("true")) {
         	return "main/warning";
@@ -2834,8 +2835,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = {"/ezBoard/boardNewItem.do", "/ezBoard/boardNewItemTempPhoto.do"})
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
         String extenLang = "1";
-        String editor = config.getProperty("config.EDITOR");
+        String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         String uploadFilePath = config.getProperty("upload_board.ROOT");
         String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
@@ -3410,7 +3412,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String uploadItemAttach(MultipartHttpServletRequest request) throws Exception{
+	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
 		int cnt = multiFile.size();
 		String realPath = commonUtil.getRealPath(request);
@@ -3420,7 +3424,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String[] resultUpload = new String[cnt];
         String[] sGUID = new String[cnt];
         String[] pUploadSN = new String[cnt];
-        String useExtension = config.getProperty("config.USE_FileExtension");
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
         
         for (int i = 0; i < cnt; i++) {
             resultUpload[i] = "false";
@@ -3521,7 +3525,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fileTitle = "";
 		String ext = "";
 		String prefix = "";
-		String useExtension = config.getProperty("config.USE_FileExtension");
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		if (request.getParameter("guid") != null) {
 			guid = request.getParameter("guid");
@@ -4522,7 +4526,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		String guBun = request.getParameter("guBun");
 		String boardID = request.getParameter("boardID");
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String extenLang = "1";
 		String strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		
@@ -4638,7 +4642,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String reservedItem = request.getParameter("reservedItem");
 		String oneLine = request.getParameter("oneLine");
 		String attach = request.getParameter("attach");
-		String oneLineReplyFlag = config.getProperty("config.ONELINE_REPLY_ENABLE");
+		String oneLineReplyFlag = ezCommonService.getTenantConfig("ONELINE_REPLY_ENABLE", userInfo.getTenantId());
 		int menuCount = 0;
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
@@ -4736,13 +4740,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardItemViewPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		String mode = "new";
 		String apprFlag = "Y";
-		String adjacentItemsEnableFlag = config.getProperty("config.ADJACENT_ITEMS_ENABLE");
+		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
 		String showAdjacent = request.getParameter("showAdjacent");
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String reservedItem = request.getParameter("pReservedItem");
 		String location = request.getParameter("location");
-		String useOCS = config.getProperty("config.USE_OCS");
+		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
         
@@ -4931,7 +4935,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardItemListThumbnail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		String mode = "new";
 		String apprFlag = "Y";
-		String useOCS = config.getProperty("config.USE_OCS");
+		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String boardType = request.getParameter("boardType");
 		String adminType = request.getParameter("adminType");
@@ -4989,7 +4993,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = userInfo.getDisplayName1();
-		String userEditor = config.getProperty("config.EDITOR");
+		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
 		String boardType = request.getParameter("bType");
@@ -5760,11 +5764,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 나의게시물 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemListMyList.do")
-	public String boardItemListMyList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		int page = 1;
-		String useOcs = config.getProperty("config.USE_OCS"); 
-        String useEditor = config.getProperty("config.EDITOR");
+	public String boardItemListMyList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
 			page = Integer.parseInt(request.getParameter("page"));
@@ -5783,7 +5788,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/writeBoardSelectModal.do")
 	public String writeBoardSelectModal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		String useEditor = config.getProperty("config.EDITOR");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("useEditor", useEditor);
 		
@@ -5795,7 +5802,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/writeBoardSelect.do")
 	public String writeBoardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		String useEditor = config.getProperty("config.EDITOR");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("useEditor", useEditor);
 		
@@ -5831,7 +5840,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/boardReservedItemList.do")
 	public String boardReservedItemList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String useEditor = config.getProperty("config.EDITOR");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String orgBoardParameters = "";
 		int page = 1;
 		String sortBy = "";
@@ -5858,7 +5869,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			sortBy = request.getParameter("sortBy");
 		}
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
 		
 		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
@@ -5911,15 +5921,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemListTemp.do")
 	public String boardItemListTemp(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		String useEditor = config.getProperty("config.EDITOR");
-		String useOcs = config.getProperty("config.USE_OCS");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		int page = 1;
 
 		if (request.getParameter("page") != null) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
@@ -6036,15 +6047,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시판승인 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemListAppr.do")
-	public String boardItemListAppr(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
-		String useEditor = config.getProperty("config.EDITOR");
-		String useOcs = config.getProperty("config.USE_OCS"); 
+	public String boardItemListAppr(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		int page = 0;
 		
 		if (request.getParameter("page") != null) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
-		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("page", page);
 		model.addAttribute("userInfo", userInfo);
@@ -6280,8 +6292,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardSelect.do")
 	public String boardSelect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = config.getProperty("config.EDITOR");
-		String useIE11Browser = config.getProperty("config.IE11EDITOR");
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
 		if (req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0 && useIE11Browser.equals("CK")) {

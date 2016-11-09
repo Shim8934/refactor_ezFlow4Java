@@ -758,7 +758,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String uploadModule = config.getProperty("config.LocalPath");
         
         if (type.equals("COMMUNITYNOTI")) {
-			uploadModule = config.getProperty("upload_community.MAINBOARD") +commonUtil.separator;
+			uploadModule = config.getProperty("upload_community.MAINBOARD") + commonUtil.separator;
         }
         
         filePath = realPath + uploadModule;
@@ -841,7 +841,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);
 				}
-				return m_strHTML.replace("&nbsp;", "");
+				
+				return m_strHTML;
 			}
 		} else {
 			return egovMessageSource.getMessage("main.t0602", locale);
@@ -944,6 +945,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		if (propertyValue == null) {
+			propertyValue = "";
+		}
 		
 		return propertyValue;
 	}

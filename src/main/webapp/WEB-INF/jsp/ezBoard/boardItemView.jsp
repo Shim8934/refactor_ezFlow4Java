@@ -87,6 +87,22 @@
 		            AddLinkTarget();
 		            SetAttachmentInfo();
 		            
+			        if (gubun == "2") {
+			            if(OneLineReplyFlag == "1")
+			                document.getElementById("message").style.height = (document.documentElement.clientHeight - 290) + "PX";
+			            else
+			                document.getElementById("message").style.height = (document.documentElement.clientHeight - 210) + "PX";
+			        }
+			        else {
+			            var trHeight = AtttributeCount * 30;
+			            if (OneLineReplyFlag == "1") {
+			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
+			            	
+			            } else {
+			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
+			            }
+			        }
+			        
 		            //추가항목 창 사이즈 조절
 		            var addheight = 0;
 		            if("${boardAttrCount}" > 0){
@@ -144,28 +160,20 @@
 		        }
 		    };
 		
-		    window.onresize = function ()
-		    {        
-	        	if (gubun != "3") { 
-		        	if (OneLineReplyFlag == "1") { 
-			            if (pAttributeYN == "Y") {
-			                document.getElementById("message").style.height = document.documentElement.clientHeight - 450 + "PX";
-			                document.getElementById("pad1").style.height = document.documentElement.clientHeight - 450 + "PX";
-			            } else {
-			                document.getElementById("message").style.height = document.documentElement.clientHeight - 320 + "PX";
-			                document.getElementById("pad1").style.height = document.documentElement.clientHeight - 320 + "PX";
-			            }
-			            } else { 
-			            if (pAttributeYN == "Y") {
-			                document.getElementById("message").style.height = document.documentElement.clientHeight - 260 + "PX";
-			                document.getElementById("pad1").style.height = document.documentElement.clientHeight - 260 + "PX";
-			            }
-			            else {
-			                document.getElementById("message").style.height = document.documentElement.clientHeight - 240 + "PX";
-			                document.getElementById("pad1").style.height = document.documentElement.clientHeight - 240 + "PX";
-			            }
-		         	}
-	        	}
+		    window.onresize = function () {
+		        if (gubun == "2") {
+		            if(OneLineReplyFlag == "1")
+		                document.getElementById("message").style.height = (document.documentElement.clientHeight - 290) + "PX";
+		            else
+		                document.getElementById("message").style.height = (document.documentElement.clientHeight - 210) + "PX";
+		        }
+		        else {
+		            var trHeight = AtttributeCount * 30;
+		            if (OneLineReplyFlag == "1")
+		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
+		            else
+		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
+		        }
 		    };
 		
 		    function AddLinkTarget() {
@@ -1132,12 +1140,12 @@
 		  <tr>
 		  <c:choose>
 			  <c:when test="${guBun != '3'}">
-			    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:460px; overflow:auto;"></iframe>
+			    <td class="pad1">
+			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:437px; overflow:auto;"></iframe>
 			    </td>
 			  </c:when>
 			  <c:otherwise>
-			    <td class="pad1" style="vertical-align: top;">
+			    <td class="pad1">
 	<%-- 		      <div class="viewbox"><img src='<%=g_ImageUrl%>' border=0 width='<%=g_Width%>' height ='<%=g_Height%>' name=zb_target_resize style='cursor:pointer'  onclick=window.open(this.src,"_blank","","false") > --%>
 			        <div id="ItemOverflow">
 			           <iframe id="message" name="message"  style="padding: 0;width:100%; overflow:auto;"></iframe>
