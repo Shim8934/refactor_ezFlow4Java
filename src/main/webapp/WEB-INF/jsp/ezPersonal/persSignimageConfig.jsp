@@ -22,7 +22,7 @@
 	        function GetSignInfo() {
 	        	$.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
+	        		dataType : "text",
 	        		async : false,
 	        		url : "/admin/ezOrgan/getEntryInfo.do",
 	        		data : {
@@ -30,7 +30,7 @@
 	        			prop  : "extensionAttribute3"
 	        		},
 	        		success: function(xml){
-	        			xmlDom = xml;
+	        			xmlDom = loadXMLString(xml);
 		                var signinfo = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE3");
 		                imagelist = signinfo.split(";");
 		

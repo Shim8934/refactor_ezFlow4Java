@@ -21,7 +21,7 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-<link rel="stylesheet" href="/js/jquery/dateControls/dateControls/demos.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 <!-- time picker-->
 <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />

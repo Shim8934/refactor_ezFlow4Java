@@ -391,7 +391,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
             	pDeptID = userInfo[0];
-                sTitle1 = userInfo[1];
+            	if (userInfo.length > 2) {
+            		sTitle1 = userInfo[1];
+            	}
+                
                 sTitle2 = "";
                 
                 if (userInfo.length == 3) {

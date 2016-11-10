@@ -2,6 +2,9 @@ package egovframework.ezEKP.ezOrgan.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,6 +33,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -407,7 +411,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String userInfo_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String signImageSize = config.getProperty("config.SignImageSizeLimit");
 		String sign = "APPROVALSIGN";
-		
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+        
 		if (userInfo_approvalG.equals("YES")) {
 			sign = "APPROVALGSIGN";
 		}
@@ -416,7 +422,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userInfo_approvalG", userInfo_approvalG);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signPath", sign);
-		
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		return "admin/ezOrgan/configSignImage";
 	}
 	
@@ -709,6 +715,111 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}
 	}
 	
+	
+	/**
+	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수(Ie9)
+	*/
+	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String returnVal = "";
+		String mode = request.getParameter("mode");
+		String userID = request.getParameter("userID");
+		String guid = UUID.randomUUID().toString();
+		String fileTitle ="" ;
+		String sFileData = "";
+		String sExt = "";
+		String sFolder = "";
+		String sPrefix = "";
+		String serverPath = "";
+		String realPath = request.getServletContext().getRealPath("");
+		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator;
+		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + commonUtil.separator;
+		
+				if (request.getParameter("guid") != null) {
+					guid = request.getParameter("guid");
+				}
+				if (request.getParameter("name") != null) {
+					fileTitle = request.getParameter("name");
+				}
+				if (request.getParameter("filedata") != null) {
+					sFileData = request.getParameter("filedata");
+				}
+				if (request.getParameter("ext") != null) {
+					sExt = request.getParameter("ext");
+				}
+				if (request.getParameter("dir") != null) {
+					sFolder = request.getParameter("dir");
+				}
+				if (request.getParameter("prefix") != null) {
+					userID = request.getParameter("prefix");
+				}
+			String fileName = sExt;
+			fileName = userID + "_" + guid + "." + fileName;
+		 
+			if (mode.equals("PICTURE")) {
+				serverPath = thumbPath;
+			} else if (mode.equals("TEMP")) {
+				serverPath = tempPath;
+			} else if (mode.equals("GLOGO")) {
+				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+			} else {
+				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+			}
+			
+			File file = new File(serverPath);
+			
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				
+				if (!mode.equals("TEMP")) {
+					File file1 = new File(tempPath);
+					
+					if (!file1.exists()) {
+						file1.mkdirs();
+					}
+				}
+				fileName = fileName.replace("+", "%2b");
+		        fileName = fileName.replace(";", "%3b");
+		        fileName = fileName.replace("~", "%7e");
+		        fileName = fileName.replace("=", "%3d");
+		        
+				InputStream stream = null;
+				OutputStream bos = null;         
+				
+				try {
+					stream = request.getInputStream();
+					bos = new FileOutputStream(serverPath+fileName);
+//					long fileSize = 0;
+					int bytesRead = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, bytesRead);
+//						fileSize += bytesRead;
+					}
+				} catch (Exception e) {
+					throw e;                
+				} finally {
+					if (bos != null) {
+						try {
+							bos.close();
+						} catch (Exception ignore) {
+						}
+					}
+					if (stream != null) {
+						try {
+							stream.close();
+						} catch (Exception ignore) {
+						}
+					}
+					returnVal = "OK_"+ fileName;
+				}
+		        
+		return returnVal;
+	}
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수
 	*/
