@@ -15,8 +15,15 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+    	<c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 	    <script type="text/javascript">
 	        var pUploadFilePath = "${uploadFilePath}";
 	        var pBoardID = "${boardID}";
@@ -134,7 +141,7 @@
                     var fileContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i]);
                     var flag = getNodeText(xmldom.getElementsByTagName("FLAG")[i]);
 
-                    imgpath = imgpath.split('/')[4];
+                    imgpath = imgpath.split('/')[5];
                     
                     attachXml += "<ROW><CELL>";
                     attachXml += "<DATA1>" + imgpath + "</DATA1>";
@@ -149,7 +156,6 @@
                     
                     if (flag == "Y")
                         saveImageId_main = imgID + " ";
-
 
                     loadimageline(imgpath, localFileName, imgUniqueID + imgpath.substring(imgpath.lastIndexOf("."), imgpath.length), "0", fileContent, flag);
                 }
@@ -175,7 +181,7 @@
 	            var imagecount = "";
 	            var imageid = "";
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                imagecount = imgpath.split("/").length - 1;
 	                imageid = imgpath.split("/")[imagecount];
 	
@@ -263,7 +269,7 @@
 	            var imagecount = "";
 	            var imageid = "";
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                imagecount = imgpath.split("/").length - 1;
 	                imageid = imgpath.split("/")[imagecount];
 	
@@ -341,7 +347,7 @@
 	            else
 	                xmldom_attachlist = pAttachListXml;
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                if (xmldom_attachlist == null) {
 	                    return "";
 	                }
@@ -378,9 +384,9 @@
 	                return;
 	            }
 	
-	            if (isdad || pNoneActiveX == "YES") {
+	            if (isdad || CrossYN()) {
 	                for (var i = 0; i < bodycount; i++) {
-	                    content += document.getElementsByName('imgContent')[i].value + "\\";
+	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
 	                    filename += document.getElementsByName('imgView')[i].title + ";";
 	                }
 	            }
@@ -417,7 +423,7 @@
 	                return;
 	            }
 	
-	            if (!isdad || pNoneActiveX == "NO") {
+	            if (!isdad || !CrossYN()) {
 	                btn_PhotoAlbumAttachAdd_onclick(file);
 	            }
 	
@@ -615,7 +621,7 @@
 	            var attachXml = "<LISTVIEWDATA><ROWS>";
 	            for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
 	                attachXml += "<ROW><CELL>";
-	                attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	                attachXml += "<DATA1>" + "/flies/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
 	                attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
 	                attachXml += "<DATA3></DATA3>";
 	                attachXml += "<DATA4></DATA4>";
@@ -633,9 +639,160 @@
 	
 	        //사진추가
 	        function btn_PhotoAttachAdd() {
-                document.getElementById('mode').value = "PHOTO";
-                document.form.file1.click();
+	            if (isdad || CrossYN()) {
+	                document.getElementById('mode').value = "PICTURE";
+	                document.form.file1.click();
+	            } else {
+	                if (isdad || CrossYN()) {
+	                    document.getElementById('mode').value = "PICTURE";
+	                    document.form.file1.click();
+	                }
+	                else {
+	                    var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                    ezUtil.UseUTF8 = true;
+	                    var file = "";
+	                    if (pMode == "modify")	
+	                    {
+	                        file = ezUtil.OpenLoadDlg("" + strLang22 + "", "");
+	                        if (file != "") {
+	                            file = file + "|";
+	                        }
+	                    }
+	                    else {
+	                        file = ezUtil.OpenLoadDlgMultiNew("" + strLang22 + "", "");
+	                    }
+	
+	                    if (!file)
+	                        return;
+	
+	                    btn_PhotoAlbumAttachAdd_onclick2(file);
+	
+	                    pAttachListXml = "";
+	                    var attachXml = "<LISTVIEWDATA><ROWS>";
+	                    for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
+	                        attachXml += "<ROW><CELL>";
+	                        attachXml += "<DATA1>" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	                        attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
+	                        attachXml += "<DATA3></DATA3>";
+	                        attachXml += "<DATA4></DATA4>";
+	                        attachXml += "<DATA5>Y</DATA5>";
+	                        attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
+	                        attachXml += "</CELL></ROW>";
+	                    }
+	                    attachXml += "</ROWS></LISTVIEWDATA>";  
+	                    var imgUniqueID = GetAttribute(document.getElementsByName('imgView')[document.getElementById("addimagecontent").childNodes.length - 1], 'uniqueId');
+	                    saveImageIds += imgUniqueID.substring(0, imgUniqueID.lastIndexOf(".")) + ";";
+	
+	                    var xmlDom = createXmlDom();
+	                    xmlDom = loadXMLString(attachXml);
+	                    pAttachListXml = xmlDom;
+	
+	                    var g_fileList = file.split("|");
+	                    var fileSize = 0;
+	
+	                    ezUtil = null;
+	
+	                    var fileNamelist = "";
+	                    var fileName = "";
+	                }
+	            }
 	        }
+		        
+	        function btn_PhotoAlbumAttachAdd_onclick2(file) {
+	            var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	            ezUtil.UseUTF8 = true;
+	
+	            if (!file)
+	                return;
+	
+	            pAttachListXml = "";
+	            g_fileList = file.split("|");
+	
+	            var fileSize = 0;
+	
+	            for (var i = 0; i < g_fileList.length - 1; i++) {
+	                if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
+	                    alert("" + strLang6 + "");
+	                    return;
+	                }
+	                
+	                var temp = ezUtil.ExtractFileName(g_fileList[i]);
+	
+	                if (temp.length > 111) {
+	                    alert("" + strLang7 + "");
+	                    return;
+	
+	                }
+	                
+	                fileSize = ezUtil.GetFileSize(g_fileList[i]);
+	                
+	                if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
+	                    alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+	                    return;
+	                }
+	            }
+	
+	            ezUtil = null;
+	
+	            var fileNamelist = "";
+	            var fileName = "";
+	
+	            beginAttachAdd_Photo2();
+	        }
+	
+	        function beginAttachAdd_Photo2() {
+	            document.all.EzHTTPTrans.AddUploadFile("", "");
+	
+	            for (var i = 0; i < g_fileList.length - 1; i++) {
+	                try {
+	
+	                    document.all.EzHTTPTrans.AddFilename(encodeURIComponent(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\") + 1)));
+	                    document.all.EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
+	                }
+	                catch (e) {
+	                    if (e.number == -2147352567)
+	                        alert("" + strLang12 + "");
+	                    else
+	                        alert(g_fileList[i] + " " + strLang13 + "" + "\n\n" + e.number + " - " + e.description);
+	
+	                    return;
+	                }
+	            }
+	
+	            var RemotePath = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezBoard/itemAttachFile.do";
+	            var nCount = document.all.EzHTTPTrans.StartUpload(RemotePath, "/Upload_BoardSTD", pBoardID, "", "");
+	
+	            for (var i = 0; i < nCount; i++) {
+	                var attachFileResult = document.all.EzHTTPTrans.GetReturn(i);
+	                var attachFilePath = attachFileResult.substr(0, attachFileResult.indexOf("/"));
+	                var attachFilename = attachFileResult.substr(attachFileResult.indexOf("/") + 1);
+	                attachFilename = attachFilename.substr(0, attachFilename.lastIndexOf("/"));
+	
+	                if (attachFilename.substr(0, 2) != "OK") {
+	                    try {
+	                        txtPhotoFile.value = "";
+	                    }
+	                    catch (e) {
+	                    }
+	
+	                    alert(g_fileList[i] + " " + strLang24 + "");
+	                    txtPhotoFile.value = "";
+	                    return;
+	                }
+	                else {
+	                    var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+	                    ezUtil.UseUTF8 = true;
+	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
+	                    txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);
+	                    ezUtil = null;
+	
+	                    var Result = attachFilename.substr(3, attachFilename.length - 3)
+	                    
+	                    addimageline(Result.split("/")[3], g_fileList[i].substr(g_fileList[i].lastIndexOf("\\") + 1), Result.substr(Result.lastIndexOf("/") + 1), fileSize);
+	                }
+	            }
+	        }
+
 	
 	        //사진삭제
 	        function btn_PhotoAttachDel() {
@@ -660,7 +817,7 @@
 	            var attachXml = "<LISTVIEWDATA><ROWS>";
 	            for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
 	                attachXml += "<ROW><CELL>";
-	                attachXml += "<DATA1>" + "/Upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+	                attachXml += "<DATA1>" + "/files/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
 	                attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
 	                attachXml += "<DATA3></DATA3>";
 	                attachXml += "<DATA4></DATA4>";
@@ -672,8 +829,6 @@
 	                saveImageIds += imgUniqueID.substring(0, imgUniqueID.lastIndexOf(".")) + ";";
 	            }
 	            attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
-	            //var imgUniqueID = GetAttribute(GetAttribute(document.getElementsByName('imgView')[i], 'id');
-	            //saveImageIds += imgUniqueID.substring(0, imgUniqueID.lastIndexOf(".")) + ";";
 	
 	            var xmlDom = createXmlDom();
 	            xmlDom = loadXMLString(attachXml);
@@ -775,6 +930,11 @@
 	            isfileup = false;
 	        }
 	    </script>
+	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+			   Append_AttachAdd(filename);
+			</script>
+	    </c:if>
 	</head>
 	<body class="popup">
 	    <table border="0" class="layout">
@@ -793,10 +953,10 @@
 	                    <li ><span onclick="window.close();"><spring:message code='ezBoard.t12'/></span></li>
 	                </ul>
 	              </div>
-	<script type="text/javascript">
-	    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	    selToggleList(document.getElementById("close"), "ul", "li", "0");
-	</script>
+				<script type="text/javascript">
+				    selToggleList(document.getElementById("menu"), "ul", "li", "0");
+				    selToggleList(document.getElementById("close"), "ul", "li", "0");
+				</script>
 	        </td>
 	  </tr>
 	  <tr>
@@ -858,6 +1018,9 @@
 	  </tr>
 	    <tr>
 	    <td style="display:none;">
+	    <c:if test="${!isCrossBrowser}">
+		    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+	    </c:if>
 	    <div id="lstAttachLink">&nbsp;</div>
 	    </td>
 	    </tr>

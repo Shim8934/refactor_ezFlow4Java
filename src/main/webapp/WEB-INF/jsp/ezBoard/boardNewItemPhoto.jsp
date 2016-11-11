@@ -212,7 +212,6 @@
 	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
 	                    filename += document.getElementsByName('imgView')[i].title + ";";
 	                }
-	
 	            } else {
 	                for (var i = 0; i < bodycount; i++)
 	                {
@@ -220,7 +219,6 @@
 	                    var checkreuslts = document.getElementById("addimagecontent").childNodes[i].childNodes[0].childNodes[0].childNodes[2].childNodes[0];
 	                    
 	                    file += GetAttribute(document.getElementById(checkreuslt.value),'name') + "|";
-	                    
 	                    content += checkreuslts.value + ";:;";
 
 	                    var imagenamelength = GetAttribute(document.getElementById(checkreuslt.value),'name').lastIndexOf("\\");
@@ -240,7 +238,6 @@
 			    var pStartDate = "";
 			    var pEndDate ="9999-12-30 23:59:59";
 			
-	
 			    if (txtTitle.value == "")
 			    {
 				    alert("<spring:message code='ezBoard.t390'/>");
