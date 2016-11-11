@@ -91,6 +91,10 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
 	public String addressZipCodePopup(Model model) throws Exception {
+		String confirmKey = config.getProperty("config.ConfirmKey");
+		
+		model.addAttribute("confirmKey", confirmKey);
+		
 		return "ezAddress/addressZipCodePopUp";
 	}
 	
