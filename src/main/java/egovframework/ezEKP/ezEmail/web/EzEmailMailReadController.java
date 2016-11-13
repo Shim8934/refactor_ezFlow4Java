@@ -1488,11 +1488,23 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	private Part getAttachPart(Part part, int index) throws MessagingException, IOException {
 		logger.debug("getAttachPart started.");
 		
-		if (part.isMimeType("multipart/*")){
+		if (part.isMimeType("multipart/mixed")){
 			Part p = ((Multipart)part.getContent()).getBodyPart(index);
 			
 			logger.debug("getAttachPart ended.");
 			return p;
+		// multipart/alternative 안에 multipart/mixed가 있는 경우의 처리
+		} else if (part.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            
+            for (int i = 0; i < count; i++) {
+                Part p = getAttachPart(mp.getBodyPart(i), index);
+                
+                if (p != null) {
+                    return p;
+                }
+            }
 		}
 		
 		logger.debug("getAttachPart ended.");
