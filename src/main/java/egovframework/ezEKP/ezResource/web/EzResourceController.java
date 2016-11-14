@@ -107,10 +107,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdID = req.getParameter("brdID");
 		}
 		if(req.getParameter("brdNm") != null) {
-			 brdNm = req.getParameter("brdnm");
+			 brdNm = req.getParameter("brdNm");
 		}
 		if(req.getParameter("brdPath") != null) {
-			brdTopPath = req.getParameter("brdpath");
+			brdTopPath = req.getParameter("brdPath");
 		}
 		
 		if(brdID.equals("")) {
@@ -527,6 +527,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdNm = req.getParameter("brdNm");
 		}
 		
+		logger.debug("brdNm="+brdNm);
 		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()); 
 		logger.debug("adminFg="+adminFg);
 		
@@ -715,7 +716,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}*/
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		model.addAttribute("strBrdID", strBrdID); 
 		model.addAttribute("strBrdNm", strBrdNm);
