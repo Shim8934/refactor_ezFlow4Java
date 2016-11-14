@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -49,11 +51,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 
 	@Override
-	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception{
+	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_REDIRECTBOARDID", redirectBoardID);
+		map.put("v_TENANTID", tenantID);
 		return ezBoardDAO.getLeft_BoardSTD(map);
 	}	
 
@@ -66,20 +72,53 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception{
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_MODE", pMode);
+		map.put("v_TENANTID", tenantID);
+		
+		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
+		
+		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
+		} else {
+			ezBoardDAO.insertBoardNewBoardOrder(map);
+			
+			BoardMyFavoriteVO boardMyFavoriteVO2 = new BoardMyFavoriteVO();
+			boardMyFavoriteVO2.setTabUsed("Y");
+			boardMyFavoriteVO2.setViewOrder("0");
+			
+			ezBoardDAO.updateMyBoard(boardMyFavoriteVO2);
+		}
+		
 		return ezBoardDAO.get_favoriteList(map);
 	}
 
 	@Override
-	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary) throws Exception{
+	public String get_parentBoardName(String boardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_BOARDIDLIST", boardIdList);
-		map.put("v_BOARDCOUNTLIST", boardIdListCount);
 		map.put("v_PRIMARY", primary);
-		return ezBoardDAO.get_parentBoardName(map);
+		map.put("v_TENANTID", tenantID);
+
+		String[] boardIDs = boardIdList.split(";");
+		String rtnValue = "";
+		
+		for (int k = 0; k < boardIdListCount; k++) {
+			map.put("v_BOARDID", boardIDs[k]);
+			
+			String boardGroupID = ezBoardDAO.getBoardGroupID(map);
+			
+			if (boardGroupID != null && !boardGroupID.equals("")) {
+				map.put("v_BOARDGROUPID", boardGroupID);
+				
+				rtnValue = rtnValue + ezBoardDAO.getBoardName(map) + ";";
+			} else {
+				rtnValue = rtnValue + egovMessageSource.getMessage("ezBoard.hyj01", locale);;
+			}
+		}
+		
+		return rtnValue;
 	}
 
 	@Override
@@ -1224,10 +1263,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 * 게시판 트리 표출 Method
 	 */
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, int tenantID) throws Exception {
 		int count = 0;
         String strForbiddenBoardIDList = "";				
-        String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID);
+        String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
         
         if (retValue != null && retValue.length() > 30) {
     		return retValue;
@@ -1241,12 +1280,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             String boardID = "";
             
             if (pMode == 0) {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID);            
+            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
             } else {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pUserID, pMode, pSelectBy, pExcludeBoardID);            
+            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pUserID, pMode, pSelectBy, pExcludeBoardID, tenantID);            
             }
             
-            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID);
+            List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
             
             if (boardTreeList.size() > 0) {
                 for (int r = 0; r < boardTreeList.size(); r++) {
@@ -1304,7 +1343,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
             result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
             result.append("<EXPANDED>FALSE</EXPANDED>");
-            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId()) + "</ISLEAF>");
+            result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
 
             if (count == 0 && pSubFlag != 1) {
             	result.append("<SELECT>TRUE</SELECT>");
@@ -1320,7 +1359,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         	result.append("</TREEVIEWDATA>");
         }
         
-        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString());
+        ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
+        ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, result.toString(), tenantID);
 
         return result.toString();
 	}
@@ -1328,9 +1368,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	/**
 	 * 게시판 트리하위여부 표출 Method
 	 */
-	public String checkIfLeafBoard(String pBoardID) {
+	public String checkIfLeafBoard(String pBoardID, int tenantID) {
 		try {
-	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID);
+	        int ret = ezBoardAdminService.checkIfLeafBoard(pBoardID, tenantID);
 	        
 	        if (ret > 0) {
 	        	return "FALSE";

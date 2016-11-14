@@ -139,16 +139,145 @@
 	</resultMap>
 	
 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
-		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #v_TENANTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 
-	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true">
-		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="MyFavoriteVO">
+		<![CDATA[
+			SELECT 
+				BOARDID, 
+				TABUSED, 
+				VIEWORDER
+    		FROM 
+    			EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO 
+    		WHERE  
+    			TENANT_ID = #v_TENANTID#
+    		AND
+    			USERID = #v_USERID#
+		]]>
+	</select>
 	
-	<procedure id="EzBoardDAO.get_parentBoardName" parameterClass="Map" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #v_PRIMARY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<update id="EzBoardDAO.updateMyBoard" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_MyBoards
+			SET 
+				TABUSED = #tabUsed#,
+	            VIEWORDER = #viewOrder#
+	        WHERE
+	        	TENANT_ID = #tenantID#
+	        AND
+	        	USERID = 'everyone'
+		]]>
+	</update>
+	
+	<insert id="EzBoardDAO.insertBoardNewBoardOrder" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO ( 
+				BOARDID, 								  USERID, 	  TABUSED, VIEWORDER, TENANT_ID 
+			)
+            VALUES ( 
+            	'{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', #v_USERID#, 'Y', 	   0, 		  #v_TENANTID# 
+            )
+		]]>
+	</insert>
+
+	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true">
+		<isEqual property="v_MODE" compareValue="ALL">
+			<![CDATA[
+				SELECT 
+					BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                TABUSED 
+	            FROM 
+	            	EZBOARDSTD.TBL_Board_MyBoards 
+	            WHERE  
+	            	TENANT_ID = #v_TENANTID#
+	            AND
+	            	(USERID = #v_USERID#
+	            	OR 
+	            	USERID = 'everyone')
+	            ORDER BY 
+	            	VIEWORDER ASC
+			]]>
+		</isEqual>
+		<isEqual property="v_MODE" compareValue="USE">
+			<![CDATA[
+				SELECT 
+					A.BoardID ,
+                    A.BoardName ,
+                    A.BoardName2 ,
+                    TABUSED ,
+                    B.Gubun 
+                FROM 
+                	EZBOARDSTD.TBL_Board_MyBoards A
+                JOIN 
+                	EZBOARDSTD.TBL_Board_BoardInfo B   
+                ON 
+                	A.BoardID = B.BoardID
+                AND
+                	A.TENANT_ID = B.TENANT_ID
+                WHERE
+                	A.TENANT_ID = #v_TENANTID#
+	            AND  
+                	( USERID = #v_USERID#
+                      OR USERID = 'everyone' )
+                AND 
+                	TABUSED = 'Y'
+                ORDER BY 
+                	VIEWORDER ASC
+			]]>
+		</isEqual>
+	</select>
+	
+<!-- 	<procedure id="EzBoardDAO.get_parentBoardName" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #v_PRIMARY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzBoardDAO.getBoardGroupID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				BOARDGROUPID 
+            FROM 
+            	EZBOARDSTD.TBL_Board_BoardInfo      
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+            AND
+            	BOARDID = #v_BOARDID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getBoardName" parameterClass="Map" resultClass="String">
+		<isEqual property="v_PRIMARY" compareValue="1">
+			<![CDATA[
+				SELECT 
+					BOARDNAME 
+				FROM 
+					EZBOARDSTD.TBL_Board_BoardInfo
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND
+					BOARDID = #v_BOARDGROUPID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PRIMARY" compareValue="1">
+			<![CDATA[
+				SELECT 
+					NVL(BOARDNAME2, BOARDNAME) 
+				FROM 
+					EZBOARDSTD.TBL_Board_BoardInfo
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND
+					BOARDID = #v_BOARDGROUPID#
+			]]>
+		</isNotEqual>
+	</select>
+	
 
 	<procedure id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO">
 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER(#v_PBOARDTYPE#, #v_PSTRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

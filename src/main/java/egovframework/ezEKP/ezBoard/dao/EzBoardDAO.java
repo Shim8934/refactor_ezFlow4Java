@@ -223,6 +223,18 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.portalPageItemEdit", boardID);
 	}
 	
+	public String getBoardGroupID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getBoardGroupID", map);
+	}
+	
+	public String getBoardName(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getBoardName", map);
+	}
+	
+	public BoardMyFavoriteVO getBoardNewBoardOrder(Map<String, Object> map) throws Exception{
+		return (BoardMyFavoriteVO) select("EzBoardDAO.getBoardNewBoardOrder", map);
+	}
+	
 	public int getBrdNewItemCount(Map<String, Object> map) throws Exception{
 		select("EzBoardDAO.getBrdNewItemCount",map);
 		return (int)map.get("v_pCount");
@@ -373,6 +385,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.photoListInsert", boardListVO);
 	}
 	
+	public void insertBoardNewBoardOrder(Map<String, Object> map) throws Exception{
+		insert("EzBoardDAO.insertBoardNewBoardOrder", map);
+	}
+	
 	public void setListOrder(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.set_ListOrder",map);
 	}
@@ -427,6 +443,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public void apprItem(Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.apprItem", map);
+	}
+	
+	public void updateMyBoard(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		update("EzBoardDAO.updateMyBoard", boardMyFavoriteVO);
 	}
 	
 	public void deleteItem(Map<String, Object> map) throws Exception{

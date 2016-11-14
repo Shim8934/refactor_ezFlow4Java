@@ -52,6 +52,10 @@ public class BoardMyFavoriteVO {
 	private String selTreeID;
 	/** 옮겨질 트리아이디*/
 	private String moveTreeID;
+	/** 보는 순서*/
+	private String viewOrder;
+	/** 테넌트아이디*/
+	private int tenantID;
 	
 	public String getBoardId() {
 		return boardId;
@@ -202,6 +206,18 @@ public class BoardMyFavoriteVO {
 	}
 	public void setMoveTreeID(String moveTreeID) {
 		this.moveTreeID = moveTreeID;
+	}
+	public String getViewOrder() {
+		return viewOrder;
+	}
+	public void setViewOrder(String viewOrder) {
+		this.viewOrder = viewOrder;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 	
 }
