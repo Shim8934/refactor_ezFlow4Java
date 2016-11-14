@@ -36,6 +36,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -357,31 +358,62 @@ public class EzEmailUtil {
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
 		
-		if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)){
+		if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+            double size = part.getSize();
+            String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
+            
+            if (encodingHeaders != null && encodingHeaders.length > 0) {
+                String encodingName = encodingHeaders[0];
+                logger.debug("Content-Transfer-Encoding=" + encodingName);
+                if (encodingName.equalsIgnoreCase("base64")) {
+                    // decrease the size because base64 increases the size to 4/3 times.
+                    size = (int)(size*0.75); 
+                }
+            }                                       
+            
+            String strSize = getSizeWithUnit(size);
+		    
+            String NonAsciiFilename = null;
+		    String[] headers = ((MimeBodyPart)part).getHeader("Content-Disposition");
+		    
+		    if (headers != null && headers.length > 0) {
+		        String contentDisposition = headers[0];
+		        
+		        logger.debug("contentDisposition=" + contentDisposition);
+		        
+		        // 표준에 의하면 filename은 US-ASCII 로만 어루어져야 하지만 그렇지 않은 비표준 메일들이 있다.
+		        // 예) contentDisposition=attachment;   filename="2016³â 2Â÷ ÀÚ»ì¿¹¹æ±³À° ÁöµµÀÚ ¾ç¼º ¾È³».hwp"
+		        if (!isPureAscii(contentDisposition)) {
+    		        ContentDisposition cd = new ContentDisposition(contentDisposition);
+    		        NonAsciiFilename = cd.getParameter("filename");
+		        }
+		    }
+		    
+		    logger.debug("NonAsciiFilename=" + NonAsciiFilename);
+		    
+            // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
+            // 디코딩이 수행된 형태인 경우도 있다.
+            // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
+		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
+		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
 			String filename = part.getFileName();
-			double size = part.getSize();
-			String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
-			if (encodingHeaders != null && encodingHeaders.length > 0) {
-				String encodingName = encodingHeaders[0];
-				logger.debug("Content-Transfer-Encoding=" + encodingName);
-				if (encodingName.equalsIgnoreCase("base64")) {
-					// decrease the size because base64 increases the size to 4/3 times.
-					size = (int)(size*0.75); 
-				}
-			}										
-			String strSize = getSizeWithUnit(size);
 			
+			logger.debug("filename=" + filename);
+									
 			if (filename != null) {
-				if (!isPureAscii(filename)) {
-					byte[] rawBytes = filename.getBytes("iso-8859-1");
-					
-					filename = decodeNonAsciiBytes(rawBytes);
-				}
-				else {
-					filename = MimeUtility.decodeText(filename);
-				}
-			}
-			else {
+			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된 경우이므로
+			    // 디코딩 처리를 하지 않는다.
+				if (isPureAscii(filename)) {
+				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
+                    if (NonAsciiFilename !=  null) {
+                        byte[] rawBytes = NonAsciiFilename.getBytes("iso-8859-1");
+                        
+                        filename = decodeNonAsciiBytes(rawBytes);
+                    } else {				    
+                        filename = MimeUtility.decodeText(filename);
+                    }
+				} 
+			} else {
 				filename = "";
 			}
 			
