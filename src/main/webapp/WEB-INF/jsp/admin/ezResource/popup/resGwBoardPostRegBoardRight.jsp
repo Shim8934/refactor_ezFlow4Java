@@ -5,7 +5,6 @@
 <html>
 	<head>
 		<title><spring:message code="ezResource.t12" /></title>
-		<meta http-equiv="X-UA-Compatible" content="IE=9">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/organ_tree.css" />
@@ -275,8 +274,7 @@
 
 	        	$.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
-	        		async : true,
+	        		dataType : "text",
 	        		url : "/ezOrgan/getDeptMemberList.do",
 	        		data : {
 	        				deptID   : DeptID, 
@@ -285,7 +283,7 @@
 	        				type 	 : "user"
 	        				},
 	        		success: function(result) {
-	        			pListXML_Info = result;
+	        			pListXML_Info = loadXMLString(result);
 						pSeach = false;
 						DisplayUserImageList();
 	        		}        			
@@ -1073,25 +1071,25 @@
 		<xml id="treeconfig" style="display: none;">
     		<tree>
         		<config>
-            		<size width="12" height="17" />
+            		<size width="12" height="17"></size>
             		<baseimage>
-                		<dot_continue path="/images/Email/tree/dot_continue.gif" />
-                		<dot_end path="/images/Email/tree/dot_end.gif" />
-                		<dot_normal path="/images/Email/tree/dot_normal.gif" />
-                		<minus_end path="/images/Email/tree/minus_end.gif" />
-                		<minus_normal path="/images/Email/tree/minus_normal.gif" />
-                		<plus_end path="/images/Email/tree/plus_end.gif" />
-                		<plus_normal path="/images/Email/tree/plus_normal.gif" />
-                		<space path="/images/Email/tree/space.gif" />
-                		<selected path="/images/Email/tree/folderselect.gif" />
+                		<dot_continue path="/images/Email/tree/dot_continue.gif"></dot_continue>
+                		<dot_end path="/images/Email/tree/dot_end.gif"></dot_end>
+                		<dot_normal path="/images/Email/tree/dot_normal.gif"></dot_normal>
+                		<minus_end path="/images/Email/tree/minus_end.gif"></minus_end>
+                		<minus_normal path="/images/Email/tree/minus_normal.gif"></minus_normal>
+                		<plus_end path="/images/Email/tree/plus_end.gif"></plus_end>
+                		<plus_normal path="/images/Email/tree/plus_normal.gif"></plus_normal>
+                		<space path="/images/Email/tree/space.gif"></space>
+                		<selected path="/images/Email/tree/folderselect.gif"></selected>
             		</baseimage>
             		<baseclass>
-                		<normal name="node_normal" />
-                		<selected name="node_selected" />
-                		<hover name="node_hover" />
+                		<normal name="node_normal"></normal>
+                		<selected name="node_selected"></selected>
+                		<hover name="node_hover"></hover>
             		</baseclass>
             		<images>
-                		<image idx="1" path="/images/Email/tree/folder.gif" />
+                		<image idx="1" path="/images/Email/tree/folder.gif"></image>
             		</images>
         		</config>
     		</tree>
