@@ -278,23 +278,11 @@
     	    displayUserList(nodeIdx.GetNodeData("CN"));
     	}
     	function displayUserList(DeptID) {
-	        /* var xmlDoc = createXmlDom();
-        	var objNode;
-        	createNodeInsert(xmlDoc, objNode, "DATA");
-        	createNodeAndInsertText(xmlDoc, objNode, "DEPTID", DeptID);
-        	createNodeAndInsertText(xmlDoc, objNode, "CELL", "displayname;title;description");
-        	createNodeAndInsertText(xmlDoc, objNode, "PROP", "displayname");
-        	createNodeAndInsertText(xmlDoc, objNode, "TYPE", "user");
-        	xmlHttp_UserList = null;
-        	xmlHttp_UserList = createXMLHttpRequest();
-        	xmlHttp_UserList.open("POST", "/ezOrgan/getDeptMemberList.do", true);
-        	xmlHttp_UserList.onreadystatechange = event_displayUserList;
-        	xmlHttp_UserList.send(xmlDoc); */
         	$(document).ready(function(){	
         	var xmlpara = createXmlDom();		        
 	        $.ajax({
 	        	type : "POST",
-	        	dataType : "xml",
+	        	dataType : "text",
 	        	url : "/ezOrgan/getDeptMemberList.do",
 	        	data : {deptID : DeptID, cell : "displayName;title;description", prop : "mail;displayName;description;title", type : "user"},
 	        	success : function(result){		        		
@@ -306,7 +294,7 @@
 	                listview.SetRowOnDblClick("ListViewNodeDblClick");
 	                listview.DataSource(document.getElementById("listviewheader2"));
 	                listview.DataBind("OrganListView");
-	                listview.DataSource(result);
+	                listview.DataSource(loadXMLString(result));
 	                listview.RowDataBind();
 	        	},
 	        	error : function(error){
