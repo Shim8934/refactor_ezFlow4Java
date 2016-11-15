@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -151,7 +152,36 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailGeneral started.");
 		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
+		
+		MailGeneralVO mailGeneralVO = new MailGeneralVO();
+		
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailGeneral", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	        	JSONObject obj = (JSONObject)object.get("result");
+	        	if (obj != null) {
+	        		mailGeneralVO.setListCount((String)obj.get("listCount"));
+	        		mailGeneralVO.setRefreshInterval((String)obj.get("refreshInterval"));
+	        		mailGeneralVO.setKeepDeleteLength((String)obj.get("keepDeleteLength"));
+	        		mailGeneralVO.setPreviewMode((String)obj.get("previewMode"));
+	        		mailGeneralVO.setPreviewWList((String)obj.get("previewWList"));
+	        		mailGeneralVO.setPreviewWContent((String)obj.get("previewWContent"));
+	        		mailGeneralVO.setPreviewHList((String)obj.get("previewHList"));
+	        		mailGeneralVO.setPreviewHContent((String)obj.get("previewHContent"));
+	        		mailGeneralVO.setMailSenderNm((String)obj.get("mailSenderName"));
+	        	}
+	        }
+		} else {
+			mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
+		}
 
 		String listCount = mailGeneralVO.getListCount() == null ? "" : mailGeneralVO.getListCount();
 		String previewMode = mailGeneralVO.getPreviewMode() == null ? "OFF" : mailGeneralVO.getPreviewMode();
@@ -205,7 +235,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 환경 설정 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGeneralSave.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailGeneralSave.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGeneralSave(@CookieValue("loginCookie") String loginCookie,
@@ -245,22 +275,55 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String rtnValue= "OK";
 
 		try {
-			MailGeneralVO mailGeneral = new MailGeneralVO();
-
-			mailGeneral.setListCount(listCount);
-			mailGeneral.setRefreshInterval(refreshInterval);
-			mailGeneral.setKeepDeleteLength(keepDeleteLength);
-			mailGeneral.setPreviewMode(previewMode);
-			mailGeneral.setPreviewWList(previewWList);
-			mailGeneral.setPreviewWContent(previewWContent);
-			mailGeneral.setPreviewHList(previewHList);
-			mailGeneral.setPreviewHContent(previewHContent);	
-
-			if (mode != null && mode.equals("ALL")) {
-				mailGeneral.setMailSenderNm(mailSenderNm);
-				ezEmailService.setMailGeneral2(userId, mailGeneral);
+			if (config.getProperty("config.USE_Mysql").equals("YES")) {
+				String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+				String listCountParam = "listCount=" + URLEncoder.encode(listCount, "UTF-8");
+				String refreshIntervalParam = "refreshInterval=" + URLEncoder.encode(refreshInterval, "UTF-8");
+				String keepDeleteLengthParam = "keepDeleteLength=" + URLEncoder.encode(keepDeleteLength, "UTF-8");
+				String previewModeParam = "previewMode=" + URLEncoder.encode(previewMode, "UTF-8");
+				String previewWListParam = "previewWList=" + URLEncoder.encode(previewWList, "UTF-8");
+				String previewWContentParam = "previewWContent=" + URLEncoder.encode(previewWContent, "UTF-8");
+				String previewHListParam = "previewHList=" + URLEncoder.encode(previewHList, "UTF-8");
+				String previewHContentParam = "previewHContent=" + URLEncoder.encode(previewHContent, "UTF-8");
+				String mailSenderNameParam = "mailSenderName=" + URLEncoder.encode(mailSenderNm, "UTF-8");
+				
+				String modeParam = "mode=";
+				if (mode != null && mode.equals("ALL")) {
+					modeParam = "mode=all";
+				}
+				
+				String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
+						+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
+						+ "&" + modeParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
+				logger.debug("strJson=" + strJson);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(strJson);
+		        
+		        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+		        	rtnValue = "ERROR";
+		        }
 			} else {
-				ezEmailService.setMailGeneral(userId, mailGeneral);
+				MailGeneralVO mailGeneral = new MailGeneralVO();
+
+				mailGeneral.setListCount(listCount);
+				mailGeneral.setRefreshInterval(refreshInterval);
+				mailGeneral.setKeepDeleteLength(keepDeleteLength);
+				mailGeneral.setPreviewMode(previewMode);
+				mailGeneral.setPreviewWList(previewWList);
+				mailGeneral.setPreviewWContent(previewWContent);
+				mailGeneral.setPreviewHList(previewHList);
+				mailGeneral.setPreviewHContent(previewHContent);	
+
+				if (mode != null && mode.equals("ALL")) {
+					mailGeneral.setMailSenderNm(mailSenderNm);
+					ezEmailService.setMailGeneral2(userId, mailGeneral);
+				} else {
+					ezEmailService.setMailGeneral(userId, mailGeneral);
+				}
 			}
 		}
 		catch (Exception e) {
@@ -567,8 +630,34 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String serverName = "";
 
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-
-		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+		
+		MailSignatureVO mailSignatureVO = null;
+		
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	        	JSONObject obj = (JSONObject)object.get("result");
+	        	
+	        	mailSignatureVO = new MailSignatureVO();
+	        	
+	        	if (obj != null) {
+	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
+	        		mailSignatureVO.setContent1((String)obj.get("content1"));
+	        		mailSignatureVO.setContent2((String)obj.get("content2"));
+	        		mailSignatureVO.setContent3((String)obj.get("content3"));
+	        	}
+	        }
+		} else {
+			mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
+		}
 
 		if (mailSignatureVO != null) {
 			signState = mailSignatureVO.getUseFlag().trim();
@@ -612,22 +701,20 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailSignSave started.");
 		logger.debug("bodyData=" + bodyData);
 		
+		String rtnValue = "OK";
+		
 		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
 		Node tempNode = null;
-
-		String pUserID = "";
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String userId = userInfo.get(0);
+		
 		String pUseFlag = "";
 		String pContent1 = "";
 		String pContent2 = "";
 		String pContent3 = "";
 
-		if (root.getElementsByTagName("USERID") != null) {
-			tempNode = root.getElementsByTagName("USERID").item(0);
-			if (tempNode != null && !tempNode.getTextContent().equals("")) {
-				pUserID = tempNode.getTextContent();
-			}
-		}
 		if (root.getElementsByTagName("USEFLAG") != null) {
 			tempNode = root.getElementsByTagName("USEFLAG").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
@@ -652,12 +739,33 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pContent3 = tempNode.getTextContent();
 			}
 		}
-
-		ezEmailService.setMailSignature(pUserID, pUseFlag, pContent1, pContent2, pContent3);
+		
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+			String useFlagParam = "useFlag=" + URLEncoder.encode(pUseFlag, "UTF-8");
+			String content1Param = "content1=" + URLEncoder.encode(pContent1, "UTF-8");
+			String content2Param = "content2=" + URLEncoder.encode(pContent2, "UTF-8");
+			String content3Param = "content3=" + URLEncoder.encode(pContent3, "UTF-8");
+			
+			String inputParams = userIdParam + "&" + useFlagParam + "&" + content1Param + "&" + content2Param + "&" + content3Param;
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailSignature", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+	        	rtnValue = "ERROR";
+	        }
+		} else {
+			ezEmailService.setMailSignature(userId, pUseFlag, pContent1, pContent2, pContent3);
+		}
 		
 		logger.debug("mailSignSave ended.");
 		
-		return "";
+		return rtnValue;
 	}
 
 
@@ -722,8 +830,39 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailAutoDelete started.");
 		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		List<MailDeleteVO> list = ezEmailService.getMailDelete(userId);
-
+		
+		List<MailDeleteVO> list = new ArrayList<MailDeleteVO>();
+		
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailDelete", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	        	JSONArray resultArray = (JSONArray)object.get("result");
+	        	
+	        	for (int i=0; i<resultArray.size(); i++) {
+	        		JSONObject obj = (JSONObject)resultArray.get(i);
+	        		
+	        		MailDeleteVO mailDeleteVO = new MailDeleteVO();
+	        		
+	        		mailDeleteVO.setPath((String)obj.get("folderPath"));
+	        		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
+	        		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
+	        		mailDeleteVO.setFolderName((String)obj.get("folderName"));
+	        		
+	        		list.add(mailDeleteVO);
+	        	}
+	        }
+		} else {
+			list = ezEmailService.getMailDelete(userId);
+		}
+		
 		for (MailDeleteVO vo : list) {
 			if (vo.getDeleteUnread().trim().equals("1")) {
 				vo.setDeleteUnread("checked");
@@ -753,6 +892,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteAdd started.");
 		
+		String rtnValue = "OK";
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
@@ -765,12 +906,33 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("userId=" + userId + ",path=" + path + ",expireTime=" + expireTime
 				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
 		
-		ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+			String folderPathParam = "folderPath=" + URLEncoder.encode(path, "UTF-8");
+			String expireTimeParam = "expireTime=" + URLEncoder.encode(expireTimeStr, "UTF-8");
+			String deleteUnreadParam = "deleteUnread=" + URLEncoder.encode(deleteUnreadStr, "UTF-8");
+			String folderNameParam = "folderName=" + URLEncoder.encode(folderName, "UTF-8");
+			
+			String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam;
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailDelete", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+	        	rtnValue = "ERROR";
+	        }
+		} else {
+			ezEmailService.setMailDelete(userId, path, expireTime, deleteUnread, folderName);
+		}
 		
 		logger.debug("mailAutoDeleteAdd redirect '/ezEmail/mailAutoDelete.do'.");
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
 		
-		return "";
+		return rtnValue;
 	}
 
 	/**
@@ -780,19 +942,48 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteDelete started.");
+		
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 
+		String rtnValue = "OK";
+		
+		String folderPath = request.getParameter("folderPath");
 		String itemSeqStr = request.getParameter("itemseq") == null ? "" : request.getParameter("itemseq");
 		int itemSeq = itemSeqStr.equals("") ? 0 : Integer.parseInt(itemSeqStr);
 		
 		logger.debug("userId=" + userId + ",itemSeq=" + itemSeq);
 		
-		ezEmailService.deleteMailDelete(userId, itemSeq);
+		if (config.getProperty("config.USE_Mysql").equals("YES")) {
+			
+			if (folderPath == null || folderPath.trim().equals("")) {
+				logger.error("cannot delete autoDelete. folderPath is empty.");
+				rtnValue = "ERROR";
+			} else {
+				String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+				String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+				
+				String inputParams = userIdParam + "&" + folderPathParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailDelete", inputParams);
+				logger.debug("strJson=" + strJson);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(strJson);
+		        
+		        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+		        	rtnValue = "ERROR";
+		        }
+			}
+			
+		} else {
+			ezEmailService.deleteMailDelete(userId, itemSeq);
+		}
 		
 		logger.debug("mailAutoDeleteDelete redirect '/ezEmail/mailAutoDelete.do'.");
 		
 		response.sendRedirect("/ezEmail/mailAutoDelete.do");
-		return "";
+		return rtnValue;
 	}
 
 	/**

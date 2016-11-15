@@ -446,11 +446,40 @@ public class EzEmailAdminController {
 		String outColor = "#0080ff";
 		
 		try {
-			MailColorVO mailColor = ezEmailService.getMailColor();
+			MailColorVO mailColor = null;
 			
-			importanceColor = mailColor.getImportanceColor();
-			inColor = mailColor.getInmailColor();
-			outColor = mailColor.getOutmailColor();
+			if (config.getProperty("config.USE_Mysql").equals("YES")) {
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				String tenantId = String.valueOf(userInfo.getTenantId());
+				
+				String inputParams = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+				logger.debug("inputParams=" + inputParams);
+				
+				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailColor", inputParams);
+				logger.debug("strJson=" + strJson);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(strJson);
+		        
+		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+		        	JSONObject obj = (JSONObject)object.get("result");
+		        	if (obj != null) {
+		        		mailColor = new MailColorVO();
+		        		
+		        		mailColor.setImportanceColor((String)obj.get("importanceColor"));
+		        		mailColor.setInmailColor((String)obj.get("inmailColor"));
+		        		mailColor.setOutmailColor((String)obj.get("outmailColor"));
+		        	}
+		        }
+			} else {
+				mailColor = ezEmailService.getMailColor();
+			}
+			
+			if (mailColor != null) {
+				importanceColor = mailColor.getImportanceColor();
+				inColor = mailColor.getInmailColor();
+				outColor = mailColor.getOutmailColor();
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -480,7 +509,30 @@ public class EzEmailAdminController {
 			String inColor = doc.getElementsByTagName("INCOLOR").item(0).getTextContent();
 			String outColor = doc.getElementsByTagName("OUTCOLOR").item(0).getTextContent();
 			
-			ezEmailService.setMailColor(importanceColor, inColor, outColor);
+			if (config.getProperty("config.USE_Mysql").equals("YES")) {
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
+				String tenantId = String.valueOf(userInfo.getTenantId());
+				
+				String tenantIdParam = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+				String importanceColorParam = "importanceColor=" + URLEncoder.encode(importanceColor, "UTF-8");
+				String inmailColorParam = "inmailColor=" + URLEncoder.encode(inColor, "UTF-8");
+				String outmailColorParam = "outmailColor=" + URLEncoder.encode(outColor, "UTF-8");
+				
+				String inputParams = tenantIdParam + "&" + importanceColorParam + "&" + inmailColorParam + "&" + outmailColorParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailColor", inputParams);
+				logger.debug("strJson=" + strJson);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(strJson);
+		        
+		        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+		        	returnValue = "ERROR";
+		        }
+			} else {
+				ezEmailService.setMailColor(importanceColor, inColor, outColor);
+			}
 			
 		} catch (Exception e) {
 			returnValue = "ERROR:" + e.getMessage();

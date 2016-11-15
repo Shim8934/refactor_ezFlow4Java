@@ -23,11 +23,11 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		    }
-		    function delete_condition(seqno) {
+		    function delete_condition(seqno, path) {
 		        if (!confirm("<spring:message code='ezEmail.t113' />"))
 		            return;
 		
-		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURI(seqno);
+		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURI(seqno) + "&folderPath=" + encodeURI(path);
 		    }
 		    function add_condition() {
 		        if (document.getElementById("folderpath").value == "") {
@@ -107,7 +107,7 @@
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">${item.expireTime} <spring:message code='ezEmail.t127' /></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
-							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}')"><spring:message code='ezEmail.t95' /></span></a>
+							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}', '${item.path}')"><spring:message code='ezEmail.t95' /></span></a>
 						</td> 
 					</tr>
 				</c:forEach>

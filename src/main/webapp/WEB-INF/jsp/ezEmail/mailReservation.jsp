@@ -79,7 +79,7 @@
 	</head>
 	
 	<body scroll="no" class="popup"> 
-		<form method="post"  runat="server">
+		<form method="post">
 		<h1><spring:message code='ezEmail.t605' /></h1>
 		<div id="close">
 		  <ul>
