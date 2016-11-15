@@ -427,6 +427,7 @@
         		document.getElementById("Preview_Content").innerHTML = "";
 		        var xmlDoc = createXmlDom();
 		        var objNode;
+
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
         		var QuestionNode = createNode(xmlDoc, "QUESTION");
         		var pQstCnt = document.frmCreate.selQues.length;
@@ -445,7 +446,7 @@
         		    var oTr = document.createElement("tr");
             		var oTh = document.createElement("th");
             		var oTd, oInput, oImg, oFileTable, pFileName;
-            		oTh.innerHTML = "질문" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("CONTENT")[0]);
+            		oTh.innerHTML = "질문" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("QUESTIONCONTENT")[0]);
             		oTr.appendChild(oTh);
             		oTable.appendChild(oTr);
 		            if (QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW").length > 0) {
@@ -482,7 +483,7 @@
                     		}
                     			oInput.disabled = "true";
                     			oTd.appendChild(oInput);
-                    			oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("TITLE")[0]);
+                    			oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]);
                     			oTr.appendChild(oTd);
                     			oTable.appendChild(oTr);
                     		if (QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length > 0) {
@@ -539,7 +540,7 @@
                     		oInput.disabled = "true";
                     		oInput.readOnly = "true";
                     		oTd.appendChild(oInput);
-                    		oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("TITLE")[0]);
+                    		oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]);
                     		oTr.appendChild(oTd);
                     		oTable.appendChild(oTr);
 		                    if (QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length > 0) {

@@ -121,7 +121,7 @@
 				$.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
-  					dataType : "xml",
+  					dataType : "text",
   					async : "false",
   					data : {
   						deptID : DeptID ,
@@ -134,11 +134,11 @@
       	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
       	                if (CrossYN()) {
-      	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+      	                    var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
       	                    var Node = headerData.importNode(xmlRtn, true);
       	                    headerData.documentElement.appendChild(Node);
       	                } else {
-      	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+      	                    var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
       	                    headerData.documentElement.appendChild(xmlRtn);
       	                }
       					
@@ -180,7 +180,7 @@
 		        $.ajax({
   					url : '/ezOrgan/getSearchList.do',
   					method : 'POST',
-  					dataType : "xml",
+  					dataType : "text",
   					data : {
   						search : search_type.value + "::" + keyword.value ,
   						cell : "company;description;displayName;title;telephoneNumber",
@@ -192,11 +192,11 @@
        	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
        	                if (CrossYN()) {
-       	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+       	                    var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
        	                    var Node = headerData.importNode(xmlRtn, true);
        	                    headerData.documentElement.appendChild(Node);
        	                } else {
-       	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+       	                    var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
        	                    headerData.documentElement.appendChild(xmlRtn);
        	                }
        					
@@ -228,7 +228,7 @@
 		        $.ajax({
   					url : '/ezOrgan/getSearchList.do',
   					method : 'POST',
-  					dataType : "xml",
+  					dataType : "text",
   					data : {
   						search : "displayname::" + deptkeyword.value ,
   						cell : "extensionAttribute3;displayName;extensionAttribute9",
@@ -236,7 +236,7 @@
   						type : "group"
   					} ,
       				success : function(result) {
-      					xmlDOM = result;
+      					xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
   					},
   					error : function(jqXHR, textStatus, errorThrown) {

@@ -372,12 +372,12 @@
         	} */
         	$.ajax({
 	        	type : "POST",
-	        	dataType : "xml",
+	        	dataType : "text",
 	        	url : "/ezOrgan/getSearchList.do",
 	        	async : false,
 	        	data : {search :"displayname::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
 	        	success : function(result){	
-	        		xmlDOM = result;
+	        		xmlDOM = loadXMLString(result);
 	                adCount = xmlDOM.getElementsByTagName("ROW").length;
 	        	},
 	        	error : function(error){

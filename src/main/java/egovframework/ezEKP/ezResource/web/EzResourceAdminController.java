@@ -190,18 +190,17 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					}
 					
 					if(nodes5.item(i).getTextContent().equals("")) {
-						nodes5.item(i).setTextContent("<![CDATA[]]>");
+						nodes5.item(i).setTextContent(" ");
 					}
 					
-					//
 					if(nodes16.item(i).getTextContent().equals("")) {
-						nodes16.item(i).setTextContent("<![CDATA[]]>");
+						nodes16.item(i).setTextContent(" ");
 					}
 					if(nodes17.item(i).getTextContent().equals("")) {
-						nodes17.item(i).setTextContent("<![CDATA[]]>");
+						nodes17.item(i).setTextContent(" ");
 					}
 					if(nodes18.item(i).getTextContent().equals("")) {
-						nodes18.item(i).setTextContent("<![CDATA[]]>");
+						nodes18.item(i).setTextContent(" ");
 					}
 						
 					//좌측 리로드할때는 선택 안되도록
@@ -220,13 +219,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 						nodes10.item(i).setTextContent("TRUE");
 					}
 					if(nodes13.item(i).getTextContent().equals("")) {
-						nodes13.item(i).setTextContent("<![CDATA[]]>");
+						nodes13.item(i).setTextContent(" ");
 					}
 					if(nodes14.item(i).getTextContent().equals("")) {
-						nodes14.item(i).setTextContent("<![CDATA[]]>");
+						nodes14.item(i).setTextContent(" ");
 					}
 					if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
-						nodes15.item(i).setTextContent("<![CDATA[]]>");
+						nodes15.item(i).setTextContent(" ");
 					}
 					
 				}

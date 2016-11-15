@@ -131,7 +131,7 @@
 		    function displayUserList(DeptID) {
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezOrgan/getDeptMemberList.do",
 		    		data : {
@@ -141,7 +141,7 @@
 		    				type 	 : "user"
 		    				},
 		    		success: function(xml){
-		    			event_displayUserList(xml);
+		    			event_displayUserList(loadXMLString(xml));
 		    		},
 		    		error: function(request, status){
 		    			alert("<spring:message code='ezPersonal.t60'/>" + request.status);
@@ -191,7 +191,7 @@
 		    	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
@@ -201,7 +201,7 @@
 		    			type   : "user"
 		    		},
 		    		success: function(xml){
-		    			event_displayUserList(xml);
+		    			event_displayUserList(loadXMLString(xml));
 		    		}        			
 		    	});
 		    }
@@ -219,7 +219,7 @@
 		        
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "xml",
+		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezOrgan/getSearchList.do",
 		    		data : {
@@ -229,7 +229,7 @@
 		    			type   : "group"
 		    		},
 		    		success: function(xml){
-		    			result = xml;
+		    			result = loadXMLString(xml);
 		    		},
 		    		error: function(request, status){
 		    			alert("<spring:message code='ezPersonal.t62'/>" + request.status);

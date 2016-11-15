@@ -222,7 +222,7 @@
 	            $.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
-  					dataType : "xml",
+  					dataType : "text",
   					data : {
   						deptID : DeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
@@ -230,7 +230,7 @@
   						type : "user"
   					} ,
       				success : function(xml) {
-      					pListXML_Info = xml;
+      					pListXML_Info = loadXMLString(xml);
 						pSeach = false;
  		                DisplayUserImageList(xml);
   					},
@@ -590,7 +590,7 @@
 	         	$.ajax({
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
-					dataType : "xml",
+					dataType : "text",
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
@@ -598,7 +598,7 @@
 						type : "user"
 					} ,
    				success : function(xml) {
-   					pListXML_Info = xml;
+   					pListXML_Info = loadXMLString(xml);
 					pSeach = true;
 		            DisplayUserImageList(xml);
 					},

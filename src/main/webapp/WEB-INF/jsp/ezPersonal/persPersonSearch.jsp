@@ -120,7 +120,7 @@
 	        	 $.ajax({
 	  					url : '/ezOrgan/getDeptMemberList.do',
 	  					method : 'POST',
-	  					dataType : "xml",
+	  					dataType : "text",
 	  					data : {
 	  						deptID : tempDeptID ,
 	  						cell : "company;description;displayName;title;telephoneNumber",
@@ -129,7 +129,7 @@
 	  						type : "user"
 	  					} ,
 	      				success : function(xml) {
-	 		                event_displayUserList(xml);
+	 		                event_displayUserList(loadXMLString(xml));
 	 		                
 	 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
 	 		               	if (strSearch != "") {
@@ -472,7 +472,7 @@
 	        	$.ajax({
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
-					dataType : "xml",
+					dataType : "text",
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
@@ -481,7 +481,7 @@
 						type : "user"
 					} ,
    					success : function(xml) {
-   						event_displayUserList2(xml);
+   						event_displayUserList2(loadXMLString(xml));
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code="ezResource.t2"/>" + textStatus);
@@ -534,11 +534,11 @@
 	        	 $.ajax({
 					url : '/ezOrgan/getSearchList.do',
 					method : 'POST',
-					dataType : "xml",
+					dataType : "text",
 					async : false,
 					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
    					success : function(result) {
-   						xmlDOM = result;
+   						xmlDOM = loadXMLString(result);
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
 	                	adCount = row.length;
 						},
