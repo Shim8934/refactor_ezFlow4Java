@@ -43,12 +43,9 @@
 
 			function SetOrder(inc) {
 		    	var SelectedNode = "";
-		    	if (CrossYN()) {
-			        SelectedNode = window.parent.frames["board_menu"].TreeView.selectedIndex();
-		    	} else {
-			        SelectedNode = parent.window.frames("board_menu").document.all("TreeView").selectedIndex;
-		    	}
-			
+		    	
+			    SelectedNode = window.parent.frames["board_menu"].TreeView.selectedIndex();
+		    	
 		    	if (SelectedNode == null && document.getElementById("BRDLIST").length == 0) {
 					alert("<spring:message code="ezResource.t94" />");
 					return;
