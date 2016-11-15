@@ -880,7 +880,7 @@
 	       
 	        	$.ajax({
 	        		type : "POST",
-	        		dataType : "xml",
+	        		dataType : "text",
 	        		async : true,
 	        		url : "/ezOrgan/getSearchList.do",
 	        		data : {
@@ -890,7 +890,7 @@
 	        				type : "user"	
 	        				},
 	        		success: function(result) {
-	        			pListXML_Info = result;
+	        			pListXML_Info = loadXMLString(result);
 	        			pSeach = true;
 	        			DisplayUserImageList();
 	        		}
