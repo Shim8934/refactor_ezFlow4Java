@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezBoard.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
@@ -17,11 +18,11 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardService {
 
-	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID) throws Exception;
+	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception;
 	
 	public List<BoardVO> get_apprUserList(String boardID) throws Exception;
 
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode) throws Exception;
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception;
 
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
 	
@@ -93,7 +94,7 @@ public interface EzBoardService {
 	
 	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
-	public String get_parentBoardName(String BoardIdList, int boardIdListCount, String primary) throws Exception;
+	public String get_parentBoardName(String BoardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception;
 	
 	public String checkForm(String boardID, String mode) throws Exception;
 
@@ -125,7 +126,7 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID) throws Exception;
 	
-	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang) throws Exception;
+	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
 	
 	public int getReservedItemListCount(String userID) throws Exception;
 	

@@ -17,11 +17,11 @@ public interface EzBoardAdminService {
 	
 	public List<BoardVO> checkApplyUser() throws Exception;
 	
-	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception;
+	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
 	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
 	
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception;
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception;
 	
@@ -37,9 +37,9 @@ public interface EzBoardAdminService {
 	
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
 
-	public String getBoardTree_Get1(String pStrLang, String string) throws Exception;
+	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	
-	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception;
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
 	public String addMyBoards(String userID, String boardID) throws Exception;
 	
@@ -49,11 +49,11 @@ public interface EzBoardAdminService {
 	
 	public String saveMHT(String boardID, String formContent, String realPath) throws Exception;
 	
-	public int checkIfLeafBoard(String pBoardID) throws Exception;
+	public int checkIfLeafBoard(String pBoardID, int tenantID) throws Exception;
 	
 	public int checkForm(String boardID, String mode) throws Exception;
 	
-	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception;	
+	public void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception;	
 		
 	public void createBoardGroup(BoardPropertyVO boardPropertyVO) throws Exception;
 	
@@ -100,6 +100,8 @@ public interface EzBoardAdminService {
 	public void saveBoardProperty_port(String boardID) throws Exception;
 
 	public void setBoardForm(String boardID, String formLocation) throws Exception;
+
+	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
 	
 
 }

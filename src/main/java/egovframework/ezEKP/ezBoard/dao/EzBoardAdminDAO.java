@@ -88,10 +88,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}	
 
 	public int checkIfLeafBoard(Map<String, Object> map) throws Exception{		
-		select("EzBoardAdminDAO.checkIfLeafBoard", map);
-		int ret = (int) map.get("v_pCount");
-		
-		return ret;
+		return (int) select("EzBoardAdminDAO.checkIfLeafBoard", map);
 	}
 	
 	public int checkForm(Map<String, Object> map) throws Exception{
@@ -210,6 +207,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	public void trunkBoard() throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard");
+	}
+
+	public void getBoardTree_Set_D(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.getBoardTree_Set_D", map);
 	}
 
 

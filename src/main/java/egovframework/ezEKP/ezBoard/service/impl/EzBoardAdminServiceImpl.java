@@ -44,13 +44,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	private CommonUtil commonUtil;
 
 	@Override
-	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID) throws Exception{
+	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pBoardID", pRootBoardID);
 		map.put("v_pUserID", pUserID);
 		map.put("v_pDeptID", pDeptID);
 		map.put("v_pCompanyID", pCompanyID);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.checkIfBoardGroupAdmin(map);
 	}
@@ -142,27 +143,29 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public String getBoardTree_Get1(String pStrLang, String pQuery) throws Exception{
+	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_STRLANG", pStrLang);
 		map.put("v_PQUERY", pQuery);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.getBoardTree_Get1(map);
 	}
 
 	@Override
-	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID) throws Exception{
+	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PACCESSID", pAccessID);
 		map.put("v_PROOTBOARDID", pRootBoardID);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
 
 	@Override
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID) throws Exception{
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pRootBoardID", pRootBoardID);
@@ -172,25 +175,39 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pMode", pMode);
 		map.put("v_pSelectBy", pSelectBy);
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.brdBoardTree(map);
 	}
 
 	@Override
-	public void getBoardTree_Set(String pStrLang, String string, String string2) throws Exception{
+	public void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_STRLANG", pStrLang);
-		map.put("v_PQUERY", string);
-		map.put("v_RESULT", string2);
+		map.put("v_PQUERY", query);
+		map.put("v_RESULT", result);
+		map.put("v_TENANTID", tenantID);
 		
 		ezBoardAdminDAO.getBoardTree_Set(map);		
 	}
+	
+	@Override
+	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_STRLANG", pStrLang);
+		map.put("v_PQUERY", query);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardAdminDAO.getBoardTree_Set_D(map);
+	}
 
 	@Override
-	public int checkIfLeafBoard(String pBoardID) throws Exception{
+	public int checkIfLeafBoard(String pBoardID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();		
 		map.put("v_PBOARDID", pBoardID);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.checkIfLeafBoard(map);
 	}
