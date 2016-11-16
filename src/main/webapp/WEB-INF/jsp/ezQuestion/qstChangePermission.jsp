@@ -198,6 +198,7 @@
 	        	        return false;
 	            	}
 	        	}
+
 	        	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	L_SearchEndDt = L_SearchEndDt.substring(0, 10);
 	        	if (trim_Cross(document.getElementById("txtExpiredate").value) != "") {
@@ -247,21 +248,24 @@
 	        	    return;
 	        	}
 		        
-	        	var m_PostDate = "${mPostDate}";
+	        	var m_PostDate = "${mPostDate1}";
 	        	if (L_SearchStartDt.length > 10) {
 	            	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	}
+alert("L_SearchStartDt="+L_SearchStartDt);
 	        	var m_PollStartDate = L_SearchStartDt;
 	        	var tempS = m_PollStartDate.split("-");
 	        	var szSYear = tempS[0];
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay;
+console.log("m_PollStartDate="+m_PollStartDate);
+console.log("m_PostDate="+m_PostDate);
 	        	if (m_PollStartDate > m_PostDate) {
-		            alert("<spring:message code='ezQuestion.t204' />");
+		            alert("<spring:message code='ezQuestion.t204'/>");
 		            return;
 	    	    }
-	        	if (confirm("<spring:message code='ezQuestion.t205' />")) {
+	        	if (confirm("<spring:message code='ezQuestion.t205'/>")) {
 	            	document.frmEndPoll.submit();
 	        	}
 	    	}
@@ -467,8 +471,8 @@
             	<a class="imgbtn"><span onclick="fun_cancel();"><spring:message code='ezQuestion.t38' /></span></a>
         	</div>
         	<div id="hidField" style="display:none">
-	            <input type="hidden" name="brd_id" id="brd_id" value="${qstListVO.brdID}" /> 
-    	        <input type="hidden" name="item_no" id="item_no" value="${qstUserPollItemVO.itemNo}" /> 
+	            <input type="hidden" name="brdID" id="brdID" value="${qstListVO.brdID}" /> 
+    	        <input type="hidden" name="itemNo" id="itemNo" value="${qstUserPollItemVO.itemNo}" /> 
         	    <input type="hidden" name="hidanonymity" id="hidanonymity" value="${qstUserPermissionVO.publicFlg}" /> 
             	<input type="hidden" name="hidopenResult" id="hidopenResult" value="${qstUserPermissionVO.publicResultFlg}" /> 
             	<input type="hidden" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" /> 
@@ -485,10 +489,10 @@
         	</div>
 		</form> 
     	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 
-        	<input type="hidden" value="${qstListVO.brdID}" name="brd_id"/> 
-        	<input type="hidden" value="${qstListVO.itemNo}" name="item_no" /> 
+        	<input type="hidden" value="${qstUserPollItemVO.brdID}" name="brdID"/> 
+        	<input type="hidden" value="${qstUserPollItemVO.itemNo}" name="itemNo" /> 
         	<input type="hidden" value="1" name="hidEndPoll" /> 
-        	<input type="hidden" value="${receve}" name="Receve_str2" /> 
+        	<input type="hidden" value="${receve}" name="receveStr2" /> 
 		</form> 	
 	</body>
 </html>

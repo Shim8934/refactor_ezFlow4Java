@@ -836,7 +836,24 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUSERID", userID);
 		return ezQuestionDAO.wpCountPollCount(map);
 	}
-	
+
+	@Override
+	public void updateTblPollItem(String endDate, int brdID, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("endDate", endDate);
+		map.put("brdID", brdID);
+		map.put("itemNo", itemNo);
+		ezQuestionDAO.updateTblPollItem(map);
+	}
+
+	@Override
+	public void updateTblPollPermission(String endFlag, int brdID, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("endFlag", endFlag);
+		map.put("brdID", brdID);
+		map.put("itemNo", itemNo);
+		ezQuestionDAO.updateTblPollPermission(map);
+	}
 	
 	
 }

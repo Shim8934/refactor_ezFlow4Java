@@ -327,6 +327,14 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		update("EzQuestionDAO.changePermission", map);
 	}
 	
+	public void updateTblPollItem(Map<String, Object> map) {
+		update("EzQuestionDAO.updateTblPollItem", map);
+	}
+	
+	public void updateTblPollPermission(Map<String, Object> map) {
+		update("EzQuestionDAO.updateTblPollPermission", map);
+	}
+	
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}

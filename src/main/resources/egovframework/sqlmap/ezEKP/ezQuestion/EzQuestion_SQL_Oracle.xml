@@ -822,4 +822,30 @@
 				 brd_id = #v_pstrBrdID#  
 		]]>
 	</update>
+	
+	 <update id="EzQuestionDAO.updateTblPollItem" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZQUESTION.TBLPOLL_ITEM
+			SET 
+				POLL_ENDDATE = #endDate#
+			WHERE
+				 BRD_ID = #brdID#
+			AND
+				ITEM_NO = #itemNo#	   
+		]]>
+	</update>
+	
+	 <update id="EzQuestionDAO.updateTblPollPermission" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZQUESTION.TBLPOLL_PERMISSION
+			SET 
+				END_FLG = #endFlag#
+			WHERE
+				 BRD_ID = #brdID#
+			AND
+				ITEM_NO = #itemNo#	   
+		]]>
+	</update>
 </sqlMap>

@@ -3153,12 +3153,13 @@ public class EzQuestionController extends EgovFileMngUtil {
                 "&currPage=" + qstListVO.getCurrPage();
 		
 		String curDate = EgovDateUtil.getTodayTime();
+		String curDate1 = EgovDateUtil.getCurrentDate("");
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(itemID));
 		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO);
-
+		
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemID));
@@ -3185,7 +3186,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         } else {
         		resultYN = false;
         }*/
-		SimpleDateFormat s = new SimpleDateFormat("YYYY-MM-dd");
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         String pollStartDate = s.parse(qstUserPollItemVO.getPollStartDate()).toString(); 
         pollEndDate = s.parse(qstUserPollItemVO.getPollEndDate()).toString(); 
         String uploadSDate = isoUTFDate(pollStartDate).toString();
@@ -3199,6 +3200,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("resultYN", resultYN);
 		model.addAttribute("saveFlg", saveFlg);
 		model.addAttribute("mPostDate", curDate);
+		model.addAttribute("mPostDate1", curDate1);
 		return "/ezQuestion/qstChangePermission";
 	}
 	
@@ -3238,18 +3240,29 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 즉시마감 실행 함수
 	 */
 	@RequestMapping("/ezQuestion/callEndPoll.do")
-	public void callEndPoll(Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		String brdID = "5";
-		String itemID = "";
+	public String callEndPoll(Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		String brdID = "";
+		String itemNo = "";
 		String endDate = "";
+		String receveStr2 = "";
+		
+		if(req.getParameter("brdID") != null) 
+			brdID = req.getParameter("brdID");
 		
 		if(req.getParameter("itemNo") != null) 
-		itemID = req.getParameter("itemNo");
+			itemNo = req.getParameter("itemNo");
+		
+		if(req.getParameter("receveStr2") != null) 
+			receveStr2 = req.getParameter("receveStr2");
 
 		if(req.getParameter("hidEndPoll").equals("1")){
-			 endDate = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).toString();
+			 endDate = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new java.util.Date()).toString();
 		}
-		ezQuestionService.updatePollEndDate(Integer.parseInt(brdID), Integer.parseInt(itemID), endDate, req.getParameter("hidEndPoll"));
+		logger.debug("endDate="+endDate);
+		//ezQuestionService.updatePollEndDate(Integer.parseInt(brdID), Integer.parseInt(itemNo), endDate, req.getParameter("hidEndPoll"));
+		ezQuestionService.updateTblPollItem(endDate, Integer.parseInt(brdID), Integer.parseInt(itemNo));
+		ezQuestionService.updateTblPollPermission(req.getParameter("hidEndPoll"), Integer.parseInt(brdID), Integer.parseInt(itemNo));
+		return "redirect:/ezQuestion/qstList.do?"+receveStr2;
 	}
 	
 	/**

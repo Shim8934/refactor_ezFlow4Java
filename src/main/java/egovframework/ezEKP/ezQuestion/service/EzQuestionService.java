@@ -173,4 +173,8 @@ public interface EzQuestionService {
 	
 	public void questionDelete1(int brdID, int itemNo, int quesNo) throws Exception;
 	
+	public void updateTblPollItem(String endDate, int brdID, int itemNo) throws Exception;
+	
+	public void updateTblPollPermission(String endFlag, int brdID, int itemNo) throws Exception;
+	
 }
