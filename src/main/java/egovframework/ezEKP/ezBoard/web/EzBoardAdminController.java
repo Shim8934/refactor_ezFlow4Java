@@ -84,7 +84,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		if (request.getParameter("BoardID") != null) {
 			redirectBoardID = request.getParameter("BoardID");
-			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID);
+			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 
 			sb.append("<DATA>");
 			for (int i = 0; i < leftBoardList.size(); i++) {
@@ -170,7 +170,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 하위게시판등록 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardCreate.do")
-	public String boardCreate(HttpServletRequest request, Model model) throws Exception {
+	public String boardCreate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -179,7 +179,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardGroupID = request.getParameter("boardGroupID");
 		String parentBoardName = "";
 
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID);
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 
 		if (lang == "2" && !boardPropertyVO.getBoardName2().equals("")) {
 			parentBoardName = boardPropertyVO.getBoardName2();
@@ -223,11 +223,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판순서조정 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardOrder.do")
-	public String boardOrder(HttpServletRequest request, Model model) throws Exception {
+	public String boardOrder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardID = request.getParameter("boardID");
 
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
 		model.addAttribute("upperBoardID", parentBoardID);
 		model.addAttribute("boardName", boardPropertyVO.getBoardName());
@@ -254,7 +254,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		String upperBoardID = request.getParameter("upperBoardID");
-		String boardTree = ezBoardService.getBoardTree(upperBoardID,	user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
+		String boardTree = ezBoardService.getBoardTree(upperBoardID,	user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
 
 		return boardTree;
 	}
@@ -269,9 +269,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, user.getTenantId());
 		
-		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "");
+		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {
@@ -487,12 +487,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판이동 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMove.do")
-	public String boardMove(HttpServletRequest request, Model model) throws Exception {
+	public String boardMove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String hasSubBoard = "";
 
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
 		if (boardID.equals(boardGroupID)) {
 			hasSubBoard = "1";
@@ -535,7 +535,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardProperty.do")
-	public String boardProperty(HttpServletRequest request,	HttpServletResponse response, Model model) throws Exception {
+	public String boardProperty(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request,	HttpServletResponse response, Model model) throws Exception {
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -545,7 +545,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String adminType = request.getParameter("adminType");
 		String style = "";
 
-		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID);
+		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
 		if (boardPropertyVO.getBoardName2() == null	|| boardPropertyVO.getBoardName2().equals("")) {
 			boardPropertyVO.setBoardName2(boardPropertyVO.getBoardName1());
@@ -717,7 +717,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판 권한설정 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardACL.do")
-	public String boardACL(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public String boardACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		String boardID = request.getParameter("boardID");
 		String parentBoardID = request.getParameter("parentBoardID");
 		String adminType = request.getParameter("adminType");
@@ -727,7 +727,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pAccessLevel = request.getParameter("accessLevel");
 		String strUserLang = "";
 
-		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID);
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		String boardName = boardProperty.getBoardName();
 
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID);
@@ -785,11 +785,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/getACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getACL(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String getACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String boardID = request.getParameter("boardID");
 		String accessID = request.getParameter("accessID");
 
-		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID);
+		BoardPropertyVO boardProperty = ezBoardAdminService.getACL(boardID, accessID, userInfo.getTenantId());
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NODES>");

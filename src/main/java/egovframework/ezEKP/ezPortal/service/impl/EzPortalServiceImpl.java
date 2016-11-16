@@ -2378,10 +2378,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getBoardProperty (String pBoardID, String lang) {
+	public String getBoardProperty (String pBoardID, String lang, int tenantID) {
 		String boardInfo = "";
 		try {
-			BoardPropertyVO result = ezBoardService.getBoardProperty(pBoardID);
+			BoardPropertyVO result = ezBoardService.getBoardProperty(pBoardID, tenantID);
 			if (result.getBoardName() != null && !result.getBoardName().equals("")) {
 				if (lang.equals("1")) {
 					boardInfo = result.getBoardName() + ":" + result.getGuBun();

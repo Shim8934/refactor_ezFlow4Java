@@ -119,9 +119,42 @@
 		]]>
 	</select>
 	
-	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3" remapResults="true">
-		{CALL EZBOARDSTD.EZSP_GETMYBOARDTREE_GET3(#v_PUSERID#, #v_PTREEUPPER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3" remapResults="true"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GETMYBOARDTREE_GET3(#v_PUSERID#, #v_PTREEUPPER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3">
+		<![CDATA[
+			SELECT 
+				TREEID ,
+             	USERID ,
+             	TREENAME ,
+             	TREENAME2 ,
+             	TREELEVEL ,
+             	TREESTEP ,
+             	TREEUPPER ,
+             	(SELECT 
+             		COUNT(*)
+     			FROM 
+     				EZBOARDSTD.TBL_Board_MyTree 
+    			WHERE  
+    				TENANT_ID = #v_TENANTID#
+    			AND
+    				TREEUPPER = A.TREEID) CHILDCNT,
+             	TREEBOARDID 
+        	FROM 
+        		EZBOARDSTD.TBL_Board_MyTree A
+       		WHERE  
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			( USERID = #v_PUSERID#
+                  OR USERID = 'everyone' )
+            AND 
+            	TREEUPPER = #v_PTREEUPPER#
+        	ORDER BY 
+        		TREESTEP ASC
+		]]>
+	</select>
 		
 <!-- 	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#,  -->
@@ -449,6 +482,8 @@
 	       FROM 
 	        	ezBoardSTD.TBL_BOARD_BOARDMANAGE 
 	       WHERE  
+	       		TENANT_ID = #tenantID#
+	       AND
 	       		boardid = #pBoardID# 
 	       AND 
 	       		accessid = #userDeptPath# 

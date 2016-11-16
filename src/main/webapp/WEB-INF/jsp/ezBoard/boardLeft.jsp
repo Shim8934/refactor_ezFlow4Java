@@ -265,14 +265,27 @@
 		        treeNode.LoadFromID(TreeIdx);
 
 		        xmlRtn = GetMyBoardItem(treeNode.GetNodeData("DATA1"));
-		        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
-		            if (CrossYN()) {
-		                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-		            }
-		            else {
-		                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
-		            }
-		        }
+		        
+		        try {
+		        	if (SelectNodes(xmlRtn, "TREEVIEWDATA/NODE/VALUE").length > 0) {
+			            if (CrossYN()) {
+			                xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("TREEVIEWDATA")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+			            }
+			            else {
+			                xmlRtn.selectNodes("TREEVIEWDATA/NODE")[0].appendChild(xmlRtn.selectNodes("TREEVIEWDATA/NODE/VALUE")[0]);
+			            }
+			        } 
+				} catch (e) {
+			        if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
+			            if (CrossYN()) {
+			                xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+			            }
+			            else {
+			                xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+			            }
+			        }
+				}
+		        
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);

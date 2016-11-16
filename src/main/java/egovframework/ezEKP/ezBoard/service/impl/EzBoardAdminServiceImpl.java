@@ -223,11 +223,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception{
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PUSERID", userID);
 		map.put("v_PTREEUPPER", pRootTreeID);
+		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardAdminDAO.getMyBoardTree_get3(map);
 	}
@@ -273,11 +273,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception{
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("pBoardID", pBoardID);
 		map.put("userDeptPath", userDeptPath);
+		map.put("tenantID", tenantID);
 		
 		return ezBoardAdminDAO.getACL(map);
 	}

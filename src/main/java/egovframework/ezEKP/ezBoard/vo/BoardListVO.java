@@ -134,6 +134,8 @@ public class BoardListVO {
 	private String fileContent;
 	/** 실제경로*/
 	private String realPath;
+	/** tenantID*/
+	private int tenantID;
 	
 	public int getrNum() {
 		return rNum;
@@ -530,6 +532,12 @@ public class BoardListVO {
 	}
 	public void setRealPath(String realPath) {
 		this.realPath = realPath;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 	
 }

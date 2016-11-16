@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -85,16 +85,17 @@
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();
-		    	$.ajax({
+		        $.ajax({
 					type : "POST",
 					dataType : "text",
-					async : false,
-					url : "/ezBoard/getBoardList.do",	        			
-					data : { boardType : pBoardType, 
-							 boardId : pBoardID, 
-							 pageNum : CurPage, 
-							 orderCell : OrderCell, 
-							 orderOption : OrderOption},
+					async : true,
+					url : "/ezBoard/getBoardList.do",
+					data : { boardType   : pBoardType, 
+							 boardId 	 : pBoardID, 
+							 pageNum 	 : CurPage, 
+							 orderCell 	 : OrderCell, 
+							 orderOption : OrderOption
+							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
 					}        			
@@ -105,7 +106,7 @@
 		    var firstFlag = false;
 		    var allListCnt = "";
 		    function getBoardList_after(xml) {
-		        try {
+// 		        try {
 		            if (GetElementsByTagName(SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA"), "ROW").length == 0) {
 		                if (CurPage > 1) {
 		                    CurPage = CurPage - 1;
@@ -201,11 +202,10 @@
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-		        }
-		        catch (e) {
-		        	alert(1000);
-		            alert("getBoardList_after : " + e.description);
-		        }
+// 		        }
+// 		        catch (e) {
+// 		            alert("getBoardList_after : " + e.description);
+// 		        }
 		    }
 		
 		    var BlockSize = 10;
