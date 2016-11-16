@@ -185,8 +185,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
-		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		//java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 		Date startDate;
 		Date endDate;
 		Date sysDate;
@@ -199,7 +199,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
 			strbuilder = new StringBuilder();
-			
+			logger.debug("startDate="+String.valueOf(startDate));
+			logger.debug("endDate="+String.valueOf(endDate));
 			if(compareStart <= 0 && compareEnd >= 0){
 				strbuilder.append("[진행중] ");
 				strbuilder.append(qst.getTitle()); 
