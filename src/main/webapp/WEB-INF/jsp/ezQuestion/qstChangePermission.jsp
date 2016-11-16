@@ -252,15 +252,14 @@
 	        	if (L_SearchStartDt.length > 10) {
 	            	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	}
-alert("L_SearchStartDt="+L_SearchStartDt);
+
 	        	var m_PollStartDate = L_SearchStartDt;
 	        	var tempS = m_PollStartDate.split("-");
 	        	var szSYear = tempS[0];
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay;
-console.log("m_PollStartDate="+m_PollStartDate);
-console.log("m_PostDate="+m_PostDate);
+
 	        	if (m_PollStartDate > m_PostDate) {
 		            alert("<spring:message code='ezQuestion.t204'/>");
 		            return;
