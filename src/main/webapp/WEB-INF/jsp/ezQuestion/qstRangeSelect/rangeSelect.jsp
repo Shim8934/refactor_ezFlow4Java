@@ -637,15 +637,14 @@
                 	//lastindex = deptlist.length;
                 	var pVaule = "";
                 	
-                	 //userInfo 부분 추가
-                    	pVaule = CurrNM;
-                	
-                	
+                	//userInfo 부분 추가
+                	 <%String userLang = (String)request.getAttribute("userLang"); %>
+                	 if ("<%= userLang %>" == "1") {
+            	        pVaule = CurrNM;
+                	} else {
 	                    pVaule = CurrNM2;
-					 
-                	//newoption = new Option(pVaule,
-                	//    CurrID + "\t" + CurrNM + "\t" + CurrNM2);
-                	//deptlist.options[lastindex] = newoption;
+    	            }
+                	 
 	                pparsingXML2 = "";
     	            pparsingXML = "";
         	        pparsingXML2 = "<LISTVIEWDATA><ROWS>";
@@ -692,15 +691,13 @@
             	    var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
 	                //lastindex = memberlist.length;
     	            var pVaule = "";
-        	       <%--  if ("<%= userinfo.lang %>" == "1") {
+    	             
+        	       if ("<%= userLang %>" == "1") {
             	        pVaule = CurrNM;
-                	}
-                	else {
+                	} else {
 	                    pVaule = CurrNM2;
-    	            } --%>
-        	        //newoption = new Option(pVaule,
-            	    //    CurrID + "\t" + CurrNM + "\t" + CurrNM2);
-                	//memberlist.options[lastindex] = newoption;
+    	            } 
+        	        
 	                var _listview = new ListView();
     	            _listview.LoadFromID("MListView");
 	                pparsingXML2 = "";
