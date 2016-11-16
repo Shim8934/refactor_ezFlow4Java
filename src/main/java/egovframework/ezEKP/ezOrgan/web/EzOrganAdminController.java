@@ -698,7 +698,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/personPicture.do")
-	public String personPicture(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String personPicture(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		return "admin/ezOrgan/personPicture";
 	}
 	
