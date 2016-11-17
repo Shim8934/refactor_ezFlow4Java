@@ -1445,6 +1445,41 @@ public class EzQuestionController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자설문 설문생성 파일첨부 실행 함수
+	 */
+	@RequestMapping(value="/ezQuestion/attachFileDeleteNonActX.do")
+	public String attachFileDeleteNonActX(HttpServletRequest req,Model model) throws Exception {
+		String pIndex = "";
+		String pQstType = "";
+		String pQstPath = "";
+		
+		if (req.getParameter("QstType_delFile") != null && !req.getParameter("QstType_delFile").equals("")) {
+			pQstType = req.getParameter("QstType_delFile");
+		}
+		if (req.getParameter("QstPath_delFile") != null && !req.getParameter("QstPath_delFile").equals("")) {
+			pQstPath = req.getParameter("QstPath_delFile");
+		}
+		if (req.getParameter("QstIndex_delFile") != null && !req.getParameter("QstIndex_delFile").equals("")) {
+			pIndex = req.getParameter("QstIndex_delFile");
+		}
+		
+		if (pQstPath != null && !pQstPath.trim().equals("")) {
+			if (new File(pQstPath).exists()) {
+				new File(pQstPath).delete();
+				if (pQstType.equals("1")) {
+					String pThumbnailPath = pQstPath.substring(0, pQstPath.lastIndexOf(".")) + "_ThumbnailImage" + pQstPath.substring(pQstPath.lastIndexOf("."));
+					if (new File(pThumbnailPath).exists()) {
+						new File(pThumbnailPath).delete();
+					}
+				}
+			}
+		}
+		
+		model.addAttribute("pIndex", pIndex);
+		return "/ezQuestion/qstAttachFileDeleteNonActX";
+	}
+		
+	/**
 	 * 전자설문 설문생성 임시저장 실행 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstTempSave.do")
