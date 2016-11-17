@@ -28,7 +28,7 @@ public interface EzBoardService {
 	
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
 	
-	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception;
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
 	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang) throws Exception;
 	
@@ -54,7 +54,7 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception;
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
 	
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception;
 	
@@ -84,23 +84,23 @@ public interface EzBoardService {
 
 	public BoardConfigVO getBoardList_Config(String userId, int tenantID) throws Exception;
 	
-	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception;
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, int tenantID) throws Exception;
 	
-	public BoardListVO getItemInfo(String itemID) throws Exception;
+	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception;
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception;
 	
-	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID) throws Exception;
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, int tenantID) throws Exception;
 	
 	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
 	public String get_parentBoardName(String BoardIdList, int boardIdListCount, String primary, int tenantID, Locale locale) throws Exception;
 	
-	public String checkForm(String boardID, String mode) throws Exception;
+	public String checkForm(String boardID, String mode, int tenantID) throws Exception;
 
-	public String checkBackGroundImage(String boardID) throws Exception;
+	public String checkBackGroundImage(String boardID, int tenantID) throws Exception;
 
-	public String brdCheckIfHasReply(String itemIDs) throws Exception;
+	public String brdCheckIfHasReply(String itemID, int tenantID) throws Exception;
 	
 	public String getNoticePostItemAll(String boardID) throws Exception;
 	
@@ -142,9 +142,9 @@ public interface EzBoardService {
 	
 	public int getNoticePostItemCount(BoardVO boardVO) throws Exception;
 
-	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception;
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception;
 	
-	public int getCheckApprUserList(String id, String itemID) throws Exception;
+	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
 	
@@ -174,7 +174,7 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception;
+	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName, int tenantID) throws Exception;
 	
 	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
 	

@@ -453,8 +453,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception {
-		return ezBoardAdminDAO.getBoardAttribute(boardID);
+	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+		
+		return ezBoardAdminDAO.getBoardAttribute(map);
 	}
 	
 	@Override

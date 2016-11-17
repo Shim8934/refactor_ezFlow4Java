@@ -171,6 +171,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardCreate.do")
 	public String boardCreate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -224,6 +226,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardOrder.do")
 	public String boardOrder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardID = request.getParameter("boardID");
 
@@ -488,6 +492,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMove.do")
 	public String boardMove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String hasSubBoard = "";
@@ -536,6 +542,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardProperty.do")
 	public String boardProperty(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request,	HttpServletResponse response, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String lang = config.getProperty("config.primary");
 		String use_multiData = config.getProperty("config.Use_MultiData");
 		String lang_primary = config.getProperty("config.lang_Primary" + lang);
@@ -596,8 +604,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/getAttribute.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getAttribute(HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception {
-		List<BoardAttributeVO> list = ezBoardAdminService.getBoardAttribute(boardAttributeVO.getBoardID());
+	public String getAttribute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, BoardAttributeVO boardAttributeVO) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<BoardAttributeVO> list = ezBoardAdminService.getBoardAttribute(boardAttributeVO.getBoardID(), userInfo.getTenantId());
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROWS>");
@@ -718,6 +728,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardACL.do")
 	public String boardACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String parentBoardID = request.getParameter("parentBoardID");
 		String adminType = request.getParameter("adminType");
@@ -786,6 +798,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezBoard/getACL.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String accessID = request.getParameter("accessID");
 

@@ -479,7 +479,7 @@
                                AND 
                                		itemid = A.itemid
                                AND 
-                               		ReadDate > TO_CHAR(SYSDATE - 5,'YYYY-MM-DD HH24:MI:SS') ) )
+                               		ReadDate > TO_DATE(SYSDATE - 5,'YYYY-MM-DD HH24:MI:SS') ) )
             AND 
             	A.StartDate < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
             AND 
@@ -514,9 +514,62 @@
 		]]>
 	</select>
 	
-	<procedure id="EzBoardDAO.getItemInfo" parameterClass="String" resultClass="BoardListVO">
-		{CALL EZBOARDSTD.EZSP_GETITEMINFO(#itemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.getItemInfo" parameterClass="String" resultClass="BoardListVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GETITEMINFO(#itemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoard.getBoardItem" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				itemid 
+            FROM 
+            	EZBOARDSTD.TBL_Board_Item 
+            WHERE
+            	TENANT_ID = #tenantID#
+            AND  
+            	ITEMID = #itemID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO">
+		<isNotNull property="tempString">
+			<![CDATA[
+				SELECT 
+					A.Title Title ,
+                    GUBUN ,
+                    A.BoardID BoardID  ,
+                    BOARDNAME ,
+                    A.WriterName,
+                    A.WriterName2,
+                    A.CONTENTLOCATION
+                FROM 
+                	EZBOARDSTD.TBL_Board_Item A
+                JOIN 
+                	EZBOARDSTD.TBL_Board_BoardInfo B   
+                ON 
+                	A.tenant_id = B.tenant_id
+                AND
+                	A.BoardID = B.BoardID
+                WHERE
+                	A.tenant_id = #tenantID#
+                AND  
+                	A.ItemID = #itemID#
+			]]>
+		</isNotNull>
+		<isNull property="tempString">
+			<![CDATA[
+				SELECT 
+					BOARDID, 
+                    CONTENTLOCATION 
+              	FROM 
+              		EZBOARDSTD.TBL_Board_Item_temp 
+              	WHERE  
+              		TENANT_ID = #tenantID#
+              	AND
+              		ITEMID = #itemID#
+			]]>
+		</isNull>
+	</select>
 	
 	<procedure id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		{CALL EZBOARDSTD.EZSP_BRDGETREADERLIST(#boardID#, #itemID#, #userID#, #lang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -630,9 +683,82 @@
 		]]>
 	</select>
 	
-	<procedure id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
-		{CALL EZBOARDSTD.EZSP_GETBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM 
+				( SELECT 
+					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
+	   				A.BOARDID,
+	   				A.ITEMID,
+	   				A.WRITERID,
+	   				A.WRITERNAME,
+	   				A.WRITERDEPTNAME,
+	   				A.WRITERCOMPANYNAME,
+	   				A.STARTDATE,
+	   				A.WRITEDATE,
+	   				A.PARENTWRITEDATE,
+	   				A.IMPORTANCE,
+	   				A.TITLE,
+	   				A.READCOUNT,
+	   				A.ATTACHMENTS,
+	   				A.ITEMLEVEL,
+	   				A.ABSTRACT,
+	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+	   				A.EXTENSIONATTRIBUTE5,
+	   				A.WRITERNAME2,
+	   				A.WRITERDEPTNAME2,
+	   				A.WRITERCOMPANYNAME2,
+	   				(SELECT 
+	                	COUNT(*)  
+     				FROM 
+     					EZBOARDSTD.TBL_Board_OneLineReply 
+    				WHERE  
+    					TENANT_ID = A.TENANT_ID
+    				AND
+    					ITEMID = A.ItemID) ONELINECNT,
+	   				A.UPPERITEMIDTREE,
+	   				A.DOCNO,
+	   			    '' AS NOTICE,
+	   				A.MAINCONTENT,
+	   				A.EXTENSIONATTRIBUTE6,
+	   				A.EXTENSIONATTRIBUTE7,
+	   				A.EXTENSIONATTRIBUTE8,
+	   				A.EXTENSIONATTRIBUTE9,
+	   				A.EXTENSIONATTRIBUTE10 
+   				  FROM 
+   				  	EZBOARDSTD.TBL_BOARD_ITEM A 
+   				  LEFT OUTER JOIN 
+   				  	( SELECT 
+   				  		COUNT(USERID) AS TOTALCOUNT, 
+   				  		ITEMID,
+   				  		TENANT_ID 
+   					  FROM 
+   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+   					  WHERE 
+   					  	TENANT_ID = #v_TENANTID#
+   					  AND
+   					  	USERID = #v_PUSERID# 
+   					  AND 
+   					  	BOARDID = #v_PBOARDID#
+   					  GROUP BY 
+   					  	ITEMID, TENANT_ID ) D 
+   				  ON 
+   				  	A.TENANT_ID = D.TENANT_ID
+   				  AND
+   				  	A.ITEMID = D.ITEMID
+   				  WHERE
+   				  	A.TENANT_ID = #v_TENANTID#
+   				  AND 
+   				  	BOARDID = #v_PBOARDID# 
+   				  $v_STRSQL$
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_GETQNABOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #v_ADMINTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -1274,13 +1400,110 @@
 		{CALL EZBOARDSTD.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
-		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardDAO.getBrdGetItemInfoTemp" parameterClass="Map" resultMap="getBrdGetItemInfoTemp">
-		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO_TEMP(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
+		<![CDATA[
+			SELECT
+				ITEMID ,
+            	WRITERID ,
+	            WRITERNAME ,
+	            WRITERNAME2 ,
+	            WRITERDEPTNAME ,
+	            WRITERDEPTNAME2 ,
+	            WRITERCOMPANYNAME ,
+	            WRITERCOMPANYNAME2 ,
+	            WRITEDATE ,
+	            PARENTWRITEDATE ,
+	            IMPORTANCE ,
+	            TITLE ,
+	            CONTENTLOCATION ,
+	            STARTDATE ,
+	            ENDDATE ,
+	            ABSTRACT ,
+	            ATTACHMENTS ,
+	            UPPERITEMIDTREE ,
+	            ITEMLEVEL ,
+	            COPIEDITEM ,
+	            EXTENSIONATTRIBUTE1 ,
+	            EXTENSIONATTRIBUTE2 ,
+	            EXTENSIONATTRIBUTE3 ,
+	            EXTENSIONATTRIBUTE32 ,
+	            EXTENSIONATTRIBUTE4 ,
+	            EXTENSIONATTRIBUTE5 ,
+	            MAINCONTENT ,
+	            A.APPRFLAG  ,
+	            B.Gubun ,
+	            extensionAttribute6 ,
+	            extensionAttribute7 ,
+	            extensionAttribute8 ,
+	            extensionAttribute9 ,
+	            extensionAttribute10 ,
+	            A.BoardID 
+	        FROM 
+	        	EZBOARDSTD.TBL_Board_Item A
+            JOIN 
+            	EZBOARDSTD.TBL_Board_BoardInfo B   
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BoardID = B.BoardID
+       		WHERE
+       			TENANT_ID = #v_TENANTID#
+       		AND  
+       			ItemID = #v_pItemID#
+		]]>
+	</select>
+	
+<!-- 	<procedure id="EzBoardDAO.getBrdGetItemInfoTemp" parameterClass="Map" resultMap="getBrdGetItemInfoTemp"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO_TEMP(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardDAO.getBrdGetItemInfoTemp" parameterClass="Map" resultMap="getBrdGetItemInfoTemp">
+		<![CDATA[
+			SELECT 
+				ItemID ,
+	            WriterID ,
+	            WriterName ,
+	            WriterName2 ,
+	            WriterDeptName ,
+	            WriterDeptName2 ,
+	            WriterCompanyName ,
+	            WriterCompanyName2 ,
+	            WriteDate ,
+	            ParentWriteDate ,
+	            Importance ,
+	            Title ,
+	            ContentLocation ,
+	            StartDate ,
+	            EndDate ,
+	            Abstract ,
+	            Attachments ,
+	            UpperItemIDTree ,
+	            ItemLevel ,
+	            copiedItem ,
+	            ExtensionAttribute1 ,
+	            ExtensionAttribute2 ,
+	            ExtensionAttribute3 ,
+	            ExtensionAttribute32 ,
+	            ExtensionAttribute4 ,
+	            ExtensionAttribute5 ,
+	            MainContent ,
+	            extensionAttribute6 ,
+	            extensionAttribute7 ,
+	            extensionAttribute8 ,
+	            extensionAttribute9 ,
+	            extensionAttribute10 
+	        FROM 
+	        	EZBOARDSTD.TBL_Board_Item_temp 
+       		WHERE
+       			TENANT_ID = #v_TENANTID#
+       		AND  
+       			ItemID = #v_pItemID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -1358,17 +1581,143 @@
 		]]>
 	</select>
 	
-	<procedure id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_GETQNABRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#, #v_PADMINTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+	<select id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_PTYPE" compareValue="1">
+			<![CDATA[
+				SELECT 
+					COUNT(ITEMID)  TOTALCOUNT
+             		FROM 
+             			EZBOARDSTD.TBL_Board_Item 
+            		WHERE  
+            			TENANT_ID = #v_TENANTID#
+            		AND
+            			BOARDID = #v_PBOARDID#
+                   AND 
+                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   AND 
+                   	ENDDATE > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+			]]>
+               <isEqual property="v_PADMINTYPE" compareValue="false">
+                   AND 
+                   	TOPWRITERID = #v_PUSERID#
+			</isEqual>
+		</isEqual>
+		<isEqual property="v_PTYPE" compareValue="2">
+			<![CDATA[
+				SELECT 
+					COUNT(A.ItemID)  TOTALCOUNT
+                	FROM 
+                		EZBOARDSTD.TBL_Board_Item A
+                   LEFT JOIN 
+                   	( SELECT 
+                   		COUNT(USERID)  TOTALCOUNT  ,
+                   		ITEMID,
+                   		TENANT_ID 
+                   	  FROM 
+                   	  	EZBOARDSTD.TBL_Board_Item_Read
+                   	  WHERE
+                   	  	TENANT_ID = #V_TENANTID#
+                   	  AND  
+                   	  	USERID = #v_PUSERID#
+                         AND 
+                         	BOARDID = #v_PBOARDID#
+                         GROUP BY 
+                         	ITEMID, TENANT_ID ) D   
+                   ON 
+                   	A.TENANT_ID = D.TENANT_ID
+                   AND
+                   	A.ItemID = D.ITEMID
+               	WHERE
+               		A.TENANT_ID = #v_TENANTID#
+               	AND  
+               		BOARDID = #v_PBOARDID#
+                   AND 
+                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   AND 
+                   	ENDDATE > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   AND 
+                   	D.TOTALCOUNT IS NULL
+			]]>
+               <isEqual property="v_PADMINTYPE" compareValue="false">
+                   AND 
+                   	TOPWRITERID = #v_PUSERID#
+			</isEqual>
+		</isEqual>
+		<isEqual property="v_PTYPE" compareValue="3">
+			<![CDATA[
+				SELECT 
+					COUNT(ITEMID)  TOTALCOUNT
+                   FROM 
+                   	EZBOARDSTD.TBL_Board_Item 
+                  	WHERE  
+                  		TENANT_ID = #v_TENANTID#
+                  	AND
+                  		BOARDID = #v_PBOARDID#
+                   AND 
+                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   AND 
+                   	ENDDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+			]]>
+			<isEqual property="v_PADMINTYPE" compareValue="false">
+                   AND 
+                   	TOPWRITERID = #v_PUSERID#
+			</isEqual>
+		</isEqual>
+	</select>
 	
-	<procedure id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+	<select id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				SELECT 
+					COUNT(BOARDID) CNT 
+                FROM 
+                	EZBOARDSTD.TBL_Board_BoardInfo 
+                WHERE  
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	BOARDID = #v_PBOARDID#
+                AND 
+                	FORMFLAG = 'Y'
+                AND 
+                	FORMLOCATION IS NOT NULL
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				SELECT 
+					COUNT(BOARDID) CNT 
+               	FROM 
+               		EZBOARDSTD.TBL_Board_BoardInfo 
+               	WHERE  
+               		TENANT_ID = #v_TENANTID#
+               	AND
+               		BOARDID = #v_PBOARDID#
+               	AND 
+               		FORMLOCATION IS NOT NULL
+			]]>
+		</isNotEqual>
+	</select>
+	
+<!-- 	<procedure id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(ItemID)
+        	FROM 
+        		EZBOARDSTD.TBL_Board_Item 
+       		WHERE  
+       			UpperItemIDTree LIKE %#itemID#%
+            AND 
+            	ItemID <> #itemID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#, #v_PTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -1737,9 +2086,49 @@
 		</isEqual>
 	</select>
 	
-	<procedure id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_CHECKITEMID(#v_ITEMID#, #v_BOARDTYPE#, #v_ACCESSID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_CHECKITEMID(#v_ITEMID#, #v_BOARDTYPE#, #v_ACCESSID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
+		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				SELECT 
+					COUNT(ACCESSID)  cnt  
+	            FROM 
+	            	EZBOARDSTD.TBL_Board_BoardManage 
+	            WHERE
+	            	TENANT_ID = #v_TENANTID#
+	            AND  
+	            	READ_FG = 'FALSE'
+	            AND 
+	            	ACCESSID = #v_ACCESSID#
+	            AND 
+	            	BOARDID = ( SELECT 
+	            					BOARDID
+	                 			FROM 
+	                 				EZBOARDSTD.TBL_Board_Item 
+	                 			WHERE
+	                 				TENANT_ID = #v_TENANTID#
+	                 			AND  
+	                 				ITEMID = #v_ITEMID# )
+			]]>
+		</isNotEqual>
+		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				SELECT 
+					COUNT(BOARDID)
+              	FROM 
+              		EZBOARDSTD.TBL_Board_Item_temp 
+              	WHERE
+              		TENANT_ID = #v_TENANTID#
+              	AND  
+              		ITEMID = #v_ITEMID#
+                AND 
+                	WRITERID = #v_ACCESSID#
+			]]>
+		</isEqual>
+	</select>
 	
 	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#v_pBoardID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -1778,27 +2167,99 @@
 		{CALL EZBOARDSTD.EZSP_SEARCHBRDMYTOTALITEMCTEMP(#v_PUSERID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SAVEATTACHMENTSINFO(#v_STRITEMID#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.saveAttachInfo" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SAVEATTACHMENTSINFO(#v_STRITEMID#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardDAO.photoSaveDB" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_PHOTOLISTADD(#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#)}
-	</procedure>
+	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_Item_Attachments ( 
+				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
+			)
+       		VALUES ( 
+       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       		)
+		]]>
+	</insert>
 	
-	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
-		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
-										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.photoSaveDB" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_PHOTOLISTADD(#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#)} -->
+<!-- 	</procedure> -->
+
+	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Photo_ImageItem
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				IMAGEID = #v_PIMAGEID#
+		]]>
+	</delete>
 	
-	<procedure id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
-		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_TEMP(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										      #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										      #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#,
-										      #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
-	</procedure>
+	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Photo_ImageItem ( 
+				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 tenant_id 
+			)
+     		VALUES ( 
+     			#v_pImageID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#, -->
+<!-- 										 #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#, -->
+<!-- 										 #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#, -->
+<!-- 										 #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzBoardDAO.getApprFlag" parameterClass="BoardListVO">
+		<![CDATA[
+			SELECT
+				apprflag
+			FROM 
+				EZBOARDSTD.TBL_Board_BoardInfo
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				boardid = #boardID#
+		]]>
+	</select>
+	
+	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
+		INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, SYSDATE, <isEqual property="parentWriteDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="parentWriteDate" compareValue="SYSDATE">#parentWriteDate#</isNotEqual>, #importance#, #title#, #contentLocation#, 0, <isEqual property="startDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="startDate" compareValue="SYSDATE">#startDate#</isNotEqual>, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItem2" parameterClass="BoardListVO">
+		INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, SYSDATE, <isEqual property="parentWriteDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="parentWriteDate" compareValue="SYSDATE">#parentWriteDate#</isNotEqual>, #importance#, #title#, #contentLocation#, 0, <isEqual property="startDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="startDate" compareValue="SYSDATE">#startDate#</isNotEqual>, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+<!-- 	<procedure id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_TEMP(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#, -->
+<!-- 										      #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#, -->
+<!-- 										      #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#topWriterID#,#extensionAttribute6#, -->
+<!-- 										      #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)} -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
+			INSERT INTO EZBOARDSTD.TBL_Board_Item_temp ( 
+				ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+			)
+        	VALUES ( 
+        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), <isEqual property="parentWriteDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="parentWriteDate" compareValue="SYSDATE">#parentWriteDate#</isNotEqual>, #importance#, #title#, #contentLocation#, 0, <isEqual property="startDate" compareValue="SYSDATE">TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')</isEqual><isNotEqual property="startDate" compareValue="SYSDATE">#startDate#</isNotEqual>, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item_temp WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
+        	)
+	</insert>
 	
 	<procedure id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
 		{CALL EZBOARDSTD.EZSP_BRDNEWITEM_PHOTO(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
@@ -1867,9 +2328,97 @@
 		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG2(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_LIST#, #v_CONTENT#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzBoardDAO.getBoardItemRead" parameterClass="Map">
+		<isEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+			<![CDATA[
+				SELECT 
+					1
+      			FROM 
+      				DUAL
+      			WHERE 
+      				NOT EXISTS ( SELECT 
+      								ItemID 
+      							 FROM 
+      							 	EZBOARDSTD.TBL_Board_Item_Read 
+                        		 WHERE  
+                        		 	TENANT_ID = #v_TENANTID#
+                        		 AND
+                        		 	ItemID = #v_pItemID#
+                                 AND 
+                                 	UserID = #v_pUserID#
+                                 AND 
+                                 	BoardID = ( SELECT 
+                                 					BoardID 
+                                 				FROM 
+                                 					EZBOARDSTD.TBL_Board_Item
+                                 				WHERE
+                                 					TENANT_ID = #v_TENANTID#
+                                 				AND  
+                                 					ItemID = #v_pItemID# ) )
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+			<![CDATA[
+				SELECT 
+					1
+      			FROM 
+      				DUAL
+      			WHERE 
+      				NOT EXISTS ( SELECT 
+      								ItemID 
+      							 FROM 
+      							 	EZBOARDSTD.TBL_Board_Item_Read 
+                        		 WHERE  
+                        		 	TENANT_ID = #v_TENANTID#
+                        		 AND
+                        		 	ItemID = #v_pItemID#
+                                 AND 
+                                 	UserID = #v_pUserID#
+                                 AND 
+                                 	BoardID = #v_pBoardID# )
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzBoardDAO.getWriterID" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				WriterID
+			FROM 
+				EZBOARDSTD.TBL_Board_Item 
+       		WHERE  
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			ItemID = #v_pItemID#
+		]]>
+	</select>
+	
+	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_Item_Read ( 
+				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate, 								  TENANT_ID 
+			)
+        	VALUES ( 
+        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, TO_DATE(SYSDATE,'yyyy-mm-dd hh24:mi:ss'), #v_TENANTID# 
+        	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.setAsRead2">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_Item
+            SET 
+            	ReadCount = ReadCount + 1
+          	WHERE
+          		TENANTD_ID = #v_TENANTID#
+          	AND  
+          		ItemID = #v_pItemID#
+		]]>
+	</update>
 	
 	<procedure id="EzBoardDAO.setAsReads" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSETASREADS(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
@@ -1899,14 +2448,93 @@
 		{CALL EZBOARDSTD.EZSP_PHOTOLISTUPDATE(#v_ImageID#, #v_BoardID#, #v_FilePath#, #v_FileContent#, #v_OFileName#)}
 	</procedure>
 	
-	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
-		{CALL EZBOARDSTD.EZSP_BRDUPDATEITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#,
-										    #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#,
-										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#readFlag#,#topWriterID#,#extensionAttribute6#,
-										    #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDUPDATEITEM(#itemID#,#boardID#,#writerID#,#writerName#,#writerDeptID#,#writerDeptName#,#writerCompanyID#,#writerCompanyName#,#writeDate#,#parentWriteDate#,#importance#, -->
+<!-- 										    #title#,#contentLocation#,#startDate#,#endDate#,#ABSTRACT#,#hasAttach#,#upperItemIDTree#,#itemLevel#,#extensionAttribute1#,#extensionAttribute2#,#extensionAttribute3#, -->
+<!-- 										    #extensionAttribute4#,#extensionAttribute5#,#docPassword#,#writerName2#,#writerDeptName2#,#writerCompanyName2#,#extensionAttribute32#,#readFlag#,#topWriterID#,#extensionAttribute6#, -->
+<!-- 										    #extensionAttribute7#,#extensionAttribute8#,#extensionAttribute9#,#extensionAttribute10#)} -->
+<!-- 	</procedure> -->
 	
+	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
+			UPDATE EZBOARDSTD.TBL_Board_Item
+		    SET 
+		    	UpdateDate = #writeDate#,
+		    	Importance = #importance#,
+	          	Title = #title#,
+	          	<isEqual property="parentWriteDate" compareValue="SYSDATE">
+		          	ParentWriteDate = SYSDATE,
+	          	</isEqual>
+	          	<isNotEqual property="parentWriteDate" compareValue="SYSDATE">
+		          	ParentWriteDate = #parentWriteDate#,
+	          	</isNotEqual>
+	          	<isEqual property="startDate" compareValue="SYSDATE">
+		          	StartDate = SYSDATE,
+	          	</isEqual>
+	          	<isNotEqual property="startDate" compareValue="SYSDATE">
+		          	StartDate = #startDate#,
+	          	</isNotEqual>
+	          	EndDate = #endDate#,
+	          	Abstract = #ABSTRACT#,
+	          	Attachments = #attachments#,
+	          	ExtensionAttribute1 = #extensionAttribute1#,
+	          	ExtensionAttribute2 = #extensionAttribute2#,
+	          	ExtensionAttribute3 = #extensionAttribute3#,
+	          	ExtensionAttribute4 = #extensionAttribute4#,
+	          	ExtensionAttribute5 = #extensionAttribute5#,
+	          	DocPassWord = #docPassWord#,
+	          	WriterName = #writerName#,
+	          	WriterName2 = #writerName2#,
+	          	ExtensionAttribute32 = #extensionAttribute32#,
+	          	WriterDeptName = #writerDeptName#,
+	          	WriterDeptName2 = #writerDeptName2#,
+	          	WriterCompanyName = #writerCompanyName#,
+	          	WriterCompanyName2 = #writerCompanyName2#,
+	          	extensionAttribute6 = #extensionAttribute6#,
+	          	extensionAttribute7 = #extensionAttribute7#,
+	          	extensionAttribute8 = #extensionAttribute8#,
+	          	extensionAttribute9 = #extensionAttribute9#,
+	          	extensionAttribute10 = #extensionAttribute10#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			ItemID = #itemID#
+	</update>
 	
+	<update id="EzBoardDAO.setInitReadCount" parameterClass="BoardListVO">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_Item
+			SET 
+				ReadCount = 0
+	      	WHERE
+	      		TENANT_ID = #tenantID#
+	      	AND
+	      		ItemID = #itemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setApprFlag" parameterClass="BoardListVO">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_Item
+         	SET 
+         		APPRFLAG = 'N'
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			apprFlag = 'C'
+       		AND
+       			ItemID = #itemID#
+		]]>
+	</update>
+	
+	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_Item_Read
+			WHERE
+				TENANT_ID = #tenantID#
+			AND  
+				ItemID = #itemID#
+		]]>
+	</delete>
 	
 	<procedure id="EzBoardDAO.deleteItem" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_DELETEITEM(#v_STRITEMLIST#, #v_BOARDID#)}
@@ -1966,7 +2594,9 @@
 	        FROM 
 	        	ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS 
 	       	WHERE  
-	       		itemid = #pItemID#
+	       		tenant_id = #tenantID#
+	       	AND
+	       		itemid = #itemID#
        	]]>
 	</select>
 	
@@ -2106,8 +2736,12 @@
 	        JOIN 
 	        	ezBoardSTD.TBL_BOARD_APPRLIST B   
 	        ON 
+	        	A.tenant_id = B.tenant_id
+	        AND
 	        	A.boardid = B.boardid
-	        WHERE  
+	        WHERE
+	        	A.tenant_id = #v_TENANTID#
+	        AND  
 	        	A.itemid = #v_PITEMID#
 	        AND 
 	        	B.appruserid = #v_PUSERID#
@@ -2290,11 +2924,13 @@
 		]]>
 	</update>
 	
-	<delete id="EzBoardDAO.newItem" parameterClass="String">
+	<delete id="EzBoardDAO.newItem" parameterClass="BoardListVO">
 		<![CDATA[
 			DELETE FROM
 				ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS
 	   		WHERE  
+	   			tenant_id = #tenantID#
+	   		AND
 	   			itemid = #itemID#
    		]]>
 	</delete>

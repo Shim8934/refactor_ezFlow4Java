@@ -23,7 +23,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
 	
-	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception;
+	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID) throws Exception;
 	

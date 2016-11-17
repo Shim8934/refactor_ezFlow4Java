@@ -47,8 +47,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception{
-		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetItemAttachmentInfo", pItemID);
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(Map<String, Object> map) throws Exception{
+		return (List<BoardAttachVO>) list("EzBoardDAO.brdGetItemAttachmentInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -196,8 +196,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardPropertyVO) select("EzBoardDAO.getBoardProperty", map);
 	}
 	
-	public BoardListVO getItemInfo(String itemID) {
-		return (BoardListVO) select("EzBoardDAO.getItemInfo", itemID);
+	public BoardListVO getItemInfo(Map<String, Object> map) {
+		return (BoardListVO) select("EzBoardDAO.getItemInfo", map);
 	}
 	
 	public BoardListVO getCopyItem(Map<String, Object> map) throws Exception{
@@ -273,8 +273,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public int getQNABrdTotalItemCount(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getQNABrdTotalItemCount",map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.getQNABrdTotalItemCount",map);
 	}
 	
 	public int getNewItemListCount(Map<String, Object> map) throws Exception{
@@ -290,18 +289,15 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public int getCheckItemID(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getCheckItemID", map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.getCheckItemID", map);
 	}
 	
 	public int checkForm(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.checkForm", map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.checkForm", map);
 	}
 
 	public int brdCheckIfHasReply(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.brdCheckIfHasReply", map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.brdCheckIfHasReply", map);
 	}
 	
 	public int checkBackGroundImage(String boardID) throws Exception{
@@ -367,6 +363,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.brdNewItem", boardListVO);
 	}
 	
+	public void brdNewItem2(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.brdNewItem2", boardListVO);
+	}
+	
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception{
 		insert("EzBoardDAO.brdNewItemTemp", boardListVO);
 	}
@@ -379,8 +379,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.brdNewItemTempPhoto", boardListVO);
 	}
 	
-	public void newItem(String itemID) throws Exception{
-		insert("EzBoardDAO.newItem", itemID);
+	public void newItem(BoardListVO boardListVO) throws Exception{
+		insert("EzBoardDAO.newItem", boardListVO);
 	}
 	
 	public void setAsRead(Map<String, Object> map) throws Exception{
@@ -489,6 +489,42 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	public void deleteTempItem(String strItemID) throws Exception{
 		delete("EzBoardDAO.deleteTempItem1", strItemID);
+	}
+
+	public String getBoardItemRead(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getBoardItemRead", map);
+	}
+
+	public String getWriterID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getWriterID", map);
+	}
+
+	public void setAsRead2(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.setAsRead2", map);
+	}
+
+	public void setInitReadCount(BoardListVO boardListVO) throws Exception{
+		update("EzBoardDAO.setInitReadCount", boardListVO);
+	}
+
+	public void setApprFlag(BoardListVO boardListVO) throws Exception{
+		update("EzBoardDAO.setApprFlag", boardListVO);
+	}
+
+	public void deleteBoardItemRead(BoardListVO boardListVO) throws Exception{
+		delete("EzBoardDAO.deleteBoardItemRead", boardListVO);
+	}
+
+	public void deletePhotoImageItem(Map<String, Object> map) throws Exception{
+		delete("EzBoardDAO.deletePhotoImageItem", map);
+	}
+
+	public String getApprFlag(BoardListVO boardListVO) throws Exception{
+		return (String) select("EzBoardDAO.getApprFlag", boardListVO);
+	}
+
+	public String getBoardItem(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoard.getBoardItem", map);
 	}
 
 }

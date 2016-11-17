@@ -735,6 +735,8 @@ public class EzBoardController extends EgovFileMngUtil{
     @RequestMapping(value = "/ezBoard/getBoardList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
+    	userInfo = commonUtil.userInfo(loginCookie);
+    	
         String boardID = boardVO.getBoardId();
         String boardType = boardVO.getBoardType();
         String mode = boardVO.getMode();
@@ -744,8 +746,6 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardVO.getType() != null && !boardVO.getType().equals("")) {
         	type = boardVO.getType();
         }
-        
-        userInfo = commonUtil.userInfo(loginCookie);
         
         BoardPropertyVO boardInfo = getBoardInfo(boardID,userInfo);
         
@@ -1648,10 +1648,11 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/getSearchBoardList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getSearchBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
     	String returnQuery = "(1=1) ";
     	String mode = boardVO.getMode();
     	
-    	userInfo = commonUtil.userInfo(loginCookie);
     	BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
     	boardVO.setSubFlag("N");
     	boardVO.setSearchQuery(boardVO.getSearchQuery().replace("&lt;", "<").replace("&gt;", ">"));
@@ -2423,7 +2424,7 @@ public class EzBoardController extends EgovFileMngUtil{
             startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount) + 1;
             endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
         }
-        List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(),userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type);
+        List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type, userInfo.getTenantId());
 
         int dlength = boardListItem.size();
         
@@ -2508,6 +2509,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/getSubBoards.do")
 	public void getSubBoards(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardPropertyVO boardInfo, HttpServletRequest req, HttpServletResponse res) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 	    String pRootBoardID = "";
 	    String pSubFlag = "";
 	    int pSelectBy = 0;
@@ -2550,9 +2552,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	            		Node node = nList.item(i);
 	            		
 	            		myFavoriteVO.setBoardId(node.getChildNodes().item(2).getTextContent());
-            			myFavoriteVO.setNowDate(EgovDateUtil.getToday(""));
             			myFavoriteVO.setUserId(userInfo.getId());
             			myFavoriteVO.setType("1");
+            			myFavoriteVO.setTenantID(userInfo.getTenantId());
             			
 	            		if (node.getChildNodes().item(6).getTextContent().equals("4")) {
 	            			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
@@ -2590,6 +2592,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezBoard/saveListOrder.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> saveListOrder(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception {
 		loginVO = commonUtil.userInfo(loginCookie);
+		
         String pUserID = loginVO.getId();
         String pBoardList = request.getParameter("pBoardList");
         String pDelBoardList = request.getParameter("pDelboardList");
@@ -2614,6 +2617,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezBoard/set_TabUse.do")
 	public String set_TabUse(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
 		loginVO = commonUtil.userInfo(loginCookie);
+		
 		String pUserID = loginVO.getId();
 		String pBoardList = request.getParameter("pBoardList");
 		String tabUsed = request.getParameter("tabUsed");
@@ -2635,8 +2639,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
             return true;
-        }
-        else{
+        } else {
             int result = 0;
             boolean rtv = false;
 
@@ -2655,7 +2658,7 @@ public class EzBoardController extends EgovFileMngUtil{
             	boardType = "GENERAL";
             }
             for (int i = 0; i < userDeptPath.split(",").length; i++) {
-            	result = ezBoardService.getCheckItemID(itemID, boardType, userDeptPath.split(",")[i].trim());
+            	result = ezBoardService.getCheckItemID(itemID, boardType, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
             	
                 if (boardType.toUpperCase().equals("GENERAL")) {
                     if (result > 0) {
@@ -2684,6 +2687,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemView.do")
 	public String getBoardItemView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
         String apprFlag = "Y";
         String extenLang = "1";
         String location = "";
@@ -2704,7 +2709,6 @@ public class EzBoardController extends EgovFileMngUtil{
         String pReservedItem = request.getParameter("pReservedItem");
         
         location = request.getParameter("location");
-        userInfo = commonUtil.userInfo(loginCookie);
         
         if (!accessCheck(itemID, location, userInfo)) {
         	return "main/warning";
@@ -2721,14 +2725,14 @@ public class EzBoardController extends EgovFileMngUtil{
         int boardAttrCount = 0; 
         
         if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
-        	boardAttr = ezBoardAdminService.getBoardAttribute(boardID);
+        	boardAttr = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
         	boardAttrCount = boardAttr.size();
         	
             if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
             	extenLang = "2";
             }
         }
-        BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
         
         if (boardItem == null) {
         	return "main/warning";
@@ -2736,7 +2740,7 @@ public class EzBoardController extends EgovFileMngUtil{
         ezBoardService.setAsRead(userInfo, boardID, itemID);
         
         if (boardItem.getApprFlag() != null && boardItem.getApprFlag().equals("N")) {
-		    int checkCnt = ezBoardService.getCheckApprUserList(userInfo.getId(), itemID);
+		    int checkCnt = ezBoardService.getCheckApprUserList(userInfo.getId(), itemID, userInfo.getTenantId());
 		    
 		    if (checkCnt == 0) {
 		    	boardItem.setApprFlag("W");
@@ -2822,6 +2826,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value="/ezBoard/setRead.do")
 	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pBoardID = "";
         String pItemIDList = "";
         
@@ -2832,7 +2837,11 @@ public class EzBoardController extends EgovFileMngUtil{
         	pItemIDList = request.getParameter("itemIDList");
         }
         
-        ezBoardService.setAsReads(userInfo, pBoardID, pItemIDList);
+        String[] itemIDs = pItemIDList.split(";");
+        
+        for (int k = 0; k < itemIDs.length; k++) {
+        	ezBoardService.setAsRead(userInfo, pBoardID, itemIDs[k]);
+        }
 	}
 	
 	/**
@@ -2894,7 +2903,7 @@ public class EzBoardController extends EgovFileMngUtil{
         //추가 항목 가져오는 소스 
         List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
         if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
-        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID);
+        	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
         	if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
         		extenLang = "2";
         	}
@@ -2915,9 +2924,9 @@ public class EzBoardController extends EgovFileMngUtil{
         	expireDays = boardInfo.getExpireDays();
         	if (!mode.equals("new")) {
         		if (!mode.equals("temp")) {
-        			boardListVO = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+        			boardListVO = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
         		} else {
-        			boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
+        			boardListVO = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, userInfo.getTenantId());
         		}
         		if (mode.equals("reply")) {
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
@@ -2973,14 +2982,14 @@ public class EzBoardController extends EgovFileMngUtil{
         	strDate.add(Calendar.MINUTE, 30);
         	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
         }
-        startDateTime = strDate.get(Calendar.YEAR)+ "-"+ (strDate.get(Calendar.MONTH)+1)+"-"+strDate.get(Calendar.DATE)+" "+strDate.get(Calendar.HOUR)+":"+strDate.get(Calendar.MINUTE)+":"+strDate.get(Calendar.SECOND);
+        startDateTime = strDate.get(Calendar.YEAR) + "-" + (strDate.get(Calendar.MONTH)+1) + "-" + strDate.get(Calendar.DATE) + " " + strDate.get(Calendar.HOUR) + ":" + strDate.get(Calendar.MINUTE) + ":" + strDate.get(Calendar.SECOND);
                 
         if (reservedItem.equals("true")) {
         	startDateTime = boardListVO.getStartDate();
         }
         
-        checkForm = ezBoardService.checkForm(boardID, "Y");
-        useBackGround = ezBoardService.checkBackGroundImage(boardID);
+        checkForm = ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId());
+        useBackGround = ezBoardService.checkBackGroundImage(boardID, userInfo.getTenantId());
         
         if (boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")) {
         	boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
@@ -3057,6 +3066,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveItem(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
 		String pMode = "";
@@ -3153,6 +3163,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
 		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		boardListVO.setRealPath(realPath);
+		boardListVO.setTenantID(userInfo.getTenantId());
 		
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
@@ -3263,7 +3274,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath)) {
+			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			boardListVO.setHasAttach("1");
@@ -3349,8 +3360,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	/**
 	 * 게시판 게시물 첨부파일저장 실행 Method
+	 * @param tenantID 
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
         long fileSize = 0;
         String filePath = "";
         String filePath2 = "";
@@ -3406,7 +3418,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
             }
             
-            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName);
+            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName, tenantID);
             temp = null;
         }
         
@@ -3448,6 +3460,7 @@ public class EzBoardController extends EgovFileMngUtil{
         if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {
             for (int i = 0; i < cnt; i++) {
                 String _pFileName = multiFile.get(i).getOriginalFilename();
+                
                 if (_pFileName.indexOf(commonUtil.separator) > 0) {
                     _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
                 }
@@ -3736,7 +3749,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/getItemAttachments.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String getItemAttachments(HttpServletRequest request) throws Exception{
+	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pItemID = "";
         String pTitle = "";
         String pConLocation = "";
@@ -3751,9 +3766,9 @@ public class EzBoardController extends EgovFileMngUtil{
         String strXML = "";
 
         if (pMode != null && (pMode.equals("boardContent") || pMode.equals("boardAttach"))) {
-        	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle);
+        	strXML = getItemAttachmentXML_Retrans(pItemID, realPath, pMode, pConLocation, pTitle, userInfo.getTenantId());
         } else {
-        	strXML = getItemAttachmentXML(pItemID);
+        	strXML = getItemAttachmentXML(pItemID, userInfo.getTenantId());
         }
         
         return strXML;
@@ -3761,9 +3776,10 @@ public class EzBoardController extends EgovFileMngUtil{
 
 	/**
 	 * 게시판 재전송관련 표출 Method
+	 * @param tenantID 
 	 */
-	public String getItemAttachmentXML_Retrans(String pItemID, String filePath, String pMode, String pConLocation, String pTitle) throws Exception{
-		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID);
+	public String getItemAttachmentXML_Retrans(String pItemID, String filePath, String pMode, String pConLocation, String pTitle, int tenantID) throws Exception{
+		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID, tenantID);
 		
 		StringBuilder resultXML = new StringBuilder();
 		resultXML.append("<NODES>");
@@ -3811,9 +3827,10 @@ public class EzBoardController extends EgovFileMngUtil{
 
 	/**
 	 * 게시판 첨부파일관련 표출 Method
+	 * @param tenantID 
 	 */
-	public String getItemAttachmentXML(String pItemID) throws Exception{
-		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID);
+	public String getItemAttachmentXML(String pItemID, int tenantID) throws Exception{
+		List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo(pItemID, tenantID);
 		
 		StringBuilder resultXML = new StringBuilder();
 		resultXML.append("<NODES>");
@@ -3869,15 +3886,22 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/checkIfHasReply.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String checkIfHasReply(HttpServletRequest request) throws Exception{
+	public String checkIfHasReply(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String itemList = "";
-		String itemIDs = ""; 
+		String result = ""; 
 		itemList = request.getParameter("itemList");
+		
 		for (int i = 0; i < itemList.split(";").length; i++) {
 			String tempItemID = itemList.split(";")[i].split(",")[0];
-			itemIDs += tempItemID + ";";
+			
+			result = ezBoardService.brdCheckIfHasReply(tempItemID, userInfo.getTenantId());
+			
+			if (result.equals("TRUE")) {
+				break;
+			}
 		}
-		String result = ezBoardService.brdCheckIfHasReply(itemIDs);
 		
 		return result;
 	}
@@ -3888,6 +3912,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/deleteItem.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String deleteItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = "";
 		String itemList = "";
 		String boardID = "";
@@ -3895,13 +3921,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		String docPath = "";
 		String realPath = commonUtil.getRealPath(request);
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		itemList = request.getParameter("itemList");
 		mode = request.getParameter("mode");
 		boardID = request.getParameter("boardID");
 		
 		if (boardID != null && !boardID.equals("")) {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getTenantId());
 			docPath = boardListVO.getContentLocation();
 			
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
@@ -3918,7 +3943,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		} else {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0]);
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getTenantId());
 			boardID = boardListVO.getBoardID();
 			docPath = boardListVO.getContentLocation();
 			
@@ -4380,9 +4405,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/addToMyBoards.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String addToMyBoards(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String boardID = request.getParameter("boardID");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String boardID = request.getParameter("boardID");
 		String result = ezBoardAdminService.addMyBoards(userInfo.getId(), boardID);
 		
 		return "<RESULT>"+result+"</RESULT>";
@@ -4393,9 +4418,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/myBoardConfig.do")
 	public String myBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String type = request.getParameter("type");
 		String boardID = request.getParameter("boardID");
-		userInfo = commonUtil.userInfo(loginCookie);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -4530,6 +4556,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardItemPreView.do")
 	public String boardItemPreView(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String guBun = request.getParameter("guBun");
 		String boardID = request.getParameter("boardID");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -4538,7 +4565,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
-			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID);
+			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
 			
 			if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
 				extenLang = "2";
@@ -4585,6 +4612,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/itemReadList.do")
 	public String itemReadList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		
@@ -4601,6 +4629,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardItemViewPrintOption.do")
 	public String boardItemViewPrintOption(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String btnStyle1 = "";
@@ -4643,6 +4672,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/boardItemViewPrint.do")
 	public String boardItemViewPrint(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String reservedItem = request.getParameter("reservedItem");
@@ -4652,7 +4682,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int menuCount = 0;
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 		
@@ -4744,6 +4774,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemViewPhoto.do")
 	public String boardItemViewPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = "new";
 		String apprFlag = "Y";
 		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
@@ -4760,7 +4792,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardVO boardAdjacent = null;
 		
 		mode = request.getParameter("mode");
-		userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (!accessCheck(itemID, location, userInfo)) {
 			return "main/warning";
@@ -4771,9 +4802,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "main/warning";
 		}
 		if (mode == null || !mode.equals("temp")) {
-			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID);
+			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
 		} else {
-			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID);
+			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, userInfo.getTenantId());
 		}
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
@@ -4939,6 +4970,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemListThumbnail.do")
 	public String boardItemListThumbnail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = "new";
 		String apprFlag = "Y";
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
@@ -4954,7 +4987,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (request.getParameter("buttonHidden") != null) {
 			buttonHidden = request.getParameter("buttonHidden");
 		}
-		userInfo = commonUtil.userInfo(loginCookie);
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
@@ -4995,7 +5027,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/newBoardItemPhoto.do")
 	public String newBoardItemPhoto(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = userInfo.getDisplayName1();
@@ -5041,6 +5072,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String imageUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = request.getParameter("mode");
 		String pFileLimit = request.getParameter("fileLimit");
 		String uniqueIDs = request.getParameter("uniqueIDs");
@@ -5199,6 +5231,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/saveItemPhoto.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String saveItemPhoto(HttpServletRequest request, @RequestBody String resultXML, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String mode = request.getParameter("mode");
 		String guBun = request.getParameter("guBun");
         String itemIDs = "";
@@ -5207,7 +5241,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "<RESULT>INACCESSIBLE</RESULT>";
@@ -5344,7 +5377,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath)) {
+			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId())) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			boardListVO.setHasAttach("1");
@@ -5444,12 +5477,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/addImageItem.do")
 	public String addImageItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
 		model.addAttribute("itemID", itemID);
@@ -5526,6 +5560,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/modifyImageItem.do")
 	public String modifyImageItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String imageID = request.getParameter("imageID");
 		int page = Integer.parseInt(request.getParameter("page"));
 		String boardID = request.getParameter("boardID");
@@ -5543,7 +5579,6 @@ public class EzBoardController extends EgovFileMngUtil{
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
-        userInfo = commonUtil.userInfo(loginCookie);
         List<BoardAttachVO> photoViewList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow);
         BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 
@@ -5823,19 +5858,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/getBoardInfo.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getBoardInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
-		String boardID = request.getParameter("boardID");
-		
 		userInfo = commonUtil.userInfo(loginCookie);
-		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		String boardID = request.getParameter("boardID");
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		String strXML = "<DATA>";
 		
         strXML += "<BOARDNAME>" + commonUtil.cleanValue(boardInfo.getBoardName()) + "</BOARDNAME>";
         strXML += "<ATTACHLIMIT>" + boardInfo.getAttachSizeLimit() + "</ATTACHLIMIT>";
         strXML += "<EXPIREDAYS>" + boardInfo.getExpireDays() + "</EXPIREDAYS>";
         strXML += "<GUBUN>" + boardInfo.getGuBun() + "</GUBUN>";
-        strXML += "<FORM>" + ezBoardService.checkForm(boardID, "Y") + "</FORM>";
-        strXML += "<BACKIMAGE>" + ezBoardService.checkBackGroundImage(boardID) + "</BACKIMAGE>";
+        strXML += "<FORM>" + ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId()) + "</FORM>";
+        strXML += "<BACKIMAGE>" + ezBoardService.checkBackGroundImage(boardID, userInfo.getTenantId()) + "</BACKIMAGE>";
         strXML += "</DATA>";
         
 		return strXML;
@@ -5978,12 +6012,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/getPreviewItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPreviewItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String location = "";
 		String itemID = "";
 		String mode = "";
 		String boardID = "";
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		location = request.getParameter("location"); 		
 		itemID = request.getParameter("itemID"); 		
 		boardID = request.getParameter("boardID"); 		
@@ -6078,11 +6113,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/apprBoardItem.do", produces="text/plain; charset=utf-8")
 	@ResponseBody
 	public String apprBoardItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String pMod = request.getParameter("mode");
-		String itemList = request.getParameter("itemList");
-		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String pMod = request.getParameter("mode");
+		String itemList = request.getParameter("itemList");
 		String result = ezBoardService.apprItem(userInfo.getId(), itemList, pMod);
 		
 		return result;
@@ -6107,6 +6141,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/saveOneLineReply.do")
 	public void saveOneLineReply(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String prm = egovFileScrty.getPrm();
 		String pre = egovFileScrty.getPre();
 		String itemID = request.getParameter("itemID");
@@ -6117,7 +6153,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		password = EgovFileScrty.decryptRsa(pk, password);
 		password = EgovFileScrty.encryptPassword(password, userInfo.getId());
 		
@@ -6140,10 +6175,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/deleteOneLineReply.do", produces="text/plain; charset=utf-8")
 	@ResponseBody
 	public String deleteOneLineReply(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String guBun = request.getParameter("guBun");
-		String replyID = request.getParameter("replyID");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String guBun = request.getParameter("guBun");
+		String replyID = request.getParameter("replyID");
 		String result = ezBoardService.deleteOneLineReply(userInfo.getId(), replyID, guBun);
 		
 		return result;
@@ -6154,10 +6189,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/checkOneLineOwner.do")
 	public String checkOneLineOwner(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String replyID = request.getParameter("replyID");
-		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String replyID = request.getParameter("replyID");
 		String result = ezBoardService.checkOneLineOwner(replyID, userInfo.getId());
 		
 		return result;
@@ -6169,11 +6203,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/readOneLineReply.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String readOneLineReply(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String userName = "";
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang());
 		
 		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName);

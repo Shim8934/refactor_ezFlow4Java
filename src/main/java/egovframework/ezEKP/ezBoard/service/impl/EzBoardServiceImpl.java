@@ -304,10 +304,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public int getQNABrdTotalItemCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", myFavoriteVO.getBoardId());
-		map.put("v_PNOW", myFavoriteVO.getNowDate());
 		map.put("v_PUSERID", myFavoriteVO.getUserId());
 		map.put("v_PTYPE", myFavoriteVO.getType());
 		map.put("v_PADMINTYPE", myFavoriteVO.getBoardAdmin_FG());
+		map.put("v_TENANTID", myFavoriteVO.getTenantID());
+		
 		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
 
@@ -436,8 +437,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID) throws Exception {
-		return ezBoardDAO.brdGetItemAttachmentInfo(pItemID);
+	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", pItemID);
+		map.put("tenantID", tenantID);
+		
+		return ezBoardDAO.brdGetItemAttachmentInfo(map);
 	}
 
 	@Override
@@ -484,16 +489,46 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type) throws Exception {
+	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {
+		String strSQL = "";
+		
+		if (orderOption1.length() > 0) {
+			if (orderOption1.indexOf("WRITEDATE") > -1) {
+				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
+					orderOption1 =" A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+				} else {
+					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+				}
+			}
+		} else {
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+		}
+		
+		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
+        boardMyFavoriteVO.setBoardId(boardID);
+        boardMyFavoriteVO.setTenantID(tenantID);
+        
+        String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
+        
+        if (tempString != null && !tempString.equals("")) {
+        	strSQL += " AND A.APPRFLAG = 'Y' ";
+        }
+        
+		if (type.equals("1")) {
+			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+		} else if (type.equals("2")) {
+			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
+		} else if (type.equals("3")) {
+			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
-		map.put("v_PBOARDID", boardId);
-		map.put("v_PSTARTROW", startRow);
-		map.put("v_PENDROW", endRow);
-		map.put("v_PTOTALCOUNT", boardCount);
+		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
 		map.put("iv_PORDERBYSUB", orderOption1);
-		map.put("v_PORDERBYMAIN", orderOption2);
-		map.put("v_TYPE", type);
+		map.put("v_STRSQL", strSQL);
+		
 		return ezBoardDAO.getBoardListItem(map);
 	}
 
@@ -726,33 +761,46 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getCheckItemID(String itemID, String boardType, String userDeptPath) throws Exception {
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ITEMID", itemID);
 		map.put("v_BOARDTYPE", boardType);
 		map.put("v_ACCESSID", userDeptPath);
+		map.put("v_TENANTID", tenantID);
+		
 		return ezBoardDAO.getCheckItemID(map);
 	}
 
 	@Override
-	public BoardListVO getBrdGetItemInfo(String boardID, String itemID) throws Exception {
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
 		return ezBoardDAO.getBrdGetItemInfo(map);
 	}
 
 	@Override
-	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID) throws Exception {
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
 	}
 
 	@Override
-	public BoardListVO getItemInfo(String itemID) throws Exception {
-		return ezBoardDAO.getItemInfo(itemID);
+	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		String tempString = ezBoardDAO.getBoardItem(map);
+		
+		map.put("tempString", tempString);
+		
+		return ezBoardDAO.getItemInfo(map);
 	}
 
 	@Override
@@ -833,7 +881,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("iv_pBoardID", boardID);
+		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
 		map.put("v_pUserID", userInfo.getId());
 		map.put("v_pUserName", userInfo.getDisplayName1());
@@ -844,14 +892,28 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pUserDeptName2", userInfo.getDeptName2());
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
-		ezBoardDAO.setAsRead(map);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		String tempString = ezBoardDAO.getBoardItemRead(map);
+		
+		if (tempString != null && !tempString.equals("")) {
+			ezBoardDAO.setAsRead(map);
+			
+			String tempWriterID = ezBoardDAO.getWriterID(map);
+			
+			if (tempWriterID.equals(userInfo.getId())) {
+				ezBoardDAO.setAsRead2(map);
+			}
+		}
 	}
 
 	@Override
-	public int getCheckApprUserList(String userID, String itemID) throws Exception {
+	public int getCheckApprUserList(String userID, String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("v_PITEMID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
 		return ezBoardDAO.getCheckApprUserList(map);
 	}
 
@@ -940,45 +1002,53 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String checkForm(String boardID, String mode) throws Exception {
+	public String checkForm(String boardID, String mode, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PMODE", mode);
+		map.put("v_TENANTID", tenantID);
 		
 		String checkForm = "";
 		int checkCnt = ezBoardDAO.checkForm(map);
 		
-		if(checkCnt > 0){
+		if (checkCnt > 0) {
 			checkForm = "TRUE";
-		}else{
+		} else {
 			checkForm = "FALSE";
 		}
+		
 		return checkForm;
 	}
 
 	@Override
-	public String checkBackGroundImage(String boardID) throws Exception {
+	public String checkBackGroundImage(String boardID, int tenantID) throws Exception {
 		String check = "";
 		int checkCnt = ezBoardDAO.checkBackGroundImage(boardID);
-		if(checkCnt > 0){
+		
+		if (checkCnt > 0) {
 			check = "TRUE";
-		}else{
+		} else {
 			check = "FALSE";
 		}
+		
 		return check;
 	}
 
 	@Override
-	public String brdCheckIfHasReply(String itemIDs) throws Exception {
+	public String brdCheckIfHasReply(String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pItemID", itemIDs);
+		map.put("v_pItemID", itemID);
+		map.put("v_TENANTID", tenantID);
+		
 		String check = "";
 		int checkCnt = ezBoardDAO.brdCheckIfHasReply(map);
-		if(checkCnt > 0){
+		
+		if (checkCnt > 0) {
 			check = "TRUE";
-		}else{
+		} else {
 			check = "FALSE";
 		}
+		
 		return check;
 	}
 
@@ -989,7 +1059,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
-		for(int i = 0; i < resultList.size(); i++){
+		for (int i = 0; i < resultList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(resultList.get(i)));
 		}
 		sb.append("</DATA>");
@@ -1181,9 +1251,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String resultMessage = "";
 		int result = ezBoardDAO.checkOneLineOwner(map);
 		
-		if(result > 0){
+		if(result > 0) {
 			resultMessage = "OK_MINE";
-		}else{
+		} else {
 			resultMessage = "FAIL";
 		}
 		
@@ -1219,28 +1289,40 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public void brdNewItem(BoardListVO boardListVO) throws Exception {
-		ezBoardDAO.brdNewItem(boardListVO);
-		ezBoardDAO.newItem(boardListVO.getItemID());
+		String tempString = ezBoardDAO.getApprFlag(boardListVO);
+		
+		if (tempString != null && tempString.equals("Y")) {
+			ezBoardDAO.brdNewItem(boardListVO);
+		} else {
+			ezBoardDAO.brdNewItem2(boardListVO);
+		}
+		
+		ezBoardDAO.newItem(boardListVO);
 	}
 
 	@Override
 	public void brdNewItemPhoto(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItemPhoto(boardListVO);
 		photoSaveDB(boardListVO);
-		ezBoardDAO.newItem(boardListVO.getItemID());
+		ezBoardDAO.newItem(boardListVO);
 	}
 
 	@Override
 	public void brdNewItemTemp(BoardListVO boardListVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pIMAGEID", boardListVO.getImageID());
+		map.put("v_TENANTID", boardListVO.getTenantID());
+		
+		ezBoardDAO.deletePhotoImageItem(map);
 		ezBoardDAO.brdNewItemTemp(boardListVO);
-		ezBoardDAO.newItem(boardListVO.getItemID());
+		ezBoardDAO.newItem(boardListVO);
 	}
 
 	@Override
 	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception {
 		ezBoardDAO.brdNewItemTempPhoto(boardListVO);
 		photoSaveDB(boardListVO);
-		ezBoardDAO.newItem(boardListVO.getItemID());
+		ezBoardDAO.newItem(boardListVO);
 	}
 
 	@Override
@@ -1251,10 +1333,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception {
 		ezBoardDAO.brdUpdateItem(boardListVO);
+		
+		if (boardListVO.getReadFlag().equals("Y")) {
+			ezBoardDAO.setInitReadCount(boardListVO);
+		}
+		ezBoardDAO.setApprFlag(boardListVO);
+		ezBoardDAO.deleteBoardItemRead(boardListVO);
+		
 		if(mode.equals("PHOTO")){
 			photoSaveDB(boardListVO);
 		}
-		ezBoardDAO.newItem(boardListVO.getItemID());
+		
+		ezBoardDAO.newItem(boardListVO);
 	}
 
 	public void photoSaveDB(BoardListVO boardListVO) throws Exception{
@@ -1279,6 +1369,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
 			map.put("v_pFilePath", strFilePath);
 			map.put("v_pWriteDate", boardListVO.getWriteDate());
+			map.put("v_TENANTID", boardListVO.getTenantID());
 			
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
@@ -1287,17 +1378,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			map.put("v_pImageName", boardListVO.getImageNames().split(";")[i]);
 			
+			ezBoardDAO.deletePhotoImageItem(map);
 			ezBoardDAO.photoSaveDB(map);
 		}
 	}
 
 	@Override
-	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName) throws Exception {
+	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_STRITEMID", strItemID);
 		map.put("v_STRATTACHMENTS", filePath);
 		map.put("v_FILESIZE", fileSize);
 		map.put("v_FILENAME", fileName);
+		map.put("v_TENANTID", tenantID);
+		
 		ezBoardDAO.saveAttachInfo(map);
 	}
 	

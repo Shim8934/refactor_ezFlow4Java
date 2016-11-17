@@ -527,7 +527,9 @@
 	       FROM 
 	       		ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE 
 	       WHERE  
-	       		boardid = #boardID#
+	       		tenant_id = #v_TENANTID#
+	       AND
+	       		boardid = #v_BOARDID#
 	       ORDER BY 
 	       		sn
 		]]>
