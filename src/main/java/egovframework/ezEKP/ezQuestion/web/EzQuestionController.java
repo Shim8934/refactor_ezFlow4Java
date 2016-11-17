@@ -3980,7 +3980,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         Integer responseMaxNo = ezQuestionService.getResponseMaxNo(brdID, itemNo, questionNo);
         
         if(responseMaxNo!=null){
-        	responseNo = responseMaxNo.toString();
+        	responseNo = String.valueOf(Integer.parseInt(responseMaxNo.toString())+1);
         }else{
         	responseNo = "1";
         }
