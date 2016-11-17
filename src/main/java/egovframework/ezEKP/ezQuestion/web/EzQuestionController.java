@@ -1864,7 +1864,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         	if (request.getParameter("currPage").equals("")){
         		pCurrPage = 1;
         	}else{
-        		pCurrPage = Integer.parseInt(request.getParameter("currPage"));
+        		pCurrPage = request.getParameter("currPage") == null || request.getParameter("currPage").toLowerCase().equals("null") || request.getParameter("currPage").equals("") ? 0 : Integer.parseInt(request.getParameter("currPage")) ;
         	}
         }
         if(loginVO.getLang().equals("1")){
@@ -1875,7 +1875,10 @@ public class EzQuestionController extends EgovFileMngUtil {
         	
         pPageSize = 15;
         pBlockSize = 10;
-
+        
+        logger.debug("brdID="+brdID);
+        logger.debug("itemNo="+itemNo);
+        
         qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
         qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
         qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);

@@ -31,7 +31,7 @@
 			MM_reloadPage(true);
 		</script>
 		<script type="text/javascript">
-			var receve= "<c:out value='${receve}'/>";
+			var receve= "${receve}";
 			var brdId = "<c:out value='${qstUserPermissionVO.brdID}'/>";
 			var itemNo = "<c:out value='${qstUserPermissionVO.itemNo}'/>";
 			
