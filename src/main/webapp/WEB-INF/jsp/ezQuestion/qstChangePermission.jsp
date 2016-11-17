@@ -454,7 +454,6 @@
                         	</c:choose>
                     	</select> 
                     	<%boolean resultYN = (boolean)request.getAttribute("resultYN"); %>
-<script>alert("<%=resultYN%>");</script>
                     	<a id="aLinkbtn" class="imgbtn"><span id="aLink"  <% if (!resultYN) { %>onclick='menu_SelectRange()' ); <% } %> ><spring:message code='ezQuestion.t253' /></span></a>
                 	</td> 
             	</tr> 
