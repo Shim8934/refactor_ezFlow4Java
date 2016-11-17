@@ -265,8 +265,8 @@
 			} */
 			
 			function SaveCSV() {
-				if ($('AnaylsisTable').html()) {
-					document.getElementById("AnalysisData").value = $('AnaylsisTable').html();
+				if ($('#AnaylsisTable').html()) {
+					document.getElementById("AnalysisData").value = $('#AnaylsisTable').html();
 					form_analysissave.submit();
 				} else {
 					alert("<spring:message code='ezQuestion.t124' />");
