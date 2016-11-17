@@ -81,6 +81,8 @@ public interface EzQuestionService {
 	
 	public int wpCountPollCount (String userID) throws Exception;
 	
+	public int getQstResponse(int brdID, int itemNo) throws Exception;
+	
 	public Integer getQstListCnt(QstListVO qstListVO) throws Exception;
 
 	public Integer getItemNoCnt(int brdID,int itemNo) throws Exception;

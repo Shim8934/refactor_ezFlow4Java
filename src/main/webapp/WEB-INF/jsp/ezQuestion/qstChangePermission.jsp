@@ -274,8 +274,8 @@
 		        window.location.href = szUrl;
 	    	}
 	    	function menu_SelectRange() {
-		        var item_no = document.getElementById("item_no").value;
-		        var szUrl = "/ezQuestion/rangeSelect.do?brd_id=5&item_no=" + item_no;
+		        var item_no = document.getElementById("itemNo").value;
+		        var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
 	    	    if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 	        	    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
 	            	    var feature = GetOpenPosition(560, 630);
@@ -453,7 +453,9 @@
                         		</c:otherwise> 
                         	</c:choose>
                     	</select> 
-                    	<a id="aLinkbtn" class="imgbtn"><span id="aLink" <%-- <% if (!ResultYN) { Response.Write("onclick='menu_SelectRange()' "); } %> --%>><spring:message code='ezQuestion.t253' /></span></a>
+                    	<%boolean resultYN = (boolean)request.getAttribute("resultYN"); %>
+<script>alert("<%=resultYN%>");</script>
+                    	<a id="aLinkbtn" class="imgbtn"><span id="aLink"  <% if (!resultYN) { %>onclick='menu_SelectRange()' ); <% } %> ><spring:message code='ezQuestion.t253' /></span></a>
                 	</td> 
             	</tr> 
             	<tr> <!----------- 설문제목 -------------> 

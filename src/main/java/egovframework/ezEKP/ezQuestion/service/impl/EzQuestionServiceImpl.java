@@ -854,6 +854,15 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("itemNo", itemNo);
 		ezQuestionDAO.updateTblPollPermission(map);
 	}
+
+	@Override
+	public int getQstResponse(int brdID, int itemNo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdID);
+		map.put("v_pItemNo", itemNo);
+		return ezQuestionDAO.getQstResponse(map);
+	}
+	
 	
 	
 }

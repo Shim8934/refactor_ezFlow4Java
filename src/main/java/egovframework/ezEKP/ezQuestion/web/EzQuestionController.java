@@ -873,9 +873,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		pStep1DataXML.append("</PARAMETER>");
 		
+		logger.debug("pStep1DataXML="+pStep1DataXML);
 		model.addAttribute("qstStep1VO", qstStep1VO);
 		model.addAttribute("questionAddVO", questionAddVO);
-		model.addAttribute("pStep1DataXML", pStep1DataXML);
+		model.addAttribute("pStep1DataXML", pStep1DataXML.toString());
 		return "/ezQuestion/qstStep2";
 	}
 	
@@ -884,7 +885,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/qstRangeSelect.do")
 	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
 		String itemID = "";
 		String userInfoDeptCode="",serverName="",pCompanyID="";
@@ -898,9 +899,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		strGenderACL0 = "checked";
 		strGenderACL1 = "";
 		strGenderACL2 = "";
-		userInfoDeptCode = loginVO.getDeptID();
-		pCompanyID = loginVO.getCompanyID();
+		userInfoDeptCode = userInfo.getDeptID();
+		pCompanyID = userInfo.getCompanyID();
 		serverName = req.getServerName();
+		String userLang = userInfo.getLang();
 		
 		QstRangeSelectVO qstRangeSelectVO = new QstRangeSelectVO();
 		qstRangeSelectVO.setBrdID(brdID);
@@ -912,10 +914,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstRangeSelectVO.setpCompanyID(pCompanyID);
 		qstRangeSelectVO.setServerName(serverName);
 		
-		model.addAttribute("brdId",qstRangeSelectVO.getBrdID());
+		model.addAttribute("brdID",qstRangeSelectVO.getBrdID());
 		model.addAttribute("itemNo",qstRangeSelectVO.getItemID());
 		model.addAttribute("pCompanyID",pCompanyID);
 		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
+		model.addAttribute("userLang",userLang);
 		return "/ezQuestion/qstRangeSelect/rangeSelect";
 	}
 	
@@ -3165,11 +3168,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemID));
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO);
 		
-		/*String publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
+		String publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
 		String publicFlg = qstUserPermissionVO.getPublicFlg();
 		String multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
 		String endFlg = qstUserPermissionVO.getEndFlg();
-		responseRange = qstUserPermissionVO.getResponseRange();*/
+		responseRange = qstUserPermissionVO.getResponseRange();
 		
 		/*boolean bPublic;
         if (publicFlg == "1"){
@@ -3179,13 +3182,21 @@ public class EzQuestionController extends EgovFileMngUtil {
         }*/
         
         //권한
-        //int responseNo = ezQuestionService.getQstResponse(Integer.parseInt(req.getParameter("brdId")), Integer.parseInt(req.getParameter("itemNo")));
-
-       /* if(responseNo == 2) {
-        		resultYN = true;
+		logger.debug("brdID="+brdID);
+		logger.debug("itemNo="+itemID);
+		int responseNo = 0;
+		try {
+			responseNo = ezQuestionService.getQstResponse(Integer.parseInt(req.getParameter("brdID")), Integer.parseInt(req.getParameter("itemNo")));
+		} catch (Exception e) {
+			responseNo = 0;
+			e.printStackTrace();
+		}
+        
+        if(responseNo >= 1) {
+        	resultYN = true;
         } else {
-        		resultYN = false;
-        }*/
+        	resultYN = false;
+        }
 		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         String pollStartDate = s.parse(qstUserPollItemVO.getPollStartDate()).toString(); 
         pollEndDate = s.parse(qstUserPollItemVO.getPollEndDate()).toString(); 
