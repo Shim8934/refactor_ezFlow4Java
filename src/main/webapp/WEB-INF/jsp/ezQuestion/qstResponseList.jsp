@@ -86,7 +86,8 @@
 					}
 				}
 				
-				document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				$('#xmlTable').html($('#xmlTable').html() + tableXml);
 			}
 
 
@@ -123,7 +124,8 @@
 			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
-			    document.getElementById("tblPageRayer").innerHTML = strtext;
+			    //document.getElementById("tblPageRayer").innerHTML = strtext;
+			    $('#tblPageRayer').html(strtext);
 			}
 			
 			function makePageSelPage() {
