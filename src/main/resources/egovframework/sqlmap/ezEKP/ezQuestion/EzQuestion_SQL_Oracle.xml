@@ -142,7 +142,7 @@
 		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"/>
 		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
 		<result property="responseUserGender"		column="RESPONSEUSER_GENDER"		columnIndex="15"/>
-		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"/>
+		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"	nullValue="0"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="17"/>
 		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
 	</resultMap>
@@ -183,7 +183,7 @@
 		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"/>
 		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
 		<result property="responseUserGender"		column="USER_GENDER"				columnIndex="8"/>
-		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"/>
+		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"		nullValue="0"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="10"/>
 	</resultMap>
 	

@@ -1932,7 +1932,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         }
         /** EZSP_RESPONSELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdID, itemNo, responseYN.trim(), pTotalCnt, pPageSize, lang);
-        
+        		
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
         
