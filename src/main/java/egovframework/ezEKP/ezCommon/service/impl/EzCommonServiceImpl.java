@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -56,6 +59,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzCommonDAO")
 	private EzCommonDAO ezCommonDAO;
+	
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 	
@@ -935,22 +941,74 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		return ezCommonDAO.selectUserGetTimeZone(userID);
 	}
 	
+	private String getTenantConfigForJMocha(String property, int tenantID) throws Exception {
+        logger.debug("getTenantConfigForJMocha started. tenantID=" + tenantID + ",property=" + property);
+        
+        String returnValue = "";
+        
+        String param1 = "tenantId=" + URLEncoder.encode(tenantID + "", "UTF-8");
+        String param2 = "property=" + URLEncoder.encode(property, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantConfig";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = (String)result.get("propertyValue");
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
+        logger.debug("PROPERTY VALUE : " + returnValue);
+        
+        logger.debug("getTenantConfigForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;	    
+	}
+	
+    private String getTenantConfigForLocal(String property, int tenantID) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("property", property.toUpperCase());
+        map.put("tenantID", tenantID);
+        
+        String propertyValue = ezCommonDAO.getTenantConfig(map);
+        
+        logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
+        logger.debug("PROPERTY VALUE : " + propertyValue);
+        
+        if (propertyValue == null) {
+            propertyValue = "";
+        }
+        
+        return propertyValue;
+    }
+	
 	@Override
 	public String getTenantConfig(String property, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("property", property.toUpperCase());
-		map.put("tenantID", tenantID);
-		
-		String propertyValue = ezCommonDAO.getTenantConfig(map);
-		
-		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
-		
-		if (propertyValue == null) {
-			propertyValue = "";
-		}
-		
-		return propertyValue;
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getTenantConfigForJMocha(property, tenantID);
+        } else {
+            return getTenantConfigForLocal(property, tenantID);
+        }	    
 	}
 
 	@Override
