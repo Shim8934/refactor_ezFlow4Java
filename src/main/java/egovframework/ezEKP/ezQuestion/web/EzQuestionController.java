@@ -1634,6 +1634,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
+		logger.debug("qstResultSubjectiv Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String brdID = "", itemNo = "", questionNo = "", lang="";
         int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
@@ -1728,6 +1729,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             			
             			rtnXML.append("</DATA>");
             			
+            			logger.debug("rtnXML="+rtnXML.toString());
             			xmlRtnDom = commonUtil.convertStringToDocument(rtnXML.toString());
             			String[] arrayContent = pAnsSubjectivity.split(";");
             			pAnsSubjectivity = "";
@@ -1759,10 +1761,11 @@ public class EzQuestionController extends EgovFileMngUtil {
             		}
             	}
             	
+            	logger.debug("fieldName="+field.getName().toUpperCase());
             	Node newDataName = xmlMainDom.createElement(field.getName().toUpperCase());
             	Node newDataValue = null;
             	//""이라 Exception
-            	if(field.get(qstResponseVO)!=null){
+            	if(field.get(qstResponseVO) != null) {
             		if(field.get(qstResponseVO).getClass() != String.class){
             			newDataValue = xmlMainDom.createTextNode(Integer.toString((int)field.get(qstResponseVO)).trim());
             		}
@@ -1770,6 +1773,8 @@ public class EzQuestionController extends EgovFileMngUtil {
             			newDataValue = xmlMainDom.createTextNode(((String)field.get(qstResponseVO)).trim());
             		}
             	}
+            	logger.debug("newDataName="+String.valueOf(newDataName));
+            	logger.debug("newDataValue="+String.valueOf(newDataValue));
             	newDataName.appendChild(newDataValue);
                 newRow.appendChild(newDataName);
                 newDataName = null;
@@ -1788,7 +1793,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         model.addAttribute("publicFlg", publicFlg);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
-        
+        logger.debug("qstResultSubjectiv End");
 		return "/ezQuestion/qstResultSubjective";
 	}
 	

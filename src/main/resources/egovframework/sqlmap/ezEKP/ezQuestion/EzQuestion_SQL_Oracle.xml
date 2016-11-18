@@ -139,7 +139,7 @@
 		<result property="responseUserEmail"		column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
 		<result property="responseUserDeptID"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
 		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="12"/>
-		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"	nullValue=""/>
 		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
 		<result property="responseUserGender"		column="RESPONSEUSER_GENDER"		columnIndex="15"/>
 		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"	nullValue="0"/>
@@ -180,7 +180,7 @@
 		<result property="responseUserEmail"		column="USER_EMAIL"					columnIndex="3"/>
 		<result property="responseUserDeptID"		column="USER_DEPT_ID"				columnIndex="4"/>
 		<result property="responseUserDeptName"		column="USER_DEPT_NAME"				columnIndex="5"/>
-		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"/>
+		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"	 nullValue=""/>
 		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
 		<result property="responseUserGender"		column="USER_GENDER"				columnIndex="8"/>
 		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"		nullValue="0"/>
