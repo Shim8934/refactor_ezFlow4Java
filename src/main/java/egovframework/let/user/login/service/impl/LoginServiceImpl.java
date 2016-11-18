@@ -1,7 +1,10 @@
 package egovframework.let.user.login.service.impl;
 
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.Properties;
 
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -13,7 +16,15 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 일반 로그인을 처리하는 비즈니스 구현 클래스
  * @author 공통서비스 개발팀 박지욱
@@ -34,9 +45,17 @@ import org.springframework.stereotype.Service;
 @Service("loginService")
 public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginService {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+            
     @Resource(name="loginDAO")
     private LoginDAO loginDAO;
 
+    @Autowired
+    private Properties config;
+        
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
+    
     /**
 	 * 일반 로그인을 처리한다
 	 * @param vo LoginVO
@@ -154,16 +173,69 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 
 
-    @Override
-    public int getTenantId(String serverName) throws Exception {
+	private int getTenantIdForJMocha(String serverName) throws Exception {
+	    logger.debug("getTenantIdForJMocha started. serverName=" + serverName);
+	    
+	    int returnValue = -1;
+	    
+        String param1 = "serverName=" + URLEncoder.encode(serverName, "UTF-8");
+        String inputParams = param1;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantId";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+	    
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = Integer.parseInt((String)result.get("tenantId"));
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("getTenantIdForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;                
+	}
+	
+    private int getTenantIdForLocal(String serverName) throws Exception {
+        logger.debug("getTenantIdForLocal started. serverName=" + serverName);
+        
         int tenantId = -1;
+        
         TenantServerNameVO tenantServerNameVO = loginDAO.selectTenantServerName(serverName);
         
         if (tenantServerNameVO != null) {
             tenantId = tenantServerNameVO.getTenantId();
         }
         
+        logger.debug("getTenantIdForLocal ended. tenantId=" + tenantId);
+        
         return tenantId;
+    }
+	
+    @Override
+    public int getTenantId(String serverName) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getTenantIdForJMocha(serverName);
+        } else {
+            return getTenantIdForLocal(serverName);
+        }
     }
 
 }
