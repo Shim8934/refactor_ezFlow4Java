@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -16,10 +18,13 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.web.EzPortalAdminController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzOrganServiceImpl.class);
 	
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
@@ -64,7 +69,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary) throws Exception {		
 		if (!pUserID.equals("") && pDeptID.equals("")){
 			OrganDeptVO organVo = getDeptInfo(pUserID, primary);
-			pDeptID = organVo.getDeptID();
+			pDeptID = organVo.getDepartment();
         }		
 		if (pDeptID.equals("")){
 			pDeptID = pTopID;
@@ -167,7 +172,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		nodeInfo.append("<NODE>");
 		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
-		nodeInfo.append("<CN>" + vo.getDeptID() + "</CN>");
+		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
 	
 		if (!pPropList.equals("")){					
 			pPropList = convertAddandConvert("group", pPropList);
@@ -183,7 +188,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
-		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDeptID());
+		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment());
 		
 		if (cnt > 0){
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
@@ -339,7 +344,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pDeptID, String pDeptName, String pCategory){		
 		Document doc = commonUtil.convertStringToDocument(pXMLString);
-
+		logger.debug("getMemberInfo Start");
+		logger.debug("pXMLString="+pXMLString);
         StringBuilder nodeInfo = new StringBuilder("<ROW>");
         String[] celllist = pCellList.split(";");
         String cellvalue = "";
@@ -347,7 +353,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         for (int i = 0; i < celllist.length; i++){
         	cellvalue = "";
-//            if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
+            //if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
             if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pDeptID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))){
             	switch (celllist[i].toLowerCase()){
                 case "department":
@@ -374,9 +380,10 @@ public class EzOrganServiceImpl implements EzOrganService {
                     break;
                 }
             }
-
-            if (cellvalue == ""){
-                if (celllist[i] != ""){
+            
+            logger.debug("cellList["+i+"]="+celllist[i]);
+            if (cellvalue == "" || cellvalue == null){
+                if (celllist[i] != null && !celllist[i].equals("")){
                     if (doc.getElementsByTagName(celllist[i].toUpperCase()) != null){
                         cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
                     }else{
