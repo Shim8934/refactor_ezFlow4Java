@@ -119,16 +119,10 @@
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
-                		//var parser = new DOMParser();
-                		//var xmlDom_Question = parser.parseFromString(document.frmCreate.selQues[i].value,"text/xml");
-						//var $temp = SelectSingleNode(xmlDom_Question, "ROW");
-						//var $temp1 = $temp.clone(true).appendTo(QuestionNode);
-//alert("fddd"+SelectSingleNode(xmlDom_Question, "ROW"));
-
+                		
                 		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
-                		//var importedNode = xmlDom_Question.selectSingleNode("ROW").cloneNode(true);
+                		
                 		QuestionNode.appendChild(importedNode);
-						//QuestionNode.appendChild($temp1);
             		}
         		}
 
