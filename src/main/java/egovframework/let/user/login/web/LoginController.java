@@ -127,11 +127,19 @@ public class LoginController {
 		    return "";
 		}
 		
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+		
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
+		loginVO.setTenantId(tenantId);
+		
     	// 1. 일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
@@ -147,13 +155,7 @@ public class LoginController {
 			if (diff <= 0) {
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
-			} else {
-			    String serverName = request.getServerName();
-			    int serverPort = request.getServerPort();
-			    int tenantId = loginService.getTenantId(serverName);
-			    
-			    logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
-			    
+			} else {			    
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				//IP Address,  마지막 login시간 저장

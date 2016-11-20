@@ -124,6 +124,7 @@ public class CommonUtil {
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
+			login.setTenantId(Integer.parseInt(tenantIdStr));
 			
 			LoginVO user = loginService.selectUser(login);
 	
@@ -163,7 +164,6 @@ public class CommonUtil {
 			user.setOffset(timeZone);
 			
 			user.setServerName(serverName);
-			user.setTenantId(Integer.parseInt(tenantIdStr));
 			
 			return user;
 		}catch(Exception e){
@@ -223,11 +223,19 @@ public class CommonUtil {
 	public boolean checkAdmin(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
-			String userID = decData.split("///")[1];
+			String[] decDataArray = decData.split("///");
+			String userID = decDataArray[1];
+			
+            String tenantIdStr = "0";
+            
+            if (decDataArray.length >= 9) {
+                tenantIdStr = decDataArray[8];  
+            }
 			
 			LoginVO login = new LoginVO();
 			login.setId(userID);
 			login.setDn("NOPASSWORD");
+			login.setTenantId(Integer.parseInt(tenantIdStr));
 	
 			LoginVO user = loginService.selectUser(login);
 	
