@@ -419,8 +419,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String pClubID = "";
 		StringBuilder aspXML = new StringBuilder(), masterXML = new StringBuilder(), isinXML = new StringBuilder(), resultXML = new StringBuilder();
 		
-		Document xmlDom = commonUtil.convertStringToDocument(data);
-		pClubID = xmlDom.getChildNodes().item(0).getTextContent();
+		pClubID = data;
 		
 		//TODO 2016-04-26 이효진  사용하지 않는 Table을 참조해서 Null반환
 		List<String> userIDList = ezCommunityDAO.goAdminOkGet1();

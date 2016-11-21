@@ -588,8 +588,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
 		
-		System.out.println(pUrl);
-		
 		return "/ezCommunity/communityNewBoardItem";
 	}
 	
@@ -3125,7 +3123,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 카테고리별 커뮤니티화면 업무별/종류별 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String myCategoryCop (Model model, HttpServletRequest request) throws Exception {
 		StringBuilder sb = new StringBuilder();
