@@ -603,7 +603,7 @@
 	                            p.appendChild(span);
 
 	                            var ul = document.createElement("UL");
-	                            var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
+                                var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
 
 	                            if (isdata.trim() != "") {
 	                                var imageCnt = 0;

@@ -452,36 +452,33 @@
             }
             
             function go_MemberOut(code) {
-                var xmlHttp = createXMLHttpRequest();
-                var xmlDoc = createXmlDom();
+            	$.ajax({
+            		type : "POST",
+		    		url : "/ezCommunity/goAdminOk.do",
+		    		async : false,
+		    		data : {code : code},
+		    		success: function (result) {
+		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    			master = master.toLowerCase();
+		                UserID = "<c:out value = '${userInfo.id}' />'";
+					    UserID = UserID.toLowerCase();
 
-                var objRoot;
-                createNodeInsert(xmlDoc, objRoot, "PARAMETER");
+				        try {
+				            if (userID == master) {
+				                alert("Community <spring:message code='ezCommunity.t1103' />");
+				            } else {
+				                var wWeight = "425";
+				                var wHeight = "385";
+				                var heigth = window.screen.availHeight;
+				                var width = window.screen.availWidth;
+				                var left = (width - wWeight) / 2;
+				                var top = (heigth - wHeight) / 2;
 
-                createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-                xmlHttp.open("POST", "/ezCommunity/goAdminOk.do", false);
-                xmlHttp.send(xmlDoc);
-
-                resultXML = xmlHttp.responseXML;
-                
-                master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
-                
-                master = master.toLowerCase();
-                UserID = "<c:out value = '${userInfo.id}' />'";
-			    UserID = UserID.toLowerCase();
-			
-			    try {
-			        if (UserID == master) {
-			            alert("Community <spring:message code='ezCommunity.t1103' />");
-			        }
-			        else {
-			
-			            var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=425,height=385";
-			            feature = feature + GetOpenPosition(425, 385);
-			            var Para = window.open("/ezCommunity/commHome/commOut.do?code=" + code, "", feature);
-			        }
-			    } catch (e) {
-			    }
+				                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+				            }
+				        } catch (e) { }
+		    		}
+            	});
 			}
             
             function RReplace(value) {
@@ -496,38 +493,31 @@
             }
 
             function isAdmin(code) {
-                var xmlHttp = createXMLHttpRequest();
-                var xmlDoc = createXmlDom();
+            	$.ajax({
+            		type : "POST",
+		    		url : "/ezCommunity/goAdminOk.do",
+		    		async : false,
+		    		data : {code : code},
+		    		success: function (result) {
+		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    			master = master.toLowerCase();
+		                UserID = "<c:out value = '${userInfo.id}' />'";
+					    UserID = UserID.toLowerCase();
+					    isin = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/ISIN")[0], "VALUE");
 
-                var objRoot;
-                createNodeInsert(xmlDoc, objRoot, "PARAMETER");
-
-                createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-
-                xmlHttp.open("POST", "/ezCommunity/goAdminOk.do", false);
-                xmlHttp.send(xmlDoc);
-
-                resultXML = xmlHttp.responseXML;
-
-                master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
-                isin = SelectNodes(resultXML, "/COMMUNITY/ISIN/VALUE").item(0).textContent;
-
-                master = master.toLowerCase();
-
-                UserID = "${userInfo.id}";
-                UserID = UserID.toLowerCase();
-
-                if (UserID == master)
-                    return true;
-                else
-                    return false;
+					    if (UserID == master)
+		                    return true;
+		                else
+		                    return false;
+		    		}
+            	});
             }
 
-                function open_admin(code) {
-                    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=800,height=500";
-                    feature = feature + GetOpenPosition(800, 500);
-                    var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code, "", feature);
-                }
+            function open_admin(code) {
+                var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=800,height=500";
+                feature = feature + GetOpenPosition(800, 500);
+                var comm = window.open("/ezCommunity/commHome/admin/index.do?code=" + code, "", feature);
+            }
 
             function goPage(idx) {
                 var url = "";

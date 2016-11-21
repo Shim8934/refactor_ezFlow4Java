@@ -86,7 +86,7 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body class="mainbody">
 		<h1><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t475' /></h1>
 		<br>
 		<br>
