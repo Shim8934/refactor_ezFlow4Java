@@ -299,7 +299,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 						response.getWriter().write("<script language='javascript' src='/js/XmlHttpRequest.js'></script>");
 						response.getWriter().write("<script language='javascript'>");
 						response.getWriter().write("window.open('/ezQuestion/qstMsgAdminConfirm.do?" + receve + "', '', GetOpenWindowfeature(330,205));");
-						response.getWriter().write("</script>");
 						response.getWriter().write("window.location.href='/ezQuestion/qstList.do?brdID=5';");
 						response.getWriter().write("</script>");
 						response.getWriter().flush();

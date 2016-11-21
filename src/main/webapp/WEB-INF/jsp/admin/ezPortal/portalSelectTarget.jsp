@@ -96,6 +96,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
+	                xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	                xmlHTTP.send(xmlpara);
 	                xmlTree = loadXMLString(xmlHTTP.responseText);
 	                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");
@@ -180,6 +181,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	            createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
+	            xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	            xmlHTTP.send(xmlpara);
 	            xmlRtn = loadXMLString(xmlHTTP.responseText);
 	            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {

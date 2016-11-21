@@ -187,6 +187,7 @@
 		        xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do", true);
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
+		        xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		        xmlhttp.send(xmlpara);
                 	        
 		    }
