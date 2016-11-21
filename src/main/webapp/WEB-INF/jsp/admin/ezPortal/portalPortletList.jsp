@@ -189,6 +189,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/deletePortlet.do?uID=" + g_UID, false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "OK")

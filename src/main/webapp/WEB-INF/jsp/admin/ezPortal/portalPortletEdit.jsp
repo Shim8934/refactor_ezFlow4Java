@@ -382,6 +382,7 @@
 			// 기본정보 저장
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/savePortletProperty.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			if (xmlhttp.responseText != "OK")
 			{
@@ -393,6 +394,7 @@
 			if (strXML2 != "") {			    
 			    xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/savePortletSubProperty.do?portletType=" + portlet_type, false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML2);
 				xmlhttp = null;
 			}
@@ -409,6 +411,7 @@
 			
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeParameter.do?mode=1&uID=" + uid + "&paramName=" + pParamName, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send();
 			xmlhttp = null;
 			
@@ -443,6 +446,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=1", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -542,6 +546,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addRight.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -587,6 +592,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeACL.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			

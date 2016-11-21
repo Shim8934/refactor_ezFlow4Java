@@ -97,6 +97,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 			    xmlhttp.open("POST", "/admin/ezPortal/removeSubMenuItem.do?pageID=" + g_UID + "&uID=" + parentuid + "&parentUID=" + pageid, false);
+			    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				xmlhttp = null;
 				

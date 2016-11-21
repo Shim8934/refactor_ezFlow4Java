@@ -83,6 +83,7 @@
 			if (confirm("<spring:message code='ezPortal.t54'/>")) {
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/removeMenuItem.do?pageID=" + pageid + "&uID=" + g_UID + "&parentUID=202", false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				xmlhttp = null;
 				
