@@ -290,79 +290,81 @@ Map<String, Object> map = new HashMap<String, Object>();
 	}
 	
 	@Override
-	public String savePop3(String pUserId, String pRet) throws Exception {
-		String rtnVal = "";
+	public void savePop3(String pUserId, String pRet) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", pUserId);
 		
-		try {
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_PUSERID", pUserId);
-			List<MailPOP3VO> pop3VoList = ezEmailDAO.getMailPOP3(map);
-			
+		//DB에서 해당 user의 pop3 정보들을 지우기 전에 가져온다.
+		List<MailPOP3VO> pop3OldVoList = ezEmailDAO.getMailPOP3(map);
+		
+		//pop3OldVoList와 같은 list를 하나 더 만든다.
+		//사용하지 않는 pop3 정보로 가져온 DB에 저장된 메일들의 정보를 삭제하기 위함이다.
+		List<MailPOP3VO> pop3OldVoToDeleteList = new ArrayList<MailPOP3VO>();
+		pop3OldVoToDeleteList.addAll(pop3OldVoList);
+		
+		map = new HashMap<String, Object>();
+		map.put("v_USERID", pUserId);
+		
+		//DB에서 해당 user의 pop3 정보들을 지운다.
+		ezEmailDAO.deletePop3ByUserId(map);
+		
+		Document doc = commonUtil.convertStringToDocument(pRet);
+		NodeList rows = doc.getElementsByTagName("ROW");
+		
+		String prm = egovFileScrty.getPrm();
+		String pre = egovFileScrty.getPre();
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		
+		for (int i=0; i<rows.getLength(); i++) {
+			NodeList children = rows.item(i).getChildNodes();
+			String server = children.item(0).getTextContent();
+			String port = children.item(1).getTextContent();
+			String id = children.item(2).getTextContent();
+			String deleteYN = children.item(3).getTextContent();
+			String pw = children.item(4).getTextContent();
+			String saveTo = children.item(5).getTextContent();
+			String saveToFolder = children.item(6).getTextContent();
+			String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
+
 			map = new HashMap<String, Object>();
 			map.put("v_USERID", pUserId);
-			ezEmailDAO.deletePop3ByUserId(map);
+			map.put("v_POP3SERVER", server);
+			map.put("v_POP3PORTNO", port);
+			map.put("v_POP3USERID", id);
+			map.put("v_POP3PW", pw);
+			map.put("v_SAVETO", saveTo);
+			map.put("v_DELETEYN", deleteYN);
+			map.put("v_POP3SSLYN", useSsl);
+			map.put("v_SAVETOFOLDER", saveToFolder);
 			
-			Document doc = commonUtil.convertStringToDocument(pRet);
-			NodeList rows = doc.getElementsByTagName("ROW");
-			
-			String prm = egovFileScrty.getPrm();
-			String pre = egovFileScrty.getPre();
-			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-			
-			List<MailPOP3VO> pop3OldVoList = new ArrayList<MailPOP3VO>();
-			
-			for (int i=0; i<rows.getLength(); i++) {
-				NodeList children = rows.item(i).getChildNodes();
-				String server = children.item(0).getTextContent();
-				String port = children.item(1).getTextContent();
-				String id = children.item(2).getTextContent();
-				String deleteYN = children.item(3).getTextContent();
-				String pw = children.item(4).getTextContent();
-				String saveTo = children.item(5).getTextContent();
-				String saveToFolder = children.item(6).getTextContent();
-				String useSsl = children.item(7).getTextContent().equals("true") ? "1" : "0";
-	
-				map = new HashMap<String, Object>();
-				map.put("v_USERID", pUserId);
-				map.put("v_POP3SERVER", server);
-				map.put("v_POP3PORTNO", port);
-				map.put("v_POP3USERID", id);
-				map.put("v_POP3PW", pw);
-				map.put("v_SAVETO", saveTo);
-				map.put("v_DELETEYN", deleteYN);
-				map.put("v_POP3SSLYN", useSsl);
-				map.put("v_SAVETOFOLDER", saveToFolder);
-				
-				for (MailPOP3VO vo : pop3VoList) {
-					if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
-							&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
-						map.put("v_POP3USERID", vo.getPop3UserId());
-					} else {
-						pop3OldVoList.add(vo);
-					}
-				}
-				
-				ezEmailDAO.insertPop3(map);
-			}
-	
 			for (MailPOP3VO vo : pop3OldVoList) {
-				map = new HashMap<String, Object>();
-				map.put("v_USERID", pUserId);
-				map.put("v_POP3SERVER", vo.getPop3Server());
-				map.put("v_POP3USERID", vo.getPop3UserId());
-				
-				ezEmailDAO.deletePop3List(map);
+				//DB에 원래 들어있던 pop3 정보인지 체크한다.
+				if (vo.getPop3Server().toLowerCase().equals(server.toLowerCase())
+						&& EgovFileScrty.decryptRsa(pk, vo.getPop3UserId()).equals(EgovFileScrty.decryptRsa(pk, id))) {
+					
+					//id와 vo.getPop3UserId()가 복호화했을 때에는 같지만 암호화 된 상태에서는 두 값이 다르기 때문에, 두 값을 비교할 때에는 복호화해서 비교해야 한다.
+					//DB에 넣을 때에는 원래 DB에 들어있던 vo.getPop3UserId() 값을 넣는다.
+					map.put("v_POP3USERID", vo.getPop3UserId());
+					
+					//원래 있던 pop3 정보로 가져온 메일들의 정보는 지울 필요가 없기 때문에, pop3OldVoToDeleteList에서 뺀다.
+					pop3OldVoToDeleteList.remove(vo);
+					
+					break;
+				}
 			}
-		
-			rtnVal = "OK";
 			
-		} catch (Exception e) {
-			rtnVal = "ERROR";
-			e.printStackTrace();
+			ezEmailDAO.insertPop3(map);
 		}
-		
-		return rtnVal;
+
+		for (MailPOP3VO vo : pop3OldVoToDeleteList) {
+			map = new HashMap<String, Object>();
+			map.put("v_USERID", pUserId);
+			map.put("v_POP3SERVER", vo.getPop3Server());
+			map.put("v_POP3USERID", vo.getPop3UserId());
+			
+			ezEmailDAO.deletePop3List(map);
+		}
+			
 	}
 
 	@Override

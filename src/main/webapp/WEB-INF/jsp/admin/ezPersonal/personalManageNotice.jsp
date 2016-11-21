@@ -41,10 +41,10 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezPersonal/manageNoticeList.do",
-	            	async : true,
+	            	dataType : "text",
 	            	data : {id : encodeURI(document.getElementById("ListCompany").value), page : pageNum},
 	            	success : function(result) {
-	            		eventNoticeList(result);
+	            		eventNoticeList(loadXMLString(result));
 	            	}
 	            });
 	        }

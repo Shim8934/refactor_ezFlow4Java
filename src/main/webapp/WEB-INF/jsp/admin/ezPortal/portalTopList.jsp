@@ -75,6 +75,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/deleteTopPage.do?uID=" + g_UID, false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "OK")
@@ -104,6 +105,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/useTopPage.do?uID=" + g_UID , false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "OK")
@@ -138,6 +140,7 @@
 	           {
 	               var xmlhttp = createXMLHttpRequest();
 	                  xmlhttp.open("POST", "/admin/ezPortal/outOfUseTopMenu.do?uID=" + g_UID , false);
+	                  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	                  xmlhttp.send();
             	      
 	                  if (xmlhttp.responseText =="OK")
@@ -182,6 +185,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/setLang.do?uID=" + g_UID + "&lang=" +  lang, false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "OK")

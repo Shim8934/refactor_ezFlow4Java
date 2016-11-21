@@ -68,6 +68,7 @@
 	                xmlhttp = null;
 	                xmlhttp = createXMLHttpRequest();
 	                xmlhttp.open("POST", "/admin/ezPortal/deleteThemeInfo.do", false);
+	                xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	                xmlhttp.send(xmlpara);
 	                if (xmlhttp.responseText == "OK") {
 	                    alert("<spring:message code='ezPortal.t55'/>");

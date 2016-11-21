@@ -27,9 +27,9 @@
 	        	$.ajax({
 	        		type : "POST",
 	        		url : "/admin/ezPersonal/getQuickLinkList.do",
-	        		async : true,
+	        		dataType : "text",
 	        		success : function(result) {
-	        			event_QuickList(result);
+	        			event_QuickList(loadXMLString(result));
 	        		}
 	        	});
 	        });
