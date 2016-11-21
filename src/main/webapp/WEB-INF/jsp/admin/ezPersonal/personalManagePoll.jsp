@@ -49,10 +49,10 @@
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezPersonal/managePollList.do",
-	            	async : true,
+	            	dataType : "text",
 	            	data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value), page : pageNum},
 	            	success : function (result) {
-	            		event_PollList(result);
+	            		event_PollList(loadXMLString(result));
 	            	}
 	            });
 	        }

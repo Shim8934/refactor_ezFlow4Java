@@ -38,11 +38,12 @@
 		    function makelist() {		        
 		        $.ajax({
 		        	type : "POST",
+		        	dataType : "text",
 		        	url : "/admin/ezPersonal/managePopupList.do",
 		        	async : false,
 		        	data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value)},
 		        	success : function (result) {
-		        		event_PopupList(result);
+		        		event_PopupList(loadXMLString(result));
 		        	}
 		        });
 		    }

@@ -25,10 +25,11 @@
 		        
 		        $.ajax({
 		        	type : "POST",
+		        	dataType : "text",
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
-		        		MakeSliderList(result);
+		        		MakeSliderList(loadXMLString(result));
 		        	}
 		        });
 		    });
