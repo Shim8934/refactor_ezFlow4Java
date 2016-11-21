@@ -185,7 +185,7 @@
 		            } else {
 		                username = GetElementsByTagName(xmldoc, "NAME")[i].text;
 		                username2 = GetElementsByTagName(xmldoc, "NAME2")[i].text;
-		                useremail = GetElementsByTagName(xmldoc, "CN")[i].text;
+		                useremail = GetElementsByTagName(xmldoc, "CN")[i].text; 
 		            }
 		            
 		            pparsingXML2 = "";
@@ -483,7 +483,7 @@
 		    	$.ajax({
 		    		type : 'POST',
 		    		url : '/ezOrgan/getDeptMemberList.do',
-		    		async : true,
+		    		dataType : "text",
 		    		data : {deptID : DeptID,
 		    				cell : 'displayName;description;title;telephoneNumber',
 		    				prop : 'mail;displayName;description;title',
@@ -495,9 +495,9 @@
 		                listview.SetSelectFlag(false);
 		                listview.SetMulSelectable(false);
 		                listview.SetRowOnDblClick("ListViewNodeDblClick");
-		                listview.DataSource(loadXMLString(listviewheader2.innerHTML.toUpperCase()));
+		                listview.DataSource(loadXMLString($('#listviewheader2').html().toUpperCase()));
 		                listview.DataBind("OrganListView");
-		                listview.DataSource(result);
+		                listview.DataSource(loadXMLString(result));
 		                listview.RowDataBind();
 		    		},
 		    		error : function(jqXHR, textStatus, errorThrown) {
@@ -558,12 +558,12 @@
 		
 		        createNodeInsert(xmlDOM, objNode, "DATA");
 		        createNodeAndInsertText(xmlDOM, objNode, "SEARCH", pMode + "::" + cnkeyword.value);
-		        createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;title;displayname;mail");
+		        createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;title;displayName;mail");
 		        createNodeAndInsertText(xmlDOM, objNode, "PROP", "department");
 		        createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
 		
 		        try {
-		            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
+		            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
 		            xmlHTTP.send(xmlDOM);
 		            if (xmlHTTP.statusText != "OK") {
 		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.statusText);
