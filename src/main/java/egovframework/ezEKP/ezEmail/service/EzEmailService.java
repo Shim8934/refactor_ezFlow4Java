@@ -39,7 +39,7 @@ public interface EzEmailService {
 	public void updateMailReceiveDetailInfo(String pNum, String pEmail, String pCode) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
 	public List<MailPOP3VO> getMailPOP3(String pUserId) throws Exception;
-	public String savePop3(String pUserId, String pRet) throws Exception;
+	public void savePop3(String pUserId, String pRet) throws Exception;
 	public void setMailPOP3(String pUserId, String pPop3Server, String pPop3UserId, String pMessageId, String pPop3DupMsg) throws Exception;
 	public List<String> getMailPOP3List(String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public void setMailColor(String pImportanceColor, String pInColor, String pOutColor) throws Exception;
