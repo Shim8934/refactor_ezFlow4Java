@@ -136,6 +136,7 @@
             	if (confirm("<spring:message code='ezPortal.t242'/>")) {
                 	var xmlhttp = createXMLHttpRequest();
                 	xmlhttp.open("POST", "/ezPortal/useMyPortalPage.do?uID=" + g_UID, false);
+                	xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 	xmlhttp.send();
                 	if (xmlhttp.responseText == "OK") {
                     	window.parent.parent.location = window.parent.parent.location.href;
