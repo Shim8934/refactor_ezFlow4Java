@@ -139,10 +139,10 @@
 		<result property="responseUserEmail"		column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
 		<result property="responseUserDeptID"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
 		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="12"/>
-		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"	nullValue=""/>
 		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
 		<result property="responseUserGender"		column="RESPONSEUSER_GENDER"		columnIndex="15"/>
-		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"/>
+		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"	nullValue="0"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="17"/>
 		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
 	</resultMap>
@@ -180,10 +180,10 @@
 		<result property="responseUserEmail"		column="USER_EMAIL"					columnIndex="3"/>
 		<result property="responseUserDeptID"		column="USER_DEPT_ID"				columnIndex="4"/>
 		<result property="responseUserDeptName"		column="USER_DEPT_NAME"				columnIndex="5"/>
-		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"/>
+		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"	 nullValue=""/>
 		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
 		<result property="responseUserGender"		column="USER_GENDER"				columnIndex="8"/>
-		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"/>
+		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"		nullValue="0"/>
 		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="10"/>
 	</resultMap>
 	
@@ -820,6 +820,32 @@
 				item_no = #v_pItemNo#
 			WHERE
 				 brd_id = #v_pstrBrdID#  
+		]]>
+	</update>
+	
+	 <update id="EzQuestionDAO.updateTblPollItem" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZQUESTION.TBLPOLL_ITEM
+			SET 
+				POLL_ENDDATE = #endDate#
+			WHERE
+				 BRD_ID = #brdID#
+			AND
+				ITEM_NO = #itemNo#	   
+		]]>
+	</update>
+	
+	 <update id="EzQuestionDAO.updateTblPollPermission" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZQUESTION.TBLPOLL_PERMISSION
+			SET 
+				END_FLG = #endFlag#
+			WHERE
+				 BRD_ID = #brdID#
+			AND
+				ITEM_NO = #itemNo#	   
 		]]>
 	</update>
 </sqlMap>

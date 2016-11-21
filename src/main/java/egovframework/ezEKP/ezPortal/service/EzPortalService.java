@@ -177,7 +177,7 @@ public interface EzPortalService {
 	
 	public String loadGetParametersXML (String pURL, String pXML, LoginVO userInfo) throws Exception;
 	
-	public String getBoardProperty (String pBoardID, String lang) throws Exception;
+	public String getBoardProperty (String pBoardID, String lang, int tenantID) throws Exception;
 	
 	public String addBestTable (LoginVO userInfo) throws Exception;
 	

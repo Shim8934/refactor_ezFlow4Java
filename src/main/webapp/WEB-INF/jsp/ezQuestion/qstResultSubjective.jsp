@@ -89,7 +89,8 @@
 					}
 				}
 				
-				document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				$('#xmlTable').html($('#xmlTable').html() + tableXml);
 			}
 			
 			function fun_UserView(responseno) {
@@ -145,14 +146,17 @@
 			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
-			    document.getElementById("tblPageRayer").innerHTML = strtext;
+			    //document.getElementById("tblPageRayer").innerHTML = strtext;
+			    $('#tblPageRayer').html(strtext);
 			}
 			
 			function makePageSelPage() {
 			    var strtext;
 			    var PagingHTML = "";
-			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+			    //document.getElementById("tblPageRayer").innerHTML = "";
+			    $('#tblPageRayer').html();
+			    //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+			    $('#mailBoxInfo').html(" - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]");
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = pCurrPage;
@@ -261,9 +265,8 @@
 			} */
 			
 			function SaveCSV() {
-				alert(document.getElementById("AnaylsisTable").innerHTML);
-				if (document.getElementById("AnaylsisTable").innerHTML) {
-					document.getElementById("AnalysisData").value = document.getElementById("AnaylsisTable").innerHTML;
+				if ($('#AnaylsisTable').html()) {
+					document.getElementById("AnalysisData").value = $('#AnaylsisTable').html();
 					form_analysissave.submit();
 				} else {
 					alert("<spring:message code='ezQuestion.t124' />");

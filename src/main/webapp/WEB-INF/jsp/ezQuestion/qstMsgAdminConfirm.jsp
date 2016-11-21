@@ -15,7 +15,7 @@
 		
 			var brd_id = "<c:out value='${brdID}'/>";
 			var item_no = "<c:out value='${itemNo}'/>";
-			var receve = "<c:out value='${receve}'/>";
+			var receve = "${receve}";
 			
 		    window.onload = function () {
 		        var UserAgentState = navigator.userAgent.toLowerCase();

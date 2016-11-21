@@ -139,9 +139,9 @@
     	}
     	function menuQst_List() {
         	if(CrossYN()) {
-        		var szUrl = "qstList.do?brdID='${pBrdID}'"
+        		var szUrl = "qstList.do?brdID=${pBrdID}"
         	} else {
-            	var szUrl = "qstList.do?brdID='${pBrdID}'"
+            	var szUrl = "qstList.do?brdID=${pBrdID}"
         	}
         	window.location.href = szUrl;	
     	}

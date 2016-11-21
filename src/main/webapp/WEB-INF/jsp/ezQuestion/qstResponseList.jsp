@@ -86,7 +86,8 @@
 					}
 				}
 				
-				document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				$('#xmlTable').html($('#xmlTable').html() + tableXml);
 			}
 
 
@@ -123,14 +124,16 @@
 			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
-			    document.getElementById("tblPageRayer").innerHTML = strtext;
+			    //document.getElementById("tblPageRayer").innerHTML = strtext;
+			    $('#tblPageRayer').html(strtext);
 			}
 			
 			function makePageSelPage() {
 			    var strtext;
 			    var PagingHTML = "";
-			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+			    $('#tblPageRayer').html();
+			    //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+			    $('#mailBoxInfo').html(" - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]");
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = CurPage;

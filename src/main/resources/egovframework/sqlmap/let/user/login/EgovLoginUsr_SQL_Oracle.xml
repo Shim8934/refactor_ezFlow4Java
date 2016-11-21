@@ -25,6 +25,7 @@
 		<result property="phone" 				column="telephonenumber"			columnIndex="15"/>
 		<result property="email"				column="mail"						columnIndex="16"/>
 		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
 	</resultMap>	
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
@@ -53,11 +54,12 @@
 		     	extensionattribute1 as rollinfo,
 		     	telephonenumber,
 		     	mail,
-		     	extensionattribute10 as jikchek
+		     	extensionattribute10 as jikchek,
+                tenant_id
 		  	FROM 
 		  		ezHrMaster.TBLUSERMASTER
 		 	WHERE 
-		 		cn = #id#		 			 				 
+		 		cn = #id# AND tenant_id = #tenantId#
 		]]>
 		<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >			
 			password = #password#

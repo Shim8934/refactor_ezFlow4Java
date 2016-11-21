@@ -9,9 +9,20 @@
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>    
+	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+	    
+	    <c:if test="${!isCrossBrowser}">
+	      	<script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
+		    <script type="text/javascript" src="/js/ezOrgan/kaoni_ActiveX.js"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+	    </c:if>
 		<script type="text/javascript" language="javascript">
-			var fileName = "";
 		    var ReturnFunction;
 		    var RetValue;
 	    	
@@ -29,12 +40,58 @@
 		        }
 			});
 			
-			function btnimagefile_onclick(){
+			function btnimagefile_onclick(ocx_file){
 			    try {
+			    	if(CrossYN()){
 			        document.form.file1.click();
+			    	} else {
+			    		var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+						var imgName = "";
+						if(!ocx_file)
+		                {
+		                    imgName = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+		                    if (!imgName)
+		                        return;
+			            }
+			            else
+			            {
+			                imgName = ocx_file.split("|");
+			            }
+						var ezUtil = null;
+						var fileNamelist = "";
+						var fileName = "";
+						 document.all.EzHTTPTrans.AddUploadFile("","");
+		                
+						try {
+							 document.all.EzHTTPTrans.AddUploadFile(imgName, "N");                   
+						}
+						catch (e) 
+						{
+							alert(imgName + "<spring:message code='ezOrgan.t135'/>" + "\n\n" + e.number + " - " + e.description);
+							return;
+						}	
+			            var RemotePath =document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/admin/ezOrgan/signImageUploadIe9.do?mode=PICTURE&userID=" + RetValue;
+			            var nCount = document.all.EzHTTPTrans.StartUpload(RemotePath,"",RetValue,"","");
+			            if (nCount == 0)
+			            {
+			                alert(imgName + "<spring:message code='ezOrgan.t135'/>");
+			                return false;
+			            }
+			            for (var i = 0; i < nCount; i++) {
+				            var fileinfo = EzHTTPTrans.GetReturn(i);
+					        var infos = fileinfo.split('/')	;  
+					        var pfileName = infos[0].substr(infos[0].lastIndexOf("\\")+1);
+					        var fileName = infos[1];
+			            }
+			            fileupafter(fileName.substr(3,infos[1].length));
+			    	}
 				}catch(e){
 					alert(e.discription);
 				}
+			}
+			
+			function fileupafter(value) {
+	    		imagefile.value = value;
 			}
 			
 			function imgtemp_onclick() {
@@ -51,7 +108,7 @@
 		            
 		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=PICTURE&userID=" + RetValue);
 		            xhr.send(fd);
-		        }
+	            }
 	        }
 			
 			function uploadComplete() {		        
@@ -68,12 +125,16 @@
 		    }
 			
 			function imgConfirm_onclick(obj) {
-				if (document.getElementById("form").file1.files.length == 0) {
-		            alert("<spring:message code='ezOrgan.t9903' />");
-		            return;
-		        }
+				if(CrossYN()){
+					if (document.getElementById("form").file1.files.length == 0) {
+			            alert("<spring:message code='ezOrgan.t9903' />");
+			            return;
+			        }
+					var fileName = document.getElementById("tempFilePath").value;
+				} else {
+					var fileName = document.getElementById("imagefile").value;
+				}
 				
-				var fileName = document.getElementById("tempFilePath").value;
 				
 				$.ajax({
 					type : "POST",
@@ -107,11 +168,21 @@
 			}
 			
 			function divImageFile_onclick() {
-			    if (document.form.file1.value != "") {
-			        preview.src = "";
-					preview.style.visibility = "hidden";
-					preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("tempFilePath").value;
-					preview.style.visibility = "visible";
+				if(CrossYN()){
+				    if (document.form.file1.value != "") {
+				        preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("tempFilePath").value;
+						preview.style.visibility = "visible";
+					}
+				} else {
+					if(imagefile.value != "")
+					{
+						preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("imagefile").value;
+						preview.style.visibility = "visible";
+					}
 				}
 			}
 	    </script>
@@ -122,6 +193,9 @@
 			<tr>
 		    	<th width="119" height="128"><img <spring:message code='ezOrgan.i6' />></th>
 		    	<td>
+		    	<c:if test="${!isCrossBrowser}">
+		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
+		    	 </c:if>
 		    		<spring:message code='ezOrgan.t241' /><br/>
 		      		119*128px<spring:message code='ezOrgan.t10000' />
 		      		<br/>
@@ -133,10 +207,11 @@
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">
+		    
 		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="true" />
+		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
+		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="false"/>
 		    			<input type="hidden" name="mode" id="mode" />
 		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>

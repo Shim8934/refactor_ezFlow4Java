@@ -23,11 +23,11 @@ public interface EzBoardAdminService {
 	
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
 	
-	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception;
+	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
 	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID) throws Exception;
 	
-	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID) throws Exception;	
+	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, int tenantID) throws Exception;	
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
@@ -35,7 +35,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type) throws Exception;
 	
-	public BoardPropertyVO getACL(String pBoardID, String userDeptPath) throws Exception;
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception;
 
 	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception;
 	

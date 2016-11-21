@@ -19,6 +19,8 @@ public class BoardConfigVO {
 	private int totalCnt;
 	/** 페이지 수*/
 	private int pageCnt;
+	/** tenant*/
+	private int tenantID;
 	
 	public String getUserId() {
 		return userId;
@@ -74,4 +76,11 @@ public class BoardConfigVO {
 	public void setPageCnt(int pageCnt) {
 		this.pageCnt = pageCnt;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
 }

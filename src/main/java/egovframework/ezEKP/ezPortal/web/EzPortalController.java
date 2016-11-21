@@ -1144,18 +1144,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 			pCompanyBoard = req.getParameter("companyBoardID");
-			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[0];
-			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[1];
+			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 			pDeptBoardID = req.getParameter("deptBoardID");
-			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[0];
-			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[1];
+			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 			pNewsBoardID = req.getParameter("newsBoardID");
-			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[0];
-			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[1];
+			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		model.addAttribute("filePath", filePath);
@@ -1200,18 +1200,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		try {
 			if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 				pCompanyBoard = req.getParameter("companyBoardID");
-				pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[0];
-				pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang()).split("\\:")[1];
+				pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+				pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 			}
 			if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 				pDeptBoardID = req.getParameter("deptBoardID");
-				pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[0];
-				pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang()).split("\\:")[1];
+				pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+				pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 			}
 			if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 				pNewsBoardID = req.getParameter("newsBoardID");
-				pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[0];
-				pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang()).split("\\:")[1];
+				pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+				pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 			}
 			
 			model.addAttribute("pCompanyBoard", pCompanyBoard);

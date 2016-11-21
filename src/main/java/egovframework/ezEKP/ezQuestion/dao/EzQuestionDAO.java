@@ -191,6 +191,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (int) map.get("v_pCount");
 	}
 	
+	public int getQstResponse(Map<String, Object> map){
+		select("EzQuestionDAO.getQstResponse", map);
+		return (int) map.get("v_pCount");
+	}
+	
 	public Integer resCount(Map<String, Object> map) {
 		return (Integer) select("EzQuestionDAO.resCount", map);
 	}
@@ -325,6 +330,14 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	
 	public void changePermission(Map<String, Object> map) {
 		update("EzQuestionDAO.changePermission", map);
+	}
+	
+	public void updateTblPollItem(Map<String, Object> map) {
+		update("EzQuestionDAO.updateTblPollItem", map);
+	}
+	
+	public void updateTblPollPermission(Map<String, Object> map) {
+		update("EzQuestionDAO.updateTblPollPermission", map);
 	}
 	
 	public void deleteItem(Map<String,Object> map) {

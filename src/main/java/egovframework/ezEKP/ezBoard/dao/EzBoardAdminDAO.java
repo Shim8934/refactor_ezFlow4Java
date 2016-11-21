@@ -53,8 +53,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardAttributeVO> getBoardAttribute(String boardID) throws Exception{
-		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardAttribute", boardID);
+	public List<BoardAttributeVO> getBoardAttribute(Map<String, Object> map) throws Exception{
+		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardAttribute", map);
 	}
 	
 	@SuppressWarnings("unchecked")

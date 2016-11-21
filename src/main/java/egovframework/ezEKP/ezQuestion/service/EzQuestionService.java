@@ -81,6 +81,8 @@ public interface EzQuestionService {
 	
 	public int wpCountPollCount (String userID) throws Exception;
 	
+	public int getQstResponse(int brdID, int itemNo) throws Exception;
+	
 	public Integer getQstListCnt(QstListVO qstListVO) throws Exception;
 
 	public Integer getItemNoCnt(int brdID,int itemNo) throws Exception;
@@ -172,5 +174,9 @@ public interface EzQuestionService {
 	public void questionDelete2(int brdID, int itemNo) throws Exception;
 	
 	public void questionDelete1(int brdID, int itemNo, int quesNo) throws Exception;
+	
+	public void updateTblPollItem(String endDate, int brdID, int itemNo) throws Exception;
+	
+	public void updateTblPollPermission(String endFlag, int brdID, int itemNo) throws Exception;
 	
 }

@@ -6,7 +6,7 @@ public class OrganDeptVO {
 	/** 회사/부서아이디*/
 	private String cn;
 	/** 회사/부서명*/
-	private String deptID;
+	private String department;
 	/** 부서명*/
 	private String displayName;
 	/** 부서명(다국어)*/
@@ -60,11 +60,11 @@ public class OrganDeptVO {
 	public void setCn(String cn) {
 		this.cn = cn;
 	}
-	public String getDeptID() {
-		return deptID;
+	public String getDepartment() {
+		return department;
 	}
-	public void setDeptID(String deptID) {
-		this.deptID = deptID;
+	public void setDepartment(String department) {
+		this.department = department;
 	}	
 	public String getDisplayName() {
 		return displayName;

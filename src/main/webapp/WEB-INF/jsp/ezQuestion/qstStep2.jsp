@@ -5,14 +5,12 @@
 <html>
 	<head>
 		<title>Step2</title>
-		<meta name="vs_defaultClientScript" content="JavaScript" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 			var index = -1;
 			var flgClose= true;
@@ -115,19 +113,23 @@
         		var xmlDoc = createXmlDom();
         		var objNode;
         		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
+
         		var QuestionNode = createNode(xmlDoc, "QUESTION"); 
         		var pQstCnt = document.frmCreate.selQues.length;
-
         		for(var i = 0;i < pQstCnt; i++) {
             		 if(document.frmCreate.selQues[i].value != null && document.frmCreate.selQues[i].value != "" && typeof(document.frmCreate.selQues[i].value) != "undefined") {
                 		var xmlDom_Question = loadXMLString(document.frmCreate.selQues[i].value);
+                		
                 		var importedNode = SelectSingleNode(xmlDom_Question, "ROW").cloneNode(true);
+                		
                 		QuestionNode.appendChild(importedNode);
             		}
         		}
+
         		xmlDoc.documentElement.appendChild(QuestionNode);
         		xmlHttp.open("POST","/ezQuestion/qstComplete.do",false);
-        		xmlHttp.send(xmlDoc); 
+        		xmlHttp.send(xmlDoc);
+
         	 	if(getXmlString(xmlHttp.responseXML) == "") {
         	 		alert("<spring:message code='ezQuestion.t263' />" + "\n" + "<spring:message code='ezQuestion.t264' />");
         	 	} else {
@@ -667,9 +669,9 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value="${pStep1DataXML}"/>
+        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value='${pStep1DataXML}'/>
+        	</form>	
 			</div>
-		</form>
 	    	<div id="Privew_List" style="display: none;">
     	    	<div id="mainmenu">
         	    	<ul>

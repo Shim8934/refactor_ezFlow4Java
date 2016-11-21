@@ -127,11 +127,19 @@ public class LoginController {
 		    return "";
 		}
 		
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        int tenantId = loginService.getTenantId(serverName);
+        
+        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+		
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
+		loginVO.setTenantId(tenantId);
+		
     	// 1. 일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
@@ -147,13 +155,7 @@ public class LoginController {
 			if (diff <= 0) {
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
-			} else {
-			    String serverName = request.getServerName();
-			    int serverPort = request.getServerPort();
-			    int tenantId = loginService.getTenantId(serverName);
-			    
-			    logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
-			    
+			} else {			    
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				//IP Address,  마지막 login시간 저장
@@ -193,7 +195,9 @@ public class LoginController {
 				        returnValue = acceptLanguage.substring(0, 2);
 				    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
 				    } else {
-				        String primary = config.getProperty("config.primary");
+				        String primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+				        
+				        logger.debug("primaryLang=" + primary);
 				        
 				        if (primary.equals("1")) {
 				            returnValue = "ko";
@@ -216,11 +220,12 @@ public class LoginController {
 						lang = "4";
 					} else {
 						//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
-						lang = config.getProperty("config.primary");
+						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 					}
 					
 					logger.debug("userID="+_uid);
 					logger.debug("lang="+lang);
+					
 					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
 				}
 				

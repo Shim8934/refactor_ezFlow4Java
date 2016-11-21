@@ -80,14 +80,14 @@
      			$.ajax({
      				url : '/ezBoard/board_generallist_save.do',
      				method : 'POST',
-     				dataType : 'json',
+     				dataType : 'text',
      				data : {
-	     				pListCount : listCount ,
-    	 				pPreview : PreviewMode,
-     					pPreviewWList : PreviewWList,
-     					pPreviewWContent : PreviewWContent,
-     					pPreviewHList : PreviewHList,
-     					pPreviewHContent : PreviewHContent	
+	     				listCount : listCount ,
+    	 				preview : PreviewMode,
+     					previewWList : PreviewWList,
+     					previewWContent : PreviewWContent,
+     					previewHList : PreviewHList,
+     					previewHContent : PreviewHContent	
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezBoard.t0014" />');

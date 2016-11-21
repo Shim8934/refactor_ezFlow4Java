@@ -46,6 +46,8 @@ public class BoardVO {
 	private String nextTitle;
 	/** 게시판종류*/
 	private String mode;
+	/** tenant*/
+	private int tenantID;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -178,6 +180,12 @@ public class BoardVO {
 	}
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 	
 }

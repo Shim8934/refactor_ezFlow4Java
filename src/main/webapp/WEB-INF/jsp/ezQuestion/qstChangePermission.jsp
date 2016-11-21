@@ -198,6 +198,7 @@
 	        	        return false;
 	            	}
 	        	}
+
 	        	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	L_SearchEndDt = L_SearchEndDt.substring(0, 10);
 	        	if (trim_Cross(document.getElementById("txtExpiredate").value) != "") {
@@ -247,21 +248,23 @@
 	        	    return;
 	        	}
 		        
-	        	var m_PostDate = "${mPostDate}";
+	        	var m_PostDate = "${mPostDate1}";
 	        	if (L_SearchStartDt.length > 10) {
 	            	L_SearchStartDt = L_SearchStartDt.substring(0, 10);
 	        	}
+
 	        	var m_PollStartDate = L_SearchStartDt;
 	        	var tempS = m_PollStartDate.split("-");
 	        	var szSYear = tempS[0];
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay;
+
 	        	if (m_PollStartDate > m_PostDate) {
-		            alert("<spring:message code='ezQuestion.t204' />");
+		            alert("<spring:message code='ezQuestion.t204'/>");
 		            return;
 	    	    }
-	        	if (confirm("<spring:message code='ezQuestion.t205' />")) {
+	        	if (confirm("<spring:message code='ezQuestion.t205'/>")) {
 	            	document.frmEndPoll.submit();
 	        	}
 	    	}
@@ -271,8 +274,8 @@
 		        window.location.href = szUrl;
 	    	}
 	    	function menu_SelectRange() {
-		        var item_no = document.getElementById("item_no").value;
-		        var szUrl = "/ezQuestion/rangeSelect.do?brd_id=5&item_no=" + item_no;
+		        var item_no = document.getElementById("itemNo").value;
+		        var szUrl = "/ezQuestion/qstRangeSelect.do?brdID=5&itemNo=" + item_no;
 	    	    if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 	        	    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
 	            	    var feature = GetOpenPosition(560, 630);
@@ -450,7 +453,8 @@
                         		</c:otherwise> 
                         	</c:choose>
                     	</select> 
-                    	<a id="aLinkbtn" class="imgbtn"><span id="aLink" <%-- <% if (!ResultYN) { Response.Write("onclick='menu_SelectRange()' "); } %> --%>><spring:message code='ezQuestion.t253' /></span></a>
+                    	<%boolean resultYN = (boolean)request.getAttribute("resultYN"); %>
+                    	<% if (!resultYN) { %><a id="aLinkbtn" class="imgbtn"> <span id="aLink"  onclick='menu_SelectRange()' );> <spring:message code='ezQuestion.t253'/></span></a><% } %>
                 	</td> 
             	</tr> 
             	<tr> <!----------- 설문제목 -------------> 
@@ -467,8 +471,8 @@
             	<a class="imgbtn"><span onclick="fun_cancel();"><spring:message code='ezQuestion.t38' /></span></a>
         	</div>
         	<div id="hidField" style="display:none">
-	            <input type="hidden" name="brd_id" id="brd_id" value="${qstListVO.brdID}" /> 
-    	        <input type="hidden" name="item_no" id="item_no" value="${qstUserPollItemVO.itemNo}" /> 
+	            <input type="hidden" name="brdID" id="brdID" value="${qstListVO.brdID}" /> 
+    	        <input type="hidden" name="itemNo" id="itemNo" value="${qstUserPollItemVO.itemNo}" /> 
         	    <input type="hidden" name="hidanonymity" id="hidanonymity" value="${qstUserPermissionVO.publicFlg}" /> 
             	<input type="hidden" name="hidopenResult" id="hidopenResult" value="${qstUserPermissionVO.publicResultFlg}" /> 
             	<input type="hidden" name="hidMultiResponse" id="hidMultiResponse" value="${qstUserPermissionVO.multiResponseFlg}" /> 
@@ -485,10 +489,10 @@
         	</div>
 		</form> 
     	<form name="frmEndPoll" action="/ezQuestion/callEndPoll.do" method="post"> 
-        	<input type="hidden" value="${qstListVO.brdID}" name="brd_id"/> 
-        	<input type="hidden" value="${qstListVO.itemNo}" name="item_no" /> 
+        	<input type="hidden" value="${qstUserPollItemVO.brdID}" name="brdID"/> 
+        	<input type="hidden" value="${qstUserPollItemVO.itemNo}" name="itemNo" /> 
         	<input type="hidden" value="1" name="hidEndPoll" /> 
-        	<input type="hidden" value="${receve}" name="Receve_str2" /> 
+        	<input type="hidden" value="${receve}" name="receveStr2" /> 
 		</form> 	
 	</body>
 </html>
