@@ -105,7 +105,7 @@
 	                    //    "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                    AddNotice_dialogArguments[0] = document.all("ListCompany").value;
 	                    AddNotice_dialogArguments[1] = add_notice_Complete;
-	                    var OpenWin = window.open("AddNotice_TFX.aspx", "AddNotice_TFX", GetOpenWindowfeature(800, 510));
+	                    var OpenWin = window.open("/admin/ezPersonal/addNoticeCK.do", "AddNotice_TFX", GetOpenWindowfeature(800, 510));
 	                    try { OpenWin.focus(); } catch (e) { }
 	                } else {
 	                    //rtnValue = window.showModalDialog("AddNotice_CK.aspx", document.getElementById("ListCompany").value,
@@ -117,14 +117,14 @@
 	                }
 	            } else {
 	                if (pUse_Editor == "TAGFREE") {
-	                    rtnValue = window.showModalDialog("AddNotice_TFI.aspx", document.all("ListCompany").value,
+	                    rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                } else {
 	                    if (p_Use_IE11Browser == "CK") {
 	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                    } else {
-	                        rtnValue = window.showModalDialog("AddNotice.aspx", document.all("ListCompany").value,
+	                        rtnValue = window.showModalDialog("/admin/ezPersonal/addNoticeCK.do", document.all("ListCompany").value,
 	                        "dialogHeight:510px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(800, 510));
 	                    }
 	                }
