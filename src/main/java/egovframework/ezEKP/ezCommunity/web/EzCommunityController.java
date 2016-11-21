@@ -2,6 +2,9 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.List;
@@ -48,6 +51,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -548,6 +552,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
 		String pMode = request.getParameter("mode");
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
 		String hasAttach = "NO";
@@ -587,6 +593,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityNewBoardItem";
 	}
@@ -613,6 +620,101 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception { 
 		return ezCommunityService.upload(request, response);
+	}
+	
+	/**
+	 * 게시판 파일업로드(IE9) 실행함수 
+	 */
+	@RequestMapping(value = "/ezCommunity/itemAttachFile.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String itemAttachFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnVal = "";
+		String guid = "";
+		String fileTitle = "";
+		String ext = "";
+		String prefix = "";
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		
+		if (request.getParameter("guid") != null) {
+			guid = request.getParameter("guid");
+		}
+		if (request.getParameter("name") != null) {
+			fileTitle = request.getParameter("name");
+		}
+		if (request.getParameter("ext") != null) {
+			ext = request.getParameter("ext");
+		}
+		if (request.getParameter("prefix") != null) {
+			prefix = request.getParameter("prefix");
+		}
+		
+		String boardID = prefix;
+		String uploadSN = "{" + guid + "}";
+		String fileName = fileTitle + "." + ext;
+		
+		if (request.getParameter("filename") != null) {
+			fileName = request.getParameter("filename");
+		}
+		
+		fileName = fileName.replace("+", "%2b");
+        fileName = fileName.replace(";", "%3b");
+        fileName = fileName.replace("~", "%7e");
+        fileName = fileName.replace("=", "%3d");
+        
+        String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+        
+        if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
+        	returnVal = "denied";
+        } else {
+        	if (!new File(dirPath + "tempUploadFile").exists()) {
+        		new File(dirPath + "tempUploadFile").mkdirs();
+        	}
+        	
+        	if (!new File(dirPath + boardID).exists()) {
+        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        		new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+        	} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        	}
+        	
+        	String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
+        	
+            InputStream stream = null;
+            OutputStream bos = null;         
+            
+            try {
+                stream = request.getInputStream();
+                bos = new FileOutputStream(attachPath);
+//                long fileSize = 0;
+                int bytesRead = 0;
+                byte[] buffer = new byte[BUFF_SIZE];
+        
+                while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+                    bos.write(buffer, 0, bytesRead);
+//                    fileSize += bytesRead;
+                }
+            } catch (Exception e) {
+                throw e;                
+            } finally {
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (Exception ignore) {
+                    }
+                }
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (Exception ignore) {
+                    }
+                }
+            }
+            returnVal = "OK_" + uploadSN + "_" + fileName;
+        }
+        
+		return returnVal;
 	}
 	
 	/**
