@@ -2991,7 +2991,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<USERNAME2>" + commonUtil.cleanValue(item.getUserName2()) + "</USERNAME2>");
 	        	sb.append("<COMPANYID>" + commonUtil.cleanValue(item.getCompanyID()) + "</COMPANYID>");
 	        	sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
-	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
+	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().replace(System.lineSeparator(), "\\n").trim()) + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
 	        	sb.append("<WRITEDAY>" + item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
@@ -4730,7 +4730,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";")[i]);
 					map.put("itemID", itemID);
 					
-					if (thumbPath.indexOf("tempUpload") > -1) {
+					if (thumbPath.indexOf("tempUploadFile") > -1) {
 						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));

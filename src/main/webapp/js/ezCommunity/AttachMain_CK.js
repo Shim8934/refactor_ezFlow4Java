@@ -370,6 +370,7 @@ function AttachFileList() {
             } else {
                 //strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";"
                 strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+                alert(strRet);
             }
         }
     }

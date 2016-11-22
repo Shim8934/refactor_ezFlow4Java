@@ -23,22 +23,7 @@
 		        color:#017bec;
 	        }
 		</style>
-		
-		<script type="text/javascript">
-			function keyword_onkeydown(e) {
-				var keycode;
-		        if (!window.ActiveXObject)
-		            keycode = e.keyCode;
-		        else
-		            keycode = event.keyCode;
-		        if (keycode == 13) {
-		            search();
-		            return false;
-		        }
-		        return true;
-		    }
-		</script>
-		
+
 		<script type="text/javascript">
 			var CurPage = '<c:out value="${curpage}" />';
 			var totalPage = '<c:out value="${totalPage}" />';
@@ -91,6 +76,19 @@
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
 		    }
 		    
+		    function keyword_onkeydown(e) {
+				var keycode;
+		        if (!window.ActiveXObject)
+		            keycode = e.keyCode;
+		        else
+		            keycode = event.keyCode;
+		        if (keycode == 13) {
+		            search();
+		            return false;
+		        }
+		        return true;
+		    }
+		    
 			function search() {
 				if( !comm_searchCheck()) {
 					return;
@@ -138,10 +136,6 @@
 				document.FIND.submit();
 				
 				return
-			}
-			
-			function gopage() {
-				document.location.href="/ezCommunity/guestOne.do?mode=list&code=" + code + "&goToPage=" + document.page.sel.value;
 			}
 			
 			function mo_onclick() {
@@ -328,10 +322,6 @@
 			}
 	        
 	        //########################################페이지네이션 변경 ##############################################
-		    function gopage() {
-		        document.location.href = "/ezCommunity/guestOne.do?mode=list&code=" + code + "&goTopage=" + document.page.sel.value;
-		    }
-
 		    function goToPage(page) {
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent("${sRadio}")
