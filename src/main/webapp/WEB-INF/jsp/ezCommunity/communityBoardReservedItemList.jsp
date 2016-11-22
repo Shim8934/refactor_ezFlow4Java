@@ -65,6 +65,7 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
+//     			$('#tblList tbody:first').append(listXML);
     			$('#tblList').html($('#tblList').html()+listXML);
     			makePageSelPage();
     		});
@@ -253,7 +254,7 @@
 			
 			function movePage(newPage) {
 			    if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-			        window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + escape(pOrgBoardParameters);
+			        window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 			    }
 			}
 
@@ -261,7 +262,7 @@
 				newPage = parseInt(CurPage) - 1;
 				
 				if(newPage > 0) {
-					window.location.href = "/ezCommunity/boardReservedItemList.aspx?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + escape(pOrgBoardParameters);
+					window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				}
 			}
 
@@ -269,7 +270,7 @@
 				newPage = parseInt(CurPage) + 1;
 				
 				if(newPage <= parseInt(totalPage)) {
-					window.location.href = "/ezCommunity/boardReservedItemList.aspx?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + escape(pOrgBoardParameters);
+					window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				}
 			}
 
@@ -278,13 +279,13 @@
 					var newPage = txt_PageInputNum.value;
 					
 					if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-						window.location.href = "/ezCommunity/boardReservedItemList.aspx?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + escape(pOrgBoardParameters);
+						window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 					}
 				}
 			}
-
+			
 			function SortPage(SortBy) {
-				window.location.href = "/ezCommunity/boardReservedItemList.aspx?page=" + CurPage + "&sortBy=" + SortBy + "&orgBoardParameters=" + escape(pOrgBoardParameters);
+				window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + CurPage + "&sortBy=" + SortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 			}
 
 			function BoardItemList() {
@@ -308,73 +309,68 @@
 		</script>
 		
 		<table class="mainlist" id ="tblList" style="margin-top:3px;width:100%">
-  			<form name="frmOutbox" action="/ezCommunity/boardReservedItemList.do" method="post">
-  				<tr>
-  					<th align="center" style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+			<tr>
+				<th align="center" style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+				<c:choose>
+					<c:when test="${pSortBy == 'BoardName'}">
+						<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName desc')" ><spring:message code='ezCommunity.t418' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+					</c:when>
+					<c:when test="${pSortBy == 'BoardName desc'}">
+						<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418' /></th>
+					</c:otherwise>
+				</c:choose>
   					
-  					<c:choose>
-						<c:when test="${pSortBy == 'BoardName'}">
-							<th style="cursor:pointer"  onClick="SortPage('BoardName desc')" ><spring:message code='ezCommunity.t418' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
-						</c:when>
-						<c:when test="${pSortBy == 'BoardName desc'}">
-							<th style="cursor:pointer"  onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
-						</c:when>
-						<c:otherwise>
-							<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName')"><spring:message code='ezCommunity.t418' /></th>
-						</c:otherwise>
-					</c:choose>
-  					
-  					<c:choose>
-						<c:when test="${pSortBy == 'A.Title'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.Title desc')" width="60%"><spring:message code='ezCommunity.t124' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
-						</c:when>
-						<c:when test="${pSortBy == 'A.Title desc'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.Title')" width="60%"><spring:message code='ezCommunity.t124' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
-						</c:when>
-						<c:otherwise>
-							<th style="cursor:pointer"  onClick="SortPage('A.Title')" width="60%"><spring:message code='ezCommunity.t124' /></th>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+					<c:when test="${pSortBy == 'A.Title'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.Title desc')" width="170"><spring:message code='ezCommunity.t124' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+					</c:when>
+					<c:when test="${pSortBy == 'A.Title desc'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.Title')" width="170"><spring:message code='ezCommunity.t124' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="cursor:pointer"  onClick="SortPage('A.Title')" width="170"><spring:message code='ezCommunity.t124' /></th>
+					</c:otherwise>
+				</c:choose>
 					
-					<c:choose>
-						<c:when test="${pSortBy == 'A.StartDate'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate desc')" width="60%"><spring:message code='ezCommunity.t989' /><spring:message code='ezCommunity.t990' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
-						</c:when>
-						<c:when test="${pSortBy == 'A.StartDate desc'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="60%"><spring:message code='ezCommunity.t991' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
-						</c:when>
-						<c:otherwise>
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="60%"><spring:message code='ezCommunity.t991' /></th>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+					<c:when test="${pSortBy == 'A.StartDate'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.StartDate desc')" width="100"><spring:message code='ezCommunity.t989' /><spring:message code='ezCommunity.t990' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+					</c:when>
+					<c:when test="${pSortBy == 'A.StartDate desc'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="100"><spring:message code='ezCommunity.t991' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="100"><spring:message code='ezCommunity.t991' /></th>
+					</c:otherwise>
+				</c:choose>
 					
-					<c:choose>
-						<c:when test="${pSortBy == 'A.EndDate'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate desc')" width="60%"><spring:message code='ezCommunity.t989' /><spring:message code='ezCommunity.t992' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
-						</c:when>
-						<c:when test="${pSortBy == 'A.EndDate desc'}">
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="60%"><spring:message code='ezCommunity.t993' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
-						</c:when>
-						<c:otherwise>
-							<th style="cursor:pointer"  onClick="SortPage('A.StartDate')" width="60%"><spring:message code='ezCommunity.t993' /></th>
-						</c:otherwise>
-					</c:choose>
+				<c:choose>
+					<c:when test="${pSortBy == 'A.EndDate'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.EndDate desc')" width="100"><spring:message code='ezCommunity.t989' /><spring:message code='ezCommunity.t992' /><img src="/images/view-sortup.gif" width="9" height="9"></th>
+					</c:when>
+					<c:when test="${pSortBy == 'A.EndDate desc'}">
+						<th style="cursor:pointer"  onClick="SortPage('A.EndDate')" width="100"><spring:message code='ezCommunity.t993' /><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="cursor:pointer"  onClick="SortPage('A.EndDate')" width="100"><spring:message code='ezCommunity.t993' /></th>
+					</c:otherwise>
+				</c:choose>
 					
-					<c:choose>
-						<c:when test="${pSortBy == 'A.Attachments'}">
-							<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortup.gif" width="9" height="9"></th>
-						</c:when>
-						<c:when test="${pSortBy == 'A.Attachments desc'}">
-							<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
-						</c:when>
-						<c:otherwise>
-							<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"></th>
-						</c:otherwise>
-					</c:choose>
-					
-				</tr>
-
-			</form>
+				<c:choose>
+					<c:when test="${pSortBy == 'A.Attachments'}">
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments desc')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortup.gif" width="9" height="9"></th>
+					</c:when>
+					<c:when test="${pSortBy == 'A.Attachments desc'}">
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="cursor:pointer"  width="20" onClick="SortPage('A.Attachments')"><img src="/images/file.gif" width="13" height="12"></th>
+					</c:otherwise>
+				</c:choose>
+			</tr>
 		</table>
 		
 		<div id="tblPageRayer"></div>
