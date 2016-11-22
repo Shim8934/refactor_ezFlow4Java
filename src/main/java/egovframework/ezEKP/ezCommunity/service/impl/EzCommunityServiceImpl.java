@@ -4725,13 +4725,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					FileUtils.moveFile(file, destFile);
 					filePath = attachments.split(";")[i].replace("tempUploadFile", "");
 				}
-
+				
 				if (!thumbPath.equals("")) {
 					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";")[i]);
 					map.put("itemID", itemID);
 					
-					if (thumbPath.indexOf("TempUpload") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+					if (thumbPath.indexOf("tempUpload") > -1) {
+						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 					} else {
