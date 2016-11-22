@@ -1,7 +1,13 @@
 package egovframework.ezEKP.ezPortal.web;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +32,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -2495,5 +2504,109 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		return "/admin/ezPortal/portalImageView";
 		
 	}
+	
+	/**
+	 * 관리자 포탈 IE9 이미지 업로드 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/uploadMenuImage.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadMenuImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		String mode = "";
+		
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+	
+		String realPath = req.getServletContext().getRealPath("");
+		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode;
+		
+		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
+		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
+		
+		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
+		
+		byte[] byt = Base64.decode(imageData);
+		String savePath = pServerPath + commonUtil.separator + pUniqueName;
+		
+		if (new File(savePath).exists()) {
+			new File(savePath).delete();
+		}
+		
+		InputStream myInputStream = new ByteArrayInputStream(byt);
+		
+		writeUploadedFile(myInputStream, pUniqueName, pServerPath);
+		
+		if (mode.equals("Theme")) {
+			BufferedImage bi = ImageIO.read(new File(savePath));	
+			String pSaveName = UUID.randomUUID().toString() + ".jpg";
+			BufferedImage bufferedImage = new BufferedImage(170, 140, bi.getType());
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
+
+			ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
+			//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
+
+			File file1 = new File(savePath);
+			if (file1.exists()) {
+				FileUtils.deleteQuietly(file1);
+			}
+			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+		} else {
+			logger.debug("path="+config.getProperty("upload_portal.ROOT") + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
+			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+		}
+		
+		
+	}
+	
+    protected void writeUploadedFile(InputStream stream, String newName, String stordFilePath) throws Exception {
+		
+		OutputStream bos = null;
+		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+		
+		try {
+		    File cFile = new File(stordFilePathReal);
+	
+		    if (!cFile.isDirectory()) {
+				boolean _flag = cFile.mkdir();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+	
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+		    if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		    if (stream != null) {
+				try {
+				    stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+    }
 	
 }
