@@ -127,6 +127,8 @@ public class BoardPropertyVO {
 	private int totalPage;
 	/** 총갯수 */
 	private int totalCount;
+	/** 테넌트아이디*/
+	private int tenantID;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -488,45 +490,12 @@ public class BoardPropertyVO {
 	public void setLoginVO(LoginVO loginVO) {
 		this.loginVO = loginVO;
 	}
-	@Override
-	public String toString() {
-		return "BoardPropertyVO [loginVO=" + loginVO + ", boardID=" + boardID
-				+ ", boardName=" + boardName + ", boardName1=" + boardName1
-				+ ", boardName2=" + boardName2 + ", treeViewOrder="
-				+ treeViewOrder + ", boardLevel=" + boardLevel
-				+ ", parentBoardID=" + parentBoardID + ", boardDescription="
-				+ boardDescription + ", itemExpires=" + itemExpires
-				+ ", attachSizeLimit=" + attachSizeLimit + ", replyNotify="
-				+ replyNotify + ", boardGroupID=" + boardGroupID
-				+ ", boardGroupName=" + boardGroupName + ", boardGroupName2="
-				+ boardGroupName2 + ", alertPostItem=" + alertPostItem
-				+ ", guBun=" + guBun + ", url=" + url + ", deleteAfter="
-				+ deleteAfter + ", boardColor=" + boardColor + ", boardNo="
-				+ boardNo + ", portlet=" + portlet + ", oneLineReply="
-				+ oneLineReply + ", boardTreePath=" + boardTreePath
-				+ ", backGround=" + backGround + ", formLocation="
-				+ formLocation + ", formFlag=" + formFlag + ", apprFlag="
-				+ apprFlag + ", apprMailFlag=" + apprMailFlag
-				+ ", apprUserList=" + apprUserList + ", orgApprFlag="
-				+ orgApprFlag + ", attributeYN=" + attributeYN
-				+ ", ss_board_maxRows=" + ss_board_maxRows
-				+ ", ss_searchBoard_maxRows=" + ss_searchBoard_maxRows
-				+ ", boardGroupAdmin_FG=" + boardGroupAdmin_FG + ", accessID="
-				+ accessID + ", accessName=" + accessName + ", accessName2="
-				+ accessName2 + ", accessLevel=" + accessLevel + ", access_="
-				+ access_ + ", boardMin_FG=" + boardMin_FG + ", listView_FG="
-				+ listView_FG + ", read_FG=" + read_FG + ", write_FG="
-				+ write_FG + ", reply_FG=" + reply_FG + ", delete_FG="
-				+ delete_FG + ", inherit_FG=" + inherit_FG + ", postNotice="
-				+ postNotice + ", boardGroupACL=" + boardGroupACL
-				+ ", access_FG=" + access_FG + ", boardAdmin_FG="
-				+ boardAdmin_FG + ", expireDays=" + expireDays
-				+ ", apprMail_FG=" + apprMail_FG + ", boardType=" + boardType
-				+ ", adminType=" + adminType + ", buttonHidden=" + buttonHidden
-				+ ", sortBy=" + sortBy + ", page=" + page + ", totalPage="
-				+ totalPage + ", totalCount=" + totalCount + "]";
+	
+	public int getTenantID() {
+		return tenantID;
 	}
-	
-	
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
 	
 }

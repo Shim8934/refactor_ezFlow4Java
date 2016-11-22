@@ -19,7 +19,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception;
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, int tenantID) throws Exception;
 	
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
 	
@@ -41,7 +41,7 @@ public interface EzBoardAdminService {
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception;
 	
-	public String addMyBoards(String userID, String boardID) throws Exception;
+	public String addMyBoards(String userID, String boardID, int tenantID) throws Exception;
 	
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	
@@ -59,9 +59,9 @@ public interface EzBoardAdminService {
 	
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception;
 	
-	public void saveBoardOrder(String pBoardIDList) throws Exception;
+	public void saveBoardOrder(String pBoardIDList, int tenantID) throws Exception;
 	
-	public void deleteBoard(String boardID) throws Exception;
+	public void deleteBoard(String boardID, int tenantID) throws Exception;
 	
 	public void statusChangeBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 	
