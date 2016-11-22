@@ -54,6 +54,7 @@
 			    var xmldom = createXmlDom();
 			    var xmlhttp = createXMLHttpRequest();
 			    xmlhttp.open("POST", "/ezPortal/portletSearchList.do?pType=" + pType + "&mode=edit" + "&pPageType=" + gubunFlag, false);
+			    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			    xmlhttp.send();
 
 			    if (xmlhttp.statusText == "OK") {

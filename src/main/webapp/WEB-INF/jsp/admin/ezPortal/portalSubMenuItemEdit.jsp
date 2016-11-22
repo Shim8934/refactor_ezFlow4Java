@@ -53,6 +53,7 @@
 		{
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeSubMenuItem.do?pageID=" + pageid + "&uID=" + uid + "&parentUID=" + parentuid, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send();
 			xmlhttp = null;
 		}
@@ -90,6 +91,7 @@
 
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItem.do?pageID=" + pageid, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -235,6 +237,7 @@
 			strXML += "</DATA>";
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addParameter.do?mode=2", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -272,6 +275,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addRight.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -304,6 +308,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeACL.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			

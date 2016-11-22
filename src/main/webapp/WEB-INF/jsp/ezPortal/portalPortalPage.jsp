@@ -172,6 +172,7 @@
 		        xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezPortal/getQuickLink.do", true);
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
+		        xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		        xmlhttp.send(xmlpara);
 
 		    }
@@ -461,7 +462,8 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			
-			xmlhttp.open("POST", "/admin/portalSavePortalPage.do?callingPageID=" + pageid + "&pageID=" + pPageID + "&parentPageID=" + pParentPageID, false);		
+			xmlhttp.open("POST", "/admin/portalSavePortalPage.do?callingPageID=" + pageid + "&pageID=" + pPageID + "&parentPageID=" + pParentPageID, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 		}
@@ -1544,6 +1546,7 @@
 		{
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/resetPortalPage.do?pageID=" + pageid + "&comapnyID=" + g_CompanyID + "&baseType=" +g_BaseType, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send();
 		  if (xmlhttp.responseText == "OK")
 		  {
@@ -1576,6 +1579,7 @@
 				
 				var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/admin/ezPortal/deletePortalPage.do", false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send("<DATA><UID_>" + pageid + "</UID_></DATA>");
 				
 				if (xmlhttp.responseText == "OK")

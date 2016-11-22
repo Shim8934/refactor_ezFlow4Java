@@ -724,7 +724,7 @@
 	        }
 	        
 	        function event_select_category(val) {
-                if (val == "NOITME") {
+	        	if (val == "NOITEM") {
                     alert(strLang1);
                     return;
                 }
@@ -737,13 +737,13 @@
                 table.style.border = "0";
 
                 for (var i = 0; i < SelectNodes(xmldom, "DATA/ROW").length; i++) {
-                    if (i == 0 && SelectSingleNodeValue(SelectNodes(xmldom, "DATA"), "COPCNT") != "") {
-                        var totla = SelectSingleNodeValue(SelectNodes(xmldom, "DATA"), "COPCNT");
+                    if (i == 0 && SelectSingleNodeValue(SelectNodes(xmldom, "DATA")[0], "COPCNT") != "") {
+                        var total = SelectSingleNodeValue(SelectNodes(xmldom, "DATA")[0], "COPCNT");
                         
-                        if (totla % 5 == 0) {
-                            totalPage = totla / 5;
+                        if (total % 5 == 0) {
+                            totalPage = total / 5;
                         } else {
-                            totalPage = parseInt(totla / 5) + 1;
+                            totalPage = parseInt(total / 5) + 1;
                         }
                     }
                     
@@ -758,7 +758,6 @@
                         img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
                     } else {
                         img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
-                        
                     }
                     
                     img.style.width = "84px";

@@ -2,6 +2,37 @@ var g_progresswin;
 var g_fileList;
 var pAttachListXml="";
 
+function btn_AttachAdd_onclick() {
+	document.getElementById("boardID").value = pBoardID;
+    document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
+    document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+			
+    if( document.getElementById("cnt").value > 0) {
+    	var formData = new FormData();
+       	
+       	$.each($('#file1')[0].files, function(i, file) {          
+       		formData.append('file-' + i, file);
+        });
+       	
+       	formData.append('mode',  document.getElementById('mode').value);
+       	formData.append("boardID", document.getElementById("boardID").value);
+       	formData.append("maxSize", document.getElementById("maxSize").value);
+       	formData.append("cnt", document.getElementById("cnt").value);
+       	
+			$.ajax({
+				url : "/ezCommunity/upload.do",
+				type : "POST",
+				processData : false,
+				contentType : false,
+				data : formData,
+				success : function(data){
+					returnvalue(data);
+				}
+			});
+       	
+        document.form.file1.value = "";	
+    }
+}
 
 //string형 일때 사용
 function replace(str,s,d)

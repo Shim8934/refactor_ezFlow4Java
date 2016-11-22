@@ -12,8 +12,16 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
+		<c:if test="${isCrossBrowser == true}">
+			<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
+		</c:if>
+		
+		<c:if test="${isCrossBrowser != true}">
+			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
+		</c:if>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
@@ -95,7 +103,17 @@
 		    var rsa = new RSAKey();
 			var flag = false;
 			
+			<c:if test="${isCrossBrowser != true}">
+			    var objMHT = new ActiveXObject("MhtFormat.Convert");
+			    var objMHTRead = new ActiveXObject("MhtFormat.Convert");
+		    </c:if>
+			
 			window.onload = function () {
+				<c:if test="${isCrossBrowser != true}">
+			        document.all.EzHTTPTrans.SetBigLang = "${userInfo.lang}" == "1" ? 1 : 0;
+			        document.all.EzHTTPTrans.UseDbCl = true;
+				</c:if>
+				
 		        if(navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1){
 		            document.getElementById("file1").multiple = false;
 		        }
@@ -896,39 +914,6 @@
                 document.form.file1.click();
             }
             
-            function btn_AttachAdd_onclick() {
-                document.getElementById("boardID").value = pBoardID;
-                document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
-                document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-  				
-                if( document.getElementById("cnt").value > 0) {
-                	var formData = new FormData();
-                	
-                	$.each($('#file1')[0].files, function(i, file) {          
-                		formData.append('file-' + i, file);
-                    });
-                	
-                	formData.append('mode',  document.getElementById('mode').value);
-                	formData.append("boardID", document.getElementById("boardID").value);
-                	formData.append("maxSize", document.getElementById("maxSize").value);
-                	formData.append("cnt", document.getElementById("cnt").value);
-                	
-    				$.ajax({
-    					url : "/ezCommunity/upload.do",
-						type : "POST",
-						processData : false,
-						contentType : false,
-						data : formData,
-						success : function(data){
-							returnvalue(data);
-						}
-	 				});
-                	
-                    document.form.file1.value = "";	
-                }
-                
-            }
-	
             function returnvalue(strXML) {
                 var xml = loadXMLString(strXML);
                 var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -961,6 +946,10 @@
 //                 document.getElementById("file1").type = "text";
 //                 document.getElementById("file1").type = "file";
             }
+		</script>
+		
+		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+		    Append_AttachAdd(filename);
 		</script>
 	</head>
 	<body class = "popup" style = "height: 100%">
@@ -1098,29 +1087,52 @@
 	        </tr>
 	        <tr>
 	            <td style="padding-top: 10px; height: 20px; vertical-align: top;">
-	                <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="visibility: hidden;">
-	                    <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="multiple" />
-	                    <input type="hidden" name="boardID" id="boardID" />
-	                    <input type="hidden" name="maxSize" id="maxSize" />
-	                    <input type="hidden" name="mode" id="mode" />
-	                    <input type="hidden" name="cnt" id="cnt" />
-	                    <input type="hidden" name="mailGubun" id="mailgubun" />
-	                </form>
-	                <table class="file">
-	                    <form name="multicheck">
-	                        <tr>
-	                            <th><spring:message code='ezCommunity.t933'/></th>
-	                            <td class="pos1">
-	                                <div id="lstAttachLink">&nbsp;</div>
-	                            </td>
-	                            <td class="pos2">
-	                            	<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177'/></span></a><br>
-	                                <a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178'/></span></a>
-	                            </td>
-	                        </tr>
-	                    </form>
-	                </table>
+	                
+	                <c:choose>
+	                	<c:when test="${isCrossBrowser != true}">
+	                		<table class="file">
+						        <form name="multicheck">
+									<tr>
+										<th><spring:message code='ezCommunity.t933'/></th>
+										<td class="pos1">
+											<script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans");</script>
+											<div id="lstAttachLink" style="display:none;OVERFLOW:auto;HEIGHT:50px;">&nbsp;</div>
+										</td>
+										<td class="pos2">
+											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177'/></span></a><br>
+											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178'/></span></a>
+										</td>
+									</tr>
+								</form>
+							</table>
+	                	</c:when>
+	                	<c:otherwise>
+	                		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+			                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="visibility: hidden;">
+			                    <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="multiple" />
+			                    <input type="hidden" name="boardID" id="boardID" />
+			                    <input type="hidden" name="maxSize" id="maxSize" />
+			                    <input type="hidden" name="mode" id="mode" />
+			                    <input type="hidden" name="cnt" id="cnt" />
+			                    <input type="hidden" name="mailGubun" id="mailgubun" />
+			                </form>
+	                		<table class="file">
+			                    <form name="multicheck">
+			                        <tr>
+			                            <th><spring:message code='ezCommunity.t933'/></th>
+			                            <td class="pos1">
+			                                <div id="lstAttachLink">&nbsp;</div>
+			                            </td>
+			                            <td class="pos2">
+			                            	<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177'/></span></a><br>
+			                                <a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178'/></span></a>
+			                            </td>
+			                        </tr>
+			                    </form>
+			                </table>
+	                	</c:otherwise>
+	                </c:choose>
+	                
 	            </td>
 	        </tr>
 	        

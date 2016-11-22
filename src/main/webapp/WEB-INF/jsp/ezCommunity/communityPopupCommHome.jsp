@@ -491,40 +491,37 @@
 		    }
 		    
 		    function go_MemberOut(code) {
-		        var xmlHttp = createXMLHttpRequest();
-		        var xmlDoc = createXmlDom();
+		    	$.ajax({
+		    		type : "POST",
+		    		url : "/ezCommunity/goAdminOk.do",
+		    		async : false,
+		    		data : {code : code},
+		    		success: function (result) {
+		    			resultXML = loadXMLString(result);
+		    			
+		    			var master = "";
+				        
+				        master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+				        master = master.toLowerCase();
+				        userID = "<c:out value='${userInfo.id }'/>";
+				        userID = userID.toLowerCase();
 
-		        var objRoot;
-		        createNodeInsert(xmlDoc, objRoot, "PARAMETER");
+				        try {
+				            if (userID == master) {
+				                alert("Community <spring:message code='ezCommunity.t1103' />");
+				            } else {
+				                var wWeight = "425";
+				                var wHeight = "385";
+				                var heigth = window.screen.availHeight;
+				                var width = window.screen.availWidth;
+				                var left = (width - wWeight) / 2;
+				                var top = (heigth - wHeight) / 2;
 
-		        createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
-		        xmlHttp.open("POST", "/ezCommunity/goAdminOk.do", false);
-		        xmlHttp.send(xmlDoc);
-
-		        resultXML = loadXMLString(xmlHttp.responseText);
-		        
-		        var master = "";
-		        
-		        master = SelectNodes(resultXML, "/COMMUNITY/MASTER/VALUE").item(0).textContent;
-		        
-		        master = master.toLowerCase();
-		        userID = "<c:out value='${userinfo.id }'/>";
-		        userID = userID.toLowerCase();
-
-		        try {
-		            if (userID == master) {
-		                alert("Community <spring:message code='ezCommunity.t1103' />");
-		            } else {
-		                var wWeight = "425";
-		                var wHeight = "385";
-		                var heigth = window.screen.availHeight;
-		                var width = window.screen.availWidth;
-		                var left = (width - wWeight) / 2;
-		                var top = (heigth - wHeight) / 2;
-
-		                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-		            }
-		        } catch (e) { }
+				                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+				            }
+				        } catch (e) { }
+		    		}
+		    	});
 		    }
 		    
 		    function open_admin(code) {
@@ -606,7 +603,7 @@
 	                            p.appendChild(span);
 
 	                            var ul = document.createElement("UL");
-                                var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
+                                var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
 
 	                            if (isdata.trim() != "") {
 	                                var imageCnt = 0;
@@ -721,7 +718,7 @@
 	                        p.appendChild(span);
 
 	                        var ul = document.createElement("UL");
-	                        var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
+	                        var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
 
 	                        if (isdata.trim() != "") {
 	                            var imageCnt = 0;

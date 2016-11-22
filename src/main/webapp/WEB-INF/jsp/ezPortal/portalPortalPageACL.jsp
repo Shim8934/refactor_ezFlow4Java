@@ -37,6 +37,7 @@
 
 	            var xmlhttp = createXMLHttpRequest();
 	            xmlhttp.open("POST", "/admin/ezPortal/addRight.do", false);
+	            xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	            xmlhttp.send(strXML);
 
 
@@ -76,6 +77,7 @@
 
 	            var xmlhttp = createXMLHttpRequest();
 	            xmlhttp.open("POST", "/admin/ezPortal/removeACL.do", false);
+	            xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	            xmlhttp.send(strXML);
 	            xmlhttp = null;
 

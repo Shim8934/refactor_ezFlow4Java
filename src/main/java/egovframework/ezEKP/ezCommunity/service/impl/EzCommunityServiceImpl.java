@@ -419,8 +419,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String pClubID = "";
 		StringBuilder aspXML = new StringBuilder(), masterXML = new StringBuilder(), isinXML = new StringBuilder(), resultXML = new StringBuilder();
 		
-		Document xmlDom = commonUtil.convertStringToDocument(data);
-		pClubID = xmlDom.getChildNodes().item(0).getTextContent();
+		pClubID = data;
 		
 		//TODO 2016-04-26 이효진  사용하지 않는 Table을 참조해서 Null반환
 		List<String> userIDList = ezCommunityDAO.goAdminOkGet1();
@@ -692,15 +691,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
-		int cnt = 0, pMaxSize = 0;
+		int pMaxSize = 0;
 		String strXML = "";
 		
 		String pBoardID = request.getParameter("boardID");
 		String pMode = request.getParameter("mode");
 		
-		if (request.getParameter("cnt") != null) {
-			cnt = Integer.parseInt(request.getParameter("cnt"));
-		}
 		if (request.getParameter("maxSize") != null) {
 			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
 		}

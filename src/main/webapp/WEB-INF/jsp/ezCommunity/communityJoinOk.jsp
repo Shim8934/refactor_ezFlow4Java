@@ -76,7 +76,7 @@
 						            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
 						                window.resizeTo(346, 243);
 						            } else {
-						            	window.resizeTo(346, 240);
+						            	window.resizeTo(346, 270);
 						            }
 						        }
 						        
@@ -149,7 +149,7 @@
 							            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
 							                window.resizeTo(346, 243);
 							            } else {
-							            	window.resizeTo(346, 240);
+							            	window.resizeTo(346, 270);
 							            }
 							        }
 							        

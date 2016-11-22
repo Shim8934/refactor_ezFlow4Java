@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		var imageWidth = "${imageWidth}";
 		var imageHeight = "${imageHeight}";
@@ -63,14 +64,35 @@
 
 		function changeNormalImage() {
 			//2016-10-21 mode PHOTO -> Logo로 변경
-	        document.getElementById('mode').value = "Logo";
-	        document.form.file1.click();
-		   
+			if (CrossYN()) {
+				document.getElementById('mode').value = "Logo";
+		        document.form.file1.click();	
+			} else {
+				 var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+			     var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+			    if (filepath == "") return;
+
+			    var strBase64 = ezUtil.DownloadToBase64(filepath);
+			    ezUtil = null;
+
+			    var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+			    var temp = ezUtil.GetImageSize(filepath);
+			    ezUtil = null;
+
+			    imageWidth = temp.split("*")[0];
+			    imageHeight = temp.split("*")[1];
+		            
+			    var strXML = "<IMAGE><OLDFILENAME>" + txtNormalImage.src.substr(txtNormalImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+			    g_xmlhttp = createXMLHttpRequest();
+			    g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Logo", true);
+			    g_xmlhttp.onreadystatechange = changeNormalImage_end;
+			    g_xmlhttp.send(strXML);				
+			}
+	        
 		}
 		
-		function changeNormalImage_end()
-		{
-			if (g_xmlhttp.readystate != 4) return;
+		function changeNormalImage_end() {
+			//if (g_xmlhttp.readystate != 4) return;
 			txtNormalImage.src = g_xmlhttp.responseText;
 			txtNormalImage.style.display = "";
 			g_Dirty = true;
@@ -108,6 +130,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/saveLogoImage.do?pageID=" + pageid + "&uID=" + uid + "&mode=SAVE", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			
 			alert("<spring:message code='ezPortal.t84'/>");
@@ -184,6 +207,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/addRight.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -203,6 +227,7 @@
 			
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/removeACL.do", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 			
@@ -215,6 +240,7 @@
 		function Delete(pFileName) {
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/saveLogoImage.do?pageID=" + pageid + "&uID=" + uid + "&oldFileName=" + escape(pFileName) + "&mode=DEL", false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send();
 			xmlhttp = null;
 		}
@@ -227,14 +253,15 @@
 		            else
 		                alert("<spring:message code='ezPortal.t414'/>");
 		        }
-		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+
+		        document.getElementById("cnt").value = $("input[name=file1]")[0].files[0].length;
 		        var frm = document.getElementById('form');
 		        frm.action = "/admin/ezPortal/portletImageUpload.do?mode=Logo";
 		        frm.submit();
-		        document.form.file1.value = "";
+		        document.form.file1.value = "";   
 		    }
-
 		}
+		
 		function returnvalue(strXML) {
 
 		    var xml = loadXMLString(strXML);

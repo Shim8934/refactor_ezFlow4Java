@@ -307,6 +307,7 @@
 
 			var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/portalSaveTopMenu.do?pageID=" + pPageID + "&parentPageID=" + pParentPageID, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send(strXML);
 			xmlhttp = null;
 		}
@@ -338,6 +339,7 @@
 		{
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/portalSaveSkin.do?pageID=" + pPageID, false);
+			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 			xmlhttp.send();
 			xmlhttp = null;
 		}

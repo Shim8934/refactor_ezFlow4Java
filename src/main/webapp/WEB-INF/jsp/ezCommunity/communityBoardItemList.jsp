@@ -120,7 +120,7 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-    			$('#tblList').html($('#tblList').html()+listXML);
+    			$('#tblList tbody:first').append(listXML);
     			makePageSelPage();
     		});
     		

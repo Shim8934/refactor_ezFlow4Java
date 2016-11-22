@@ -30,8 +30,8 @@
 			    createNodeAndInsertText(xmlDoc, objRoot, "CODE", code);
 			    createNodeAndInsertText(xmlDoc, objRoot, "REASON", ConvMakeXMLString(window.outreason.value));
 	
-				xmlHttp.open("POST","/ezCommunity/commOutOk.do",false);
-				xmlhttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
+			    xmlHttp.open("POST","/ezCommunity/commOutOk.do",false);
+			    xmlHttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
 				xmlHttp.send(xmlDoc);
 					
 				var resultXML = loadXMLString(xmlHttp.responseText);

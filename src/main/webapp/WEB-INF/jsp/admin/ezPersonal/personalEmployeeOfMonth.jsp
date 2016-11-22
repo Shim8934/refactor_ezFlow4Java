@@ -27,15 +27,15 @@
 		            var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
 		            try { Select_Best.focus(); } catch (e) {
 		            }
-		        }/*  else {
+		        }  else {
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
 		            var left = (width - 500) / 2;
 		            var top = (heigth - 400) / 2;
-		            var rtnValue = window.showModalDialog("Select_Best.aspx", "",
+		            var rtnValue = window.showModalDialog("/admin/ezPersonal/selectBest.do", "",
 		                  "dialogHeight:200px;dialogwidth:400px;dialogleft:left = " + left + ";dialogtop:" + top + ", status:no;toolbar:no;location:no;scroll:no;edge:sunken, top=" + top + ",left = " + left);
 		            window.location.reload(false);
-		        } */
+		        } 
 		    }
 	
 		    function btn_Select_Complete(){

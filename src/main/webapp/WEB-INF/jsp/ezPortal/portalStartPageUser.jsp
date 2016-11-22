@@ -68,6 +68,7 @@
 			{
 			    var xmlhttp = createXMLHttpRequest();
 				xmlhttp.open("POST", "/ezPortal/useMyStartPage.do?uID=" + g_UID + "&oldUID=" + g_UseFlag , false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send();
 				if (xmlhttp.responseText == "OK")
 					document.location.reload();

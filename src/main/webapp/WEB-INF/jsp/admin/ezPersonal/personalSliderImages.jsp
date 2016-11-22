@@ -25,10 +25,11 @@
 		        
 		        $.ajax({
 		        	type : "POST",
+		        	dataType : "text",
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
-		        		MakeSliderList(result);
+		        		MakeSliderList(loadXMLString(result));
 		        	}
 		        });
 		    });
@@ -64,7 +65,7 @@
 		            }
 		        }
 		        else {
-		            var url = "SelectImage.aspx?";
+		            var url = "/admin/ezPersonal/selectImage.do";
 		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:410px;edge:sunken;scroll:no" + GetShowModalPosition(610, 410);
 		            feature = feature + GetShowModalPosition(610, 410);
 		            window.showModalDialog(url, "", feature);

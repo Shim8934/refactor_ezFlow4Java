@@ -20,7 +20,7 @@ public interface EzBoardService {
 
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception;
 	
-	public List<BoardVO> get_apprUserList(String boardID) throws Exception;
+	public List<BoardVO> get_apprUserList(String boardID, int tenantID) throws Exception;
 
 	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, int tenantID) throws Exception;
 
@@ -30,25 +30,25 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
-	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang) throws Exception;
+	public List<BoardReadVO> getReaderList(String boardID, String itemID, String userID, String lang, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree) throws Exception;
+	public List<BoardListVO> getAdjacentItems1(String boardID, String parentWriteDate, String upperItemIDTree, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getAdjacentItems2(String boardID, String parentWriteDate) throws Exception;
+	public List<BoardListVO> getAdjacentItems2(String boardID, String parentWriteDate, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getAdjacentItems3(String boardID, String parentWriteDate, String itemID, String upperItemIDTree, String previousItemID) throws Exception;
+	public List<BoardListVO> getAdjacentItems3(String boardID, String parentWriteDate, String itemID, String upperItemIDTree, String previousItemID, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getAdjacentItems2Photo(String boardID, String parentWriteDate) throws Exception;
+	public List<BoardListVO> getAdjacentItems2Photo(String boardID, String parentWriteDate, int tenantID) throws Exception;
 
-	public List<BoardListVO> getAdjacentItems3Photo(String boardID, String parentWriteDate) throws Exception;
+	public List<BoardListVO> getAdjacentItems3Photo(String boardID, String parentWriteDate, int tenantID) throws Exception;
 	
-	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow) throws Exception;
+	public List<BoardAttachVO> photoViewDB(String itemID, String boardID, int pStartRow, int pEndRow, int tenantID) throws Exception;
 	
-	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID) throws Exception;
+	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang) throws Exception;
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, int tenantID) throws Exception;
 	
-	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName) throws Exception;
+	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception;
 	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
@@ -76,7 +76,7 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
-	public List<String> getCopyItemAttach(String orgItemID) throws Exception;
+	public List<String> getCopyItemAttach(String orgItemID, int tenantID) throws Exception;
 	
 	public BoardPropertyVO getBoardProperty(String pBoardID, int tenantID) throws Exception;
 	
@@ -88,7 +88,7 @@ public interface EzBoardService {
 	
 	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception;
 	
-	public BoardListVO getCopyItem(String orgItemID, String orgBoardID) throws Exception;
+	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
 	
 	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, int tenantID) throws Exception;
 	
@@ -102,33 +102,31 @@ public interface EzBoardService {
 
 	public String brdCheckIfHasReply(String itemID, int tenantID) throws Exception;
 	
-	public String getNoticePostItemAll(String boardID) throws Exception;
+	public String getNoticePostItemAll(String boardID, int tenantID) throws Exception;
 	
-	public String getParentBoardID(String boardID) throws Exception;
+	public String getParentBoardID(String boardID, int tenantID) throws Exception;
 	
-	public String getDocPassWord(String itemID) throws Exception;
+	public String getDocPassWord(String itemID, int tenantID) throws Exception;
 	
-	public String deleteTempItem(String strItemID) throws Exception;
-	
-	public String getItemXML(String boardID, String itemID, String lang) throws Exception;
+	public String getItemXML(String boardID, String itemID, String lang, int tenantID) throws Exception;
 
-	public String getItemTempXML(String boardID, String itemID, String lang) throws Exception;
+	public String getItemTempXML(String boardID, String itemID, String lang, int tenantID) throws Exception;
 	
-	public String setBoardConfig(String userID, String listCount, String preView) throws Exception;
+	public String setBoardConfig(String userID, String listCount, String preView, int tenantID) throws Exception;
 	
-	public String apprItem(String userID, String itemList, String pMod) throws Exception;
+	public String apprItem(String userID, String itemList, String pMod, int tenantID) throws Exception;
 	
-	public String deleteOneLineReply(String id, String replyID, String guBun) throws Exception;
+	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
 	
-	public String checkOneLineOwner(String replyID, String userID) throws Exception;
+	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
-	public String getThumbListXML (String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang) throws Exception;
+	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, int tenantID) throws Exception;
 	
 	public String portalPageItemEdit(String boardID) throws Exception;
 	
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
 	
-	public int getReservedItemListCount(String userID) throws Exception;
+	public int getReservedItemListCount(String userID, int tenantID) throws Exception;
 	
 	public int getNewItemListCount(LoginVO userInfo) throws Exception;
 
@@ -148,7 +146,7 @@ public interface EzBoardService {
 	
 	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
 	
-	public int checkApprUserList(String userID, String itemID) throws Exception;
+	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception;
 	
 	public int getMyBoardTotalItemCount(LoginVO userInfo) throws Exception;
 
@@ -188,26 +186,28 @@ public interface EzBoardService {
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
 	
-	public void setMainImageID(String mainImageID, String itemID, String type) throws Exception;
+	public void setMainImageID(String mainImageID, String itemID, String type, int tenantID) throws Exception;
 	
-	public void setNotiOrder(String itemID) throws Exception;
+	public void setNotiOrder(String itemID, int tenantID, int sn) throws Exception;
 	
-	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName) throws Exception;
+	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName, int tenantID) throws Exception;
 
-	public void updateCopyItem(String itemID) throws Exception;
+	public void updateCopyItem(String itemID, int tenantID) throws Exception;
 	
-	public void updateMoveItem(String destItemID, String orgItemID) throws Exception;
+	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception;
 	
-	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content) throws Exception;
+	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
-	public void photoListAlbumEdit(String boardID, String itemID, String title, String content) throws Exception;
+	public void photoListAlbumEdit(String boardID, String itemID, String title, String content, int tenantID) throws Exception;
 	
-	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content) throws Exception;
+	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content, int tenantID) throws Exception;
 	
-	public void deleteItem(String itemIDs, String boardID) throws Exception;
+	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 
-	public void deleteTempItem(String itemIDs, String boardID) throws Exception;
+	public void deleteTempItem(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public void photoListDel(String boardID, String imageID) throws Exception;
+	public void photoListDel(String boardID, String imageID, int tenantID) throws Exception;
+
+	public String deleteTempItem(String strItemID, int tenantID) throws Exception;
 
 }
