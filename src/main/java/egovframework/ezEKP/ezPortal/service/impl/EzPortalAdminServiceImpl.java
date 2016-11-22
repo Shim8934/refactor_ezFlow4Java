@@ -1478,8 +1478,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	public String loadMenuItemConfig (String pUID, String pPageID, String pSkinNum) throws Exception {
+		logger.debug("loadMenuItemConfig Start");
 		String strXML = "";
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", pUID);
 		map.put("v_PPAGEID", pPageID);
@@ -1509,11 +1509,15 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		} else {
 			strXML = "<DATA>" + resultStr + "<IMAGEDATA></IMAGEDATA></DATA>";
 		}
+		logger.debug("strXML="+strXML);
+		logger.debug("loadMenuItemConfig End");
 		return strXML;
 	}
 	
 	public String saveMenuItemConfig (String pXML, String pPageID, String pCompanyID) {
+		logger.debug("saveMenuItemConfig Start");
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		logger.debug("pXML="+pXML);
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		String imgUID = xmlDom.getElementsByTagName("IMGUID").item(0).getTextContent();
 		String displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
@@ -1551,6 +1555,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		map.put("v_PIMAGEHEIGHT", Integer.parseInt(imageHeight));
 		map.put("v_PLINKURL", linkURL);
+		logger.debug("linkLocation="+linkLocation);
+		logger.debug("windowOption="+windowOption);
 		map.put("v_PLINKLOCATION", linkLocation);
 		map.put("v_PWINDOWOPTION", windowOption);
 		map.put("v_PNEWUID", UUID.randomUUID().toString());
@@ -1559,7 +1565,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PCOMPANYID", pCompanyID);
 		
 		ezPortalAdminDAO.saveMenuItemConfig(map);
-		
+		logger.debug("saveMenuItemConfig End");
 		return "OK";
 	}
 	
