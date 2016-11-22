@@ -68,7 +68,7 @@
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;\">";
-					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT") + "</textarea></td>";
+					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
 		        }

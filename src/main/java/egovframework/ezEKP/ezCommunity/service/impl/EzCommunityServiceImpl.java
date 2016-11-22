@@ -742,7 +742,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
 			}
 
-			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
+			pFileName =pFileName.replaceAll("+", "%2b").replaceAll(";", "%3b");
 			int fileSize = (int) file.getSize();
 			
 			if (fileSize > pMaxSize) {
@@ -2009,7 +2009,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	result.append("</TREEVIEWDATA>");
         }
         
-        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"));
+        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replaceAll("'", "''"));
 
         return result.toString();
 	}
@@ -2593,7 +2593,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			userName2 = userInfo.getDisplayName2();
 		}
 		
-		pContent = pContent.replace("'",  "''");
+		pContent = pContent.replaceAll("'",  "''");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PITEMID", pItemID);
@@ -2991,7 +2991,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<USERNAME2>" + commonUtil.cleanValue(item.getUserName2()) + "</USERNAME2>");
 	        	sb.append("<COMPANYID>" + commonUtil.cleanValue(item.getCompanyID()) + "</COMPANYID>");
 	        	sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
-	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().replace(System.lineSeparator(), "\\n").trim()) + "</CONTENT>");
+	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
 	        	sb.append("<WRITEDAY>" + item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");

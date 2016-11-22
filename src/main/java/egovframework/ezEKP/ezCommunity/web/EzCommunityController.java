@@ -1621,7 +1621,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (mode.equals("edit")) {
 			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId());
-			
+			item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			if (item != null) {
 				bIsMyContent = true;
 			}
@@ -1650,7 +1650,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
-		String memo = request.getParameter("memo");
+		String memo = request.getParameter("memo").replaceAll("\r\n", "<br>");
 		
 		LOGGER.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		
