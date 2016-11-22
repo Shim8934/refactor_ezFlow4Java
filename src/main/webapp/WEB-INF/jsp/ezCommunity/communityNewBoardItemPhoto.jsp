@@ -925,8 +925,7 @@
 		                    strRet +=  filepath.substr(0, idx+1) + "s_" + filepath.substr(idx+1) +  ";";
 		                }
 		            } else {
-		                //strRet += pBoardID + "/UploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
-		                strRet += "TempUploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
+		                strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
 		            }
 		        }
 							
