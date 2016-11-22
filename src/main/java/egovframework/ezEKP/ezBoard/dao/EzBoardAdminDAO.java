@@ -33,8 +33,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) {		
-		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", parentBoardID);
+	public List<BoardTreeVO> get_Admin_TopBoardList(Map<String, Object> map) {		
+		return (List<BoardTreeVO>) list("EzBoardAdminDAO.get_Admin_TopBoardList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -99,19 +99,31 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public void createBoardGroup(Map<String, Object> map) throws Exception{		
-		select("EzBoardAdminDAO.createBoardGroup", map);
+		insert("EzBoardAdminDAO.createBoardGroup", map);
 	}
 	
-	public void createBoard(Map<String, Object> map) throws Exception{
-		select("EzBoardAdminDAO.createBoard", map);
+	public void createBoardGroup2(Map<String, Object> map) throws Exception{		
+		insert("EzBoardAdminDAO.createBoardGroup", map);
+	}
+	
+	public void createBoard_I(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.createBoard_I", map);
+	}
+	
+	public void createBoard_I2(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.createBoard_I2", map);
+	}
+	
+	public void createBoard_U(Map<String, Object> map) throws Exception{
+		update("EzBoardAdminDAO.createBoard_U", map);
 	}
 	
 	public void saveBoardOrder(Map<String, Object> map) throws Exception{			
-		select("EzBoardAdminDAO.saveBoardOrder", map);
+		update("EzBoardAdminDAO.saveBoardOrder", map);
 	}
 	
 	public void deleteBoard(Map<String, Object> map) throws Exception{		
-		select("EzBoardAdminDAO.deleteBoard", map);
+		delete("EzBoardAdminDAO.deleteBoard", map);
 	}
 	
 	public void addMyBoards(Map<String, Object> map) {
@@ -213,5 +225,44 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.getBoardTree_Set_D", map);
 	}
 
+	public void deleteTreeCache(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.deleteTreeCache", map);
+	}
+
+	public void setMyBoardTreeConfig_N(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		insert("EzBoardAdminDAO.setMyBoardTreeConfig_N", boardMyFavoriteVO);
+	}
+
+	public void setMyBoardTreeConfig_M(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		update("EzBoardAdminDAO.setMyBoardTreeConfig_M", boardMyFavoriteVO);
+	}
+
+	public void setMyBoardTreeConfig_D(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
+		delete("EzBoardAdminDAO.setMyBoardTreeConfig_D", boardMyFavoriteVO);
+	}
+
+	public String getParentBoardID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardAdminDAO.getParentBoardID", map);
+	}
+
+	public String getBoardID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardAdminDAO.getBoardID", map);
+	}
+
+	public void deleteBoardManage(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.deleteBoardManage", map);
+	}
+
+	public void deleteBoardInfo(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.deleteBoardInfo", map);
+	}
+
+	public void deleteBoardMyBoard(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.deleteBoardMyBoard", map);
+	}
+
+	public void insertDeleteReservedBoard(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.insertDeleteReservedBoard", map);
+	}
 
 }

@@ -298,9 +298,45 @@
 		]]>
 	</select>
 	
-	<procedure id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_BRDADDTOMYBOARDS(#v_PUSERID#, #v_PBOARDID#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.addMyBoards" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDADDTOMYBOARDS(#v_PUSERID#, #v_PBOARDID#)} -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_MyBoards ( 
+				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+			)
+         	( SELECT 
+         		v_PUSERID ,
+              	BOARDID ,
+                BOARDNAME ,
+                BOARDNAME2 ,
+                ( SELECT 
+                	COUNT(BOARDID) + 1
+     			  FROM 
+     			  	EZBOARDSTD.TBL_Board_MyBoards 
+     			  WHERE
+     			  	TENANT_ID = #v_TENANTID#
+     			  AND  
+     			  	USERID = #v_PUSERID# ),
+                ( SELECT 
+                	NVL(MAX(VIEWORDER), 1) + 1 
+                  FROM 
+                  	EZBOARDSTD.TBL_Board_MyBoards 
+                  WHERE  
+                  	TENANT_ID = #v_TENANTID#
+                  AND
+                  	USERID = #v_PUSERID# ),
+                TENANT_ID
+           	  FROM 
+           	  	EZBOARDSTD.TBL_Board_BoardInfo 
+           	  WHERE
+           	  	TENANT_ID = #v_TENANTID#
+           	  AND
+           	  	BOARDID = #v_PBOARDID# )
+		]]>
+	</insert>
 	
 <!-- 	<procedure id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map" > -->
 <!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_SET(#v_STRLANG#, #v_PQUERY#, #v_RESULT#)} -->
@@ -344,27 +380,162 @@
 		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_TENANTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_CREATEBOARDGROUP(#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#,
-											   #v_PARENTBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}		
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_CREATEBOARDGROUP(#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, -->
+<!-- 											   #v_PARENTBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}		 -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.createBoard" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_CREATEBOARD_INSERT(#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_ACCESSID#, 
-											     #v_ACCESSNAME#, #v_ACCESSNAME2#)}		
-	</procedure>
+	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardInfo ( 
+				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT NVL(MAX(BOARDNO), 0)  + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID# 
+     		)
+		]]>
+	</insert>
 	
-	<procedure id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage( 
+				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.createBoard" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_CREATEBOARD_INSERT(#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_ACCESSID#,  -->
+<!-- 											     #v_ACCESSNAME#, #v_ACCESSNAME2#)}		 -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardInfo ( 
+				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID 
+			)
+	   		VALUES ( 
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 5, ( SELECT NVL(MAX(BOARDNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID# 
+	   		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<select id="EzBoardAdminDAO.getParentBoardID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PARENTBOARDID
+       		FROM 
+       			EZBOARDSTD.TBL_BOARD_BOARDINFO 
+       		WHERE 
+       			TENANT_ID = #tenantID#
+       		AND
+       			BOARDID = #boardID#
+		]]>
+	</select>
+	
+	<select id="EzBoardAdminDAO.getBoardID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				BOARDID
+       		FROM 
+       			EZBOARDSTD.TBL_BOARD_BOARDINFO 
+       		WHERE 
+       			TENANT_ID = #tenantID#
+       		AND
+       			BOARDID = #parentBoardID#
+		]]>
+	</select>
+	
+	<update id="EzBoardAdminDAO.createBoard_U" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardInfo 
+      		SET 
+      			BOARDTREEPATH = #boardTreePath#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<update id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+            SET 
+            	TreeViewOrder = #v_count#
+            WHERE  
+            	tenant_id = #v_tenantID#
+            AND
+            	BoardID = #v_boardID#
+		]]>
+	</update>
 	
 	<procedure id="EzBoardAdminDAO.saveBackGroundImage" parameterClass="Map" >
 		{CALL EZBOARDSTD.EZSP_SETBACKGROUNDIMAGE(#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, #v_WIDTH#, #v_HEIGHT#, #v_MODE#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_BRDDELETEBOARD(#v_pBoardID#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDDELETEBOARD(#v_pBoardID#)} -->
+<!-- 	</procedure> -->
+	
+	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_BoardManage
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_BoardInfo
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteBoardMyBoard" parameterClass="Map" >
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_MyBoards
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<insert id="EzBoardAdminDAO.insertDeleteReservedBoard" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_DeleteReservedBoard( 
+				BoardID, 	  TENANT_ID
+			)
+      		VALUES ( 
+      			#v_pBoardID#, #v_TENANTID# 
+      		)
+		]]>
+	</insert>
 	
 	<procedure id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
 		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)}
@@ -380,13 +551,74 @@
 		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzBoardAdminDAO.setMyBoardTreeConfig" parameterClass="MyFavoriteVO">
-		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE(#treeId#, #userId#, #treeName#, #treeName2#, #treeUpper#, #mode#, #boardId#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.setMyBoardTreeConfig" parameterClass="MyFavoriteVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE(#treeId#, #userId#, #treeName#, #treeName2#, #treeUpper#, #mode#, #boardId#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
-		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE_MOVECOPY(#userId#, #selTreeID#, #moveTreeID#, #mode#)}
-	</procedure>
+	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_MyTree ( 
+				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID 
+			)
+            VALUES ( 
+            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT NVL(MAX(TREESTEP), 0) + 1 FROM EZBOARDSTD.TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
+            )
+		]]>
+	</insert>
+	
+	<update id="EzBoardAdminDAO.setMyBoardTreeConfig_M" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_MyTree
+		    SET 
+		    	TREENAME = #treeName#,
+		    	TREENAME2 = #treeName2#
+            WHERE
+            	TENANT_ID = #tenantID#
+            AND  
+            	TREEID = #treeUpper#
+            AND 
+            	USERID = #userId#
+		]]>
+	</update>
+	
+	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_MyTree
+			WHERE  
+				TENANT_ID = #tenantID#
+			AND
+				( TREEID = #treeUpper#
+            	  AND USERID = #userId# )
+            OR 
+            	TREEUPPER = #treeUpper#
+		]]>
+	</delete>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE_MOVECOPY(#userId#, #selTreeID#, #moveTreeID#, #mode#)} -->
+<!-- 	</procedure> -->
+	
+	<update id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_MyTree
+            SET 
+            	TREEUPPER = #moveTreeID#,
+            	TREESTEP = ( SELECT 
+            					COUNT(TREENAME) + 1 
+                             FROM 
+                             	EZBOARDSTD.TBL_Board_MyTree 
+                             WHERE  
+                             	TREEUPPER = #moveTreeID#
+                             AND 
+                             	USERID = #userId# )
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	TREEID = #selTreeID#
+            AND 
+            	USERID = #userId#
+		]]>
+	</update>
 	
 	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map">
 		{CALL EZBOARDSTD.EZSP_BRDSAVEACL(#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pParentBoardID#, #v_pInherit#, #v_pAdmin#, #v_pAccess#, 
@@ -440,7 +672,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="java.lang.String">
+	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="Map">
 		<![CDATA[
 			SELECT 
 				boardid,
@@ -453,6 +685,8 @@
 			FROM 
 				ezBoardSTD.TBL_Board_BoardInfo
 			WHERE
+				tenant_id = #tenantID#
+			AND
 				parentboardid = #parentBoardID#
 			ORDER BY 
 				treevieworder

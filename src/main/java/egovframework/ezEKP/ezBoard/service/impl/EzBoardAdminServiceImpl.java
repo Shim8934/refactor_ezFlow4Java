@@ -57,14 +57,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public String addMyBoards(String userID, String boardID) throws Exception {
+	public String addMyBoards(String userID, String boardID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_PQUERY", userID);
 		
 		try {
-			ezBoardAdminDAO.addMyBoards(map);			
+			ezBoardAdminDAO.addMyBoards(map);
+			ezBoardAdminDAO.getBoardTree_Set_D(map);
+			
 			return "OK";
 		} catch (Exception e) {
 			return "NO";
@@ -74,7 +77,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
 		try {
-			ezBoardAdminDAO.setMyBoardTreeConfig(boardMyFavoriteVO);			
+			if (boardMyFavoriteVO.getMode().equals("NEW")) {
+				ezBoardAdminDAO.setMyBoardTreeConfig_N(boardMyFavoriteVO);	
+			} else if (boardMyFavoriteVO.getMode().equals("MOD")) {
+				ezBoardAdminDAO.setMyBoardTreeConfig_M(boardMyFavoriteVO);	
+			} else if (boardMyFavoriteVO.getMode().equals("DEL")) {
+				ezBoardAdminDAO.setMyBoardTreeConfig_D(boardMyFavoriteVO);	
+			}
+			
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR"; 
@@ -233,8 +243,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID) throws Exception {
-		return ezBoardAdminDAO.get_Admin_TopBoardList(parentBoardID);
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentBoardID", parentBoardID);
+		map.put("tenantID", tenantID);
+		
+		return ezBoardAdminDAO.get_Admin_TopBoardList(map);
 		
 	}
 	
@@ -294,14 +308,17 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");
+		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		ezBoardAdminDAO.createBoardGroup(map);
+		ezBoardAdminDAO.createBoardGroup2(map);
+		
+		trunkBoard();
 	}
 
 	@Override
 	public void createBoard(BoardPropertyVO boardPropertyVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_BOARDID", boardPropertyVO.getBoardID());
 		map.put("v_BOARDNAME", boardPropertyVO.getBoardName());
 		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
@@ -310,29 +327,73 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());	
+		map.put("v_TENANTID", boardPropertyVO.getTenantID());	
 		
-		ezBoardAdminDAO.createBoard(map);
+		ezBoardAdminDAO.createBoard_I(map);
+		ezBoardAdminDAO.createBoard_I2(map);
+		
+		String boardTreePath = getBoardTreePath(boardPropertyVO.getBoardID(), boardPropertyVO.getTenantID());
+		map.put("boardTreePath", boardTreePath);
+		
+		ezBoardAdminDAO.createBoard_U(map);
+		
+		trunkBoard();
+	}
+
+	public String getBoardTreePath(String boardID, int tenantID) throws Exception{
+		String tempString = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		
+		String parentBoardID = ezBoardAdminDAO.getParentBoardID(map);
+		
+		if (parentBoardID != null && !parentBoardID.equals("None")) {
+			while (!parentBoardID.equals("top")) {
+				map.put("parentBoardID", parentBoardID);
+				
+				String tempBoardID = ezBoardAdminDAO.getBoardID(map);
+				tempString += tempBoardID;
+				
+				map.put("boardID", tempBoardID);
+				
+				parentBoardID = ezBoardAdminDAO.getParentBoardID(map);
+				
+				if (!parentBoardID.equals("top")) {
+					tempString += ",";
+				}
+			}
+		}
+		
+		return tempString;
 	}
 
 	@Override
-	public void saveBoardOrder(String pBoardIDList) throws Exception {
+	public void saveBoardOrder(String pBoardIDList, int tenantID) throws Exception {
+		String[] tempBoardID = pBoardIDList.split(";");
 		Map<String, Object> map = new HashMap<String, Object>();
-		int pBoardListCount = pBoardIDList.split(";").length - 1;
-		
-		map.put("v_pBoardIDList", pBoardIDList);
-		map.put("v_pBoardListCount", pBoardListCount);
-		
-		ezBoardAdminDAO.saveBoardOrder(map);
+		map.put("v_tenantID", tenantID);
+
+		for (int k = 0; k < tempBoardID.length; k++) {
+			map.put("v_boardID", tempBoardID[k]);
+			map.put("v_count", k + 1);
+			
+			ezBoardAdminDAO.saveBoardOrder(map);
+		}
 		
 		trunkBoard();
 	}
 
 	@Override
-	public void deleteBoard(String boardID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();		
+	public void deleteBoard(String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
+		map.put("v_TENANTID", tenantID);
 		
-		ezBoardAdminDAO.deleteBoard(map);
+		ezBoardAdminDAO.deleteBoardManage(map);
+		ezBoardAdminDAO.deleteBoardInfo(map);
+		ezBoardAdminDAO.deleteBoardMyBoard(map);
+		ezBoardAdminDAO.insertDeleteReservedBoard(map);
 		
 		trunkBoard();
 	}
