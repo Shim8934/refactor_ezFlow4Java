@@ -603,7 +603,14 @@
 	                            p.appendChild(span);
 
 	                            var ul = document.createElement("UL");
-                                var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
+	                            
+	                            <c:if test="${isCrossBrowser != true}">
+	                            	var isdata = SelectSingleNodeValue(SelectNodes(xmldom, "ITEM/BOARDITEM")[i], "DATA");
+	            		    	</c:if>
+	            		    	
+	            		    	<c:if test="${isCrossBrowser == true}">
+	                            	var isdata = SelectNodes(xmldom, "ITEM/BOARDITEM/DATA")[i].textContent;
+	            		    	</c:if>
 
 	                            if (isdata.trim() != "") {
 	                                var imageCnt = 0;

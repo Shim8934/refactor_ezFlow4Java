@@ -299,6 +299,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
@@ -365,6 +367,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityPopupCommHome";
 	}
