@@ -440,7 +440,7 @@ function AttachFileList()
 		if(filepath.indexOf(pBoardID) != -1) {
 			strRet += filepath + ";";
 		} else {
-		    strRet += "TempUploadFile/" + getNodeText(xmldomNodes.item(i)) + ";"
+		    strRet += "tempUploadFile/" + getNodeText(xmldomNodes.item(i)) + ";"
 		}
 	}
 	
@@ -614,7 +614,7 @@ function AttachFileList_Photo()
 		if(filepath.indexOf(pBoardID) != -1) {
 			strRet += filepath + ";";
 		} else {
-		    strRet += "TempUploadFile/" + getNodeText(xmldomNodes.item(i)) + ";"
+		    strRet += "tempUploadFile/" + getNodeText(xmldomNodes.item(i)) + ";"
 		}
 	}
 	

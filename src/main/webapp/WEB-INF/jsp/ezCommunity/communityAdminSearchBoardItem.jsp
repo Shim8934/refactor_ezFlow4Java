@@ -114,7 +114,9 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + ";";
     			}
     			
-    			$('.mainlist').html($('.mainlist').html() + listXML);
+    			///////////////////////
+				$('.mainlist tbody').html();
+    			$('.mainlist tbody').append(listXML);
     			
     			
 		    	$("#Sdatepicker").datepicker({

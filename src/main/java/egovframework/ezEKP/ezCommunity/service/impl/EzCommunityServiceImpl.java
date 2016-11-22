@@ -705,7 +705,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
-		String tempPath = pDirPath  + "TempUploadFile";
+		String tempPath = pDirPath  + "tempUploadFile";
 		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "uploadFile";
 		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
 		
@@ -752,13 +752,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					if (userExtension.indexOf(pFileName.substring(pFileName.lastIndexOf(".") + 1).toString()) == -1 && !userExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
-						pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
+						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						resultUpload = "true";
 					}
 				} else if (pMode.equals("PHOTO")) {
-					pAttachPath = pDirPath + "TempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
 					File thumbnailFile = new File(pAttachPath);
 					file.transferTo(thumbnailFile);
 					
@@ -770,7 +770,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					saveImage = outputImage.createGraphics();
 					saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 					
-					File tempTumbbail = new File(pDirPath + "TempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf(".")));
+					File tempTumbbail = new File(pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf(".")));
 					ImageIO.write(outputImage, "png", tempTumbbail);
 					
 					resultUpload = "true";
@@ -4669,7 +4669,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mhtFilePath = "";
 		
 		try {
-			docPath = realPath + commonUtil.separator + strFilePath + commonUtil.separator;
+			docPath = realPath + strFilePath;
 			
 			if (!new File(docPath + strBoardID).exists()) {
 				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
@@ -4679,7 +4679,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
-
+			
 			if(new File(mhtFilePath).exists()) {
 				new File(mhtFilePath).delete();
 			}
@@ -4691,6 +4691,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return true;
 		} catch(Exception e) {
+			LOGGER.debug("saveMHT ERROR");
+			LOGGER.debug(e.getMessage());
 			return false;
 		}
 	}
@@ -4718,10 +4720,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				filePath = attachments.split(";")[i];
 				
-				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachments.split(";")[i].replace("TempUploadFile", ""));
+				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachments.split(";")[i].replace("tempUploadFile", ""));
 					FileUtils.moveFile(file, destFile);
-					filePath = attachments.split(";")[i].replace("TempUploadFile", "");
+					filePath = attachments.split(";")[i].replace("tempUploadFile", "");
 				}
 
 				if (!thumbPath.equals("")) {
@@ -4729,9 +4731,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("TempUpload") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
-						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("TempUploadFile", ""));
+						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 					} else {
 						map.put("filePath", thumbPath.split(";")[i]);
 					}
@@ -4744,7 +4746,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				map.put("fileSize", fileSize);
 				map.put("fileName", fileName);
 				
-				if (attachments.split(";")[i].indexOf("TempUploadFile") > -1) {
+				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
 					map.put("filePath", boardID + commonUtil.separator + "uploadFile" + filePath);
 					ezCommunityDAO.insertAttachInfo(map);
 				} else {
