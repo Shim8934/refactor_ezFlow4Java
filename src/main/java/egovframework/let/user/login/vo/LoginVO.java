@@ -109,6 +109,8 @@ public class LoginVO implements Serializable{
 	private String phone;
 	/** 직책(extensionattribute10)*/
 	private String jikChek;
+    /** 직책(extensionattribute102)*/
+    private String jikChek2;	
 	/** 표준시간대*/
 	private String offset;
 	/** 다국어설정*/
@@ -371,7 +373,13 @@ public class LoginVO implements Serializable{
 	public void setJikChek(String jikChek) {
 		this.jikChek = jikChek;
 	}
-	public Locale getLocale() {
+	public String getJikChek2() {
+        return jikChek2;
+    }
+    public void setJikChek2(String jikChek2) {
+        this.jikChek2 = jikChek2;
+    }
+    public Locale getLocale() {
 		return locale;
 	}
 	public void setLocale(Locale locale) {

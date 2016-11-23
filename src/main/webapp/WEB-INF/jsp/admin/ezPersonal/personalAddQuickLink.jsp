@@ -93,12 +93,13 @@
 	        function initQuickLink() {
 	        	$.ajax({
 	        		type : "POST",
+	        		dataType : "text",
 	        		url : "/admin/ezPersonal/getQuickLink.do",
 	        		async : true,
 	        		data : {pQuickLinkID : ArgQuickID},
 	        		success : function(result) {
 	        			if (result != null) {
-	        				event_GetQuickLink(result);
+	        				event_GetQuickLink(loadXMLString(result));
 	        			}
 	        		}
 	        	});
@@ -154,10 +155,10 @@
 	        	$.ajax({
 	        		type : "POST",
 	        		url : "/admin/ezPersonal/getQuickLinkACL.do",
-	        		async : true,
+	        		dataType : "text",
 	        		data : {pQuickLinkID : ArgQuickID},
 	        		success : function(result) {
-	        			event_GetQuickLinkACL(result);
+	        			event_GetQuickLinkACL(loadXMLString(result));
 	        		}
 	        	});
 	        }

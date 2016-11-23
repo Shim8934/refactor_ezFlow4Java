@@ -700,12 +700,35 @@
 		
 		var g_xmlhttp = null;
 		function changeNormalImage() {
-		    document.getElementById('mode').value = "PHOTO";
-		    document.form.file1.click();
+			if (CrossYN()) {
+				document.getElementById('mode').value = "PHOTO";
+			    document.form.file1.click();	
+			} else {
+				var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+				var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+				if (filepath == "") return;			
+				
+				var strBase64 = ezUtil.DownloadToBase64(filepath);
+				ezUtil = null;
+				
+				var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+				var temp = ezUtil.GetImageSize(filepath);
+				ezUtil = null;
+				
+				pImageWidth = temp.split("*")[0];
+				pImageHeight = temp.split("*")[1];			
+				
+				var strXML = "<IMAGE><OLDFILENAME>" + txtImage.src.substr(txtImage.src.lastIndexOf("/")+1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\")+1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+				
+				g_xmlhttp = createXMLHttpRequest();
+				g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Image", true);
+				g_xmlhttp.onreadystatechange = changeNormalImage_end;
+				g_xmlhttp.send(strXML);				
+			}
 		}
 		
 		function changeNormalImage_end() {
-			if (g_xmlhttp.readystate != 4) return;
+			//if (g_xmlhttp.readystate != 4) return;
 			txtImage.src = g_xmlhttp.responseText;
 			txtImage.style.display = "";
 			g_xmlhttp = null;
@@ -718,9 +741,7 @@
 		        try { OpenWin.focus(); } catch (e) { }
 		    } else {
 		        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
-		        //var ret = window.showModalDialog("/myoffice/ezCommunity/CopyBoardItem.aspx", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken");
-		        if (typeof(ret) != "undefined")
-		        {
+		        if (typeof(ret) != "undefined") {
 		            document.getElementById("txtBoardID").value = ret[0];
 		            document.getElementById("txtBoardName").value = ret[2];
 		        }
@@ -811,7 +832,7 @@
 		            else
 		                alert("<spring:message code='ezPortal.t414'/>");
 		        }
-		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+		        document.getElementById("cnt").value = $("input[name=file1]")[0].files[0].length;
 		        var frm = document.getElementById('form');
 		        frm.action = "/admin/ezPortal/portletImageUpload.do?mode=Portlet";
 		        frm.submit();

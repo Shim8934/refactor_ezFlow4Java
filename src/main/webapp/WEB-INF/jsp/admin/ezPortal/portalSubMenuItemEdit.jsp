@@ -561,21 +561,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}"></td>
 		</tr>
 		<% }
 	 else

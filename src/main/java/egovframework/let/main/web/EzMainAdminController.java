@@ -27,12 +27,14 @@ public class EzMainAdminController {
 		String use_ezDMS = config.getProperty("config.Use_ezDMS");
 		String use_portal = config.getProperty("config.Use_Portal");
 		String use_mobileMgmt = config.getProperty("config.Use_MobileMgmt");
+		String useJMochaUserRepository = config.getProperty("config.UseJMochaUserRepository");
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezKMS", use_ezKMS);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("use_mobileMgmt", use_mobileMgmt);
+		model.addAttribute("useJMochaUserRepository", useJMochaUserRepository);
 		
 		return "admin/adminTop";
 	}	

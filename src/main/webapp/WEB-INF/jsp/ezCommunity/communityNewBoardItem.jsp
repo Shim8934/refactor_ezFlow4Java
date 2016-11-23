@@ -573,7 +573,7 @@
 		            
 		            window.close();		
 		        } else {
-		            alert("<spring:message code='ezCommunity.t283'/>" + xmlhttp.responseText);
+		            alert("<spring:message code='ezCommunity.t283'/> " + xmlhttp.responseText);
 		        }
 		        
 		        xmlhttp = null;
