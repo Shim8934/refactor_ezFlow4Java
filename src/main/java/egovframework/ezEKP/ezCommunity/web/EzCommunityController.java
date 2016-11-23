@@ -35,6 +35,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
@@ -379,7 +380,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean checkIE = commonUtil.checkIE(request);
 		
 		String code = request.getParameter("code");
 		
@@ -387,14 +387,32 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/** 
-	 * 커뮤니티 메인 오른쪽화면 실행함수
+	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	@ResponseBody
-	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
-		return ezCommunityService.commHomeBoardInfo(request);
+	public String commHomeBoardInfo(Model model, HttpServletRequest request) throws Exception {
+		String code = request.getParameter("code");
+		
+		List<CommunityBoardInfoVO> list = ezCommunityService.commHomeBoardInfo(code);
+		
+		model.addAttribute("boardInfoList", list);
+		
+		return "json";
 	}
 	
+	/** 
+	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardItemList.do")
+	public String commHomeBoardItemList(Model model, HttpServletRequest request) throws Exception {
+		String boardID = request.getParameter("boardID");
+		
+		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID);
+		
+		model.addAttribute("boardItemList", list);
+		
+		return "json";
+	}
 	/**
 	 * 커뮤니티 게시판 목록화면 호출함수
 	 */
@@ -1653,7 +1671,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
-		String memo = request.getParameter("memo").replaceAll("\r\n", "<br>");
+		String memo = request.getParameter("memo");
 		
 		LOGGER.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		

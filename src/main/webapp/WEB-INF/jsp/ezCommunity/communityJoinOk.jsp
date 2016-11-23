@@ -63,7 +63,7 @@
 								}
 
 								var UserAgentState = navigator.userAgent.toLowerCase();
-								
+
 								if (CrossYN()) {
 						        	if (UserAgentState.indexOf("chrome") > 0) {
 						        		window.resizeTo(340, 260);
@@ -243,7 +243,7 @@
 							            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
 							                window.resizeTo(346, 243);
 							            } else {
-							            	window.resizeTo(346, 240);
+							            	window.resizeTo(346, 270);
 							            }
 							        }
 							        if (MACSAFARIYN()) {

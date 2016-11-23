@@ -129,8 +129,12 @@
     				listXML += "<spring:message code = 'ezCommunity.t926' />";
     				listXML += "</td></tr>";
     			}
-
-    			$('#tblList').html($('#tblList').html()+listXML);
+    			
+				listXML = $('#tblList').html()+listXML;
+    			
+    			$('#tblList').html("");
+    			$('#tblList tbody').append(listXML);
+    			
     			makePageSelPage();
     		});
 	        

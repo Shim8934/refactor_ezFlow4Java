@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
@@ -43,6 +44,10 @@ public interface EzCommunityService {
 	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow) throws Exception;
 	
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode) throws Exception ;
+	
+	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code) throws Exception;
+	
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID) throws Exception;
 	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
 	
@@ -98,6 +103,8 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO boardItemListPhotoGet1(String id, String boardID) throws Exception;
 	
+	public CommunityClubVO leftCommunityGet4(String code)throws Exception;
+	
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item) throws Exception;
 	
 	public String getLeftCommunity(LoginVO userInfo) throws Exception;
@@ -109,8 +116,6 @@ public interface EzCommunityService {
 	public String goAdminOk(String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception;
 	
 	public String commHomeInfo(LoginVO userInfo, String code, HttpServletRequest request) throws Exception;
-	
-	public String commHomeBoardInfo(HttpServletRequest request) throws Exception;
 	
 	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception;
 	
@@ -254,6 +259,10 @@ public interface EzCommunityService {
 	
 	public String getBoardTotalItemCount(String pBoardID) throws Exception;
 	
+	public String leftCommunityGet2(String code) throws Exception;
+	
+	public String checkPassword(String pItemID) throws Exception;
+	
 	public Integer boardPropertyGet(String boardID) throws Exception;
 
 	public Integer adminOuterListGet1(String code) throws Exception;
@@ -329,13 +338,4 @@ public interface EzCommunityService {
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
 
 	public void okNoSet(String flag, String code, String cID) throws Exception;
-
-	public String leftCommunityGet2(String code) throws Exception;
-
-	public CommunityClubVO leftCommunityGet4(String code)throws Exception;
-
-	public String checkPassword(String pItemID) throws Exception;
-	
-	
-
 }

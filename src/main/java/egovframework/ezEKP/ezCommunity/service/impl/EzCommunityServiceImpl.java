@@ -522,54 +522,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		String code = request.getParameter("code");
-		
+	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code) throws Exception {
 		List<CommunityBoardInfoVO> boardInfoList = ezCommunityDAO.copHomeBoardGet(code);
 		
-		sb.append("<ITEM>");
-		sb.append("<BOARDINFO>");
-		sb.append("<DATA>");
-		
-		for(CommunityBoardInfoVO boardInfo: boardInfoList){
-			sb.append("<ROW>");
-			sb.append("<BOARDID>"+boardInfo.getBoardID()+"</BOARDID>");
-			sb.append("<BOARDNAME>"+boardInfo.getBoardName()+"</BOARDNAME>");
-			sb.append("<BOARDNAME2>"+boardInfo.getBoardName2()+"</BOARDNAME2>");
-			sb.append("<SHOWPOSITION>"+boardInfo.getShowPosition()+"</SHOWPOSITION>");
-			sb.append("<SN>"+boardInfo.getSn()+"</SN>");
-			sb.append("<GUBUN>"+boardInfo.getGubun()+"</GUBUN>");
-			sb.append("</ROW>");
-		}
-		
-		sb.append("</DATA>");
-		sb.append("</BOARDINFO>");
-		sb.append("<BOARDITEM>");
-		
-		for(int i = 0; i < boardInfoList.size(); i++){
-			String boardID = boardInfoList.get(i).getBoardID();
-			List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(boardID);
-			sb.append("<DATA>");
-			
-			for(CommunityBoardItemVO boardItem: boardItemList){
-				sb.append("<ROW>");
-				sb.append("<BOARDID>"+boardItem.getBoardID()+"</BOARDID>");
-				sb.append("<ITEMID>"+boardItem.getItemID()+"</ITEMID>");
-				sb.append("<TITLE>"+boardItem.getTitle()+"</TITLE>");
-				sb.append("<WRITEDATE>"+boardItem.getWriteDate()+"</WRITEDATE>");
-				sb.append("<GUBUN>"+boardItem.getGubun()+"</GUBUN>");
-				sb.append("<EXTENSIONATTRIBUTE5>"+boardItem.getExtensionAttribute5()+"</EXTENSIONATTRIBUTE5>");
-				sb.append("</ROW>");
-			}
-			
-			sb.append("</DATA>");
-		}
-		
-		sb.append("</BOARDITEM>");
-		sb.append("</ITEM>");
-		
-		return sb.toString();
+		return boardInfoList;
+	}
+	
+	@Override
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID) throws Exception {
+		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(boardID);
+		return boardItemList;
 	}
 
 	@Override
@@ -742,7 +704,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				pFileName = pFileName.split(commonUtil.separator)[pFileName.split(commonUtil.separator).length - 1];
 			}
 
-			pFileName =pFileName.replaceAll("+", "%2b").replaceAll(";", "%3b");
+			pFileName =pFileName.replace("+", "%2b").replace(";", "%3b");
 			int fileSize = (int) file.getSize();
 			
 			if (fileSize > pMaxSize) {
@@ -2009,7 +1971,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	result.append("</TREEVIEWDATA>");
         }
         
-        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replaceAll("'", "''"));
+        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"));
 
         return result.toString();
 	}
@@ -3015,7 +2977,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo);
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>"));
 				
 				break;
 			case "delete" :
@@ -3035,7 +2997,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					
 					if (item != null) {
 						bIsMyContent = true;
-						guestEditOkUpdate(no, code, memo, userInfo.getId());
+						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>"), userInfo.getId());
 					}
 				}
 				
@@ -3076,8 +3038,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		CommunityBoardItemVO item = ezCommunityDAO.copyItemGet1(map);
 		item.setItemID(pDestItemID);
 		item.setBoardID(pDestBoardID);
-		item.setContentLocation(item.getContentLocation().replaceAll(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1)));
-		item.setContentLocation(item.getContentLocation().replaceAll(pOrgItemID.substring(1, pOrgBoardID.length()-1), pDestItemID.substring(1, pDestBoardID.length()-1)));
+		item.setContentLocation(item.getContentLocation().replace(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1)));
+		item.setContentLocation(item.getContentLocation().replace(pOrgItemID.substring(1, pOrgBoardID.length()-1), pDestItemID.substring(1, pDestBoardID.length()-1)));
 		item.setStartDate("");
 		item.setUpperItemIDTree(pDestItemID);
 		item.setItemLevel(1);
@@ -3092,7 +3054,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		for(CommunityBoardItemAttachmentVO itemAttachment : orgAttachList) {
 			String orgAttach = itemAttachment.getFilePath();
-			String destAttach = itemAttachment.getFilePath().replaceAll(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
+			String destAttach = itemAttachment.getFilePath().replace(pOrgBoardID.substring(1, pOrgBoardID.length()-1), pDestBoardID.substring(1, pDestBoardID.length()-1));
 			
 			copyAttachments(orgAttach, destAttach, pDestBoardID, pUploadFilePath);
 			attachments.append(destAttach + ";");
