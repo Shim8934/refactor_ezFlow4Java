@@ -19,6 +19,8 @@ public class BoardListHeaderVO {
 	private String colName;
 	/** SN */
 	private String sn;
+	/** tenantID*/
+	private int tenantID;
 
 	public String getName() {
 		return name;
@@ -74,6 +76,11 @@ public class BoardListHeaderVO {
 	public void setSn(String sn) {
 		this.sn = sn;
 	}
-
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
 	
 }

@@ -277,9 +277,85 @@
 		</isNotEqual>
 	</select>
 	
-	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute">
-		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDTYPE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDTYPE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardAdminDAO.getBoardItemListOptionBoard" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				'O' 
+          	FROM 
+          		DUAL
+          	WHERE 
+         		EXISTS ( 	SELECT 
+         						BOARDID ,
+         						SN ,
+         						NAME1 ,
+         						NAME2 ,
+         						NAME3 ,
+                        		NAME4 ,
+                        		COLNAME ,
+                        		WIDTH ,
+                        		VIEW_FG  
+                        	FROM 
+                        		EZBOARDSTD.TBL_Board_Item_ListOption_Boar 
+                        	WHERE
+                        		tenant_id = #v_TENANTID#
+                        	AND  
+                        		BoardID = #v_PBOARDID# )
+		]]>
+	</select>
+	
+	<select id="EzBoardAdminDAO.getBoardHeader_B" parameterClass="Map" resultMap="boardAttribute">
+		<![CDATA[
+			SELECT 
+				BOARDID ,
+				SN ,
+				NAME1 ,
+				NAME2 ,
+				NAME3 ,
+               	NAME4 ,
+               	COLNAME ,
+               	WIDTH ,
+               	VIEW_FG  
+       	    FROM 
+       	    	EZBOARDSTD.TBL_Board_Item_ListOption_Boar 
+            WHERE
+            	tenant_id = #v_TENANTID#
+            AND  
+            	BoardID = #v_PBOARDID#
+            AND 
+            	VIEW_FG = 'Y'
+            ORDER BY 
+            	SN
+		]]>
+	</select>
+	
+	<select id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute">
+		<![CDATA[
+			SELECT 
+				LISTTYPE ,
+				SN ,
+				NAME1 ,
+				NAME2 ,
+				NAME3 ,
+				NAME4 ,
+				COLNAME ,
+				WIDTH ,
+				VIEW_FG  
+            FROM 
+            	EZBOARDSTD.TBL_Board_Item_ListOption 
+            WHERE
+            	tenant_id = #v_TENANTID#
+            AND  
+            	LISTTYPE = #v_PBOARDTYPE#
+            AND 
+            	VIEW_FG = 'Y'
+            ORDER BY 
+            	SN
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_CHECKIFLEAFBOARD(#v_PBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -376,9 +452,36 @@
 		</isNotEqual>
 	</insert>
 	
-	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_TENANTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_TENANTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(AccessID) TOTALCOUNT
+        	FROM 
+        		EZBOARDSTD.TBL_Board_BoardManage
+        	WHERE 
+        		TENANT_ID = #v_TENANTID#
+            AND 
+            	BoardAdmin_FG = 'true'
+            AND 
+            	( AccessID = #v_pUserID#
+            	  OR AccessID = #v_pDeptID#
+                  OR AccessID = #v_pCompanyID# 
+                  OR AccessID = 'everyone' )
+            AND 
+            	BoardID = ( SELECT 
+            					BoardGroupID 
+         					FROM 
+         						EZBOARDSTD.TBL_Board_BoardInfo 
+         					WHERE  
+         						TENANT_ID = #v_TENANTID#
+         					AND 
+         						BoardID = #v_pBoardID# )
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" > -->
 <!-- 		{CALL EZBOARDSTD.EZSP_CREATEBOARDGROUP(#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, -->
@@ -488,9 +591,37 @@
 		]]>
 	</update>
 	
-	<procedure id="EzBoardAdminDAO.saveBackGroundImage" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_SETBACKGROUNDIMAGE(#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, #v_WIDTH#, #v_HEIGHT#, #v_MODE#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.saveBackGroundImage" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETBACKGROUNDIMAGE(#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, #v_WIDTH#, #v_HEIGHT#, #v_MODE#)} -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardBackGroundInfo ( 
+				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
+			)
+           	VALUES ( 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, NVL((select 0 from dual where 8 < (SELECT COUNT(*) FROM EZBOARDSTD.TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')), 1), ( SELECT COUNT(*) FROM EZBOARDSTD.TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardAdminDAO.saveBackGroundImage_U" parameterClass="Map" >
+		UPDATE EZBOARDSTD.TBL_Board_BoardBackGroundInfo
+           SET 
+        	<isNotEmpty property="v_ORGFILENAME">
+	           	ORGFILENAME = #v_ORGFILENAME#,
+        	</isNotEmpty>   
+        	<isNotEmpty property="v_SAVEFILENAME">
+        		SAVEFILENAME = #v_SAVEFILENAME#,
+        	</isNotEmpty>   
+               WIDTH = #v_WIDTH#,
+               HEIGHT = #v_HEIGHT#
+           WHERE
+           	TENANT_ID = #v_TENANTID#
+           AND  
+           	BACKGROUNDID = #v_BACKGROUNDID#
+	</update>
 	
 <!-- 	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" > -->
 <!-- 		{CALL EZBOARDSTD.EZSP_BRDDELETEBOARD(#v_pBoardID#)} -->
@@ -537,19 +668,158 @@
 		]]>
 	</insert>
 	
-	<procedure id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)}
-	</procedure>	
+<!-- 	<procedure id="EzBoardAdminDAO.moveBoard" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)} -->
+<!-- 	</procedure>	 -->
 	
-	<procedure id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
-		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY(#v_PBOARDID#, #v_PATTACHMAX#, #v_PDESCRIPTION#, #v_PEXPIRES#, #v_PURL#, #v_PREPLYNOTIFY#, #v_PGUBUN#, #v_PBOARDNAME#,
-		                                           #v_PDELETEAFTER#, #v_PBOARDCOLOR#, #v_PBOARDNAME2#, #v_PPORTLET#, #v_PONELINEREPLY#, #v_PBACKGROUND#, #v_PFORM#, 
-		                                           #v_PAPPRFLAG#, #v_PAPPRMAILFLAG#)}
-	</procedure>
+	<update id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+         	SET 
+         		ParentBoardID = #v_pNewParentBoardID#,
+             	BoardGroupID = #v_pNewBoardGroupID#
+       		WHERE
+       			tenant_id = #v_TENANTID#
+       		AND  
+       			BoardID = #v_pOrgBoardID#
+		]]>
+	</update>	
 	
-	<procedure id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
-		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<update id="EzBoardAdminDAO.moveBoard2" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardManage
+            SET 
+            	ParentBoardID = #v_pNewParentBoardID#
+           	WHERE
+           		tenant_id = #v_TENANTID#
+           	AND  
+           		BoardID = #v_pOrgBoardID#
+		]]>
+	</update>	
+	
+<!-- 	<procedure id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" > -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY(#v_PBOARDID#, #v_PATTACHMAX#, #v_PDESCRIPTION#, #v_PEXPIRES#, #v_PURL#, #v_PREPLYNOTIFY#, #v_PGUBUN#, #v_PBOARDNAME#, -->
+<!-- 		                                           #v_PDELETEAFTER#, #v_PBOARDCOLOR#, #v_PBOARDNAME2#, #v_PPORTLET#, #v_PONELINEREPLY#, #v_PBACKGROUND#, #v_PFORM#,  -->
+<!-- 		                                           #v_PAPPRFLAG#, #v_PAPPRMAILFLAG#)} -->
+<!-- 	</procedure> -->
+	
+	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+      		SET 
+      			BOARDDESCRIPTION = #v_PDESCRIPTION#,
+          		ITEMEXPIRES = #v_PEXPIRES#,
+	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
+	          	URL = #v_PURL#,
+	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
+	          	GUBUN = #v_PGUBUN#,
+	          	BOARDNAME = #v_PBOARDNAME#,
+	          	DELETEAFTER = #v_PDELETEAFTER#,
+	          	BOARDCOLOR = #v_PBOARDCOLOR#,
+	          	BOARDNAME2 = #v_PBOARDNAME2#,
+	          	PORTLET = #v_PPORTLET#,
+	          	ONELINEREPLY = #v_PONELINEREPLY#,
+	          	BACKGROUND = #v_PBACKGROUND#,
+	          	FORMFLAG = #v_PFORM#,
+	          	APPRFLAG = #v_PAPPRFLAG#,
+	          	APPRMAILFLAG = #v_PAPPRMAILFLAG#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveBoardProperty2" parameterClass="Map" >
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_MyBoards
+      		SET 
+      			BOARDNAME = #v_PBOARDNAME#,
+          		BOARDNAME2 = #v_PBOARDNAME2#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
+		<![CDATA[
+			SELECT
+				T2.COMPANY ,
+	            T2.DESCRIPTION ,
+	            T2.DISPLAYNAME ,
+	            T2. TITLE ,
+	            T2.COMPANY2 ,
+	            T2.DESCRIPTION2 ,
+	            T2.DISPLAYNAME2 ,
+	            T2.TITLE2 ,
+	            T1.ACCESSID , 
+	            T1.ACCESSNAME ,
+	            T1.ACCESSNAME2 ,
+	            T1.BOARDGROUPACL ,
+	            T1.BOARDADMIN_FG ,
+	            T1.ACCESS_ ,
+	            T1.LISTVIEW_FG ,
+	            T1.READ_FG ,
+	            T1.WRITE_FG ,
+	            T1.REPLY_FG ,
+	            T1.DELETE_FG ,
+	            T1.POSTNOTICE 
+        	FROM 
+        		EZBOARDSTD.TBL_Board_BoardManage T1
+        	JOIN 
+        		EZHRMASTER.TBLUSERMASTER T2   
+        	ON 
+        		T1.TENANT_ID = T2.TENANT_ID
+        	AND
+        		T1.ACCESSID = T2.CN
+        	WHERE 
+        		T1.TENANT_ID = #v_TENANTID#
+        	AND
+        		BOARDID = #v_PBOARDID#
+        		
+      		UNION
+      		 
+      		SELECT 
+      			NULL COMPNAY ,
+             	NULL DESCRIPTION  ,
+	            DISPLAYNAME ,
+	            NULL TITLE  ,
+	            NULL COMPANY2  ,
+	            NULL DESCRIPTION2  ,
+	            DISPLAYNAME2 ,
+	            NULL TITLE2  ,
+	            T1.ACCESSID ,
+	            T1.ACCESSNAME ,
+	            T1.ACCESSNAME2 ,
+	            T1.BOARDGROUPACL ,
+	            T1.BOARDADMIN_FG ,
+	            T1.ACCESS_ ,
+	            T1.LISTVIEW_FG ,
+	            T1.READ_FG ,
+	            T1.WRITE_FG ,
+	            T1.REPLY_FG ,
+	            T1.DELETE_FG ,
+	            T1.POSTNOTICE 
+        	FROM 
+        		EZBOARDSTD.TBL_Board_BoardManage T1
+        	JOIN 
+        		EZHRMASTER.TBLDEPTMASTER T3   
+        	ON 
+        		T1.TENANT_ID = T3.TENANT_ID
+        	AND
+        		T1.ACCESSID = T3.CN
+       		WHERE
+       			T1.TENANT_ID = #v_TENANTID#
+       		AND  
+       			BOARDID = #v_PBOARDID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardAdminDAO.setMyBoardTreeConfig" parameterClass="MyFavoriteVO"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE(#treeId#, #userId#, #treeName#, #treeName2#, #treeUpper#, #mode#, #boardId#)} -->
@@ -620,48 +890,336 @@
 		]]>
 	</update>
 	
-	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_BRDSAVEACL(#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pParentBoardID#, #v_pInherit#, #v_pAdmin#, #v_pAccess#, 
-		                                 #v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pPostNotice#, #v_pAccessName2#, #v_pBoardGroupACL#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEACL(#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pParentBoardID#, #v_pInherit#, #v_pAdmin#, #v_pAccess#,  -->
+<!-- 		                                 #v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pPostNotice#, #v_pAccessName2#, #v_pBoardGroupACL#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_BRDDELETEACL(#v_pBoardID#, #v_pAccessID#)}
-	</procedure>
+	<select id="EzBoardAdminDAO.getBoardManage" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(AccessID)
+     		FROM 
+     			EZBOARDSTD.TBL_Board_BoardManage 
+     		WHERE  
+     			tenant_id = #v_TENANTID#
+     		AND
+     			BoardID = #v_pBoardID#
+     		AND 
+     			AccessID = #v_pAccessID#
+		]]>
+	</select>
 	
-	<procedure id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO">
-		{CALL EZBOARDSTD.EZSP_GETUNDERBOARDID(#v_PBOARDID#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id 
+			)
+        	VALUES ( 
+        		#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pAccessName2#, #v_pAccess#, #v_pParentBoardID#, #v_pAdmin#, 	#v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pInherit#, #v_pPostNotice#, #v_pBoardGroupACL#, #v_TENANTID# 
+        	)
+		]]>
+	</insert>
 	
-	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL(#v_PBOARDID#, #v_PACCESSID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, #v_PACCESSLEVEL#, #v_PACCESS#, #v_PPARENTBOARDID#,
-												 #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#,
-												 #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#)}
-	</procedure>
+	<update id="EzBoardAdminDAO.saveACL_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardManage
+         	SET 
+         		inherit_FG = #v_pInherit#,
+             	BoardAdmin_FG = #v_pAdmin#,
+             	ACCESS_ = #v_pAccess#,
+             	ListView_FG = #v_pListView#,
+             	Read_FG = #v_pRead#,
+             	Write_FG = #v_pWrite#,
+             	Reply_FG = #v_pReply#,
+             	Delete_FG = #v_pDelete#,
+             	PostNotice = #v_pPostNotice#,
+             	BoardGroupACL = #v_pBoardGroupACL#
+       		WHERE  
+       			tenant_id = #v_TENANTID#
+       		AND
+       			BoardID = #v_pBoardID#
+        	AND 
+        		AccessID = #v_pAccessID#
+		]]>
+	</update>
 	
-	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL2(#v_PDEFAULTBOARDID#, #v_PBOARDID#, #v_PPARENTBOARDID#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.deleteACL" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDDELETEACL(#v_pBoardID#, #v_pAccessID#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETCOPYBOARDACL(#v_PBOARDID#, #v_PPARENTBOARDID#, #v_PDEFAULTBOARDID#)}
-	</procedure>
+	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_BoardManage
+      		WHERE
+      			tenant_id = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+      		AND 
+      			AccessID = #v_pAccessID#
+		]]>
+	</delete>
 	
-	<procedure id="EzBoardAdminDAO.saveBoardProperty_appr" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY_APPR(#v_pBoardID#, #v_pAPPRUSERID#, #v_pMODE#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_GETUNDERBOARDID(#v_PBOARDID#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_APPRPROPERTY_INFO(#v_PBOARDID#, #v_PMODE#)}
-	</procedure>
+	<select id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO">
+		<isEqual property="v_PTYPE" compareValue="1">
+			<![CDATA[
+				SELECT 
+					B.BoardID ,
+                	B.AccessID ,
+                	B.AccessName ,
+                	B.AccessName2 ,
+                	B.AccessLevel ,
+                	B.Access_ ,
+                	B.ParentBoardID ,
+                	B.BoardAdmin_FG ,
+                	B.ListView_FG ,
+                	B.Read_FG ,
+                	B.Write_FG ,
+                	B.Reply_FG ,
+                	B.Delete_FG ,
+                	B.inherit_FG ,
+                	B.PostNotice ,
+                	B.BoardGroupACL 
+           		FROM 
+           			EZBOARDSTD.TBL_Board_BoardManage B
+                JOIN 
+                	EZBOARDSTD.TBL_Board_BoardInfo A   
+                ON 
+                	A.tenant_id = B.tenant_id
+                AND
+                	A.BoardID = B.BoardID
+          		WHERE
+          			A.tenant_id = #v_TENANTID#
+          		AND  
+          			B.BoardID LIKE #v_PBOARDID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PTYPE" compareValue="1">
+			<![CDATA[
+				SELECT 
+					BOARDID ,
+                	PARENTBOARDID
+           		FROM 
+           			EZBOARDSTD.TBL_Board_BoardInfo A
+        		WHERE  
+        			TENANT_ID = #v_TENANTID#
+        		AND
+        			BOARDTREEPATH LIKE #v_PBOARDID#
+			]]>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL(#v_PBOARDID#, #v_PACCESSID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, #v_PACCESSLEVEL#, #v_PACCESS#, #v_PPARENTBOARDID#, -->
+<!-- 												 #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, -->
+<!-- 												 #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
-		{CALL EZBOARDSTD.EZSP_SETBOARDFORM(#v_PBOARDID#, #v_PFORMLOCATION#)}
-	</procedure>
+	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
+		UPDATE EZBOARDSTD.TBL_Board_BoardManage
+        SET 
+        	BOARDID = #v_pBoardID#,
+            ACCESSID = #v_pAccessID#,
+            ACCESSNAME = #v_PACCESSNAME#,
+            ACCESSNAME2 = #v_PACCESSNAME2#,
+			<isEmpty property="v_PACCESSLEVEL">
+	            ACCESSLEVEL = NULL,
+			</isEmpty>
+			<isNotEmpty property="v_PACCESSLEVEL">
+	            ACCESSLEVEL = #v_PACCESSLEVEL#,
+			</isNotEmpty>
+            ACCESS_ = #v_PACCESS#,
+            PARENTBOARDID = #v_PPARENTBOARDID#,
+            BOARDADMIN_FG = #v_PBOARDADMIN_FG#,
+            LISTVIEW_FG = #v_PLISTVIEW_FG#,
+            READ_FG = #v_PREAD_FG#,
+            WRITE_FG = #v_PWRITE_FG#,
+            REPLY_FG = #v_PREPLY_FG#,
+            DELETE_FG = #v_PDELETE_FG#,
+            INHERIT_FG = #v_PINHERIT_FG#,
+            POSTNOTICE = #v_PPOSTNOTICE#,
+            BOARDGROUPACL = #v_PBOARDGROUPACL#
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	ACCESSID = #v_PACCESSID#
+        AND 
+        	BOARDID = #v_PBOARDID#
+	</update>
+	
+	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
+		INSERT INTO EZBOARDSTD.TBL_Board_BoardManage (
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+		)
+        VALUES ( 
+        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID# 
+        )
+	</insert>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL2(#v_PDEFAULTBOARDID#, #v_PBOARDID#, #v_PPARENTBOARDID#)} -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+			)
+            ( SELECT 
+            	#v_pBoardID# ,
+                ACCESSID ,
+                ACCESSNAME ,
+                ACCESSNAME2 ,
+                ACCESSLEVEL ,
+                ACCESS_ ,
+                #v_PPARENTBOARDID# ,
+                BOARDADMIN_FG ,
+                LISTVIEW_FG ,
+                READ_FG ,
+                WRITE_FG ,
+                REPLY_FG ,
+                DELETE_FG ,
+                INHERIT_FG ,
+                POSTNOTICE ,
+                BOARDGROUPACL,
+                TENANT_ID
+      	      FROM 
+      	      	EZBOARDSTD.TBL_Board_BoardManage 
+              WHERE  
+              	TENANT_ID = #v_TENANTID#
+              AND
+              	BOARDID = #v_PDEFAULTBOARDID# )
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETCOPYBOARDACL(#v_PBOARDID#, #v_PPARENTBOARDID#, #v_PDEFAULTBOARDID#)} -->
+<!-- 	</procedure> -->
+	
+	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+			)
+        	( SELECT
+        		#v_pBoardID# ,
+                ACCESSID ,
+                ACCESSNAME ,
+                ACCESSNAME2 ,
+                ACCESSLEVEL ,
+                ACCESS_ ,
+                #v_PPARENTBOARDID# ,
+                BOARDADMIN_FG ,
+                LISTVIEW_FG ,
+                READ_FG ,
+                WRITE_FG ,
+                REPLY_FG ,
+                DELETE_FG ,
+                INHERIT_FG ,
+                POSTNOTICE ,
+                BOARDGROUPACL 
+          	  FROM 
+          	  	EZBOARDSTD.TBL_Board_BoardManage 
+          	  WHERE  
+          	  	TENANT_ID = #V_TENANTID#
+          	  AND
+          	  	BOARDID = #v_PDEFAULTBOARDID# )
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.saveBoardProperty_appr" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY_APPR(#v_pBoardID#, #v_pAPPRUSERID#, #v_pMODE#)} -->
+<!-- 	</procedure> -->
+	
+	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
+		<![CDATA[
+			DELETE EZBOARDSTD.TBL_Board_ApprList
+          	WHERE
+          		TENANT_ID = #v_TENANTID#
+          	AND  
+          		BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<insert id="EzBoardAdminDAO.saveBoardProperty_appr_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZBOARDSTD.TBL_Board_ApprList ( 
+				BOARDID, APPRUSERID, TENANT_ID 
+			)
+          	VALUES ( 
+          		#v_pBoardID#, #v_pAPPRUSERID#, #v_TENANTID# 
+          	)
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_APPRPROPERTY_INFO(#v_PBOARDID#, #v_PMODE#)} -->
+<!-- 	</procedure> -->
+	
+	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
+		<isEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				UPDATE EZBOARDSTD.TBL_Board_Item
+           		SET 
+           			APPRFLAG = 'N'
+         		WHERE  
+         			TENANT_ID = #v_TENANTID#
+         		AND
+         			BOARDID = #v_PBOARDID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				UPDATE EZBOARDSTD.TBL_Board_Item
+           		SET 
+           			APPRFLAG = NULL
+         		WHERE  
+         			TENANT_ID = #v_TENANTID#
+         		AND
+         			BOARDID = #v_PBOARDID#
+			]]>
+		</isNotEqual>
+	</update>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
+		SELECT 
+			COUNT(BOARDID) CNT 
+        FROM 
+        	EZBOARDSTD.TBL_Board_BoardInfo 
+        WHERE
+        	TENANT_ID = #v_TENANTID#
+        AND  
+        	BOARDID = #v_PBOARDID#
+        <isEqual property="v_PMODE" compareValue="Y" prepend="AND">
+        	FORMFLAG = 'Y'
+        </isEqual>
+        AND 
+        	FORMLOCATION IS NOT NULL
+	</select>
+	
+<!-- 	<procedure id="EzBoardAdminDAO.setBoardForm" parameterClass="Map"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SETBOARDFORM(#v_PBOARDID#, #v_PFORMLOCATION#)} -->
+<!-- 	</procedure> -->
+	
+	<update id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+      		SET 
+      			FORMLOCATION = #v_PFORMLOCATION#
+    		WHERE  
+    			TENANT_ID = #v_TENANTID#
+    		AND
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
 	
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
@@ -669,6 +1227,8 @@
 				DISTINCT appruserid 
 			FROM 
 				ezBoardSTD.TBL_BOARD_APPRLIST
+			WHERE 
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -740,11 +1300,12 @@
 	            height
 	       FROM 
 	        	ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO	       
+	       WHERE
+	       		tenant_id = #tenantID#
 		]]>
-		<dynamic prepend="WHERE">
-			<isNotEmpty property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
-		</dynamic>
-		ORDER BY sn
+			<isNotEmpty prepend="AND" property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
+		ORDER BY 
+				sn
 	</select>
 	
 	<select id="EzBoardAdminDAO.getBoardAttribute" resultClass="BoardAttributeVO">
@@ -772,10 +1333,10 @@
 	<insert id="EzBoardAdminDAO.saveAttribute" parameterClass="BoardAttributeVO">
 		<![CDATA[
 			INSERT INTO	ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE(
-				boardid, 	tablecol, 		sn, 	colname1,	 	colname2, 		value, 		coltype, 	must	
+				boardid, 	tablecol, 		sn, 	colname1,	 	colname2, 		value, 		coltype, 	must,   tenant_id
 			)
 			VALUES(
-				#boardID#, 	#tableCol#, 	#sn#, 	#colName1#,	 	#colName2#, 	#value#, 	#colType#, 	#must#
+				#boardID#, 	#tableCol#, 	#sn#, 	#colName1#,	 	#colName2#, 	#value#, 	#colType#, 	#must#, #tenantID#
 			)		
 		]]>		
 	</insert>
@@ -783,10 +1344,10 @@
 	<insert id="EzBoardAdminDAO.saveHeader" parameterClass="BoardListHeaderVO">
 		<![CDATA[
 			INSERT INTO	ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR(
-				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg
+				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg, tenant_id
 			)
 			VALUES(
-				#boardID#, 	#sn#, 	#name1#, 	#name2#,	#name3#, 	#name4#, 	#colName#, 		#width#,	#name#
+				#boardID#, 	#sn#, 	#name1#, 	#name2#,	#name3#, 	#name4#, 	#colName#, 		#width#,	#name#,  #tenantID#
 			)		
 		]]>		
 	</insert>
@@ -797,6 +1358,8 @@
 			<isEqual property="type" compareValue="U"> isuse = #isUse#</isEqual>
 			<isNotEqual property="type" compareValue="U"> sn = #isUse#</isNotEqual>
 		WHERE
+			tenant_id = #tenantID#
+		AND
 			backgroundid = #backgroundID#			
 	</update>
 	
@@ -806,6 +1369,8 @@
 			SET
 				attributeyn = #value#	
 			WHERE
+				tenant_id = #tenantID#
+			AND
 				boardid = #boardID#
 		]]>					
 	</update>
@@ -815,16 +1380,20 @@
 			DELETE FROM 
 				ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
 			WHERE
+				tenant_id = #tenantID#
+			AND
 				backgroundid = #backgroundID#
 		]]>			
 	</delete>
 	
-	<delete id="EzBoardAdminDAO.deleteAttribute" parameterClass="java.lang.String">
+	<delete id="EzBoardAdminDAO.deleteAttribute" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
 				ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE		
 			WHERE
-				boardid = #boardID#
+				tenant_id = #v_TENANTID#
+			AND
+				boardid = #v_BOARDID#
 		]]>			
 	</delete>
 	
@@ -833,14 +1402,18 @@
 			DELETE FROM 
 				ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		
 			WHERE
-				boardid = #boardID#
+				tenant_id = #v_TENANTID#
+			AND
+				boardid = #v_BOARDID#
 		]]>			
 	</delete>
 	
-	<delete id="EzBoardAdminDAO.trunkBoard">
+	<delete id="EzBoardAdminDAO.trunkBoard" parameterClass="Integer">
 		<![CDATA[
 			DELETE FROM
 				ezBoardSTD.TBL_BOARD_TREECACHE
+			WHERE
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 

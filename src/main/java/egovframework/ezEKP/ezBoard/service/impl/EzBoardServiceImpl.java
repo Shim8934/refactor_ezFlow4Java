@@ -1000,6 +1000,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pBoardID", boardVO.getBoardId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+		
+		if (boardVO.getSubFlag().equals("Y")) {
+			map.put("v_PWHEREBOARD", " (BOARDID = " + boardVO.getBoardId() + " OR BOARDID IN (SELECT BOARDID FROM EZBOARDSTD.TBL_BOARD_BOARDINFO WHERE PARENTBOARDID = " + boardVO.getBoardId() + "))");
+		} else {
+			map.put("v_PWHEREBOARD", " BOARDID = " + boardVO.getBoardId() + " ");
+		}
+		
 		return ezBoardDAO.getSearchBoardItemCount(map);
 	}
 
@@ -1674,8 +1686,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String portalPageItemEdit(String boardID) throws Exception {
-		return ezBoardDAO.portalPageItemEdit(boardID);
+	public String portalPageItemEdit(String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		
+		return ezBoardDAO.portalPageItemEdit(map);
 	}
 
 	/**

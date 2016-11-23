@@ -1040,7 +1040,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				pBoardID = subProp.getElementsByTagName("BOARDID").item(0).getTextContent();
 				pItemCount = subProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
 				pItemFields = subProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
-				pBoardName = ezBoardService.portalPageItemEdit(pBoardID);
+				pBoardName = ezBoardService.portalPageItemEdit(pBoardID, userInfo.getTenantId());
 			}
 			
 		}

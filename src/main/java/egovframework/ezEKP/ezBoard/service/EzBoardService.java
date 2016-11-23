@@ -122,7 +122,7 @@ public interface EzBoardService {
 	
 	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, int tenantID) throws Exception;
 	
-	public String portalPageItemEdit(String boardID) throws Exception;
+	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
 	

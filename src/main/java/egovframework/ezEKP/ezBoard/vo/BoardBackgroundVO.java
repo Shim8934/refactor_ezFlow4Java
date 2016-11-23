@@ -21,7 +21,8 @@ public class BoardBackgroundVO {
 	private String height;
 	/** 타입*/
 	private String type;
-	
+	/** tenantid*/
+	private int tenantID;
 
 	public String getBackgroundID() {
 		return backgroundID;
@@ -82,6 +83,12 @@ public class BoardBackgroundVO {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 	
 }
