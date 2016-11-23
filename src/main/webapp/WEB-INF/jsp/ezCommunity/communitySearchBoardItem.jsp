@@ -137,7 +137,7 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-    			$('.mainlist').html($('.mainlist').html() + listXML);
+    			$('.mainlist tbody').append(listXML);
     			
     			makePageSelPage();
     			
