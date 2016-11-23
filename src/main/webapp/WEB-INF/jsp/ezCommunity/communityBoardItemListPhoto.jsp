@@ -130,10 +130,7 @@
     				listXML += "</td></tr>";
     			}
     			
-				listXML = $('#tblList').html()+listXML;
-    			
-    			$('#tblList').html("");
-    			$('#tblList tbody').append(listXML);
+    			$('#tblList').append(listXML);
     			
     			makePageSelPage();
     		});
