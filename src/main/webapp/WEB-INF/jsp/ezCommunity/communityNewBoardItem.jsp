@@ -915,7 +915,6 @@
             }
             
             function returnvalue(strXML) {
-alert(strXML);
                 var xml = loadXMLString(strXML);
                 var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
                 var extFlag = false;
