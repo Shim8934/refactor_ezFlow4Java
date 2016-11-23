@@ -75,8 +75,8 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		delete("EzEmailDAO.deleteMailReserved", map);
 	}
 	
-	public MailReservationVO getMailReservedTime(Map<String, Object> map) throws Exception {
-		return (MailReservationVO)select("EzEmailDAO.getMailReservedTime", map);
+	public String getMailReservedTime(Map<String, Object> map) throws Exception {
+		return (String)select("EzEmailDAO.getMailReservedTime", map);
 	}
 	
 	public MailColorVO getMailColor() throws Exception {

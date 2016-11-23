@@ -76,36 +76,7 @@ public class EzEmailScheduler {
 		logger.debug("오전 05:00:00에 호출이 됩니다.");
 		Locale locale = Locale.getDefault();
 		
-		List<MailDeleteVO> list = new ArrayList<MailDeleteVO>();
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailDeleteAll", null);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONArray resultArray = (JSONArray)object.get("result");
-	        	
-	        	for (int i=0; i<resultArray.size(); i++) {
-	        		JSONObject obj = (JSONObject)resultArray.get(i);
-	        		
-	        		MailDeleteVO mailDeleteVO = new MailDeleteVO();
-	        		
-	        		mailDeleteVO.setUserId((String)obj.get("userId"));
-	        		mailDeleteVO.setPath((String)obj.get("folderPath"));
-	        		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
-	        		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
-	        		mailDeleteVO.setFolderName((String)obj.get("folderName"));
-	        		
-	        		list.add(mailDeleteVO);
-	        	}
-	        }
-		} else {
-			list = ezEmailService.getMailDeleteList();
-		}
-		
+		List<MailDeleteVO> list = ezEmailService.getMailDeleteList();
 
 		for (MailDeleteVO vo : list) {
 			IMAPAccess ia = null;
@@ -168,32 +139,7 @@ public class EzEmailScheduler {
 		logger.debug("reservedMailSend scheduler started.");
 		Locale locale = Locale.getDefault();
 		
-		List<MailReservationVO> list = new ArrayList<MailReservationVO>();
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReserved2", null);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONArray resultArray = (JSONArray)object.get("result");
-	        	
-	        	for (int i=0; i<resultArray.size(); i++) {
-	        		JSONObject obj = (JSONObject)resultArray.get(i);
-	        		
-	        		MailReservationVO vo = new MailReservationVO();
-	        		
-	        		vo.setMessageId((String)obj.get("messageId"));
-	        		vo.setConnUrl((String)obj.get("userId"));
-	        		
-	        		list.add(vo);
-	        	}
-	        }
-		} else {
-			list = ezEmailService.getMailReserved2();
-		}
+		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		
 		for (MailReservationVO vo : list) {
 			logger.debug(vo.toString());
@@ -246,24 +192,9 @@ public class EzEmailScheduler {
 					logger.error("Cannot find file. filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				}
 				
-				if (config.getProperty("config.USE_Mysql").equals("YES")) {
-					String inputParams = "messageId=" + URLEncoder.encode(vo.getMessageId(), "UTF-8");
-					logger.debug("inputParams=" + inputParams);
-					
-					String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailReserved", inputParams);
-					logger.debug("strJson=" + strJson);
-					
-					JSONParser parser = new JSONParser();
-					JSONObject object = (JSONObject)parser.parse(strJson);
-			        
-			        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
-			        	logger.error("Error from JGwServer");
-			        }
-			        
-				} else {
-					ezEmailService.deleteMailReserved(vo.getMessageId());
-					logger.debug("Succeed in deleting data from DB.");
-				}
+				ezEmailService.deleteMailReserved(vo.getMessageId());
+				logger.debug("Succeed in deleting data from DB.");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

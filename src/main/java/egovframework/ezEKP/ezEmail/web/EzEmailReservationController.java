@@ -111,37 +111,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
 		String domainName = config.getProperty("config.DomainName");
 		
-		List<MailReservationVO> list = new ArrayList<MailReservationVO>();
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReserved", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONArray resultArray = (JSONArray)object.get("result");
-	        	
-	        	for (int i=0; i<resultArray.size(); i++) {
-	        		JSONObject obj = (JSONObject)resultArray.get(i);
-	        		
-	        		MailReservationVO vo = new MailReservationVO();
-	        		
-	        		vo.setMessageId((String)obj.get("messageId"));
-	        		vo.setConnUrl((String)obj.get("userId"));
-	        		vo.setSubject((String)obj.get("subject"));
-	        		vo.setSendDate((String)obj.get("sendDate"));
-	        		
-	        		list.add(vo);
-	        	}
-	        }
-		} else {
-			list = ezEmailService.getMailReserved(userId + "@" + domainName);
-		}
+		List<MailReservationVO> list = ezEmailService.getMailReserved(userId + "@" + domainName);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		for (MailReservationVO vo : list) {
@@ -167,23 +137,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
 		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String inputParams = "messageId=" + URLEncoder.encode(messageId, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailReserved", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
-	        	logger.error("Error from JGwServer");
-	        }
-	        
-		} else {
-			ezEmailService.deleteMailReserved(messageId);
-		}
+		ezEmailService.deleteMailReserved(messageId);
 
 		String realPath = config.getProperty("data_root");
 		String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
@@ -277,22 +231,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		if (request.getParameter("messageid") != null && !request.getParameter("messageid").trim().equals("")) { 
 			pCDOMessageID = request.getParameter("messageid").trim();
 			
-			if (config.getProperty("config.USE_Mysql").equals("YES")) {
-				String inputParams = "messageId=" + URLEncoder.encode(pCDOMessageID, "UTF-8");
-				logger.debug("inputParams=" + inputParams);
-				
-				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReservedTime", inputParams);
-				logger.debug("strJson=" + strJson);
-				
-				JSONParser parser = new JSONParser();
-				JSONObject object = (JSONObject)parser.parse(strJson);
-		        
-		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-		        	pReservedSaveTime = (String)object.get("result");
-		        }
-			} else {
-				pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID).getSendDate();
-			}
+			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID);
 			
 			//utc에서 timezone으로 시간변경
 			pReservedSaveTime = EgovDateUtil.getDateStringInUTC(pReservedSaveTime, loginInfo.getOffset(), false);
@@ -376,33 +315,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			return "ezEmail/mailMessage";
 		}
 
-		MailColorVO vo = null;
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String tenantId = String.valueOf(loginInfo.getTenantId());
-			
-			String inputParams = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailColor", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONObject obj = (JSONObject)object.get("result");
-	        	if (obj != null) {
-	        		vo = new MailColorVO();
-	        		
-	        		vo.setImportanceColor((String)obj.get("importanceColor"));
-	        		vo.setInmailColor((String)obj.get("inmailColor"));
-	        		vo.setOutmailColor((String)obj.get("outmailColor"));
-	        	}
-	        }
-		} else {
-			vo = ezEmailService.getMailColor();
-		}
+		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
@@ -620,27 +533,11 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		}
 		
 		if (messageId != null && !messageId.equals("")) {
+			String reservedTime = ezEmailService.getMailReservedTime(messageId);
 			
-			if (config.getProperty("config.USE_Mysql").equals("YES")) {
-				String inputParams = "messageId=" + URLEncoder.encode(messageId, "UTF-8");
-				logger.debug("inputParams=" + inputParams);
-				
-				String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailReservedTime", inputParams);
-				logger.debug("strJson=" + strJson);
-				
-				JSONParser parser = new JSONParser();
-				JSONObject object = (JSONObject)parser.parse(strJson);
-		        
-		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-		        	returnValue = "<DATA>MAIL-EXISTS</DATA>";
-		        }
-			} else {
-				MailReservationVO vo = ezEmailService.checkReservedMail(messageId);
-				if (vo.getSubject() != null) {
-					returnValue = "<DATA>MAIL-EXISTS</DATA>";
-				}
+			if (reservedTime != null) {
+				returnValue = "<DATA>MAIL-EXISTS</DATA>";
 			}
-			
 		}
 		
 		logger.debug("returnValue=" + returnValue);

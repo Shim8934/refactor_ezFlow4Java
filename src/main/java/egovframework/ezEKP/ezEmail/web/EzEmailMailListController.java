@@ -130,71 +130,13 @@ public class EzEmailMailListController {
 			folderType = "delete";
 		}
 		
-		
-		MailGeneralVO mailGeneral = null;
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailGeneral", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONObject obj = (JSONObject)object.get("result");
-	        	if (obj != null) {
-	        		mailGeneral = new MailGeneralVO();
-	        		
-	        		mailGeneral.setListCount((String)obj.get("listCount"));
-	        		mailGeneral.setRefreshInterval((String)obj.get("refreshInterval"));
-	        		mailGeneral.setKeepDeleteLength((String)obj.get("keepDeleteLength"));
-	        		mailGeneral.setPreviewMode((String)obj.get("previewMode"));
-	        		mailGeneral.setPreviewWList((String)obj.get("previewWList"));
-	        		mailGeneral.setPreviewWContent((String)obj.get("previewWContent"));
-	        		mailGeneral.setPreviewHList((String)obj.get("previewHList"));
-	        		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
-	        		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
-	        	}
-	        }
-		} else {
-			// retrieve the mail general settings from DB.
-			List<MailGeneralVO> mailGeneralList = ezEmailService.getMailGeneral(userId);
-			mailGeneral = mailGeneralList.get(0);
-		}
+		// retrieve the mail general settings from DB.
+		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userId).get(0);
 				
 		// 컬러 관련 설정 정보를 DB로부터 읽어인다.
 		String importanceColor = "#ff0000";
 		
-		MailColorVO mailColor = null;
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String tenantId = String.valueOf(userInfo.getTenantId());
-			
-			String inputParams = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailColor", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONObject obj = (JSONObject)object.get("result");
-	        	if (obj != null) {
-	        		mailColor = new MailColorVO();
-	        		
-	        		mailColor.setImportanceColor((String)obj.get("importanceColor"));
-	        		mailColor.setInmailColor((String)obj.get("inmailColor"));
-	        		mailColor.setOutmailColor((String)obj.get("outmailColor"));
-	        	}
-	        }
-		} else {
-			mailColor = ezEmailService.getMailColor();
-		}
+		MailColorVO mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
 		
 		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral + ",mailColor=" + mailColor);		
 		
