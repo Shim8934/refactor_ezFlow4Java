@@ -343,13 +343,35 @@
 		}
 		var ImageState = "";
 		function changeNormalImage() {
-		        ImageState = "Normal";
-		        //document.getElementById('mode').value = "PHOTO";
-		        document.getElementById('mode').value = "Menu";
-		        document.form.file1.click();
+			ImageState = "Normal";
+		    if (CrossYN()) {
+				document.getElementById('mode').value = "Menu";
+				document.form.file1.click();	
+			} else {
+				 var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+			     var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+			     if (filepath == "") return;
+
+			     var strBase64 = ezUtil.DownloadToBase64(filepath);
+			     ezUtil = null;
+
+			     var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+			     var temp = ezUtil.GetImageSize(filepath);
+			     ezUtil = null;
+
+			     imageWidth = temp.split("*")[0];
+			     imageHeight = temp.split("*")[1];
+
+			     var strXML = "<IMAGE><OLDFILENAME>" + txtNormalImage.src.substr(txtNormalImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+
+			     g_xmlhttp = createXMLHttpRequest();
+			     g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Menu", true);
+			     g_xmlhttp.onreadystatechange = changeNormalImage_end;
+			     g_xmlhttp.send(strXML);
+			}
 		}
 		function changeNormalImage_end() {
-		    if (g_xmlhttp.readyState != 4) return;
+		    //if (g_xmlhttp.readyState != 4) return;
 		    txtNormalImage.src = g_xmlhttp.responseText;
 		    txtNormalImage.style.display = "";
 		    g_Dirty = true;
@@ -530,21 +552,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}"></td>
 		</tr>
 		<% } else { %>
 		<tr>

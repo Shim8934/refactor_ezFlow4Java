@@ -151,6 +151,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName());
 			model.addAttribute("result", result);
 			model.addAttribute("list", list);
+			model.addAttribute("userInfo", userInfo);
 			return "/admin/ezPortal/portalThemeList";
 		} else {
 			return "";
@@ -1049,7 +1050,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				pBoardID = subProp.getElementsByTagName("BOARDID").item(0).getTextContent();
 				pItemCount = subProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
 				pItemFields = subProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
-				pBoardName = ezBoardService.portalPageItemEdit(pBoardID);
+				pBoardName = ezBoardService.portalPageItemEdit(pBoardID, userInfo.getTenantId());
 			}
 			
 		}
@@ -1826,6 +1827,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String displayName = "";
 		String displayName2 = "";
 		String menuType = "";
+		String imageDataLinkURL = "";
+		String imageDataLinkLocation = "";
+		String imageDataWindowOption = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -1856,15 +1860,21 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
-			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
+			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(0).getTextContent();
+			logger.debug("imageUID="+imageUID);
 			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
 			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
 			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
 			overImagePath = xmlDom.getElementsByTagName("OVERIMAGEPATH").item(0).getTextContent();
+
+			imageDataLinkURL = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+			imageDataLinkLocation = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+			imageDataWindowOption = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
 		}
 		linkURL = xmlDom.getElementsByTagName("LINKURL").item(0).getTextContent();
 		linkLocation = xmlDom.getElementsByTagName("LINKLOCATION").item(0).getTextContent();
 		windowOption = xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent() == null || xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent().equals("")  ? "" : xmlDom.getElementsByTagName("WINDOWOPTION").item(0).getTextContent();
+		
 		displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 		displayName2 = xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 		
@@ -1922,6 +1932,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("displayName2", displayName2);
 		model.addAttribute("menuType", menuType);
+		model.addAttribute("imageDataLinkURL", imageDataLinkURL);
+		model.addAttribute("imageDataLinkLocation", imageDataLinkLocation);
+		model.addAttribute("imageDataWindowOption", imageDataWindowOption);
 		
 		return "/admin/ezPortal/portalMenuItemEdit";
 		
@@ -2355,6 +2368,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String windowOption = "";
 		String displayName = "";
 		String displayName2 = "";
+		String imageDataLinkURL = "";
+		String imageDataLinkLocation = "";
+		String imageDataWindowOption = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -2381,11 +2397,14 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		logger.debug("strXML="+strXML);
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
-			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getTextContent();
+			imageUID = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 			imageWidth = xmlDom.getElementsByTagName("IMAGEWIDTH").item(0).getTextContent();
 			imageHeight = xmlDom.getElementsByTagName("IMAGEHEIGHT").item(0).getTextContent();
 			normalImagePath = xmlDom.getElementsByTagName("NORMALIMAGEPATH").item(0).getTextContent();
 			overImagePath = xmlDom.getElementsByTagName("OVERIMAGEPATH").item(0).getTextContent();
+			imageDataLinkURL = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+			imageDataLinkLocation = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+			imageDataWindowOption = xmlDom.getElementsByTagName("IMAGEDATA").item(0).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
 		}
 		linkURL = xmlDom.getElementsByTagName("LINKURL").item(0).getTextContent();
 		linkLocation = xmlDom.getElementsByTagName("LINKLOCATION").item(0).getTextContent();
@@ -2448,9 +2467,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("imageDataLinkURL", imageDataLinkURL);
+		model.addAttribute("imageDataLinkLocation", imageDataLinkLocation);
+		model.addAttribute("imageDataWindowOption", imageDataWindowOption);
 		
 		return "/admin/ezPortal/portalSubMenuItemEdit";
-		
 	}
 	
 	/**

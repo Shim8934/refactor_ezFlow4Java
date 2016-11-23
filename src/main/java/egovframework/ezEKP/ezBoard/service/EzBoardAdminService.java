@@ -15,7 +15,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 
 public interface EzBoardAdminService {
 	
-	public List<BoardVO> checkApplyUser() throws Exception;
+	public List<BoardVO> checkApplyUser(int tenantID) throws Exception;
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
@@ -25,15 +25,15 @@ public interface EzBoardAdminService {
 	
 	public List<BoardAttributeVO> getBoardAttribute(String boardID, int tenantID) throws Exception;
 	
-	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID) throws Exception;
+	public List<BoardAttributeVO> getBoardHeader(String gubun, String boardID, int tenantID) throws Exception;
 	
 	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, int tenantID) throws Exception;	
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
-	public List<BoardPropertyVO> getBoardAccessList(String boardID) throws Exception;
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, int tenantID) throws Exception;
 	
-	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type) throws Exception;
+	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	
 	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID) throws Exception;
 
@@ -51,7 +51,7 @@ public interface EzBoardAdminService {
 	
 	public int checkIfLeafBoard(String pBoardID, int tenantID) throws Exception;
 	
-	public int checkForm(String boardID, String mode) throws Exception;
+	public int checkForm(String boardID, String mode, int tenantID) throws Exception;
 	
 	public void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception;	
 		
@@ -69,37 +69,35 @@ public interface EzBoardAdminService {
 	
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;
 	
-	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+	public void moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID, int tenantID) throws Exception;
 	
 	public void saveBoardProperty(BoardPropertyVO boardPropertyVO) throws Exception;
 	
-	public void deleteAttribute(String boardID) throws Exception;
+	public void deleteAttribute(String boardID, int tenantID) throws Exception;
 		
 	public void updateAttribute(BoardAttributeVO boardAttributeVO) throws Exception;
 
 	public void saveAttribute(BoardAttributeVO boardAttributeVO) throws Exception;
 
-	public void deleteHeader(String boardID) throws Exception;
+	public void deleteHeader(String boardID, int tenantID) throws Exception;
 
 	public void saveHeader(BoardListHeaderVO boardListHeaderVO) throws Exception;
 
 	public void saveACL(Map<String, Object> map) throws Exception;
 
-	public void deleteACL(Document doc) throws Exception;
+	public void deleteACL(Document doc, int tenantID) throws Exception;
 
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID) throws Exception;
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, int tenantID) throws Exception;
 
-	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID) throws Exception;
+	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID, int tenantID) throws Exception;
 
-	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode) throws Exception;
+	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode, int tenantID) throws Exception;
 
-	public void apprProperty_info(String boardID, String string) throws Exception;
+	public void apprProperty_info(String boardID, String mode, int tenantID) throws Exception;
 
-	public void saveBoardProperty_port(String boardID) throws Exception;
-
-	public void setBoardForm(String boardID, String formLocation) throws Exception;
+	public void setBoardForm(String boardID, String formLocation, int tenantID) throws Exception;
 
 	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
 	

@@ -18,13 +18,13 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzBoardAdminDAO extends EgovAbstractDAO {	
 		
 	@SuppressWarnings("unchecked")
-	public List<BoardVO> checkApplyUser() throws Exception{
-		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser");
+	public List<BoardVO> checkApplyUser(int tenantID) throws Exception{
+		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser", tenantID);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BoardVO> getBoardTree_Get2(Map<String, Object> map) throws Exception{		
-		return (List<BoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2",	map);
+		return (List<BoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -53,6 +53,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<BoardAttributeVO> getBoardHeader_B(Map<String, Object> map) throws Exception{		
+		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardHeader_B", map);		
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<BoardAttributeVO> getBoardAttribute(Map<String, Object> map) throws Exception{
 		return (List<BoardAttributeVO>) list("EzBoardAdminDAO.getBoardAttribute", map);
 	}
@@ -76,9 +81,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 
 	public String checkIfBoardGroupAdmin(Map<String, Object> map) throws Exception{
-		select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
-		
-		int ret = (int) map.get("v_pCount");
+		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
 		
 		if (ret > 0 ) {
 			return "OK";
@@ -92,10 +95,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int checkForm(Map<String, Object> map) throws Exception{
-		select("EzBoardAdminDAO.checkForm", map);		
-		int ret = (int) map.get("v_pCount");
-		
-		return ret;
+		return (int) select("EzBoardAdminDAO.checkForm", map);
 	}
 	
 	public void createBoardGroup(Map<String, Object> map) throws Exception{		
@@ -138,12 +138,20 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.saveHeader", boardListHeaderVO);
 	}
 
-	public void saveACL(Map<String, Object> map) throws Exception{
-		insert("EzBoardAdminDAO.saveACL", map);
+	public void saveACL_I(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.saveACL_I", map);
 	}
 	
-	public void setUnderBoardIDAcl(Map<String, Object> map) throws Exception{
-		insert("EzBoardAdminDAO.setUnderBoardIDAcl", map);		
+	public void saveACL_U(Map<String, Object> map) throws Exception{
+		update("EzBoardAdminDAO.saveACL_U", map);
+	}
+	
+	public void setUnderBoardIDAcl_U(Map<String, Object> map) throws Exception{
+		update("EzBoardAdminDAO.setUnderBoardIDAcl_U", map);		
+	}
+	
+	public void setUnderBoardIDAcl_I(Map<String, Object> map) throws Exception{
+		insert("EzBoardAdminDAO.setUnderBoardIDAcl_I", map);		
 	}
 
 	public void setUnderBoardIDAcl2(Map<String, Object> map) throws Exception{
@@ -154,7 +162,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.copyBoardAcl", map);		
 	}
 	
-	public void saveBoardProperty_appr(Map<String, Object> map) throws Exception{
+	public void saveBoardProperty_appr_D(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.saveBoardProperty_appr", map);		
+	}
+	
+	public void saveBoardProperty_appr_I(Map<String, Object> map) throws Exception{
 		insert("EzBoardAdminDAO.saveBoardProperty_appr", map);		
 	}
 	
@@ -162,10 +174,6 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		insert("EzBoardAdminDAO.apprProperty_info", map);	
 	}
 
-	public void saveBoardProperty_port(Map<String, Object> map) throws Exception{		
-		insert("EzBoardAdminDAO.trunkBoard", map);
-	}
-	
 	public void setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception{
 		update("EzBoardAdminDAO.setMyBoardTreeConfig", boardMyFavoriteVO);
 	}
@@ -182,16 +190,28 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		update("EzBoardAdminDAO.statusChangeBackGroundImage", boardBackgroundVO);
 	}
 	
-	public void saveBackGroundImage(Map<String, Object> map) throws Exception{		
-		update("EzBoardAdminDAO.saveBackGroundImage", map);
+	public void saveBackGroundImage_I(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBackGroundImage_I", map);
+	}
+	
+	public void saveBackGroundImage_U(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBackGroundImage_U", map);
 	}
 	
 	public void moveBoard(Map<String, Object> map) throws Exception{		
 		update("EzBoardAdminDAO.moveBoard", map);
 	}
 	
+	public void moveBoard2(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.moveBoard2", map);
+	}
+	
 	public void saveBoardProperty(Map<String, Object> map) throws Exception{		
 		update("EzBoardAdminDAO.saveBoardProperty", map);
+	}
+	
+	public void saveBoardProperty2(Map<String, Object> map) throws Exception{		
+		update("EzBoardAdminDAO.saveBoardProperty2", map);
 	}
 	
 	public void updateAttribute(BoardAttributeVO boardAttributeVO) throws Exception{		
@@ -202,23 +222,23 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		update("EzBoardAdminDAO.setBoardForm", map);
 	}
 	
-	public void deleteAttribute(String boardID) throws Exception{		
-		delete("EzBoardAdminDAO.deleteAttribute", boardID);
+	public void deleteAttribute(Map<String, Object> map) throws Exception{		
+		delete("EzBoardAdminDAO.deleteAttribute", map);
 	}	
 	
 	public void deleteBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception{		
 		delete("EzBoardAdminDAO.deleteBackGroundImage", boardBackgroundVO);
 	}
 
-	public void deleteHeader(String boardID) throws Exception{
-		delete("EzBoardAdminDAO.deleteHeader", boardID);
+	public void deleteHeader(Map<String, Object> map) throws Exception{
+		delete("EzBoardAdminDAO.deleteHeader", map);
 	}
 
 	public void deleteACL(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.deleteACL", map);		
 	}
-	public void trunkBoard() throws Exception{
-		delete("EzBoardAdminDAO.trunkBoard");
+	public void trunkBoard(int tenantID) throws Exception{
+		delete("EzBoardAdminDAO.trunkBoard", tenantID);
 	}
 
 	public void getBoardTree_Set_D(Map<String, Object> map) throws Exception{
@@ -263,6 +283,14 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	public void insertDeleteReservedBoard(Map<String, Object> map) throws Exception{
 		insert("EzBoardAdminDAO.insertDeleteReservedBoard", map);
+	}
+
+	public String getBoardItemListOptionBoard(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardAdminDAO.getBoardItemListOptionBoard", map);
+	}
+
+	public int getBoardManage(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardAdminDAO.getBoardManage", map);
 	}
 
 }

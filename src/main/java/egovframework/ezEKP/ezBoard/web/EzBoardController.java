@@ -204,7 +204,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pSubFlag = "0";
         String pExcludeBoardID = " ";
         String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID, tenantID);
-        List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser();
+        List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(tenantID);
         
         for (BoardVO vo: applyUserList) {
         	if (vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1) {

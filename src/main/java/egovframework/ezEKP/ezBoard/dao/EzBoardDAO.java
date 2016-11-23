@@ -220,8 +220,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.deleteOneLineReply", map);
 	}
 	
-	public String portalPageItemEdit(String boardID) {
-		return (String) select("EzBoardDAO.portalPageItemEdit", boardID);
+	public String portalPageItemEdit(Map<String, Object> map) {
+		return (String) select("EzBoardDAO.portalPageItemEdit", map);
 	}
 	
 	public String getBoardGroupID(Map<String, Object> map) throws Exception{
