@@ -741,9 +741,7 @@
 		        try { OpenWin.focus(); } catch (e) { }
 		    } else {
 		        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
-		        //var ret = window.showModalDialog("/myoffice/ezCommunity/CopyBoardItem.aspx", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken");
-		        if (typeof(ret) != "undefined")
-		        {
+		        if (typeof(ret) != "undefined") {
 		            document.getElementById("txtBoardID").value = ret[0];
 		            document.getElementById("txtBoardName").value = ret[2];
 		        }

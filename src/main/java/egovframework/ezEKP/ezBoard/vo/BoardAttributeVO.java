@@ -18,6 +18,8 @@ public class BoardAttributeVO {
 	private String colType;
 	/** */
 	private String must;
+	/** tenantID */
+	private int tenantID;
 	
 	public String getBoardID() {
 		return boardID;
@@ -66,6 +68,12 @@ public class BoardAttributeVO {
 	}
 	public void setMust(String must) {
 		this.must = must;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 
 }

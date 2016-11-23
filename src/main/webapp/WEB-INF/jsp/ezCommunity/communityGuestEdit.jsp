@@ -35,7 +35,7 @@
 				if (ReplaceText(document.forms[0].memo.value, " ", "") == "" ) {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
  					//OpenAlertUI("<spring:message code='ezCommunity.t568' /><br><spring:message code='ezCommunity.t569' />");
-					alert("<spring:message code='ezCommunity.t568' /><br><spring:message code='ezCommunity.t569' />");
+					alert("<spring:message code='ezCommunity.t568' />\n<spring:message code='ezCommunity.t569' />");
 					document.forms[0].memo.value = "";
 					document.forms[0].memo.focus();
 			        

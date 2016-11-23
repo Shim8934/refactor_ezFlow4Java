@@ -25,9 +25,16 @@
 		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
+		<c:if test="${isCrossBrowser == true}">
+			<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
+		</c:if>
+		
+		<c:if test="${isCrossBrowser != true}">
+			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
+			<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
+		</c:if>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/composeappt.js"></script>
@@ -925,8 +932,7 @@
 		                    strRet +=  filepath.substr(0, idx+1) + "s_" + filepath.substr(idx+1) +  ";";
 		                }
 		            } else {
-		                //strRet += pBoardID + "/UploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
-		                strRet += "TempUploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
+		                strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes[i]) +  ";";
 		            }
 		        }
 							

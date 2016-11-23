@@ -23,22 +23,7 @@
 		        color:#017bec;
 	        }
 		</style>
-		
-		<script type="text/javascript">
-			function keyword_onkeydown(e) {
-				var keycode;
-		        if (!window.ActiveXObject)
-		            keycode = e.keyCode;
-		        else
-		            keycode = event.keyCode;
-		        if (keycode == 13) {
-		            search();
-		            return false;
-		        }
-		        return true;
-		    }
-		</script>
-		
+
 		<script type="text/javascript">
 			var CurPage = '<c:out value="${curpage}" />';
 			var totalPage = '<c:out value="${totalPage}" />';
@@ -83,12 +68,25 @@
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid none;border-right:1px solid none;\">";
 					html += "<td  colspan=\"3\" style=\"word-break:break-all; height:100px; border-left:1px solid none;border-right:1px solid none;\">";
-					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT") + "</textarea></td>";
+					html += "<textarea style=\"height:100px;width:98%; border:0; overflow-y:auto;\" readonly=\"readonly\" id=textarea1 name=textarea1>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "CONTENT").replace(/<br>/gi, "\n") + "</textarea></td>";
 					html += "</tr>";
 					html += "</table>";
 		        }
 		        
 		        document.getElementById("formDel").innerHTML = document.getElementById("formDel").innerHTML + html; 
+		    }
+		    
+		    function keyword_onkeydown(e) {
+				var keycode;
+		        if (!window.ActiveXObject)
+		            keycode = e.keyCode;
+		        else
+		            keycode = event.keyCode;
+		        if (keycode == 13) {
+		            search();
+		            return false;
+		        }
+		        return true;
 		    }
 		    
 			function search() {
@@ -138,10 +136,6 @@
 				document.FIND.submit();
 				
 				return
-			}
-			
-			function gopage() {
-				document.location.href="/ezCommunity/guestOne.do?mode=list&code=" + code + "&goToPage=" + document.page.sel.value;
 			}
 			
 			function mo_onclick() {
@@ -328,10 +322,6 @@
 			}
 	        
 	        //########################################페이지네이션 변경 ##############################################
-		    function gopage() {
-		        document.location.href = "/ezCommunity/guestOne.do?mode=list&code=" + code + "&goTopage=" + document.page.sel.value;
-		    }
-
 		    function goToPage(page) {
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent("${sRadio}")

@@ -84,9 +84,13 @@
 		            listview.RowDataBind();
 		            xmldomNode = null;
 		
-		            if (CrossYN()) {
-		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+		            } else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+		            	//IE11일때 추가
+		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
 		            } else {
 		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));

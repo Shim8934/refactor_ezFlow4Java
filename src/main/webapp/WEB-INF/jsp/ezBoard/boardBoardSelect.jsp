@@ -57,6 +57,7 @@
 			var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "${noneActiveX}";
 			var pUse_IE11Browser = "${useIE11Browser}";
+			var ReturnFunction;
 			
 		    function Select() {
 		        if (SelectedBoardID == "") {
@@ -74,11 +75,25 @@
 		    		return;
 		    	}
 		        
-       			ret[0] = SelectedBoardID;
-       			ret[2] = SelectedBoardName;
-       			isselected = true;
-       			opener.boardselect_cross_dialogArguments[1](ret);
-       			window.close();
+		        if (CrossYN()) {
+		        	ret[0] = SelectedBoardID;
+	       			ret[2] = SelectedBoardName;
+	       			isselected = true;
+	       			opener.boardselect_cross_dialogArguments[1](ret);
+	       			window.close();	
+		        } else {
+		        	ret[0] = SelectedBoardID;
+		            ret[1] = selectedBoardGroupID;
+		            ret[2] = SelectedBoardName;
+
+		            if (ReturnFunction != null) {
+		                ReturnFunction(ret);
+		            } else {
+		                window.returnValue = ret;
+		            }
+		            window.close();
+		        }
+		        
 		    }
 
 			function CheckIfAnonyBoard(pBoardID) {
@@ -221,10 +236,10 @@
 			    }
 			}
 			
-			window.onunload = function () {
+			 window.onunload = function () {
 			    if (!isselected)
 			        opener.boardselect_cross_dialogArguments[1]("");
-			}
+			} 
 		</script>
 	</head>
 	<body class="popup" onload="javascript:window_onload()">

@@ -2568,9 +2568,27 @@
 		</isEqual>
 	</select>
 	
-	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#v_pBoardID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#v_pBoardID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	
+	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(ITEMID)
+   			FROM 
+   				EZBOARDSTD.TBL_BOARD_ITEM A 
+   			WHERE    				
+   				$v_PWHEREBOARD$ 
+   			AND
+   				TENANT_ID = #v_TENANTID#
+   			AND 
+   				STARTDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   			AND 
+   				ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   			$v_STRSUBQUERY$
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer"> -->
 <!-- 		{CALL EZBOARDSTD.EZSP_GETMYNOTICEPOSTCOUNT(#v_PUSERID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -3337,12 +3355,22 @@
 <!-- 		{CALL EZBOARDSTD.EZSP_DELETETEMPITEM(#strItemID#)} -->
 <!-- 	</procedure> -->
 	
-	<delete id="EzBoardDAO.deleteTempItem1" parameterClass="Map">
-	</delete>
+<!-- 	<procedure id="EzBoardDAO.portalPageItemEdit" parameterClass="String" resultClass="String"> -->
+<!-- 		{CALL EZBOARDSTD.EZSP_PORTALPAGEITEM_EDIT(#boardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzBoardDAO.portalPageItemEdit" parameterClass="String" resultClass="String">
-		{CALL EZBOARDSTD.EZSP_PORTALPAGEITEM_EDIT(#boardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzBoardDAO.portalPageItemEdit" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				BOARDNAME 
+        	FROM 
+        		EZBOARDSTD.TBL_Board_BoardInfo 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			BOARDID = #boardID#
+		]]>
+	</select>
 	
 	<select id="EzBoardDAO.getBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
 		<![CDATA[

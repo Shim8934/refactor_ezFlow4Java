@@ -1280,11 +1280,11 @@ img { border:0px;}
 }
 
 /*  common-board */
-.boare_area {
+.board_area {
 	clear:both;
 	margin:20px 5px 0px 0px;
 	padding:0px;
-	overflow:hidden;	
+	overflow:hidden;
 }
 
 

@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 		var mode = "${mode}";
         var pKeyCode = "${pKeyCode}";
@@ -146,13 +147,12 @@
         }
         var ImageState = "";
         function changeNormalImage() {
-            //if (CrossYN() || (pNoneActiveX=="YES")) {
+           if (CrossYN()) {
                 ImageState = "Normal";
                 document.getElementById('mode').value = "Theme";
                 //document.getElementById('mode').value = "PHOTO";
                 document.form.file1.click();
-            //}
-            /*else {
+            } else {
                 var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
                 var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
                 if (filepath == "") return;
@@ -169,11 +169,11 @@
 
                 var strXML = "<IMAGE><OLDFILENAME>" + txtNormalImage.src.substr(txtNormalImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
 
-                g_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                g_xmlhttp.open("POST", "/myoffice/ezPortal/admin/edit/UploadMenuImage.aspx?mode=Theme", true);
+                g_xmlhttp = createXMLHttpRequest();
+                g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Theme", true);
                 g_xmlhttp.onreadystatechange = changeNormalImage_end;
                 g_xmlhttp.send(strXML);
-            }*/
+            }
         }
         function changeNormalImage_end() {
             if (g_xmlhttp.readyState != 4) return;
@@ -189,7 +189,7 @@
                     else
                         alert("<spring:message code='ezPortal.t414'/>");
                 }
-                document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+                document.getElementById("cnt").value = $("input[name=file1]")[0].files[0].length;
                 var frm = document.getElementById('form');
                 frm.action = "/admin/ezPortal/portletImageUpload.do?mode=Theme";
                 frm.submit();

@@ -369,7 +369,7 @@ function AttachFileList() {
                 strRet += filepath + ";";
             } else {
                 //strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) + ";"
-                strRet += "TempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+                strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
             }
         }
     }
@@ -550,7 +550,7 @@ function AttachFileList_Photo()
 		    strRet += filepath + ";";
 		} else {
 		    //strRet += pBoardID + "/UploadFile/" + getNodeText(xmldomNodes[i]) +";";
-		    strRet += "TempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
+		    strRet += "tempUploadFile/" + getNodeText(xmldomNodes[i]) + ";"
 		}
 	}
 	

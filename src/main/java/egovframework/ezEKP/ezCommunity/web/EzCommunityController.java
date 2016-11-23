@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardListVO;
@@ -96,6 +98,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzCommunityController.class);
 	
 	/**
 	 * 커뮤니티 메인화면 호출함수
@@ -296,6 +300,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean joinFlag = false, checkSysop = false;
 		int newMemberConfirmType = 0;
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
@@ -362,6 +368,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("newMemberConfirmType", newMemberConfirmType);
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityPopupCommHome";
 	}
@@ -373,7 +380,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String commHomeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean checkIE = commonUtil.checkIE(request);
 		
 		String code = request.getParameter("code");
 		
@@ -381,14 +387,32 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/** 
-	 * 커뮤니티 메인 오른쪽화면 실행함수
+	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	@ResponseBody
-	public String commHomeBoardInfo(HttpServletRequest request) throws Exception {
-		return ezCommunityService.commHomeBoardInfo(request);
+	public String commHomeBoardInfo(Model model, HttpServletRequest request) throws Exception {
+		String code = request.getParameter("code");
+		
+		List<CommunityBoardInfoVO> list = ezCommunityService.commHomeBoardInfo(code);
+		
+		model.addAttribute("boardInfoList", list);
+		
+		return "json";
 	}
 	
+	/** 
+	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardItemList.do")
+	public String commHomeBoardItemList(Model model, HttpServletRequest request) throws Exception {
+		String boardID = request.getParameter("boardID");
+		
+		List<CommunityBoardItemVO> list = ezCommunityService.commHomeBoardItemList(boardID);
+		
+		model.addAttribute("boardItemList", list);
+		
+		return "json";
+	}
 	/**
 	 * 커뮤니티 게시판 목록화면 호출함수
 	 */
@@ -714,6 +738,119 @@ public class EzCommunityController extends EgovFileMngUtil{
             returnVal = "OK_" + uploadSN + "_" + fileName;
         }
         
+		return returnVal;
+	}
+	
+	/**
+	 * 포토게시판 파일업로드(IE9) 실행함수 
+	 */
+	@RequestMapping(value = "/ezCommunity/itemAttachFilePhoto.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String itemAttachFilePhoto(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnVal = "";
+		String guid = "";
+		String fileTitle = "";
+		String ext = "";
+		String prefix = "";
+		
+		if (request.getParameter("guid") != null) {
+			guid = request.getParameter("guid");
+		}
+		if (request.getParameter("name") != null) {
+			fileTitle = request.getParameter("name");
+		}
+		if (request.getParameter("ext") != null) {
+			ext = request.getParameter("ext");
+		}
+		if (request.getParameter("prefix") != null) {
+			prefix = request.getParameter("prefix");
+		}
+		
+		String boardID = prefix;
+		String uploadSN = "{" + guid + "}";
+		String fileName = fileTitle + "." + ext;
+		
+		fileName = fileName.replace("+", "%2b");
+		fileName = fileName.replace(";", "%3b");
+		fileName = fileName.replace("~", "%7e");
+		fileName = fileName.replace("=", "%3d");
+		
+		String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		
+		if (!new File(dirPath + "tempUploadFile").exists()) {
+			new File(dirPath + "tempUploadFile").mkdirs();
+		}
+		
+		if (!new File(dirPath + boardID).exists()) {
+			new File(dirPath + boardID).mkdir();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		}
+		
+		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
+		String mapPath = dirPath + "tempUploadFile" + commonUtil.separator;
+		
+		InputStream stream = null;
+		OutputStream bos = null;         
+		
+		try {
+			stream = request.getInputStream();
+			bos = new FileOutputStream(attachPath);
+//			long fileSize = 0;
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+//				fileSize += bytesRead;
+			}
+		} catch (Exception e) {
+			throw e;                
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+				}
+			}
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+				}
+			}
+		}
+		
+		File imageFile = new File(attachPath);	
+		
+		int nImgWidth = 0;
+		int nImgHeight = 0;
+		
+		if (imageFile.exists()) {			
+			BufferedImage bi = ImageIO.read(imageFile);			    
+			nImgWidth = bi.getWidth();
+			nImgHeight = bi.getHeight();
+			int nWidth = 0, nHeight = 0;
+			
+            if (nImgWidth > nImgHeight) {
+                nWidth = 200;
+                nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+            } else {
+                nHeight = 200;
+                nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+            }
+            
+            BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+            bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+            ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + "_" + fileName));
+		}
+		
+		returnVal = "OK_" + uploadSN + fileName;
+		
 		return returnVal;
 	}
 	
@@ -1505,7 +1642,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (mode.equals("edit")) {
 			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId());
-			
+			item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			if (item != null) {
 				bIsMyContent = true;
 			}
@@ -1526,6 +1663,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/guestEditOk.do")
 	public String guestEditOk(@CookieValue("loginCookie") String loginCookie, Model model, CommunityCClubGuestVO item, HttpServletRequest request) throws Exception {
+		LOGGER.debug("guestEditOk started. ");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean bIsMyContent = false;
 		String[] cNo = request.getParameterValues("c_no");
@@ -1534,11 +1673,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String memo = request.getParameter("memo");
 		
+		LOGGER.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
+		
 		bIsMyContent = ezCommunityService.guestEditOk(userInfo, item, code, mode, memo, cNo, bIsMyContent);
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("code", code);
 		model.addAttribute("bIsMyContent", bIsMyContent);
+		
+		LOGGER.debug("guestEditOk ended. ");
 		
 		return "/ezCommunity/communityGuestEditOk";
 	}
@@ -3427,6 +3570,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardItemVO item = null;
 		CommunityBoardPropertyVO boardInfo = null;
 		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "", strAbstract = "";
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String boardID = request.getParameter("boardID");
 		String mode = request.getParameter("mode");
@@ -3506,6 +3651,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("expireDays", expireDays);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityNewBoardItemPhoto";
 	}

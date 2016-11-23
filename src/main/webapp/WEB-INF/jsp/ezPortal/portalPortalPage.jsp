@@ -23,6 +23,7 @@
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<c:url value='/js/ezPortal/showModalDialog.js'/>" ></script>
 		<script type="text/javascript">
 			var xmlhttp;
@@ -905,7 +906,7 @@
 					alert("<spring:message code='ezPortal.t293'/>");
 					return;
 				}
-		    	var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+		 /*    	var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 				newrow.style.width = "100%";
 				newrow.style.height = ret[2];
 				var subtdGetid = "subtd" + GetGUID().substr(0,4);
@@ -919,7 +920,38 @@
 				    pageuid = GetPageID(document.getElementById(subtdGetid));
 
 				document.getElementById(subtdGetid).setAttribute("pageuid", pageuid);
-				document.getElementById(subtdGetid).focus();
+				document.getElementById(subtdGetid).focus(); */
+				var newrow = eval(selectedCell).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+				newrow.style.width = "100%";
+				newrow.style.height = ret[2];
+
+				var newcell = newrow.insertCell();
+				newcell.id = "subtd" + GetID();
+				newcell.uid = ret[0];
+				newcell.pageuid = GetPageID(newcell);
+				newcell.ownerpageuid = pageid;
+				newcell.canremove = 1;
+				newcell.canresize = 1;
+				newcell.canreplace = 1;
+				
+				newcell.setAttribute("id", "subtd" + GetID());
+				newcell.setAttribute("uid", ret[0]);
+				newcell.setAttribute("pageuid", GetPageID(newcell));
+				newcell.setAttribute("ownerpageuid", pageid);
+				newcell.setAttribute("canremove", 1);
+				newcell.setAttribute("canresize", 1);
+				newcell.setAttribute("canreplace", 1);
+				
+				newcell.style.width = "100%";
+				newcell.align = "center";	
+				newcell.innerHTML = "<b>"+ret[1]+"</b>";
+				newcell.onclick = selectsubcell;
+				newcell.ondbclick = dbclicknotice;
+				newcell.onkeydown = cellkeydown;
+				selectedSubCell = "";
+				newcell.focus();
+
+			    //AttachEvents(newcell);
 		   	}
 		}
 		
@@ -1384,32 +1416,50 @@
 			strHTML += "<TD id='td0" + GetGUID().substr(0,3) + "' vAlign=top><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>";
 			strHTML += "<TBODY><TR style='WIDTH: 100%; HEIGHT: 10px' onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR></tbody>";
 			strHTML += "</table></td></tr></table>";
+			
+			if (CrossYN()) {
+				var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+				newrow.style.width = "100%";
+				newrow.style.height = "100";
+				
+				var subGetId = "subtd" + GetID();
+				var strInnerHTML = "<td id=\"" + subGetId + "\"uid=\""+GetGUID()+"\" style=\"width:100%\" pageuid='"+GetGUID()+"' ownerpageuid='"+pageid+"' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\">"+strHTML+"</td>";
+				newrow.innerHTML = strInnerHTML;
+				
+				document.getElementById(subGetId).focus();
+				AttachEvents(document.getElementById(subGetId))
+			} else {
+				var newrow = eval(selectedCell).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
+				newrow.style.width = "100%";
+				newrow.style.height = "100";
 
-			//alert(eval(selectedCell).children[0].children[0].children.length);
-			var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
-			newrow.style.width = "100%";
-			newrow.style.height = "100";
-			var subGetId = "subtd" + GetID();
-			var strInnerHTML = "<td id=\"" + subGetId + "\"uid=\""+GetGUID()+"\" style=\"width:100%\" pageuid='"+GetGUID()+"' ownerpageuid='"+pageid+"' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\">"+strHTML+"</td>";
-			newrow.innerHTML = strInnerHTML;
+				var newcell = newrow.insertCell();
+				newcell.id = "subtd" + GetID();
+				newcell.uid = GetGUID();
+				newcell.pageuid = GetGUID();
+				newcell.ownerpageuid = pageid;
+				newcell.canremove = 1;
+				newcell.canresize = 1;
+				newcell.canreplace = 1;
+				
+				newcell.setAttribute("id", "subtd" + GetID());
+				newcell.setAttribute("uid", GetGUID());
+				newcell.setAttribute("pageuid", GetGUID());
+				newcell.setAttribute("ownerpageuid", pageid);
+				newcell.setAttribute("canremove", 1);
+				newcell.setAttribute("canresize", 1);
+				newcell.setAttribute("canreplace", 1);
+				
+				newcell.style.width = "100%";
+				newcell.align = "center";	
+				newcell.innerHTML = strHTML;
+				selectedSubCell = "";
+				newcell.focus();
 
-			//var newcell = newrow.insertCell();
-			//newcell.id = "subtd" + GetID();
-			//newcell.uid = GetGUID();
-			//newcell.pageuid = GetGUID();
-			//newcell.ownerpageuid = pageid;
-			//newcell.canremove = 1;
-			//newcell.canresize = 1;
-			//newcell.canreplace = 1;
-			//newcell.style.width = "100%";
-			//newcell.align = "center";	
-			//newcell.innerHTML = strHTML;
-			//selectedSubCell = "";
-			//newcell.focus();
+			    AttachEvents(newcell);
+			}
 
-		    //AttachEvents(newcell);
-			document.getElementById(subGetId).focus();
-			AttachEvents(document.getElementById(subGetId))
+
 		}
 
 		function newpage()

@@ -129,8 +129,9 @@
     				listXML += "<spring:message code = 'ezCommunity.t926' />";
     				listXML += "</td></tr>";
     			}
-    						
-    			$('#tblList').html($('#tblList').html()+listXML);
+    			
+    			$('#tblList').append(listXML);
+    			
     			makePageSelPage();
     		});
 	        
@@ -197,29 +198,29 @@
 	            }
 	        }
 	
-	        function checkBox_checked(pItemID, pUserID) {
-	            if (window.event.srcElement.checked) {
-	                strListInfo += pItemID + "," + pUserID + ";";
-	            } else {
-	                strListInfo = ReplaceText(strListInfo, pItemID + "," + pUserID + ";", "");
-	            }
-	        }
+// 	        function checkBox_checked(pItemID, pUserID) {
+// 	            if (window.event.srcElement.checked) {
+// 	                strListInfo += pItemID + "," + pUserID + ";";
+// 	            } else {
+// 	                strListInfo = ReplaceText(strListInfo, pItemID + "," + pUserID + ";", "");
+// 	            }
+// 	        }
 	
-	        function checkBox_checkAll() {
-	            var i = 0;
+// 	        function checkBox_checkAll() {
+// 	            var i = 0;
 	            
-	            for (i = 1; i < document.frmOutbox.length; i++) {
-	                if (document.frmOutbox[i].type == 'checkbox') {
-	                    if (document.frmOutbox.checkbox.checked) {
-	                        document.frmOutbox[i].checked = true;
-	                        strListInfo = ListInfo.innerText;
-	                    } else {
-	                        document.frmOutbox[i].checked = false;
-	                        strListInfo = "";
-	                    }
-	                }
-	            }
-	        }
+// 	            for (i = 1; i < document.frmOutbox.length; i++) {
+// 	                if (document.frmOutbox[i].type == 'checkbox') {
+// 	                    if (document.frmOutbox.checkbox.checked) {
+// 	                        document.frmOutbox[i].checked = true;
+// 	                        strListInfo = ListInfo.innerText;
+// 	                    } else {
+// 	                        document.frmOutbox[i].checked = false;
+// 	                        strListInfo = "";
+// 	                    }
+// 	                }
+// 	            }
+// 	        }
 	        
 	        var checkpassword_dialogArguments = new Array();
 	        
@@ -724,8 +725,8 @@
 	    </div>
 
 	    <table id="tblList">
-	        <form name="frmOutbox" action="/ezCommunity/boardItemListPhoto.do" method="post">
-	        </form>
+<!-- 	        <form name="frmOutbox" action="/ezCommunity/boardItemListPhoto.do" method="post"> -->
+<!-- 	        </form> -->
 	    </table>
 	    <div style="width: 615px; padding-top: 10px" id="tblPageRayer"></div>
 	    <div id="ListInfo" style="DISPLAY: none">${listInfo}</div>

@@ -92,8 +92,7 @@ function beginAttachAdd()
 	    var attachFilePath = attachFileResult.substr(0, attachFileResult.indexOf("/"));
 	    var attachFilename = attachFileResult.substr(attachFileResult.indexOf("/")+1);
 	    attachFilename = attachFilename.substr(0, attachFilename.lastIndexOf("/"));
-
-	    alert(attachFilename);
+	    
 	    if (attachFilename.substr(0, 2) == "OK") {
 	        var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 	        ezUtil.UseUTF8 = true;
@@ -527,6 +526,7 @@ function beginAttachAdd_Photo()
     {
 		try
 		{
+			document.all.EzHTTPTrans.AddFilename(encodeURIComponent(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1)));
 			document.all.EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
 		}
 		catch (e) {
@@ -539,7 +539,7 @@ function beginAttachAdd_Photo()
 		}	
 	}
 	
-	var RemotePath = document.location.protocol+"//" + document.location.hostname + "/myoffice/ezCommunity/aspx/Item_AttachFile_Photo.aspx";
+	var RemotePath = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommunity/itemAttachFilePhoto.do";
 	var nCount = document.all.EzHTTPTrans.StartUpload(RemotePath,"/upload_Community",pBoardID , "","");
 	
 	for (var i = 0; i < nCount; i++)
