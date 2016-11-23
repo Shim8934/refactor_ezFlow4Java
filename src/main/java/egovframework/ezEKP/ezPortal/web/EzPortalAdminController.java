@@ -151,6 +151,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName());
 			model.addAttribute("result", result);
 			model.addAttribute("list", list);
+			model.addAttribute("userInfo", userInfo);
 			return "/admin/ezPortal/portalThemeList";
 		} else {
 			return "";
