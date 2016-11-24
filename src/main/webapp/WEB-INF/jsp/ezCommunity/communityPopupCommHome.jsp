@@ -86,8 +86,7 @@
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
-					data : { code   : code
-					},
+					data : { code   : code },
 					dataType : "json",
 					success: function(result){
 						if (result.boardInfoList.length > 0) {
@@ -106,7 +105,7 @@
 			                		} else {
 			                			div2.className = "f_left btype_photo";
 			                		}
-			                	} else {
+			                	} else if (infoVO.showPosition == "2"){
 			                		if (infoVO.gubun != "3") {
 			                			div2.className = "f_right btype_list";
 			                		} else {
@@ -201,13 +200,6 @@
 		                                    li.appendChild(span3);
 		                                    ul.appendChild(li);
 	            						});
-	            						
-	            						if (result.boardItemList.length == 0) {
-	            							div2.appendChild(p);
-	    	                                div2.appendChild(ul);
-	    	                                div.appendChild(div2);
-	    	                                document.getElementById("mainboard").appendChild(div);
-	            						}
 	            					}
 	            				});
 	                            

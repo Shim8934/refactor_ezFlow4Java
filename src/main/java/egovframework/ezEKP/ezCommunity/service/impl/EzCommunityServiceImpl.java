@@ -525,6 +525,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code) throws Exception {
 		List<CommunityBoardInfoVO> boardInfoList = ezCommunityDAO.copHomeBoardGet(code);
 		
+		for(CommunityBoardInfoVO vo : boardInfoList) {
+			LOGGER.debug("showPosition : " + vo.getShowPosition() + ", sn : " + vo.getSn());
+		}
+		
+		
 		return boardInfoList;
 	}
 	

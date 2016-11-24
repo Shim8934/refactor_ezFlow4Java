@@ -393,9 +393,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commHomeBoardInfo(Model model, HttpServletRequest request) throws Exception {
 		String code = request.getParameter("code");
 		
+		LOGGER.debug("commHomeBoardInfo started. code : " + code);
+		
 		List<CommunityBoardInfoVO> list = ezCommunityService.commHomeBoardInfo(code);
 		
 		model.addAttribute("boardInfoList", list);
+		
+		LOGGER.debug("commHomeBoardInfo ended.");
 		
 		return "json";
 	}
