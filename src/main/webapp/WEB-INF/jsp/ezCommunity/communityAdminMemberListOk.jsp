@@ -65,7 +65,7 @@
 				<th><spring:message code = 'ezCommunity.t519' /></th>
 				<td>
 					<c:if test="${clubUser.c_birth != '0' }">
-						${memberInfoVO.birthDay}
+						${memberInfo.birthDay}
 					</c:if>
 				</td>
 			</tr>

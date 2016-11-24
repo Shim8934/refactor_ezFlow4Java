@@ -626,8 +626,19 @@
 		    			resultXML = loadXMLString(result);
 		    			
 		    			var master = "";
+		    			
+		    			<c:if test="${!isCrossBrowser}">
+		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    		    </c:if>
+		    		    
+		    		    <c:if test="${isCrossBrowser}">
+		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+	    		    	</c:if>
+	    		    
+				        if (master == null) {
+				        	master = "";
+				        }
 				        
-				        master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
 				        master = master.toLowerCase();
 				        userID = "<c:out value='${userInfo.id }'/>";
 				        userID = userID.toLowerCase();

@@ -76,7 +76,7 @@
 					alert("<spring:message code = 'ezCommunity.t75' />");
 					return;
 				}
-				alert(strQuery)
+				
 				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + strSelect + "&query=" + encodeURI(make_searchstring(strQuery));
 			}
 			
