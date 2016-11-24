@@ -424,13 +424,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
-		String pBoardID = request.getParameter("boardID");
-		String pBoardName = request.getParameter("boardName");
+		String boardID = request.getParameter("boardID");
+		String boardName = request.getParameter("boardName");
 		String userLevel = "";
 		
+		LOGGER.debug("boarditemList started.");
+		LOGGER.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
+		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(pBoardID, userInfo.getId());
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(boardID, userInfo.getId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
 		
 		if (boardList == null) {
@@ -446,9 +449,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pBoardName", pBoardName);
+		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		
+		LOGGER.debug("boarditemList ended.");
 		
 		return "/ezCommunity/communityBoardItemList";
 	}

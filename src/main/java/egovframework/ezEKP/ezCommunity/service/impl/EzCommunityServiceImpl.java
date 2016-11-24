@@ -3958,6 +3958,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", id);
 		map.put("v_PSORTBY", pSortBy);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		if (pEndRow > 0){
 			map.put("v_PENDROW", pEndRow);
@@ -4513,6 +4514,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_PENDROW", pEndRow);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
 		
