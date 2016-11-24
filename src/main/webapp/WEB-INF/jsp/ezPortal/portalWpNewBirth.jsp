@@ -134,13 +134,13 @@
 	        	
 	        	 $.ajax({
 	    	        	type : "POST",
-	    	        	dataType : "xml",
+	    	        	dataType : "text",
 	    	        	url : "/ezPersonal/mainBirthUserList.do",
 	    	        	data : {
 	    	        		mon   : month, 
 	    	        	},
 	    	        	success : function(xml){		        		
-	    	        		getbirthUserList_after(xml);
+	    	        		getbirthUserList_after(loadXMLString(xml));
 	    	        	},
 	    	        	error : function(error){
 	    	        		alert(error);	
