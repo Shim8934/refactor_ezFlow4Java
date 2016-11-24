@@ -338,4 +338,6 @@ public interface EzCommunityService {
 	public void joinOkUpdate2(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openHouse, String openJob, String openBirth, String openSex) throws Exception;
 
 	public void okNoSet(String flag, String code, String cID) throws Exception;
+
+	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath) throws Exception;
 }
