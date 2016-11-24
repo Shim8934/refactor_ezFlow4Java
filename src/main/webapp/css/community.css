@@ -1289,6 +1289,7 @@ img { border:0px;}
 
 
 .f_left {
+	clear:both;
 	float:left;
 	width:335px;
 }

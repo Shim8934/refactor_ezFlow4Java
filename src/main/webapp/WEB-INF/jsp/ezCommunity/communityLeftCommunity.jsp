@@ -458,7 +458,17 @@
 		    		async : false,
 		    		data : {code : code},
 		    		success: function (result) {
-		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    			<c:if test="${!isCrossBrowser}">
+	    					master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    		    </c:if>
+		    		    
+		    		    <c:if test="${isCrossBrowser}">
+		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+	    		    	</c:if>
+	    		    
+				        if (master == null) {
+				        	master = "";
+				        }
 		    			master = master.toLowerCase();
 		                UserID = "<c:out value = '${userInfo.id}' />'";
 					    UserID = UserID.toLowerCase();
@@ -499,7 +509,17 @@
 		    		async : false,
 		    		data : {code : code},
 		    		success: function (result) {
-		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    			<c:if test="${!isCrossBrowser}">
+		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    		    </c:if>
+		    		    
+		    		    <c:if test="${isCrossBrowser}">
+		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+	    		    	</c:if>
+	    		    
+				        if (master == null) {
+				        	master = "";
+				        }
 		    			master = master.toLowerCase();
 		                UserID = "<c:out value = '${userInfo.id}' />'";
 					    UserID = UserID.toLowerCase();

@@ -525,6 +525,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code) throws Exception {
 		List<CommunityBoardInfoVO> boardInfoList = ezCommunityDAO.copHomeBoardGet(code);
 		
+		for(CommunityBoardInfoVO vo : boardInfoList) {
+			LOGGER.debug("showPosition : " + vo.getShowPosition() + ", sn : " + vo.getSn());
+		}
+		
+		
 		return boardInfoList;
 	}
 	
@@ -3953,6 +3958,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", id);
 		map.put("v_PSORTBY", pSortBy);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		if (pEndRow > 0){
 			map.put("v_PENDROW", pEndRow);
@@ -4034,6 +4040,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_PENDROW", pEndRow);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
 		
@@ -4508,6 +4515,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_PENDROW", pEndRow);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
 		

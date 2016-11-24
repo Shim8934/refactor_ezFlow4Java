@@ -118,6 +118,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = "", userLevel = "";
 		int newMemberConfirmtype = 0;
         boolean checkSysop = false;
+        String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
         if (request.getParameter("communityCD") != null) {
             code = request.getParameter("communityCD");
@@ -156,6 +158,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
 		model.addAttribute("lang",userInfo.getLang());
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
 		return "/ezCommunity/communityLeftCommunity";
 	}
 
@@ -393,9 +397,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String commHomeBoardInfo(Model model, HttpServletRequest request) throws Exception {
 		String code = request.getParameter("code");
 		
+		LOGGER.debug("commHomeBoardInfo started. code : " + code);
+		
 		List<CommunityBoardInfoVO> list = ezCommunityService.commHomeBoardInfo(code);
 		
 		model.addAttribute("boardInfoList", list);
+		
+		LOGGER.debug("commHomeBoardInfo ended.");
 		
 		return "json";
 	}
@@ -420,13 +428,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
-		String pBoardID = request.getParameter("boardID");
-		String pBoardName = request.getParameter("boardName");
+		String boardID = request.getParameter("boardID");
+		String boardName = request.getParameter("boardName");
 		String userLevel = "";
 		
+		LOGGER.debug("boarditemList started.");
+		LOGGER.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
+		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(pBoardID, userInfo.getId());
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(boardID, userInfo.getId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
 		
 		if (boardList == null) {
@@ -442,9 +453,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("pBoardName", pBoardName);
+		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		
+		LOGGER.debug("boarditemList ended.");
 		
 		return "/ezCommunity/communityBoardItemList";
 	}
@@ -2862,13 +2875,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
 		
+		LOGGER.debug("getMemberInfo(" + companyID + ", " + cID + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID);
 		
 		if (memberInfoVO != null) {
+			LOGGER.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID);
 			
 			if (clubUser != null) {
-				if (clubUser.getC_birth() != 0 && !memberInfoVO.getBirthDay().trim().equals("")) {
+				if (clubUser.getC_birth() != 0 && memberInfoVO.getBirthDay() != null) {
 					if (memberInfoVO.getBirthDay().trim().substring(0, 1).equals("-")) {
 						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t538", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
 					} else {
@@ -3289,7 +3304,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminMemPermit.do")
 	public String adminMemPermit(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		String code = request.getParameter("code");
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
@@ -3308,22 +3322,37 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminOkNo.do")
 	public String adminOkNo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LOGGER.debug("adminOkNo started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
 		String flag = request.getParameter("flag");
 		String cID = request.getParameter("cID");
+		String result = "";
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		LOGGER.debug("code : " + code + ", flag : " + flag + ", cID : " + cID);
 		
-		ezCommunityService.okNoSet(flag.toUpperCase(), code, cID);
+		String postCount = ezCommunityService.adminMemPermitGet1(code);		
+		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
+		
+		try {
+			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID);
+			
+			result = "true";
+		} catch (Exception e) {
+			LOGGER.debug(e.getMessage());
+			
+			result = "false";
+		}
 		
 //		sendMail();
 		
-		model.addAttribute("sysopCheck", sysopCheck);
-		model.addAttribute("code", code);
+		model.addAttribute("result", result);
+		model.addAttribute("postCount", postCount);
+		model.addAttribute("idSpanValue", idSpanValue);
+		LOGGER.debug("adminOkNo ended.");
 		
-		return "/ezCommunity/communityAdminMemPermit";
+		return "json";
 	}
 	
 	/**

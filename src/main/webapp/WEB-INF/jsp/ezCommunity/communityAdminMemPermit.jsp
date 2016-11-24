@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<c:if test="${sysopCheck != '1' }">
 			<spring:message code = 'ezCommunity.t447' />
@@ -47,15 +48,28 @@
 					var result = confirm(userName+"<spring:message code = 'ezCommunity.t546' />");
 					
 					if (result) {
-						document.location.href="/ezCommunity/adminOkNo.do?flag="+a+"&cID="+b+"&code="+c+"&goToPage="+d;
+						adminOkNo(a,b,c,d);
 					}
 				} else {
 					var result = confirm(userName + "<spring:message code = 'ezCommunity.t547' />");
 					
 					if (result) {
-						document.location.href="/ezCommunity/adminOkNo.do?flag="+a+"&cID="+b+"&code="+c+"&goToPage="+d;
+						adminOkNo(a,b,c,d);
 					}
 				}
+			}
+			
+			function adminOkNo(flag, cID, code, goToPage) {
+				$.ajax({
+					type : "POST",
+					url : "/ezCommunity/adminOkNo.do",
+					async : false,
+					data : {flag : flag, cID : cID, code : code, goToPage : goToPage},
+					dataType : "json",
+					success : function(result) {
+						location.reload();
+					}
+				});
 			}
 	
 			function openinfo(a,b,c) {
