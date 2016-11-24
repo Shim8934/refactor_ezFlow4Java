@@ -514,6 +514,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept) throws Exception {
+		logger.debug("getScheduleXML Start");
 		StringBuilder returnStr = new StringBuilder();
 		try {
 			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
@@ -524,6 +525,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
 			String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept);
+			logger.debug("getScheduleList="+scheRs);
 			Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 
 			returnStr.append("<root>");
@@ -641,6 +643,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		logger.debug("getScheduleXML End");
 		return returnStr.toString();
 	}
 	
@@ -1232,6 +1235,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@SuppressWarnings("deprecation")
 	public String getMonthlyRepDateTimes(String xmlStr, String sDate, String eDate) {
+		logger.debug("getMonthlyRepDateTimes Start");
+		logger.debug("xmlStr="+xmlStr);
 		StringBuilder returnXML = new StringBuilder();
 		try {
 			Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
@@ -1277,12 +1282,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				if (daysOfWeek.indexOf(",") < 0) {
 					wDayCnt = 0;
 				}
+				logger.debug("selType="+selType);
 				if (selType.equals("0")) {
 					int datePartDay = format.parse(tmpDTStr).getDate();
 					int datePartMonth = format.parse(tmpDTStr).getMonth()+1;
 					int datePartYear = format.parse(tmpDTStr).getYear();
 					boolean checkLastDate = true;
-					
+					logger.debug("datePartMonth="+datePartMonth);
 					if (daysOfMonth.equals("31") && (datePartMonth == 2 || datePartMonth == 4 || datePartMonth == 6 || datePartMonth == 9 || datePartMonth == 11)) {
 						checkLastDate = false;
 					} else if (daysOfMonth.equals("30") && datePartMonth == 2) {
@@ -1377,9 +1383,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tmpDTStr = sTmpDTStr;
 							wDayCnt = count;
 						}
-						
+						logger.debug("byPosition="+byPosition);
 						if (!byPosition.equals("1")) {
 							if (wDayCnt == 5) {
+								logger.debug("getDate="+format.parse(tmpDTStr).getDate());
 								if (format.parse(tmpDTStr).getDate() == 1) {
 									tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								} else {
@@ -1389,18 +1396,22 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -2) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 									}
 								}
+								logger.debug("tmpDtStr="+tmpDTStr);
 							} else {
 								tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 								tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, (Integer.parseInt(byPosition) -1) * 7, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+								logger.debug("tmpDTStr="+tmpDTStr);
+								logger.debug("tmpEDTStr="+tmpEDTStr);
+								logger.debug("tmpSDTStr="+tmpSDTStr);
 							}
 						}
 					} else {
 						int count1 = 1;
-						
-						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, -1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						logger.debug("tmpDTStr2="+tmpDTStr);
 						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-						
+						tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, -1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+						logger.debug("tmpDTStr3="+tmpDTStr);
 						int tmpWeekDay = weekDay(tmpDTStr);
 						
 						while (true) {
@@ -1468,6 +1479,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								for (int i=0; i<wDayCnt; i++) {
 									if (i>0) {
 										tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+										logger.debug("tmpDTStr1="+tmpDTStr);
 									}
 									if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgtmpDTStr)) {
 										returnXML.append("<ROW>");
@@ -1523,6 +1535,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpEDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addMonth(tmpSDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
+				logger.debug("tmpDTStr="+tmpDTStr);
+				logger.debug("tmpEDTStr="+tmpEDTStr);
+				logger.debug("tmpSDTStr="+tmpSDTStr);
 				
 				temp++;
 				if (temp > 1000) {
@@ -1533,6 +1548,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		logger.debug("getMonthlyRepDateTimes End");
 		return returnXML.toString();
 	}
 	
