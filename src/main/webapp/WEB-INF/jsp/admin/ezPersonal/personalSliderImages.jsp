@@ -237,7 +237,7 @@
 		            }
 		        }
 		        else {
-		            var url = "SelectImage.aspx?item=" + document.getElementById(clickitem).getAttribute("DATA1") + "";
+		            var url = "/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1") + "";
 		            var feature = "center:yes;status:no;dialogWidth:610px;dialogHeight:410px;edge:sunken;scroll:no" + GetShowModalPosition(610, 410);
 		            feature = feature + GetShowModalPosition(610, 410);
 	
