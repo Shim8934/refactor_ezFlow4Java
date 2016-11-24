@@ -1121,11 +1121,12 @@
                 DELETE_FG ,
                 INHERIT_FG ,
                 POSTNOTICE ,
-                BOARDGROUPACL 
+                BOARDGROUPACL ,
+                TENANT_ID
           	  FROM 
           	  	EZBOARDSTD.TBL_Board_BoardManage 
           	  WHERE  
-          	  	TENANT_ID = #V_TENANTID#
+          	  	TENANT_ID = #v_TENANTID#
           	  AND
           	  	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>

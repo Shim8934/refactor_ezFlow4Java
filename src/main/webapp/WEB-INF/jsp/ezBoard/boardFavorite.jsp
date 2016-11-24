@@ -77,7 +77,7 @@
         	 	$.ajax({
   					url : '/ezBoard/set_TabUse.do',
   					method : 'POST',
-  					dataType : 'json',
+  					dataType : 'text',
   					data : {
       					pBoardList : obj.getAttribute("BoardID") ,
       					tabUsed : tabUsed
@@ -199,7 +199,7 @@
             	$.ajax({
  					url : '/ezBoard/saveListOrder.do',
  					method : 'POST',
- 					dataType : 'json',
+ 					dataType : 'text',
  					data : {
 	     				pBoardList : boardID ,
 		 				pDelboardList : delBoardID,

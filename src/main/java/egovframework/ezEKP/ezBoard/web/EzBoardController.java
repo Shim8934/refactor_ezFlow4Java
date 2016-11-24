@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -2589,44 +2588,28 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 환경설정 순서  표출 Method
 	 */
 	@RequestMapping(value="/ezBoard/saveListOrder.do", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> saveListOrder(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception {
-		loginVO = commonUtil.userInfo(loginCookie);
+	public void saveListOrder(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-        String pUserID = loginVO.getId();
         String pBoardList = request.getParameter("pBoardList");
         String pDelBoardList = request.getParameter("pDelboardList");
-        int pBoardListCount = pBoardList.split(";").length-1;
-        int pDelBoardListCount = pDelBoardList.split(";").length-1;
  
- 		Map<String, Object> map = new HashMap<String, Object>();
-        map.put("pBoardList",pBoardList);
-        map.put("pDelBoardList",pDelBoardList);
-        map.put("pBoardListCount",pBoardListCount);
-        map.put("pBoardList",pBoardList);
-        map.put("pDelBoardListCount",pDelBoardListCount);
-        
-        ezBoardService.setListOrder(pUserID, map);
-        
-		return map;
+        ezBoardService.setListOrder(userInfo, pBoardList, pDelBoardList);
 	}
 	
 	/**
 	 * 게시판 환경설정 탭 표출 Method
 	 */
 	@RequestMapping(value="/ezBoard/set_TabUse.do")
-	public String set_TabUse(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap,HttpServletRequest request,HttpServletResponse response,LoginVO loginVO) throws Exception{
-		loginVO = commonUtil.userInfo(loginCookie);
+	public void set_TabUse(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String pUserID = loginVO.getId();
 		String pBoardList = request.getParameter("pBoardList");
 		String tabUsed = request.getParameter("tabUsed");
+		int tenantID = loginVO.getTenantId();
 
-		modelMap.addAttribute("pBoardList",pBoardList);
-		modelMap.addAttribute("tabUsed",tabUsed);
-		
-        ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed);
-        
-        return "json";
+        ezBoardService.setTabUsed(pUserID, pBoardList, tabUsed, tenantID);
 	}
 	
 	/**
