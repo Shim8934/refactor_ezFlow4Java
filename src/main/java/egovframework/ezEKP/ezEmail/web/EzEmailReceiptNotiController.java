@@ -337,7 +337,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String internetMessageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+			DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String createDate = sdFormat.format(message.getSentDate());
 			
 			//get arrAddress
