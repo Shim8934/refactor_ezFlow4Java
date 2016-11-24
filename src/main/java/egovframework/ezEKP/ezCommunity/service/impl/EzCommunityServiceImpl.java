@@ -4040,6 +4040,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_PENDROW", pEndRow);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardItemVO> itemList = ezCommunityDAO.boardItemListPhotoGet2(map);
 		
