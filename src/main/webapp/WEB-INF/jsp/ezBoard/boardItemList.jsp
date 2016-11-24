@@ -87,8 +87,9 @@
 		    var SQLPARADATA = "";
 		    var pAdminType = "${boardInfo.adminType}";
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
-		    if (url != "")
+		    if (url != "") {
 		        window.location.href = url;
+		    }
 		
 		    var previewType = "TEXT";
 		    var clickPreviweType = "TEXT";
@@ -383,7 +384,7 @@
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
 		        }
 		        catch (e) {
-		            //alert("getBoardList_after : " + e.description);
+		            alert("getBoardList_after : " + e.description);
 		        }
 		    }
 		    function MakeSubCondition() {

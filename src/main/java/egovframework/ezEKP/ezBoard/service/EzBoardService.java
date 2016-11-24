@@ -3,17 +3,16 @@ package egovframework.ezEKP.ezBoard.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardService {
@@ -180,11 +179,7 @@ public interface EzBoardService {
 
 	public void setAsRead(LoginVO userInfo, String boardID, String itemID) throws Exception;
 
-	public void setAsReads(LoginVO userInfo, String pBoardID, String pItemIDList) throws Exception;
-	
-	public void setListOrder(String pUserID, Map<String, Object> map) throws Exception;
-
-	public void setTabUsed(String pUserID, String pBoardList, String tabUsed) throws Exception;
+	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception;
 	
 	public void setMainImageID(String mainImageID, String itemID, String type, int tenantID) throws Exception;
 	
@@ -208,6 +203,9 @@ public interface EzBoardService {
 	
 	public void photoListDel(String boardID, String imageID, int tenantID) throws Exception;
 
+	public void setListOrder(LoginVO userInfo, String pBoardList, String pDelBoardList) throws Exception;
+	
 	public String deleteTempItem(String strItemID, int tenantID) throws Exception;
+
 
 }

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -53,6 +54,8 @@ public class EzEmailAsync {
 			
 			Locale locale = Locale.getDefault();
 			
+			List<String[]> receiveDetailList = new ArrayList<String[]>();
+			
 			for (String address : addresses) {
 				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
 				//config.IS_READ_DELETE가 YES이면 읽었어도 지우기 때문에 jobCode=1
@@ -101,21 +104,25 @@ public class EzEmailAsync {
 							messages[0].setFlag(Flags.Flag.DELETED, true);
 						}
 					}
+					
 					folder.close(true);
 					ia.close();
+					ia = null;
 					
-					logger.debug("num=" + num + ", address=" + address + ", jobCode=" + jobCode);
-					ezEmailService.updateMailReceiveDetailInfo(num, address, jobCode);
 				} catch (MessagingException e) {
 					e.printStackTrace();
 					jobCode = "3";
-					ezEmailService.updateMailReceiveDetailInfo(num, address, jobCode);
 				} finally {
 					if (ia != null) {
 						ia.close();
 					}
 				}
+				
+				receiveDetailList.add(new String[]{address, jobCode});
 			}
+			
+			ezEmailService.updateMailReceiveDetailInfo(num, receiveDetailList);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

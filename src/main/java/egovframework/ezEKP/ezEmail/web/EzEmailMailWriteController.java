@@ -255,33 +255,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
 		
-		MailColorVO vo = null;
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String tenantId = String.valueOf(loginInfo.getTenantId());
-			
-			String inputParams = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailColor", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONObject obj = (JSONObject)object.get("result");
-	        	if (obj != null) {
-	        		vo = new MailColorVO();
-	        		
-	        		vo.setImportanceColor((String)obj.get("importanceColor"));
-	        		vo.setInmailColor((String)obj.get("inmailColor"));
-	        		vo.setOutmailColor((String)obj.get("outmailColor"));
-	        	}
-	        }
-		} else {
-			vo = ezEmailService.getMailColor();
-		}
+		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
@@ -319,35 +293,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
 		
-		MailGeneralVO mailGeneralVO = new MailGeneralVO();
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailGeneral", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	JSONObject obj = (JSONObject)object.get("result");
-	        	if (obj != null) {
-	        		mailGeneralVO.setListCount((String)obj.get("listCount"));
-	        		mailGeneralVO.setRefreshInterval((String)obj.get("refreshInterval"));
-	        		mailGeneralVO.setKeepDeleteLength((String)obj.get("keepDeleteLength"));
-	        		mailGeneralVO.setPreviewMode((String)obj.get("previewMode"));
-	        		mailGeneralVO.setPreviewWList((String)obj.get("previewWList"));
-	        		mailGeneralVO.setPreviewWContent((String)obj.get("previewWContent"));
-	        		mailGeneralVO.setPreviewHList((String)obj.get("previewHList"));
-	        		mailGeneralVO.setPreviewHContent((String)obj.get("previewHContent"));
-	        		mailGeneralVO.setMailSenderNm((String)obj.get("mailSenderName"));
-	        	}
-	        }
-		} else {
-			mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
-		}
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
 		
 		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
 		
@@ -395,33 +341,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	to = msgto;
             String resultXML = "";
             
-            MailSignatureVO mailSignatureVO = null;
-    		
-    		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-    			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-    			logger.debug("inputParams=" + inputParams);
-    			
-    			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature", inputParams);
-    			logger.debug("strJson=" + strJson);
-    			
-    			JSONParser parser = new JSONParser();
-    			JSONObject object = (JSONObject)parser.parse(strJson);
-    	        
-    	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-    	        	JSONObject obj = (JSONObject)object.get("result");
-    	        	
-    	        	mailSignatureVO = new MailSignatureVO();
-    	        	
-    	        	if (obj != null) {
-    	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
-    	        		mailSignatureVO.setContent1((String)obj.get("content1"));
-    	        		mailSignatureVO.setContent2((String)obj.get("content2"));
-    	        		mailSignatureVO.setContent3((String)obj.get("content3"));
-    	        	}
-    	        }
-    		} else {
-    			mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-    		}
+            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
             
             if (mailSignatureVO != null) {
             	mailSign1 = mailSignatureVO.getContent1();
@@ -521,33 +441,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                attach = attachXmlList.toString();	
 						}
 						
-						MailSignatureVO mailSignatureVO = null;
-						
-						if (config.getProperty("config.USE_Mysql").equals("YES")) {
-							String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-							logger.debug("inputParams=" + inputParams);
-							
-							String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature", inputParams);
-							logger.debug("strJson=" + strJson);
-							
-							JSONParser parser = new JSONParser();
-							JSONObject object = (JSONObject)parser.parse(strJson);
-					        
-					        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-					        	JSONObject obj = (JSONObject)object.get("result");
-					        	
-					        	mailSignatureVO = new MailSignatureVO();
-					        	
-					        	if (obj != null) {
-					        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
-					        		mailSignatureVO.setContent1((String)obj.get("content1"));
-					        		mailSignatureVO.setContent2((String)obj.get("content2"));
-					        		mailSignatureVO.setContent3((String)obj.get("content3"));
-					        	}
-					        }
-						} else {
-							mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-						}
+						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
 						
 						if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -645,33 +539,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
-		                MailSignatureVO mailSignatureVO = null;
-		        		
-		        		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-		        			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-		        			logger.debug("inputParams=" + inputParams);
-		        			
-		        			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature", inputParams);
-		        			logger.debug("strJson=" + strJson);
-		        			
-		        			JSONParser parser = new JSONParser();
-		        			JSONObject object = (JSONObject)parser.parse(strJson);
-		        	        
-		        	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-		        	        	JSONObject obj = (JSONObject)object.get("result");
-		        	        	
-		        	        	mailSignatureVO = new MailSignatureVO();
-		        	        	
-		        	        	if (obj != null) {
-		        	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
-		        	        		mailSignatureVO.setContent1((String)obj.get("content1"));
-		        	        		mailSignatureVO.setContent2((String)obj.get("content2"));
-		        	        		mailSignatureVO.setContent3((String)obj.get("content3"));
-		        	        	}
-		        	        }
-		        		} else {
-		        			mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-		        		}
+		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -882,33 +750,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		draftsFolder.close(true);
 		                
-		        		MailSignatureVO mailSignatureVO = null;
-		        		
-		        		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-		        			String inputParams = "userId=" + URLEncoder.encode(userId + "@" + config.getProperty("config.DomainName"), "UTF-8");
-		        			logger.debug("inputParams=" + inputParams);
-		        			
-		        			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignature", inputParams);
-		        			logger.debug("strJson=" + strJson);
-		        			
-		        			JSONParser parser = new JSONParser();
-		        			JSONObject object = (JSONObject)parser.parse(strJson);
-		        	        
-		        	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-		        	        	JSONObject obj = (JSONObject)object.get("result");
-		        	        	
-		        	        	mailSignatureVO = new MailSignatureVO();
-		        	        	
-		        	        	if (obj != null) {
-		        	        		mailSignatureVO.setUseFlag((String)obj.get("useFlag"));
-		        	        		mailSignatureVO.setContent1((String)obj.get("content1"));
-		        	        		mailSignatureVO.setContent2((String)obj.get("content2"));
-		        	        		mailSignatureVO.setContent3((String)obj.get("content3"));
-		        	        	}
-		        	        }
-		        		} else {
-		        			mailSignatureVO = ezEmailService.getMailSignature(userId, "A");
-		        		}
+		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -2632,24 +2474,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
 		            logger.debug("reservedId=" + reservedId);
 		            if (reservedId != null && !reservedId.trim().equals("")) {
-		            	
-		            	if (config.getProperty("config.USE_Mysql").equals("YES")) {
-							String inputParams = "messageId=" + URLEncoder.encode(reservedId, "UTF-8");
-							logger.debug("inputParams=" + inputParams);
-							
-							String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteMailReserved", inputParams);
-							logger.debug("strJson=" + strJson);
-							
-							JSONParser parser = new JSONParser();
-							JSONObject object = (JSONObject)parser.parse(strJson);
-					        
-					        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
-					        	logger.error("Error from JGwServer");
-					        }
-					        
-						} else {
-							ezEmailService.deleteMailReserved(reservedId);
-						}
+						ezEmailService.deleteMailReserved(reservedId);
 		            	
 			            String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
 			    		pDirPath = realPath + pDirPath;
@@ -3175,10 +3000,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
+		String domain = config.getProperty("config.DomainName");
 		
 		try {
 			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-
+			inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 			logger.debug("inputParams=" + inputParams);
 
 			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
@@ -3372,7 +3198,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         try {
         	pSearchList = pSearchList.split("::")[1];
         	
+        	String domain = config.getProperty("config.DomainName");
+        	
         	String inputParams = "companyId=" + URLEncoder.encode(userInfo.getCompanyID(), "UTF-8");
+        	inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
         	inputParams += "&filter=" + URLEncoder.encode("AND GROUP_NAME LIKE '%" + pSearchList + "%'", "UTF-8");
         	
 			logger.debug("inputParams=" + inputParams);
@@ -3517,39 +3346,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("reservedId : " + reservedId);
 		
 		String email = userId + "@" + config.getProperty("config.DomainName");
+		String messageId = reservedId;
 		
-		String messageId = "";
-		if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
-			messageId = reservedId;
-		} else { //예약메일 생성
-			messageId = UUID.randomUUID().toString();
-		}
-		
-		if (config.getProperty("config.USE_Mysql").equals("YES")) {
-			String messageIdParam = "messageId=" + URLEncoder.encode(messageId, "UTF-8");
-			String userIdParam = "userId=" + URLEncoder.encode(email, "UTF-8");
-			String subjectParam = "subject=" + URLEncoder.encode(subject, "UTF-8");
-			String sendDateParam = "sendDate=" + URLEncoder.encode(sendDate, "UTF-8");
-			
-			String inputParams = messageIdParam + "&" + userIdParam + "&" + subjectParam + "&" + sendDateParam;
-			logger.debug("inputParams=" + inputParams);
-			
-			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailReserved", inputParams);
-			logger.debug("strJson=" + strJson);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-	        
-	        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
-	        	logger.error("Error from JGwServer.");
-	        }
-		} else {
-			if (isReserve.equalsIgnoreCase("YES")) { //예약메일 수정
-				ezEmailService.updateReservedMail(messageId, subject, sendDate);
-			} else { //예약메일 생성
-				ezEmailService.setMailReserved(messageId, subject, sendDate, email);
-			}
-		}
+		messageId = ezEmailService.setMailReserved(messageId, subject, sendDate, email, isReserve);
 		
 		File f = null;
 		

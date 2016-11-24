@@ -106,7 +106,7 @@
 	</procedure>
 	
 	<procedure id="EzEmailDAO.getMailSignature" parameterClass="Map" resultMap="mailSignature">
-		{CALL EZEMAIL.EZSP_GETSIGNATURE(#v_USERID#, #v_ISUSE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZEMAIL.EZSP_GETSIGNATURE(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzEmailDAO.setMailSignature" parameterClass="Map">
@@ -141,7 +141,7 @@
 		{CALL EZEMAIL.EZSP_DELETERESERVEDMAIL(#v_PMESSAGEID#)}
 	</procedure>
 	
-	<procedure id="EzEmailDAO.getMailReservedTime" parameterClass="Map" resultMap="mailReservation3">
+	<procedure id="EzEmailDAO.getMailReservedTime" parameterClass="Map" resultClass="String">
 		{CALL EZEMAIL.EZSP_GETRESERVERDMAILTIME(#v_MESSAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
@@ -158,7 +158,7 @@
 	</procedure>
 	
 	<procedure id="EzEmailDAO.getMailReadList" parameterClass="Map" resultMap="mailRead">
-		{CALL EZEMAIL.EZSP_GETMAILREADLIST(#v_PUSERID#, #v_PUSERID2#, #v_PMESSAGEID#, #v_PMESSAGEID2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZEMAIL.EZSP_GETMAILREADLIST(#v_PUSERID#, #v_PMESSAGEID#, #v_PMESSAGEID2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzEmailDAO.getMailCancelList" parameterClass="Map" resultMap="mailCancel">

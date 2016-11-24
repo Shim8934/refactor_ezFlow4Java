@@ -163,11 +163,11 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public void saveBoardProperty_appr_D(Map<String, Object> map) throws Exception{
-		delete("EzBoardAdminDAO.saveBoardProperty_appr", map);		
+		delete("EzBoardAdminDAO.saveBoardProperty_appr_D", map);		
 	}
 	
 	public void saveBoardProperty_appr_I(Map<String, Object> map) throws Exception{
-		insert("EzBoardAdminDAO.saveBoardProperty_appr", map);		
+		insert("EzBoardAdminDAO.saveBoardProperty_appr_I", map);		
 	}
 	
 	public void apprProperty_info(Map<String, Object> map) throws Exception{

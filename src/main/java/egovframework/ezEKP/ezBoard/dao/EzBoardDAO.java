@@ -337,13 +337,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	public int getSearchMyBoardItemCount(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getSearchMyBoardItemCount", map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.getSearchMyBoardItemCount", map);
 	}
 
 	public int getSearchMyBoardItemCountTemp(Map<String, Object> map) throws Exception{
-		select("EzBoardDAO.getSearchMyBoardItemCountTemp", map);
-		return (int)map.get("v_pCount");
+		return (int) select("EzBoardDAO.getSearchMyBoardItemCountTemp", map);
 	}
 	
 	public int checkOneLineOwner(Map<String, Object> map) throws Exception{
@@ -394,10 +392,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.setAsRead", map);
 	}
 	
-	public void setAsReads(Map<String, Object> map) throws Exception{
-		insert("EzBoardDAO.setAsReads", map);
-	}
-	
 	public void saveAttachInfo(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.saveAttachInfo", map);
 	}
@@ -422,12 +416,24 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.setBoardConfig2", map);
 	}
 	
+	public void setListOrder_U(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.set_ListOrder_U",map);
+	}
+	
 	public void setListOrder(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.set_ListOrder",map);
 	}
 	
+	public void setListOrder_D(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.set_ListOrder_D",map);
+	}
+	
 	public void setTabUsed(Map<String, Object> map) throws Exception{
 		update("EzBoardDAO.set_TabUsed",map);
+	}
+	
+	public void setTabUsed2(Map<String, Object> map) throws Exception{
+		update("EzBoardDAO.set_TabUsed2",map);
 	}
 	
 	public void setNotiOrder(Map<String, Object> map) throws Exception{

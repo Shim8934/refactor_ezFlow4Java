@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
+import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -142,8 +143,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String userId = userEmail;
 				String userId2 = userEmail;
 				
-				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, userId2, messageId, outerReadCheck);
+				//get readList
+				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, messageId, outerReadCheck);
+				
+				//get cancelList
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
+				
 				List<String> tempMailList = new ArrayList<String>();
 				
 				LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -283,7 +288,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
-		long uid = Long.parseLong(uidStr); 
+		long uid = Long.parseLong(uidStr);
 		
 		//넘어온 folderPath가 보낸편지함이 아닐경우
 		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
@@ -332,83 +337,42 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String internetMessageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+			DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String createDate = sdFormat.format(message.getSentDate());
 			
-			String isInsert = ezEmailService.checkDoubleMailReceive(userEmail, subject, createDate, internetMessageId, localServerName);
-			logger.debug("isInsert = " + isInsert);
-			
+			//get arrAddress
+			String[] arrAddress = null;
 			if (pEachCancel.equals("NO")) {
-				
-				String[] arrAddress = new String[addresses.length];
+				arrAddress = new String[addresses.length];
 				for (int i=0; i<addresses.length; i++) {
 					arrAddress[i] = ((InternetAddress)addresses[i]).getAddress();
 				}
-				
-				arrAddress = getMember(arrAddress);
-				
-				//내부사용자 추출
-				List<String> innerAddresses = new ArrayList<String>();
-				for (String address : arrAddress) {
-					int index = address.indexOf("@");
-					String domain = "";
-					if (index > -1) {
-						domain = address.substring(index + 1);
-					}
-					if (domain.equals(config.getProperty("config.DomainName"))) {
-						innerAddresses.add(address);
-					}
-				}
-				
-				if (isInsert == null) {
-					isInsert = ezEmailService.insertMailReceiveInfo(userEmail, subject, createDate, internetMessageId, localServerName, "");
-				}
-				
-				if (innerAddresses.size() == 0) {
-					logger.debug(egovMessageSource.getMessage("ezEmail.t99000113", locale));
-					logger.debug("mailCancelSend ended.");
-					return egovMessageSource.getMessage("ezEmail.t99000113", locale);
-				}
-				
-				for (String address : innerAddresses) {
-					ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
-				}
-				
-				//회수처리 함수 호출(비동기)
-				ezEmailAsync.cancelMailDelete(isInsert);
 			} else {
-				String[] emailAddressArray = pEachCancel.split("\\|!\\|");
-				
-				emailAddressArray = getMember(emailAddressArray);
-				
-				//내부사용자 추출
-				List<String> innerAddresses = new ArrayList<String>();
-				for (String address : emailAddressArray) {
-					int index = address.indexOf("@");
-					String domain = "";
-					if (index > -1) {
-						domain = address.substring(index + 1);
-					}
-					if (domain.equals(config.getProperty("config.DomainName"))) {
-						innerAddresses.add(address);
-					}
-				}
-				
-				if (isInsert == null) {
-					isInsert = ezEmailService.insertMailReceiveInfo(userEmail, subject, createDate, internetMessageId, localServerName, "");
-				}
-				
-				if (innerAddresses.size() == 0) {
-					return egovMessageSource.getMessage("ezEmail.t99000113", locale);
-				}
-				
-				for (String address : innerAddresses) {
-					ezEmailService.insertMailReceiveDetailInfo(Integer.parseInt(isInsert), address);
-				}
-				
-				//회수처리 함수 호출(비동기)
-				ezEmailAsync.cancelMailDelete(isInsert);
+				arrAddress = pEachCancel.split("\\|!\\|");
 			}
+			arrAddress = getMember(arrAddress);
+			
+			//get innerAddresses(내부사용자)
+			List<String> innerAddresses = new ArrayList<String>();
+			for (String address : arrAddress) {
+				int index = address.indexOf("@");
+				String domain = "";
+				if (index > -1) {
+					domain = address.substring(index + 1);
+				}
+				if (domain.equals(config.getProperty("config.DomainName"))) {
+					innerAddresses.add(address);
+				}
+			}
+			
+			//내부사용자 없을 경우 리턴
+			if (innerAddresses.size() == 0) {
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000113", locale));
+				logger.debug("mailCancelSend ended.");
+				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
+			}
+			
+			ezEmailService.setMailCancelSend(internetMessageId, userEmail, subject, createDate, localServerName, innerAddresses);
 			
 			folder.close(true);
 			
