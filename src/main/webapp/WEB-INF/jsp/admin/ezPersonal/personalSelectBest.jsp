@@ -40,7 +40,7 @@
 		            }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("../BujaeConf/SelectPerson_cross.aspx?type=EMP", "",
+		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "",
 		                "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
 	
 		            if (typeof (rtnValue) != "undefined") {
