@@ -473,7 +473,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strSysopID = xmlMainDom.getElementsByTagName("C_SYSOPID").item(0).getTextContent().trim();
 		
 		String proplist = "displayName;description;company;extensionAttribute2";
-		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang());
+		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang(), userInfo.getTenantId());
 		
 		Document xmldomMemberInfo = commonUtil.convertStringToDocument(infoXMLMemberInfo);
 		

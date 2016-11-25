@@ -105,7 +105,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public String getPropertyList(String pCN, String pPropList, String pLangCode) throws Exception {
+	public String getPropertyList(String pCN, String pPropList, String pLangCode, int tenantID) throws Exception {
 		String propvalue = "";
 		String DataType = "user";
 		Object vo = null;

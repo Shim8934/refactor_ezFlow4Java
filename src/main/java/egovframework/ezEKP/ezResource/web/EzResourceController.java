@@ -2081,7 +2081,7 @@ public class EzResourceController extends EgovFileMngUtil {
         String propList = doc.getElementsByTagName("prop").item(0).getTextContent();
         String listType = doc.getElementsByTagName("type").item(0).getTextContent();
         
-        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang());
+        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang(), userInfo.getTenantId());
         
 		return returnXML;
 	}

@@ -60,7 +60,7 @@ public class EzOrganController {
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
         
-        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary());
+        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), userInfo.getTenantId());
         
 		return deptInfo;
 	}
@@ -77,7 +77,7 @@ public class EzOrganController {
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
         
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary());
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		return deptInfo;
 	}
@@ -112,9 +112,9 @@ public class EzOrganController {
 		String infoXML = "";
 
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang);
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang, userInfo.getTenantId());
 		} else {
-			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page);
+			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page, userInfo.getTenantId());
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

@@ -251,11 +251,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", produces = "text/xml;charset=utf-8")	
 	@ResponseBody
-	public String getEntryInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
 		String cn = request.getParameter("cn");
-		String proplist = request.getParameter("prop");		
+		String proplist = request.getParameter("prop");				
 	
-		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1");		
+		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1", userInfo.getTenantId());		
 
 		return infoXML;
 	}

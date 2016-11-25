@@ -66,7 +66,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary) throws Exception {		
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {		
 		if (!pUserID.equals("") && pDeptID.equals("")){
 			OrganDeptVO organVo = getDeptInfo(pUserID, primary);
 			pDeptID = organVo.getDepartment();
@@ -84,6 +84,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_CN", deptID);
 			map.put("v_LANGDATA", primary);
+			map.put("v_TENANT_ID", tenantID);
 			
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
 			
@@ -98,6 +99,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 					Map<String, Object> map1 = new HashMap<String, Object>();				
 					map1.put("v_CN", obj.getCn());
 					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
 					
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
@@ -117,6 +119,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        Map<String, Object> map2 = new HashMap<String, Object>();				
 			map2.put("v_CN", deptID);
 			map2.put("v_LANGDATA", primary);
+			map2.put("v_TENANT_ID", tenantID);
 			
 	        vo = ezOrganDAO.getTBLDeptMaster(map2);
 	        
@@ -132,11 +135,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary) throws Exception {
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
+		map.put("v_TENANT_ID", tenantID);
 		
 		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
 				
@@ -150,6 +154,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CN", obj.getCn());
 				map1.put("v_LANGDATA", primary);
+				map1.put("v_TENANT_ID", tenantID);
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
                 
@@ -188,7 +193,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
-		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment());
+		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId());
 		
 		if (cnt > 0){
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
@@ -224,7 +229,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode) throws Exception {	
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID) throws Exception {	
 		if (!pLangCode.equals("2")){
 			pLangCode = "1";
 		}
@@ -235,6 +240,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CLASS", pClass);
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", pLangCode);
+		map.put("v_TENANT_ID", tenantID);
 		
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
 		
@@ -251,12 +257,14 @@ public class EzOrganServiceImpl implements EzOrganService {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
+        		map1.put("v_TENANT_ID", tenantID);
         		
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
             }else{
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
+        		map1.put("v_TENANT_ID", tenantID);
         		                
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
                 sb.append(commonUtil.getQueryResult(userVO));
@@ -281,7 +289,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage) throws Exception {	
+	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {	
 		if (!pLangCode.equals("2")){
 			pLangCode = "1";
 		}
@@ -294,6 +302,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_PAGE", pPage);
+		map.put("v_TENANT_ID", tenantID);
 		
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
@@ -310,12 +319,14 @@ public class EzOrganServiceImpl implements EzOrganService {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
+        		map1.put("v_TENANT_ID", tenantID);
         		
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
             }else{
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
+        		map1.put("v_TENANT_ID", tenantID);
         		                
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
                 sb.append(commonUtil.getQueryResult(userVO));
@@ -331,6 +342,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }
 		
 		map2.put("v_CN", pDeptID);
+		map2.put("v_TENANT_ID", tenantID);
 		String totalcount = ezOrganDAO.getMemberListCount(map2);
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA>");
         memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");

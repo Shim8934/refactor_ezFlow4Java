@@ -54,6 +54,9 @@ public class OrganDeptVO {
 	/** dept*/
 	private String type;
 	
+    /** 사용자가 속한 Tenant의 고유 ID */
+    private int tenantId = -1;
+	
 	public String getCn() {
 		return cn;
 	}
@@ -210,5 +213,13 @@ public class OrganDeptVO {
 	public void setParentCn(String parentCn) {
 		this.parentCn = parentCn;
 	}
+
+    public int getTenantId() {
+        return tenantId;
+    }
+    
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
+    }
 	
 }

@@ -23,7 +23,7 @@ public interface EzOrganAdminService {
 	
 	public OrganUserVO getRetireEntryInfo(String cn, String lang) throws Exception;
 	
-	public String getPropertyList(String cn, String proplist, String string) throws Exception;
+	public String getPropertyList(String cn, String proplist, String string, int tenantID) throws Exception;
 	
 	public String moveEntry(String parentCn, String cn, String type) throws Exception;
 	
