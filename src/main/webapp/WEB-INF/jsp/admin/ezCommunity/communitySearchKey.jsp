@@ -28,9 +28,9 @@
 			function view_CommunityInfo(pcode) {
 				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 720) / 2;
+				var pTop = (pheight - 760) / 2;
 				var pLeft = (pwidth - 765) / 2;
-				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=360,width=480,top=" + pTop + ",left=" + pLeft, "");
+				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=380,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
 			function prevPage_onclick() {

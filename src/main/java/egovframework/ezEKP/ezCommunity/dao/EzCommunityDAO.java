@@ -92,8 +92,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> copHomeBoardItemGet(String v_BOARDID) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.copHomeBoardItemGet", v_BOARDID);
+	public List<CommunityBoardItemVO> copHomeBoardItemGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.copHomeBoardItemGet", map);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -95,10 +95,16 @@
 				
 				function go() {
 				    if(window.parent.parent.opener != null) {
-				        document.getElementById("imageSrc").value = window.parent.parent.opener.coplogo.src;
+						<c:if test="${isCrossBrowser == true}">
+							document.getElementById("imageSrc").value = window.parent.parent.opener.coplogo.src;
+						</c:if>
+							
+				        <c:if test="${isCrossBrowser == false}">
+				        	btn_AttachAdd_onclick();
+				        </c:if>
 				    }
 				    
-				    image.submit();   
+// 				    image.submit();   
 		        }
 
 		        //로고, 베너 등록 시 이미지 파일 확장자가 아닐 때 비교하는 함수 추가_2013.01.30
@@ -160,6 +166,45 @@
 		        function btn_AttachSelect_onclick() {
 		            document.getElementById("logo").click();
 		        }
+		        
+		        <c:if test="${isCrossBrowser == false}">
+					var filesize = "";
+			        function btn_AttachAdd_onclick() {
+			            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+			            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+			            
+			            if (filepath == "") return;
+		
+			            var strBase64 = ezUtil.DownloadToBase64(filepath);
+			            filesize = ezUtil.getFileSize(filepath)
+			            ezUtil = null;
+		
+			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+			            var temp = ezUtil.GetImageSize(filepath);
+			            ezUtil = null;
+		
+			            imageWidth = temp.split("*")[0];
+			            imageHeight = temp.split("*")[1];
+		
+			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
+			            
+			            document.getElementById("filename").innerText = fileName;
+			            			            			            
+			            $.ajax({
+			            	type : "POST",
+			            	url : "/ezCommunity/commAdminLogoUpload.do",
+			            	async : false,
+			            	data : {
+			            		fileName : fileName,
+			            		fileData : strBase64
+			            	},
+			            	dataType : "json",
+			            	success : function(result) {
+			            		
+			            	}
+			            });
+			        }
+				</c:if>
 		</script>
 	</head>
 	<body class="mainbody">
@@ -178,7 +223,8 @@
 	                <td>
 	                    <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    <span id="filename" style="vertical-align:middle"></span>
-	                    <input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()"></td>
+	                    <input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()">
+	                </td>
 	            </tr>
 	        </table>
 	        <br>

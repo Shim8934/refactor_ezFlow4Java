@@ -194,20 +194,7 @@
 		            	success : function(result) {
 		            		
 		            	}
-		            	
-		            })
-		            if (num == 1) {
-		                var Filename = new Array();
-		                Filename = g_xmlhttp.responseText.split(",");
-		                
-		                document.getElementById("logofilename").value = Filename[0];
-		                document.getElementById("logofilename_thumbnail").value = Filename[1];
-		                document.getElementById("logofilesize").value = filesize;
-		            }
-		            else {
-		                document.getElementById("bannerfilename").value = g_xmlhttp.responseText;
-		                document.getElementById("bannerfilesize").value = filesize;
-		            }
+		            });
 		        }
 			</c:if>
 	        

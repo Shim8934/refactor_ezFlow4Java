@@ -2256,6 +2256,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminLogo.do")
 	public String adminLogo(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String code = request.getParameter("code");
 		
@@ -2273,9 +2275,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("clubVO", clubVO);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityAdminLogo";
 	}
+	
+	
 	
 	/**
 	 * 커뮤니티 환경설정화면 실행함수

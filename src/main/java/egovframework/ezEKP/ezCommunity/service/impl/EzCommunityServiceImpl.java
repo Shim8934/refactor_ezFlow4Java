@@ -604,7 +604,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Override
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID) throws Exception {
-		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(boardID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		
+		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
+		
 		return boardItemList;
 	}
 
@@ -2535,6 +2540,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_STRLANG", commonUtil.getMultiData(lang));
 		map.put("v_PUSERID", id);
 		map.put("v_PSORTBY", pSortBy);
+		//수정중
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.getReservedItemListXML(map);
 
