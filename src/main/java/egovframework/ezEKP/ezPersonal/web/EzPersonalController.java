@@ -715,7 +715,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
 		String labelCompany = xmlDom.getElementsByTagName("COMPANY").item(0).getTextContent();

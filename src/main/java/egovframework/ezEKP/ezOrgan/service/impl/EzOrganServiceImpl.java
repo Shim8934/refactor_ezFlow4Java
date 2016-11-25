@@ -57,10 +57,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public OrganDeptVO getDeptInfo(String userID,  String primary) throws Exception {
+	public OrganDeptVO getDeptInfo(String userID,  String primary, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("primary", primary);
+		map.put("v_TENANT_ID", tenantID);
 		
 		return ezOrganDAO.getDeptInfo(map);
 	}
@@ -68,7 +69,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Override
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {		
 		if (!pUserID.equals("") && pDeptID.equals("")){
-			OrganDeptVO organVo = getDeptInfo(pUserID, primary);
+			OrganDeptVO organVo = getDeptInfo(pUserID, primary, tenantID);
 			pDeptID = organVo.getDepartment();
         }		
 		if (pDeptID.equals("")){
@@ -795,7 +796,7 @@ public class EzOrganServiceImpl implements EzOrganService {
     }
 
 	@Override
-	public String getPropertyList(String id, String pPropList, String primary) throws Exception {
+	public String getPropertyList(String id, String pPropList, String primary, int tenantID) throws Exception {
 		String propValue = "";
 		StringBuilder propInfo = new StringBuilder("<DATA>");
 		primary = commonUtil.convertLangCode(primary);
@@ -804,6 +805,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", id);
 		map.put("v_LANGDATA", primary);
+		map.put("v_TENANT_ID",  tenantID);
+		
 		String strXML = commonUtil.getQueryResult(ezOrganDAO.getUserInfo(map));
 		Document xmldom = null;
 		
@@ -815,6 +818,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map = new HashMap<String, Object>();
 			map.put("userID", id);
 			map.put("primary", primary);
+			map.put("v_TENANT_ID",  tenantID);
+			
 			strXML = commonUtil.getQueryResult(ezOrganDAO.getDeptInfo(map));
 			xmldom = commonUtil.convertStringToDocument(strXML); 
 			dataType = "group";

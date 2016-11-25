@@ -302,6 +302,8 @@ public class EzEmailAdminController {
 	public String mailViewDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailViewDistributionList started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String returnData = "";
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -344,7 +346,7 @@ public class EzEmailAdminController {
 				logger.debug("pCn=" + pCn + ", pClass=" + pClass);
 				
 				if(pClass.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"));
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
 					if (dept != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
@@ -358,7 +360,7 @@ public class EzEmailAdminController {
 					}
 				
 				} else {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"));
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
 					if (user != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");

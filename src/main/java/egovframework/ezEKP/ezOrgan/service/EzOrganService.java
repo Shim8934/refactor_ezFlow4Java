@@ -1,12 +1,10 @@
 package egovframework.ezEKP.ezOrgan.service;
 
-import java.util.List;
-
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 
 public interface EzOrganService {
 	
-	public OrganDeptVO getDeptInfo(String userID,String primary) throws Exception;	
+	public OrganDeptVO getDeptInfo(String userID,String primary, int tenantID) throws Exception;	
 
 	public String getPropertyValue(String userID, String propName) throws Exception;
 
@@ -26,7 +24,7 @@ public interface EzOrganService {
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
-	public String getPropertyList(String id, String proplist, String primary) throws Exception;
+	public String getPropertyList(String id, String proplist, String primary, int tenantID) throws Exception;
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception;	
 	

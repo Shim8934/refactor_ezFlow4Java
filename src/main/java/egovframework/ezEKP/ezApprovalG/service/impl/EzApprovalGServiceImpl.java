@@ -252,7 +252,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang) throws Exception {
+	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
@@ -293,7 +293,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					map.put("v_FLAG", "003");
 					String drafterDeptID = makeListField(ezApprovalGDAO.getAccessYNG(map));
-					String result = ezOrganService.getPropertyList(userID, "extensionAttribute4;department", commonUtil.getPrimaryData(lang));
+					String result = ezOrganService.getPropertyList(userID, "extensionAttribute4;department", commonUtil.getPrimaryData(lang), tenantID);
 					
 					if (result.toLowerCase().lastIndexOf(drafterDeptID.toLowerCase()) >= 0 && drafterDeptID.trim().length() > 0) {
 						rtnVal = true;
@@ -2026,7 +2026,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang) throws Exception {
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception {
 		StringBuilder strSQL = new StringBuilder();
         StringBuilder rtnXML = new StringBuilder();
         String subSQL = "";
@@ -2044,7 +2044,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         rtnXML.append("<ROWS>");
         
         for (int k = 0; k < dlength; k++) {
-        	subSQL = ezOrganService.getPropertyList(docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim(), "displayName;extensionAttribute2", commonUtil.getPrimaryData(lang));
+        	subSQL = ezOrganService.getPropertyList(docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim(), "displayName;extensionAttribute2", commonUtil.getPrimaryData(lang), tenantID);
         	
         	deptXML = commonUtil.convertStringToDocument(subSQL);
         	
@@ -4046,7 +4046,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signCnt = signNum;
 		String signImage = "";
 		String propList = "extensionAttribute3;title;title2;displayName;displayName2;department;description;description2;extensionAttribute14";
-		String results = ezOrganService.getPropertyList(userID, propList, strLang);
+		String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());
 		
 		Document xmlDoc = commonUtil.convertStringToDocument(results);
 		
@@ -4061,7 +4061,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		empNo = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE14").item(0).getTextContent();
 		
-		results = ezOrganService.getPropertyList(orgUID, propList, strLang);
+		results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
 		
 		xmlDoc = commonUtil.convertStringToDocument(results);
 		
@@ -8815,7 +8815,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (userID.trim().toUpperCase().equals(userDeptID.trim().toUpperCase())) {
 			if (userID.toLowerCase().indexOf("address") == -1) {
-				strXML = ezOrganService.getPropertyList(userID, "displayName;extensionAttribute2", commonUtil.getPrimaryData(strLang));
+				strXML = ezOrganService.getPropertyList(userID, "displayName;extensionAttribute2", commonUtil.getPrimaryData(strLang), userInfo.getTenantId());
 				resultXML = commonUtil.convertStringToDocument(strXML);
 				
 				String tempDeptName = userDeptName.trim();
@@ -8846,7 +8846,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			String tmpUserName = "";
 			
-			strXML = ezOrganService.getPropertyList(userID, "displayName;department;description;physicalDeliveryOfficeName;title;extensionAttribute4", strLang);
+			strXML = ezOrganService.getPropertyList(userID, "displayName;department;description;physicalDeliveryOfficeName;title;extensionAttribute4", strLang, userInfo.getTenantId());
 			resultXML = commonUtil.convertStringToDocument(strXML);
 			
 			if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) != null) {
@@ -9167,7 +9167,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
-			subSQL = insertProxyUserInfo(docID, curAprMemberSN, userID, proxyUserID, companyID, lang);
+			subSQL = insertProxyUserInfo(docID, curAprMemberSN, userID, proxyUserID, companyID, lang, userInfo.getTenantId());
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
@@ -11771,12 +11771,12 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		return result;
 	}
 
-	public String insertProxyUserInfo(String docID, String curAprMemberSN, String userID, String proxyUserID, String companyID, String lang) throws Exception{
+	public String insertProxyUserInfo(String docID, String curAprMemberSN, String userID, String proxyUserID, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		String isUse = getIsUse("A23", "001", companyID, lang);
 		
 		if (isUse.equals("1")) {
-			String rtnXML = ezOrganService.getPropertyList(proxyUserID, "displayName;title;department;description", commonUtil.getPrimaryData(lang));
+			String rtnXML = ezOrganService.getPropertyList(proxyUserID, "displayName;title;department;description", commonUtil.getPrimaryData(lang), tenantID);
 			
 			Document docXML = commonUtil.convertStringToDocument(rtnXML);
 			

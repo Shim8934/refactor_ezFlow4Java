@@ -32,7 +32,7 @@ public interface EzApprovalGService {
 	
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang) throws Exception;
 
-	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang) throws Exception;
+	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID) throws Exception;
 
 	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
 	
@@ -74,7 +74,7 @@ public interface EzApprovalGService {
 	
 	public String getFormInfoDetail(String formID, String companyID) throws Exception;
 	
-	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang) throws Exception;
+	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String createNewDoc(String formID, String companyID) throws Exception;
 	

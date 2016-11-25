@@ -251,7 +251,7 @@ public class EzOrganController {
 		
 		String cn = request.getParameter("cn");
 		String propName = request.getParameter("prop");
-		String infoXML = ezOrganService.getPropertyList(cn, propName, userInfo.getPrimary());
+		String infoXML = ezOrganService.getPropertyList(cn, propName, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		return infoXML;
 	}

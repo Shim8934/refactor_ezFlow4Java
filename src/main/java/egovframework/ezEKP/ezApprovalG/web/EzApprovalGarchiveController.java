@@ -82,7 +82,7 @@ public class EzApprovalGarchiveController {
 			susinAdmin = "NO";
 		}
     	
-		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
 		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
@@ -134,7 +134,7 @@ public class EzApprovalGarchiveController {
         else
         	susinAdmin = "NO";
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-		String pass=ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+		String pass=ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		if(pass.equals("<RESULT>TRUE</RESULT>")){
 			String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +

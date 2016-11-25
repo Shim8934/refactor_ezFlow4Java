@@ -112,12 +112,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		StringBuilder propinfo = new StringBuilder("<DATA>");
 		pLangCode = commonUtil.convertLangCode(pLangCode);
 		
-		vo = getUserInfo(pCN, pLangCode);
+		vo = getUserInfo(pCN, pLangCode, tenantID);
 
 		if(vo == null){
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("userID", pCN);
 			map1.put("primary", pLangCode);
+			map1.put("v_TENANT_ID", tenantID);
 			
 			vo = ezOrganDao.getDeptInfo(map1);
 			DataType = "group";
@@ -143,7 +144,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String moveEntry(String parentCn, String cn, String type) throws Exception {
+	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception {
 		String result = "";
 		
 		if(parentCn.equals(cn)){
@@ -154,10 +155,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String oldGroupAddr = "";
 			
 			if (type.equalsIgnoreCase("group")) {
-				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"));
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"), tenantID);
 				oldGroupAddr = dept.getExtensionAttribute1() + "@" + config.getProperty("config.DomainName");
 			} else {
-				OrganUserVO userVO = getUserInfo(cn, config.getProperty("config.primary"));
+				OrganUserVO userVO = getUserInfo(cn, config.getProperty("config.primary"), tenantID);
 				oldGroupAddr = userVO.getDepartment() + "@" + config.getProperty("config.DomainName");
 			}
 			
@@ -360,11 +361,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public OrganUserVO getUserInfo(String cn, String lang) throws Exception {
+	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", lang);
+		map.put("v_TENANT_ID", tenantID);
 		
 		return ezOrganAdminDao.getUserInfo(map);
 	}

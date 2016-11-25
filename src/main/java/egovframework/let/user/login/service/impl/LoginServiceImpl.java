@@ -58,7 +58,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     private EzEmailUtil ezEmailUtil;
 
     public LoginVO selectUserForJMocha(LoginVO vo) throws Exception {
-        logger.debug("selectUserForJMocha started. id=" + vo.getId());
+        logger.debug("selectUserForJMocha started. tenantId=" + vo.getTenantId() + ",id=" + vo.getId());
         
         LoginVO loginVO = new LoginVO();
                 
