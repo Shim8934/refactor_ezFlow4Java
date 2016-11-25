@@ -64,12 +64,6 @@
 		    	pBoardName = "<c:out value='${boardInfo.boardName2}' />";
 		    }
 		    
-		    window.onload = function() {
-			    if (searchStart == "") {
-			        btn_PostDate_Clear();
-			    }
-			}
-		    
 		    $(function () {
 		    	var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
@@ -132,12 +126,12 @@
 						listXML += "<td align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</td>";
 					}
 					
-					listXML += "<tr>";
+					listXML += "</tr>";
 					
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-    			$('.mainlist tbody').append(listXML);
+    			$('.mainlist').html($('.mainlist tbody').html() + listXML);
     			
     			makePageSelPage();
     			
@@ -171,10 +165,8 @@
 			    NowDate2.setMonth(NowDate2.getMonth() - 1);
 			    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Edatepicker").datepicker('setDate', NowDate2);
-			});
-			
-			$(function () {
-				if("${userInfo.lang == '1'}"){
+			    
+			    if("${userInfo.lang == '1'}"){
 					$.datepicker.regional['ko'] = {
 		            	closeText: '닫기',
 		            	prevText: '이전달',
@@ -209,8 +201,12 @@
 		        	
 		        	$.datepicker.setDefaults($.datepicker.regional['en']);
 				}
-	    	});
-		    
+			    
+			    if (searchStart == "") {
+			        btn_PostDate_Clear();
+			    }
+			});
+			
 			function btn_PostDate_Clear() {
 			    $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Sdatepicker").datepicker('setDate', "");
@@ -348,28 +344,21 @@
 			}
 
 			function DeleteItem() {
-// 			    var xmlhttp = createXMLHttpRequest();
-			    
-// 				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
-// 				xmlhttp.send();
-				
 				$.ajax({
 					type : 'POST',
 					url : '/ezCommunity/deleteItem.do',
 					async : false,
 					data : {itemList : strListInfo},
 					success : function() {
-						alert(1);
+						if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && CurPage != 1) {
+							movePage(CurPage);
+						} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
+						    movePage(CurPage);
+						} else {
+						    window.location.reload();
+						}
 					}
-				})
-				
-				if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && CurPage != 1) {
-					movePage(CurPage);
-				} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
-				    movePage(CurPage);
-				} else {
-				    window.location.reload();
-				}
+				});
 			}
 
 			function ReplaceText(orgStr, findStr, replaceStr) {
