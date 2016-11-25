@@ -53,7 +53,8 @@
             			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
             			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
             			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
-            			SUM(RETURNCNT) AS RETURNCNT
+            			SUM(RETURNCNT) AS RETURNCNT,
+            			TENANT_ID
             	  FROM 
             	  		EZSTATISTICS.TBDAILYFORMCOUNTLOG
             	  WHERE 
@@ -64,8 +65,11 @@
             	  		REGDATE < #endDate#
             	  GROUP BY 
             	  		SUBSTR(REGDATE,0,7), 
-            	  		FORMID ) B  
+            	  		FORMID,
+            	  		TENANT_ID ) B  
             ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
             	A.FORMID = B.FORMID
             INNER JOIN 
             	EZAPPROVALG_S907000.TBFORMCONTAINER C  
@@ -115,8 +119,8 @@
    			AND
    				REGDATE >= #startDate#
    			AND 
-   				REGDATE < #endDate#
-   			$searchList$
+   				REGDATE < #endDate# 
+   			$searchList$ 
    			GROUP BY 
    				A.FORMID, 
    				B.FORMNAME, 
@@ -126,4 +130,5 @@
    				B.FORMNAME2
 		]]>
 	</select>
+	
 </sqlMap>
