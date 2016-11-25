@@ -48,4 +48,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortalAdmin_SQL_Oracle.xml"/>
 	<!-- 초기화면 관리자-->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonalAdmin_SQL_Oracle.xml"/>
+	<!-- 통계 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezStatistics/EzStatisticsAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

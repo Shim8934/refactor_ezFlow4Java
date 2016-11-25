@@ -38,7 +38,7 @@
 	            parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
 	            break;
 	        case "APPROVAL":
-	            parent.frames[1].location.href = "Approval/ezStatistics_Main.aspx";
+	            parent.frames[1].location.href = "/ezStatistics/statisticsApprMain.do";
 	            break;
 	        case "PAGELOG":
 	            parent.frames[1].location.href = "PageLog/PageLog_Main.aspx";
@@ -67,7 +67,7 @@
 	            url = "/ezStatistics/statisticsQuantityUser.do";
 	            break;
 	        case 6:
-	            url = "Approval/ezStatistics_Mon_Form.aspx";
+	            url = "/ezStatistics/statisticsMonForm.do";
 	            break;
 	        case 7:
 	            url = "Approval/ezStatistics_Mon_Dept.aspx";
@@ -94,7 +94,7 @@
 	            url = "Approval/ezStatistics_User.aspx";
 	            break;
 	        case 15:
-	            url = "Approval/ezStatistics_Main.aspx";
+	            url = "/ezStatistics/statisticsApprMain.do";
 	            break;
 	        case 16:
 	            url = "Personal/ezStatistics_Connect.aspx";
@@ -115,7 +115,7 @@
 	            url = "WebLog_Statistics/WebLog_Module.aspx";
 	            break;
 	    }
-	
+
 	    window.open(url,"stat_main");
     }
 

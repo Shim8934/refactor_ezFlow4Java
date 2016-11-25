@@ -99,11 +99,41 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO">
+<!-- 	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZHRMASTER.EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	
+	<select id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			SELECT 
+				A.CN ,
+             	A.DISPLAYNAME , 
+             	A.DISPLAYNAME2 
+        	FROM 
+        		( SELECT 
+        			CN,
+        			CASE #lang#
+        				WHEN '1' THEN DISPLAYNAME
+        				ELSE DISPLAYNAME2   
+        				END DISPLAYNAME,
+                    CASE #lang#
+                    	WHEN '1' THEN DISPLAYNAME2
+                        ELSE DISPLAYNAME   
+                        END DISPLAYNAME2               
+               	  FROM 
+               	  	EZHRMASTER.TBLDeptmaster 
+               	  WHERE
+               	  	TENANT_ID = #tenantID#
+               	  AND  
+               	  	DEPTLEVEL = 1
+               	  OR 
+               	  	CN = 'Top' ) A
+           	ORDER BY 
+        		A.CN
 		]]>
-	</procedure>
+	</select>
 	
 	<procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[

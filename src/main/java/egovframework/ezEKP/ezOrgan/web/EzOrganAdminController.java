@@ -906,7 +906,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -1091,7 +1091,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		

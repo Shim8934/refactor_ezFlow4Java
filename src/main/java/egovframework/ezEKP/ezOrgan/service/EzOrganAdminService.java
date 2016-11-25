@@ -7,7 +7,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 
 public interface EzOrganAdminService {
 	
-	public List<OrganDeptVO> getCompanyList(String lang) throws Exception;
+	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception;
 	

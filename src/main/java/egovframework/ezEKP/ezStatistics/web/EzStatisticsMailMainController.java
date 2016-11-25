@@ -68,7 +68,7 @@ public class EzStatisticsMailMainController {
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);		
 				
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		
 		StringBuilder listCompany = new StringBuilder();
 		for (OrganDeptVO vo : list) {

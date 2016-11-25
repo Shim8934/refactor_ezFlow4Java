@@ -1097,8 +1097,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String getLastLogin(String userID) throws Exception {
 		return ezOrganDAO.getLastLogin(userID);
 	}
-	
-	
+
 }
 
 

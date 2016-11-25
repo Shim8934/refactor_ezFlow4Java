@@ -90,7 +90,7 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		
 		StringBuilder listCompany = new StringBuilder();
 		for (OrganDeptVO vo : list) {

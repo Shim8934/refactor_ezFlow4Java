@@ -47,10 +47,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	
 	@Override
-	public List<OrganDeptVO> getCompanyList(String lang) throws Exception {
+	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("v_LANGDATA", lang);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
 		
 		return ezOrganAdminDao.getCompanyList(map);
 	}
