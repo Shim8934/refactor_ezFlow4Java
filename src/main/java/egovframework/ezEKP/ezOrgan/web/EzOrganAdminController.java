@@ -189,7 +189,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delDept.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String delDept(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	    
 		String cn = request.getParameter("cn");
 		String pClass = "group";
 		String result = "";
@@ -210,7 +212,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			if (rc == 0) { // removeGroup 성공
 				
-				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"));
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"), userInfo.getTenantId());
 				String groupAddr = dept.getExtensionAttribute1() + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
@@ -251,11 +253,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", produces = "text/xml;charset=utf-8")	
 	@ResponseBody
-	public String getEntryInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
 		String cn = request.getParameter("cn");
-		String proplist = request.getParameter("prop");		
+		String proplist = request.getParameter("prop");				
 	
-		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1");		
+		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1", userInfo.getTenantId());		
 
 		return infoXML;
 	}
@@ -338,11 +342,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/movDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String movDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		
-		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group");
+		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getTenantId());
 
 		return result;
 	}
@@ -513,7 +518,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			if (rc == 0) { // retireUser 성공				
 				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
 				LoginVO userInfo = commonUtil.userInfo(loginCookie);
-				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary());
+				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), userInfo.getTenantId());
 				String groupAddr = userVO.getDepartment() + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
@@ -543,13 +548,14 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/movUser.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String movUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String movUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String parentCn = request.getParameter("parentCn");
 		String cn[] = request.getParameter("cn").split(",");
 		String result = "OK";
 		
 		for (int i=0; i < cn.length; i++) {			
-			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user");
+			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", userInfo.getTenantId());
 		
 			if (!result.equals("OK")) {
 				break;
@@ -589,7 +595,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					if (rc == 0) {
 						// 사용자가 속한 부서의 Group Email 주소를 구한다.
 						LoginVO userInfo = commonUtil.userInfo(loginCookie);
-						OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary());
+						OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), userInfo.getTenantId());
 						groupAddr = userVO.getDepartment() + "@" + domain;				
 						
 						// 부서의 Group Email 주소로부터 해당 User를 제거한다.
@@ -906,7 +912,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -1091,7 +1097,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang);
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		

@@ -792,7 +792,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public List<MailReadVO> getMailReadListForJMocha(String pUserId, String pMessageId) throws Exception {
 		List<MailReadVO> readList = new ArrayList<MailReadVO>();
 		
-		String userIdParam = "userId=" + URLEncoder.encode(pUserId + "@" + config.getProperty("config.DomainName"), "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(pUserId, "UTF-8");
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
 		
 		String inputParams = userIdParam + "&" + messageIdParam;
@@ -1019,8 +1019,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		inputParams.append("recallIdx=" + URLEncoder.encode(pNum, "UTF-8"));
 		
 		for (String[] receiveDetail : receiveDetailList) {
-			inputParams.append("re=" + URLEncoder.encode(receiveDetail[0], "UTF-8"));
-			inputParams.append("s=" + URLEncoder.encode(receiveDetail[1], "UTF-8"));
+			inputParams.append("&re=" + URLEncoder.encode(receiveDetail[0], "UTF-8"));
+			inputParams.append("&s=" + URLEncoder.encode(receiveDetail[1], "UTF-8"));
 		}
 		
 		logger.debug("inputParams=" + inputParams.toString());

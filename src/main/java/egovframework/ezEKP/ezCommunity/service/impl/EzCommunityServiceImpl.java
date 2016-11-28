@@ -542,7 +542,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strSysopID = xmlMainDom.getElementsByTagName("C_SYSOPID").item(0).getTextContent().trim();
 		
 		String proplist = "displayName;description;company;extensionAttribute2";
-		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang());
+		String infoXMLMemberInfo = ezOrganAdminService.getPropertyList(strSysopID, proplist, userInfo.getLang(), userInfo.getTenantId());
 		
 		Document xmldomMemberInfo = commonUtil.convertStringToDocument(infoXMLMemberInfo);
 		
@@ -1515,7 +1515,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang()))) + "</td>");
+			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())) + "</td>");
 			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
 			sb.append("<td style=\"width:150\">");
@@ -4662,8 +4662,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return ezCommunityDAO.pollResGet4(map);
 	}
 	
-	public String getClubMemberInfo(String pCN, String pSearch, String lang) throws Exception {
-		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1"));
+	public String getClubMemberInfo(String pCN, String pSearch, String lang, int tenantID) throws Exception {
+		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1", tenantID));
 		
 		if (lang.equals("2")) {
 			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();

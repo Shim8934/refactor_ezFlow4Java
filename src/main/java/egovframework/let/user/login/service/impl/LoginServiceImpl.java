@@ -58,7 +58,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     private EzEmailUtil ezEmailUtil;
 
     public LoginVO selectUserForJMocha(LoginVO vo) throws Exception {
-        logger.debug("selectUserForJMocha started. id=" + vo.getId());
+        logger.debug("selectUserForJMocha started. tenantId=" + vo.getTenantId() + ",id=" + vo.getId());
         
         LoginVO loginVO = new LoginVO();
                 
@@ -66,7 +66,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         String param2 = "userId=" + URLEncoder.encode(vo.getId(), "UTF-8");
         String inputParams = param1 + "&" + param2;
 
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserInfo";
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getLoginInfo";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
         logger.debug("response=" + response);

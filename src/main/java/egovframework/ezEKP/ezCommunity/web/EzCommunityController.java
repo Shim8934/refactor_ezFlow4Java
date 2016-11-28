@@ -2899,7 +2899,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String companyID = request.getParameter("companyID");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
-		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, config.getProperty("config.primary"));
+		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, config.getProperty("config.primary"), userInfo.getTenantId());
 		
 		Document xmldom = commonUtil.convertStringToDocument(infoXML);
 		

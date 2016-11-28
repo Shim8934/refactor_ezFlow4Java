@@ -141,7 +141,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				
 				//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
 				String userId = userEmail;
-				String userId2 = userEmail;
 				
 				//get readList
 				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, messageId, outerReadCheck);
