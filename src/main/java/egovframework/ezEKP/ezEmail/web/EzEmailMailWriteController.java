@@ -214,7 +214,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		userLang = loginInfo.getLang();
 		userTimeset = loginInfo.getOffset();
 		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary, loginInfo.getTenantId());
 		
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		
@@ -3062,6 +3062,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailSelectDLMember.do")
 	public String mailSelectDLMember(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
 		String isUser = "";
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
@@ -3101,7 +3103,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				logger.debug("pCn=" + pCn + ", isUser=" + isUser);
 				
 				if(isUser.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"));
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("displayName", dept.getDisplayName());
@@ -3112,7 +3114,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					list.add(map);
 				} else {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"));
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("displayName", user.getDisplayName());

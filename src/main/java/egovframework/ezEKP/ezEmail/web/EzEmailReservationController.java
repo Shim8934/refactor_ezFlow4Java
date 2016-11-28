@@ -342,7 +342,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		userLang = loginInfo.getLang();
 		userTimeset = loginInfo.getOffset();
 		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary);
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary, loginInfo.getTenantId());
 		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		displayNamePrintable = userInfo.getDisplayName();
 		
