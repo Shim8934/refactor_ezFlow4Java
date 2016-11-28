@@ -154,15 +154,28 @@
 			    });
 			    var settime;
 			    var NowDate;
-
-			    NowDate = new Date(searchStart.substring(0, 4), searchStart.substring(5, 7), searchStart.substring(8, 10), searchStart.substring(11, 13), searchStart.substring(14, 16));
+			    
+			    if (searchStart != "") {
+			    	NowDate = new Date(searchStart.substring(0, 4), searchStart.substring(5, 7), searchStart.substring(8, 10), searchStart.substring(11, 13), searchStart.substring(14, 16));
+			    } else {
+			    	NowDate = new Date();
+			    }
+			    
 			    NowDate.setMonth(NowDate.getMonth() - 1);
 	
 			    $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Sdatepicker").datepicker('setDate', NowDate);
 	
-			    var NowDate2 = new Date(searchEnd.substring(0, 4), searchEnd.substring(5, 7), searchEnd.substring(8, 10), searchEnd.substring(11, 13), searchEnd.substring(14, 16));
+			    var NowDate2;
+			    
+			    if (searchEnd != "") {
+			    	NowDate2 = new Date(searchEnd.substring(0, 4), searchEnd.substring(5, 7), searchEnd.substring(8, 10), searchEnd.substring(11, 13), searchEnd.substring(14, 16));
+			    } else {
+			    	NowDate2 = new Date();
+			    }
+			    
 			    NowDate2.setMonth(NowDate2.getMonth() - 1);
+			    
 			    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Edatepicker").datepicker('setDate', NowDate2);
 			    
@@ -780,11 +793,26 @@
 			}
 			
 			function Print_onclick() {
+				if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
+			        alert("<spring:message code='ezCommunity.t421' />");
+			        return;
+			    }
+			    
+			    if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
+			    	alert("<spring:message code='ezCommunity.t421' />");
+			        return;
+			    }
+			    
+			    if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+			    	alert("<spring:message code='ezCommunity.t1459' />");
+			        return;
+			    }
+			    
 				var title = document.getElementById("txtTitle").value;
 				var writerName = document.getElementById("txtWriterName").value;
 				var strAbstract = document.getElementById("txtAbstract").value;
-				var searchStart = document.getElementById("idDatepicker").value;
-				var searchEnd = document.getElementById("_D2").value;
+				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			
 				var url = "/ezCommunity/searchBoardItemPrint.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
@@ -832,7 +860,7 @@
 			<ul>
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208'/></span></li>
-				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li>
+<%-- 				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li> --%>
 				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li>
 				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>

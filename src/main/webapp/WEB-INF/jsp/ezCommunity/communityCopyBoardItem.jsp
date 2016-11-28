@@ -105,6 +105,7 @@
 					}
 				});
 				
+				console.log(access);
 				if(access != "-1") {
 					return true;
 				} else {

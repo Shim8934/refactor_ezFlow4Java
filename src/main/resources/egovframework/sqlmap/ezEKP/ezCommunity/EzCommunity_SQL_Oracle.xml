@@ -166,7 +166,7 @@
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.searchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
-		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.adminSearchItemXML"			parameterClass="Map"		resultClass="CommunityBoardListVO">

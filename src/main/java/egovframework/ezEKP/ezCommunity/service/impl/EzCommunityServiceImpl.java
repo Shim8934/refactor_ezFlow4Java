@@ -2227,6 +2227,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         map.put("v_PABSTRACT", abstracts);
         map.put("v_PSTARTDATE", searchStart);
         map.put("v_PENDDATE", searchEnd);
+        map.put("v_pNow", EgovDateUtil.getTodayTime());
         
         List<CommunityBoardListVO> list = ezCommunityDAO.searchItemXML(map);
         

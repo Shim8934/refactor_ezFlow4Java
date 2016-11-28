@@ -574,10 +574,31 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstract", abstracts);
+        model.addAttribute("searchStart", searchStart);
+        model.addAttribute("searchEnd", searchEnd);
         
 		return "/ezCommunity/communitySearchBoardItem";
 	}
 	
+	//TODO 수정중
+	/**
+	 * 커뮤니티 검색화면 인쇄화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCommunity/searchBoardItemPrint.do")
+	public String searchBoardItemPrint(Model model, HttpServletRequest request) {
+		LOGGER.debug("searchBoardItemPrint started");
+		
+		String orgBoardParameters = request.getParameter("orgBoardParameters");
+		String boardID = request.getParameter("boardID");
+		String title = request.getParameter("title");
+		String writerName = request.getParameter("writerName");
+		String Strabstract = request.getParameter("strAbstract");
+		String searchStart = request.getParameter("searchStart");
+		String searchEnd = request.getParameter("searchEnd");
+		
+		LOGGER.debug("222");
+		return "/ezCommunity/communitySearchBoardItemPrint";
+	}
 	/**
 	 * 게시물 읽음표시 실행함수
 	 */
@@ -1267,25 +1288,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/checkIfAnonyBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	public String checkIfAnonyBoard(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("checkIfAnonyBoard started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String ret = "";
 		String pBoardID = request.getParameter("boardID");
+		String ret = "";
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-//		if (boardInfo.getGubun().equals("2") || boardInfo.getUrl() != null || boardInfo.getGubun().equals("3")) {
-//			ret = "anonyboard";
-//		} else {
-//			ret = "normalboard";
-//		}
-//		
-		if  (boardInfo.getGubun() == null || boardInfo.getUrl () == null || !boardInfo.getGubun().equals("2")){
-			ret = "normalboard";
-		} else {
+		if  (boardInfo.getGubun().equals("2") || boardInfo.getUrl () != null || boardInfo.getGubun().equals("3")){
 			ret = "anonyboard";
+		} else {
+			ret = "normalboard";
 		}
 		
 		model.addAttribute("result", ret);
+		
+		LOGGER.debug("checkIfAnonyBoard ended. result : " + ret);
 		
 		return "json";
 	}
