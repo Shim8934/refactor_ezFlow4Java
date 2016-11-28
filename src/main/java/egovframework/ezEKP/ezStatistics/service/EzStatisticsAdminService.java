@@ -5,7 +5,7 @@ import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 
 public interface EzStatisticsAdminService {
 
-	public String getTimeList(String date, String company, int tenantID);
+	public String getTimeList(StatApprVO statApprVO);
 
 	public String getCountList(StatApprVO statApprVO);
 

@@ -15,6 +15,12 @@ public class StatDailyDocCountLogVO {
 	private String formID;
 	/** 양식명*/
 	private String formInfo;
+	/** */
+	private String cn;
+	/** 이름*/
+	private String displayName;
+	/** 기안시간*/
+	private float dTime;
 	
 	public String getRegDate() {
 		return regDate;
@@ -57,6 +63,24 @@ public class StatDailyDocCountLogVO {
 	}
 	public void setFormInfo(String formInfo) {
 		this.formInfo = formInfo;
+	}
+	public String getCn() {
+		return cn;
+	}
+	public void setCn(String cn) {
+		this.cn = cn;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	public float getdTime() {
+		return dTime;
+	}
+	public void setdTime(float dTime) {
+		this.dTime = dTime;
 	}
 	
 }

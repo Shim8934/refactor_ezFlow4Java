@@ -413,8 +413,6 @@ function ListView() {
 
             objElm.appendChild(oTable);
 
-            if (_debugMode) yjTest("oTable", objElm.innerHTML);
-
             objElm = null;
         }
     }
@@ -1409,23 +1407,6 @@ function td_mouseout(td, titIdx) {
 //    td = null;
 }
 
-function yjTest(pArea, pStr) {
-    var testText = document.getElementById("txtTest");
-
-    if (!testText) {
-        testText = document.createElement("TEXTAREA");
-        testText.id = "txtTest";
-        testText.rows = "30";
-        testText.cols = "170";
-    }
-
-    testText.value += "## " + pArea + " 시작 #########################################################\r\n";
-    testText.value += pStr + "\r\n";
-    testText.value += "## " + pArea + " 끝 ###########################################################\r\n";
-
-    document.body.appendChild(testText);
-    testText = null;
-}
 
 try {
     // 비 IE 브라우저에서 사용 가능하도록 innerText 구현
