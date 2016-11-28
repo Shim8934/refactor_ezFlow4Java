@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -21,7 +22,9 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +147,58 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return sb.toString();
 	}
 	
+	@Override
+	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath) throws Exception {
+		int clubNo = Integer.parseInt(ezCommunityDAO.commMakeOkGet3().trim()) + 1;
+		String code = "C_"+clubNo;
+		
+		if (mode.equals("logo")) {
+			String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".") + 1);
+            String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+            String logoTemp = onlyFileName + "_logoTemp" + "." + ext;
+            String logoFileName = code + "_logo" + ".png";
+            String logoThumbnailFileName = code + "_thumbnail" + ".png";
+
+            
+            if (!new File(logoPath).exists()) {
+				new File(logoPath).mkdirs();
+			}
+			
+			File file = new File(logoPath + logoTemp);
+            byte[] byteList = Base64.decodeBase64(fileData);
+            
+            FileOutputStream fos = null;
+            
+            try {
+            	fos = new FileOutputStream(file);
+                IOUtils.write(byteList, fos);
+                
+                BufferedImage inputImage = ImageIO.read(file);
+    			BufferedImage outputImage = null;
+    			Graphics2D saveImage = null;
+    			
+    			outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+    			saveImage = outputImage.createGraphics();
+    			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+    			
+    			File newLogo = new File(logoPath + logoFileName);
+    			ImageIO.write(outputImage, "png", newLogo);
+    			//썸네일파일 생성
+    			outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+    			saveImage = outputImage.createGraphics();
+    			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+    			
+    			File newThumbnail = new File(logoPath + logoThumbnailFileName);
+    			ImageIO.write(outputImage, "png", newThumbnail);
+            } catch (Exception e) {
+            	throw e;
+            } finally {
+            	fos.close();
+            	file.delete();
+            }
+        }
+	}
+
 	@Override
 	public void commMakeOk(LoginVO userInfo, CommunityClubVO clubVO, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
 		String clubName2 = "";
@@ -317,7 +372,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String fileName = "", attachFile = "", onlyFileName = "", extName = "";
 		int fileSize = 0, iStart = 0;
 		
-		if (!cClubLogo.isEmpty()) {
+		if (cClubLogo != null && !cClubLogo.isEmpty()) {
 			fileName = code;
 			attachFile = cClubLogo.getOriginalFilename();
 			fileSize = (int) cClubLogo.getSize();
@@ -354,10 +409,24 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			file.delete();
 			
 			commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, fileSize);
+		} else {
+			//IE9
+			fileName = code;
+			
+			if (!new File(logoPath).exists()) {
+				new File(logoPath).mkdirs();
+			}
+			
+			File logoFile = new File(logoPath + fileName + "_logo" + ".png");
+			File logoThumbnailFile = new File(logoPath + fileName + "_thumbnail" + ".png");
+			
+			if (logoFile.exists() && logoThumbnailFile.exists()) {
+				commMakeOkSet1(fileName + "_logo" + ".png", fileName + "_thumbnail" + ".png", fileName, (int) logoFile.length());
+			}
 		}
 		
 		//TODO 2016-05-03 이효진 뷰에서 banner을 사용하지 않아서 파라미터로 받지 않는다.
-		if (!cClubBanner.isEmpty()) {
+		if (cClubBanner != null && !cClubBanner.isEmpty()) {
 			fileName = code;
 			attachFile = cClubBanner.getOriginalFilename();
 			fileSize = (int) cClubBanner.getSize();
@@ -535,7 +604,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Override
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID) throws Exception {
-		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(boardID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
+		
+		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
+		
 		return boardItemList;
 	}
 
@@ -2239,11 +2313,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void deleteItem(String itemList) throws Exception {
+		LOGGER.debug("deleteItem started.");
+		
 		String boardID = "";
 		
 		for (String itemID : itemList.split(";")) {
 			itemID = itemID.split(",")[0];
 			boardID = ezCommunityDAO.deleteItemGet(itemID);
+			
+			LOGGER.debug("itemID : " + itemID + ", boardID : " + boardID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("boardID", boardID);
@@ -2255,18 +2333,26 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.deleteItem5(itemID);
 			ezCommunityDAO.deleteItem4(map);
 		}
+		
+		LOGGER.debug("deleteItem ended.");
 	}
 
 	@Override
 	public String checkIfHasReply(String itemList) throws Exception {
+		LOGGER.debug("checkIfHasReply started.");
+		
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
 			String ret = ezCommunityDAO.checkIfHasReply(itemID);
+			LOGGER.debug("itemID : " + itemID);
+			LOGGER.debug("ret : " + ret);
 
 			if (!ret.equals("0")) {
 				return "FALSE";
 			}
 		}
+		
+		LOGGER.debug("checkIfHasReply ended.");
 		
 		return "TRUE";
 	}
@@ -2466,6 +2552,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_STRLANG", commonUtil.getMultiData(lang));
 		map.put("v_PUSERID", id);
 		map.put("v_PSORTBY", pSortBy);
+		//수정중
+		map.put("v_pNow", EgovDateUtil.getTodayTime());
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.getReservedItemListXML(map);
 

@@ -1,8 +1,7 @@
 package egovframework.ezEKP.ezStatistics.service.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -29,16 +28,20 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzStatisticsAdminServiceImpl.class);
 	
 	@Override
-	public String getTimeList(String date, String company, int tenantID) {
+	public String getTimeList(StatApprVO statApprVO) {
 		String rtnValue = "";
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("startDate", date + "-01-01");
-		map.put("endDate", date + "-13-31");
-		map.put("companyID", company);
-		map.put("tenantID", tenantID);
+		
+		statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
+		statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
 		
 		try {
-			List<StatDailyDocCountLogVO> docCountLogVOs = ezStatisticsAdminDAO.getTimeList(map);
+			List<StatDailyDocCountLogVO> docCountLogVOs = new ArrayList<StatDailyDocCountLogVO>();
+			
+			if (statApprVO.getType().equals("FORM")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_F(statApprVO);
+			} else if (statApprVO.getType().equals("DEPT")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_D(statApprVO);
+			}
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append("<DATA>");
@@ -65,7 +68,13 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
 		
 		try {
-			List<StatDailyDocCountLogVO> docCountLogVOs = ezStatisticsAdminDAO.getCountList(statApprVO);
+			List<StatDailyDocCountLogVO> docCountLogVOs = new ArrayList<StatDailyDocCountLogVO>();
+			
+			if (statApprVO.getType().equals("FORM")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getCountList_F(statApprVO);
+			} else if (statApprVO.getType().equals("USER")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getCountList_U(statApprVO);
+			}
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append("<DATA>");

@@ -70,13 +70,13 @@
 	            url = "/ezStatistics/statisticsMonForm.do";
 	            break;
 	        case 7:
-	            url = "Approval/ezStatistics_Mon_Dept.aspx";
+	            url = "/ezStatistics/statisticsMonDept.do";
 	            break;
 	        case 8:
-	            url = "Approval/ezStatistics_Mon_User.aspx";
+	            url = "/ezStatistics/statisticsMonUser.do";
 	            break;
 	        case 9:
-	            url = "Approval/ezStatistics_Time_From.aspx";
+	            url = "/ezStatistics/statisticsTimeForm.do";
 	            break;
 	        case 10:
 	            url = "Approval/ezStatistics_Time_Dept.aspx";

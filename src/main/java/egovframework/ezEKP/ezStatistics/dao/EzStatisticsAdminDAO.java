@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezStatistics.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,13 +12,23 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
-	public List<StatDailyDocCountLogVO> getTimeList(Map<String, Object> map) {
-		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getTimeList", map);
+	public List<StatDailyDocCountLogVO> getTimeList_F(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getTimeList_F", statApprVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getTimeList_D(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getTimeList_D", statApprVO);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<StatDailyDocCountLogVO> getCountList(StatApprVO statApprVO) {
-		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getCountList", statApprVO);
+	public List<StatDailyDocCountLogVO> getCountList_F(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getCountList_F", statApprVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getCountList_U(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getCountList_U", statApprVO);
 	}
 
 	@SuppressWarnings("unchecked")

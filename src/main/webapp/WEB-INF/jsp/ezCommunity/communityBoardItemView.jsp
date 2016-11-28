@@ -157,7 +157,7 @@
 			 			    xmlhttp = null;
 			 			    
 			 			    try {
-			 			        window.opener.refresh_onclick();
+			 			    	window.opener.location.reload(true);
 			 			    } catch (e) {
 			 			    }
 			 			    
@@ -168,21 +168,33 @@
 	                	return;
 	                }
 	            } else {
-	            	if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
-	            		return;
-	            	}
-					
-	 			    var xmlhttp = createXMLHttpRequest();
-	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
-	 			    xmlhttp.send();
-	 			    xmlhttp = null;
-	 			    
-	 			    try {
-	 			        window.opener.refresh_onclick();
-	 			    } catch (e) {
-	 			    }
-	 			    
-	 			    window.close();
+	            	if (gubun == "2") {
+	                	if(CrossYN()) {
+	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
+	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                        try {
+	                        	OpenWin.focus();
+	                        } catch (e) { }
+	                	} else {
+	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
+		                    feature = feature + GetShowModalPosition(330, 200);
+		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
+
+	                		if (typeof (ret) == "undefined") {
+		                        alert("<spring:message code = 'ezCommunity.t901' />");
+		                        return;
+		                    }
+
+	                		 if (ret != "OK") {
+	                             alert("<spring:message code = 'ezCommunity.t921' />");
+	                             return
+		                    } else if (ret == "cancel") {
+		    	            	alert("<spring:message code='ezCommunity.t60'/>");
+		    	                return;
+		    	            }
+	                	}
+
+	                }
                 }
 	        }
 	        
@@ -192,7 +204,7 @@
 	                return;
 	            }
 
-	            if (ret == "NO") {
+	            if (ret != "OK") {
                     alert("<spring:message code = 'ezCommunity.t921' />");
                     return;
                 } else if (ret == "cancel") {
@@ -209,7 +221,7 @@
 	            xmlhttp.send();
 	            xmlhttp = null;
 	            try {
-	                window.opener.refresh_onclick();
+	            	window.opener.location.reload(true);
 	            } catch (e) {
 	            }
 	            window.close();

@@ -64,12 +64,6 @@
 		    	pBoardName = "<c:out value='${boardInfo.boardName2}' />";
 		    }
 		    
-		    window.onload = function() {
-			    if (searchStart == "") {
-			        btn_PostDate_Clear();
-			    }
-			}
-		    
 		    $(function () {
 		    	var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
@@ -132,12 +126,12 @@
 						listXML += "<td align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</td>";
 					}
 					
-					listXML += "<tr>";
+					listXML += "</tr>";
 					
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + ";";
     			}
     			
-    			$('.mainlist tbody').append(listXML);
+    			$('.mainlist').html($('.mainlist tbody').html() + listXML);
     			
     			makePageSelPage();
     			
@@ -171,10 +165,8 @@
 			    NowDate2.setMonth(NowDate2.getMonth() - 1);
 			    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Edatepicker").datepicker('setDate', NowDate2);
-			});
-			
-			$(function () {
-				if("${userInfo.lang == '1'}"){
+			    
+			    if("${userInfo.lang == '1'}"){
 					$.datepicker.regional['ko'] = {
 		            	closeText: '닫기',
 		            	prevText: '이전달',
@@ -209,8 +201,12 @@
 		        	
 		        	$.datepicker.setDefaults($.datepicker.regional['en']);
 				}
-	    	});
-		    
+			    
+			    if (searchStart == "") {
+			        btn_PostDate_Clear();
+			    }
+			});
+			
 			function btn_PostDate_Clear() {
 			    $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Sdatepicker").datepicker('setDate', "");
@@ -290,7 +286,21 @@
 		    }
 			
 			function checkBox_checkAll() {
-			    for (var i = 1; i < document.frmOutbox.length; i++) {
+				var i=0;
+    			
+    			for(i=0;i<$("input[name='chk']").length;i++) {
+    				if($("input[name='chk']")[i].type == 'checkbox') {
+    					if($("input[name='checkbox']")[0].checked) {
+    					$("input[name='chk']")[i].checked = true;
+                            strListInfo = ListInfo;
+                        } else {
+                        	$("input[name='chk']")[i].checked = false;
+    						strListInfo = "";
+    					}				
+    				}
+    			}
+    			//보드아이디가 안나옴
+			    /* for (var i = 1; i < document.frmOutbox.length; i++) {
 			        if (document.frmOutbox[i].type == 'checkbox') {
 			            if (document.frmOutbox.checkbox.checked) {
 			                document.frmOutbox[i].checked = true;
@@ -300,36 +310,109 @@
 			                strListInfo = "";
 			            }
 			        }
-			    }
+			    } */
 			}
 			
-			function DeleteItem_onclick() {	
-				if(strListInfo == "") {
-					alert("<spring:message code='ezCommunity.t424' />");
-					return;
-				}
+			var checkpassword_dialogArguments = new Array();   		
+    		function DeleteItem_onclick() {	
+    			if(strListInfo == "") {
+    				alert("<spring:message code='ezCommunity.t424' />");
+    				return;
+    			}
+    			
+    			if (gubun == "2") {
+    				arrList = strListInfo.split(";");
+    				
+    				if (arrList.length > 2)  {
+    					alert("<spring:message code='ezCommunity.lhj01' />");
+    					return;
+    				}
+    			}
 
-				if(Delete_FG != "true") {
-					alert("<spring:message code='ezCommunity.t901' />");
-					return;
-				}
+    			if(Delete_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t901' />");
+    				return;
+    			}
+    			
+    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+    		        if (gubun == "2") {
+    		            var pItemInfo = strListInfo.split(";")[0];
+    		            var pItemID = pItemInfo.split(",")[0];
 
-				if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
-					alert("<spring:message code='ezCommunity.t431' />");
-					return;
-				}
+    		            if (pItemID != "") {
+   		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    
+   		                    try {
+   		                    	OpenWin.focus();
+   		                    	
+   		                    } catch (e) {
+   		                    	
+   		                    }
+    		            }
+    		        } else {
+    		            alert("<spring:message code='ezCommunity.t431' />");
+    		            return;
+    		        }
+    		    } else {
+    		    	if (gubun == "2") {
+    		    		if (gubun == "2") {
+        		            var pItemInfo = strListInfo.split(";")[0];
+        		            var pItemID = pItemInfo.split(",")[0];
 
-				if(CheckIfHasReplies()) {
-					alert("<spring:message code='ezCommunity.t425' />");
-					return;
-				}
-				
-				var ret = confirm("<spring:message code='ezCommunity.t426' />");
-				
-				if (ret)	{
-					DeleteItem();	
-				}
-			}
+        		            if (pItemID != "") {
+       		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
+       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+       		                    
+       		                    try {
+       		                    	OpenWin.focus();
+       		                    	
+       		                    } catch (e) {
+       		                    	
+       		                    }
+        		            }
+    		    		}
+    		    	}
+    		    }
+    		    
+    		    if (CheckIfHasReplies()) {
+    		        alert("<spring:message code='ezCommunity.t425' />");
+                    return;
+                }
+    		    
+    		    if(gubun != "2"){
+    		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
+    		        if (ret) {
+    		        	DeleteItem();
+    		        }
+    		    }
+    		}
+    		
+    		function DeleteItem_onclick_Complete(ret) {
+		        if (typeof (ret) == "undefined") {
+		            alert("<spring:message code='ezCommunity.t901' />");
+		            return;
+		        }
+
+		        if (ret != "OK") {
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
+	                return;
+	            }
+
+		        if (CheckIfHasReplies()) {
+		            alert("<spring:message code='ezCommunity.t425' />");
+		            return;
+		        }
+
+		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
+		        
+		        if (ret) {
+		        	DeleteItem();
+		        }
+		    }
 			
 			function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
@@ -348,28 +431,21 @@
 			}
 
 			function DeleteItem() {
-// 			    var xmlhttp = createXMLHttpRequest();
-			    
-// 				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
-// 				xmlhttp.send();
-				
 				$.ajax({
 					type : 'POST',
 					url : '/ezCommunity/deleteItem.do',
 					async : false,
 					data : {itemList : strListInfo},
 					success : function() {
-						alert(1);
+						if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && CurPage != 1) {
+							movePage(CurPage);
+						} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
+						    movePage(CurPage);
+						} else {
+						    window.location.reload();
+						}
 					}
-				})
-				
-				if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && CurPage != 1) {
-					movePage(CurPage);
-				} else if (document.getElementById("rowdata") != null && document.getElementById("rowdata").length == strListInfo.split(";").length - 1 && CurPage != 1) {
-				    movePage(CurPage);
-				} else {
-				    window.location.reload();
-				}
+				});
 			}
 
 			function ReplaceText(orgStr, findStr, replaceStr) {

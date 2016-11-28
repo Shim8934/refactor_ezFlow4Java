@@ -219,6 +219,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commMake.do")
 	public String commMake(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		String langPrimary="", langSecondary="", userInfoDisplayName = "";
 		
 		langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
@@ -235,6 +237,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
 //		model.addAttribute("flag", flag);		
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityCommMake";
 	}
@@ -248,6 +251,34 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		ezCommunityService.commMakeOk(userInfo, clubVO, request, response);
+	}
+	
+	/**
+	 * 커뮤니티만들기 IE9 로고 업로드
+	 */
+	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
+	public String commMakeUpload(Model model, HttpServletRequest request) {
+		LOGGER.debug("commMakeUpload started.");
+		
+		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		String mode = request.getParameter("mode");
+		String fileName = request.getParameter("fileName");
+		String fileData = request.getParameter("fileData");
+		boolean result = false;
+		
+		try {
+			ezCommunityService.commMakeUpload(mode, fileName, fileData, logoPath);
+			
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		
+		LOGGER.debug("commMakeUpload ended.");
+		
+		model.addAttribute("result", result);
+		
+		return "json";
 	}
 	
 	/**
@@ -575,6 +606,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시물 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/deleteItem.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void deleteItem(HttpServletRequest request) throws Exception {
 		String itemList = request.getParameter("itemList");
 		
@@ -2225,6 +2257,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminLogo.do")
 	public String adminLogo(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String code = request.getParameter("code");
 		
@@ -2242,9 +2276,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("clubVO", clubVO);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "/ezCommunity/communityAdminLogo";
 	}
+	
+	
 	
 	/**
 	 * 커뮤니티 환경설정화면 실행함수
