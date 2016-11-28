@@ -1143,11 +1143,13 @@
 	    <input id="publicExponent" value="${publicExponent }" type="hidden"/>
 	    
 	    <script type="text/javascript">
-	        if("${boardInfo.gubun != '2'}") {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-	        } else {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 355 + "PX";
-	        }
+	    	<c:if test="${boardInfo.gubun != '2'}">
+            	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+	    	</c:if>
+
+	    	<c:if test="${boardInfo.gubun == '2'}">
+	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+	    	</c:if>
 		</script>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	

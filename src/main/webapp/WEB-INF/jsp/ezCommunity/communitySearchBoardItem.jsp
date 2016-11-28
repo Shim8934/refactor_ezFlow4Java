@@ -623,6 +623,8 @@
 				url += "&page=" + newPage.toString();
 				url += "&code=" + code;
 
+				alert(newPage);
+				alert(totalPage);
 				if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage))  {
 					window.location.href = url;
 				}

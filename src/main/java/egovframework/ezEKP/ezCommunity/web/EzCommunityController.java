@@ -576,6 +576,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("abstract", abstracts);
         model.addAttribute("searchStart", searchStart);
         model.addAttribute("searchEnd", searchEnd);
+        model.addAttribute("pPage", pPage);
         
 		return "/ezCommunity/communitySearchBoardItem";
 	}
