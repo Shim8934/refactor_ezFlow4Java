@@ -85,9 +85,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
-	@Autowired
-	private Properties globals;
-	
 	@Resource(name = "loginService")
 	private LoginService loginService;
 	

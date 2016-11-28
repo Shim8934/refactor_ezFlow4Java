@@ -507,7 +507,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							// retrieve user info from db.
 							LoginVO userInfo = commonUtil.userInfo(loginCookie);
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary());
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary(), userInfo.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 									userEmail, password);
@@ -1193,7 +1193,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							// retrieve user info from db.
 							LoginVO userInfo = commonUtil.userInfo(loginCookie);
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary());
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary(), userInfo.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 									userEmail, password);

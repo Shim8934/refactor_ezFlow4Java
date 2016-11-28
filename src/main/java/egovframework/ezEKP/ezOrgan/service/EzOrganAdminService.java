@@ -7,7 +7,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 
 public interface EzOrganAdminService {
 	
-	public List<OrganDeptVO> getCompanyList(String lang) throws Exception;
+	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception;
 	
@@ -19,13 +19,13 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getUserCnList() throws Exception;
 	
-	public OrganUserVO getUserInfo(String cn, String lang) throws Exception;
+	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception;
 	
 	public OrganUserVO getRetireEntryInfo(String cn, String lang) throws Exception;
 	
-	public String getPropertyList(String cn, String proplist, String string) throws Exception;
+	public String getPropertyList(String cn, String proplist, String string, int tenantID) throws Exception;
 	
-	public String moveEntry(String parentCn, String cn, String type) throws Exception;
+	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception;
 	
 	public void updateProperty(String cn, String column, String number, String pClass) throws Exception;
 

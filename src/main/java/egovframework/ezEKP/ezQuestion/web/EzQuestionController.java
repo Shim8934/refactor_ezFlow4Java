@@ -1134,7 +1134,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                     String propList = "department;mail;displayname;title;description;company;title";
                     String pClass = "all";
                        
-                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, config.getProperty("config.primary"));
+                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, config.getProperty("config.primary"), loginVO.getTenantId());
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
              			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
              				if(xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent() != "") {
@@ -1179,7 +1179,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 	ezQuestionService.callCreateMother(qstCompleteVO);
                 	
                 	String propList = "department;mail;displayName;title;description;company";
-                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, config.getProperty("config.primary"));
+                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, config.getProperty("config.primary"), loginVO.getTenantId());
 
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
 					String userDeptId = "";

@@ -856,7 +856,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 			String propList = "displayName1;displayName2;title1;title2;description1;description2";
-			String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang());
+			String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
@@ -938,7 +938,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 			String propList = "displayName1;displayName2;title1;title2;description1;description2";
-			String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang());
+			String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
@@ -1216,7 +1216,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			writerID = getSchedule.getWriterID();
 			
 			String propList = "displayName;description";
-			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang());
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			
@@ -1501,7 +1501,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			writerID = getSchedule.getWriterID();
 	
 			String propList = "displayName;description";
-			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang());
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			
@@ -2084,7 +2084,7 @@ public class EzResourceController extends EgovFileMngUtil {
         String propList = doc.getElementsByTagName("prop").item(0).getTextContent();
         String listType = doc.getElementsByTagName("type").item(0).getTextContent();
         
-        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang());
+        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang(), userInfo.getTenantId());
         
 		return returnXML;
 	}

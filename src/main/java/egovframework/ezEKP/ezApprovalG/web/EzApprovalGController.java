@@ -168,7 +168,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
 		String propList = "extensionAttribute4;department;description;title;title2;description2";
-		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary());
+		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		String myDept = "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
@@ -259,7 +259,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			susinAdmin = "NO";
 		}
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
 		
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
@@ -434,7 +434,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			} else if (mode.toUpperCase().equals("END")) {
 				String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary());
+				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 					return "<RESULT>NOTPERMISSION</RESULT>";
@@ -915,7 +915,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
-		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
 		return result;
 	}
@@ -1617,7 +1617,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
 			String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-			String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+			String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 			
 			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 				result = "NOTPERMISSION";
@@ -1820,7 +1820,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
 			if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0 || docHref.split("/").length == 1) {
@@ -4005,7 +4005,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
@@ -4781,7 +4781,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useEditor = config.getProperty("config.EDITOR");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId());
 		
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang());
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		if (docID != null && docID.equals("")) {
 			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID());

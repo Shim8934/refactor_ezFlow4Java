@@ -169,7 +169,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			keepDeleteLength = "60";
 		}
 		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1", loginInfo.getTenantId());
 		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
 		
 		if (pMailSenderNM == null) {

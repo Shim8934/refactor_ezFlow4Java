@@ -946,7 +946,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
         String returnValue = "";
         
-        String param1 = "tenantId=" + URLEncoder.encode(tenantID + "", "UTF-8");
+        String param1 = "tenantId=" + tenantID;
         String param2 = "property=" + URLEncoder.encode(property, "UTF-8");
         String inputParams = param1 + "&" + param2;
 

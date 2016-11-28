@@ -97,7 +97,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary());
 		String multiData = commonUtil.getMultiData(userInfo.getLang());
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -469,7 +469,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String serverName = config.getProperty("config.ServerName");
 				
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -699,7 +699,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -824,7 +824,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String apprGTaskCodeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1160,7 +1160,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1213,7 +1213,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String manageSeal (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1379,7 +1379,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1537,7 +1537,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1602,7 +1602,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1741,7 +1741,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -1884,7 +1884,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {

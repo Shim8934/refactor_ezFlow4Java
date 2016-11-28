@@ -105,7 +105,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -382,7 +382,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -596,7 +596,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
