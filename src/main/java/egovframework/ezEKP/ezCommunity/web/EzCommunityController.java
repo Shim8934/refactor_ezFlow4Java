@@ -606,6 +606,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시물 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/deleteItem.do", method = RequestMethod.POST)
+	@ResponseBody
 	public void deleteItem(HttpServletRequest request) throws Exception {
 		String itemList = request.getParameter("itemList");
 		

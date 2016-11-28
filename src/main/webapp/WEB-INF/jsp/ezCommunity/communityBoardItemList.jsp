@@ -245,29 +245,22 @@
     		        }
     		    } else {
     		    	if (gubun == "2") {
-    		    		var pItemInfo = strListInfo.split(";")[0];
-     		            var pItemID = pItemInfo.split(",")[0];
-     		            
-    		    		if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
-    	            		return;
-    	            	}
-    	            	
-                        var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
-    					
-    					if (ret != "OK") {
-    					    alert("<spring:message code = 'ezCommunity.t901' />");
-    					    return;
-    					}
-    					
-    	 			    var xmlhttp = createXMLHttpRequest();
-    	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
-    	 			    xmlhttp.send();
-    	 			    xmlhttp = null;
-    	 			    
-    	 			    try {
-    	 			        window.refresh_onclick();
-    	 			    } catch (e) {
-    	 			    }
+    		    		if (gubun == "2") {
+        		            var pItemInfo = strListInfo.split(";")[0];
+        		            var pItemID = pItemInfo.split(",")[0];
+
+        		            if (pItemID != "") {
+       		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
+       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+       		                    
+       		                    try {
+       		                    	OpenWin.focus();
+       		                    	
+       		                    } catch (e) {
+       		                    	
+       		                    }
+        		            }
+    		    		}
     		    	}
     		    }
     		    
@@ -291,9 +284,12 @@
 		        }
 
 		        if (ret != "OK") {
-		            alert("<spring:message code='ezCommunity.t901' />");
-		            return;
-		        }
+                    alert("<spring:message code = 'ezCommunity.t921' />");
+                    return;
+                } else if (ret == "cancel") {
+	            	alert("<spring:message code='ezCommunity.t60'/>");
+	                return;
+	            }
 
 		        if (CheckIfHasReplies()) {
 		            alert("<spring:message code='ezCommunity.t425' />");
@@ -322,12 +318,14 @@
     		}
 
     		function DeleteItem() {
-    		    var xmlhttp = createXMLHttpRequest();
-    		    
-    			xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
-    			xmlhttp.send();
-    			xmlhttp = null;
-    			window.location.href = "/ezCommunity/boardItemList.do?boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
+    			$.ajax({
+    				type : "POST",
+    				async : false,
+    				url : "/ezCommunity/deleteItem.do",
+    				data : {itemList : strListInfo}
+    			});
+
+    			refresh_onclick();
     		}
 
     		function ReplaceText( orgStr, findStr, replaceStr ) {

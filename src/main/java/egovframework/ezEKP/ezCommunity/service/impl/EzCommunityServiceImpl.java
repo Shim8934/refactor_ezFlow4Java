@@ -2313,11 +2313,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void deleteItem(String itemList) throws Exception {
+		LOGGER.debug("deleteItem started.");
+		
 		String boardID = "";
 		
 		for (String itemID : itemList.split(";")) {
 			itemID = itemID.split(",")[0];
 			boardID = ezCommunityDAO.deleteItemGet(itemID);
+			
+			LOGGER.debug("itemID : " + itemID + ", boardID : " + boardID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("boardID", boardID);
@@ -2329,18 +2333,26 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.deleteItem5(itemID);
 			ezCommunityDAO.deleteItem4(map);
 		}
+		
+		LOGGER.debug("deleteItem ended.");
 	}
 
 	@Override
 	public String checkIfHasReply(String itemList) throws Exception {
+		LOGGER.debug("checkIfHasReply started.");
+		
 		for (String item : itemList.split(";")) {
 			String itemID = item.split(",")[0];
 			String ret = ezCommunityDAO.checkIfHasReply(itemID);
+			LOGGER.debug("itemID : " + itemID);
+			LOGGER.debug("ret : " + ret);
 
 			if (!ret.equals("0")) {
 				return "FALSE";
 			}
 		}
+		
+		LOGGER.debug("checkIfHasReply ended.");
 		
 		return "TRUE";
 	}
