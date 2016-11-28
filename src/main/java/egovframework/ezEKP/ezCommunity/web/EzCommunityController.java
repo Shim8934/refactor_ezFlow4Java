@@ -585,18 +585,55 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 검색화면 인쇄화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/searchBoardItemPrint.do")
-	public String searchBoardItemPrint(Model model, HttpServletRequest request) {
+	public String searchBoardItemPrint(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("searchBoardItemPrint started");
 		
-		String orgBoardParameters = request.getParameter("orgBoardParameters");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 		String title = request.getParameter("title");
 		String writerName = request.getParameter("writerName");
-		String Strabstract = request.getParameter("strAbstract");
+		String strAbstract = request.getParameter("strAbstract");
 		String searchStart = request.getParameter("searchStart");
 		String searchEnd = request.getParameter("searchEnd");
+		String searchConfig = "";
 		
-		LOGGER.debug("222");
+		if (!title.equals("")) {
+			searchConfig += egovMessageSource.getMessage("ezCommunity.t1467", userInfo.getLocale()) + "'" + title + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
+		}
+		
+		if (!writerName.equals("")) {
+			searchConfig += egovMessageSource.getMessage("ezCommunity.t1469", userInfo.getLocale()) + "'" + writerName + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
+		}
+
+		if (strAbstract != null) {
+			searchConfig += egovMessageSource.getMessage("ezCommunity.t1470", userInfo.getLocale()) + "'" + strAbstract + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
+		}
+		
+		if (searchStart != null && !searchStart.equals("")) {
+			searchConfig += egovMessageSource.getMessage("ezCommunity.t1471", userInfo.getLocale()) + "'" + searchStart.substring(0, 10) + "' " + egovMessageSource.getMessage("ezCommunity.t1472", userInfo.getLocale());
+		}
+		
+		if (searchEnd != null && !searchEnd.equals("")) {
+			searchConfig += egovMessageSource.getMessage("ezCommunity.t1471", userInfo.getLocale()) + "'" + searchEnd.substring(0, 10) + "' " + egovMessageSource.getMessage("ezCommunity.t1473", userInfo.getLocale());
+		}
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+
+        String strXML = "";
+		
+		if (!title.equals("") || !writerName.equals("") || strAbstract != null || searchStart != null) {
+            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, strAbstract, searchStart, searchEnd, 1, 1000, commonUtil.getMultiData(userInfo.getLang()));
+        }
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strAbstract", strAbstract);
+		model.addAttribute("strNow", EgovDateUtil.getTodayTime());
+		model.addAttribute("searchConfig", searchConfig);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("strXML", strXML);
+		
+		LOGGER.debug("searchBoardItemPrint ended");
+		
 		return "/ezCommunity/communitySearchBoardItemPrint";
 	}
 	/**

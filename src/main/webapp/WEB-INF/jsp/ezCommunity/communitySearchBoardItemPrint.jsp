@@ -7,14 +7,74 @@
 		<title><spring:message code='ezCommunity.t1463'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<link rel="stylesheet" type="text/css" href="/css/community.css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-			
+			$(function () {
+				var xmldoc = loadXMLString('${strXML}');
+    			var listXML = '';
+    			
+    			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
+					var strSpace = '';
+					var strEmergent = '';
+					var bTag = '';
+					var readCount = '';
+					
+					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Importance") == "1") {
+						strEmergent = "<img src='/images/i_urgency.gif'>&nbsp;";
+					}
+					
+					for (var j = 1; j < SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemLevel"); j++) {
+						strSpace += "&nbsp&nbsp;";
+						if (j == SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemLevel") - 1) {
+							strSpace += "<img src='/images/i_rep.gif' align='absmiddle'>&nbsp;";
+						}
+					}
+					
+					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadFlag") != "0") {
+						bTag = "";
+					} else {
+						bTag = "<B>";
+					}
+					
+					listXML += "<tr>";
+					listXML += "<td title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden'>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim() + "</td>"
+
+					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() != "") {
+						listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</td>";
+					} else {
+						listXML += "<td>&nbsp;</td>";
+					}
+					
+					listXML += "<td><div>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
+					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
+					
+					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
+						listXML += "<td align=center><img src='/images/i_save01.gif'></td>";
+					} else {
+						listXML += "<td>&nbsp;</td>";
+					}
+					
+					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount").trim() == ""){
+						readCount = "0";
+					} else {
+						readCount = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount").trim();
+					}
+					
+					
+					if (i > 0 && i % 25 == 0){
+						listXML += "<td style='page-break-after:always' align=center>" + readCount + "</td>";
+					} else {
+						listXML += "<td align=center>" + readCount+ "</td>";
+					}
+					
+					listXML += "</tr>";
+    			}
+    			
+    			$('.popuplist').html($('.popuplist tbody').html() + listXML);
+			});
 		</script>
 	</head>
 	
@@ -35,7 +95,12 @@
 		    </tr>
 		    <tr>
 		    	<th ><spring:message code='ezCommunity.t1465'/></th>
-		        <td>${boardName }</td>
+		    	<c:if test="${userInfo.primary == '1' }">
+		    		<td>${boardInfo.boardName }</td>
+		    	</c:if>
+		    	<c:if test="${userInfo.primary != '1' }">
+		    		<td>${boardInfo.boardName2 }</td>
+		    	</c:if>
 			</tr>
 	        <tr>
 				<th ><spring:message code='ezCommunity.t1466'/></th>
