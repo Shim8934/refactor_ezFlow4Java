@@ -14,9 +14,17 @@
 		
 		<script type="text/javascript">
 			var ReturnFunction;
-	
+/* 			Date.prototype.yyyymmdd = function()
+			{
+			    var yyyy = this.getFullYear().toString();
+			    var mm = (this.getMonth() + 1).toString();
+			    var dd = this.getDate().toString();
+
+
+			    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
+			} */
 			var date = new Date();
-			
+alert(date);
 		    $(document).ready(function () {
 		        try {
 		            ReturnFunction = parent.select_best_dialogArguments[1];
@@ -40,8 +48,7 @@
 		            }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "",
-		                "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
+		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
 	
 		            if (typeof (rtnValue) != "undefined") {
 		                pid = rtnValue.split(":")[0];
@@ -81,6 +88,7 @@
 	            	data : {type : "INS", userID : pid, deptID : pDeptID, term : date.getFullYear().toString() + "-" + document.getElementById("Sel_Month").value},
 	            	dataType : "text",
 	            	success : function (result) {
+alert(result);
 	            		if (result != "OK") {
 			                alert("<spring:message code = 'ezPersonal.t00005' />");
 			            } else {
@@ -109,7 +117,7 @@
 	        <table class="content">
 	             <tr>
 	                <th style="width:100px; text-align:center"><spring:message code = 'ezPersonal.t275' /></th>
-	                <td style="width:150px; text-align:center">
+	                <td style="width:150px; text-align:center"> ${nowYear}
 	                    <c:out value = '${fn:substring(date, 0, 4) }' /> <spring:message code = 'ezPersonal.t290' />&nbsp; 
 	                    <select id="Sel_Month">
 	                        <option value="1">1 </option>

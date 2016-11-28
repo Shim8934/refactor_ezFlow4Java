@@ -156,7 +156,7 @@
 	
 	<procedure id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH"		parameterClass="Map">
 		<![CDATA[
-			{CALL EZPERSONAL.EZSP_SETEMPLOYEEMONTH(#v_pType#, #v_pUserID#, #v_pDeptID#, #v_pTerm#)}
+			{CALL EZPERSONAL.EZSP_SETEMPLOYEEMONTH(#v_pType#, #v_pUserID#, #v_pDeptID#, #v_pTerm#, #tenantID#)}
 		]]>	
 	</procedure>
 	

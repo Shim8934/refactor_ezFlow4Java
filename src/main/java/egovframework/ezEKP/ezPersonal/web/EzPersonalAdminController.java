@@ -816,7 +816,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 이달의우수사원 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectBest.do")
-	public String selectBest() {
+	public String selectBest(Model model) {
+		model.addAttribute("nowYear", EgovDateUtil.getCurrentDate("").substring(0, 4));
 		return "admin/ezPersonal/personalSelectBest";
 	}
 	
@@ -825,7 +826,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
 	@ResponseBody
-	public String setEmployeeMonth(HttpServletRequest request) throws Exception {
+	public String setEmployeeMonth(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
@@ -837,8 +839,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			deptID = request.getParameter("deptID");
 		}
 		
+		int tenantID = userInfo.getTenantId();
+		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term);
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
 			
 			return "OK";
 		} catch (Exception e) {
