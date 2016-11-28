@@ -891,9 +891,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 등혹 이미지등록 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do", produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do")
+	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String dirPath = config.getProperty("upload_portal.ROOT");
 		String resultUpload = "false";
@@ -921,7 +920,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		File file = new File(realPath + serverPath + uniqueName);
 		
-		if (mode.equals("sliderImage")) {
+		if (mode.equals("SLIDERIMAGE")) {
 			String saveName = UUID.randomUUID() + ".jpg";
 			BufferedImage inputImage = ImageIO.read(file);
 			BufferedImage outputImage = null;
@@ -942,21 +941,24 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		resultUpload = "true";
 		
-		StringBuilder result = new StringBuilder();
+		StringBuilder strXML = new StringBuilder();
 		
-		result.append("<ROOT>");
-		result.append("<NODES>");
-		result.append("<NODE>");
-		result.append("<PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
-		result.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-		result.append("<PFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></PFILENAME>");
-		result.append("<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
-		result.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
-		result.append("</NODE>");
-		result.append("</NODES>");
-		result.append("</ROOT>");
+		strXML.append("<ROOT>");
+		strXML.append("<NODES>");
+		strXML.append("<NODE>");
+		strXML.append("<PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+		strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+		strXML.append("<PFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></PFILENAME>");
+		strXML.append("<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
+		strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+		strXML.append("</NODE>");
+		strXML.append("</NODES>");
+		strXML.append("</ROOT>");
 		
-		return result.toString();
+		model.addAttribute("strXML", strXML);
+		
+		return "/admin/ezPortal/portalPortletImageUpload";
+		//return result.toString();
 	}
 	
 	/**

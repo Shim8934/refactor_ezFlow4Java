@@ -13,7 +13,7 @@
 		
 		<script type="text/javascript">
 			var guid = "{" + GetGUID() + "}";
-		    /* var g_xmlhttp; */
+		     var g_xmlhttp; 
 		    var sliderid = "<c:out value = '${sliderID}' />";
 		    var ReturnFunction;
 		    var pNoneActiveX = "YES";
@@ -21,36 +21,36 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            document.getElementById("file1").click();
 		        } else {
-// 		            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-// 		            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
-// 		            if (filepath == "") return;
+ 		            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+ 		            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+ 		            if (filepath == "") return;
 	
-// 		            var strBase64 = ezUtil.DownloadToBase64(filepath);
-// 		            ezUtil = null;
+ 		            var strBase64 = ezUtil.DownloadToBase64(filepath);
+ 		            ezUtil = null;
 	
-// 		            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
-// 		            var temp = ezUtil.GetImageSize(filepath);
-// 		            ezUtil = null;
+ 		            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+ 		            var temp = ezUtil.GetImageSize(filepath);
+ 		            ezUtil = null;
 	
-// 		            imageWidth = temp.split("*")[0];
-// 		            imageHeight = temp.split("*")[1];
-// 		            tempfilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
-// 		            var strXML = "<IMAGE><OLDFILENAME>" + tempfilename + "</OLDFILENAME><FILENAME>" + guid + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+ 		            imageWidth = temp.split("*")[0];
+ 		            imageHeight = temp.split("*")[1];
+ 		            tempfilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+ 		            var strXML = "<IMAGE><OLDFILENAME>" + tempfilename + "</OLDFILENAME><FILENAME>" + guid + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
 	
-// 		            g_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-// 		            g_xmlhttp.open("POST", "aspx/UploadSliderImage.aspx?mode=SLIDERIMAGE", true);
-// 		            g_xmlhttp.onreadystatechange = changeSliderImage_end;
-// 		            g_xmlhttp.send(strXML);
+ 		            g_xmlhttp = createXMLHttpRequest();
+ 		            g_xmlhttp.open("POST", "/ezPersonal/uploadSliderImage.do?mode=SLIDERIMAGE", true);
+ 		            g_xmlhttp.onreadystatechange = changeSliderImage_end;
+ 		            g_xmlhttp.send(strXML);
 		        }
 		    }
 	
-		    /* function changeSliderImage_end() {
-		        if (g_xmlhttp.readyState != 4) {
+		     function changeSliderImage_end() {
+		        /* if (g_xmlhttp.readyState != 4) {
 		        	return;
-		        }
+		        } */
 	
 		        UploadSliderImage.src = g_xmlhttp.responseText;
-		    } */
+		    } 
 	
 		    function btn_AttachAdd_onclick() {
 		        var extension = document.getElementById("file1").value.split('.');
@@ -64,9 +64,11 @@
 	
 		        
 		        var frm = document.getElementById('form');
-	            var form = new FormData(frm);
+	            //var form = new FormData(frm);
+	            frm.action = "/admin/ezPersonal/saveSliderImage.do?mode=SLIDERIMAGE";
+		        frm.submit();
 		        
-		        $.ajax({
+		  /*        $.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/saveSliderImage.do",
 		        	async : false,
@@ -76,13 +78,13 @@
 		        	success : function (result) {
 		        		retrunvalue(result);
 		        	}
-		        });
+		        });  */
 		        document.form.file1.value = "";
 		    }
 		    
 		    var xml;
-		    function retrunvalue(result) {
-		        xml = result;
+		    function returnvalue(result) {
+		        xml = loadXMLString(result);
 		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		        for (var i = 0; i < nodes.length; i++) {
 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
@@ -297,7 +299,7 @@
 	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
 	        <input type="hidden" name="boardid" id="boardid" />
 	        <input type="hidden" name="maxsize" id="maxsize" />
-	        <input type="hidden" name="mode" id="mode" value="sliderImage"/>
+	        <input type="hidden" name="mode" id="mode" value="SLIDERIMAGE"/>
 	        <input type="hidden" name="cnt" id="cnt" />
 	        <input type="hidden" name="mailgubun" id="mailgubun" />
 	    </form>

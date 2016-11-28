@@ -1,12 +1,19 @@
 package egovframework.ezEKP.ezPersonal.web;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.PrivateKey;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -23,10 +30,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 import org.w3c.dom.Document;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -42,6 +52,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -93,6 +104,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzPortalAdminService")
+	private EzPortalAdminService ezPortalAdminService;
 	
 	@Autowired
     private LocaleResolver localeResolver;
@@ -1004,4 +1018,107 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("filePath2", filePath2);
 		return "/ezPersonal/persPhotoUploadByUser";
 	}
+	
+	/**
+	 * 초기화면 관리자 슬라이드이미지 IE9 이미지 업로드 실행 함수
+	 */
+	@RequestMapping(value = "/ezPersonal/uploadSliderImage.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadSliderImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("uploadSliderImage Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		logger.debug("xmlStr="+xmlStr);
+		String mode = "";
+		
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+	
+		String realPath = req.getServletContext().getRealPath("");
+		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode;
+		
+		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
+		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
+		
+		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
+		
+		byte[] byt = Base64.decode(imageData);
+		String savePath = pServerPath + commonUtil.separator + pUniqueName;
+		
+		if (new File(savePath).exists()) {
+			new File(savePath).delete();
+		}
+		
+		InputStream myInputStream = new ByteArrayInputStream(byt);
+		
+		writeUploadedFile(myInputStream, pUniqueName, pServerPath);
+		
+		if (mode.equals("SLIDERIMAGE")) {
+			BufferedImage bi = ImageIO.read(new File(savePath));	
+			String pSaveName = UUID.randomUUID().toString() + ".jpg";
+			BufferedImage bufferedImage = new BufferedImage(467, 200, bi.getType());
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, 467, 200, null);
+
+			ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
+			//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
+
+			File file1 = new File(savePath);
+			if (file1.exists()) {
+				FileUtils.deleteQuietly(file1);
+			}
+			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+		} else {
+			logger.debug("path="+config.getProperty("upload_portal.ROOT") + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
+			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+		}
+	}
+	
+	 protected void writeUploadedFile(InputStream stream, String newName, String stordFilePath) throws Exception {
+			
+			OutputStream bos = null;
+			String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
+			
+			try {
+			    File cFile = new File(stordFilePathReal);
+		
+			    if (!cFile.isDirectory()) {
+					boolean _flag = cFile.mkdir();
+					if (!_flag) {
+					    throw new IOException("Directory creation Failed ");
+					}
+			    }
+		
+			    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		
+			    int bytesRead = 0;
+			    byte[] buffer = new byte[BUFF_SIZE];
+		
+			    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+			    	bos.write(buffer, 0, bytesRead);
+			    }
+			} catch (FileNotFoundException fnfe) {
+				logger.debug("fnfe: {}", fnfe);
+			} catch (IOException ioe) {
+				logger.debug("ioe: {}", ioe);
+			} catch (Exception e) {
+				logger.debug("e: {}", e);
+			} finally {
+			    if (bos != null) {
+					try {
+					    bos.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+			    if (stream != null) {
+					try {
+					    stream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+			}
+	    }
 }

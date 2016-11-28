@@ -273,6 +273,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleGet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("scheduleGet Start");
+		logger.debug("xmlStr="+xmlStr);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String reVal = "";
 		String resID = "";
@@ -498,9 +500,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			 e.printStackTrace();
 		}
-			logger.debug("reVal="+reVal.toString());
-			return reVal.toString();
-		}
+		logger.debug("scheduleGet End");
+		logger.debug("reVal="+reVal.toString());
+		return reVal.toString();
+	}
 	
 	
 	/**
