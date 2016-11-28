@@ -14,17 +14,9 @@
 		
 		<script type="text/javascript">
 			var ReturnFunction;
-/* 			Date.prototype.yyyymmdd = function()
-			{
-			    var yyyy = this.getFullYear().toString();
-			    var mm = (this.getMonth() + 1).toString();
-			    var dd = this.getDate().toString();
 
-
-			    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
-			} */
 			var date = new Date();
-alert(date);
+
 		    $(document).ready(function () {
 		        try {
 		            ReturnFunction = parent.select_best_dialogArguments[1];
@@ -88,7 +80,6 @@ alert(date);
 	            	data : {type : "INS", userID : pid, deptID : pDeptID, term : date.getFullYear().toString() + "-" + document.getElementById("Sel_Month").value},
 	            	dataType : "text",
 	            	success : function (result) {
-alert(result);
 	            		if (result != "OK") {
 			                alert("<spring:message code = 'ezPersonal.t00005' />");
 			            } else {
