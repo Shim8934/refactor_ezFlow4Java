@@ -497,29 +497,32 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
-		if (result.getItemSeq() == 0) {
-			labelPollTitle = egovMessageSource.getMessage("ezPersonal.t385", locale);
-		} else {
-			if (userInfo.getLang().equals("2") && result.getPollTitle2() != null && !result.getPollTitle2().equals("")) {
-				labelPollTitle = result.getPollTitle2();
+		if (result != null) {
+			if (result.getItemSeq() == 0) {
+				labelPollTitle = egovMessageSource.getMessage("ezPersonal.t385", locale);
 			} else {
-				labelPollTitle = result.getPollTitle();
-			}
-			
-			pollSeq = String.valueOf(result.getItemSeq());
-			int count = Integer.parseInt(result.getPollSelectionCount());
-			
-			for (int i=0; i<count; i++) {
-				answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
-			}
-			
-			literalAnswer = answer;
-			
-			if (result.getResult() == 0) {
+				if (userInfo.getLang().equals("2") && result.getPollTitle2() != null && !result.getPollTitle2().equals("")) {
+					labelPollTitle = result.getPollTitle2();
+				} else {
+					labelPollTitle = result.getPollTitle();
+				}
 				
-			} else {
+				pollSeq = String.valueOf(result.getItemSeq());
+				int count = Integer.parseInt(result.getPollSelectionCount());
 				
+				for (int i=0; i<count; i++) {
+					answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+				}
+				
+				literalAnswer = answer;
+				
+				if (result.getResult() == 0) {
+					
+				} else {
+					
+				}
 			}
+	
 		}
 		
 		model.addAttribute("userInfo", userInfo);

@@ -1123,6 +1123,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRead.do")
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		logger.debug("scheduleRead Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useIE11Browser = "";
@@ -1206,6 +1207,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				endDateVal = req.getParameter("endDate").trim();
 			}
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
+			
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
 				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID());
 			}

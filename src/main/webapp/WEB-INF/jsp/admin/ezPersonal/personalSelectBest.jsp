@@ -14,9 +14,9 @@
 		
 		<script type="text/javascript">
 			var ReturnFunction;
-	
+
 			var date = new Date();
-			
+
 		    $(document).ready(function () {
 		        try {
 		            ReturnFunction = parent.select_best_dialogArguments[1];
@@ -40,8 +40,7 @@
 		            }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "",
-		                "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
+		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:660px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
 	
 		            if (typeof (rtnValue) != "undefined") {
 		                pid = rtnValue.split(":")[0];
@@ -109,7 +108,7 @@
 	        <table class="content">
 	             <tr>
 	                <th style="width:100px; text-align:center"><spring:message code = 'ezPersonal.t275' /></th>
-	                <td style="width:150px; text-align:center">
+	                <td style="width:150px; text-align:center"> ${nowYear}
 	                    <c:out value = '${fn:substring(date, 0, 4) }' /> <spring:message code = 'ezPersonal.t290' />&nbsp; 
 	                    <select id="Sel_Month">
 	                        <option value="1">1 </option>

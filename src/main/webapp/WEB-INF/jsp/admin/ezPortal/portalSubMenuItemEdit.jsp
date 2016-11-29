@@ -328,12 +328,11 @@
 
 		var ImageState = "";
 		function changeNormalImage() {
-		    //if (CrossYN() || (pNoneActiveX=="YES")) {
+		    if (CrossYN() || (pNoneActiveX=="YES")) {
 		        ImageState = "Normal";
 		        document.getElementById('mode').value = "SubMenu";
 		        document.form.file1.click();
-		   /* }
-		    else {
+		   } else {
 		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
 		        var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
 		        if (filepath == "") return;
@@ -349,11 +348,11 @@
 		        imageHeight = temp.split("*")[1];
 
 		        var strXML = "<IMAGE><OLDFILENAME>" + txtNormalImage.src.substr(txtNormalImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
-		        g_xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		        g_xmlhttp.open("POST", "UploadMenuImage.aspx?mode=Menu", true);
+		        g_xmlhttp = createXMLHttpRequest();
+		        g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Menu", true);
 		        g_xmlhttp.onreadystatechange = changeNormalImage_end;
 		        g_xmlhttp.send(strXML);
-		    }*/
+		    }
 		}
 		function changeNormalImage_end() {
 		    if (g_xmlhttp.readystate != 4) return;
@@ -363,12 +362,11 @@
 		}
 
 		function changeOverImage() {
-		    //if (CrossYN() || (pNoneActiveX == "YES")) {
+		    if (CrossYN() || (pNoneActiveX == "YES")) {
 		        ImageState = "Over";
 		        document.getElementById('mode').value = "SubMenu";
 		        document.form.file1.click();
-		    /*}
-		    else {
+		    } else {
 		        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
 		        var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
 		        if (filepath == "") return;
@@ -385,14 +383,14 @@
 
 		        var strXML = "<IMAGE><OLDFILENAME>" + txtOverImage.src.substr(txtOverImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
 
-		        g_xmlhttp.open("POST", "UploadMenuImage.aspx?mode=Menu", true);
+		        g_xmlhttp.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Menu", true);
 		        g_xmlhttp.onreadystatechange = changeOverImage_end;
 		        g_xmlhttp.send(strXML);
-		    }*/
+		    }
 		}
 
 		function changeOverImage_end() {
-		    if (g_xmlhttp.readystate != 4) return;
+		    //if (g_xmlhttp.readystate != 4) return;
 		    txtOverImage.src = g_xmlhttp.responseText;
 		    txtOverImage.style.display = "";
 		    g_Dirty = true;

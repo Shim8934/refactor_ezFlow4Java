@@ -922,9 +922,9 @@ function SaveSchedule_onClick( cmd , resItem) {
 		
 //		if(!CrossYN())
 //		{
-		    
+
 		if (!setApprovFlag) {
-		    window_onUnload();
+		    //window_onUnload();
 		    window.close();
 		}
 		//}

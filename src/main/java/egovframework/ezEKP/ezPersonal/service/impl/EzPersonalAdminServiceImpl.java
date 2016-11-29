@@ -346,13 +346,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void setEmpMonth(String type, String userID, String deptID, String term) throws Exception {
+	public void setEmpMonth(String type, String userID, String deptID, String term, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pType", type);
 		map.put("v_pUserID", userID);
 		map.put("v_pDeptID", deptID);
 		map.put("v_pTerm", term);
-		
+		map.put("tenantID", tenantID);
 		ezPersonalAdminDAO.setEmployeeMonth(map);
 		
 	}

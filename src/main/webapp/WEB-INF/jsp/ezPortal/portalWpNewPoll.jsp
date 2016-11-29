@@ -13,7 +13,7 @@
    				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="더보기"></span></div>
   				<div class="pollcont">
  	 				<c:choose>
-  						<c:when test="${not empty pPollItemSeq}">
+  						<c:when test="${pPollItemSeq != 0}">
   							<p class="qusetion">
    								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span style="margin-left:3px">${pPollTitle }</span>
     						</p>

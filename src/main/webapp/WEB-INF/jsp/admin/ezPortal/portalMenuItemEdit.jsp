@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		var imageWidth = "${imageWidth}";
 		var imageHeight = "${imageHeight}";
@@ -379,13 +380,35 @@
 
 		function changeOverImage() {
 		        ImageState = "Over";
-		        document.getElementById('mode').value = "Menu";
-		        //document.getElementById('mode').value = "PHOTO";
-		        document.form.file1.click();
-		  
+		        
+		        if (CrossYN()) {
+					document.getElementById('mode').value = "Menu";
+					document.form.file1.click();	
+				} else {
+					 var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+				     var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+				     if (filepath == "") return;
+
+				     var strBase64 = ezUtil.DownloadToBase64(filepath);
+				     ezUtil = null;
+
+				     var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+				     var temp = ezUtil.GetImageSize(filepath);
+				     ezUtil = null;
+
+				     imageWidth = temp.split("*")[0];
+				     imageHeight = temp.split("*")[1];
+
+				     var strXML = "<IMAGE><OLDFILENAME>" + txtOverImage.src.substr(txtOverImage.src.lastIndexOf("/") + 1) + "</OLDFILENAME><FILENAME>" + filepath.substr(filepath.lastIndexOf("\\") + 1) + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+
+				     g_xmlhttp2 = createXMLHttpRequest();
+				     g_xmlhttp2.open("POST", "/admin/ezPortal/uploadMenuImage.do?mode=Menu", true);
+				     g_xmlhttp2.onreadystatechange = changeOverImage_end;
+				     g_xmlhttp2.send(strXML);
+				}
 		}
 		function changeOverImage_end() {
-		    if (g_xmlhttp2.readyState != 4) return;
+		    //if (g_xmlhttp2.readyState != 4) return;
 		    txtOverImage.src = g_xmlhttp2.responseText;
 		    txtOverImage.style.display = "";
 		    g_Dirty = true;
@@ -399,7 +422,9 @@
 		            else
 		                alert("<spring:message code='ezPortal.t414'/>");
 		        }
-		        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+		        //document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+		        document.getElementById("cnt").value = $("input[name=file1]")[0].files[0].length;
+		        
 		        var frm = document.getElementById('form');
 		        frm.action = "/admin/ezPortal/portletImageUpload.do?mode=Menu";
 		        frm.submit();
