@@ -124,7 +124,6 @@
     			makePageSelPage();
     		});
     		
-    		
     		if (url != "") { 
 				window.location.href = url;
     		}

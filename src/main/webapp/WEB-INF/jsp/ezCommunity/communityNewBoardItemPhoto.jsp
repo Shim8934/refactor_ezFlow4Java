@@ -22,10 +22,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<c:if test="${isCrossBrowser == true}">
+			<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
 			<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
 			<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
 		</c:if>
@@ -35,7 +36,7 @@
 			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
 			<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
 		</c:if>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/composeappt.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
@@ -91,9 +92,7 @@
 // 		    var _hasattach = "<c:out value = '${_hasattach}' />";
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
-		    //사진올리기 중복 클릭 방지
-		    var delay = 1000;
-		    var submitted = false;
+		    
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
 		    }
@@ -316,7 +315,7 @@
 		            
 		            return;
 		        }
-							if(unloadflag =="1")
+		        
 		        var strXML = "";
 		        var newID = "";
 		        var pStartDate = GetStartDate();
@@ -362,11 +361,20 @@
 		        if (pStartDate == "" && pReservedItem == "TRUE") {
 		            strParentWriteDate = "";
 		        }
-	
+
 		        if (typeof (pAttachListXml) == "string") {
-		            pAttachListXml = loadXMLString(pAttachListXml);
+		        	<c:choose>
+			        	<c:when test="${isCrossBrowser != true}">
+				        	var parser = new DOMParser();
+				        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
+				            parser = null;
+		            	</c:when>
+		            	<c:otherwise>
+		            		pAttachListXml = loadXMLString(pAttachListXml);
+		            	</c:otherwise>
+		            </c:choose>
 		        }
-	
+		        
 		        var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
 		        
 		        for(var i=xmldomNodes.length; i>0; i--) {
@@ -457,23 +465,38 @@
 		            }
 		        }
 	
-		        if (pDocID != "") {
-		            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-		        }
 		        
-		        JSleep(1000);
-		        var strBody = message.GetEditorContent();
-		        
-		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-		        } else {
-		            if (pDocID == "") {
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-		            } else {
-		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-		            }
-		        }
+		        <c:choose>
+			        <c:when test="${isCrossBrowser != true}">
+				        if (pDocID != "") {
+				            message.SetEditorContent(message.SetEditorContent(message.GetEditorContent() + "<hr>" + docContent.document.body.innerHTML)";
+				        }
+				        
+				        JSleep(1000);
+				        var strBody = message.GetEditorContent();
+				        
+			        	strBody = ConvertHTMLtoMHT(message.GetEditorContent());
+		        	</c:when>
+		        	<c:otherwise>
+			        	if (pDocID != "") {
+				            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
+				        }
+				        
+				        JSleep(1000);
+				        var strBody = message.GetEditorContent();
+				        
+			        	if (trim_Cross(strBody) != "" || pDocID == "") {
+				            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				        } else {
+				            if (pDocID == "") {
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+				            } else {
+				                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+				            }
+				        }
+		        	</c:otherwise>
+		        </c:choose>
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);	
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");	
@@ -586,18 +609,6 @@
 		        }
 							
 		        idDatepicker.vtLocalEndDate = AddDate(idDatepicker.vtLocalDate, temp);			
-		    }
-						
-		    function LoadFromPC() {
-		        if(gubun!="3") {
-		            pModeOld = "loadpc";		   
-	
-		            var returnValue = pzFormProc.FileOpenDlg("");
-		            
-		            if( returnValue==false ) {						
-		                pModeOld = "";
-		            }
-		        }	
 		    }
 	
 		    function SelectBoard() {
@@ -828,7 +839,7 @@
 		    function FieldsAvailable() {
 		    }
 	
-		    function btn_AttachSelect_onclick() {
+		    /* function btn_AttachSelect_onclick() {
 		        document.getElementById('mode').value = "ATT";
 		        document.form.file1.click();
 		    }
@@ -878,7 +889,7 @@
 		        } else {
 		            alert("<spring:message code = 'ezCommunity.lhj07' />");
 		        }
-		    }
+		    } */
 	
 		    function returnvalue(strXML) {
 		        var xml = loadXMLString(strXML);
@@ -940,14 +951,6 @@
 
 		        return strRet;
 		    }
-
-		    function submitCheck() {
-
-		    	  if(submitted == true) { return; }
-		    	  setTimeout ('SaveItem()', delay);
-
-		    	  submitted = true;
-		    	}
 		    
 		    function GetFileName() {
 		        var strRet = "";
@@ -978,7 +981,7 @@
 	    		<td style="height:20px">
 	    			<div id="menu">
 		        		<ul>
-		          			<li><span  onClick="submitCheck();"><spring:message code = 'ezCommunity.t155' /></span></li>
+		          			<li><span  onClick="SaveItem();"><spring:message code = 'ezCommunity.t155' /></span></li>
 		          			<li style="display:none"><span  onClick="PreviewItem();"><spring:message code = 'ezCommunity.t1167' /></span></li>
 		        		</ul>
 	      			</div>
@@ -1098,8 +1101,19 @@
 				        </tr>
 				        <tr>
             				<th><spring:message code = 'ezCommunity.t1218' /></th>
-							<td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>
-							<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
+            				<c:choose>
+			                	<c:when test="${isCrossBrowser != true}">
+			                		<script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>
+			                		<td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>
+									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
+			                	</c:when>
+			                	<c:otherwise>
+			                		<td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>
+									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
+			                	</c:otherwise>
+		                	</c:choose>
+	                	
+							
       					</tr>
       				</table>
       			</td>

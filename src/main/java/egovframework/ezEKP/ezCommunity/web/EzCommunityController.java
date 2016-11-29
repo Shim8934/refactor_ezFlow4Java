@@ -253,6 +253,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.commMakeOk(userInfo, clubVO, request, response);
 	}
 	
+	//TODO 이효진 수정중
 	/**
 	 * 커뮤니티만들기 IE9 로고 업로드
 	 */
@@ -581,7 +582,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communitySearchBoardItem";
 	}
 	
-	//TODO 수정중
 	/**
 	 * 커뮤니티 검색화면 인쇄화면 호출 함수
 	 */
