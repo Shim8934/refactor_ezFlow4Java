@@ -118,6 +118,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalMain Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		String skinID = "1";
@@ -129,7 +130,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID(), locale);
 			
 			Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
-			
+			logger.debug("userPortalPage="+userPortalPage);
 			String pUserThemeUID = "";
 			if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
 				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
@@ -1351,95 +1352,104 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("wpNewPoll Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String votePoll = "";
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
 		String pPollResultContent = "";
-		
+		logger.debug("userID="+userInfo.getId());
+		logger.debug("userCompanyID="+userInfo.getCompanyID());
 		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
-		if (result.getResult() > 0) {
-			if (result.getResult() != 0) {
-				votePoll = Integer.toString(result.getResult());
-			}
-		} else {
-			votePoll = "";
-		}
-		
-		if (result.getItemSeq() > 0) {
-			if (result.getItemSeq() != 0) {
-				pPollItemSeq = result.getItemSeq();
-				int maxAns = Integer.parseInt(result.getPollSelectionCount());
-				pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
-				
-				List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq);
-				
-				int pTotalCnt = 0;
-				for (int i=0; i<list.size(); i++) {
-					pTotalCnt = pTotalCnt + list.get(i).getCount();
+		if (result != null) {
+			if (result.getResult() > 0) {
+				if (result.getResult() != 0) {
+					votePoll = Integer.toString(result.getResult());
 				}
-				//ArrayList pPollResultList
-				List<Integer> pPollResultList = new ArrayList<Integer>();
-				int resultPrintCnt = 0;
-				for (int i=0; i<list.size(); i++) {
-					if (i >= 4) {
-						break;
-					} else {
-						float poolRstCnt = list.get(i).getCount();
-						float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
-						String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
-						if (strAnswer.length() > 11) {
-							strAnswer = strAnswer.substring(0, 11) + "…";
-						}
-						pPollResultList.add(list.get(i).getResult());
-						pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + list.get(i).getResult() + "." + strAnswer + " (" + 
-						"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-						"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-						"</dl>";
-                        resultPrintCnt++;
+			} else {
+				votePoll = "";
+			}	
+			
+			if (result.getItemSeq() > 0) {
+				if (result.getItemSeq() != 0) {
+					pPollItemSeq = result.getItemSeq();
+					int maxAns = Integer.parseInt(result.getPollSelectionCount());
+					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+					
+					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq);
+					
+					int pTotalCnt = 0;
+					for (int i=0; i<list.size(); i++) {
+						pTotalCnt = pTotalCnt + list.get(i).getCount();
 					}
-				}
-				
-				if (resultPrintCnt < 4) {
-					for (int i=1; i<=maxAns; i++) {
-						boolean isDuplication = false;
-						for (int j=0; j<pPollResultList.size(); j++) {
-							if (i == pPollResultList.get(j)) {
-								isDuplication = true;
-								break;
+					//ArrayList pPollResultList
+					List<Integer> pPollResultList = new ArrayList<Integer>();
+					int resultPrintCnt = 0;
+					for (int i=0; i<list.size(); i++) {
+						if (i >= 4) {
+							break;
+						} else {
+							float poolRstCnt = list.get(i).getCount();
+							float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
+							String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+							if (strAnswer.length() > 11) {
+								strAnswer = strAnswer.substring(0, 11) + "…";
 							}
+							pPollResultList.add(list.get(i).getResult());
+							pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + list.get(i).getResult() + "." + strAnswer + " (" + 
+							"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+							"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+							"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+							"</dl>";
+	                        resultPrintCnt++;
 						}
-						if (!isDuplication) {
-							String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
-							if (strAnswer.length() > 13) {
-								strAnswer = strAnswer.substring(0, 13) + "...";
+					}
+					
+					if (resultPrintCnt < 4) {
+						for (int i=1; i<=maxAns; i++) {
+							boolean isDuplication = false;
+							for (int j=0; j<pPollResultList.size(); j++) {
+								if (i == pPollResultList.get(j)) {
+									isDuplication = true;
+									break;
+								}
 							}
-							pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + i + "." + strAnswer + " (" +
-                                    						"<strong>0</strong>명/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-															resultPrintCnt++;
+							if (!isDuplication) {
+								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+								if (strAnswer.length() > 13) {
+									strAnswer = strAnswer.substring(0, 13) + "...";
+								}
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + i + "." + strAnswer + " (" +
+	                                    						"<strong>0</strong>명/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+																resultPrintCnt++;
+								
+								if (resultPrintCnt == 4) {
+									break;
+								}
+							}
 							
-							if (resultPrintCnt == 4) {
-								break;
-							}
 						}
-						
 					}
 				}
 			}
+			
 		}
+
+		
+		
 		
 		model.addAttribute("pPollTitle", pPollTitle);
 		model.addAttribute("votePoll", votePoll);
 		model.addAttribute("pPollItemSeq", pPollItemSeq);
 		model.addAttribute("pPollResultContent", pPollResultContent);
 		model.addAttribute("userLang", userInfo.getLang());
-		return "/ezPortal/portalWpNewPoll";
 		
+		logger.debug("wpNewPoll End");
+		return "/ezPortal/portalWpNewPoll";
 	}
 	
 	/**
