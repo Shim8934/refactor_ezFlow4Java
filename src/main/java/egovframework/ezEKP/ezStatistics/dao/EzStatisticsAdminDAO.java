@@ -36,4 +36,34 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getFormInfo", statApprVO);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getCountList_D(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getCountList_D", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getTimeList_U(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getTimeList_U", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getSearchList_F(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getSearchList_F", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getSearchList_D(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getSearchList_D", statApprVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getSearchList_U(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getSearchList_U", statApprVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<StatDailyDocCountLogVO> getMainList(StatApprVO statApprVO) {
+		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getMainList", statApprVO);
+	}
+
 }

@@ -253,8 +253,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int userCheck(String cn) throws Exception {
-		return ezOrganAdminDao.userCheck(cn);
+	public int userCheck(String cn, int tenantID) throws Exception {
+		return ezOrganAdminDao.userCheck(cn, tenantID);
 	}
 	
 	@Override
@@ -317,6 +317,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void insertDBData_user(OrganUserVO vo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+        map.put("v_TENANT_ID", vo.getTenantId());		
 		map.put("v_CN", vo.getCn());
 		map.put("v_DISPLAYNAME", vo.getDisplayName());
 		map.put("v_DISPLAYNAME2", vo.getDisplayName2());

@@ -133,7 +133,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				selectFlag = req.getParameter("flag");
 			}
 			
-			String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
+			String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 			xmlRet = commonUtil.convertStringToDocument(ret);
 			
 			if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
@@ -155,7 +155,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				
 				ezResourceAdminService.addClsData(strXML.toString());
 				
-				ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
+				ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 				
 				xmlRet = commonUtil.convertStringToDocument(ret);
 				

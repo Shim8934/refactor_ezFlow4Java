@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title><spring:message code='ezStatistics.t1033'/></title>
+		<title><spring:message code='ezStatistics.t1038'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
 	    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
@@ -13,6 +13,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezStatistics/control_Cross/TreeView.js"></script>
+	    <script type="text/javascript" src="/js/ezStatistics/control_Cross/ListView_list.js"></script>
 	    <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
 	    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
 	    <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
@@ -47,10 +48,8 @@
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            xmlTree = loadXMLString(xmlHTTP.responseText);
-	            
 	            var treeXML = loadXMLFile("/xml/organtree_config3.xml");
 	            document.getElementById('TreeView').innerHTML = "";
-	            
 	            var treeView = new TreeView();
 	            treeView.SetConfig(treeXML);
 	            treeView.SetID("FromTreeView");
@@ -61,14 +60,13 @@
 	            treeView.DataBind("TreeView");
 	        }
 	
-	        var selDeptID;
 	        function TreeViewNodeClick() {
 	            var nodeIdx = 1;
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var selnode = treeView.GetSelectNode();
-	            selDeptID = selnode.GetNodeData("CN");
-	            getapprovalstatistics();
+	            DeptID = selnode.GetNodeData("CN");
+	            displayUserList(DeptID);
 	        }
 	
 	        function RequestData(pNodeID, pTreeID) {
@@ -80,6 +78,7 @@
 	        }
 	
 	        function GetDeptSubTreeInfo(deptID, TreeIdx) {
+	        	
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlRtn = createXmlDom();
 	            var xmlpara = createXmlDom();
@@ -104,10 +103,47 @@
 	                }
 	            }
 	
-	
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+	        }
+	
+	        function displayUserList(DeptID) {
+	        	$.ajax({
+	    			type : "POST",
+	    			dataType : "text",
+	    			async : false,
+	    			url : "/ezOrgan/getDeptMemberList.do",
+	    			data : {
+	    					deptID   : DeptID, 
+	    					cell 	 : "displayName;description",
+	    					prop     : "department;displayName;description;title",
+	    					type 	 : "user"
+	    					},
+	    			success: function(text){
+		                var retXml = createXmlDom();
+		            	
+		                if (document.getElementById("UserList").innerHTML != "")
+		                    document.getElementById("UserList").innerHTML = "";
+		
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+		                if (text != "") {
+		                    var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+		                        headerData.documentElement.appendChild(xmlRtn);
+		                }
+		                var pUserList = new ListView();
+		                pUserList.SetID("lvUserList");
+		                pUserList.SetRowOnClick("getapprovalstatistics");
+		                pUserList.SetSelectFlag(false);
+		                pUserList.SetHeightFree(true);
+		                pUserList.DataSource(headerData);
+		                pUserList.DataBind("UserList");
+	    			},
+	    			error: function() {
+		                OpenAlertUI(linealt2);
+	    			}
+	    		});
 	        }
 	
 	        var isfirst = true;
@@ -150,35 +186,33 @@
 	        }
 	
 	        function getapprovalstatistics() {
+	            var pUserList = new ListView();
+	            pUserList.LoadFromID("lvUserList");
+	            
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
-					url : "/ezStatistics/getStatisticsAprMon.do",
+					url : "/ezStatistics/getStatisticsAprTime.do",
 					data : {
 							company : "",
 							date : document.getElementById("selyear").value,
-							searchID : selDeptID,
-							type : "DEPT"
+							searchID : GetAttribute(pUserList.GetSelectedRows()[0],"DATA2"),
+							type : "USER"
 							},
 					success: function(text) {
 						event_getapprovalstatistics(text);
-					}        			
+					}
 				});
 	        }
 	
 	        function event_getapprovalstatistics(text) {
                 document.getElementById("statisticstable").innerHTML = "";
                 document.getElementById("colorbox").style.display = "";
-                if ("${userInfo.lang}" == "2") {
-                    document.getElementById("eng").style.display = "inline-block";
-                    document.getElementById("colordra").innerHTML = "Draft";
-                    document.getElementById("colorapp").innerHTML = "Approval";
-                    document.getElementById("colorpro").innerHTML = "Progress";
-                    document.getElementById("colorrej").innerHTML = "Rejecting";
-                }
+
                 var resultxml = loadXMLString(text);
 
+                document.getElementById("seluser").style.display = "none";
                 if (SelectNodes(resultxml, "DATA/ROW").length == 0) {
                     document.getElementById("nodata").style.display = "";
                     document.getElementById("viewdata").style.display = "none";
@@ -197,44 +231,17 @@
                 var _Tr2 = document.createElement("TR");
                 var _Tr3 = document.createElement("TR");
                 var _Tr4 = document.createElement("TR");
-                var _Tr5 = document.createElement("TR");
-                var _Tr6 = document.createElement("TR");
                 var ticks = "<spring:message code='ezStatistics.t218'/>".split(";");
 
                 for (var i = 1; i < 13; i++) {
                     var _Th = document.createElement("TH");
-                    _Th.colSpan = "4";
                     _Th.innerHTML = ticks[i - 1];
-
-                    var _Th2 = document.createElement("TH");
-                    _Th2.style.whiteSpace = "normal";
-                    _Th2.innerHTML = "<spring:message code='ezStatistics.t1026'/>";
-
-                    var _Th3 = document.createElement("TH");
-                    _Th3.style.whiteSpace = "normal";
-                    _Th3.innerHTML = "<spring:message code='ezStatistics.t1027'/>";
-
-                    var _Th4 = document.createElement("TH");
-                    _Th4.style.whiteSpace = "normal";
-                    _Th4.innerHTML = "<spring:message code='ezStatistics.t1028'/>";
-
-                    var _Th5 = document.createElement("TH");
-                    _Th5.style.whiteSpace = "normal";
-                    _Th5.innerHTML = "<spring:message code='ezStatistics.t1029'/>";
 
                     if (i < 7) {
                         _Tr.appendChild(_Th);
-                        _Tr2.appendChild(_Th2);
-                        _Tr2.appendChild(_Th3);
-                        _Tr2.appendChild(_Th4);
-                        _Tr2.appendChild(_Th5);
                     }
                     else {
-                        _Tr3.appendChild(_Th);
-                        _Tr4.appendChild(_Th2);
-                        _Tr4.appendChild(_Th3);
-                        _Tr4.appendChild(_Th4);
-                        _Tr4.appendChild(_Th5);
+                        _Tr2.appendChild(_Th);
                     }
                 }
 
@@ -249,48 +256,21 @@
                         mon = j + 1;
 
                     var _Td = document.createElement("TD");
-                    var _Td2 = document.createElement("TD");
-                    var _Td3 = document.createElement("TD");
-                    var _Td4 = document.createElement("TD");
 
                     if (regdate == document.getElementById("selyear").value + "-" + mon && (i == 0 || formid == getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i - 1], "CN")))) {
                         _Td = document.createElement("TD");
-                        _Td.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DRAFTCNT"));
-
-                        _Td2 = document.createElement("TD");
-                        _Td2.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DRAFTENDCNT"))
-
-                        _Td3 = document.createElement("TD");
-                        _Td3.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DRAFTINGCNT"));
-
-                        _Td4 = document.createElement("TD");
-                        _Td4.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "RETURNCNT"));
+                        _Td.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DTIME"));
                     }
                     else {
                         _Td = document.createElement("TD");
                         _Td.innerHTML = "0";
-
-                        _Td2 = document.createElement("TD");
-                        _Td2.innerHTML = "0";
-
-                        _Td3 = document.createElement("TD");
-                        _Td3.innerHTML = "0";
-
-                        _Td4 = document.createElement("TD");
-                        _Td4.innerHTML = "0";
                         i--;
                     }
                     if (j < 6) {
-                        _Tr5.appendChild(_Td);
-                        _Tr5.appendChild(_Td2);
-                        _Tr5.appendChild(_Td3);
-                        _Tr5.appendChild(_Td4);
+                        _Tr3.appendChild(_Td);
                     }
                     else {
-                        _Tr6.appendChild(_Td);
-                        _Tr6.appendChild(_Td2);
-                        _Tr6.appendChild(_Td3);
-                        _Tr6.appendChild(_Td4);
+                        _Tr4.appendChild(_Td);
                     }
                     j++;
                 }
@@ -299,64 +279,42 @@
                     _Td = document.createElement("TD");
                     _Td.innerHTML = "0";
 
-                    _Td2 = document.createElement("TD");
-                    _Td2.innerHTML = "0";
-
-                    _Td3 = document.createElement("TD");
-                    _Td3.innerHTML = "0";
-
-                    _Td4 = document.createElement("TD");
-                    _Td4.innerHTML = "0";
-
                     if (j < 6) {
-                        _Tr5.appendChild(_Td);
-                        _Tr5.appendChild(_Td2);
-                        _Tr5.appendChild(_Td3);
-                        _Tr5.appendChild(_Td4);
+                        _Tr3.appendChild(_Td);
                     }
                     else {
-                        _Tr6.appendChild(_Td);
-                        _Tr6.appendChild(_Td2);
-                        _Tr6.appendChild(_Td3);
-                        _Tr6.appendChild(_Td4);
+                        _Tr4.appendChild(_Td);
                     }
                 }
-                _Tr5.id = "mon";
-                _Tr6.id = "mon2";
+                _Tr3.id = "mon";
+                _Tr4.id = "mon2";
 
                 _Table.appendChild(_Tr);
-                _Table.appendChild(_Tr2);
-                _Table.appendChild(_Tr5);
                 _Table.appendChild(_Tr3);
+                _Table.appendChild(_Tr2);
                 _Table.appendChild(_Tr4);
-                _Table.appendChild(_Tr6);
 
                 document.getElementById("statisticstable").innerHTML = _Table.outerHTML;
                 drawingchart();
 	        }
 	
-	        function drawingchart() {
+	        function drawingchart(obj) {
 	            document.getElementById("statisticschart").innerHTML = "";
+	            document.getElementById("chartdiv").style.display = "";
 	
 	            var data = new Array();
 	            var data2 = new Array();
 	            var data3 = new Array();
 	            var data4 = new Array();
 	            for (var i = 0; i < 6; i++) {
-	                data.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon"))[i * 4])));
-	                data2.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon"))[i * 4 + 1])));
-	                data3.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon"))[i * 4 + 2])));
-	                data4.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon"))[i * 4 + 3])));
+	                data.push(parseFloat(getnodetext(GetChildNodes(document.getElementById("mon"))[i])));
 	            }
 	            for (var i = 0; i < 6; i++) {
-	                data.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon2"))[i * 4])));
-	                data2.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon2"))[i * 4 + 1])));
-	                data3.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon2"))[i * 4 + 2])));
-	                data4.push(parseInt(getnodetext(GetChildNodes(document.getElementById("mon2"))[i * 4 + 3])));
+	                data.push(parseFloat(getnodetext(GetChildNodes(document.getElementById("mon2"))[i])));
 	            }
 	
 	            var ticks = "<spring:message code='ezStatistics.t218'/>".split(";");
-	            plot2 = $.jqplot('statisticschart', [data, data2, data3, data4], {
+	            plot2 = $.jqplot('statisticschart', [data], {
 	                animate: true,
 	                seriesDefaults: {
 	                    renderer: $.jqplot.BarRenderer,
@@ -389,21 +347,29 @@
 	        function search_press(e) {
 	            if (window.event) {
 	                if (window.event.keyCode == 13) {
-	                    searchdept();
+	                    search();
 	                }
 	            }
 	            else {
 	                if (e.which == 13)
-	                    searchdept();
+	                    search();
 	            }
 	        }
 	
+	        function search() {
+	            if (document.getElementById("searchopt").value == "1")
+	                searchuser();
+	            else
+	                searchdept();
+	        }
+	
 	        function searchdept() {
-	            if (deptkeyword.value == "") {
+	            if (keyword.value == "") {
 	                alert("<spring:message code='ezStatistics.t1010'/>");
-	                deptkeyword.focus();
+	                keyword.focus();
 	                return;
 	            }
+	            var xmlDom = createXmlDom();
 	            
 	            $.ajax({
             		type : "POST",
@@ -411,7 +377,7 @@
             		async : false,
             		url : "/ezOrgan/getSearchList.do",
             		data : {
-            			search : "displayname::" + deptkeyword.value,
+            			search : "displayname::" + keyword.value,
             			cell   : "extensionAttribute3;displayName;extensionAttribute9",
             			prop   : "",
             			type   : "group"
@@ -425,7 +391,7 @@
             			xmlDom = null;
             		}
             	});
-	
+	            
 	            if (adCount == 0) {
 	                alert("<spring:message code='ezStatistics.t1011'/>");
 	                return;
@@ -433,6 +399,7 @@
 	            else if (adCount == 1) {
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
+	
 	                var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDom.getElementsByTagName("DATA2").item(0)) + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
 	                
 	
@@ -471,7 +438,7 @@
 	                        } catch (e) { }
 	                    }
 	
-	                    var treeXML = loadXMLFile("/myoffice/common/organtree_config3.xml");
+	                    var treeXML = loadXMLFile("/xml/organtree_config3.xml");
 	                    document.getElementById('TreeView').innerHTML = "";
 	
 	                    var treeView = new TreeView();
@@ -489,19 +456,86 @@
 	                }
 	            }
 	        }
+	
+	        function searchuser() {
+	            if (keyword.value == "") {
+	                alert("<spring:message code='ezStatistics.t1010'/>");
+	                keyword.focus();
+	                return;
+	            }
+	            
+	            $.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : true,
+            		url : "/ezOrgan/getSearchList.do",
+            		data : {
+            			search : "displayname::" + keyword.value,
+            			cell   : "displayName;description",
+            			prop   : "department;displayName;description;title",
+            			type   : "user"
+            		},
+            		success: function(text) {
+            			event_displayUserList2(text);
+            		}
+            	});
+	        }
+	        function event_displayUserList2(text) {
+                if (loadXMLString(text).getElementsByTagName("ROW").length == 0)
+                    alert("<spring:message code='ezStatistics.t1016'/>");
+                else {
+                    var retXml = createXmlDom();
+
+                    if (document.getElementById("UserList").innerHTML != "")
+                        document.getElementById("UserList").innerHTML = "";
+
+                    var headerData = createXmlDom();
+                    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+                    if (text != "") {
+                        var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+                        headerData.documentElement.appendChild(xmlRtn);
+                    }
+                    var pUserList = new ListView();
+                    pUserList.SetID("lvUserList");
+                    pUserList.SetRowOnClick("getapprovalstatistics");
+                    pUserList.SetSelectFlag(false);
+                    pUserList.SetHeightFree(true);
+                    pUserList.DataSource(headerData);
+                    pUserList.DataBind("UserList");
+	            }
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code='ezStatistics.t1033'/></h1>
+	    <xml id="userlist_h" style="display: none">
+	    <LISTVIEWDATA>
+	    <HEADERS>
+	        <HEADER>
+	        <NAME><spring:message code='ezStatistics.t1017'/></NAME>
+	        <WIDTH>70</WIDTH>
+	        </HEADER>
+	        <HEADER>
+	        <NAME><spring:message code='ezStatistics.t113'/></NAME>
+	        <WIDTH>100</WIDTH>
+	        </HEADER>
+	    </HEADERS>
+	    <ROWS></ROWS>
+	    </LISTVIEWDATA>
+	</xml>
+	    <h1><spring:message code='ezStatistics.t1038'/></h1>
 	    <table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2; margin-bottom: 5px">
 	        <tr>
 	            <td style="width: 99%">
 	                <span id="topmenu" style="float: left; width: 500px"><spring:message code='ezStatistics.t1002'/> : 
 	            <select id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
-	       &nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
-	             <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
+	          &nbsp;&nbsp;
+	         <select id="searchopt">
+	             <option value="1"><spring:message code='ezStatistics.t1017'/></option>
+	             <option value="2"><spring:message code='ezStatistics.t113'/></option>
+	         </select>
+	                    <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
+	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
@@ -517,43 +551,32 @@
 	    <h2 id="ToTitle" class="receiver_tltype01" style="border:0px">
 	        <span style="min-width: 45px;"><spring:message code='ezStatistics.t1014'/></span>
 	    </h2>
-	  <table style="width: 1250px;height:680px ;border:1px solid #b6b6b6"> 
-	      <tr>
-	          <td style="vertical-align: top">
-	              <div style="width: 300px; height: 680px; overflow-x: auto; overflow-y: auto;border-right:1px solid #b6b6b6;" id="TreeView"></div>
-	          </td>
-	          <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
-	                <div id="viewdata">
+	   <table style="width: 1150px;height:630px ;border:1px solid #b6b6b6"> 
+	        <tr>
+	            <td style="vertical-align:top">                
+	                <div style="width:310px;height:300px;overflow-x:auto;overflow-y:auto;border-right:1px solid #b6b6b6;" id="TreeView" ></div>
+	                <div id="UserList" style="Width: 310px; Height: 330px; overflow: auto;border-right:1px solid #b6b6b6"></div>
+	            </td>
+	            <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
+	                <div id="viewdata" style="display:none">
 	                    <div id="colorbox" class="statistics_addition" style="display: none">
 	                        <dl>
 	                            <dt class="colorbox_wrap"><span style="background: #4bb2c5" class="colorbox"></span></dt>
-	                            <dd id="colordra" class="additiontext"><spring:message code='ezStatistics.t1026'/></dd>
-	                        </dl>
-	                        <dl>
-	                            <dt class="colorbox_wrap"><span style="background: #eaa229" class="colorbox"></span></dt>
-	                            <dd id="colorapp" class="additiontext"><spring:message code='ezStatistics.t1027'/></dd>
-	                        </dl>
-	                        <dl>
-	                            <dt class="colorbox_wrap"><span style="background: #c2b483" class="colorbox"></span></dt>
-	                            <dd id="colorpro" class="additiontext"><spring:message code='ezStatistics.t1028'/></dd>
-	                        </dl>
-	                        <dl>
-	                            <dt class="colorbox_wrap"><span style="background: #58966f" class="colorbox"></span></dt>
-	                            <dd id="colorrej" class="additiontext"><spring:message code='ezStatistics.t1029'/></dd>
+	                            <dd class="additiontext"><spring:message code='ezStatistics.t1035'/>(<spring:message code='ezStatistics.t57'/>)</dd>
 	                        </dl>
 	                    </div>
-	                    <div id="chartdiv" style="width: 100%; text-align: center;padding-top:20px">
-	                        <div id="statisticschart" style="width: 900px; height: 490px; float: left; font-size: 16px;">
+	                    <div id="chartdiv" style="width: 100%; text-align: center; display: none;">
+	                        <div id="statisticschart" style="width: 800px; height: 500px; float: left; font-size: 16px;">
 	                        </div>
 	                    </div>
-	                     <div id="eng" style="display: none; float: left">
-	                         <br />
-	                         <span style="padding-right: 5px">D = Draft</span>
-	                         <span style="padding-right: 5px">A = Approval</span>
-	                         <span style="padding-right: 5px">P = Progress</span>
-	                         <span>R = Rejecting</span>
-	                     </div>
 	                    <div id="statisticstable"></div>
+	                </div>
+	                <div id="seluser" class="statistics_select" style="margin: 0 auto">
+	                    <dl class="statistics_txt">
+	                        <dt><spring:message code='ezStatistics.t1019'/></dt>
+	                        <dd><spring:message code='ezStatistics.t1020'/><br>
+	                            <spring:message code='ezStatistics.t1021'/></dd>
+	                    </dl>
 	                </div>
 	                <div id="nodata" class="statistics_nodata" style="display: none; margin: 0 auto">
 	                    <dl class="statistics_txt">
@@ -561,9 +584,9 @@
 	                        <dd><spring:message code='ezStatistics.t1009'/></dd>
 	                    </dl>
 	                </div>
-	          </td>
-	      </tr>
-	  </table>
+	            </td>
+	        </tr>
+	    </table>
 	    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/excelExportOut.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
 	        <input type="hidden" id="userAgent" name="userAgent" value="">

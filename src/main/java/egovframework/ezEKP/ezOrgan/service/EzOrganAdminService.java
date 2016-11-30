@@ -33,7 +33,7 @@ public interface EzOrganAdminService {
 	
 	public int companyChildCheck(String cn) throws Exception;
 	
-	public int userCheck(String cn) throws Exception;
+	public int userCheck(String cn, int tenantID) throws Exception;
 	
 	public int getRetireListCount(int pPage, int pPageRow) throws Exception;
 	

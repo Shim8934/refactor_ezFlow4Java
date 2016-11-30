@@ -72,16 +72,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	private CommonUtil commonUtil;
 
 	@Override
-	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType) throws Exception {
+	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_TreeType", treeType);
+		map.put("tenantID", tenantID);
 		return ezResourceDAO.getAdmSubClsTree(map);
 	}
 
 	@Override
-	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID) throws Exception {
+	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
 		map.put("v_P_CompanyID", companyID);
@@ -90,6 +91,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PCOMID", comID);
 		map.put("v_PDEPTID", deptID);
 		map.put("v_PUSERID", userID);
+		map.put("tenantID", tenantID);
 		return ezResourceDAO.getSubClsTree(map);
 	}
 	
@@ -2178,7 +2180,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return childBrd;
 	}
 	
-	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID) throws Exception {
+	public String getSubClsTree(String xmlStr, String langStr, String pComID, String pDeptID, String pUserID, int tenantID) throws Exception {
         String strUserID = "";
         String strDeptPath = "";
         String returnXML = "";
@@ -2198,9 +2200,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         
         List<ResGetAdmSubClsTreeVO> resGetAdmSubClsTree = new ArrayList<ResGetAdmSubClsTreeVO>();
         if(strAccessFlag.equals("0")) {
-        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType);
+        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType, tenantID);
         } else {
-        	resGetAdmSubClsTree = getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID);
+        	resGetAdmSubClsTree = getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID, tenantID);
         }
 
         StringBuilder strTreeStyle = new StringBuilder();

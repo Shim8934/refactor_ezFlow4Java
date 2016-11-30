@@ -41,6 +41,8 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_F(statApprVO);
 			} else if (statApprVO.getType().equals("DEPT")) {
 				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_D(statApprVO);
+			} else if (statApprVO.getType().equals("USER")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getTimeList_U(statApprVO);
 			}
 			
 			StringBuffer sb = new StringBuffer();
@@ -74,6 +76,8 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				docCountLogVOs = ezStatisticsAdminDAO.getCountList_F(statApprVO);
 			} else if (statApprVO.getType().equals("USER")) {
 				docCountLogVOs = ezStatisticsAdminDAO.getCountList_U(statApprVO);
+			} else if (statApprVO.getType().equals("DEPT")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getCountList_D(statApprVO);
 			}
 			
 			StringBuffer sb = new StringBuffer();
@@ -98,8 +102,10 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		String rtnValue = "";
 		String subQuery = "";
 		
-		statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
-		statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
+		if (statApprVO.getDate() != null && !statApprVO.getDate().equals("")) {
+			statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
+			statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
+		}
 		
 		try {
 			if (statApprVO.getType().equals("1")) {
@@ -127,6 +133,65 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			rtnValue = memberlist2.toString();
 		} catch (Exception e) {
 			LOGGER.error("EzStatisticsAdminDAO :: getFormInfo :: " + e.getMessage());
+			rtnValue = "ERROR";
+		}
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getSearchList(StatApprVO statApprVO) {
+		String rtnValue = "";
+		
+		try {
+			List<StatDailyDocCountLogVO> docCountLogVOs = new ArrayList<StatDailyDocCountLogVO>();
+			
+			if (statApprVO.getType().equals("FORM")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getSearchList_F(statApprVO);
+			} else if (statApprVO.getType().equals("DEPT")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getSearchList_D(statApprVO);
+			} else if (statApprVO.getType().equals("USER")) {
+				docCountLogVOs = ezStatisticsAdminDAO.getSearchList_U(statApprVO);
+			}
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("<DATA>");
+			
+			for (int i = 0; i < docCountLogVOs.size(); i++) {
+				sb.append(commonUtil.getQueryResult(docCountLogVOs.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			rtnValue = sb.toString();
+		} catch (Exception e) {
+			LOGGER.error("EzStatisticsAdminDAO :: getSearchList :: " + e.getMessage());
+			rtnValue = "ERROR";
+		}
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getMainList(StatApprVO statApprVO) {
+		String rtnValue = "";
+		
+		statApprVO.setStartDate(statApprVO.getDate() + "-01-01");
+		statApprVO.setEndDate(statApprVO.getDate() + "-12-31");
+		
+		try {
+			List<StatDailyDocCountLogVO> docCountLogVOs = ezStatisticsAdminDAO.getMainList(statApprVO);
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("<DATA>");
+			
+			for (int i = 0; i < docCountLogVOs.size(); i++) {
+				sb.append(commonUtil.getQueryResult(docCountLogVOs.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			rtnValue = sb.toString();
+		} catch (Exception e) {
+			LOGGER.error("EzStatisticsAdminDAO :: getMainList :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		

@@ -1613,7 +1613,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         	pFileName = request.getParameter("fileName");
         }
         
-        if(pType.equals("QUESTION")){
+        try {
+            if(pType.equals("QUESTION")){
                 if (!pFileName.equals("")){
                     pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+commonUtil.separator+pFileName;
                 }else{
@@ -1624,7 +1625,11 @@ public class EzQuestionController extends EgovFileMngUtil {
                 if (pFilePath != null && pFilePath != ""){
                     ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
                 }
-        }
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+   
 	}
 
 	/**

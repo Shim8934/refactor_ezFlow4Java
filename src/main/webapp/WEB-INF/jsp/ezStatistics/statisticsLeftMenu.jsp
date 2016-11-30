@@ -79,19 +79,19 @@
 	            url = "/ezStatistics/statisticsTimeForm.do";
 	            break;
 	        case 10:
-	            url = "Approval/ezStatistics_Time_Dept.aspx";
+	            url = "/ezStatistics/statisticsTimeDept.do";
 	            break;
 	        case 11:
-	            url = "Approval/ezStatistics_Time_User.aspx";
+	            url = "/ezStatistics/statisticsTimeUser.do";
 	            break;
 	        case 12:
-	            url = "Approval/ezStatistics_Form.aspx";
+	            url = "/ezStatistics/statisticsForm.do";
 	            break;
 	        case 13:
-	            url = "Approval/ezStatistics_Dept.aspx";
+	            url = "/ezStatistics/statisticsDept.do";
 	            break;
 	        case 14:
-	            url = "Approval/ezStatistics_User.aspx";
+	            url = "/ezStatistics/statisticsUser.do";
 	            break;
 	        case 15:
 	            url = "/ezStatistics/statisticsApprMain.do";
