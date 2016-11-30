@@ -1,7 +1,10 @@
 ﻿var g_progresswin;
 var g_fileList;
 var pAttachListXml="";
-
+var pMode="";
+var AttachLimit="";
+var pBoardID="";
+var PhotoBoard="";
 
 var AttachProgressFlag = false;
 var fileArray = new Array();
@@ -558,7 +561,6 @@ function beginAttachAdd_Photo()
 		    catch(e)
 		    {
 		    }
-		    
 		    alert(g_fileList[i] + " " + strLang24 + "");
 		    txtPhotoFile.value = "";
 		    return;
@@ -600,12 +602,15 @@ function AttachFileList_Photo()
 	var strRet = "";
 	var filepath = "";
 	
-	if (loadXMLString(pAttachListXml) == false) {
-		xmldom_attachlist = null;	
+	if (typeof (pAttachListXml) == "string")
+		xmldom_attachlist = loadXMLString(pAttachListXml);
+	else
+		xmldom_attachlist = loadXMLString(getXmlString(pAttachListXml));	    
+
+	if (getXmlString(pAttachListXml) == "") {
 		return "";
 	}
 
-	xmldom_attachlist = loadXMLString(pAttachListXml)
 	var xmldomNodes = xmldom_attachlist.selectNodes("LISTVIEWDATA/ROWS/ROW/CELL/DATA2");
 	
 	for(i=0;i<xmldomNodes.length;i++)

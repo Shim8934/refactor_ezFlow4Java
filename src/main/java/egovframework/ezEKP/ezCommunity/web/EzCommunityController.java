@@ -874,7 +874,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String boardID = prefix;
 		String uploadSN = "{" + guid + "}";
-		String fileName = fileTitle + "." + ext;
+		String fileName = "." + ext;
 		
 		fileName = fileName.replace("+", "%2b");
 		fileName = fileName.replace(";", "%3b");
@@ -895,7 +895,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
-		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
+		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + fileName;
 		String mapPath = dirPath + "tempUploadFile" + commonUtil.separator;
 		
 		InputStream stream = null;
@@ -950,7 +950,7 @@ public class EzCommunityController extends EgovFileMngUtil{
             
             BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-            ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + "_" + fileName));
+            ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + fileName));
 		}
 		
 		returnVal = "OK_" + uploadSN + fileName;
@@ -3785,6 +3785,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do")
 	@ResponseBody
 	public String saveItemPhoto (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("saveItemPhoto started.");
+		LOGGER.debug(xmlData);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 		String mode = request.getParameter("mode");
@@ -3796,6 +3798,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String fileName = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 		String itemID = xmlDom.getElementsByTagName("ITEMID").item(0).getTextContent();
+		
+		LOGGER.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
 		
 		String[] attachArray = attachList.split(";");
         String[] smallArray = smallName.split(";");
@@ -3822,6 +3826,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
         	}
         }
+        
+        LOGGER.debug("saveItemPhoto ended.");
         
 		return ret;
 	}

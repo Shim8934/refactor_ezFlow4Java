@@ -43,9 +43,9 @@
 		
 		<script type="text/javascript">
 			var pUploadFilePath = "<c:out value = '${pUploadPath}' />";
-			var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
+			pBoardID = "<c:out value = '${boardInfo.boardID}' />";
 			var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
-			var pMode = "<c:out value = '${pMode}'/>";
+			pMode = "<c:out value = '${pMode}'/>";
 			var pModeOld = "";
 			var MHTLoadComplete = "";
 			var SSUserID = "<c:out value = '${userInfo.id}' />";
@@ -73,9 +73,9 @@
 			var strItemLevel = "<c:out value = '${item.itemLevel}' />";
 			var strWriterTitle = "<c:out value = '${extensionAttribute3}' />";
 			
-			var pAttachListXml = "";
+			pAttachListXml = "";
 			
-			var AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
+			AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
 			var pReservedItem = "<c:out value = '${pReservedItem}' />";
 			
 			var strUserRank = "<c:out value = '${userInfo.title1}' />";
@@ -88,7 +88,7 @@
 			var pUrl = "<c:out value = '${pUrl}' />";
 			var pDocID = "<c:out value = '${pDocID}' />";
 			var unloadflag = "0";
-		    var PhotoBoard = "Y";
+		    PhotoBoard = "Y";
 // 		    var _hasattach = "<c:out value = '${_hasattach}' />";
 // 		    var NewGuid = "<c:out value = '${NewGuid}' />";
 		    var flag = false;
@@ -361,24 +361,21 @@
 		        if (pStartDate == "" && pReservedItem == "TRUE") {
 		            strParentWriteDate = "";
 		        }
-
+		        
 		        if (typeof (pAttachListXml) == "string") {
-		        	<c:choose>
-			        	<c:when test="${isCrossBrowser != true}">
-				        	var parser = new DOMParser();
-				        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
-				            parser = null;
-		            	</c:when>
-		            	<c:otherwise>
-		            		pAttachListXml = loadXMLString(pAttachListXml);
-		            	</c:otherwise>
-		            </c:choose>
-		        }
-		        
-		        var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
-		        
-		        for(var i=xmldomNodes.length; i>0; i--) {
-		            newID += "{" + GetGUID().toUpperCase() + "};";
+		        	<c:if test="${isCrossBrowser != true}">
+			        	var parser = new DOMParser();
+			        	pAttachListXml = parser.parseFromString(pAttachListXml, "text/xml");
+			            parser = null;
+			            
+			            newID += "{" + GetGUID().toUpperCase() + "};";
+	            	</c:if>
+		        } else {
+		        	var xmldomNodes = SelectNodes(pAttachListXml,"LISTVIEWDATA/ROWS/ROW");
+            		
+    		        for(var i=xmldomNodes.length; i>0; i--) {
+    		            newID += "{" + GetGUID().toUpperCase() + "};";
+    		        }
 		        }
 		        
 		        var xmlDom = createXmlDom();
@@ -448,7 +445,7 @@
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE3", strUserRank);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE32", strUserRank2);
-            	    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", MakeXMLString(GetFileName()) );
+            	    createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE4", MakeXMLString(GetFileName()));
 		        }
 							
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", MakeXMLString(GetSmallUrl()));
@@ -464,39 +461,36 @@
 		                obj[i].removeAttribute('className');
 		            }
 		        }
-	
 		        
-		        <c:choose>
-			        <c:when test="${isCrossBrowser != true}">
-				        if (pDocID != "") {
-				            message.SetEditorContent(message.SetEditorContent(message.GetEditorContent() + "<hr>" + docContent.document.body.innerHTML)";
-				        }
-				        
-				        JSleep(1000);
-				        var strBody = message.GetEditorContent();
-				        
-			        	strBody = ConvertHTMLtoMHT(message.GetEditorContent());
-		        	</c:when>
-		        	<c:otherwise>
-			        	if (pDocID != "") {
-				            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
-				        }
-				        
-				        JSleep(1000);
-				        var strBody = message.GetEditorContent();
-				        
-			        	if (trim_Cross(strBody) != "" || pDocID == "") {
-				            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-				        } else {
-				            if (pDocID == "") {
-				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-				            } else {
-				                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-				            }
-				        }
-		        	</c:otherwise>
-		        </c:choose>
+		        <c:if test="${isCrossBrowser != true}">
+			        if (pDocID != "") {
+			            message.SetEditorContent(message.SetEditorContent(message.GetEditorContent() + "<hr>" + docContent.document.body.innerHTML));
+			        }
+			        
+			        JSleep(1000);
+			        var strBody = message.GetEditorContent();
+			        
+		        	strBody = ConvertHTMLtoMHT(message.GetEditorContent());
+	        	</c:if>
+	        	<c:if test="${isCrossBrowser == true}">
+		        	if (pDocID != "") {
+			            message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
+			        }
+			        
+			        JSleep(1000);
+			        var strBody = message.GetEditorContent();
+			        
+		        	if (trim_Cross(strBody) != "" || pDocID == "") {
+			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+			        } else {
+			            if (pDocID == "") {
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+			            } else {
+			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+			            }
+			        }
+	        	</c:if>
 		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);	
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD","");	
@@ -838,59 +832,7 @@
 	
 		    function FieldsAvailable() {
 		    }
-	
-		    /* function btn_AttachSelect_onclick() {
-		        document.getElementById('mode').value = "ATT";
-		        document.form.file1.click();
-		    }
 		    
-		    function btn_AttachAdd_onclick() {
-		        if (document.form.file1.value != "") {
-		            if (document.getElementById("form").file1.files.length < 6) {
-		                document.getElementById('txtPhotoFile').value = document.form.file1.value;
-		            } else {
-		                alert("<spring:message code = 'ezCommunity.lhj06' />");
-		                
-		                return;
-		            }
-		            
-		            
-		            document.getElementById("boardID").value = pBoardID;
-		            document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
-		            document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-// 		            var frm = document.getElementById('form');
-// 		            frm.action = "/ezCommunity/upload.do";
-// 		            frm.submit();
-// 		            document.form.file1.value = "";
-		            
-	                if( document.getElementById("cnt").value > 0) {
-	                	var formData = new FormData();
-						
-	                	$.each($('#file1')[0].files, function(i, file) {          
-	                		 formData.append('file-' + i, file);
-	                     });
-	                	
-	                	formData.append('mode',  document.getElementById('mode').value);
-	                	formData.append("boardID", document.getElementById("boardID").value);
-	                	formData.append("maxSize", document.getElementById("maxSize").value);
-	                	formData.append("cnt", document.getElementById("cnt").value);
-	                	
-	    				$.ajax({
-	    					url : "/ezCommunity/upload.do",
-							type : "POST",
-							processData : false,
-							contentType : false,
-							data : formData,
-							success : function(data){
-								returnvalue(data);
-							}
-		 				});
-	                }
-		        } else {
-		            alert("<spring:message code = 'ezCommunity.lhj07' />");
-		        }
-		    } */
-	
 		    function returnvalue(strXML) {
 		        var xml = loadXMLString(strXML);
 		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -923,7 +865,13 @@
 		        var strRet = "";
 		        var filepath = "";
 		        
-		        xmldom_attachlist = loadXMLString(getXmlString(pAttachListXml));
+				<c:if test="${isCrossBrowser == true}">
+					xmldom_attachlist = pAttachListXml;
+				</c:if>
+				
+				<c:if test="${isCrossBrowser != true}">
+					xmldom_attachlist = loadXMLString(getXmlString(pAttachListXml));
+				</c:if>
 		        
 		        if(xmldom_attachlist == false) {
 		            xmldom_attachlist = null;
@@ -956,7 +904,14 @@
 		        var strRet = "";
 		        
 		        if (typeof (pAttachListXml) == "string") {
-		            pAttachListXml = loadXMLString(pAttachListXml);
+		        	<c:if test="${isCrossBrowser == true}">
+		        		pAttachListXml = pAttachListXml;
+					</c:if>
+					
+					<c:if test="${isCrossBrowser != true}">
+						pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
+					</c:if>
+		            
 		        }
 		        //else
 		        //    pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
@@ -1106,6 +1061,7 @@
 			                		<script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>
 			                		<td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>
 									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_PhotoAttachAdd_onclick()" ><spring:message code = 'ezCommunity.t1177' /></span></a></td>
+									<div id="lstAttachLink" style="display:none;OVERFLOW:auto;HEIGHT:50px;">&nbsp;</div>
 			                	</c:when>
 			                	<c:otherwise>
 			                		<td class="pos1"><INPUT type="text" id="txtPhotoFile" style="WIDTH:100%" readonly="readonly" ></td>

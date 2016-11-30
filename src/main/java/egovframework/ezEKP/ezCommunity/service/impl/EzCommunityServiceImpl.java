@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.antlr.runtime.debug.DebugEventHub;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -2503,8 +2504,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pDocPassWord", item.getDocPassword());
 
 		if (pMode.equals("modify")) {
+			LOGGER.debug("modifyItem");
 			ezCommunityDAO.brdUpdateItem(map);
 		} else {
+			LOGGER.debug("newItem");
 			ezCommunityDAO.brdNewItem(map);
 		}
 		
@@ -4757,6 +4760,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	public boolean saveAttachmentsInfo(CommunityBoardItemVO item, String pUploadFilePath, String realPath) throws Exception {
+		LOGGER.debug("saveItemAttachInfo started. ");
+		
 		String fileSize = "";
 		String filePath = "";
 		Map<String, Object> map;
@@ -4767,6 +4772,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String thumbPath = item.getExtensionAttribute5();
 		String fileName = item.getExtensionAttribute4();
 
+		LOGGER.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
+		
 		try {
 			if (!attachments.substring(attachments.length() - 1).equals(";")) {
 				attachments += ";";
