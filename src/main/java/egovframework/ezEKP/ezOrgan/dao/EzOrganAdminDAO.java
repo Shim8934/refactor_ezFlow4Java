@@ -355,9 +355,70 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception{
 		update("EzOrganAdminDAO.updateDBData_dept", vo);
 	}
+
+    private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
+        logger.debug("updateDBData_userForJMocha started. tenantId=" + vo.getTenantId() + ",userId=" + vo.getCn());
+
+        String param1 = "tenantId=" + vo.getTenantId();
+        String param2 = "userId=" + URLEncoder.encode(vo.getCn(), "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(vo.getDisplayName(), "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(vo.getDisplayName2(), "UTF-8");
+        String param5 = "title=" + URLEncoder.encode(vo.getTitle(), "UTF-8");
+        String param6 = "title2=" + URLEncoder.encode(vo.getTitle2(), "UTF-8");
+        String param7 = "telephoneNumber=" + URLEncoder.encode(vo.getTelephoneNumber(), "UTF-8");
+        String param8 = "homePhone=" + URLEncoder.encode(vo.getHomePhone(), "UTF-8");
+        String param9 = "facsimileTelephoneNumber=" + URLEncoder.encode(vo.getFacsimileTelephoneNumber(), "UTF-8");
+        String param10 = "mobile=" + URLEncoder.encode(vo.getMobile(), "UTF-8");
+        String param11 = "postalCode=" + URLEncoder.encode(vo.getPostalCode(), "UTF-8");
+        String param12 = "streetAddress=" + URLEncoder.encode(vo.getStreetAddress(), "UTF-8");
+        String param13 = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
+        String param14 = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");
+        String param15 = "extensionAttribute102=" + URLEncoder.encode(vo.getExtensionAttribute102(), "UTF-8");
+        String param16 = "extensionAttribute14=" + URLEncoder.encode(vo.getExtensionAttribute14(), "UTF-8");
+        String param17 = "extensionAttribute15=" + URLEncoder.encode(vo.getExtensionAttribute15(), "UTF-8");
+        String param18 = "birth=" + URLEncoder.encode(vo.getBirth(), "UTF-8");
+        String param19 = "birthType=" + URLEncoder.encode(vo.getBirthType(), "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
+                    + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
+                    + "&" + param13 + "&" + param14 + "&" + param15 + "&" + param16 + "&" + param17 + "&" + param18
+                    + "&" + param19;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("updateDBData_userForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Updating User Failed!");
+        }        
+    }
 	
-	public void updateDBData_user(OrganUserVO vo) throws Exception{
-		update("EzOrganAdminDAO.updateDBData_user", vo);
+    private void updateDBData_userForLocal(OrganUserVO vo) throws Exception {
+        update("EzOrganAdminDAO.updateDBData_user", vo);
+    }
+	
+	public void updateDBData_user(OrganUserVO vo) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            updateDBData_userForJMocha(vo);
+        } else {
+            updateDBData_userForLocal(vo);
+        }       
 	}
 	
 	public void updateProperty(Map<String, Object> map) throws Exception{
@@ -367,9 +428,54 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
 		update("EzOrganAdminDAO.restoreRetireEntry", map);
 	}
+
+    private void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String userId = (String)map.get("v_CN");
+        String deleteClass = (String)map.get("v_CLASS");
+        
+        logger.debug("deleteDBDataForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",deleteClass=" + deleteClass);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteUser";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("deleteDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Deleting User Failed!");
+        }        
+    }
 	
-	public void deleteDBData(Map<String, Object> map) throws Exception{
-		delete("EzOrganAdminDAO.deleteDBData", map);
+    private void deleteDBDataForLocal(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData", map);
+    }
+	
+	public void deleteDBData(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            deleteDBDataForJMocha(map);
+        } else {
+            deleteDBDataForLocal(map);
+        }       
 	}
 
 	public void moveDBData(Map<String, Object> map) throws Exception{

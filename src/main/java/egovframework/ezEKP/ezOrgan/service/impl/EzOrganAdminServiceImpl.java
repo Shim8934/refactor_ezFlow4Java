@@ -352,11 +352,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void deleteDBData(String cn, String pClass) throws Exception {
+	public void deleteDBData(String cn, String pClass, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
+		map.put("v_TENANT_ID", tenantID);
 		
 		ezOrganAdminDao.deleteDBData(map);
 	}

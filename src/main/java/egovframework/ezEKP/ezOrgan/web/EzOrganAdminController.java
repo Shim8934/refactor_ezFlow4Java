@@ -195,6 +195,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@ResponseBody
 	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);	    
 	    
 		String cn = request.getParameter("cn");
 		String pClass = "group";
@@ -221,7 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
 				if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식그룹을 찾지 못해도 성공으로 봄.)
-					ezOrganAdminService.deleteDBData(cn, pClass);
+					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
 					result = "OK";
 				} else {
 					result = "EMAIL_ERROR";
@@ -573,10 +576,17 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
 	public void delUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("delUser started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
-		String domain = config.getProperty("config.DomainName");
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		// dhlee - end
 				
 		for (int i=0; i < cn.length; i++) {
@@ -588,7 +598,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
 				// 로컬 시스템 계정을 삭제한다.
-				ezOrganAdminService.deleteDBData(cn[i], "user");
+				ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정.
 				String groupAddr = null;
 				
@@ -598,7 +608,6 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 
 					if (rc == 0) {
 						// 사용자가 속한 부서의 Group Email 주소를 구한다.
-						LoginVO userInfo = commonUtil.userInfo(loginCookie);
 						OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), userInfo.getTenantId());
 						groupAddr = userVO.getDepartment() + "@" + domain;				
 						
@@ -617,7 +626,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 												
 				try {
 					// 로컬 시스템 계정을 삭제한다.
-					ezOrganAdminService.deleteDBData(cn[i], "user");
+					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
@@ -638,6 +647,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 			// dhlee - end
 		}		
+		
+		logger.debug("delUser ended.");
 	}
 	
 	/**
@@ -657,9 +668,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    
 		String result = "";		
 		
+		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 empty string 이다.
 		if (vo.getParentCn().equals("")) {		
 			ezOrganAdminService.updateDBData_user(vo);
 			result = "OK";
+		// 새로운 사용자를 등록한다.
 		} else {		    
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String cn = vo.getCn();
