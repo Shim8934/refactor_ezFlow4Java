@@ -178,8 +178,57 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
 	}
 
-	public int userCheck(String cn) throws Exception{
-		return (int) select("EzOrganAdminDAO.userCheck", cn);
+    private int userCheckForJMocha(String cn, int tenantID) throws Exception{
+        logger.debug("userCheckForJMocha started. cn=" + cn + ",tenantID=" + tenantID);
+        
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkUserExists";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("userCount")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("userCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;             
+    }
+	
+    private int userCheckForLocal(String cn, int tenantID) throws Exception{
+        return (int) select("EzOrganAdminDAO.userCheck", cn);
+    }
+	
+	public int userCheck(String cn, int tenantID) throws Exception{
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return userCheckForJMocha(cn, tenantID);
+        } else {
+            return userCheckForLocal(cn, tenantID);
+        }       
 	}
 	
 	public int getPermissionListCount(Map<String, Object> map) throws Exception{
@@ -205,8 +254,102 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.insertDBData_dept", map);
 	}
 
-	public void insertDBData_user(Map<String, Object> map) throws Exception{
-		insert("EzOrganAdminDAO.insertDBData_user", map);
+    private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String userId = (String)map.get("v_CN");
+        String displayName = (String)map.get("v_DISPLAYNAME");
+        String displayName2 = (String)map.get("v_DISPLAYNAME2");
+        String mail = (String)map.get("v_MAIL");
+        String mailNickName = (String)map.get("v_MAILNICKNAME");
+        String upnName = (String)map.get("v_UPNNAME");
+        String parentCn = (String)map.get("v_PARENTCN");
+        String title = (String)map.get("v_TITLE");
+        String title2 = (String)map.get("v_TITLE2");
+        String telephoneNumber = (String)map.get("v_TELEPHONE");
+        String homePhone = (String)map.get("v_HOMEPHONE");
+        String facsimileTelephoneNumber = (String)map.get("v_FAX");
+        String mobile = (String)map.get("v_MOBILE");
+        String postalCode = (String)map.get("v_POSTALCODE");
+        String streetAddress = (String)map.get("v_ADDRESS");
+        String extensionAttribute6 = (String)map.get("v_EXTATTR6");
+        String extensionAttribute10 = (String)map.get("v_EXTATTR10");
+        String extensionAttribute102 = (String)map.get("v_EXTATTR102");
+        String extensionAttribute14 = (String)map.get("v_EXTATTR14");
+        String extensionAttribute15 = (String)map.get("v_EXTATTR15");
+        String ldapPath = (String)map.get("v_LDAPPATH");
+        String birth = (String)map.get("v_BIRTH");
+        String birthType = (String)map.get("v_BIRTHTYPE");
+        String password = (String)map.get("v_PASS");
+        
+        logger.debug("insertDBData_userForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",parentCn=" + parentCn);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(displayName2, "UTF-8");
+        String param5 = "mail=" + URLEncoder.encode(mail, "UTF-8");
+        String param6 = "mailNickName=" + URLEncoder.encode(mailNickName, "UTF-8");
+        String param7 = "upnName=" + URLEncoder.encode(upnName, "UTF-8");
+        String param8 = "parentCn=" + URLEncoder.encode(parentCn, "UTF-8");
+        String param9 = "title=" + URLEncoder.encode(title, "UTF-8");
+        String param10 = "title2=" + URLEncoder.encode(title2, "UTF-8");
+        String param11 = "telephoneNumber=" + URLEncoder.encode(telephoneNumber, "UTF-8");
+        String param12 = "homePhone=" + URLEncoder.encode(homePhone, "UTF-8");
+        String param13 = "facsimileTelephoneNumber=" + URLEncoder.encode(facsimileTelephoneNumber, "UTF-8");
+        String param14 = "mobile=" + URLEncoder.encode(mobile, "UTF-8");
+        String param15 = "postalCode=" + URLEncoder.encode(postalCode, "UTF-8");
+        String param16 = "streetAddress=" + URLEncoder.encode(streetAddress, "UTF-8");
+        String param17 = "extensionAttribute6=" + URLEncoder.encode(extensionAttribute6, "UTF-8");
+        String param18 = "extensionAttribute10=" + URLEncoder.encode(extensionAttribute10, "UTF-8");
+        String param19 = "extensionAttribute102=" + URLEncoder.encode(extensionAttribute102, "UTF-8");
+        String param20 = "extensionAttribute14=" + URLEncoder.encode(extensionAttribute14, "UTF-8");
+        String param21 = "extensionAttribute15=" + URLEncoder.encode(extensionAttribute15, "UTF-8");
+        String param22 = "ldapPath=" + URLEncoder.encode(ldapPath, "UTF-8");
+        String param23 = "birth=" + URLEncoder.encode(birth, "UTF-8");
+        String param24 = "birthType=" + URLEncoder.encode(birthType, "UTF-8");
+        String param25 = "password=" + URLEncoder.encode(password, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
+                    + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
+                    + "&" + param13 + "&" + param14 + "&" + param15 + "&" + param16 + "&" + param17 + "&" + param18
+                    + "&" + param19 + "&" + param20 + "&" + param21 + "&" + param22 + "&" + param23 + "&" + param24
+                    + "&" + param25;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addUser";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("insertDBData_userForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Adding User Failed!");
+        }
+    }
+	
+    private void insertDBData_userForLocal(Map<String, Object> map) throws Exception {
+        insert("EzOrganAdminDAO.insertDBData_user", map);
+    }
+	
+	public void insertDBData_user(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            insertDBData_userForJMocha(map);
+        } else {
+            insertDBData_userForLocal(map);
+        }       
 	}
 	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception{

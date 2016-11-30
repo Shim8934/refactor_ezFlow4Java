@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +54,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class EzOrganAdminController extends EgovFileMngUtil{
 	
+    private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminController.class);
+            
 	@Autowired	
 	private CommonUtil commonUtil;
 	
@@ -641,17 +645,30 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveUserInfo(OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String result = "";
+	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("saveUserInfo started.");
+	    
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    int tenantID = userInfo.getTenantId();
+	    
+	    vo.setTenantId(tenantID);
+	    
+	    logger.debug("tenantID=" + tenantID);
+	    
+		String result = "";		
 		
 		if (vo.getParentCn().equals("")) {		
 			ezOrganAdminService.updateDBData_user(vo);
 			result = "OK";
-		} else {
-			String domain = config.getProperty("config.DomainName");
+		} else {		    
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String cn = vo.getCn();
 						
-			int cnt = ezOrganAdminService.userCheck(cn);
+			logger.debug("domain=" + domain + ",cn=" + cn);
+			
+			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
+			
+			logger.debug("cnt=" + cnt);
 			
 			if (cnt > 0) {
 				result = "PRE";
@@ -697,6 +714,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				// dhlee - end								
 			}
 		}
+		
+		logger.debug("saveUserInfo ended. result=" + result);
+		
 		return result;
 	}
 	
