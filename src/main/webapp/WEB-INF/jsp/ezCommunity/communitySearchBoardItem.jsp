@@ -820,9 +820,9 @@
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(strAbstract);
-				url += "&searchStart=" + searchStart;
-				url += "&searchEnd=" + searchEnd;
+				url += "&strAbstract=" + encodeURIComponent(strAbstract);
+				url += "&searchStart=" + encodeURIComponent(searchStart);
+				url += "&searchEnd=" + encodeURIComponent(searchEnd);
 				
 				window.open(url, "", "top=0, left=0, height=760px, width=1000px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 			}

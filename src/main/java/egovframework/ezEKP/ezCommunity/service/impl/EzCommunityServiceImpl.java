@@ -1542,8 +1542,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String imageSrc = request.getParameter("imageSrc");
 		MultipartFile logoFile = request.getFile("logo");
 		
-		LOGGER.debug("type : " + copType);
-		LOGGER.debug(imageSrc);
 		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
 		
 		if (!logoFile.isEmpty()) {

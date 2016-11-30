@@ -600,6 +600,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String searchEnd = request.getParameter("searchEnd");
 		String searchConfig = "";
 		
+		LOGGER.debug("title : " + title + ", writerName : " + writerName + ", strAbstract : " + strAbstract + ", searchStart : " + searchStart + ", searchEnd : " + searchEnd);
+		
 		if (!title.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1467", userInfo.getLocale()) + "'" + title + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
 		}
@@ -608,15 +610,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1469", userInfo.getLocale()) + "'" + writerName + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
 		}
 
-		if (strAbstract != null) {
+		if (!strAbstract.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1470", userInfo.getLocale()) + "'" + strAbstract + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
 		}
 		
-		if (searchStart != null && !searchStart.equals("")) {
+		if (!searchStart.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1471", userInfo.getLocale()) + "'" + searchStart.substring(0, 10) + "' " + egovMessageSource.getMessage("ezCommunity.t1472", userInfo.getLocale());
 		}
 		
-		if (searchEnd != null && !searchEnd.equals("")) {
+		if (!searchEnd.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1471", userInfo.getLocale()) + "'" + searchEnd.substring(0, 10) + "' " + egovMessageSource.getMessage("ezCommunity.t1473", userInfo.getLocale());
 		}
 		
@@ -624,7 +626,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
         String strXML = "";
 		
-		if (!title.equals("") || !writerName.equals("") || strAbstract != null || searchStart != null) {
+        if (!title.equals("") || !writerName.equals("") || !strAbstract.equals("") || !searchStart.equals("")) {
             strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, strAbstract, searchStart, searchEnd, 1, 1000, commonUtil.getMultiData(userInfo.getLang()));
         }
 		
