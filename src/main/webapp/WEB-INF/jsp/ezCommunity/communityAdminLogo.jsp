@@ -95,16 +95,18 @@
 				
 				function go() {
 				    if(window.parent.parent.opener != null) {
-						<c:if test="${isCrossBrowser == true}">
-							document.getElementById("imageSrc").value = window.parent.parent.opener.coplogo.src;
+				    	document.getElementById("imageSrc").value = window.parent.parent.opener.coplogo.src;
+				    	<c:if test="${isCrossBrowser == true}">
+							image.submit();
 						</c:if>
 							
-				        <c:if test="${isCrossBrowser == false}">
-				        	btn_AttachAdd_onclick();
+				        <c:if test="${isCrossBrowser != true}">
+				        	adminLogoUpload();
 				        </c:if>
+				    } else {
 				    }
 				    
-// 				    image.submit();   
+// 				       
 		        }
 
 		        //로고, 베너 등록 시 이미지 파일 확장자가 아닐 때 비교하는 함수 추가_2013.01.30
@@ -169,13 +171,15 @@
 		        
 		        <c:if test="${isCrossBrowser == false}">
 					var filesize = "";
+					var filepath = "";
+					var strBase64 = "";
 			        function btn_AttachAdd_onclick() {
 			            var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-			            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+			            filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
 			            
 			            if (filepath == "") return;
-		
-			            var strBase64 = ezUtil.DownloadToBase64(filepath);
+			            
+			            strBase64 = ezUtil.DownloadToBase64(filepath);
 			            filesize = ezUtil.getFileSize(filepath)
 			            ezUtil = null;
 		
@@ -188,19 +192,58 @@
 		
 			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
 			            
-			            document.getElementById("filename").innerText = fileName;
-			            			            			            
-			            $.ajax({
+			            document.getElementById("filename").innerHTML = fileName;
+			            
+			            var check = "false";
+			            var extension = filepath.split('.');
+			            check = compareExtension(check, extension[1]);
+
+			            if (check == "false") {
+			                alert("<spring:message code ='ezCommunity.lhj03' />");
+			                logo = "";
+			            }
+
+			            if (filepath != "") {
+			                window.parent.parent.opener.coplogo.src = filepath;
+			                window.parent.parent.opener.coplogo.style.visibility = "visible";
+			            } else {
+			                image.reset();
+			            }
+			        }
+			        
+			        function adminLogoUpload() {
+			        	var result;
+			        	var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+			            
+			            if (filepath == "") return;
+			            
+			            ezUtil = null;
+		
+			            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+			            var temp = ezUtil.GetImageSize(filepath);
+			            ezUtil = null;
+		
+			            imageWidth = temp.split("*")[0];
+			            imageHeight = temp.split("*")[1];
+		
+			            fileName = filepath.substr(filepath.lastIndexOf("\\") + 1);
+			            
+			           	$.ajax({
 			            	type : "POST",
-			            	url : "/ezCommunity/commAdminLogoUpload.do",
+			            	url : "/ezCommunity/adminLogoUpload.do",
 			            	async : false,
 			            	data : {
 			            		fileName : fileName,
-			            		fileData : strBase64
+			            		fileData : strBase64,
+			            		code : $("#code").val(),
+			            		type : $("#Type").val(),
+			            		imageSrc : $("#imageSrc").val()
 			            	},
 			            	dataType : "json",
 			            	success : function(result) {
-			            		
+			            		if (result.result == true) {
+			            			window.location.href = "/ezCommunity/adminLogoIE9Ok.do?code=" + $("#code").val();
+			            		}
 			            	}
 			            });
 			        }
@@ -211,7 +254,7 @@
 		<h1><spring:message code = 'ezCommunity.t2012' /></h1>
     	<div class="subtxt"><spring:message code = 'ezCommunity.t497' /></div> <br />
     	<form enctype="multipart/form-data" method="post" name="image" action="/ezCommunity/adminLogoOk.do">
-	        <input type="hidden" name="code" value="<c:out value = '${code}' />">
+	        <input type="hidden" name="code" id="code" value="<c:out value = '${code}' />">
 	        <input type="hidden" name="type" id="Type" value="">
 	        <input type="hidden" name="imageSrc" id="imageSrc" value="">
 	        <div class="subtxt">
@@ -221,9 +264,17 @@
 	            <tr>
 	                <th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t498' /></th>
 	                <td>
-	                    <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
-	                    <span id="filename" style="vertical-align:middle"></span>
-	                    <input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()">
+	                    
+	                    <c:if test="${isCrossBrowser == true}">
+	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    	<span id="filename" style="vertical-align:middle"></span>
+	                    	<input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()">
+	                    </c:if>
+	                    <c:if test="${isCrossBrowser == false}">
+	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachAdd_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    	<span id="filename" style="vertical-align:middle"></span>
+	                    	<input type="file" id="logo" name="logo" accept="image/*">
+	                    </c:if>
 	                </td>
 	            </tr>
 	        </table>

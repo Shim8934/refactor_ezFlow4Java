@@ -340,4 +340,6 @@ public interface EzCommunityService {
 	public void okNoSet(String flag, String code, String cID) throws Exception;
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath) throws Exception;
+
+	public void adminLogoUpload(String code, String type, String imageSrc, String logoPath, String fileName, String fileData) throws Exception;
 }

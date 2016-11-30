@@ -22,7 +22,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.antlr.runtime.debug.DebugEventHub;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -373,6 +372,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String fileName = "", attachFile = "", onlyFileName = "", extName = "";
 		int fileSize = 0, iStart = 0;
 		
+		LOGGER.debug("" + cClubLogo);
 		if (cClubLogo != null && !cClubLogo.isEmpty()) {
 			fileName = code;
 			attachFile = cClubLogo.getOriginalFilename();
@@ -1539,9 +1539,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String code = request.getParameter("code");
 		String copType = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");		
+		String imageSrc = request.getParameter("imageSrc");
 		MultipartFile logoFile = request.getFile("logo");
 		
+		LOGGER.debug("type : " + copType);
+		LOGGER.debug(imageSrc);
 		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
 		
 		if (!logoFile.isEmpty()) {
@@ -1551,7 +1553,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			extName = attachFile.substring(iStart);
 			String logoFileName = fileName + "_logo_Temp" + "." + extName;
 			
-			File file = new File(logoPath + fileName + logoFileName);
+			File file = new File(logoPath + logoFileName);
 			logoFile.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -1583,6 +1585,63 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			adminCommType(copType, code);
 			
 			if (logoFile.isEmpty()) { 
+				if (imageSrc.indexOf("default_logo_type") > -1) {
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void adminLogoUpload(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData) throws Exception {
+		int iStart = 0;
+		if (fileData != null) {
+			iStart = fileName.lastIndexOf(".");
+			String extName = fileName.substring(iStart);
+			String logoFileName = code + "_logo_Temp" + "." + extName;
+			
+			File file = new File(logoPath + logoFileName);
+	        byte[] byteList = Base64.decodeBase64(fileData);
+	        
+	        FileOutputStream fos = null;
+	        
+	        try {
+	        	fos = new FileOutputStream(file);
+	            IOUtils.write(byteList, fos);
+	            
+	            BufferedImage inputImage = ImageIO.read(file);
+				BufferedImage outputImage = null;
+				Graphics2D saveImage = null;
+				
+				outputImage= new BufferedImage(894, 100, BufferedImage.TYPE_INT_RGB);
+				saveImage = outputImage.createGraphics();
+				saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
+				
+				File newLogo = new File(logoPath + code + "_logo" + ".png");
+				ImageIO.write(outputImage, "png", newLogo);
+				String logoFileNameLogo = code + "_logo" + ".png";
+				
+				outputImage = new BufferedImage(198, 140, BufferedImage.TYPE_INT_RGB);
+				saveImage = outputImage.createGraphics();
+				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
+				
+				File newThumbnail = new File(logoPath + code + "_thumbnail" + ".png");
+				ImageIO.write(outputImage, "png", newThumbnail);
+				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
+				
+				adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, code);
+	        } catch (Exception e) {
+	        	throw e;
+	        } finally {
+	        	fos.close();
+	        	file.delete();
+	        }
+		}
+		
+		if (!copType.equals("")) {
+			adminCommType(copType, code);
+			
+			if (fileData != null) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
 					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
 				}

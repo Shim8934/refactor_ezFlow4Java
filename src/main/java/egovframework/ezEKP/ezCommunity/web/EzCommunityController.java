@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.web;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +16,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,7 +256,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.commMakeOk(userInfo, clubVO, request, response);
 	}
 	
-	//TODO 이효진 수정중
 	/**
 	 * 커뮤니티만들기 IE9 로고 업로드
 	 */
@@ -2338,7 +2340,33 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "/ezCommunity/communityAdminLogo";
 	}
 	
-	
+	/**
+	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
+	 */
+	@RequestMapping(value = "/ezCommunity/adminLogoUpload.do")
+	public String adminLogoUpload(HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("adminLogoUpload started. IE9 ");
+		
+		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		String fileName = request.getParameter("fileName");
+		String fileData = request.getParameter("fileData");
+		String code = request.getParameter("code");
+		String type = request.getParameter("type");
+		String imageSrc = request.getParameter("imageSrc");
+		
+		LOGGER.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
+		
+		try {
+			ezCommunityService.adminLogoUpload(code, type, imageSrc, logoPath, fileName, fileData);
+			model.addAttribute("result", true);
+			LOGGER.debug("adminLogoUpload ended. ");
+		} catch (Exception e) {
+			model.addAttribute("result", false);
+			throw e;
+		}
+		
+		return "json";
+	}
 	
 	/**
 	 * 커뮤니티 환경설정화면 실행함수
@@ -2352,6 +2380,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
 		ezCommunityService.adminLogoOk(request);
+		
+		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("code", code);
+		
+		return "/ezCommunity/communityAdminLogoOk";
+	}
+	
+	/**
+	 * 커뮤니티 환경설정화면 실행함수 IE9
+	 */
+	@RequestMapping(value = "/ezCommunity/adminLogoIE9Ok.do")
+	public String adminLogoOkIE9(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = request.getParameter("code");
+
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
