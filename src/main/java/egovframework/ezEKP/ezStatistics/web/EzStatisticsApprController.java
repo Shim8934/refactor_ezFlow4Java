@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +126,7 @@ public class EzStatisticsApprController {
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
 		
-		String result = ezStatisticsAdminService.getTimeList(statApprVO);
+		String result = ezStatisticsAdminService.getMainList(statApprVO);
 		
 		return result;
 	}
@@ -180,7 +181,7 @@ public class EzStatisticsApprController {
 	}
 	
 	/**
-	 * 양식별 통계 현황 표출
+	 * 양식 관련 통계 현황 표출
 	 */
 	@RequestMapping(value = "/ezStatistics/getFormInfo.do", produces ="text/xml;charset=utf-8")
 	@ResponseBody
@@ -193,6 +194,40 @@ public class EzStatisticsApprController {
 		String result = ezStatisticsAdminService.getFormInfo(statApprVO);
 		
 		return result;
+	}
+	
+	/**
+	 * 부서별 결재처리시간 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsTimeDept.do")
+	public String statisticsTimeDept(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		try {
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			
+			StringBuilder companySel = new StringBuilder();
+			
+			for (OrganDeptVO vo : deptVOs) {
+				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+					companySel.append(vo.getDisplayName());
+					companySel.append("</option>");
+				}
+			}
+			
+			model.addAttribute("companySel", companySel);
+			model.addAttribute("userInfo", userInfo);
+		} catch (Exception e) {
+			LOGGER.error("ezStatistics :: statisticsTimeDept :: " + e.getMessage());
+		}
+		
+		return "ezStatistics/statisticsTimeDept";
 	}
 	
 	/**
@@ -230,7 +265,7 @@ public class EzStatisticsApprController {
 	}
 	
 	/**
-	 * 부서별 통계 현황 표출
+	 * 결재처리시간 표출
 	 */
 	@RequestMapping(value = "/ezStatistics/getStatisticsAprTime.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
@@ -253,7 +288,7 @@ public class EzStatisticsApprController {
 	}
 	
 	/**
-	 * 개인별 통계 현황
+	 * 개인별 통계 현황 호출
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMonUser.do")
 	public String statisticsMonUser(@CookieValue("loginCookie") String loginCookie, Model model) {
@@ -286,6 +321,9 @@ public class EzStatisticsApprController {
 		return "ezStatistics/statisticsMonUser";
 	}
 	
+	/**
+	 * 양식별 통계 현황 호출
+	 */
 	@RequestMapping(value = "/ezStatistics/statisticsTimeForm.do")
 	public String statisticsTimeForm(@CookieValue("loginCookie") String loginCookie, Model model) {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -317,4 +355,154 @@ public class EzStatisticsApprController {
 		return "ezStatistics/statisticsTimeForm";
 	}
 	
+	/**
+	 * 개인별 결재처리 시간 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsTimeUser.do")
+	public String statisticsTimeUser(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		try {
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			
+			StringBuilder companySel = new StringBuilder();
+			
+			for (OrganDeptVO vo : deptVOs) {
+				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+					companySel.append(vo.getDisplayName());
+					companySel.append("</option>");
+				}
+			}
+			
+			model.addAttribute("companySel", companySel);
+			model.addAttribute("userInfo", userInfo);
+		} catch (Exception e) {
+			LOGGER.error("ezStatistics :: statisticsTimeUser :: " + e.getMessage());
+		}
+
+		return "ezStatistics/statisticsTimeUser";
+	}
+	
+	/**
+	 * 양식별 통계 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsForm.do")
+	public String statisticsForm(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		try {
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			
+			StringBuilder companySel = new StringBuilder();
+			
+			for (OrganDeptVO vo : deptVOs) {
+				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+					companySel.append(vo.getDisplayName());
+					companySel.append("</option>");
+				}
+			}
+			
+			model.addAttribute("companySel", companySel);
+			model.addAttribute("userInfo", userInfo);
+		} catch (Exception e) {
+			LOGGER.error("ezStatistics :: statisticsForm :: " + e.getMessage());
+		}
+
+		return "ezStatistics/statisticsForm";
+	}
+	
+	/**
+	 * 통계 표출
+	 */
+	@RequestMapping(value = "/ezStatistics/getStatisticsAprSearch.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getStatisticsAprSearch(@CookieValue("loginCookie") String loginCookie, StatApprVO statApprVO) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		statApprVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezStatisticsAdminService.getSearchList(statApprVO);
+		
+		return result;
+	}
+	
+	/**
+	 * 부서별 통계 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsDept.do")
+	public String statisticsDept(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		try {
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			
+			StringBuilder companySel = new StringBuilder();
+			
+			for (OrganDeptVO vo : deptVOs) {
+				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+					companySel.append(vo.getDisplayName());
+					companySel.append("</option>");
+				}
+			}
+			
+			model.addAttribute("companySel", companySel);
+			model.addAttribute("userInfo", userInfo);
+		} catch (Exception e) {
+			LOGGER.error("ezStatistics :: statisticsDept :: " + e.getMessage());
+		}
+
+		return "ezStatistics/statisticsDept";
+	}
+	
+	/**
+	 * 개인별 통계 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsUser.do")
+	public String statisticsUser(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		try {
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+			
+			StringBuilder companySel = new StringBuilder();
+			
+			for (OrganDeptVO vo : deptVOs) {
+				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+					companySel.append("<option value='" + vo.getCn() + "'>");
+					companySel.append(vo.getDisplayName());
+					companySel.append("</option>");
+				}
+			}
+			
+			model.addAttribute("companySel", companySel);
+			model.addAttribute("userInfo", userInfo);
+		} catch (Exception e) {
+			LOGGER.error("ezStatistics :: statisticsUser :: " + e.getMessage());
+		}
+		
+		return "ezStatistics/statisticsUser";
+	}
 }

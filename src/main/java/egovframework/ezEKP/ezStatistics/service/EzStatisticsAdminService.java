@@ -11,4 +11,8 @@ public interface EzStatisticsAdminService {
 
 	public String getFormInfo(StatApprVO statApprVO);
 
+	public String getSearchList(StatApprVO statApprVO);
+
+	public String getMainList(StatApprVO statApprVO);
+
 }
