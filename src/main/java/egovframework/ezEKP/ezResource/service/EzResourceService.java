@@ -21,9 +21,9 @@ import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
 public interface EzResourceService {
-	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType) throws Exception;
+	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID) throws Exception;
 	
-	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID) throws Exception;
+	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID, int tenantID) throws Exception;
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang) throws Exception;
 	
@@ -75,7 +75,7 @@ public interface EzResourceService {
 
 	public String getCurrentDate() throws Exception;
 
-	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id) throws Exception;
+	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id, int tenantID) throws Exception;
 	
 	public String updateScheduleDateTime(String xmlDom, String companyID) throws Exception;
 	
