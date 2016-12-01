@@ -39,6 +39,11 @@
 		            window.focus();
 		        };
 		    }
+		    
+		    window.onresize = function () {
+		        pzFormProc.style.height = null;
+		        pzFormProc.height = document.documentElement.clientHeight - 200;
+		    }
 	
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -48,6 +53,7 @@
 		    };
 	
 		    $(document).ready(function() {
+		    	window.onresize();
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -481,10 +487,10 @@
 		        }
 	
 		        var parameter = new Array();
-		        parameter[0] = pzFormProc.editor.DOM.all.PROCESSOR.innerHTML;		// xmlPath
-		        parameter[1] = SCompID.value;								// companyID
+		        parameter[0] = pzFormProc.editor.DOM.all.PROCESSOR.innerHTML;
+		        parameter[1] = SCompID.value;
 		        parameter[2] = pzFormProc.object.Fields;
-		        parameter[3] = pzFormProc.editor.DOM.all.conn.innerHTML;		// xmlPath
+		        parameter[3] = pzFormProc.editor.DOM.all.conn.innerHTML;
 		        parameter[4] = susinCnt;
 	
 		        var url = "/myoffice/ezprocdesigner/ProcUI_View.aspx";
@@ -551,39 +557,33 @@
 		    }
 		    
 		</script>
-		<script language="javascript" for="pzFormProc" event="FieldsAvailable">
-		    pzFormProc_FieldsAvailable();
-		</script>
-		<script language="javascript" for="pzFormProc" event="DocumentComplete">
-		<!--
-		    pzFormProc_DocumentComplete();
-		    //-->
-		</script>
-		<script language="javascript" for="pzFormProc" event="BlurTDElement">
-		<!--
-		    pzFormProc_BlurTDElement();
-		//-->
-		</script>
-		<script language="javascript" for="pzFormProc" event="FPError">
-		<!--
-		    pzFormProc_FPError();
-		//-->
-		</script>
-		<script language="javascript" for="pzFormProc" event="InvalidDocument">
-		<!--
-		    pzFormProc_InvalidDocument();
-		//-->
-		</script>
-		<script language="javascript" for="pzFormProc" event="ElementKeyEvent(nKey)">
-		<!--
-		    pzFormProc_ElementKeyEvent(nKey);
-		//-->
-		</script>
-		<script language="javascript" for="pzFormProc" event="ElementChange">
-		<!--
-		    pzFormProc_ElementChange();
-		//-->
-		</script>
+		<script type="text/javascript" for="pzFormProc" event="FieldsAvailable">
+	        pzFormProc_FieldsAvailable();
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="DocumentComplete">
+	        pzFormProc_DocumentComplete()
+	
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="BlurTDElement">
+	        pzFormProc_BlurTDElement()
+	
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="FPError">
+	        pzFormProc_FPError()
+	
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="InvalidDocument">
+	        pzFormProc_InvalidDocument()
+	
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="ElementKeyEvent(nKey)">
+	        pzFormProc_ElementKeyEvent(nKey)
+	
+	    </script>
+	    <script type="text/javascript" for="pzFormProc" event="ElementChange">
+	        pzFormProc_ElementChange()
+	
+	    </script>
 	</head>
 	<body class="popup">
         <div id="menu">
@@ -601,7 +601,7 @@
 	        	<p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code = 'ezApprovalG.t1456' /></span></p><!-- 양식작성기 -->
                 <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code = 'ezApprovalG.t00004' /></span></p><!-- 양식정보 -->
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code = 'ezApprovalG.t00005' /></span></p><!-- 연동정보 -->
-                <%--<p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab3">Workflow</span></p>--%>
+                <%--<p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">Workflow</span></p>--%>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code = 'ezApprovalG.t1629' /></span></p><!-- 고정수신처 -->
 	        </div>
         </div>
@@ -721,7 +721,7 @@
         <table id="TForm" style="height:0px;">
             <tr>
                 <td valign="top">
-                    <script language='JavaScript'>FormProc_ActiveX3("pzFormProc", "2", "845px");</script>
+                    <script type="text/javascript">FormProc_ActiveX3("pzFormProc", "2", "790px");</script>
                 </td>
                 <td id="rootTD"></td>
             </tr>

@@ -805,6 +805,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getDocType(String selected, String companyID, String lang) throws Exception {
+		LOGGER.debug("getDocType started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", commonUtil.getMultiData(lang));
 		map.put("companyID", companyID);
@@ -824,7 +826,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				sb.append("<OPTION value=" + code2 + ">" + name + "</OPTION>");
 			}
 		}
-	
+		
+		LOGGER.debug("stringBuiler : " + sb.toString());
+		LOGGER.debug("getDocType ended.");
+		
 		return sb.toString();
 	}
 

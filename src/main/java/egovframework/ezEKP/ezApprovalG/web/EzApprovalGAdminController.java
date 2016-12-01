@@ -98,6 +98,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formAdmin.do")
 	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		LOGGER.debug("formAdmin started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary());
 		String multiData = commonUtil.getMultiData(userInfo.getLang());
@@ -117,6 +119,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("docType", docType);
 		model.addAttribute("multiData", multiData);
 		model.addAttribute("list", resultList);
+		
+		LOGGER.debug("formAdmin ended.");
 		
 		return "admin/ezApprovalG/apprGFormAdmin";
 	}
@@ -289,6 +293,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("formMain started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
@@ -316,6 +322,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
+		
+		LOGGER.debug("formMain ended.");
 		
 		return "admin/ezApprovalG/apprGFormMain";
 	}
