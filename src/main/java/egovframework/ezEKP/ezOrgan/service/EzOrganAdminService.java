@@ -47,7 +47,7 @@ public interface EzOrganAdminService {
 
 	public void deleteDBData(String cn, String pClass, int tenantID) throws Exception;
 	
-	public void moveDBData(String parentCn, String cn, String type) throws Exception;
+	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception;
 
 	public void setPassword(String cn, String password) throws Exception;
 

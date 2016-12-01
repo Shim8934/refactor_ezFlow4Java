@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
@@ -45,6 +46,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Autowired	
 	private CommonUtil commonUtil;
 	
+    @Autowired
+    private EzCommonService ezCommonService;	
 	
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -153,23 +156,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			// skyblue0o0
 			String oldGroupAddr = "";
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			
 			if (type.equalsIgnoreCase("group")) {
-				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"), tenantID);
-				oldGroupAddr = dept.getExtensionAttribute1() + "@" + config.getProperty("config.DomainName");
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, "1", tenantID);
+				oldGroupAddr = dept.getExtensionAttribute1() + "@" + domain;
 			} else {
-				OrganUserVO userVO = getUserInfo(cn, config.getProperty("config.primary"), tenantID);
-				oldGroupAddr = userVO.getDepartment() + "@" + config.getProperty("config.DomainName");
+				OrganUserVO userVO = getUserInfo(cn, "1", tenantID);
+				oldGroupAddr = userVO.getDepartment() + "@" + domain;
 			}
 			
-			String newGroupAddr = parentCn + "@" + config.getProperty("config.DomainName");
-			String mailAddr = cn + "@" + config.getProperty("config.DomainName");
+			String newGroupAddr = parentCn + "@" + domain;
+			String mailAddr = cn + "@" + domain;
 			
 			int rc = ezEmailUserAdminService.updateGroupMove(oldGroupAddr, newGroupAddr, mailAddr);
 			
 			if (rc == 0) { // 성공
 				try {
-					moveDBData(parentCn, cn, type);
+					moveDBData(parentCn, cn, type, tenantID);
 				} catch (Exception e) {
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
 					throw e;
@@ -207,9 +211,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		ezOrganAdminDao.updateProperty(map);
 	}
 
-	public void moveDBData(String parentCn, String cn, String type) throws Exception {
+	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PARENTCN", parentCn);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", type);
