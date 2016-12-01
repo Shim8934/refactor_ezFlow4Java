@@ -45,7 +45,7 @@ public interface EzOrganAdminService {
 	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception;
 
-	public void deleteDBData(String cn, String pClass) throws Exception;
+	public void deleteDBData(String cn, String pClass, int tenantID) throws Exception;
 	
 	public void moveDBData(String parentCn, String cn, String type) throws Exception;
 
