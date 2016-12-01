@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -71,6 +74,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGAdminController.class);
 	
 	/**
 	 * 전자결재G관리 메인화면 호출 함수
@@ -119,31 +124,46 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록(MHT) 기안양식함목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do")
+	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("getFormContInfo started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String id = request.getParameter("id");
 		String companyID = request.getParameter("companyID");
 		
+		LOGGER.debug("id : " + id + ", companyID : " + companyID);
+		
 		String result = ezApprovalGService.getFormContainerInfo(id, "", companyID, userInfo.getPrimary());
 		
-		return result;
+		LOGGER.debug("result : " + result);
+		
+		model.addAttribute("resultXML", result);
+		
+		LOGGER.debug("getFormContInfo ended.");
+		
+		return "json";
 	}
 	
 	/**
 	 * 전자결재G관리 양식등록(MHT) 기안양식목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getFormList.do", produces="text/xml;charset=utf-8")
-	@ResponseBody
-	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	@RequestMapping(value = "/admin/ezApprovalG/getFormList.do")
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("getFormList started.");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String id = request.getParameter("id");
 		String kind = request.getParameter("kind");
 		String companyID = request.getParameter("companyID");
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, "", "", "", companyID, userInfo.getLang());
 		
-		return result;
+		LOGGER.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
+		
+		model.addAttribute("resultXML", result);
+		
+		LOGGER.debug("getFormList ended.");
+		
+		return "json";
 	}
 	
 	/**

@@ -20,6 +20,8 @@ import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -63,6 +65,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezApprovalG.web.EzApprovalGAdminController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -93,6 +96,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource messageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGAdminController.class);
 	
 	// DocType
 	final public String staDTDraftDoc = "001";		// 기안문
@@ -878,6 +883,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
+		
+		LOGGER.debug("resultXML : " + resultXML);
 		
 		return resultXML.toString();
 	}

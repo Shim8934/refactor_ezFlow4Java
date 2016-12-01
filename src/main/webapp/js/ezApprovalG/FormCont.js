@@ -5,9 +5,10 @@ function GetFormInfo(ID,KIND) {
 		type : "POST",
 		url : "/admin/ezApprovalG/getFormList.do",
 		async : false,
+		dataType : "json",
 		data : {id : ID, kind : KIND, companyID : companyID},
 		success : function(result) {
-			xmlRtn = result;
+			xmlRtn = loadXMLString(result.resultXML);
 		}
 	});
 	
@@ -36,9 +37,10 @@ function GetFormContInfo(ID, DeptID, eventflag) {
 		type : "POST",
 		url : "/admin/ezApprovalG/getFormContInfo.do",
 		async : false,
+		dataType : "json",
 		data : {id : ID, companyID : companyID},
 		success : function (result) {
-			xmlRtn = result;
+			xmlRtn = loadXMLString(result.resultXML);
 		}
 	});
 	
@@ -56,16 +58,17 @@ function GetFormContInfo(ID, DeptID, eventflag) {
 }
 
 function InitFormCont() {
-	var tempRet = null;
+	var tempRet = createXmlDom();
 	var xmlTree = createXmlDom(); 	
 	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezApprovalG/getFormContInfo.do",
 		async : false,
+		dataType : "json",
 		data : {id : "ROOT", companyID : companyID},
 		success : function (result) {
-			tempRet = result;
+			tempRet = loadXMLString(result.resultXML);
 		}
 	});
 	
@@ -78,14 +81,14 @@ function InitFormCont() {
     listview.DataSource(xmlRtn);                       
     listview.DataBind("divlvtForm");                     
     xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
-
+    
 	if(tempRet != null) {
 		if(CrossYN()) {
             var xmlRtn = tempRet.documentElement;
             xmlTree.documentElement.getElementsByTagName("NODE")[0].appendChild(xmlRtn);
 	    } else {
             var xmlRtn = tempRet.documentElement;
-            xmlTree.childNodes[0].childNodes[0].appendChild(xmlRtn);
+            GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
         }
 	}
 	
