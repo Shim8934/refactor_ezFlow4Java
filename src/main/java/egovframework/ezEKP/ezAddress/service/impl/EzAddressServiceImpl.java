@@ -1,412 +1,896 @@
 package egovframework.ezEKP.ezAddress.service.impl;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezAddress.dao.EzAddressDAO;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
-import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 
 @Service("EzAddressService")
 public class EzAddressServiceImpl implements EzAddressService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzAddressServiceImpl.class);
 	
+	@Autowired
+    private Properties config;
+	
+	@Autowired
+    private EzEmailUtil ezEmailUtil;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Resource(name = "EzAddressDAO")
 	private EzAddressDAO ezAddressDAO;
-
+	
 	@Override
-	public List<AddressVO> getAddressInfo(String dong) throws Exception {
-		return ezAddressDAO.getAddressInfo(dong);
-	}
-
-	@Override
-	public List<SimpleAddressVO> getSimpleAddress(String userId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();		
-		map.put("v_PUSERID", userId);
+	public String getListType(int tenantId, String userId) throws Exception {
+		String listType = null;
 		
-		return ezAddressDAO.getSimpleAddress(map);
-	}
-
-	@Override
-	public void setSimpleAddress(String pUserId, String pMailList) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", pUserId);
-		map.put("v_SN", 0);
-		map.put("v_NAME", "");
-		map.put("v_EMAIL", "");
-		map.put("v_STATUS", 1);
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
-		ezAddressDAO.setSimpleAddress(map);
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getListType", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+        	listType = (String)object.get("result");
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+        
+        return listType;
+	}
+	
+	@Override
+	public String getListCnt(int tenantId, String userId) throws Exception {
+		String listCnt = null;
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getListCnt", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+        	listCnt = (String)object.get("result");
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+        
+        return listCnt;
+	}
+	
+	@Override
+	public void setAddressConfig(int tenantId, String pUserID, String pListCnt, String pListType) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String userIdIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + domainName, "UTF-8");
+		String listCntParam = "listCnt=" + URLEncoder.encode(pListCnt, "UTF-8");
+		String listTypeParam = "listType=" + URLEncoder.encode(pListType, "UTF-8");
+		
+		String inputParams = userIdIdParam + "&" + listCntParam + "&" + listTypeParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/setAddressGeneral", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public int getAddressCount(int tenantId, String pFolderId, String pOwnerId, String pFilter) throws Exception {
+		int count = 0;
+		
+		String filterName = null;
+		String filterValue = null;
+		
+		if (pFilter == null || pFilter.trim().equals("")) {
+			filterName = "NONE";
+			filterValue = "";
+		}
+		else if (pFilter.indexOf(",") > -1) {
+			int splitIndex = pFilter.indexOf(",");
+			filterName = pFilter.substring(0, splitIndex);
+			filterValue = pFilter.substring(splitIndex + 1);
+		} else {
+			//TODO: 잘못 넘어오는 pFilter가 있으면 수정해줘야함.
+			logger.error("Invalid pFilter parameter. pFilter=" + pFilter);
+			filterName = "NONE";
+			filterValue = "";
+		}
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
+		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		
+		String inputParams = ownerIdParam + "&" + folderIdParam + "&" + filterNameParam + "&" + filterValueParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressCount", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			count = ((Long)object.get("result")).intValue();
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+		
+        return count;
+	}
+	
+	@Override
+	public int getSearchCount(int tenantId, String[] pIdLists, String pFilter) throws Exception {
+		int count = 0;
+		
+		String filterName = null;
+		String filterValue = null;
+		
+		if (pFilter.indexOf(",") > -1) {
+			int splitIndex = pFilter.indexOf(",");
+			filterName = pFilter.substring(0, splitIndex);
+			filterValue = pFilter.substring(splitIndex + 1);
+		}
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
+		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		
+		String inputParams = filterNameParam + "&" + filterValueParam;
+		
+		for (String ownerId : pIdLists) {
+			inputParams += "&ownerId=" + URLEncoder.encode(ownerId + "@" + domainName, "UTF-8");
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getOwnerAddressCount", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			count = ((Long)object.get("result")).intValue();
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+		
+        return count;
+	}
+	
+	@Override
+	public List<AddressVO> getAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption,
+			String pFilter, int count, int start) throws Exception {
+		List<AddressVO> list = new ArrayList<AddressVO>();
+		
+		String filterName = null;
+		String filterValue = null;
+		
+		if (pFilter == null || pFilter.trim().equals("")) {
+			filterName = "NONE";
+			filterValue = "";
+		}
+		else if (pFilter.indexOf(",") > -1) {
+			int splitIndex = pFilter.indexOf(",");
+			filterName = pFilter.substring(0, splitIndex);
+			filterValue = pFilter.substring(splitIndex + 1);
+		}
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderID, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerID + "@" + domainName, "UTF-8");
+		String orderOptionParam = "orderOption=" + URLEncoder.encode(pOrderOption, "UTF-8");
+		String startParam = "start=" + start;
+		String countParam = "count=" + count;
+		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
+		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + orderOptionParam 
+				+ "&" + startParam + "&" + countParam + "&" + filterNameParam + "&" + filterValueParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAddressList", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressVO vo = new AddressVO();
+        		
+        		vo.setAddressId((String)obj.get("addressId"));
+        		vo.setFolderId((String)obj.get("folderId"));
+        		vo.setOwnerId(((String)obj.get("ownerId")).split("@")[0]);
+        		vo.setCreatorId(((String)obj.get("creatorId")).split("@")[0]);
+        		vo.setModifierId(((String)obj.get("modifierId")).split("@")[0]);
+        		vo.setsName((String)obj.get("sName"));
+        		vo.setsEmail((String)obj.get("sEmail"));
+        		vo.setsCompany((String)obj.get("sCompany"));
+        		vo.setsCompanyPhone((String)obj.get("sCompanyPhone"));
+        		vo.setsMobile((String)obj.get("sMobile"));
+        		vo.setsType((String)obj.get("sType"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public List<AddressVO> getAllAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption, String pFilter) 
+			throws Exception {
+		List<AddressVO> list = new ArrayList<AddressVO>();
+		
+		String filterName = null;
+		String filterValue = null;
+		
+		if (pFilter == null || pFilter.trim().equals("")) {
+			filterName = "NONE";
+			filterValue = "";
+		}
+		else if (pFilter.indexOf(",") > -1) {
+			int splitIndex = pFilter.indexOf(",");
+			filterName = pFilter.substring(0, splitIndex);
+			filterValue = pFilter.substring(splitIndex + 1);
+		}
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderID, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerID + "@" + domainName, "UTF-8");
+		String orderOptionParam = "orderOption=" + URLEncoder.encode(pOrderOption, "UTF-8");
+		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
+		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + orderOptionParam 
+				+ "&" + filterNameParam + "&" + filterValueParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderAllAddressList", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject resultObject = (JSONObject)resultArray.get(i);
+        		
+        		AddressVO vo = new AddressVO();
+        		
+        		vo.setAddressId((String)resultObject.get("addressId"));
+        		vo.setFolderId((String)resultObject.get("folderId"));
+        		vo.setOwnerId(((String)resultObject.get("ownerId")).split("@")[0]);
+        		vo.setCreatorId(((String)resultObject.get("creatorId")).split("@")[0]);
+        		vo.setCreateDate((String)resultObject.get("createDate"));
+        		vo.setModifierId(((String)resultObject.get("modifierId")).split("@")[0]);
+        		vo.setModifyDate((String)resultObject.get("modifyDate"));
+        		vo.setsName((String)resultObject.get("sName"));
+        		vo.setsEmail((String)resultObject.get("sEmail"));
+        		vo.setsCompany((String)resultObject.get("sCompany"));
+        		vo.setsDept((String)resultObject.get("sDept"));
+        		vo.setsTitle((String)resultObject.get("sTitle"));
+        		vo.setsCompanyPhone((String)resultObject.get("sCompanyPhone"));
+        		vo.setsFax((String)resultObject.get("sFax"));
+        		vo.setsMobile((String)resultObject.get("sMobile"));
+        		vo.setsHomePage((String)resultObject.get("sHomepage"));
+        		vo.setsCompanyZip((String)resultObject.get("sCompanyZip"));
+        		vo.setsCompanyAddr((String)resultObject.get("sCompanyAddr"));
+        		vo.setsHomeZip((String)resultObject.get("sHomeZip"));
+        		vo.setsHomeAddr((String)resultObject.get("sHomeAddr"));
+        		vo.setsMemo((String)resultObject.get("sMemo"));
+        		vo.setsType((String)resultObject.get("sType"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter,
+			int count, int start) throws Exception {
+		List<AddressVO> list = new ArrayList<AddressVO>();
+		
+		String filterName = null;
+		String filterValue = null;
+		
+		if (pFilter.indexOf(",") > -1) {
+			int splitIndex = pFilter.indexOf(",");
+			filterName = pFilter.substring(0, splitIndex);
+			filterValue = pFilter.substring(splitIndex + 1);
+		}
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String orderOptionParam = "orderOption=" + URLEncoder.encode(pOrderOption, "UTF-8");
+		String startParam = "start=" + start;
+		String countParam = "count=" + count;
+		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
+		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		
+		String inputParams = orderOptionParam + "&" + startParam + "&" + countParam + "&" + filterNameParam + "&" + filterValueParam;
+		
+		for (String ownerId : pIdLists) {
+			inputParams += "&ownerId=" + URLEncoder.encode(ownerId + "@" + domainName, "UTF-8");
+		}
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getOwnerAddressList", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressVO vo = new AddressVO();
+        		
+        		vo.setAddressId((String)obj.get("addressId"));
+        		vo.setFolderId((String)obj.get("folderId"));
+        		vo.setOwnerId(((String)obj.get("ownerId")).split("@")[0]);
+        		vo.setCreatorId(((String)obj.get("creatorId")).split("@")[0]);
+        		vo.setModifierId(((String)obj.get("modifierId")).split("@")[0]);
+        		vo.setsName((String)obj.get("sName"));
+        		vo.setsEmail((String)obj.get("sEmail"));
+        		vo.setsCompany((String)obj.get("sCompany"));
+        		vo.setsCompanyPhone((String)obj.get("sCompanyPhone"));
+        		vo.setsMobile((String)obj.get("sMobile"));
+        		vo.setsType((String)obj.get("sType"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public boolean checkDuplicateAddress(int tenantId, String ownerId, String sEmail) throws Exception {
+		boolean isDuplicate = true;
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(ownerId + "@" + domainName, "UTF-8");
+		String sEmailParam = "sEmail=" + URLEncoder.encode(sEmail, "UTF-8");
+		
+		String inputParams = ownerIdParam + "&" + sEmailParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/checkDuplicateAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			isDuplicate = ((Boolean)object.get("result"));
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+		
+        return isDuplicate;
+	}
+	
+	@Override
+	public AddressVO getAddressInfo(int tenantId, String primary, String pAddressId) throws Exception {
+		AddressVO vo = new AddressVO();
+		
+		String inputParams = "addressId=" + URLEncoder.encode(pAddressId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getAddressInfo", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONObject resultObject = (JSONObject)object.get("result");
+        		
+    		vo.setAddressId((String)resultObject.get("addressId"));
+    		vo.setFolderId((String)resultObject.get("folderId"));
+    		vo.setOwnerId(((String)resultObject.get("ownerId")).split("@")[0]);
+    		vo.setCreatorId(((String)resultObject.get("creatorId")).split("@")[0]);
+    		vo.setCreateDate((String)resultObject.get("createDate"));
+    		vo.setModifierId(((String)resultObject.get("modifierId")).split("@")[0]);
+    		vo.setModifyDate((String)resultObject.get("modifyDate"));
+    		vo.setsName((String)resultObject.get("sName"));
+    		vo.setsEmail((String)resultObject.get("sEmail"));
+    		vo.setsCompany((String)resultObject.get("sCompany"));
+    		vo.setsDept((String)resultObject.get("sDept"));
+    		vo.setsTitle((String)resultObject.get("sTitle"));
+    		vo.setsCompanyPhone((String)resultObject.get("sCompanyPhone"));
+    		vo.setsFax((String)resultObject.get("sFax"));
+    		vo.setsMobile((String)resultObject.get("sMobile"));
+    		vo.setsHomePage((String)resultObject.get("sHomepage"));
+    		vo.setsCompanyZip((String)resultObject.get("sCompanyZip"));
+    		vo.setsCompanyAddr((String)resultObject.get("sCompanyAddr"));
+    		vo.setsHomeZip((String)resultObject.get("sHomeZip"));
+    		vo.setsHomeAddr((String)resultObject.get("sHomeAddr"));
+    		vo.setsMemo((String)resultObject.get("sMemo"));
+    		vo.setsType((String)resultObject.get("sType"));
+    		
+    		OrganUserVO creatorVO = ezOrganAdminService.getUserInfo(((String)resultObject.get("creatorId")).split("@")[0], primary, tenantId);
+    		vo.setCreatorName(creatorVO.getDisplayName());
+    		
+    		OrganUserVO modifierVO = ezOrganAdminService.getUserInfo(((String)resultObject.get("modifierId")).split("@")[0], primary, tenantId);
+    		vo.setModifierName(modifierVO.getDisplayName());
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+		
+		return vo;
+	}
+	
+	@Override
+	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId,
+			String sName, String sEmail, String sCompany, String sDept, String sTitle,
+			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
+			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr,
+			String sMemo, String sType) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
+		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		String sNameParam = "sName=" + URLEncoder.encode(sName, "UTF-8");
+		String sEmailParam = "sEmail=" + URLEncoder.encode(sEmail, "UTF-8");
+		String sCompanyParam = "sCompany=" + URLEncoder.encode(sCompany, "UTF-8");
+		String sDeptParam = "sDept=" + URLEncoder.encode(sDept, "UTF-8");
+		String sTitleParam = "sTitle=" + URLEncoder.encode(sTitle, "UTF-8");
+		String sCompanyPhoneParam = "sCompanyPhone=" + URLEncoder.encode(sCompanyPhone, "UTF-8");
+		String sFaxParam = "sFax=" + URLEncoder.encode(sFax, "UTF-8");
+		String sMobileParam = "sMobile=" + URLEncoder.encode(sMobile, "UTF-8");
+		String sHomepageParam = "sHomepage=" + URLEncoder.encode(sHomePage, "UTF-8");
+		String sCompanyZipParam = "sCompanyZip=" + URLEncoder.encode(sCompanyZip, "UTF-8");
+		String sCompanyAddrParam = "sCompanyAddr=" + URLEncoder.encode(sCompanyAddr, "UTF-8");
+		String sHomeZipParam = "sHomeZip=" + URLEncoder.encode(sHomeZip, "UTF-8");
+		String sHomeAddrParam = "sHomeAddr=" + URLEncoder.encode(sHomeAddr, "UTF-8");
+		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
+		String sTypeParam = "sType=" + URLEncoder.encode(sType, "UTF-8");
+		
+		String inputParams = folderIdIdParam + "&" + ownerIdParam + "&" + creatorIdParam
+				 + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam + "&" + sTitleParam
+				 + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&" + sHomepageParam
+				 + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&" + sHomeAddrParam
+				 + "&" + sMemoParam + "&" + sTypeParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/addAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void updateAddress(int tenantId, String pAddressId, String pModifierId, 
+			String sName, String sEmail, String sCompany, String sDept, String sTitle,
+			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
+			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String addressIdIdParam = "addressId=" + URLEncoder.encode(pAddressId, "UTF-8");
+		String modifierIdParam = "modifierId=" + URLEncoder.encode(pModifierId + "@" + domainName, "UTF-8");
+		String sNameParam = "sName=" + URLEncoder.encode(sName, "UTF-8");
+		String sEmailParam = "sEmail=" + URLEncoder.encode(sEmail, "UTF-8");
+		String sCompanyParam = "sCompany=" + URLEncoder.encode(sCompany, "UTF-8");
+		String sDeptParam = "sDept=" + URLEncoder.encode(sDept, "UTF-8");
+		String sTitleParam = "sTitle=" + URLEncoder.encode(sTitle, "UTF-8");
+		String sCompanyPhoneParam = "sCompanyPhone=" + URLEncoder.encode(sCompanyPhone, "UTF-8");
+		String sFaxParam = "sFax=" + URLEncoder.encode(sFax, "UTF-8");
+		String sMobileParam = "sMobile=" + URLEncoder.encode(sMobile, "UTF-8");
+		String sHomepageParam = "sHomepage=" + URLEncoder.encode(sHomePage, "UTF-8");
+		String sCompanyZipParam = "sCompanyZip=" + URLEncoder.encode(sCompanyZip, "UTF-8");
+		String sCompanyAddrParam = "sCompanyAddr=" + URLEncoder.encode(sCompanyAddr, "UTF-8");
+		String sHomeZipParam = "sHomeZip=" + URLEncoder.encode(sHomeZip, "UTF-8");
+		String sHomeAddrParam = "sHomeAddr=" + URLEncoder.encode(sHomeAddr, "UTF-8");
+		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
+		
+		String inputParams = addressIdIdParam + "&" + modifierIdParam
+				 + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam + "&" + sTitleParam
+				 + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&" + sHomepageParam
+				 + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&" + sHomeAddrParam
+				 + "&" + sMemoParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/modAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+		
+	}
+	
+	@Override
+	public void deleteAddress(String[] pAddressIds) throws Exception {
+		String inputParams = "addressId=" + URLEncoder.encode(pAddressIds[0], "UTF-8");
+		for (int i=1; i<pAddressIds.length; i++) {
+			inputParams += "&addressId=" + URLEncoder.encode(pAddressIds[i], "UTF-8");
+		}
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/delAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void moveAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + ownerIdParam;
+		
+		for (String addressId : pAddressIds) {
+			inputParams += "&addressId=" + URLEncoder.encode(addressId, "UTF-8");
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/moveAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
+		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + creatorIdParam;
+		
+		for (String addressId : pAddressIds) {
+			inputParams += "&addressId=" + URLEncoder.encode(addressId, "UTF-8");
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/copyAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public List<AddressFolderVO> getSubTreeInfo(int tenantId, String pParentID, String pOwnerID) throws Exception {
+		List<AddressFolderVO> list = new ArrayList<AddressFolderVO>();
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String parentIdParam = "parentId=" + URLEncoder.encode(pParentID, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerID + "@" + domainName, "UTF-8");
+		
+		String inputParams = parentIdParam + "&" + ownerIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getSubFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressFolderVO vo = new AddressFolderVO();
+        		
+        		vo.setFolderId((String)obj.get("folderId"));
+        		vo.setOwnerId(((String)obj.get("ownerId")).split("@")[0]);
+        		vo.setFolderName((String)obj.get("folderName"));
+        		vo.setFolderType((String)obj.get("folderType"));
+        		vo.setChildCount((String)obj.get("childCount"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public AddressFolderVO getFolderInfo(String pFolderId) throws Exception {
+		AddressFolderVO vo = new AddressFolderVO();
+		
+		String inputParams = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getFolderInfo", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONObject resultObject = (JSONObject)object.get("result");
+        	
+			vo.setFolderId((String)resultObject.get("folderId"));
+			vo.setParentId((String)resultObject.get("parentId"));
+    		vo.setOwnerId(((String)resultObject.get("ownerId")).split("@")[0]);
+    		vo.setFolderName((String)resultObject.get("folderName"));
+    		vo.setFolderType((String)resultObject.get("folderType"));
+        }
+		
+		return vo;
+	}
+	
+	@Override
+	public void insertFolder(int tenantId, String pParentId, String pOwnerId, String pFolderType, String pFolderName) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String parentIdParam = "parentId=" + URLEncoder.encode(pParentId, "UTF-8");
+		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
+		String folderTypeParam = "folderType=" + URLEncoder.encode(pFolderType, "UTF-8");
+		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
+		
+		String inputParams = parentIdParam + "&" + ownerIdParam + "&" + folderTypeParam + "&" + folderNameParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/addFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void updateFolder(String pFolderId, String pFolderName) throws Exception {
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + folderNameParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/modFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void deleteFolder(String pFolderId) throws Exception {
+		String inputParams = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/delFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void moveFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType)
+			throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String newParentIdParam = "newParentId=" + URLEncoder.encode(pNewParentId, "UTF-8");
+		String newOwnerIdParam = "newOwnerId=" + URLEncoder.encode(pNewOwnerId + "@" + domainName, "UTF-8");
+		String newFolderTypeParam = "newFolderType=" + URLEncoder.encode(pNewFolderType, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + newParentIdParam + "&" + newOwnerIdParam + "&" + newFolderTypeParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/moveFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId) 
+			throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
+		String newParentIdParam = "newParentId=" + URLEncoder.encode(pNewParentId, "UTF-8");
+		String newOwnerIdParam = "newOwnerId=" + URLEncoder.encode(pNewOwnerId + "@" + domainName, "UTF-8");
+		String newFolderTypeParam = "newFolderType=" + URLEncoder.encode(pNewFolderType, "UTF-8");
+		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		
+		String inputParams = folderIdParam + "&" + newParentIdParam + "&" + newOwnerIdParam + "&" + newFolderTypeParam + "&" + creatorIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/copyFolder", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+	
+	@Override
+	public List<SimpleAddressVO> getSimpleAddress(int tenantId, String userId) throws Exception {
+		List<SimpleAddressVO> list = new ArrayList<SimpleAddressVO>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getSimpleAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONArray resultArray = (JSONArray)object.get("result");
+        	
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		SimpleAddressVO vo = new SimpleAddressVO();
+        		
+        		vo.setName((String)obj.get("simpleName"));
+        		vo.setEmail((String)obj.get("simpleEmail"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		return list;
+	}
+	
+	@Override
+	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception {
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "userId=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
 		
 		String[] mailList = pMailList.split("\\|");
 		
 		for (int i=0; i<mailList.length; i++) {
-			map = new HashMap<String, Object>();
-			map.put("v_USERID", pUserId);
-			map.put("v_SN", i);
-			map.put("v_NAME", mailList[i].split(";")[0]);
-			map.put("v_EMAIL", mailList[i].split(";")[1]);
-			map.put("v_STATUS", 0);
-			
-			ezAddressDAO.setSimpleAddress(map);
-			
+			inputParams += "&simpleName=" + URLEncoder.encode(mailList[i].split(";")[0], "UTF-8");
+			inputParams += "&simpleEmail=" + URLEncoder.encode(mailList[i].split(";")[1], "UTF-8");
 		}
-	}
-
-	@Override
-	public List<SubTreeInfoVO> getSubTreeInfo(String pParentID, String pOwnerID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PARENTID", pParentID);
-		map.put("v_OWNERID", makeRightField(pOwnerID));
 		
-		return ezAddressDAO.getSubTreeInfo(map);
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/setSimpleAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
 	}
 	
-	@Override
-	public String getListType(String userId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PUSERID", userId);
-		
-		return ezAddressDAO.getListType(map);
-	}
+	
+	
+	
 
-	@Override
-	public String getListCnt(String userId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", userId);
-		
-		return ezAddressDAO.getListCnt(map);
-	}
 
-	@Override
-	public String getAddressCount(String pFolderID, String pOwnerID, String pFilter) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_POWNERID", pOwnerID);
-		map.put("v_PFOLDERID", pFolderID);
-		map.put("v_PFILTER", pFilter);
-		
-		return ezAddressDAO.getAddressCount(map);
-	}
+	
+	
+	
+	
+	
+	
 	
 	@Override
-	public List<AddressInfoVO> getAddressList(String pFolderID, String pOwnerID, String pOrderOption,
-			String pFilter, String pFieldList, int pFolderMaxCount, int pListPageSize, int pStart)
-					throws Exception {
-		
-		if (pFieldList.equals("")) {
-            pFieldList = "AddressID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
-		}
-		
-        if (pOrderOption.equals("")){
-        	pOrderOption = "SNAME:0";
-        }
-
-        if (!pFilter.equals("")){
-        	pFilter = " AND " + pFilter;
-        }
-		
-        String orderName = pOrderOption.split(":")[0];
-        String order1 = pOrderOption.split(":")[1];
-        String order2 = "";
-        
-        if (order1.equals("0")) {
-            order1 = " ASC, AddressID ASC";
-            order2 = " DESC, AddressID DESC";
-        } else {
-            order1 = " DESC, AddressID DESC";
-            order2 = " ASC, AddressID ASC";
-        }
-        
-        if (pFolderID == null || pFolderID.equals("")) {
-        	pFolderID = "0";
-        }
-        
-        logger.debug("pFilter : " + pFilter);
-        
-        Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_POWNERID", makeRightField(pOwnerID));
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderID));
-		map.put("v_PORDERNAME", orderName);
-		map.put("v_PORDER1", order1);
-		map.put("v_PORDER2", order2);
-		map.put("v_PFILTER", pFilter);
-		map.put("v_PFIELDLIST", pFieldList);
-		map.put("v_PTOTAL", pFolderMaxCount);
-		map.put("v_PSTART", pStart);
-		map.put("v_PCOUNT", pListPageSize);
-		
-		return ezAddressDAO.getAddressList(map);
-	}
-	
-	private String makeRightField(String pOrgStr) {
-		if (pOrgStr == null) {
-			return null;
-		}
-		
-		return pOrgStr.replace("'", "''").replace("\0", "");
-	}
-
-	@Override
-	public AddressInfoVO getAddressInfo2(String pAddressId) throws Exception {
-		if (pAddressId == null || pAddressId.equals("")) {
-			pAddressId = "0";
-        }
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PADDRESSID", Integer.parseInt(pAddressId));
-		
-		return ezAddressDAO.getAddressInfo2(map);
-	}
-
-	@Override
-	public int getSearchCount(String pIdList, String pFilter) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PIDLIST", pIdList);
-		map.put("v_PFILTER", pFilter);
-		
-		return ezAddressDAO.getSearchCount(map);
-	}
-
-	@Override
-	public void insertAddress(String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName,
-			String pCreatorName2, String pPhotoPath, String sName, String sCompany, String sDept, String sTitle,
-			String sCompanyPhone, String sFax, String sMobile, String sEmail, String sHomePage, String sCompanyZip,
-			String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType, String pAttachXML)
-					throws Exception {
-		//TODO : 첨부파일(필요시)
-		
-		String hasAttach = "N";
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_POWNERID", pOwnerId);
-		map.put("v_PFOLDERID", pFolderId);
-		map.put("v_PCREATORID", pCreatorId);
-		map.put("v_PCREATORNAME", pCreatorName);
-		map.put("v_PCREATORNAME2", pCreatorName2);
-		map.put("v_PPHOTOPATH", pPhotoPath);
-		map.put("v_PSNAME", sName);
-		map.put("v_PSCOMPANY", sCompany);
-		map.put("v_PSDEPT", sDept);
-		map.put("v_PSTITLE", sTitle);
-		map.put("v_PSCOMPANYPHONE", sCompanyPhone);
-		map.put("v_PSFAX", sFax);
-		map.put("v_PSMOBILE", sMobile);
-		map.put("v_PSEMAIL", sEmail);
-		map.put("v_PSHOMEPAGE", sHomePage);
-		map.put("v_PSCOMPANYZIP", sCompanyZip);
-		map.put("v_PSCOMPANYADDR", sCompanyAddr);
-		map.put("v_PSHOMEZIP", sHomeZip);
-		map.put("v_PSHOMEADDR", sHomeAddr);
-		map.put("v_PSMEMO", sMemo);
-		map.put("v_PSTYPE", sType);
-		map.put("v_PHASATTACH", hasAttach);
-		
-		ezAddressDAO.insertAddress(map);
-		
-	}
-
-	@Override
-	public void updateAddress(String pAddressId, String pModifierID, String pModifierName, String pModifierName2,
-			String pPhotoPath, String sName, String sCompany, String sDept, String sTitle, String sCompanyPhone,
-			String sFax, String sMobile, String sEmail, String sHomePage, String sCompanyZip, String sCompanyAddr,
-			String sHomeZip, String sHomeAddr, String sMemo, String pAttachXML) throws Exception {
-		//TODO : 첨부파일(필요시)
-		
-		String hasAttach = "N";
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PMODIFIERID", pModifierID);
-		map.put("v_PMODIFIERNAME", pModifierName);
-		map.put("v_PMODIFIERNAME2", pModifierName2);
-		map.put("v_PPHOTOPATH", pPhotoPath);
-		map.put("v_PSNAME", sName);
-		map.put("v_PSCOMPANY", sCompany);
-		map.put("v_PSDEPT", sDept);
-		map.put("v_PSTITLE", sTitle);
-		map.put("v_PSCOMPANYPHONE", sCompanyPhone);
-		map.put("v_PSFAX", sFax);
-		map.put("v_PSMOBILE", sMobile);
-		map.put("v_PSEMAIL", sEmail);
-		map.put("v_PSHOMEPAGE", sHomePage);
-		map.put("v_PSCOMPANYZIP", sCompanyZip);
-		map.put("v_PSCOMPANYADDR", sCompanyAddr);
-		map.put("v_PSHOMEZIP", sHomeZip);
-		map.put("v_PSHOMEADDR", sHomeAddr);
-		map.put("v_PSMEMO", sMemo);
-		map.put("v_PHASATTACH", hasAttach);
-		map.put("v_PADDRESSID", pAddressId);
-		
-		ezAddressDAO.updateAddress(map);
-		
-	}
-
-	@Override
-	public void deleteAddress(String pAddressId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PADDRESSID", pAddressId);
-		
-		ezAddressDAO.deleteAddress(map);
-	}
-
-	@Override
-	public void setAddressConfig(String pUserID, String pListCnt, String pListType) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PUSERID", pUserID);
-		map.put("v_PLISTCNT", Integer.parseInt(pListCnt));
-		map.put("v_PLISTTYPE", pListType);
-		
-		ezAddressDAO.setAddressConfig(map);
-	}
-
-	@Override
-	public void moveAddress(String pAddressId, String pFolderId, String pOwnerId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PADDRESSID", Integer.parseInt(pAddressId));
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		map.put("v_POWNERID", pOwnerId);
-		
-		ezAddressDAO.moveAddress(map);
-	}
-
-	@Override
-	public void copyAddress(String pAddressId, String pFolderId, String pOwnerId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PADDRESSID", Integer.parseInt(pAddressId));
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		map.put("v_POWNERID", pOwnerId);
-		
-		ezAddressDAO.copyAddress(map);
-	}
-
-	@Override
-	public int getMaxSeq(String pParentId, String pOwnerId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PPARENTID", pParentId);
-		map.put("v_POWNERID", pOwnerId);
-		
-		return ezAddressDAO.getMaxSeq(map);
-	}
-
-	@Override
-	public String insertFolder(String pParentId, String pOwnerId, String pFolderType, String pFolderName,
-			String pFolderName2, int pMaxSeq) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PPARENTID", Integer.parseInt(pParentId));
-		map.put("v_POWNERID", pOwnerId);
-		map.put("v_PFOLDERTYPE", pFolderType);
-		map.put("v_PFOLDERNAME", pFolderName);
-		map.put("v_PFOLDERNAME2", pFolderName2);
-		map.put("v_PMAXSEQ", pMaxSeq);
-		
-		return ezAddressDAO.insertFolder(map);
-	}
-
-	@Override
-	public void updateFolder(String pFolderId, String pFolderName, String pFolderName2) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		map.put("v_PFOLDERNAME", pFolderName);
-		map.put("v_PFOLDERNAME2", pFolderName2);
-		
-		ezAddressDAO.updateFolder(map);
-	}
-
-	@Override
-	public void deleteFolder(String pFolderId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		
-		ezAddressDAO.deleteFolder(map);
-	}
-
-	@Override
-	public void moveFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType)
-			throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		map.put("v_PNEWPARENTID", Integer.parseInt(pNewParentId));
-		map.put("v_PNEWOWNERID", pNewOwnerId);
-		map.put("v_PNEWFOLDERTYPE", pNewFolderType);
-		
-		ezAddressDAO.moveFolder(map);
-	}
-
-	@Override
-	public void copyFolder(String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType)
-			throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		map.put("v_PNEWPARENTID", Integer.parseInt(pNewParentId));
-		map.put("v_PNEWOWNERID", pNewOwnerId);
-		map.put("v_PNEWFOLDERTYPE", pNewFolderType);
-		
-		ezAddressDAO.copyFolder(map);
-	}
-
-	@Override
-	public List<AddressInfoVO> getSearchList(String pIdList, String pOrderOption, String pFilter, String pFieldList,
-			int pFolderMaxCount, int pListPageSize, int pStart) throws Exception {
-		if (pFieldList.equals("")) {
-            pFieldList = "AddressID, FolderID, OwnerID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
-		}
-		
-        if (pOrderOption.equals("")){
-        	pOrderOption = "SNAME:0";
-        }
-
-        if (!pFilter.equals("")){
-        	pFilter = " AND " + pFilter;
-        }
-		
-        String orderName = pOrderOption.split(":")[0];
-        String order1 = pOrderOption.split(":")[1];
-        String order2 = "";
-        
-        if (order1.equals("0")) {
-            order1 = " ASC, AddressID ASC";
-            order2 = " DESC, AddressID DESC";
-        } else {
-            order1 = " DESC, AddressID DESC";
-            order2 = " ASC, AddressID ASC";
-        }
-        
-        logger.debug("pIdList : " + pIdList);
-        logger.debug("pFilter : " + pFilter);
-        
-        Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PIDLIST", pIdList);
-		map.put("v_PORDERNAME", orderName);
-		map.put("v_PORDER1", order1);
-		map.put("v_PORDER2", order2);
-		map.put("v_PFILTER", pFilter);
-		map.put("v_PFIELDLIST", pFieldList);
-		map.put("v_PTOTAL", pFolderMaxCount);
-		map.put("v_PSTART", pStart);
-		map.put("v_PCOUNT", pListPageSize);
-		
-		return ezAddressDAO.getSearchList(map);
-		
-	}
-
-	@Override
-	public SubTreeInfoVO getFolderInfo(String pFolderId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PFOLDERID", Integer.parseInt(pFolderId));
-		
-		return ezAddressDAO.getFolderInfo(map);
+	public List<AddressOldZipCodeVO> getZipCodeInfo(String dong) throws Exception {
+		return ezAddressDAO.getZipCodeInfo(dong);
 	}
 
 	@Override

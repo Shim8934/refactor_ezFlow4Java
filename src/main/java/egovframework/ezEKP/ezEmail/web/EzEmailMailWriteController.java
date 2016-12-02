@@ -79,7 +79,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -3144,8 +3144,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userId);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userInfo.getTenantId(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NewDataSet>");
@@ -3168,12 +3169,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		String mailList = xmlDoc.getElementsByTagName("SMEMO").item(0).getTextContent();
 		
-		ezAddressService.setSimpleAddress(userId, mailList);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezAddressService.setSimpleAddress(userInfo.getTenantId(), userInfo.getId(), mailList);
 		
 		return "<DATA>OK</DATA>";
 	}
@@ -3262,16 +3263,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getAddressSearch(String pFilter, LoginVO userInfo) {
         String returnValue = "";
         try {
+            String[] ownerIds = new String[]{userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId()};
+            pFilter = "SNAME," + pFilter;
             
-            String pIdList = "'" + userInfo.getCompanyID() + "', '" + userInfo.getDeptID() + "', '" + userInfo.getId() + "'";
-        	String field = "STYPE, AddressID, SNAME, SEMAIL, SCOMPANY, SDEPT, STITLE";
-            pFilter = "SNAME LIKE '%" + pFilter + "%'";
-            
-            List<AddressInfoVO> addressInfoList = ezAddressService.getSearchList(pIdList, "", pFilter, field, 0, 100, 0);
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
             StringBuilder sb = new StringBuilder();
             
-            for (AddressInfoVO addressInfo : addressInfoList) {
+            for (AddressVO addressInfo : addressInfoList) {
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
             	sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");

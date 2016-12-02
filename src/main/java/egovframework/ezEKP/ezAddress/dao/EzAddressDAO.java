@@ -5,19 +5,19 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
-import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
+import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAddressDAO")
 public class EzAddressDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
-	public List<AddressVO> getAddressInfo(String dong) throws Exception{
-		return (List<AddressVO>) list("EzAddressDAO.getAddressInfo", dong);
+	public List<AddressOldZipCodeVO> getZipCodeInfo(String dong) throws Exception{
+		return (List<AddressOldZipCodeVO>) list("EzAddressDAO.getAddressInfo", dong);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -30,8 +30,8 @@ public class EzAddressDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SubTreeInfoVO> getSubTreeInfo(Map<String, Object> map) throws Exception{
-		return (List<SubTreeInfoVO>) list("EzAddressDAO.getSubTreeInfo", map);
+	public List<AddressFolderVO> getSubTreeInfo(Map<String, Object> map) throws Exception{
+		return (List<AddressFolderVO>) list("EzAddressDAO.getSubTreeInfo", map);
 	}
 	
 	public String getListType(Map<String, Object> map) throws Exception{
@@ -42,17 +42,17 @@ public class EzAddressDAO extends EgovAbstractDAO {
 		return (String) select("EzAddressDAO.getListCnt", map);
 	}
 	
-	public String getAddressCount(Map<String, Object> map) throws Exception{
-		return (String) select("EzAddressDAO.getAddressCount", map);
+	public int getAddressCount(Map<String, Object> map) throws Exception{
+		return (Integer) select("EzAddressDAO.getAddressCount", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AddressInfoVO> getAddressList(Map<String, Object> map) throws Exception{
-		return (List<AddressInfoVO>) list("EzAddressDAO.getAddressList", map);
+	public List<AddressVO> getAddressList(Map<String, Object> map) throws Exception{
+		return (List<AddressVO>) list("EzAddressDAO.getAddressList", map);
 	}
 	
-	public AddressInfoVO getAddressInfo2(Map<String, Object> map) throws Exception{
-		return (AddressInfoVO) select("EzAddressDAO.getAddressInfo2", map);
+	public AddressVO getAddressInfo(Map<String, Object> map) throws Exception{
+		return (AddressVO) select("EzAddressDAO.getAddressInfo2", map);
 	}
 	
 	public int getSearchCount(Map<String, Object> map) throws Exception{
@@ -108,12 +108,12 @@ public class EzAddressDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AddressInfoVO> getSearchList(Map<String, Object> map) throws Exception{
-		return (List<AddressInfoVO>) list("EzAddressDAO.getSearchList", map);
+	public List<AddressVO> getSearchList(Map<String, Object> map) throws Exception{
+		return (List<AddressVO>) list("EzAddressDAO.getSearchList", map);
 	}
 	
-	public SubTreeInfoVO getFolderInfo(Map<String, Object> map) throws Exception{
-		return (SubTreeInfoVO) select("EzAddressDAO.getFolderInfo", map);
+	public AddressFolderVO getFolderInfo(Map<String, Object> map) throws Exception{
+		return (AddressFolderVO) select("EzAddressDAO.getFolderInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")

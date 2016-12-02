@@ -14,7 +14,7 @@
 	    <script type="text/javascript">
 	
 	        var pCurrentPage = "1";
-	        var pOrderOption = "SNAME:0";
+	        var pOrderOption = "S_NAME:0";
 	        var pFilter = "";
 	        var pTotalCnt = "";
 	        var pPageSize = "";
@@ -389,18 +389,18 @@
 	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
 	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
 	                <select name="search_case" id="search_case">
-	                    <option value="SNAME"><spring:message code='ezAddress.t124' /></option>
-	                    <option value="SCOMPANY"><spring:message code='ezAddress.t51' /></option>
-	                    <option value="SDEPT"><spring:message code='ezAddress.t54' /></option>
-	                    <option value="STITLE"><spring:message code='ezAddress.t52' /></option>
-	                    <option value="SCOMPANYADDR"><spring:message code='ezAddress.t295' /></option>
-	                    <option value="SHOMEADDR"><spring:message code='ezAddress.t296' /></option>
-	                    <option value="SMEMO"><spring:message code='ezAddress.t259' /></option>
-	                    <option value="SEMAIL"><spring:message code='ezAddress.t264' /></option>
-	                    <option value="SCOMPANYPHONE"><spring:message code='ezAddress.t263' /></option>
-	                    <option value="SMOBILE"><spring:message code='ezAddress.t189' /></option>
-	                    <option value="SFAX"><spring:message code='ezAddress.t292' /></option>
-	                    <option value="SHOMEPAGE"><spring:message code='ezAddress.t293' /></option>
+	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
+	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
+	                    <option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
+	                    <option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
+	                    <option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
+	                    <option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
+	                    <option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
+	                    <option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
+	                    <option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
+	                    <option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>
+	                    <option value="S_FAX"><spring:message code='ezAddress.t292' /></option>
+	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();">
 	                <a href="#" class="imgbtn"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>

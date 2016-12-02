@@ -33,10 +33,10 @@ import com.opencsv.CSVWriter;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
-import egovframework.ezEKP.ezAddress.vo.SubTreeInfoVO;
+import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -140,7 +140,7 @@ public class EzAddressController{
 
 		if (dong != null) {
 			if (!dong.equals("")) {
-				List<AddressVO> list = ezAddressService.getAddressInfo(dong);
+				List<AddressOldZipCodeVO> list = ezAddressService.getZipCodeInfo(dong);
 				model.addAttribute("list", list);
 			}
 		}		
@@ -160,9 +160,11 @@ public class EzAddressController{
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
-		List<SubTreeInfoVO> subTreeList = ezAddressService.getSubTreeInfo(parentId, ownerId);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		for (SubTreeInfoVO vo : subTreeList) {
+		List<AddressFolderVO> subTreeList = ezAddressService.getSubTreeInfo(userInfo.getTenantId(), parentId, ownerId);
+		
+		for (AddressFolderVO vo : subTreeList) {
 			sb.append("<ROW>");
 			sb.append("<FOLDERID>" + vo.getFolderId() + "</FOLDERID>");
 			sb.append("<OWNERID>" + vo.getOwnerId() + "</OWNERID>");
@@ -213,7 +215,7 @@ public class EzAddressController{
 			pOwerId = userInfo.getId();
 		}
 		
-		String pListType = ezAddressService.getListType(userInfo.getId());
+		String pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
 		if (pListType == null) {
 			pListType = "card";
 		}
@@ -243,7 +245,7 @@ public class EzAddressController{
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			String strListPageSize = ezAddressService.getListCnt(userInfo.getId());
+			String strListPageSize = ezAddressService.getListCnt(userInfo.getTenantId(), userInfo.getId());
 			
 			if (strListPageSize == null) {
 				strListPageSize = "20";
@@ -253,17 +255,17 @@ public class EzAddressController{
 			String pFolderID = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String pOwnerID = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
-			String pFolderName = "";
+			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
 			
 			String pOrderOption = "";
-			String pFolderFilter = "";
+			String pFilter = "";
 			String strCurrentPage = "1";
 			
 			if (xmldom.getElementsByTagName("ORDERBY").item(0) != null) {
 				pOrderOption = xmldom.getElementsByTagName("ORDERBY").item(0).getTextContent();
 			}
 			if (xmldom.getElementsByTagName("FILTER").item(0) != null) {
-				pFolderFilter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+				pFilter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 			}
 			if (xmldom.getElementsByTagName("PAGE").item(0) != null) {
 				strCurrentPage = xmldom.getElementsByTagName("PAGE").item(0).getTextContent();
@@ -274,13 +276,9 @@ public class EzAddressController{
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
-			String strFolderMaxCount = ezAddressService.getAddressCount(pFolderID, pOwnerID, pFolderFilter);
-			int pFolderMaxCount = 0;
-			if (strFolderMaxCount != null) {
-				pFolderMaxCount = Integer.parseInt(strFolderMaxCount);
-			}
+			int pFolderMaxCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderID, pOwnerID, pFilter);
 			
-			List<AddressInfoVO> addressList = ezAddressService.getAddressList(pFolderID, pOwnerID, pOrderOption, pFolderFilter, "", pFolderMaxCount, pListPageSize, start);
+			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderID, pOwnerID, pOrderOption, pFilter, pListPageSize, start);
 			
 			StringBuilder sb = new StringBuilder();
 			
@@ -290,7 +288,7 @@ public class EzAddressController{
 			sb.append("<CURPAGE>" + pCurrentPage + "</CURPAGE>");
 			sb.append("<DISPLAYNAME>" + pFolderName + "</DISPLAYNAME>");
 			
-			for (AddressInfoVO vo : addressList) {
+			for (AddressVO vo : addressList) {
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + vo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + vo.getCreatorId() + "</CREATORID>");
@@ -350,24 +348,19 @@ public class EzAddressController{
 				}
 			}
 			else {
-				SubTreeInfoVO folderInfo = ezAddressService.getFolderInfo(folderId);
+				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
 				ownerId = folderInfo.getOwnerId();
 			}
 		}
 		
 		if (!addressId.equals("")) {
-			AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(addressId);
+			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 			model.addAttribute("addressInfo", addressInfo);
 			
 			textEmail = addressInfo.getsEmail();
 		}
 		
-		//2016-07-21 이효민사원 -- LiteralPhoto가 주석처리 되어있어서 구현안함.
-//		if (LiteralPhoto.Text.equals("")) {
-//      	LiteralPhoto.Text = "<IMG " + RM.GetString("i1") + ">";
-//		}
-		
-		//TODO : GetRootAddressList() 구현(필요한 경우)
+		//TODO : GetRootAddressList() (필요한 경우)
 //		if (folderId.equals("")) {
 //			GetRootAddressList();
 //		}
@@ -394,14 +387,17 @@ public class EzAddressController{
 	@ResponseBody
 	public String addressGetSearchCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
 		Document xmldom = commonUtil.convertRequestToDocument(request);
-		String idList = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent();
-		String filter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
+		String ownerId = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent();
+		String sEmail = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 		
-		filter = " SEMAIL='" + filter.trim() + "'";
-		idList = "'" + idList + "'" ;
-		int totalCount = ezAddressService.getSearchCount(idList, filter);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		return totalCount + "";
+		boolean isDuplicate = ezAddressService.checkDuplicateAddress(userInfo.getTenantId(), ownerId, sEmail.trim());
+		if (isDuplicate) {
+			return "1";
+		} else {
+			return "0";
+		}
 	}
 	
 	/**
@@ -450,7 +446,7 @@ public class EzAddressController{
 					}
 				}
 				else {
-					SubTreeInfoVO folderInfo = ezAddressService.getFolderInfo(folderId);
+					AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
 					ownerId = folderInfo.getOwnerId();
 				}
 			}
@@ -466,26 +462,22 @@ public class EzAddressController{
 				}
 			}
 			
-			if (addressId.equals("")) {
-				//주소록 추가
+			if (addressId.equals("")) { //주소록 생성
 				//주소록 중복검사(메일읽기->주소록에추가에서 중복검사를 하지않기때문에 필요함.)
-				String filter = " SEMAIL='" + sEmail.trim() + "'";
-				String idList = "'" + ownerId + "'" ;
-				int totalCount = ezAddressService.getSearchCount(idList, filter);
-				if (totalCount > 0) {
+				boolean isDuplicate = ezAddressService.checkDuplicateAddress(userInfo.getTenantId(), ownerId, sEmail.trim());
+				if (isDuplicate) {
 					return "PRE";
 				}
 				
-				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
-				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), photoPath, sName,
-						sCompany, sDept, sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip,
-						sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType, "");
-			} else {
-				//주소록 수정
-				//TODO : 첨부파일(필요시) (마지막 파라미터 : xmldom.SelectSingleNode("DATA/ATTACHLIST").OuterXml)
-				ezAddressService.updateAddress(addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), photoPath, sName, sCompany, sDept,
-						sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr,
-						sMemo, "");
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+						sName, sEmail, sCompany, sDept, sTitle, 
+						sCompanyPhone, sFax, sMobile, sHomePage, 
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
+			} else { //주소록 수정
+				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(),
+						sName, sEmail, sCompany, sDept, sTitle, 
+						sCompanyPhone, sFax, sMobile, sHomePage, 
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
@@ -516,7 +508,7 @@ public class EzAddressController{
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
-		AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
+		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
         	compAdmin = "Y";
@@ -609,13 +601,15 @@ public class EzAddressController{
 			String sType = "G";
 			
 			if (addressId.equals("")) {
-				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), "", sGroupName,
-						"", "", "", "", "", "", sEmail, "", "",
-						"", "", "", sMemo, sType, "");
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+						sGroupName, sEmail, "", "", "", 
+						"", "", "", "", 
+						"", "", "", "", sMemo, sType);
 			} else {
-				ezAddressService.updateAddress(addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), "", sGroupName, 
-						"", "", "", "", "", "", sEmail, "", "", 
-						"", "", "", sMemo, "");
+				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), 
+						sGroupName, sEmail, "", "", "", 
+						"", "", "", "", 
+						"", "", "", "", sMemo);
 			}
 			
 		} catch (Exception e) {
@@ -652,7 +646,7 @@ public class EzAddressController{
         	deptAdmin = "Y";
         }
 		
-        AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
+		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		String address = addressInfo.getsMemo();
 		StringBuilder listMember = new StringBuilder();
 		
@@ -696,10 +690,12 @@ public class EzAddressController{
 	        Document xmldom = commonUtil.convertRequestToDocument(request);
 			NodeList ids = xmldom.getElementsByTagName("ID");
 	        
-            for (int i=0; i<ids.getLength(); i++) {
-                ezAddressService.deleteAddress(ids.item(i).getTextContent());
-            }
-            
+			String[] addressIds = new String[ids.getLength()];
+			for (int i=0; i<ids.getLength(); i++) {
+				addressIds[i] = ids.item(i).getTextContent();
+			}
+			
+			ezAddressService.deleteAddress(addressIds);
 	    } catch (Exception e) {
 	        returnValue = "ERROR";
 	    }
@@ -754,6 +750,7 @@ public class EzAddressController{
 		String returnValue="OK";
 		
 		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
@@ -761,20 +758,16 @@ public class EzAddressController{
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			
 			NodeList addressIdList = xmldom.getElementsByTagName("ID");
+			String[] addressIds = new String[addressIdList.getLength()];
+			
+			for (int i=0; i<addressIdList.getLength(); i++) {
+				addressIds[i] = addressIdList.item(i).getTextContent();
+			}
+			
 			if (cmd.equals("MOVE")) {
-				
-				for (int i=0; i<addressIdList.getLength(); i++) {
-					String addressId = addressIdList.item(i).getTextContent();
-					ezAddressService.moveAddress(addressId, folderId, ownerId);
-				}
-				
+				ezAddressService.moveAddress(userInfo.getTenantId(), addressIds, folderId, ownerId);
 			} else if (cmd.equals("COPY")) {
-				
-				for (int i=0; i<addressIdList.getLength(); i++) {
-					String addressId = addressIdList.item(i).getTextContent();
-					ezAddressService.copyAddress(addressId, folderId, ownerId);
-				}
-				
+				ezAddressService.copyAddress(userInfo.getTenantId(), addressIds, folderId, ownerId, userInfo.getId());
 			}
 			
 		} catch (Exception e) {
@@ -792,12 +785,12 @@ public class EzAddressController{
 	public String addressConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String pListType = ezAddressService.getListType(userInfo.getId());
+		String pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
 		if (pListType == null) {
 			pListType = "card";
 		}
 		
-		String listCount = ezAddressService.getListCnt(userInfo.getId());
+		String listCount = ezAddressService.getListCnt(userInfo.getTenantId(), userInfo.getId());
 		if (listCount == null) {
 			listCount = "20";
 		}
@@ -823,7 +816,9 @@ public class EzAddressController{
 			String pListCnt = xmldom.getElementsByTagName("LISTCNT").item(0).getTextContent();
 			String pListType = xmldom.getElementsByTagName("LISTTYPE").item(0).getTextContent();
 			
-			ezAddressService.setAddressConfig(pUserID, pListCnt, pListType);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			ezAddressService.setAddressConfig(userInfo.getTenantId(), pUserID, pListCnt, pListType);
 		
 		} catch (Exception e) {
 			returnValue = "ERROR";
@@ -852,7 +847,7 @@ public class EzAddressController{
 			
 			StringBuilder sb = new StringBuilder();
 			
-			AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(addressId);
+			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 			
 			sb.append("<NewDataSet>");
 			sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
@@ -897,7 +892,9 @@ public class EzAddressController{
 			Document xmldom = commonUtil.convertRequestToDocument(request);
 			String pAddressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			
-			AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
@@ -939,8 +936,10 @@ public class EzAddressController{
 
 		try {
 			String pAddressId = request.getParameter("id");
-
-			AddressInfoVO addressInfo = ezAddressService.getAddressInfo2(pAddressId);
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
@@ -1035,15 +1034,9 @@ public class EzAddressController{
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			
-			String folderName2 = folderName;
-			int maxSeq = ezAddressService.getMaxSeq(parentId, ownerId) + 1;
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			returnValue = ezAddressService.insertFolder(parentId, ownerId, folderType, folderName, folderName2, maxSeq);
-			
-			if (returnValue == null || returnValue.trim().equals("")) {
-				returnValue = "ERROR";
-			}
-			
+			ezAddressService.insertFolder(userInfo.getTenantId(), parentId, ownerId, folderType, folderName);
 		} catch (Exception e) {
 			returnValue = "ERROR";
 			e.printStackTrace();
@@ -1065,9 +1058,7 @@ public class EzAddressController{
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String folderName = xmldom.getElementsByTagName("FOLDERNAME").item(0).getTextContent();
 			
-			String folderName2 = folderName;
-			
-			ezAddressService.updateFolder(folderId, folderName, folderName2);
+			ezAddressService.updateFolder(folderId, folderName);
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
@@ -1115,10 +1106,12 @@ public class EzAddressController{
 			String newOwnerId = xmldom.getElementsByTagName("NEWOWNERID").item(0).getTextContent();
 			String newFolderType = xmldom.getElementsByTagName("NEWFOLDERTYPE").item(0).getTextContent();
 			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
 			if (cmd.equals("MOVE")) {
-				ezAddressService.moveFolder(folderId, newParentId, newOwnerId, newFolderType);
+				ezAddressService.moveFolder(userInfo.getTenantId(), folderId, newParentId, newOwnerId, newFolderType);
 			} else if (cmd.equals("COPY")) {
-				ezAddressService.copyFolder(folderId, newParentId, newOwnerId, newFolderType);
+				ezAddressService.copyFolder(userInfo.getTenantId(), folderId, newParentId, newOwnerId, newFolderType, userInfo.getId());
 			}
 			
 		} catch (Exception e) {
@@ -1165,7 +1158,7 @@ public class EzAddressController{
         	cAdmin = "Y";
         }
 		
-        pListType = ezAddressService.getListType(userInfo.getId());
+        pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
         if (pListType == null) {
 			pListType = "card";
 		}
@@ -1194,7 +1187,7 @@ public class EzAddressController{
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			String strListPageSize = ezAddressService.getListCnt(userInfo.getId());
+			String strListPageSize = ezAddressService.getListCnt(userInfo.getTenantId(), userInfo.getId());
 			if (strListPageSize == null) {
 				strListPageSize = "20";
 			}
@@ -1204,59 +1197,41 @@ public class EzAddressController{
 			
 			String[] tempIdArr = pIdList.split(",");
 			
-			pIdList = "";
+			String[] pIdLists = new String[tempIdArr.length];
 			for (int i=0; i<tempIdArr.length; i++) {
-				if (pIdList.equals("")) {
-					if (tempIdArr[i].equals("P")) {
-						pIdList += "'" + userInfo.getId() + "'";
-					} else if (tempIdArr[i].equals("D")) {
-						pIdList += "'" + userInfo.getDeptID() + "'";
-					} else if (tempIdArr[i].equals("C")) {
-						pIdList += "'" + userInfo.getCompanyID() + "'";
-					}
-				} else {
-					if (tempIdArr[i].equals("P")) {
-						pIdList += ", '" + userInfo.getId() + "'";
-					} else if (tempIdArr[i].equals("D")) {
-						pIdList += ", '" + userInfo.getDeptID() + "'";
-					} else if (tempIdArr[i].equals("C")) {
-						pIdList += ", '" + userInfo.getCompanyID() + "'";
-					}
+				if (tempIdArr[i].equals("P")) {
+					pIdLists[i] = userInfo.getId();
+				} else if (tempIdArr[i].equals("D")) {
+					pIdLists[i] = userInfo.getDeptID();
+				} else if (tempIdArr[i].equals("C")) {
+					pIdLists[i] = userInfo.getCompanyID();
 				}
 			}
 			
 			String pOrderOption = "";
-			String pFolderFilter = "";
+			String pFilter = "";
 			String strCurrentPage = "1";
 			
 			if (xmldom.getElementsByTagName("ORDERBY").item(0) != null) {
 				pOrderOption = xmldom.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
 			}
 			if (xmldom.getElementsByTagName("FILTER").item(0) != null) {
-				pFolderFilter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent().trim();
+				pFilter = xmldom.getElementsByTagName("FILTER").item(0).getTextContent().trim();
 			}
 			if (xmldom.getElementsByTagName("PAGE").item(0) != null) {
 				strCurrentPage = xmldom.getElementsByTagName("PAGE").item(0).getTextContent().trim();
 			}
 			
-			if (pFolderFilter.indexOf(",") > -1) {
-				pFolderFilter = pFolderFilter.split(",")[0] + " Like '%" + pFolderFilter.split(",")[1] + "%'";
-			}
 			int pListPageSize = Integer.parseInt(strListPageSize);
 			int pCurrentPage = Integer.parseInt(strCurrentPage);
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
-			int pFolderMaxCount = 0;
-			List<AddressInfoVO> addressList = null;
+			//TODO: pFilter가 항상 a,b 형식인지 확인하기
+			logger.debug("pFilter=" + pFilter);
 			
-			if (!pIdList.trim().equals("")) {
-				pFolderMaxCount = ezAddressService.getSearchCount(pIdList, pFolderFilter);
-				addressList = ezAddressService.getSearchList(pIdList, pOrderOption, pFolderFilter, "", pFolderMaxCount, pListPageSize, start);
-			}
-			else {
-				addressList = new ArrayList<AddressInfoVO>();
-			}
+			int pFolderMaxCount = ezAddressService.getSearchCount(userInfo.getTenantId(), pIdLists, pFilter);
+			List<AddressVO> addressList = ezAddressService.getSearchList(userInfo.getTenantId(), pIdLists, pOrderOption, pFilter, pListPageSize, start);
 			
 			StringBuilder sb = new StringBuilder();
 			
@@ -1266,7 +1241,7 @@ public class EzAddressController{
 			sb.append("<CURPAGE>" + pCurrentPage + "</CURPAGE>");
 			sb.append("<DISPLAYNAME></DISPLAYNAME>");
 			
-			for (AddressInfoVO vo : addressList) {
+			for (AddressVO vo : addressList) {
 				
 				//set folderType
 				String folderType = "";
@@ -1385,20 +1360,18 @@ public class EzAddressController{
 			
 			String orderBy = "SNAME:0";
 			
-			List<AddressInfoVO> addressList = null;
+			List<AddressVO> addressList = null;
 			int totalCount = 0;
 			
 			if (searchGubun.equals("Y")) {
-				
+				//TODO: Y로 올 경우가 없는 것 같음.
+				// 여기로 넘어오는지 테스트해보고 안넘어오면 지우기. 넘어오면 코딩하기.
+				logger.error("searchGubun=Y. Need more code. Location:EzAddressController 1367");
 			} else {
-				filter = "";
-				field = "AddressID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE,'" + folderType + "' AS FOLDERTYPE";
-				String strTotalCount = ezAddressService.getAddressCount(folderId, ownerId, filter);
-				if (strTotalCount != null && !strTotalCount.equals("")) {
-					totalCount = Integer.parseInt(strTotalCount);
-				}
+				LoginVO userInfo = commonUtil.userInfo(loginCookie);
 				
-				addressList = ezAddressService.getAddressList(folderId, ownerId, orderBy, filter, field, totalCount, pageSize, (currentPage - 1) * pageSize);
+				totalCount = ezAddressService.getAddressCount(userInfo.getTenantId(), folderId, ownerId, "");
+				addressList = ezAddressService.getAddressList(userInfo.getTenantId(), folderId, ownerId, orderBy, "", pageSize, (currentPage - 1) * pageSize);
 			}
 			
 			int pageCount = ((totalCount + pageSize - 1) / pageSize);
@@ -1410,7 +1383,7 @@ public class EzAddressController{
 			sb.append("<PAGECOUNT>" + pageCount + "</PAGECOUNT>");
 			sb.append("<DATA>");
 			
-			for (AddressInfoVO addressInfo : addressList) {
+			for (AddressVO addressInfo : addressList) {
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1445,11 +1418,11 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressSelectGroupMailList.do")
 	public String addressSelectGroupMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
-		
 		String addressId = request.getParameter("id") == null ? "" : request.getParameter("id");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		AddressInfoVO addressInfo =  ezAddressService.getAddressInfo2(addressId);
+		AddressVO addressInfo =  ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 		String address = addressInfo.getsMemo();
 		
 		List<InternetAddress> list = new ArrayList<InternetAddress>();
@@ -1483,7 +1456,7 @@ public class EzAddressController{
 			int pCurrentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
 			String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			String pSearchText = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
-			String pSearCase = xmldom.getElementsByTagName("CASE").item(0).getTextContent();
+			String pSearchCase = xmldom.getElementsByTagName("CASE").item(0).getTextContent();
 			
 			int start = (pListPageSize * (pCurrentPage - 1));
 			
@@ -1494,31 +1467,15 @@ public class EzAddressController{
 				pOwnerId = userInfo.getDeptID();
 			}
 			
-			String field = "AddressID, CreatorID, ModifierID, HasAttach, HasComment, SNAME, SCOMPANY, SCOMPANYPHONE, SMOBILE, SEMAIL, STYPE";
-			
 			String pFilter = "";
-			switch (pSearCase) {
-                case "SNAME":
-                    pFilter = " SNAME Like '%" + pSearchText.trim() + "%'";
-                    break;
-
-                case "SCOMPANY":
-                    pFilter = " SCOMPANY Like '%" + pSearchText.trim() + "%'";
-                    break;
-
-                case "SEMAIL":
-                    pFilter = " SEMAIL Like '%" + pSearchText.trim() + "%'";
-                    break;
-
-                default:
-                    pFilter = " SNAME Like '%" + pSearchText.trim() + "%'";
-                    break;
-            }
+			if (pSearchCase != null && !pSearchCase.trim().equals("")) {
+				pFilter = pSearchCase + "," + pSearchText.trim();
+			}
 			
-			String totalCount = ezAddressService.getAddressCount(pFolderId, pOwnerId, pFilter);
-			List<AddressInfoVO> addressList = ezAddressService.getAddressList(pFolderId, pOwnerId, "", pFilter, field, Integer.parseInt(totalCount), pListPageSize, start);
+			int totalCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderId, pOwnerId, pFilter);
+			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderId, pOwnerId, "", pFilter, pListPageSize, start);
 			
-			int pageCount = ((Integer.parseInt(totalCount) + pListPageSize - 1) / pListPageSize);
+			int pageCount = ((totalCount + pListPageSize - 1) / pListPageSize);
 			
 			StringBuilder sb = new StringBuilder();
 			
@@ -1528,7 +1485,7 @@ public class EzAddressController{
 			sb.append("<PAGECOUNT>" + pageCount + "</PAGECOUNT>");
 			sb.append("<DATA>");
 			
-			for (AddressInfoVO addressInfo : addressList) {
+			for (AddressVO addressInfo : addressList) {
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1636,12 +1593,9 @@ public class EzAddressController{
 	        csvWriter.writeNext(headArray);
 	        csvWriter.flush();
 	        
-	        List<AddressInfoVO> addressList = ezAddressService.getAddressList(folderId, ownerId, "", "STYPE='P'", 
-	        		"ADDRESSID, CREATORID, MODIFIERID, HASATTACH, HASCOMMENT, "
-	        		+ "SNAME, SCOMPANY, SCOMPANYPHONE, SDEPT, STITLE, SCOMPANYPHONE, SFAX, SMOBILE, SEMAIL, "
-	        		+ "SHOMEPAGE, SCOMPANYZIP, SCOMPANYADDR, SHOMEZIP, SHOMEADDR, SMEMO, STYPE", 0, 0, 0);
+	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", "s_type,P");
 	        
-	        for (AddressInfoVO address : addressList) {
+	        for (AddressVO address : addressList) {
 	        	String[] valueArray = new String[87];
 	        	Arrays.fill(valueArray, "");
 	        	
@@ -1965,9 +1919,10 @@ public class EzAddressController{
         			 + ",sCompanyAddr=" + sCompanyAddr + ",sHomeZip=" + sHomeZip + ",sHomeAddr=" + sHomeAddr + ",sMemo=" + sMemo);
         	
         	try {
-				ezAddressService.insertAddress(ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), "", sName,
-						sCompany, sDept, sTitle, sCompanyPhone, sFax, sMobile, sEmail, sHomePage, sCompanyZip,
-						sCompanyAddr, sHomeZip, sHomeAddr, sMemo, "P", "");
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+						sName, sEmail, sCompany, sDept, sTitle, 
+						sCompanyPhone, sFax, sMobile, sHomePage, 
+						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, "P");
         	} catch (Exception e) {
         		logger.error("Import address fail. sName=" + sName);
         		e.printStackTrace();
@@ -1976,7 +1931,6 @@ public class EzAddressController{
         
         model.addAttribute("result", "OK");
         return "ezAddress/addressImportComplete";
-        
 	}
 	
 }
