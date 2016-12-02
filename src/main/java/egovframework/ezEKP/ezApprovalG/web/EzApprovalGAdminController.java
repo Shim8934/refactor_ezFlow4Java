@@ -455,10 +455,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/componentListTransfer.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("componentListTransfer started.");
 		StringBuilder result = new StringBuilder();
 		String realPath = commonUtil.getRealPath(request); 
 		String path = "xml" + commonUtil.separator + "ezApprovalG" + commonUtil.separator + "componentlist_admin.xml";
-		path = realPath + commonUtil.separator + path;
+		path = realPath + path;
+		
+		LOGGER.debug("path : " + path);
+		
 		try {
 			File file = new File(path);
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -472,7 +476,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		LOGGER.debug("result : " + result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
+		
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
 	
