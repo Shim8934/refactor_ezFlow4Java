@@ -95,10 +95,6 @@ public class EzEmailMailListController {
 			Model model) throws Exception {
 		logger.debug("showMailList started.");
 		
-		// get user credentials
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
-		
 		// retrieve the passed in parameters
 		String dispname = request.getParameter("dispname");
 		String url = request.getParameter("url");
@@ -107,9 +103,9 @@ public class EzEmailMailListController {
 		logger.debug("dispname=" + dispname + ",url=" + url);
 				
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String userLang = userInfo.getLang();
 		String domainName = config.getProperty("config.DomainName");
 		String useEditor = config.getProperty("config.EDITOR");
 		String useOcs = config.getProperty("config.USE_OCS");
@@ -131,14 +127,14 @@ public class EzEmailMailListController {
 		}
 		
 		// retrieve the mail general settings from DB.
-		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userId).get(0);
+		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
 				
 		// 컬러 관련 설정 정보를 DB로부터 읽어인다.
 		String importanceColor = "#ff0000";
 		
 		MailColorVO mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
 		
-		logger.debug("userId=" + userId + ",mailGeneral=" + mailGeneral + ",mailColor=" + mailColor);		
+		logger.debug("mailGeneral=" + mailGeneral + ",mailColor=" + mailColor);		
 		
 		if (mailColor != null && mailColor.getImportanceColor() != null) {
 			importanceColor = mailColor.getImportanceColor();
@@ -149,8 +145,8 @@ public class EzEmailMailListController {
 		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);
 		model.addAttribute("isSentItems", isSentItems);
-		model.addAttribute("userLang", userLang);
-		model.addAttribute("userId", userId);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("domainName", domainName);
 		model.addAttribute("mailGeneral", mailGeneral);
 		model.addAttribute("useEditor", useEditor);

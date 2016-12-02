@@ -78,9 +78,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
-	@Autowired
-	private EzEmailAsync ezEmailAsync;
-	
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
 	 */
@@ -132,25 +129,25 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				String outerReadCheck = "NONE"; //외부용 관련 변수
+				
 				
 				//TODO: 외부용 메일 처리
+//				String outerReadCheck = "NONE";
 //				if (message.ExtendedProperties.Count > 0) {
 //              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
 //          	}
 				
 				//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
-				String userId = userEmail;
+				
+				LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 				
 				//get readList
-				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, messageId, outerReadCheck);
+				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
 				//get cancelList
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 				
 				List<String> tempMailList = new ArrayList<String>();
-				
-				LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 				
 				//수신table에서 가져옴
 				for (MailReadVO vo : readList) {
@@ -371,7 +368,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(internetMessageId, userEmail, subject, createDate, localServerName, innerAddresses);
+			LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, createDate, localServerName, innerAddresses);
 			
 			folder.close(true);
 			

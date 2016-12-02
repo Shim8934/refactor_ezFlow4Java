@@ -293,7 +293,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
 		
-		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
 		
 		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
 		
@@ -341,7 +341,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	to = msgto;
             String resultXML = "";
             
-            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
             
             if (mailSignatureVO != null) {
             	mailSign1 = mailSignatureVO.getContent1();
@@ -441,7 +441,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                attach = attachXmlList.toString();	
 						}
 						
-						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 						
 						if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -539,7 +539,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
-		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -750,7 +750,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		draftsFolder.close(true);
 		                
-		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -2397,7 +2397,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		        	delaySendTime = EgovDateUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
 		        	
-		            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
+		            doDelaySend(loginInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
 		        	
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
@@ -3340,16 +3340,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 예약발송 처리 함수
 	 */
-	private void doDelaySend(Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
+	private void doDelaySend(int tenantId, Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
 		logger.debug("isReserve : " + isReserve);
 		logger.debug("subject : " + subject);
 		logger.debug("sendDate : " + sendDate);
 		logger.debug("reservedId : " + reservedId);
 		
-		String email = userId + "@" + config.getProperty("config.DomainName");
 		String messageId = reservedId;
 		
-		messageId = ezEmailService.setMailReserved(messageId, subject, sendDate, email, isReserve);
+		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, userId, isReserve);
 		
 		File f = null;
 		
