@@ -312,7 +312,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public MailColorVO getMailColorForJMocha(int tenantId) throws Exception {
 		MailColorVO vo = new MailColorVO();
 		
-		String inputParams = "tenantId=" + URLEncoder.encode(String.valueOf(tenantId), "UTF-8");
+		String inputParams = "tenantId=" + tenantId;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailColor", inputParams);
@@ -351,7 +351,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	public void setMailColorForJMocha(int pTenantId, String pImportanceColor, String pInColor, String pOutColor) throws Exception {
-		String tenantIdParam = "tenantId=" + URLEncoder.encode(String.valueOf(pTenantId), "UTF-8");
+		String tenantIdParam = "tenantId=" + pTenantId;
 		String importanceColorParam = "importanceColor=" + URLEncoder.encode(pImportanceColor, "UTF-8");
 		String inmailColorParam = "inmailColor=" + URLEncoder.encode(pInColor, "UTF-8");
 		String outmailColorParam = "outmailColor=" + URLEncoder.encode(pOutColor, "UTF-8");
@@ -445,8 +445,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 			throws Exception {
 		String userIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + config.getProperty("config.DomainName"), "UTF-8");
 		String folderPathParam = "folderPath=" + URLEncoder.encode(pPath, "UTF-8");
-		String expireTimeParam = "expireTime=" + URLEncoder.encode(String.valueOf(pExpireTime), "UTF-8");
-		String deleteUnreadParam = "deleteUnread=" + URLEncoder.encode(String.valueOf(pDeleteUnread), "UTF-8");
+		String expireTimeParam = "expireTime=" + pExpireTime;
+		String deleteUnreadParam = "deleteUnread=" + pDeleteUnread;
 		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
 		
 		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam;
