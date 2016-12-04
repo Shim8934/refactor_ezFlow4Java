@@ -255,8 +255,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int companyChildCheck(String cn) throws Exception {
-		return ezOrganAdminDao.companyChildCheck(cn);
+	public int companyChildCheck(String cn, int tenantID) throws Exception {
+		return ezOrganAdminDao.companyChildCheck(cn, tenantID);
 	}
 
 	@Override
@@ -304,6 +304,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void insertDBData_dept(OrganDeptVO vo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", vo.getTenantId());
 		map.put("v_CN", vo.getCn());
 		map.put("v_DISPLAYNAME", vo.getDisplayName());
 		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
@@ -452,9 +453,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int userCountCheck(String cn) throws Exception {
-		// TODO Auto-generated method stub
-		return  ezOrganAdminDao.userCountCheck(cn);
+	public int userCountCheck(String cn, int tenantID) throws Exception {
+		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
 	}
 	
 	

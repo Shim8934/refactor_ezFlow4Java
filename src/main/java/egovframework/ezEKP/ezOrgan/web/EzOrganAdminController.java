@@ -171,7 +171,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					} catch (Exception e) {
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.removeGroup(mailAddr);
-						throw e;
+						result = "EMAIL_ERROR";
 					}
 								
 				} else {
@@ -189,11 +189,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 조직도관리 회사삭제 실행 함수
+	 * 조직도관리 회사 & 부서 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delDept.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
 	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("delDept started.");
+	    
 	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
         int tenantID = userInfo.getTenantId();        
         
@@ -203,8 +205,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String pClass = "group";
 		String result = "";
 		
-		int cnt = ezOrganAdminService.companyChildCheck(cn);
-		int usercnt = ezOrganAdminService.userCountCheck(cn);
+		logger.debug("cn=" + cn);
+		
+		int cnt = ezOrganAdminService.companyChildCheck(cn, tenantID);
+		int usercnt = ezOrganAdminService.userCountCheck(cn, tenantID);
+		
+		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
+		
 		if (cnt > 0) {
 			result = "HASCHILD";
 		} else if(usercnt>0){
@@ -212,20 +219,37 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}else {
 			
 			// skyblue0o0
-			String domain = config.getProperty("config.DomainName");
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String mailAddr = cn + "@" + domain;
+			
+			logger.debug("mailAddr=" + mailAddr);
 			
 			int rc = ezEmailUserAdminService.removeGroup(mailAddr);
 			
+			logger.debug("removeGroup rc=" + rc);
+			
 			if (rc == 0) { // removeGroup 성공
 				
-				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, config.getProperty("config.primary"), userInfo.getTenantId());
+				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, "1", userInfo.getTenantId());
 				String groupAddr = dept.getExtensionAttribute1() + "@" + domain;
+				
+				logger.debug("groupAddr=" + groupAddr);
+				
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
+				logger.debug("updateGroupDel rc=" + rc);
+				
 				if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식그룹을 찾지 못해도 성공으로 봄.)
-					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
-					result = "OK";
+				    try {
+    					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
+    					result = "OK";
+    				// 예외가 발생하면 그룹 주소를 다시 등록한다.
+				    } catch (Exception e) {
+				        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				        ezEmailUserAdminService.addGroup(mailAddr);
+				        
+				        result = "EMAIL_ERROR";
+				    }
 				} else {
 					result = "EMAIL_ERROR";
 				}
@@ -235,6 +259,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			// skyblue0o0 - end
 			
 		}
+		
+		logger.debug("delDept ended.");
 		
 		return result;
 	}
@@ -263,9 +289,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	    
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+	    
 		String cn = request.getParameter("cn");
 		String proplist = request.getParameter("prop");				
 	
+		logger.debug("cn=" + cn);
+		
 		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1", userInfo.getTenantId());		
 
 		return infoXML;
@@ -276,15 +308,28 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveDeptInfo(OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{	
-		String domain = config.getProperty("config.DomainName");
+	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        
+        int tenantID = userInfo.getTenantId();                              
+	    
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		
+		logger.debug("tenantID=" + tenantID + ",domain=" + domain); 
+		
 		String result = "";
 
+        vo.setTenantId(tenantID);
+        
 		if (vo.getParentCn() == null) {
 			ezOrganAdminService.updateDBData_dept(vo);
 		} else {
 			String cn = vo.getCn();
-			int cnt = ezOrganAdminService.companyCheck(cn);
+			
+			// 사용자, 부서, 퇴직자, 회사 모두 기존에 사용되는 아이디를 체크한다.
+			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
+			
+			logger.debug("cn=" + cn + ",cnt=" + cnt);
 			
 			if (cnt > 0) {
 				result = "PRE";
@@ -292,11 +337,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 
 				String mailAddr = cn + "@" + domain;
 				
+				logger.debug("mailAddr=" + mailAddr);
+				
 				// skyblue0o0
 				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
 				if (rc == 0) { // addGroup 성공
 					String groupAddr = vo.getParentCn() + "@" + domain;
+					
+					logger.debug("groupAddr=" + groupAddr);
+					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
 					if (rc == 0) { // updateGroupAdd 성공
@@ -308,8 +358,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 							result = "OK";	
 						} catch (Exception e) {
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
-							ezEmailUserAdminService.removeGroup(mailAddr);
-							throw e;
+							ezEmailUserAdminService.removeGroup(mailAddr);							
+							result = "EMAIL_ERROR";
 						}
 									
 					}
@@ -350,12 +400,23 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/movDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	    logger.debug("movDept started.");
+	    
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+	    
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		
-		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getTenantId());
+		logger.debug("parentCn=" + parentCn + ",cn=" + cn);
+		
+		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
 
+		logger.debug("movDept ended.");
+		
 		return result;
 	}
 	
@@ -758,7 +819,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
 							
-							throw e;
+							result = "EMAIL_ERROR";
 						}
 					} else {
 						// 부서의 Group Email 주소로의 등록에 실패하면 해당 User를 삭제하고 에러를 반환한다.

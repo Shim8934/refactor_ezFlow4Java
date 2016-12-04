@@ -31,7 +31,7 @@ public interface EzOrganAdminService {
 
 	public int companyCheck(String cn) throws Exception;
 	
-	public int companyChildCheck(String cn) throws Exception;
+	public int companyChildCheck(String cn, int tenantID) throws Exception;
 	
 	public int userCheck(String cn, int tenantID) throws Exception;
 	
@@ -61,7 +61,7 @@ public interface EzOrganAdminService {
 
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception;
 
-	public int userCountCheck(String cn)throws Exception;
+	public int userCountCheck(String cn, int tenantID)throws Exception;
 
 	 
 }

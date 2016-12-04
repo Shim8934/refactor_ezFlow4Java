@@ -351,9 +351,58 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public int companyCheck(String cn) throws Exception{		
 		return (int) select("EzOrganAdminDAO.companyCheck", cn);
 	}
+
+    private int companyChildCheckForJMocha(String cn, int tenantID) throws Exception {
+        logger.debug("companyChildCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
+        
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptSubDeptCnt";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("count")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("companyChildCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;        
+    }
 	
-	public int companyChildCheck(String cn) throws Exception{
-		return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
+    private int companyChildCheckForLocal(String cn, int tenantID) throws Exception {
+        return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
+    }
+	
+	public int companyChildCheck(String cn, int tenantID) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return companyChildCheckForJMocha(cn, tenantID);
+        } else {
+            return companyChildCheckForLocal(cn, tenantID);
+        }       
 	}
 
     private int userCheckForJMocha(String cn, int tenantID) throws Exception{
@@ -478,8 +527,78 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.insertDBData_company", map);
 	}
 
-	public void insertDBData_dept(Map<String, Object> map) throws Exception{
-		insert("EzOrganAdminDAO.insertDBData_dept", map);
+    private void insertDBData_deptForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String deptId = (String)map.get("v_CN");
+        String displayName = (String)map.get("v_DISPLAYNAME");
+        String displayName2 = (String)map.get("v_DISPLAYNAME2");
+        String mail = (String)map.get("v_MAIL");
+        String parentCn = (String)map.get("v_PARENTCN");
+        String extensionAttribute4 = (String)map.get("v_EXTATTR4");
+        String extensionAttribute5 = (String)map.get("v_EXTATTR5");
+        String extensionAttribute6 = (String)map.get("v_EXTATTR6");
+        String extensionAttribute8 = (String)map.get("v_EXTATTR8");
+        String extensionAttribute9 = (String)map.get("v_EXTATTR9");
+        String extensionAttribute10 = (String)map.get("v_EXTATTR10");
+        String extensionAttribute15 = (String)map.get("v_EXTATTR15");
+        String ldapPath = (String)map.get("v_LDAPPATH");
+        
+        logger.debug("insertDBData_deptForJMocha started. tenantId=" + tenantId + ",deptId=" + deptId + ",parentCn=" + parentCn);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(displayName2, "UTF-8");
+        String param5 = "mail=" + URLEncoder.encode(mail, "UTF-8");
+        String param6 = "parentCn=" + URLEncoder.encode(parentCn, "UTF-8");
+        String param7 = "extensionAttribute4=" + URLEncoder.encode(extensionAttribute4, "UTF-8");
+        String param8 = "extensionAttribute5=" + URLEncoder.encode(extensionAttribute5, "UTF-8");
+        String param9 = "extensionAttribute6=" + URLEncoder.encode(extensionAttribute6, "UTF-8");
+        String param10 = "extensionAttribute8=" + URLEncoder.encode(extensionAttribute8, "UTF-8");
+        String param11 = "extensionAttribute9=" + URLEncoder.encode(extensionAttribute9, "UTF-8");
+        String param12 = "extensionAttribute10=" + URLEncoder.encode(extensionAttribute10, "UTF-8");
+        String param13 = "extensionAttribute15=" + URLEncoder.encode(extensionAttribute15, "UTF-8");        
+        String param14 = "ldapPath=" + URLEncoder.encode(ldapPath, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
+                    + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
+                    + "&" + param13 + "&" + param14;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addDept";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("insertDBData_deptForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Adding Department Failed!");
+        }
+    }
+	
+    private void insertDBData_deptForLocal(Map<String, Object> map) throws Exception {
+        insert("EzOrganAdminDAO.insertDBData_dept", map);
+    }
+	
+	public void insertDBData_dept(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            insertDBData_deptForJMocha(map);
+        } else {
+            insertDBData_deptForLocal(map);
+        }               
 	}
 
     private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
@@ -580,8 +699,59 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       
 	}
 	
-	public void updateDBData_dept(OrganDeptVO vo) throws Exception{
-		update("EzOrganAdminDAO.updateDBData_dept", vo);
+    private void updateDBData_deptForJMocha(OrganDeptVO vo) throws Exception {
+        logger.debug("updateDBData_deptForJMocha started. tenantId=" + vo.getTenantId() + ",deptId=" + vo.getCn());
+
+        String param1 = "tenantId=" + vo.getTenantId();
+        String param2 = "deptId=" + URLEncoder.encode(vo.getCn(), "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(vo.getDisplayName(), "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(vo.getDisplayName2(), "UTF-8");
+        String param5 = "extensionAttribute4=" + URLEncoder.encode(vo.getExtensionAttribute4(), "UTF-8");
+        String param6 = "extensionAttribute5=" + URLEncoder.encode(vo.getExtensionAttribute5(), "UTF-8");
+        String param7 = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
+        String param8 = "extensionAttribute8=" + URLEncoder.encode(vo.getExtensionAttribute8(), "UTF-8");
+        String param9 = "extensionAttribute9=" + URLEncoder.encode(vo.getExtensionAttribute9(), "UTF-8");
+        String param10 = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");
+        String param11 = "extensionAttribute15=" + URLEncoder.encode(vo.getExtensionAttribute15(), "UTF-8");        
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
+                    + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateDept";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("updateDBData_deptForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Updating Dept Failed!");
+        }                
+    }
+	
+    private void updateDBData_deptForLocal(OrganDeptVO vo) throws Exception {
+        update("EzOrganAdminDAO.updateDBData_dept", vo);
+    }
+	
+	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            updateDBData_deptForJMocha(vo);
+        } else {
+            updateDBData_deptForLocal(vo);
+        }       
 	}
 
     private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
@@ -701,16 +871,26 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
     private void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
-        String userId = (String)map.get("v_CN");
+        String cn = (String)map.get("v_CN");
         String targetClass = (String)map.get("v_CLASS");
         
-        logger.debug("deleteDBDataForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",targetClass=" + targetClass);
+        logger.debug("deleteDBDataForJMocha started. tenantId=" + tenantId + ",cn=" + cn + ",targetClass=" + targetClass);
 
         String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
-        String inputParams = param1 + "&" + param2;
+        String param2 = null;
 
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteUser";
+        String requestURL = null;
+                
+        if (targetClass.equals("group")) {
+            param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
+            requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteDept";
+        } else {
+            param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
+            requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteUser";
+        }
+        
+        String inputParams = param1 + "&" + param2;
+        
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
         logger.debug("response=" + response);
@@ -732,7 +912,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         logger.debug("deleteDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
         
         if (reasonCode != 0) {
-            throw new Exception("Deleting User Failed!");
+            if (targetClass.equals("group")) {
+                throw new Exception("Deleting Department Failed!");
+            } else {
+                throw new Exception("Deleting User Failed!");
+            }
         }        
     }
 	
@@ -751,18 +935,28 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     private void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String parentCn = (String)map.get("v_PARENTCN");
-        String userId = (String)map.get("v_CN");
+        String cn = (String)map.get("v_CN");
         String targetClass = (String)map.get("v_CLASS");
         
-        logger.debug("moveDBDataForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",targetClass=" + targetClass
+        logger.debug("moveDBDataForJMocha started. tenantId=" + tenantId + ",cn=" + cn + ",targetClass=" + targetClass
                     + ",parentCn=" + parentCn);
 
         String param1 = "tenantId=" + tenantId;
-        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String param2 = null;
         String param3 = "parentCn=" + URLEncoder.encode(parentCn, "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3;
 
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/moveUser";
+        String requestURL = null;
+        
+        if (targetClass.equals("group")) {
+            param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
+            requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/moveDept";
+        } else {
+            param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
+            requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/moveUser";
+        }
+        
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+        
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
         logger.debug("response=" + response);
@@ -784,7 +978,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         logger.debug("moveDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
         
         if (reasonCode != 0) {
-            throw new Exception("Moving User Failed!");
+            if (targetClass.equals("group")) {
+                throw new Exception("Moving Dept Failed!");
+            } else {
+                throw new Exception("Moving User Failed!");
+            }
         }                
     }
 	
@@ -848,10 +1046,57 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		delete("EzOrganAdminDAO.setAddJob", map);
 	}
 
-	public int userCountCheck(String cn) {
-		// TODO Auto-generated method stub
-		return (int) select("EzOrganAdminDAO.userCountCheck", cn);
-	}
-		
+    public int userCountCheckForJMocha(String cn, int tenantID) throws Exception {
+        logger.debug("userCountCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
+        
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "deptId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptUserCount";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("count")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("userCountCheckForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;
+    }
+	
+    public int userCountCheckForLocal(String cn, int tenantID) {
+        return (int) select("EzOrganAdminDAO.userCountCheck", cn);
+    }
+	
+	public int userCountCheck(String cn, int tenantID) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return userCountCheckForJMocha(cn, tenantID);
+        } else {
+            return userCountCheckForLocal(cn, tenantID);
+        }       
+	}		
 
 }
