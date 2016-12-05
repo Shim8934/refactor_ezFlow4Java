@@ -414,10 +414,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		
-		logger.debug("parentCn=" + parentCn + ",cn=" + cn);
-		
-		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+        logger.debug("parentCn=" + parentCn + ",cn=" + cn);
+        
+        String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
 
+        logger.debug("moveEntry result=" + result);
+        
 		logger.debug("movDept ended.");
 		
 		return result;

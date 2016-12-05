@@ -175,12 +175,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			if (rc == 0) { // 성공
 				try {
 					moveDBData(parentCn, cn, type, tenantID);
+		            result = "OK";
 				} catch (Exception e) {
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
-					throw e;
-				}
-				
-				result = "OK";
+					result = "EMAIL_ERROR";
+				}				
 			} else {
 				result = "EMAIL_ERROR";
 			}
