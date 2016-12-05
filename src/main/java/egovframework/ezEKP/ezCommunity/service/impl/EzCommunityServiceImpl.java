@@ -478,7 +478,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pMode = 1;
 		}
 		
-		strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(userInfo.getLang()));
+		strXML = getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 
 		return strXML;
 	}
@@ -2022,7 +2022,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, int tenantID) throws Exception {
 		int count = 0;
         String strForbiddenBoardIDList = "";
 		StringBuilder result;
@@ -2036,7 +2036,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         }
         
         String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {
         	boardTreeList = getBoardTreeGet2(pAccessID.split(",")[i].trim());

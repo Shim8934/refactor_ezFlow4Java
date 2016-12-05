@@ -272,7 +272,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String textProxyName = "";
 		String initDate = EgovDateUtil.getTodayTime();
 		
-		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5");
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");

@@ -133,7 +133,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 		for(String propname : proplist){
             if (ezOrganService.checkDBColum(propname.toUpperCase()) == false){
-                propvalue = ezOrganService.getPropertyValue(pCN, propname);
+                propvalue = ezOrganService.getPropertyValue(pCN, propname, tenantID);
                 propinfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propvalue) + "</" + propname.toUpperCase() + ">");
             }else if (!propname.toUpperCase().equals("")){
             	Field field = vo.getClass().getDeclaredField(propname);
@@ -286,9 +286,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath) throws Exception {
+	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_DISPLAYNAME", displayName);
 		map.put("v_DISPLAYNAME2", displayName2);
