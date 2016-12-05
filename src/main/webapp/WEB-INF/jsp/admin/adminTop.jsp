@@ -38,7 +38,7 @@
 					    parent.frames["bottom"].location.href = "/admin/ezOrgan/organMain.do";				
 						break;				
 			        case "menu03":		
-			            parent.frames["bottom"].location.href = "index_approval.aspx";
+			            parent.frames["bottom"].location.href = "/admin/ezApproval/apprMain.do";
 						break;
 					case "menu04":		
 					    parent.frames["bottom"].location.href = "/admin/ezApprovalG/apprGMain.do";
