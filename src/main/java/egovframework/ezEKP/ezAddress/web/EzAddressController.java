@@ -547,10 +547,6 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDeptName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		
-		//TODO: delete
-		String domainName = config.getProperty("config.DomainName");
-		model.addAttribute("domainName", domainName);
-		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("ownerId", ownerId);

@@ -500,9 +500,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		//TODO: delete
-		model.addAttribute("domainName", config.getProperty("config.DomainName"));
-		
         logger.debug("mailEdit ended.");
         
 		return "ezEmail/mailEdit";

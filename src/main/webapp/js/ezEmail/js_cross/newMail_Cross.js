@@ -1303,13 +1303,6 @@ function GetMailAddresses(name) {
         m_addrBook["title"][count + adCount] = "";
     }
     
-    //TODO: delete
-    for (var count = 0 ; count < m_addrBook["email"].length ; count++) {
-    	if (m_addrBook["email"][count].indexOf("opensol2014.com") > -1) {
-    		m_addrBook["email"][count] = m_addrBook["email"][count].replace("opensol2014.com", domainName);
-    	}
-    }
-    
     xmlDOM = null;
     xmlHTTP = null;
 }

@@ -100,9 +100,6 @@
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
 	    
-	    //TODO: delete
-	    var domainName = "${domainName}";
-	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;

@@ -955,9 +955,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("serverName", serverName);
 		
-		//TODO: delete
-		model.addAttribute("domainName", config.getProperty("config.DomainName"));
-		
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
@@ -2995,9 +2992,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
-		
-		//TODO: delete
-		model.addAttribute("domainName", config.getProperty("config.DomainName"));
 		
 		return "ezEmail/mailNewReceiverChoose";
 	}
