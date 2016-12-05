@@ -583,8 +583,62 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getMemberListCount", map);
 	}
 	
-	public String getPropertyValue(Map<String, Object> map) throws Exception{
-		return (String) select("EzOrganDAO.getPropertyValue", map);
+    private String getPropertyValueForJMocha(Map<String, Object> map) throws Exception {
+        String cn = (String)map.get("v_CN");
+        String field = (String)map.get("v_FIELD");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getPropertyValueForJMocha started. tenantId=" + tenantId + ",cn=" + cn + ",field=" + field);
+        
+        String returnValue = "";
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "cn=" + URLEncoder.encode(cn, "UTF-8");
+        String param3 = "field=" + URLEncoder.encode(field, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getEntityPropertyValue";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = (String)result.get("value");
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("getPropertyValueForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;        
+    }
+	
+    private String getPropertyValueForLocal(Map<String, Object> map) throws Exception {
+        return (String) select("EzOrganDAO.getPropertyValue", map);
+    }
+	
+	public String getPropertyValue(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getPropertyValueForJMocha(map);
+        } else {
+            return getPropertyValueForLocal(map);
+        }       
 	}
 
 	public String getSIPUriList(Map<String, Object> map) throws Exception{
