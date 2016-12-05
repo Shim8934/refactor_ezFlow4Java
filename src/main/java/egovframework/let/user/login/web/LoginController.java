@@ -174,13 +174,11 @@ public class LoginController {
 				//
 				//DB에서 lang 값 가져옴
 				String lang = ezCommonService.selectUserGetLang(_uid);
-				String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
+				//String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
 				
 				String acceptLanguage = request.getHeader("Accept-Language");
 				String returnValue = "";
 
-		        logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
-				
 				if (lang != null &&lang.equals("1")) {
 					returnValue = "ko";
 				} else if (lang != null && lang.equals("2")) {
@@ -228,6 +226,10 @@ public class LoginController {
 					
 					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
 				}
+				
+				String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
+				
+				logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
 				
 				//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
 				locale = new Locale(returnValue);
