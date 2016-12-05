@@ -513,7 +513,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             userName  = loginVO.getDisplayName1();
             userName2 = loginVO.getDisplayName2();
             //패스워드, 도메인 네임
-            String domainName = config.getProperty("config.DomainName");
+            String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
             
             String personalId = null;
             String shareDeptId = null;

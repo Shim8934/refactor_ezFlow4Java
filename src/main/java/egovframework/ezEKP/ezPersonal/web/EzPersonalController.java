@@ -845,7 +845,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
         // dhlee
-        String domain = config.getProperty("config.DomainName");
+        String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String mailAddr = userInfo.getId() + "@" + domain;
         
         // 이메일 계정의 암호를 새 암호로 설정한다.

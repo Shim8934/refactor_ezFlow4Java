@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,9 +22,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +40,12 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
-import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -90,7 +86,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
-
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 
@@ -210,7 +209,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdnPw.get(0);
 		String password  = userIdnPw.get(1);
 		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -262,14 +260,17 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 				try {
 					fis = new FileInputStream(f);
 					
+					String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+					String userEmail = loginInfo.getId() + "@" + domainName;
+					
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userId + "@"+config.getProperty("config.DomainName"), password);
+							userEmail, password);
 
 					message = sa.readMimeMessage(fis);
 
 					//임시보관함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 					
 					if (folder.exists()) {
@@ -340,8 +341,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		userLang = loginInfo.getLang();
 		userTimeset = loginInfo.getOffset();
 		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary, loginInfo.getTenantId());
-		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), userPrimary, loginInfo.getTenantId());
 		displayNamePrintable = userInfo.getDisplayName();
 		
 		//set sendFrom

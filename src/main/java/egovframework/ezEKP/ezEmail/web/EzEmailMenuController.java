@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.user.login.vo.LoginVO;
@@ -62,6 +63,9 @@ public class EzEmailMenuController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;  
 	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
 	/**
 	 * 메일 왼쪽화면 호출 함수
 	 */
@@ -70,10 +74,11 @@ public class EzEmailMenuController {
 		logger.debug("showMailLeft started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -191,10 +196,11 @@ public class EzEmailMenuController {
 		logger.debug("getFolderList started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -329,10 +335,11 @@ public class EzEmailMenuController {
 		logger.debug("getFolderUnreadCount started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -386,10 +393,11 @@ public class EzEmailMenuController {
 		String strResult = "ERROR";
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		List<MultipartFile> multiFile = request.getFiles("file1");
@@ -469,10 +477,11 @@ public class EzEmailMenuController {
         }
         
         List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
         
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
@@ -522,10 +531,11 @@ public class EzEmailMenuController {
 		logger.debug("mailExport started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		String url = request.getParameter("url");

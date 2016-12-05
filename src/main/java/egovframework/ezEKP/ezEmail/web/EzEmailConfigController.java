@@ -60,6 +60,7 @@ import com.sun.mail.pop3.POP3Folder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -68,8 +69,6 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -104,15 +103,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
-
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
-	
-	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
 	
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
@@ -278,10 +277,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
 		
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
+		String userEmail = userInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		IMAPAccess ia = null;
@@ -358,12 +359,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoForward(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailAutoForward stated.");
 		
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 
 		String forwardAddress = getMailForwardAddress(userEmail);
 
-		model.addAttribute("userId", userId);
+		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("userEmail", userEmail);
 		model.addAttribute("forwardAddress", forwardAddress);
 		
@@ -383,8 +386,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailAutoForwardSave started.");		
 		logger.debug("bodyData=" + bodyData);
 
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
@@ -420,9 +425,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailAutoForwardDelete started.");		
 		logger.debug("bodyData=" + bodyData);
-
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 
 		String strResult = deleteMailForwardAddress(userEmail);
 
@@ -522,9 +529,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String result = "Error";
 
 		try {
-			String userIdParam = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
-			String inputParams = userIdParam;
-
+			String inputParams = "userId=" + URLEncoder.encode(userEmail, "UTF-8");
 			logger.debug("inputParams=" + inputParams);
 
 			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailForwardAddress";			
@@ -817,8 +822,6 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailSetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetInboxRule started.");
 		
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-
 		String mode = request.getParameter("mode");
 
 		StringBuilder sb = new StringBuilder();
@@ -826,8 +829,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String displayName = doc.getElementsByTagName("NAME").item(0).getTextContent();
 		sb.append("displayName=" + URLEncoder.encode(displayName, "UTF-8"));
-
-		userId = userId + "@" + config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userId = userInfo.getId() + "@" + domainName;
 		sb.append("&userId=" + URLEncoder.encode(userId, "UTF-8"));
 
 		//condition
@@ -948,9 +953,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailGetInboxRule started.");
 		
 		String returnValue = "Error";
-
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		userId = userId + "@" + config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userId = userInfo.getId() + "@" + domainName;
+		
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
@@ -1237,8 +1244,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		String userLang = userInfo.getLang();
 
-		String userId = userInfo.getId();
-		userId = userId + "@" + config.getProperty("config.DomainName");
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userId = userInfo.getId() + "@" + domainName;
 
 		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
@@ -1315,14 +1322,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String external = doc.getElementsByTagName("EXTERNAL").item(0).getTextContent();
 		String externalAudience = doc.getElementsByTagName("EXTERNALAUDIENCE").item(0).getTextContent();
 
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		userId = userId + "@" + config.getProperty("config.DomainName");
-		
 		//set UTC time
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
 		startDate = EgovDateUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = EgovDateUtil.getDateStringInUTC(endDate, offset, true);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userId = userInfo.getId() + "@" + domainName;
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
@@ -1482,12 +1489,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailGetPop3 started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		response.setContentType("text/html; charset=utf-8");

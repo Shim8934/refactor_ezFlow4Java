@@ -138,12 +138,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveCompanyInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");
-		String domain = config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
 		String result = "";
 		String ldapPath = "";
 		
@@ -212,7 +215,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}else {
 			
 			// skyblue0o0
-			String domain = config.getProperty("config.DomainName");
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String mailAddr = cn + "@" + domain;
 			
 			int rc = ezEmailUserAdminService.removeGroup(mailAddr);
@@ -276,8 +279,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveDeptInfo(OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{	
-		String domain = config.getProperty("config.DomainName");
+	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{	
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
 		String result = "";
 
 		if (vo.getParentCn() == null) {
@@ -469,12 +474,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 새로운 비밀번호 설정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/changePassword.do")
-	public void changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void changePassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String pw = request.getParameter("password");
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
-		String domain = config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		// dhlee - end
 		
 		for (int i=0; i < cn.length; i++) {		
@@ -514,7 +520,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String cn[] = request.getParameter("cn").split(",");
 		
 		// dhlee
-		String domain = config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		// dhlee - end
 		
 		for (int i=0; i < cn.length; i++) {			
@@ -524,7 +531,6 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			if (rc == 0) { // retireUser 성공				
 				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
-				LoginVO userInfo = commonUtil.userInfo(loginCookie);
 				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), userInfo.getTenantId());
 				String groupAddr = userVO.getDepartment() + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
@@ -1292,12 +1298,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 퇴직자관리 복구 기능 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/restoreRetireUser.do")
-	public void restoreRetireUser(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void restoreRetireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String deptID = request.getParameter("deptID");
 		String[] cn = request.getParameter("cn").split(",");
 		
 		// dhlee
-		String domain = config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		// dhlee - end
 		
 		for (int i = 0; i < cn.length; i++) {

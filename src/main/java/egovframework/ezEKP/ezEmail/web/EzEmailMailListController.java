@@ -44,6 +44,7 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -82,6 +83,9 @@ public class EzEmailMailListController {
     @Resource(name="EzEmailService")
     private EzEmailService ezEmailService;        
 	
+    @Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+    
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
     
@@ -106,7 +110,7 @@ public class EzEmailMailListController {
 		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String domainName = config.getProperty("config.DomainName");
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String useEditor = config.getProperty("config.EDITOR");
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
@@ -169,10 +173,11 @@ public class EzEmailMailListController {
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
 		
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userEmail = userInfo.getId() + "@" + domainName;
         
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
@@ -184,7 +189,7 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		
-		logger.debug("userId=" + userId + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
+		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
 					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
 		
@@ -194,7 +199,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -534,8 +539,9 @@ public class EzEmailMailListController {
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
@@ -563,9 +569,11 @@ public class EzEmailMailListController {
 		IMAPAccess ia = null;
 		
 		try {
-		
+	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+	        String userEmail = userInfo.getId() + "@" + domainName;
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -617,7 +625,6 @@ public class EzEmailMailListController {
 		
 		try {
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-			String userId = userIdAndPassword.get(0);
 			String password = userIdAndPassword.get(1);
 			
 			Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -639,8 +646,12 @@ public class EzEmailMailListController {
 				uids[i] = Long.parseLong(msgId);
 			}
 			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+	        String userEmail = userInfo.getId() + "@" + domainName;
+			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
@@ -686,8 +697,11 @@ public class EzEmailMailListController {
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userEmail = userInfo.getId() + "@" + domainName;
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
@@ -713,7 +727,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -762,8 +776,11 @@ public class EzEmailMailListController {
 
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userEmail = userInfo.getId() + "@" + domainName;
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String isRead = doc.getElementsByTagName("ISREAD").item(0).getTextContent();
@@ -785,7 +802,7 @@ public class EzEmailMailListController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
@@ -845,14 +862,17 @@ public class EzEmailMailListController {
 		}
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+        String userEmail = loginInfo.getId() + "@" + domainName;
 		
 		IMAPAccess ia = null;
 		String resultData = "ERROR";
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			Folder folder = ia.getFolder(folderPath);
 			folder.open(Folder.READ_ONLY);
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
@@ -903,9 +923,6 @@ public class EzEmailMailListController {
 		
 		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
 		
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userInfo.get(0);
-		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
 		
@@ -917,8 +934,11 @@ public class EzEmailMailListController {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		userId = userId + "@" + config.getProperty("config.DomainName");
-		sb.append("userId=" + URLEncoder.encode(userId, "UTF-8"));
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+        String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		sb.append("userId=" + URLEncoder.encode(userEmail, "UTF-8"));
 		
 		List<String> addresses = new ArrayList<String>();
 		
