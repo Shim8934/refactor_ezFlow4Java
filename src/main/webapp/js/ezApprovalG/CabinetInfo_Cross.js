@@ -85,7 +85,7 @@ function GetCabinetClassInfo(pCabID) {
     if (rtnXml == "FALSE") {
         alert(strLang483);
     }
-    return result;
+    return loadXMLString(result);
 }
 
 var addvolume_cross_dialogArguments = new Array();

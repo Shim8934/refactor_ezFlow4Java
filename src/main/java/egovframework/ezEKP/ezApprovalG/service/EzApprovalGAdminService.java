@@ -9,7 +9,7 @@ public interface EzApprovalGAdminService {
 
 	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception;
 
-	public String getContTypeInfo(String type, String companyID, String primary) throws Exception;
+	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
 	
 	public String deleteContainerType(String docTypeID, String companyID) throws Exception;
 	
@@ -25,7 +25,7 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteContainer(String contID, String companyID) throws Exception;
 	
-	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang) throws Exception;
+	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang, int tenantID) throws Exception;
 	
 	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID) throws Exception;
 	
@@ -39,7 +39,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception;
 	
-	public String getTaskInSubCategoryForManage(Document doc) throws Exception;
+	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception;
 
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception;
 
@@ -65,9 +65,9 @@ public interface EzApprovalGAdminService {
 	
 	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception;
 	
-	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception;
+	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception;
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
 	
 	public String getSealList(String listFlag, String companyID, String lang) throws Exception;
 
@@ -95,7 +95,7 @@ public interface EzApprovalGAdminService {
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String primary, String approvUser) throws Exception;
+			String orderCell, String orderOption, String companyID, String primary, String approvUser, int tenantID) throws Exception;
 
 	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
 	
