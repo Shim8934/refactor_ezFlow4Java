@@ -2897,13 +2897,13 @@
 	                            SC1 ,
 	                            SC2 ,
 	                            SC3 ,
-	                            TENENT_ID
+	                            TENANT_ID
 	                     FROM 
 	                     		EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB 
 	                     WHERE  
 	                     		SERIALNO = '000' 
 	                     AND
-	                     		TENENT_ID = #v_TENANTID#) SCINFO   
+	                     		TENANT_ID = #v_TENANTID#) SCINFO   
 	           ON 
 	           		TBCABINETCLASS.CabinetClassNo = SCINFO.CABINETCLASSNO
 	           AND
