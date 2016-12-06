@@ -272,7 +272,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String textProxyName = "";
 		String initDate = EgovDateUtil.getTodayTime();
 		
-		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5");
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");
@@ -830,6 +830,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@ResponseBody
 	public String changePassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String prm = egovFileScrty.getPrm();
@@ -856,7 +860,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         if (rc == 0) { // checkAndUpdateUserPassword 성공                                                 
             try {
                 // 로컬 시스템에서 해당 User의 암호를 변경한다.
-                ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword));
+                ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword), tenantID);
             } catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
                 ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedNewPassword, decryptedOldPassword);
                 
@@ -1015,7 +1019,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user");
+		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user", userInfo.getTenantId());
 		
 		model.addAttribute("filePath", filePath);
 		model.addAttribute("filePath2", filePath2);

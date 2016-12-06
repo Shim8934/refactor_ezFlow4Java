@@ -5,6 +5,8 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -34,6 +36,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzOrganController {
 	
+    private static final Logger logger = LoggerFactory.getLogger(EzOrganController.class);
+    
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -52,7 +56,14 @@ public class EzOrganController {
 	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("getDeptTreeInfo started.");
+	    
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = "";
@@ -60,7 +71,13 @@ public class EzOrganController {
         String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
         
-        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), userInfo.getTenantId());
+        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList);
+        
+        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);
+        
+        logger.debug("deptInfo=" + deptInfo);
+        
+        logger.debug("getDeptTreeInfo ended.");
         
 		return deptInfo;
 	}
@@ -274,7 +291,7 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String cn = userInfo.getId();
-		String infoXML = ezOrganService.getPropertyValue(cn, "extensionattribute4");
+		String infoXML = ezOrganService.getPropertyValue(cn, "extensionattribute4", userInfo.getTenantId());
 		
 		 infoXML="<RESULT>" + infoXML + "</RESULT>";
 		return infoXML;

@@ -1812,7 +1812,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         }
         
         String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",everyone";
-        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1");        
+        String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);        
         List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {

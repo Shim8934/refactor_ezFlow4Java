@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCommunity.web;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,8 +15,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,8 +179,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
 	@ResponseBody
-	public String getLeftBoardList() throws Exception {
-		return ezCommunityService.getLeftBoardList();
+	public String getLeftBoardList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		return ezCommunityService.getLeftBoardList(userInfo.getTenantId());
 	}
 	
 	/**
@@ -371,7 +370,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			mode = 1;
 		}
 		
-		String retXML = ezCommunityService.getBoardTree("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		String retXML = ezCommunityService.getBoardTree("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
@@ -1356,6 +1355,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
 	public String bbsList(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("bbsList started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String bName = "c_Board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
 		String titleName = "";
@@ -1387,10 +1388,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!code.equals("")) {
-			titleName = ezCommunityService.getBoardTitleName(bName, code);
+			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 
-		keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -1398,7 +1399,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
 		
 		String strHTML = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 
@@ -1414,6 +1415,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
 		
+		LOGGER.debug("bbsList ended.");
+		
 		return "/ezCommunity/communityBbsList";
 	}
 	
@@ -1422,6 +1425,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsViewNew.do")
 	public String bbsNewViewNew(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		LOGGER.debug("bbsViewNew started.");
+		
 		String keyword = "", sRadio = "", pagec = "1";
 		String strTitle = "", strWriteName = "", strWriterID = "";
 		int myStep = 0, myLevel = 0, grsRef = 0, readNo = 0, grsNo = 0;	
@@ -1448,9 +1453,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pagec = request.getParameter("pagec");
 		}
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
-		String fileName = ezCommunityService.bbsEditGet1(bName, no);
-		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no);
+		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
+		String fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
+		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no, userInfo.getTenantId());
 		
 		if (cBoardGet1 != null) {
 			strTitle = cBoardGet1.getTitle().trim().replaceAll("&quot;", "'").replaceAll("&dquot;", "\"");
@@ -1519,6 +1524,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("previousItemID", previousItemID);
 		model.addAttribute("userInfo", userInfo);
 		
+		LOGGER.debug("bbsViewNew ended.");
+		
 		return "/ezCommunity/communityBbsViewNew";
 	}
 	
@@ -1527,6 +1534,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do")
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+		LOGGER.debug("bbsEditNew started.");
+		
 		String code = "", sRadio = "", keyword = "", cID = "", no = "", fileName = "", title = "", grsUserName = "", writeFakerName = "";
 		int pagec = 0, block = 0;
 		String step = "", level = "", ref = "";
@@ -1570,8 +1579,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (!no.equals("")) { //  수정(mode :  "edit")  또는 답변(mode :  "write")
 
-			fileName = ezCommunityService.bbsEditGet1(bName, no);
-			cBoardVO = ezCommunityService.bbsEditNew(bName, no, commonUtil.getMultiData(userInfo.getLang()));
+			fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
+			cBoardVO = ezCommunityService.bbsEditNew(bName, no, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 			
 			 if (!no.equals("")) { // 수정(mode : "edit") 답변 (mode : "write")
 				 if (userInfo.getLang().equals("2")) {
@@ -1617,6 +1626,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("step", step);
 		model.addAttribute("level", level);
 		model.addAttribute("gref", ref);
+		
+		LOGGER.debug("bbsEditNew ended.");
 		
 		return "/ezCommunity/communityBbsEditNew";
 	}
@@ -1664,7 +1675,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String bName = request.getParameter("bName");
 
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo());
+		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code);
 		
 		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
@@ -2232,7 +2243,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pMode = 1;
 		}
 
-		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")){
             retXML = "<RESULT>ERROR</RESULT>";
@@ -2631,7 +2642,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pExcludeBoardID = request.getParameter("pExcludeBoardID");
 		}
 		
-		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()));
+		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 
 		return strXML;
 	}
@@ -2772,7 +2783,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			boardInfo.setBoardName(boardInfo.getBoardName2());
 		}
 		
-		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()));
+		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
@@ -3190,14 +3201,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/myCopNewBoardItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String myCopNewBoardItem (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("myCopNewBoardItem started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		int page = Integer.parseInt(request.getParameter("page"));
-		
 		int startRow = (3 * (page - 1)) + 1;
 		int endRow = 3 * page;
 		
-		return ezCommunityService.myCopNewBoardItem(userInfo, startRow, endRow);
+		LOGGER.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
+		
+		String result = ezCommunityService.myCopNewBoardItem(userInfo, startRow, endRow);
+		
+		LOGGER.debug("result : " + result);
+		LOGGER.debug("myCopNewBoardItem ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -3500,7 +3518,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 오늘의 커뮤니티 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/todayCop.do", method = RequestMethod.POST)
-	public String todayCop(Model model) throws Exception {
+	public String todayCop(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("todayCop started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		int num = 0;
 		String cCatecAName = "", cCatecBName = "";
 		
@@ -3525,12 +3547,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 			cCatecBName = ezCommunityService.todayCopGet3(club.getC_Cate_B(), "B");
 		}
 		
-		String itemCnt = ezCommunityService.categoryListItemCntGet(club.getC_ClubNo()); 
+		String itemCnt = ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()); 
 		
 		model.addAttribute("clubVO", club);
 		model.addAttribute("cCateAName", cCatecAName);
 		model.addAttribute("cCateBName", cCatecBName);
 		model.addAttribute("itemCnt", itemCnt);
+		
+		LOGGER.debug("todayCop ended.");
 		
 		return "json";
 	}
@@ -3570,7 +3594,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/categoryCopList.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
-	public String categoryCopList(Model model, HttpServletRequest request) throws Exception {
+	public String categoryCopList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
 		String type = request.getParameter("type");
 		int page = Integer.parseInt(request.getParameter("page"));
@@ -3584,7 +3609,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("<DATA>");
 		
 		for (CommunityClubVO club : clubList) {
-			club.setItemCnt(Integer.parseInt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo())));
+			club.setItemCnt(Integer.parseInt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId())));
 			sb.append(commonUtil.getQueryResult(club));
 		}
 		
@@ -3629,7 +3654,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("<DATA>");
 		
 		for (CommunityClubVO club : clubList) {
-			club.setItemCnt(Integer.parseInt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo())));
+			club.setItemCnt(Integer.parseInt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId())));
 			sb.append(commonUtil.getQueryResult(club));
 		}
 		

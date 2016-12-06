@@ -139,37 +139,59 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
 	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("saveCompanyInfo started.");
+	    
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");
 		
+		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
+		logger.debug("domain=" + domain);
 		
 		String result = "";
 		String ldapPath = "";
 		
-		int cnt = ezOrganAdminService.companyCheck(cn);
-
+        // 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+        int cnt = ezOrganAdminService.userCheck(cn, tenantID);
+        
+        logger.debug("userCheck cnt=" + cnt);
+        
 		if (cnt > 0) {
 			result = "PRE";
 		} else {
 			String mailAddr = cn + "@" + domain;
 			
+			logger.debug("mailAddr=" + mailAddr);
+			
 			// skyblue0o0
 			int rc = ezEmailUserAdminService.addGroup(mailAddr);
+			
+			logger.debug("addGroup rc=" + rc);
 			
 			if (rc == 0) { // addGroup 성공
 				
 				String groupAddr = parentCn + "@" + domain;
+				
+				logger.debug("groupAddr=" + groupAddr);
+				
 				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				
+				logger.debug("updateGroupAdd rc=" + rc);
 				
 				if (rc == 0) { // updateGroupAdd 성공
 					
 					//insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 					try {
-						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath);
+						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID);
 						result = "OK";	
 					} catch (Exception e) {
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
@@ -178,7 +200,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					}
 								
 				} else {
-					ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+				    ezEmailUserAdminService.removeGroup(mailAddr);
 					result = "EMAIL_ERROR";
 				}
 			} else {
@@ -187,6 +209,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			// skyblue0o0 - end
 			
 		}
+		
+		logger.debug("saveCompanyInfo ended.");
 		
 		return result;
 	}
@@ -329,7 +353,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		} else {
 			String cn = vo.getCn();
 			
-			// 사용자, 부서, 퇴직자, 회사 모두 기존에 사용되는 아이디를 체크한다.
+			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cn=" + cn + ",cnt=" + cnt);
@@ -414,10 +438,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String parentCn = request.getParameter("parentCn");
 		String cn = request.getParameter("cn");
 		
-		logger.debug("parentCn=" + parentCn + ",cn=" + cn);
-		
-		String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+        logger.debug("parentCn=" + parentCn + ",cn=" + cn);
+        
+        String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
 
+        logger.debug("moveEntry result=" + result);
+        
 		logger.debug("movDept ended.");
 		
 		return result;
@@ -436,15 +462,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        logger.debug("saveOrderList started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String pClass = request.getParameter("pClass");
 		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
 		String result = "";
 		
+		logger.debug("pClass=" + pClass + ",cn=" + cn);
+		
 		for (int i=0; i<cnDatas.length; i++) {
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass);	
+			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
 		}
+		
+		logger.debug("saveOrderList ended.");
 		
 		return result;
 	}
@@ -534,17 +571,30 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/changePassword.do")
 	public void changePassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("changePassword started.");
+	    
 		String pw = request.getParameter("password");
 		String cn[] = request.getParameter("cn").split(",");
 		
+		logger.debug("cn=" + request.getParameter("cn")); 
+		
 		// dhlee
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);		
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		
+		logger.debug("domain=" + domain);
 		// dhlee - end
 		
 		for (int i=0; i < cn.length; i++) {		
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
+			
+			logger.debug("mailAddr=" + mailAddr);
+			
 			// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
 			String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
 			
@@ -552,10 +602,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				// 이메일 계정의 암호를 새 암호로 설정한다.
 				int rc = ezEmailUserAdminService.updateUserPassword(mailAddr, pw);
 				
+				logger.debug("updateUserPassword rc=" + rc);
+				
 				if (rc == 0) { // updateUserPassword 성공													
 					try {
 						// 로컬 시스템에서 해당 User의 암호를 변경한다.
-						ezOrganAdminService.setPassword(cn[i], pw);
+						ezOrganAdminService.setPassword(cn[i], pw, tenantID);
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
 						
@@ -569,6 +621,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 			// dhlee - end
 		}
+		
+		logger.debug("changePassword ended.");
 	}
 	
 	/**
@@ -785,6 +839,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						
 			logger.debug("domain=" + domain + ",cn=" + cn);
 			
+			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
 			int cnt = ezOrganAdminService.userCheck(cn, tenantID);
 			
 			logger.debug("cnt=" + cnt);
@@ -1150,7 +1205,14 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveSubTitle(@RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+        logger.debug("saveSubTitle started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -1166,9 +1228,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 		}
 		
-		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user");
+		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
 		
 		ezOrganAdminService.addJob(userID, titleInfo);
+		
+		logger.debug("saveSubTitle ended.");
 		
 		return "OK";
 	}

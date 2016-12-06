@@ -34,8 +34,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	
 	@Override
-	public String getPropertyValue(String userid, String propName) throws Exception{
+	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
 		
@@ -117,6 +118,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        deptInfo = deptlist2.toString();	
 	        prevDeptID = deptID;
 	        
+	        logger.debug("prevDeptID=" + prevDeptID);
+	        
 	        Map<String, Object> map2 = new HashMap<String, Object>();				
 			map2.put("v_CN", deptID);
 			map2.put("v_LANGDATA", primary);
@@ -125,8 +128,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        vo = ezOrganDAO.getTBLDeptMaster(map2);
 	        
 	        if (!deptID.toLowerCase().equals(pTopID.toLowerCase())){	        	
-                deptID = getPropertyValue(deptID, "extensionAttribute1");
+                deptID = getPropertyValue(deptID, "extensionAttribute1", tenantID);                
 	        }
+	        
+	        logger.debug("deptID=" + deptID);
 	        
         }while(!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
@@ -830,7 +835,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
         for(String propname : propList){
         	if (checkDBColum(propname.toUpperCase()) == false){
-                propValue = getPropertyValue(id, propname);
+                propValue = getPropertyValue(id, propname, tenantID);
                 propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
             }else if (propname.toUpperCase() != ""){
             	

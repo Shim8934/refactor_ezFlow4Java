@@ -42,13 +42,13 @@ public interface EzApprovalGService {
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang) throws Exception;
 
-	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang) throws Exception;
+	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getDocType(String selected, String companyID, String lang) throws Exception;
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang) throws Exception;
 
-	public String getFormContainerInfo(String id, String deptID, String companyID, String primary) throws Exception;
+	public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID) throws Exception;
 	
 	public String setUserFormInfo(String formID, String userID, String companyID) throws Exception;
 	
@@ -135,7 +135,7 @@ public interface EzApprovalGService {
 	
 	public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
-	public String getRecordList(Document doc, String lang) throws Exception;
+	public String getRecordList(Document doc, String lang, int tenantID) throws Exception;
 	
 	public String getCodeInfo(String companyID, String lang) throws Exception;
 	
@@ -208,7 +208,7 @@ public interface EzApprovalGService {
 	public String getTotalDownload(String docID, String mode, String companyID) throws Exception;
 	
 	public String getReceiveDocList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
-			String searchQuery, Document xmlDomSub) throws Exception;
+			String searchQuery, Document xmlDomSub, int tenantID) throws Exception;
 	
 	public String gongRamDocInfo(String docID, String companyID) throws Exception;
 	
@@ -221,7 +221,7 @@ public interface EzApprovalGService {
 	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
 			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang) throws Exception;
 	
-	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID) throws Exception;
+	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang) throws Exception;
 	
@@ -233,11 +233,11 @@ public interface EzApprovalGService {
 	
 	public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType) throws Exception;
 	
-	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang) throws Exception;
+	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String makeTaskListXml(Document docXML, String companyID, String strType) throws Exception;
 	
-	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang) throws Exception;
+	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getAprType_AprState(String docID, String userID, String companyID) throws Exception;
 	
@@ -250,7 +250,7 @@ public interface EzApprovalGService {
 	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
-			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser) throws Exception;
+			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser, int tenantID) throws Exception;
 	
 	public String updateSignCheck(String strSQL, String companyID) throws Exception;
 	
@@ -258,7 +258,7 @@ public interface EzApprovalGService {
 	
 	public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType) throws Exception;
 	
-	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang) throws Exception;
+	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getGamSaSearchDocList(String containerID, String userID, String deptID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR,
 			String draftFromMONTH, String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR,
@@ -273,7 +273,7 @@ public interface EzApprovalGService {
 	
 	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID) throws Exception;
 	
-	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID) throws Exception;
+	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID, int tenantID) throws Exception;
 	
 	public String chkIfNotArrangedCabExist(String deptID, String companyID) throws Exception;
 	
@@ -363,7 +363,7 @@ public interface EzApprovalGService {
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang)throws Exception;
 
-	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang)throws Exception;
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID)throws Exception;
 
 	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang) throws Exception;
 
@@ -375,6 +375,6 @@ public interface EzApprovalGService {
 	
 	public String makeContainer(String deptID, String containerType, String companyID) throws Exception;
 	
-	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang) throws Exception;
+	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID) throws Exception;
 
 }
