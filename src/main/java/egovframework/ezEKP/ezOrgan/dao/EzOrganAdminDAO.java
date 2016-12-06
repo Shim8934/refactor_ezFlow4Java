@@ -1151,7 +1151,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		delete("EzOrganAdminDAO.setAddJob", map);
 	}
 
-    public int userCountCheckForJMocha(String cn, int tenantID) throws Exception {
+    private int userCountCheckForJMocha(String cn, int tenantID) throws Exception {
         logger.debug("userCountCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
         
         int returnValue = 0;
@@ -1192,7 +1192,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return returnValue;
     }
 	
-    public int userCountCheckForLocal(String cn, int tenantID) {
+    private int userCountCheckForLocal(String cn, int tenantID) {
         return (int) select("EzOrganAdminDAO.userCountCheck", cn);
     }
 	

@@ -101,12 +101,13 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 
     @SuppressWarnings("unchecked")
-    public List<OrganDeptVO> getDeptSubTreeInfoForLocal(Map<String, Object> map) {      
+    private List<OrganDeptVO> getDeptSubTreeInfoForLocal(Map<String, Object> map) {      
         return (List<OrganDeptVO>) list("EzOrganDAO.getDeptSubTreeInfo", map);
     }
 	
 	public List<OrganDeptVO> getDeptSubTreeInfo(Map<String, Object> map) throws Exception {		
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            // getDeptSubTreeInfo와 getDeptTreeInfo가 동일한 것으로 판단되어 getDeptTreeInfoForJMocha를 호출하도록 함.
             return getDeptTreeInfoForJMocha(map);
         } else {
             return getDeptSubTreeInfoForLocal(map);
