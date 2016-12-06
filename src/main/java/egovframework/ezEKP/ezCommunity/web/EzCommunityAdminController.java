@@ -119,10 +119,10 @@ public class EzCommunityAdminController {
 		}
 		
 		if (!code.equals("")) {
-			titleName = ezCommunityService.getBoardTitleName(bName, code);
+			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 		
-		int keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		int keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -131,7 +131,7 @@ public class EzCommunityAdminController {
 		
 		curPage = Math.min(curPage,  totalPage);
 		
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
 		String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);

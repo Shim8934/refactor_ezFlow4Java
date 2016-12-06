@@ -36,7 +36,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1121,6 +1120,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/addTaskCodeDeptInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String addTaskCodeDeptInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("addTaskCodeDeptInfo started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String taskCode = request.getParameter("taskCode");
 		String deptCode = request.getParameter("deptID");
@@ -1128,7 +1129,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String deptName2 = request.getParameter("deptName2");
 		String companyID = request.getParameter("companyID");
 		
+		LOGGER.debug("taskCode : " + taskCode + ", deptCode : " + deptCode + ", deptName : " + deptName + ", deptName2 : " + deptName2 + ", companyID : " + companyID);
+		
 		String result = ezApprovalGAdminService.addTaskCodeDeptInfo(taskCode, deptCode, deptName, deptName2, companyID, userInfo);
+		
+		LOGGER.debug("result : " + result);
+		LOGGER.debug("addTaskCodeDeptInfo ended.");
 		
 		return result;
 	}

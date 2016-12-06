@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -63,6 +65,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
 	@Override
 	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception {
@@ -1022,9 +1026,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_TASKCODE", taskCode);
 			map.put("companyID", companyID);
 			
+			LOGGER.debug("getTaskName started.");
+			
 			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 			
+			LOGGER.debug("getTaskName ended.");
+			
+			LOGGER.debug("setTaskHistory started.");
+			
 			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj09", userInfo.getLocale()), "Designates the Dept", deptCode, deptName, deptName2, companyID);
+			
+			LOGGER.debug("setTaskHistory ended.");
 			
 			if (temp.equals("FALSE")) {
 				return "FALSE";
@@ -1036,8 +1048,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map1.put("v_pCount", 0);
 			map1.put("companyID", companyID);
 			
+			LOGGER.debug("getTaskCodeDeptCnt started.");
+			
 			Integer tempCount = ezApprovalGAdminDAO.getTaskCodeDeptCnt(map1);
-
+			
+			LOGGER.debug("getTaskCodeDeptCnt ended.");
+			
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("taskCode", taskCode);
 			map2.put("deptCode", deptCode);
@@ -1046,13 +1062,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map2.put("companyID", companyID);
 			
 			if (tempCount > 0){
+				LOGGER.debug("updateDeptInfo started.");
+				
 				ezApprovalGAdminDAO.updateDeptInfo(map2);
+				
+				LOGGER.debug("updateDeptInfo ended.");
 			} else {
+				LOGGER.debug("insertDeptInfo started.");
+				
 				ezApprovalGAdminDAO.insertDeptInfo(map2);
+				
+				LOGGER.debug("insertDeptInfo ended.");
 			}
 			
 			return "TRUE";
 		} catch(Exception e) {
+			LOGGER.debug(e.getMessage());
+			
 			return "FALSE";
 		}
 	}
