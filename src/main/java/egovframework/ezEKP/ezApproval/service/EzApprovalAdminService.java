@@ -22,4 +22,6 @@ public interface EzApprovalAdminService {
 
 	public String getDocType(String selected, LoginVO userInfo) throws Exception;
 
+	public String getContainerInfoManage(String deptID, String mode, String companyID, LoginVO userInfo) throws Exception;
+
 }

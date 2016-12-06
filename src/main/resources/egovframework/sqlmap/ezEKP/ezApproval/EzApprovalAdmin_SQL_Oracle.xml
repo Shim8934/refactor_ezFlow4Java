@@ -328,6 +328,33 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getContainerInfoManage" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				tbContainer.ContainerID ,
+             	tbContainer.ContainerTypeID ,
+             	tbContainer.ContainerOwnDepID ,
+             	tbContainerType.ContainerTypeName ,
+             	tbContainerType.ContainerTypeName2 
+        	FROM 
+        		tbContainer 
+            JOIN 
+            	tbContainerType
+            ON 
+            	tbContainer.tenant_id = tbContainerType.tenant_id
+            AND
+            	tbContainer.companyid = tbContainerType.companyid
+            AND
+            	tbContainer.ContainerTypeID = tbContainerType.ContainerTypeID
+       		WHERE
+       			tbContainer.tenant_id = #tenantId#
+       		AND
+       			tbContainer.companyid = #companyID#
+       		AND  
+       			CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[

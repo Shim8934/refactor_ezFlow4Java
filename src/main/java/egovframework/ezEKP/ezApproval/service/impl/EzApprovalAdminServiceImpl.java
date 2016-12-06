@@ -530,5 +530,80 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		return selOption.toString();
 	}
-	
+
+	@Override
+	public String getContainerInfoManage(String deptID, String mode, String companyID, LoginVO userInfo) throws Exception {
+		logger.debug("getContainerInfoManage started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		
+		if (mode.equals("LIST")) {
+			resultXML.append("<LISTVIEWDATA>");
+			resultXML.append("<HEADERS>");
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + getCode2Name("L02", "001", userInfo.getTenantId(), userInfo.getLang()) + "</NAME>");
+			resultXML.append("<WIDTH>" + "250" + "</WIDTH>");
+			resultXML.append("</HEADER>");
+			resultXML.append("</HEADERS>");
+			
+			userInfo.setCompanyID(companyID);
+			userInfo.setDeptID(deptID);
+			
+			List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContainerInfoManage(userInfo);
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				resultXML.append("<ROW>");
+				resultXML.append("<CELL>");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getContainerTypeName() + "</VALUE>");
+				} else {
+					resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getContainerTypeName2() + "</VALUE>");
+				}
+				resultXML.append("<DATA1>" + apprContInfoVOs.get(k).getContainerID() + "</DATA1>");
+				resultXML.append("<DATA2>" + apprContInfoVOs.get(k).getContainerTypeID() + "</DATA2>");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<DATA3>" + apprContInfoVOs.get(k).getContainerTypeName() + "</DATA3>");
+				} else {
+					resultXML.append("<DATA3>" + apprContInfoVOs.get(k).getContainerTypeName2() + "</DATA3>");
+				}
+				resultXML.append("<DATA4>" + apprContInfoVOs.get(k).getContainerOwnDepID() + "</DATA4>");
+				resultXML.append("</CELL>");
+				resultXML.append("</ROW>");
+			}
+			
+			resultXML.append("</LISTVIEWDATA>");
+		} else {
+			resultXML.append("<PARAMETER>");
+			
+			userInfo.setCompanyID(companyID);
+			userInfo.setDeptID(deptID);
+			
+			List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContainerInfoManage(userInfo);
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				resultXML.append("<CONTID" + k + ">");
+				resultXML.append(apprContInfoVOs.get(k).getContainerID());
+				resultXML.append("</CONTID" + k + ">");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<NAME" + k + ">");
+					resultXML.append(apprContInfoVOs.get(k).getContainerTypeName());
+					resultXML.append("</NAME" + k + ">");
+				} else {
+					resultXML.append("<NAME" + k + ">");
+					resultXML.append(apprContInfoVOs.get(k).getContainerTypeName2());
+					resultXML.append("</NAME" + k + ">");
+				}
+			}
+			resultXML.append("</PARAMETER>");
+			
+		}
+		
+		logger.debug("getContainerInfoManage ended");
+		
+		return resultXML.toString();
+	}
+
 }

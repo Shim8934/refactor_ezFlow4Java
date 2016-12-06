@@ -79,5 +79,10 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		return (List<ApprCodeVO>) list("EzApprovalAdminDAO.getDocType", tenantID);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ApprContInfoVO> getContainerInfoManage(LoginVO userInfo) throws Exception{
+		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getContainerInfoManage", userInfo);
+	}
+
 
 }
