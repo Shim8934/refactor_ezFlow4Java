@@ -224,12 +224,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void setPassword(String cn, String password) throws Exception {
+	public void setPassword(String cn, String password, int tenantID) throws Exception {
 		String pwd = EgovFileScrty.encryptPassword(password, cn);
 		
 		LoginVO loginVO = new LoginVO();		
 		loginVO.setId(cn);
 		loginVO.setPassword(pwd);
+		loginVO.setTenantId(tenantID);
 		
 		loginDAO.updatePassword(loginVO);
 	}

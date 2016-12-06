@@ -49,7 +49,7 @@ public interface EzOrganAdminService {
 	
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception;
 
-	public void setPassword(String cn, String password) throws Exception;
+	public void setPassword(String cn, String password, int tenantID) throws Exception;
 
 	public void retireEntry(String cn, int tenantID) throws Exception;
 
