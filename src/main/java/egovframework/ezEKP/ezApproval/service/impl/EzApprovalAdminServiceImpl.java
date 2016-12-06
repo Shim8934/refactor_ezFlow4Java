@@ -148,8 +148,8 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			List<ApprContInfoVO> tempApprContInfoVOs = ezApprovalAdminDAO.getUserContInfo(apprContInfoVO);
 			
 			for (int k = 0; k < tempApprContInfoVOs.size(); k++) {
-				tempApprContInfoVOs.get(k).setContainerTypeName(makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName")) + "_" + makeListField(tempApprContInfoVOs.get(k).getContainerTypeName()));
-				tempApprContInfoVOs.get(k).setContainerTypeName2(makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName2")) + "_" + makeListField(tempApprContInfoVOs.get(k).getContainerTypeName2()));
+				tempApprContInfoVOs.get(k).setContainerTypeName(makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName", apprContInfoVO.getTenantID())) + "_" + makeListField(tempApprContInfoVOs.get(k).getContainerTypeName()));
+				tempApprContInfoVOs.get(k).setContainerTypeName2(makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName2", apprContInfoVO.getTenantID())) + "_" + makeListField(tempApprContInfoVOs.get(k).getContainerTypeName2()));
 				
 				apprContInfoVOs.add(tempApprContInfoVOs.get(k));
 			}

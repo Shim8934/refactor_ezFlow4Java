@@ -36,12 +36,11 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
-import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -74,12 +73,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
-
-	@Autowired
-	private EzEmailUtil ezEmailUtil;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Autowired
-	private EzEmailAsync ezEmailAsync;
+	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
@@ -101,10 +100,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("bodyData=" + bodyData);
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		String returnValue = "";
@@ -132,25 +133,19 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				String messageId = ((MimeMessage)message).getMessageID() == null ? "" : ((MimeMessage)message).getMessageID();
 				logger.debug("messageId = " + messageId);
 				
-				String outerReadCheck = "NONE"; //외부용 관련 변수
-				
 				//TODO: 외부용 메일 처리
+//				String outerReadCheck = "NONE";
 //				if (message.ExtendedProperties.Count > 0) {
 //              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
 //          	}
 				
-				//pUserId:userInfo.Email, pUserId2:userInfo.userId 이지만 우선 둘다 쿠키의 id@opensol2016.com으로 넣음.
-				String userId = userEmail;
-				
 				//get readList
-				List<MailReadVO> readList = ezEmailService.getMailReadList(userId, messageId, outerReadCheck);
+				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
 				//get cancelList
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
 				
 				List<String> tempMailList = new ArrayList<String>();
-				
-				LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 				
 				//수신table에서 가져옴
 				for (MailReadVO vo : readList) {
@@ -277,10 +272,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String localServerName = config.getProperty("config.COMPUTERNAME");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
@@ -359,7 +355,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				if (index > -1) {
 					domain = address.substring(index + 1);
 				}
-				if (domain.equals(config.getProperty("config.DomainName"))) {
+				if (domain.equals(domainName)) {
 					innerAddresses.add(address);
 				}
 			}
@@ -371,7 +367,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(internetMessageId, userEmail, subject, createDate, localServerName, innerAddresses);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, createDate, localServerName, innerAddresses);
 			
 			folder.close(true);
 			

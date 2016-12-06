@@ -52,6 +52,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -91,6 +92,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 	
@@ -103,10 +107,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -370,7 +375,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 						String receivedDateStr = sdf.format(date);
 						
-						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 						dateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
 					}
 					logger.debug("dateStr=" + dateStr);
@@ -453,10 +457,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userCookieInfo.get(0);
 		String password = userCookieInfo.get(1);
 		
-		String userEmail = id+"@"+config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -506,8 +511,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("MDNSentFlag isn't set.");
 							
 							// retrieve user info from db.
-							LoginVO userInfo = commonUtil.userInfo(loginCookie);
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary(), userInfo.getTenantId());
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 									userEmail, password);
@@ -549,10 +553,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -618,10 +623,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -780,10 +786,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -868,10 +875,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -1046,7 +1054,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 						String receivedDateStr = sdf.format(date);
 						
-						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 						dateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
 					}
 					logger.debug("dateStr=" + dateStr);
@@ -1133,10 +1140,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userCookieInfo.get(0);
 		String password  = userCookieInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		// retrieve the passed in parameters
@@ -1192,8 +1200,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("MDNSentFlag isn't set.");
 							
 							// retrieve user info from db.
-							LoginVO userInfo = commonUtil.userInfo(loginCookie);
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(id, userInfo.getPrimary(), userInfo.getTenantId());
+							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 									userEmail, password);
@@ -1242,10 +1249,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String pBody = "";
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		String url = null;
@@ -1347,8 +1355,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
 						sdFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 						pReciveDT = sdFormat.format(message.getReceivedDate());
-						
-						LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 						pReciveDT = EgovDateUtil.getDateStringInUTC(pReciveDT, loginInfo.getOffset(), false);
 					}
 					logger.debug("pReciveDT=" + pReciveDT);
@@ -1408,10 +1414,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("mailDelInterAttach started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userEmail = id + "@" + config.getProperty("config.DomainName");
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);

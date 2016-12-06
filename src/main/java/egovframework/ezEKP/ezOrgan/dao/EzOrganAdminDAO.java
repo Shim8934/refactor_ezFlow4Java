@@ -522,9 +522,63 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       	    
 	}
 
+    private void insertDBData_companyForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String companyId = (String)map.get("v_CN");
+        String displayName = (String)map.get("v_DISPLAYNAME");
+        String displayName2 = (String)map.get("v_DISPLAYNAME2");
+        String mail = (String)map.get("v_MAIL");
+        String parentCn = (String)map.get("v_PARENTCN");
+        String ldapPath = (String)map.get("v_LDAPPATH");
+        
+        logger.debug("insertDBData_companyForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId + ",parentCn=" + parentCn);
 
-	public void insertDBData_company(Map<String, Object> map) throws Exception{
-		insert("EzOrganAdminDAO.insertDBData_company", map);
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(displayName2, "UTF-8");
+        String param5 = "mail=" + URLEncoder.encode(mail, "UTF-8");
+        String param6 = "parentCn=" + URLEncoder.encode(parentCn, "UTF-8");
+        String param7 = "ldapPath=" + URLEncoder.encode(ldapPath, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
+                    + "&" + param7;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addCompany";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("insertDBData_companyForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Adding Company Failed!");
+        }
+    }
+	
+    private void insertDBData_companyForLocal(Map<String, Object> map) throws Exception {
+        insert("EzOrganAdminDAO.insertDBData_company", map);
+    }
+	
+	public void insertDBData_company(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            insertDBData_companyForJMocha(map);
+        } else {
+            insertDBData_companyForLocal(map);
+        }               
 	}
 
     private void insertDBData_deptForJMocha(Map<String, Object> map) throws Exception {

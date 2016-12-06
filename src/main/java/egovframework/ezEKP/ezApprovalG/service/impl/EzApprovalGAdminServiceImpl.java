@@ -1711,7 +1711,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getGroupDept(String contID, String lang, String companyID) throws Exception {
+	public String getGroupDept(String contID, String lang, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMCONTID", contID);
 		map.put("companyID", companyID);
@@ -1728,9 +1728,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<NAME" + list.indexOf(vo) + ">");
 			
 			if (!lang.equals("2")) {
-				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname"));
+				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname", tenantID));
 			} else {
-				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2"));
+				sb.append(ezOrganService.getPropertyValue(vo.getFormContUserDepID(), "displayname2", tenantID));
 			}
 			
 			sb.append("</NAME" + list.indexOf(vo) + ">");
@@ -1823,7 +1823,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception {
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1856,7 +1856,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			for (int j = 0; j < listHeader.size(); j++) {	
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + commonUtil.getMultiData(lang)) + "</VALUE>");
+				sb.append("<CELL><VALUE>" + ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + commonUtil.getMultiData(lang), tenantID) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1></CELL></ROW>");
