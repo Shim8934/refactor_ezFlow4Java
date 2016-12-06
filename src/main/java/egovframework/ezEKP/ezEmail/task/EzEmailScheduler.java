@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,9 +23,6 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,25 +78,20 @@ public class EzEmailScheduler {
 			IMAPAccess ia = null;
 			
 			try {
-				String userId = vo.getUserId();
-				int index = userId.indexOf("@");
-				if (index != -1) {
-					userId = userId.substring(0, index);
-				}
+				String userEmail = vo.getUserId();
 
-				//TODO: 비밀번호 setting...
 				String password = config.getProperty("config.JMochaSuperPassword");
 				String path = vo.getPath();
 				String deleteUnread = vo.getDeleteUnread();
 				int expireTime = vo.getExpireTime();
 
-				logger.debug("userId : " + userId);
+				logger.debug("userEmail : " + userEmail);
 				logger.debug("path : " + path);
 				logger.debug("deleteUnread : " + deleteUnread);
 				logger.debug("expireTime : " + expireTime);
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale);
 				Folder f = ia.getFolder(path);
 
 				if (f != null && f.exists()) {
@@ -147,11 +138,7 @@ public class EzEmailScheduler {
 			FileInputStream fis = null;
 			try {
 				
-				String userId = vo.getConnUrl();
-				int index = userId.indexOf("@");
-				if (index > -1) {
-					userId = userId.substring(0, index);
-				}
+				String userEmail = vo.getConnUrl();
 				String password = config.getProperty("config.JMochaSuperPassword");
 	
 				String realPath = config.getProperty("data_root");
@@ -163,7 +150,7 @@ public class EzEmailScheduler {
 					fis = new FileInputStream(f);
 	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userId + "@"+config.getProperty("config.DomainName"), password);
+							userEmail, password);
 	
 					MimeMessage message = sa.readMimeMessage(fis);
 					
@@ -176,7 +163,7 @@ public class EzEmailScheduler {
 			        
 					//보낸편지함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userId +"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 					if (folder.exists()) {
 						folder.open(Folder.READ_WRITE);

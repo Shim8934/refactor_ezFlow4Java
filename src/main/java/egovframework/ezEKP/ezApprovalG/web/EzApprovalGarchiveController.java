@@ -981,7 +981,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
 		String dirpath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
-		String result = ezApprovalGService.addBebu(xmlDom, dirpath , userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezApprovalGService.addBebu(xmlDom, dirpath , userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
 	

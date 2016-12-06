@@ -79,8 +79,9 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressInfoVO;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -135,6 +136,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzAddressService ezAddressService;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
@@ -204,19 +208,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// get user credentials
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdnPw.get(0);
 		String password  = userIdnPw.get(1);
 				
 		// retrieve user info from db.
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		
+		String userId = loginInfo.getId();
 		userPrimary = loginInfo.getPrimary();
 		userLang = loginInfo.getLang();
 		userTimeset = loginInfo.getOffset();
 		
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary, loginInfo.getTenantId());
-		
-		userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
 		
 		useEditor = config.getProperty("config.EDITOR");
 
@@ -293,7 +295,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
 		
-		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userId).get(0);
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
 		
 		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
 		
@@ -341,7 +343,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	to = msgto;
             String resultXML = "";
             
-            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
             
             if (mailSignatureVO != null) {
             	mailSign1 = mailSignatureVO.getContent1();
@@ -381,8 +383,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	
 			IMAPAccess ia = null;
 			try {
+				String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+				String userEmail = userId + "@" + domainName;
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	    				userId+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale);
 				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
@@ -441,7 +445,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                attach = attachXmlList.toString();	
 						}
 						
-						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 						
 						if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -458,7 +462,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-		        				userId+"@"+config.getProperty("config.DomainName"), password);
+		        				userEmail, password);
 		        		MimeMessage resendMessage = sa.createMimeMessage();
 		        		
 		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
@@ -539,7 +543,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
-		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -750,7 +754,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		draftsFolder.close(true);
 		                
-		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userId);
+		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
 		                
 		                if (mailSignatureVO != null) {
 		                	mailSign1 = mailSignatureVO.getContent1();
@@ -1279,7 +1283,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
 		long uid = 0;
@@ -1289,7 +1292,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 		String realPath = config.getProperty("data_root");
 		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
-				
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
 		Folder folder = null;
@@ -1299,13 +1306,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (hasAttachFile) {
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-						id+"@"+config.getProperty("config.DomainName"), password);
+						userEmail, password);
 				
 				// 첨부파일들을 추가하여 임시 보관함에 저장할 메시지를 생성한다.
 				newMessage = sa.createMimeMessage();
 				
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+						userEmail, password, egovMessageSource, locale);
 				
 				// 임시 보관함 폴더 오픈 
 				folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
@@ -1690,13 +1697,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
-		String userId = id;
-
-		//OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, "1"); //추후 lang(두번째 파라미터) 수정
-		//userInfo.setMail(userInfo.getCn()+"@"+config.getProperty("config.DomainName"));
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = loginInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = userId + "@" + domainName;
 		
 		String pMessageID = "";
 		String rtnStatus = "";
@@ -1892,7 +1899,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-				id+"@"+config.getProperty("config.DomainName"), password);
+				userEmail, password);
 		
 		// MIME Message를 생성한다.
 		MimeMessage message = sa.createMimeMessage();
@@ -1902,7 +1909,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			// 메일 From,Recipient,CC,BCC
 			InternetAddress internetAddress = new InternetAddress();
@@ -2394,10 +2401,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        if (!delaySendTime.equals("")) {
 		        	//예약발송
-		        	LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		        	delaySendTime = EgovDateUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
 		        	
-		            doDelaySend(message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
+		            doDelaySend(loginInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
 		        	
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
@@ -2579,7 +2585,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@ResponseBody
 	public String delDrafts(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
 		String uidStr = request.getParameter("itemid");
@@ -2590,10 +2595,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			uid = Long.parseLong(uidStr);
 		}
 		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("domainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 			folder.open(Folder.READ_WRITE);
@@ -2693,7 +2702,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@ResponseBody
 	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String id = userInfo.get(0);
 		String password  = userInfo.get(1);
 		
 		String returnValue = "<DATA><![CDATA[";
@@ -2709,17 +2717,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
 		if (uid != 0) {
 			NodeList rows = root.getElementsByTagName("ROW");
 			
 			if (rows != null && rows.item(0) != null) {
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-						id+"@"+config.getProperty("config.DomainName"), password);
+						userEmail, password);
 				
 				IMAPAccess ia = null;
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							id+"@"+config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+							userEmail, password, egovMessageSource, locale);
 					
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
 					folder.open(Folder.READ_WRITE);
@@ -3000,7 +3012,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
-		String domain = config.getProperty("config.DomainName");
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		try {
 			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
@@ -3068,7 +3080,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
 		String cn = request.getParameter("cn");
-		String domain = config.getProperty("config.DomainName");
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -3144,8 +3156,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userId);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userInfo.getTenantId(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NewDataSet>");
@@ -3168,12 +3181,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String userId = commonUtil.getUserIdAndPassword(loginCookie).get(0);
-		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		String mailList = xmlDoc.getElementsByTagName("SMEMO").item(0).getTextContent();
 		
-		ezAddressService.setSimpleAddress(userId, mailList);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezAddressService.setSimpleAddress(userInfo.getTenantId(), userInfo.getId(), mailList);
 		
 		return "<DATA>OK</DATA>";
 	}
@@ -3200,7 +3213,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         try {
         	pSearchList = pSearchList.split("::")[1];
         	
-        	String domain = config.getProperty("config.DomainName");
+        	String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         	
         	String inputParams = "companyId=" + URLEncoder.encode(userInfo.getCompanyID(), "UTF-8");
         	inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
@@ -3262,16 +3275,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	private String getAddressSearch(String pFilter, LoginVO userInfo) {
         String returnValue = "";
         try {
+            String[] ownerIds = new String[]{userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId()};
+            pFilter = "SNAME," + pFilter;
             
-            String pIdList = "'" + userInfo.getCompanyID() + "', '" + userInfo.getDeptID() + "', '" + userInfo.getId() + "'";
-        	String field = "STYPE, AddressID, SNAME, SEMAIL, SCOMPANY, SDEPT, STITLE";
-            pFilter = "SNAME LIKE '%" + pFilter + "%'";
-            
-            List<AddressInfoVO> addressInfoList = ezAddressService.getSearchList(pIdList, "", pFilter, field, 0, 100, 0);
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, 100, 0);
             
             StringBuilder sb = new StringBuilder();
             
-            for (AddressInfoVO addressInfo : addressInfoList) {
+            for (AddressVO addressInfo : addressInfoList) {
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
             	sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
@@ -3341,16 +3352,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 예약발송 처리 함수
 	 */
-	private void doDelaySend(Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
+	private void doDelaySend(int tenantId, Message message, String isReserve, String reservedId, String subject, String sendDate, String userId, String realPath) throws Exception {
 		logger.debug("isReserve : " + isReserve);
 		logger.debug("subject : " + subject);
 		logger.debug("sendDate : " + sendDate);
 		logger.debug("reservedId : " + reservedId);
 		
-		String email = userId + "@" + config.getProperty("config.DomainName");
 		String messageId = reservedId;
 		
-		messageId = ezEmailService.setMailReserved(messageId, subject, sendDate, email, isReserve);
+		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, userId, isReserve);
 		
 		File f = null;
 		

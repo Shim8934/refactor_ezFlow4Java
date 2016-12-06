@@ -18,7 +18,7 @@
 	        var deptAdmin = "${deptAdmin}";
 	        var compAdmin = "${compAdmin}";
 	        var pCurrentPage = "1";
-	        var pOrderOption = "SNAME:0";
+	        var pOrderOption = "S_NAME:0";
 	        var pFilter = "";
 	        var pFilterDB = "";
 	        var pTotalCnt = "";
@@ -695,74 +695,74 @@
 			</ul>
 		</div>
 		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
-			<li><span onClick="pFilterDB='';pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+			<li><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 			<span id="address_wordmenu_korea">
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄱ'OR(SNAME>='가' AND SNAME<'나'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄴ'OR(SNAME>='나' AND SNAME<'다'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄷ'OR(SNAME>='다' AND SNAME<'라'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄷ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㄹ'OR(SNAME>='라' AND SNAME<'마'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㄹ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅁ'OR(SNAME>='마' AND SNAME<'바'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅁ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅂ'OR(SNAME>='바' AND SNAME<'사'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅂ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅅ'OR(SNAME>='사' AND SNAME<'아'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅅ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅇ'OR(SNAME>='아' AND SNAME<'자'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅇ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅈ'OR(SNAME>='자' AND SNAME<'차'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅈ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅊ'OR(SNAME>='차' AND SNAME<'카'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅊ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅋ'OR(SNAME>='카' AND SNAME<'타'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅋ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅌ'OR(SNAME>='타' AND SNAME<'파'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅌ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅍ'OR(SNAME>='파' AND SNAME<'하'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅍ</span></li>
-				<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='ㅎ'OR(SNAME>='하' AND substr(SNAME,1,1)<='힣'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ㅎ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㄱ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㄴ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㄷ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄷ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㄹ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄹ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅁ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅁ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅂ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅂ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅅ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅅ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅇ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅇ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅈ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅈ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅊ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅊ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅋ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅋ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅌ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅌ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅍ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅍ</span></li>
+				<li><span onClick="pFilterDB='INDEX_KO,ㅎ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㅎ</span></li>
 			</span>
 			<span id="address_wordmenu_japan">
-				<li><span onClick="pFilterDB=&quot;((SNAME>='あ' AND SNAME<'か')OR(SNAME>='ア' AND SNAME<'カ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">あ</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='か' AND SNAME<'さ')OR(SNAME>='カ' AND SNAME<'サ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">か</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='さ' AND SNAME<'た')OR(SNAME>='サ' AND SNAME<'タ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">さ</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='た' AND SNAME<'な')OR(SNAME>='タ' AND SNAME<'ナ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">た</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='な' AND SNAME<'は')OR(SNAME>='ナ' AND SNAME<'ハ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">な</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='は' AND SNAME<'ほ')OR(SNAME>='ハ' AND SNAME<'マ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">は</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='ほ' AND SNAME<'や')OR(SNAME>='マ' AND SNAME<'ヤ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ま</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='や' AND SNAME<'ら')OR(SNAME>='ヤ' AND SNAME<'ラ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">や</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='ら' AND SNAME<'わ')OR(SNAME>='ラ' AND SNAME<'ワ'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">ら</span></li>
-				<li><span onClick="pFilterDB=&quot;((SNAME>='わ' AND substr(SNAME,1,1)<='ん')OR(SNAME>='ワ' AND substr(SNAME,1,1)<='ン'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">わ</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,あ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">あ</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,か';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">か</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,さ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">さ</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,た';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">た</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,な';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">な</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,は';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">は</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,ま';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ま</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,や';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">や</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,ら';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ら</span></li>
+				<li><span onClick="pFilterDB='INDEX_JA,わ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">わ</span></li>
 			</span>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='A' OR substr(SNAME,1,1)='a')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='B' OR substr(SNAME,1,1)='b')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='C' OR substr(SNAME,1,1)='c')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='D' OR substr(SNAME,1,1)='d')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='E' OR substr(SNAME,1,1)='e')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='F' OR substr(SNAME,1,1)='f')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='G' OR substr(SNAME,1,1)='g')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='H' OR substr(SNAME,1,1)='h')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='I' OR substr(SNAME,1,1)='i')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='J' OR substr(SNAME,1,1)='j')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='K' OR substr(SNAME,1,1)='k')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='L' OR substr(SNAME,1,1)='l')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='M' OR substr(SNAME,1,1)='m')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='N' OR substr(SNAME,1,1)='n')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='O' OR substr(SNAME,1,1)='o')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='P' OR substr(SNAME,1,1)='p')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Q' OR substr(SNAME,1,1)='q')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='R' OR substr(SNAME,1,1)='r')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='S' OR substr(SNAME,1,1)='s')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='T' OR substr(SNAME,1,1)='t')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='U' OR substr(SNAME,1,1)='u')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='V' OR substr(SNAME,1,1)='v')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='W' OR substr(SNAME,1,1)='w')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='X' OR substr(SNAME,1,1)='x')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Y' OR substr(SNAME,1,1)='y')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
-			<li><span onClick="pFilterDB=&quot;(substr(SNAME,1,1)='Z' OR substr(SNAME,1,1)='z')&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,A';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">A</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,B';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">B</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,C';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">C</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,D';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">D</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,E';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">E</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,F';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">F</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,G';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">G</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,H';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">H</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,I';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">I</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,J';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">J</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,K';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">K</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,L';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">L</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,M';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">M</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,N';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">N</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,O';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">O</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,P';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">P</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,Q';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Q</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,R';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">R</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,S';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">S</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,T';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">T</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,U';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">U</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,V';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">V</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,W';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">W</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,X';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">X</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,Y';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Y</span></li>
+			<li><span onClick="pFilterDB='INDEX_EN,Z';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
 			<c:choose>
 				<c:when test="${userInfo.lang eq '1'}">
-					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z')AND(substr(SNAME,1,1)<'ㄱ' OR substr(SNAME,1,1)>'ㅎ')AND(substr(SNAME,1,1)<'가' OR substr(SNAME,1,1)>'힣'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+					<li><span onClick="pFilterDB='INDEX_KO,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:when>
 				<c:when test="${userInfo.lang eq '3'}">
-					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z')AND(substr(SNAME,1,1)<'あ' OR substr(SNAME,1,1)>'ん')AND(substr(SNAME,1,1)<'ア' OR substr(SNAME,1,1)>'ン'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+					<li><span onClick="pFilterDB='INDEX_JA,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:when>
 				<c:otherwise>
-					<li><span onClick="pFilterDB=&quot;((substr(SNAME,1,1)<'A' OR substr(SNAME,1,1)>'Z')AND(substr(SNAME,1,1)<'a' OR substr(SNAME,1,1)>'z'))&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">
+					<li><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:otherwise>
@@ -781,7 +781,7 @@
 					<th style="cursor:pointer;padding:0;width:20px">
 				    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
 					</th>
-					<th style="padding:0;text-align:center;width:20px"><img src="../../images/i_individual.gif" border="0"></th>
+					<th style="padding:0;text-align:center;width:20px"><img src="/images/i_individual.gif" border="0"></th>
 					<th id="CompanyName" style="CURSOR:pointer;width:20%;white-space:nowrap;"onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="1" _OrderName="SNAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="SNAME"></span></th>
 					<th id="PhoneNumber" style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="SCOMPANY" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t51' /><span id="SCOMPANY"></span></th>
 					<th style="CURSOR:pointer;width:20%;white-space:nowrap;" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'" _OrderOption="0" _OrderName="SCOMPANYPHONE" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t263' /><span id="SCOMPANYPHONE"></span></th>
@@ -851,18 +851,18 @@
 						<tr>
 							<th style="text-align:center">
 								<select name="search_case" id="search_case">
-									<option value="SNAME"><spring:message code='ezAddress.t124' /></option>
-									<option value="SCOMPANY"><spring:message code='ezAddress.t51' /></option>
-									<option value="SDEPT"><spring:message code='ezAddress.t54' /></option>
-									<option value="STITLE"><spring:message code='ezAddress.t52' /></option>
-									<option value="SCOMPANYADDR"><spring:message code='ezAddress.t295' /></option>
-									<option value="SHOMEADDR"><spring:message code='ezAddress.t296' /></option>
-									<option value="SMEMO"><spring:message code='ezAddress.t259' /></option>
-									<option value="SEMAIL"><spring:message code='ezAddress.t264' /></option>
-									<option value="SCOMPANYPHONE"><spring:message code='ezAddress.t263' /></option>
-									<option value="SMOBILE"><spring:message code='ezAddress.t189' /></option>
-									<option value="SFAX"><spring:message code='ezAddress.t292' /></option>
-									<option value="SHOMEPAGE"><spring:message code='ezAddress.t293' /></option>
+									<option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
+									<option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
+									<option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
+									<option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
+									<option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
+									<option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
+									<option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
+									<option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
+									<option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
+									<option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>
+									<option value="S_FAX"><spring:message code='ezAddress.t292' /></option>
+									<option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 								</select>
 							</th>
 							<td style="text-align:left">

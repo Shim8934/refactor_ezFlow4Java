@@ -1881,10 +1881,7 @@
 	
 	            addrsearh = true;
 	            var xmlHTTP = createXMLHttpRequest();
-	            if(foldertype == "P")
-	                xmlHTTP.open("POST", "/ezAddress/addressGetListMailSearchCall.do", false);
-	            else
-	                xmlHTTP.open("POST", "/ezAddress/addressGetListMailSearchCall.do", false);
+                xmlHTTP.open("POST", "/ezAddress/addressGetListMailSearchCall.do", false);
 	            xmlHTTP.send(strXML);
 	            if (xmlHTTP.status != 200) {
 	                alert("<spring:message code='ezEmail.t585' />");
@@ -3236,11 +3233,11 @@
 	                                                        <td>
 	                                                            <div style="margin-left: 5px;">
 	                                                                <select name="search_case" id="search_case">
-	                                                                    <option value="SNAME">
+	                                                                    <option value="S_NAME">
 	                                                                        <spring:message code='ezEmail.t31' /></option>
-	                                                                    <option value="SCOMPANY">
+	                                                                    <option value="S_COMPANY">
 	                                                                        <spring:message code='ezEmail.t712' /></option>
-	                                                                    <option value="SEMAIL">
+	                                                                    <option value="S_EMAIL">
 	                                                                        <spring:message code='ezEmail.t713' /></option>
 	                                                                </select>
 	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 150px; margin: 0px;" name="Input">

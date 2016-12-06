@@ -1,7 +1,8 @@
 package egovframework.ezEKP.ezAddress.vo;
 
-public class SubTreeInfoVO {	
+public class AddressFolderVO {	
 	private String folderId;
+	private String parentId;
 	private String ownerId;
 	private String folderType;
 	private String folderName;
@@ -12,6 +13,12 @@ public class SubTreeInfoVO {
 	}
 	public void setFolderId(String folderId) {
 		this.folderId = folderId;
+	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 	public String getOwnerId() {
 		return ownerId;
@@ -40,8 +47,7 @@ public class SubTreeInfoVO {
 	
 	@Override
 	public String toString() {
-		return "AddressFolderVO [folderId=" + folderId + ", ownerId=" + ownerId + ", folderType=" + folderType
-				+ ", folderName=" + folderName + ", childCount=" + childCount + "]";
+		return "AddressFolderVO [folderId=" + folderId + ", parentId=" + parentId + ", ownerId=" + ownerId
+				+ ", folderType=" + folderType + ", folderName=" + folderName + ", childCount=" + childCount + "]";
 	}
-	
 }

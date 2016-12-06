@@ -1066,7 +1066,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));
 			
 			//유저이미지
-			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2");
+			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 			
 			if (result != null && !result.equals("")) {
 				userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";

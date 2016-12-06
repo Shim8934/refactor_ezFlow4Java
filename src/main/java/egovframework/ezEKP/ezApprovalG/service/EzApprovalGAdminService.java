@@ -101,7 +101,7 @@ public interface EzApprovalGAdminService {
 	
 	public String insertFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String deptList, String companyID) throws Exception;
 	
-	public String getGroupDept(String contID, String lang, String companyID) throws Exception;
+	public String getGroupDept(String contID, String lang, String companyID, int tenantID) throws Exception;
 	
 	public String updateFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String contID, String deptList, String companyID) throws Exception;
 	
@@ -111,7 +111,7 @@ public interface EzApprovalGAdminService {
 	
 	public String delForm(String formID, String companyID, String realPath) throws Exception;
 	
-	public String getFormRecvAdmin(String formID, String lang, String companyID) throws Exception;
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID) throws Exception;
 
 	public String formSave(Document doc, String realPath, String companyID, LoginVO userInfo) throws Exception;
 

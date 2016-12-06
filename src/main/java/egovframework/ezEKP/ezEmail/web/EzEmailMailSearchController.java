@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -68,6 +69,9 @@ public class EzEmailMailSearchController {
     @Resource(name="EzEmailService")
     private EzEmailService ezEmailService;        
 	
+    @Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
+    
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
@@ -82,10 +86,11 @@ public class EzEmailMailSearchController {
 		logger.debug("mailSearchView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);	
 		
 		String serverName = config.getProperty("config.ServerName");
@@ -102,7 +107,7 @@ public class EzEmailMailSearchController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			List<Folder> topLevelFolders = ia.getTopLevelFolders();		
 			
@@ -125,7 +130,7 @@ public class EzEmailMailSearchController {
 			}
 		}
 		
-		model.addAttribute("userId", userId);
+		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("useEditor", useEditor);
@@ -150,10 +155,11 @@ public class EzEmailMailSearchController {
 
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);		
 		
-		String userEmail = userId + "@" + config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -433,8 +439,11 @@ public class EzEmailMailSearchController {
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
@@ -451,7 +460,7 @@ public class EzEmailMailSearchController {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];
@@ -492,14 +501,16 @@ public class EzEmailMailSearchController {
 	public String mailMoveCopyMessageS(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailMoveCopyMessageS started.");
+		logger.debug("bodyData=" + bodyData);
 		
 		String returnValue = "OK";
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String userId = userIdAndPassword.get(0);
 		String password = userIdAndPassword.get(1);
 		
-		logger.debug("bodyData=" + bodyData);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
@@ -516,7 +527,7 @@ public class EzEmailMailSearchController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userId + "@" + config.getProperty("config.DomainName"), password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
 				String folderAndMsgId = folderAndMsgIdArray[i];

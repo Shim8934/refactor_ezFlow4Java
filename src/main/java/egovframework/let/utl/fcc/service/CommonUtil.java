@@ -171,8 +171,10 @@ public class CommonUtil {
 		}
 	}
 	
-	public LoginVO aprUserInfo(String loginCookie){
+	public LoginVO aprUserInfo(String loginCookie) {
 		try{
+			logger.debug("aprUserInfo started");
+			
 			LoginVO user = userInfo(loginCookie);
 			
 			ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -213,9 +215,10 @@ public class CommonUtil {
 				user.setCompanyName(user.getCompanyName2());
 			}
 			
+			logger.debug("aprUserInfo ended");
+			
 			return user;
 		}catch(Exception e){
-			logger.debug("[Exception]aprUserInfo : " + e.getStackTrace());
 			return null;
 		}
 	}

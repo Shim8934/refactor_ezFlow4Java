@@ -169,12 +169,7 @@
 	            }
 	            else {
 	                alert("<spring:message code='ezAddress.t153' />");
-	
-	                var childXML = "<node imgidx='1' caption=\"" + MakeRightField(szName) + "\" ownerid='" +
-	                        MakeRightField(AddressTreeView.getvalue(nodeIdx, "ownerid")) +
-	                        "' type='" + AddressTreeView.getvalue(nodeIdx, "type") +
-	                        "' folderid='" + xmlHTTP.responseText + "' />";
-	                AddressTreeView.addnode(nodeIdx, childXML);
+	                LoadAddressTree();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
@@ -251,7 +246,7 @@
 	                alert("<spring:message code='ezAddress.t157' />");
 	            else {
 	                alert("<spring:message code='ezAddress.t158' />");
-	                AddressTreeView.putcaption(nodeIdx, szName);
+	                LoadAddressTree();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
@@ -268,7 +263,7 @@
 	                alert("<spring:message code='ezAddress.t159' />");
 	                return;
 	            }
-	            else if (AddressTreeView.haschild(nodeIdx)) {
+	            else if (AddressTreeView.getvalue(nodeIdx, "hassub") == "1") {
 	                alert("<spring:message code='ezAddress.t160' />");
 	                return;
 	            }

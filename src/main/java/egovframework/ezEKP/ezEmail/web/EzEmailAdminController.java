@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -70,6 +71,9 @@ public class EzEmailAdminController {
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
@@ -120,7 +124,9 @@ public class EzEmailAdminController {
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
-		String domain = config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		try {
 			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
@@ -216,7 +222,9 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		
-		String domain = config.getProperty("config.DomainName");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
 		int reasonCode = -100;
 		String result = "ERROR";
 		try {
@@ -302,13 +310,13 @@ public class EzEmailAdminController {
 	public String mailViewDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailViewDistributionList started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		String returnData = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-		String domain = config.getProperty("config.DomainName");
 		
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -400,7 +408,10 @@ public class EzEmailAdminController {
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
-		String domain = config.getProperty("config.DomainName");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
 		String result = "ERROR";
 		
 		try {

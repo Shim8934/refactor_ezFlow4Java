@@ -93,9 +93,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getRetireList(int pPage, int pPageRow)	throws Exception {
+	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID)	throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		
@@ -132,7 +133,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 		for(String propname : proplist){
             if (ezOrganService.checkDBColum(propname.toUpperCase()) == false){
-                propvalue = ezOrganService.getPropertyValue(pCN, propname);
+                propvalue = ezOrganService.getPropertyValue(pCN, propname, tenantID);
                 propinfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propvalue) + "</" + propname.toUpperCase() + ">");
             }else if (!propname.toUpperCase().equals("")){
             	Field field = vo.getClass().getDeclaredField(propname);
@@ -174,12 +175,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			if (rc == 0) { // 성공
 				try {
 					moveDBData(parentCn, cn, type, tenantID);
+		            result = "OK";
 				} catch (Exception e) {
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
-					throw e;
-				}
-				
-				result = "OK";
+					result = "EMAIL_ERROR";
+				}				
 			} else {
 				result = "EMAIL_ERROR";
 			}
@@ -234,9 +234,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void retireEntry(String cn) throws Exception {
+	public void retireEntry(String cn, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		
 		ezOrganAdminDao.retireDBData(map);
@@ -253,8 +254,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int companyChildCheck(String cn) throws Exception {
-		return ezOrganAdminDao.companyChildCheck(cn);
+	public int companyChildCheck(String cn, int tenantID) throws Exception {
+		return ezOrganAdminDao.companyChildCheck(cn, tenantID);
 	}
 
 	@Override
@@ -263,9 +264,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getRetireListCount(int pPage, int pPageRow) throws Exception {
+	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PAGE", pPage);
 		map.put("v_ROWPERPAGE", pPageRow);
 		
@@ -284,9 +286,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath) throws Exception {
+	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_DISPLAYNAME", displayName);
 		map.put("v_DISPLAYNAME2", displayName2);
@@ -301,6 +304,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void insertDBData_dept(OrganDeptVO vo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", vo.getTenantId());
 		map.put("v_CN", vo.getCn());
 		map.put("v_DISPLAYNAME", vo.getDisplayName());
 		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
@@ -360,9 +364,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void deleteDBData(String cn, String pClass, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+        map.put("v_TENANT_ID", tenantID);		
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
-		map.put("v_TENANT_ID", tenantID);
 		
 		ezOrganAdminDao.deleteDBData(map);
 	}
@@ -371,17 +375,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
+		map.put("v_TENANT_ID", tenantID);		
 		map.put("v_CN", cn);
-		map.put("v_LANGDATA", lang);
-		map.put("v_TENANT_ID", tenantID);
+		map.put("v_LANGDATA", lang);		
 		
 		return ezOrganAdminDao.getUserInfo(map);
 	}
 	
 	@Override
-	public OrganUserVO getRetireEntryInfo(String cn, String lang) throws Exception {
+	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", lang);
 		
@@ -437,9 +442,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void restoreRetireEntry(String cn, String deptID) throws Exception {
+	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
+	    map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_PARENTCN", deptID);
 		
@@ -447,9 +453,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int userCountCheck(String cn) throws Exception {
-		// TODO Auto-generated method stub
-		return  ezOrganAdminDao.userCountCheck(cn);
+	public int userCountCheck(String cn, int tenantID) throws Exception {
+		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
 	}
 	
 	
