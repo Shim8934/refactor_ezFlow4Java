@@ -144,14 +144,12 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public void updateUser(LoginVO vo) throws Exception {
-		// TODO Auto-generated method stub
 		loginDAO.updateUser(vo);
 	}
 
 
 	@Override
 	public void insertLog(LoginVO vo) throws Exception {
-		// TODO Auto-generated method stub
 		loginDAO.insertLog(vo);
 	}
 
