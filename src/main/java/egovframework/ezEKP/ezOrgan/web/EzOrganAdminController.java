@@ -462,15 +462,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        logger.debug("saveOrderList started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String pClass = request.getParameter("pClass");
 		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
 		String result = "";
 		
+		logger.debug("pClass=" + pClass + ",cn=" + cn);
+		
 		for (int i=0; i<cnDatas.length; i++) {
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass);	
+			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
 		}
+		
+		logger.debug("saveOrderList ended.");
 		
 		return result;
 	}
@@ -1177,7 +1188,14 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveSubTitle(@RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+        logger.debug("saveSubTitle started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -1193,9 +1211,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 		}
 		
-		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user");
+		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
 		
 		ezOrganAdminService.addJob(userID, titleInfo);
+		
+		logger.debug("saveSubTitle ended.");
 		
 		return "OK";
 	}

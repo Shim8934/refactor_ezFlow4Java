@@ -1015,7 +1015,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user");
+		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user", userInfo.getTenantId());
 		
 		model.addAttribute("filePath", filePath);
 		model.addAttribute("filePath2", filePath2);

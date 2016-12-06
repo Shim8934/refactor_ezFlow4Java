@@ -191,7 +191,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void updateProperty(String cn, String column, String number, String pClass) throws Exception{
+	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception{
 		String strFlag = "N";
 		
 		if(!pClass.equals("user")){
@@ -202,6 +202,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
 		map.put("v_PROPNAME", column);
