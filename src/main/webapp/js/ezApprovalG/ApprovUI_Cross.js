@@ -2616,7 +2616,7 @@ function SendAckForExch(pType, pMode) {
 			body  : pBody
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}
 	});
 
