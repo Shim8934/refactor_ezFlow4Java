@@ -37,8 +37,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityCBoardVO> getLeftBoardList() throws Exception {
-		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getLeftBoardList");
+	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception {
+		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getLeftBoardList", tenantID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -207,8 +207,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityMyCommunityVO> myCommunityItemGet(String v_COPNO) throws Exception {
-		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityItemGet", v_COPNO);
+	public List<CommunityMyCommunityVO> myCommunityItemGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityItemGet", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -616,8 +616,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.todayCopGet3", map);
 	}
 
-	public String categoryListItemCntGet(String v_C_CLUBNO) throws Exception {
-		return (String) select("EzCommunityDAO.categoryListItemCntGet", v_C_CLUBNO);
+	public String categoryListItemCntGet(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.categoryListItemCntGet", map);
 	}
 	
 	public Integer pollResGetAllCount(int v_QUESTIONID) throws Exception {
@@ -638,8 +638,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	public Integer bbsListGet1(Map<String, Object> map) throws Exception {
-		select("EzCommunityDAO.bbsListGet1", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzCommunityDAO.bbsListGet1", map);
 	}
 	
 	public Integer commMakeOkGet2(Map<String, Object> map) throws Exception {

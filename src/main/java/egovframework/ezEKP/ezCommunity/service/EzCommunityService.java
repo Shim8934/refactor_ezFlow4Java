@@ -29,7 +29,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
-	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception;
 	
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName) throws Exception;
 
@@ -49,11 +49,9 @@ public interface EzCommunityService {
 	
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID) throws Exception;
 	
-	public CommunityCBoardVO bbsViewNewGet1(String bName, String no) throws Exception;
+	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID) throws Exception;
 	
-	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang) throws Exception;
-	
-	public CommunityCBoardVO bbsEditOkGet1(String bName, String gant, String code) throws Exception;
+	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang, int tenantID) throws Exception;
 	
 	public CommunityCBoardVO bbsDelOkGet(String bName, String itemNo, String code) throws Exception;
 	
@@ -109,7 +107,7 @@ public interface EzCommunityService {
 	
 	public String getLeftCommunity(LoginVO userInfo) throws Exception;
 	
-	public String getLeftBoardList() throws Exception;
+	public String getLeftBoardList(int tenantID) throws Exception;
 	
 	public String getSubBoard(LoginVO userInfo, HttpServletRequest request) throws Exception;
 	
@@ -155,9 +153,9 @@ public interface EzCommunityService {
 
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType) throws Exception;
 	
-	public String getBoardTitleName(String strBoardName, String strClubNo) throws Exception;
+	public String getBoardTitleName(String strBoardName, String strClubNo, int tenantID) throws Exception;
 	
-	public String bbsEditGet1(String bName, String no) throws Exception;
+	public String bbsEditGet1(String bName, String no, int tenantID) throws Exception;
 	
 	public String getFileFolderName(String bName) throws Exception;
 	
@@ -249,7 +247,7 @@ public interface EzCommunityService {
 	
 	public String todayCopGet3(String c_Cate, String type) throws Exception;
 
-	public String categoryListItemCntGet(String c_ClubNo) throws Exception;
+	public String categoryListItemCntGet(String c_ClubNo, int tenantID) throws Exception;
 	
 	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy) throws Exception;
 	
@@ -271,9 +269,9 @@ public interface EzCommunityService {
 
 	public Integer adminMemberListOkGetE(String code, String cID) throws Exception;	
 
-	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio) throws Exception;
+	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception;
 
-	public int bbsAdminCheck(String userID, String rollInfo) throws Exception;
+	public int bbsAdminCheck(String userID, String rollInfo, int tenantID) throws Exception;
 	
 	public int getReservedItemListCount(String id) throws Exception;
 	

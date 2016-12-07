@@ -1979,7 +1979,7 @@ function btnAddAddress() {
         if (AddressUserName == "cancel" || AddressUserName == "")
             return;
 
-        var Para = window.showModalDialog("/myoffice/ezAddress/address_zip_select.aspx", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
+        var Para = window.showModalDialog("/ezAddress/addressZipCodePopUp.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
         var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
         var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
         parameter = parameter + GetShowModalPosition(330, 205);
@@ -2031,7 +2031,7 @@ function btnAddAddress_Complete(AddressUserName) {
     address_zip_select_dialogArguments[0] = "";
     address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
 
-    DivPopUpShow(655, 420, "/myoffice/ezAddress/address_zip_select.aspx");
+    DivPopUpShow(655, 420, "/ezAddress/addressZipCodePopUp.do");
     TempAddressUserName = AddressUserName;
 }
 

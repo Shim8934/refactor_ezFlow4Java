@@ -20,10 +20,6 @@
         <script type="text/javascript" src="/js/ezEmail/js/kaoni_ActiveX.js"></script>
         </c:if>  
 		<script>
-			
-			//TODO: delete
-			var domainName = "${domainName}";
-			
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
 			var g_cmd = "${cmd}";
