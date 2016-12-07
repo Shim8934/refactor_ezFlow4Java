@@ -962,7 +962,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String result = "FALSE";
-		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo.getCompanyID());
+		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo.getCompanyID(), userInfo.getTenantId());
 		Document resultXML = commonUtil.convertStringToDocument(strXml);
 		
 		if(resultXML.getElementsByTagName("HREF").getLength()>0){
