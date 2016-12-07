@@ -121,9 +121,60 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (String) select("EzResourceDAO.getBrdApproveFlag", map);
 	}
 	
+	public String getAclTblBrd_S1(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getAclTblBrd_S1", map);
+	}
+	
+	public String getAclTblBrd_S2(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getAclTblBrd_S2", map);
+	}
+	
+	public String getAclTblBrd_S3(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getAclTblBrd_S3", map);
+	}
+	
+	public String delResSch_S1(Map<String , Object> map) {
+		return (String)select("EzResourceDAO.delResSch_S1", map);
+	}
+	
+	public String modifyResSch_S1(Map<String , Object> map) {
+		return (String)select("EzResourceDAO.modifyResSch_S1", map);
+	}
+	
+	public String modifyResSch_S2(Map<String , Object> map) {
+		return (String)select("EzResourceDAO.modifyResSch_S2", map);
+	}
+	
+	public String addRessch_S1(Map<String , Object> map) {
+		return (String)select("EzResourceDAO.addRessch_S1", map);
+	}
+	
+	public int addResData_S1() {
+		return (int) select("EzResourceDAO.addResData_S1");
+	}
+	
+	public int addResData_S2(Map<String, Object> map) {
+		return (int) select("EzResourceDAO.addResData_S2", map);
+	}
+	
+	public int addResData_S3(Map<String, Object> map) {
+		return (int) select("EzResourceDAO.addResData_S3", map);
+	}
+	
 	public int getBrdCnt(Map<String , Object> map) {
-		select("EzResourceDAO.getBrdCnt", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzResourceDAO.getBrdCnt", map);
+	}
+	
+	public int insertScheduleRepetition_S(Map<String , Object> map) {
+		return (int)select("EzResourceDAO.insertScheduleRepetition_S", map);
+	}
+	
+	public int insertForm_S(Map<String , Object> map) {
+		return (int)select("EzResourceDAO.insertForm_S", map);
+	}
+	
+	public int delResSch_S2(Map<String , Object> map) {
+		return (int)select("EzResourceDAO.delResSch_S2", map);
 	}
 	
 	public void addResData(Map<String, Object> map) {
@@ -140,6 +191,22 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void addResSch(Map<String, Object> map) {
 		insert("EzResourceDAO.addRessch", map);
+	}
+	
+	public void insertForm_I(Map<String, Object> map) {
+		insert("EzResourceDAO.insertForm_I", map);
+	}
+	
+	public void delResSch_I(Map<String, Object> map) {
+		insert("EzResourceDAO.delResSch_I", map);
+	}
+	
+	public void modifyResSch_I1(Map<String, Object> map) {
+		insert("EzResourceDAO.modifyResSch_I1", map);
+	}
+	
+	public void modifyResSch_I2(Map<String, Object> map) {
+		insert("EzResourceDAO.modifyResSch_I2", map);
 	}
 	
 	public void modifyResData(Map<String, Object> map) {
@@ -162,8 +229,40 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		update("EzResourceDAO.modifyResSch", map);
 	}
 	
+	public void delResData_U(Map<String, Object> map) {
+		update("EzResourceDAO.delResData_U", map);
+	}
+	
+	public void insertForm_U(Map<String, Object> map) {
+		update("EzResourceDAO.insertForm_U", map);
+	}
+	
+	public void delResSch_U(Map<String, Object> map) {
+		update("EzResourceDAO.delResSch_U", map);
+	}
+	
+	public int modifyResSch_U1(Map<String, Object> map) {
+		return update("EzResourceDAO.modifyResSch_U1", map);
+	}
+	
+	public void modifyResSch_U2(Map<String, Object> map) {
+		update("EzResourceDAO.modifyResSch_U2", map);
+	}
+	
 	public void delResData(Map<String, Object> map) {
 		delete("EzResourceDAO.delResData", map);
+	}
+	
+	public void delResData1(Map<String, Object> map) {
+		delete("EzResourceDAO.delResData1", map);
+	}
+	
+	public void delResData2(Map<String, Object> map) {
+		delete("EzResourceDAO.delResData2", map);
+	}
+	
+	public void delResData3(Map<String, Object> map) {
+		delete("EzResourceDAO.delResData3", map);
 	}
 	
 	public void deleteRepetition(Map<String, Object> map) {
@@ -177,6 +276,27 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void delResSch(Map<String, Object> map) {
 		delete("EzResourceDAO.delResSch", map);
 	}
+	
+	public void delResSch_D1(Map<String, Object> map) {
+		delete("EzResourceDAO.delResSch_D1", map);
+	}
+	
+	public void delResSch_D2(Map<String, Object> map) {
+		delete("EzResourceDAO.delResSch_D2", map);
+	}
+	
+	public void delResSch_D3(Map<String, Object> map) {
+		delete("EzResourceDAO.delResSch_D3", map);
+	}
+	
+	public void modifyResSch_D1(Map<String, Object> map) {
+		delete("EzResourceDAO.modifyResSch_D1", map);
+	}
+	
+	public void modifyResSch_D2(Map<String, Object> map) {
+		delete("EzResourceDAO.modifyResSch_D2", map);
+	}
+	
 	
 }
 
