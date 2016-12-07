@@ -11,6 +11,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +51,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzResourceAdminController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzResourceAdminController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -124,115 +129,115 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callManagerDepthNode.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("callManagerDepthNode Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String selectFlag = "";
 		StringBuilder strXML = new StringBuilder();
 		Document xmlRet = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		try {
-			if (req.getParameter("flag") != null) {
-				selectFlag = req.getParameter("flag");
-			}
-			
-			String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
-			xmlRet = commonUtil.convertStringToDocument(ret);
-			
-			if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
-				strXML.append("<PARADATA>");
-				strXML.append("<DATA>0</DATA>");
-				strXML.append("<DATA>"+userInfo.getDeptID()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getDeptName1()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getId()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getDisplayName1()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getTitle1()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getPhone()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getCompanyName1()+"</DATA>");
-				strXML.append("<DATA></DATA>");
-				strXML.append("<DATA></DATA>");
-				strXML.append("<DATA>"+userInfo.getCompanyID()+"</DATA>");
-				strXML.append("<DATA>"+userInfo.getCompanyName2()+"</DATA>");
-				strXML.append("<ISCOMPANY>Y</ISCOMPANY>");
-				strXML.append("</PARADATA>");
-				
-				ezResourceAdminService.addClsData(strXML.toString());
-				
-				ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
-				
-				xmlRet = commonUtil.convertStringToDocument(ret);
-				
-			}
-			
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			NodeList nodes = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
-			NodeList nodes1 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
-			NodeList nodes2 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
-			NodeList nodes3 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA12", xmlRet, XPathConstants.NODESET);
-			NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
-			NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
-			NodeList nodes16 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
-			NodeList nodes17 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
-			NodeList nodes18 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
-				
-			NodeList nodes7 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
-			NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
-			NodeList nodes9 = (NodeList)xpath.evaluate("NODES/NODE/DATA12", xmlRet, XPathConstants.NODESET);
-			NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
-			NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
-			NodeList nodes13 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
-			NodeList nodes14 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
-			NodeList nodes15 = (NodeList)xpath.evaluate("NODES/NODE/DATA10", xmlRet, XPathConstants.NODESET);
-				
-			if (nodes.getLength() != 0) {
-				for (int i=0; i<nodes.getLength(); i++) {
-					nodes1.item(i).removeChild((Node) nodes2.item(i));
-					
-					if (nodes3.item(i).getTextContent().equals("0")) {
-						nodes4.item(i).setTextContent("TRUE");
-					}
-					
-					if(nodes5.item(i).getTextContent().equals("")) {
-						nodes5.item(i).setTextContent(" ");
-					}
-					
-					if(nodes16.item(i).getTextContent().equals("")) {
-						nodes16.item(i).setTextContent(" ");
-					}
-					if(nodes17.item(i).getTextContent().equals("")) {
-						nodes17.item(i).setTextContent(" ");
-					}
-					if(nodes18.item(i).getTextContent().equals("")) {
-						nodes18.item(i).setTextContent(" ");
-					}
-						
-					//좌측 리로드할때는 선택 안되도록
-					if (selectFlag.equals("SELECT_NO")) {
-						if (nodes5.getLength() != 0) {
-							nodes1.item(i).removeChild((Node) nodes5.item(i));
-						}
-					}
-				}
-			}
-			if (nodes7.getLength() != 0) {
-				for (int i=0; i<nodes7.getLength(); i++) {
-					nodes8.item(i).removeChild((Node) nodes11.item(i));
-					
-					if (nodes9.item(i).getTextContent().equals("0")) {
-						nodes10.item(i).setTextContent("TRUE");
-					}
-					if(nodes13.item(i).getTextContent().equals("")) {
-						nodes13.item(i).setTextContent(" ");
-					}
-					if(nodes14.item(i).getTextContent().equals("")) {
-						nodes14.item(i).setTextContent(" ");
-					}
-					if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
-						nodes15.item(i).setTextContent(" ");
-					}
-					
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		if (req.getParameter("flag") != null) {
+			selectFlag = req.getParameter("flag");
 		}
+		logger.debug("xmlStr="+xmlStr);
+		String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		xmlRet = commonUtil.convertStringToDocument(ret);
+		
+		if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
+			strXML.append("<PARADATA>");
+			strXML.append("<DATA>0</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getId()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDisplayName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getTitle1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getPhone()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName1()+"</DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName2()+"</DATA>");
+			strXML.append("<ISCOMPANY>Y</ISCOMPANY>");
+			strXML.append("</PARADATA>");
+			
+			ezResourceAdminService.addClsData(strXML.toString(), userInfo.getTenantId());
+			
+			ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+			
+			xmlRet = commonUtil.convertStringToDocument(ret);
+		}
+		
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		NodeList nodes = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes1 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes2 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes3 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
+		NodeList nodes16 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes17 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes18 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		NodeList nodes7 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes9 = (NodeList)xpath.evaluate("NODES/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes13 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes14 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes15 = (NodeList)xpath.evaluate("NODES/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		if (nodes.getLength() != 0) {
+			for (int i=0; i<nodes.getLength(); i++) {
+				nodes1.item(i).removeChild((Node) nodes2.item(i));
+				
+				if (nodes3.item(i).getTextContent().equals("0")) {
+					nodes4.item(i).setTextContent("TRUE");
+				}
+				
+				if(nodes5.item(i).getTextContent().equals("")) {
+					nodes5.item(i).setTextContent(" ");
+				}
+				
+				if(nodes16.item(i).getTextContent().equals("")) {
+					nodes16.item(i).setTextContent(" ");
+				}
+				if(nodes17.item(i).getTextContent().equals("")) {
+					nodes17.item(i).setTextContent(" ");
+				}
+				if(nodes18.item(i).getTextContent().equals("")) {
+					nodes18.item(i).setTextContent(" ");
+				}
+					
+				//좌측 리로드할때는 선택 안되도록
+				if (selectFlag.equals("SELECT_NO")) {
+					if (nodes5.getLength() != 0) {
+						nodes1.item(i).removeChild((Node) nodes5.item(i));
+					}
+				}
+			}
+		}
+		if (nodes7.getLength() != 0) {
+			for (int i=0; i<nodes7.getLength(); i++) {
+				nodes8.item(i).removeChild((Node) nodes11.item(i));
+				
+				if (nodes9.item(i).getTextContent().equals("0")) {
+					nodes10.item(i).setTextContent("TRUE");
+				}
+				if(nodes13.item(i).getTextContent().equals("")) {
+					nodes13.item(i).setTextContent(" ");
+				}
+				if(nodes14.item(i).getTextContent().equals("")) {
+					nodes14.item(i).setTextContent(" ");
+				}
+				if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
+					nodes15.item(i).setTextContent(" ");
+				}
+				
+			}
+		}
+		
+		logger.debug("xmlRet="+commonUtil.convertDocumentToString(xmlRet));
+		logger.debug("callManagerDepthNode End");
 		return commonUtil.convertDocumentToString(xmlRet);
 	}
 	
@@ -259,7 +264,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				companyID = req.getParameter("selCompanyID");
 			}
 				
-			getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID);
+			getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID, userInfo.getTenantId());
 				
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -280,14 +285,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdMod.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdMod(@RequestBody String xmlStr) throws Exception {
-		try {
-			boolean returnValue = ezResourceAdminService.modifyClsData(xmlStr);
-			return String.valueOf(returnValue);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+	public String callBrdMod(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		boolean returnValue = ezResourceAdminService.modifyClsData(xmlStr, userInfo.getTenantId());
+		return String.valueOf(returnValue);
 	}
 	
 	/**
@@ -349,14 +351,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdNew.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdNew(@RequestBody String xmlStr) throws Exception {
-		try {
-			boolean returnValue = ezResourceAdminService.addClsData(xmlStr);
-			return String.valueOf(returnValue);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+	public String callBrdNew(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		boolean returnValue = ezResourceAdminService.addClsData(xmlStr, userInfo.getTenantId());
+		return String.valueOf(returnValue);
 	}
 	
 	/**
@@ -376,48 +375,46 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String optAdmLvl = "";
 		String optUserLvl = "";
 		String strOptions = "";
-		try {
-			brdID = req.getParameter("brdID");
-			brdNm = req.getParameter("brdNm");
-			brdGb = req.getParameter("brdGb");
-			selCompanyID = req.getParameter("selCompanyID");
+		
+		brdID = req.getParameter("brdID");
+		brdNm = req.getParameter("brdNm");
+		brdGb = req.getParameter("brdGb");
+		selCompanyID = req.getParameter("selCompanyID");
+		
+		strXMLPara.append("<PARA_DATA>");
+		strXMLPara.append("<NODE>" + brdID + "</NODE>");
+		strXMLPara.append("<NODE>" + selCompanyID + "</NODE>");
+		strXMLPara.append("</PARA_DATA>");
+		
+		strRtnXML = ezResourceAdminService.getClsACLList(strXMLPara.toString(), userInfo.getTenantId());
+		
+		Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
+		
+		for (int i=0; i<xmlRet.getElementsByTagName("NODE").getLength(); i++) {
+			String strDeptYn = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(0).getTextContent();
+			String strSDAYN = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(1).getTextContent();
+			String memberNam = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(2).getTextContent();
+			String memberID = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(3).getTextContent();
+			String accessLvl = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(4).getTextContent();
 			
-			strXMLPara.append("<PARA_DATA>");
-			strXMLPara.append("<NODE>" + brdID + "</NODE>");
-			strXMLPara.append("<NODE>" + selCompanyID + "</NODE>");
-			strXMLPara.append("</PARA_DATA>");
-			
-			strRtnXML = ezResourceAdminService.getClsACLList(strXMLPara.toString());
-			
-			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
-			
-			for (int i=0; i<xmlRet.getElementsByTagName("NODE").getLength(); i++) {
-				String strDeptYn = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(0).getTextContent();
-				String strSDAYN = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(1).getTextContent();
-				String memberNam = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(2).getTextContent();
-				String memberID = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(3).getTextContent();
-				String accessLvl = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(4).getTextContent();
-				
-				if (accessLvl.equals("1")) {
-					strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t115", locale);
-					optAdmLvl = "checked";
-					optUserLvl = "";
-				} else if (accessLvl.equals("2")) {
-					strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t116", locale);
-					optAdmLvl = "";
-					optUserLvl = "checked";
-				}
-				 strOptions = strOptions + "<OPTION";
-	             strOptions = strOptions + " Dept_YN='" + strDeptYn + "'";
-	             strOptions = strOptions + " SDA_YN='" + strSDAYN + "'";
-	             strOptions = strOptions + " Member_nam='" + memberNam + "'";
-	             strOptions = strOptions + " Member_ID='" + memberID + "'";
-	             strOptions = strOptions + " Access_lvl='" + accessLvl + "'>" + strVal;
-	             strOptions = strOptions + "</OPTION>";
+			if (accessLvl.equals("1")) {
+				strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t115", locale);
+				optAdmLvl = "checked";
+				optUserLvl = "";
+			} else if (accessLvl.equals("2")) {
+				strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t116", locale);
+				optAdmLvl = "";
+				optUserLvl = "checked";
 			}
-		} catch (Exception e) {
-			 
+			 strOptions = strOptions + "<OPTION";
+             strOptions = strOptions + " Dept_YN='" + strDeptYn + "'";
+             strOptions = strOptions + " SDA_YN='" + strSDAYN + "'";
+             strOptions = strOptions + " Member_nam='" + memberNam + "'";
+             strOptions = strOptions + " Member_ID='" + memberID + "'";
+             strOptions = strOptions + " Access_lvl='" + accessLvl + "'>" + strVal;
+             strOptions = strOptions + "</OPTION>";
 		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
@@ -494,7 +491,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					tempStr2.append("<NODE>"+companyID+"</NODE>");
 					tempStr2.append("</PARA_DATA>");
 					
-					strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getLang());
+					strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getLang(), userInfo.getTenantId());
 					
 					Document objXML2 = commonUtil.convertStringToDocument(strRtnXML);
 					
@@ -545,17 +542,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callBrdStep(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			String currID = req.getParameter("currID");
-			String next = req.getParameter("nextID");
-			String companyID = req.getParameter("companyID");
-			
-			boolean result = ezResourceAdminService.blnChgClsOrder(currID, next, companyID);
-			return String.valueOf(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+		
+		String currID = req.getParameter("currID");
+		String next = req.getParameter("nextID");
+		String companyID = req.getParameter("companyID");
+		
+		boolean result = ezResourceAdminService.blnChgClsOrder(currID, next, companyID, userInfo.getTenantId());
+		return String.valueOf(result);
 	}
 	
 	/**
@@ -629,17 +622,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callBrdMove(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			String brdID = req.getParameter("srcID");
-			String targetID = req.getParameter("targetID");
-			String strPara = req.getParameter("strPara");
-			
-			boolean result = ezResourceAdminService.blnMoveCls(brdID, targetID, strPara);
-			return String.valueOf(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+		
+		String brdID = req.getParameter("srcID");
+		String targetID = req.getParameter("targetID");
+		String strPara = req.getParameter("strPara");
+		
+		boolean result = ezResourceAdminService.blnMoveCls(brdID, targetID, strPara, userInfo.getTenantId());
+		return String.valueOf(result);
 	}
 	
 	/**
@@ -711,13 +700,9 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callBrdDel(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			boolean result = ezResourceAdminService.delClsData(xmlStr);
-			return String.valueOf(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+		
+		boolean result = ezResourceAdminService.delClsData(xmlStr, userInfo.getTenantId());
+		return String.valueOf(result);
 	}
 	
 	/**
@@ -728,7 +713,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	public String callBrdMng(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		try {
-			boolean result = ezResourceAdminService.saveACLLst(xmlStr);
+			boolean result = ezResourceAdminService.saveACLLst(xmlStr, userInfo.getTenantId());
 			return String.valueOf(result);
 		} catch (Exception e) {
 			e.printStackTrace();
