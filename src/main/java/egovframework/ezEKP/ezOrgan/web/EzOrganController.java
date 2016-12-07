@@ -104,10 +104,11 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", produces="text/html;charset=utf-8")
 	@ResponseBody
-	public String getDeptFullPath(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptFullPath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String cn = request.getParameter("cn");
 		
-		String result = ezOrganService.getDeptFullPath(cn);
+		String result = ezOrganService.getDeptFullPath(cn, userInfo.getTenantId());
 		
 		return result;
 	}

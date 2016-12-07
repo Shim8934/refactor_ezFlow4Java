@@ -2088,7 +2088,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     		return retValue;
         }
         
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID) + ",EVERYONE";
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",EVERYONE";
         String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {

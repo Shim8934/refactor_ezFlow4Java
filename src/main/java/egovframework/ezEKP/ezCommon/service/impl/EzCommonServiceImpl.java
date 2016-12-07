@@ -935,13 +935,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 	
 	@Override
-	public String selectUserGetLang(String userID) throws Exception {
-		return ezCommonDAO.selectUserGetLang(userID);
+	public String selectUserGetLang(String userID, int tenantID) throws Exception {
+		return ezCommonDAO.selectUserGetLang(userID, tenantID);
 	}
 
 	@Override
-	public String selectUserGetTimeZone(String userID) throws Exception {
-		return ezCommonDAO.selectUserGetTimeZone(userID);
+	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
+		return ezCommonDAO.selectUserGetTimeZone(userID, tenantID);
 	}
 	
 	private String getTenantConfigForJMocha(String property, int tenantID) throws Exception {
@@ -1015,11 +1015,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
-	public void insertTblUserLocalInfo(String userID, String timeZone, String lang) throws Exception {
+	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("userID", userID);
 		map.put("timeZone", timeZone);
 		map.put("lang", lang);
+		
 		ezCommonDAO.insertTblUserLocalInfo(map);
 	}
 

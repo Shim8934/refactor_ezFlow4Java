@@ -53,8 +53,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getDeptFullPath(String deptID) throws Exception {
-		return ezOrganDAO.getDeptFullPath(deptID);
+	public String getDeptFullPath(String deptID, int tenantID) throws Exception {
+		return ezOrganDAO.getDeptFullPath(deptID, tenantID);
 	}
 
 	@Override

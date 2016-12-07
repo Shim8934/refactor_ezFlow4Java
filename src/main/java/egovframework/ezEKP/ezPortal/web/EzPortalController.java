@@ -1571,7 +1571,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
 		
-		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID());
+		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
 
 		String[] splitDeptPath = new String[deptFullPath.split("\\,").length];
 		String reversePath = "";
