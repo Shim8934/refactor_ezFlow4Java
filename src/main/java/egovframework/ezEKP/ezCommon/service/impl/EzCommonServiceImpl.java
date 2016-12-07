@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -37,12 +38,14 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommonService")
@@ -1037,6 +1040,56 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map1.put("lang", userInfo.getLang());
 		ezCommonDAO.insertTblUserLocalInfo(map1);
 		return "OK";
+	}
+
+	@Override
+	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
+		logger.debug("getTenantServerNameList started.");
+        
+		List<TenantServerNameVO> list = new ArrayList<TenantServerNameVO>();
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantServerList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray resultArray = (JSONArray)responseObj.get("result");
+                    
+                    for (int i=0; i<resultArray.size(); i++) {
+                		JSONObject obj = (JSONObject)resultArray.get(i);
+                		
+                		TenantServerNameVO vo = new TenantServerNameVO();
+                		
+                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
+                		vo.setServerName((String)obj.get("serverName"));
+                		
+        				list.add(vo);
+                	}
+                }
+            }
+        }                       
+        
+        for(TenantServerNameVO vo : list) {
+        	logger.debug("tenantId=" + vo.getTenantId() + ",serverName=" + vo.getServerName());
+        }
+        
+        logger.debug("getTenantServerNameList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return list;
+		
 	}
 	
 }

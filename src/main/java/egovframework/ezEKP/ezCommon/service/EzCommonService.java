@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommon.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 
 public interface EzCommonService {
 
@@ -28,6 +30,8 @@ public interface EzCommonService {
 	public String selectUserGetTimeZone(String userID) throws Exception;
 	
 	public String getTenantConfig(String property, int tenantID) throws Exception;
+	
+	public List<TenantServerNameVO> getTenantServerNameList() throws Exception;
 	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	
