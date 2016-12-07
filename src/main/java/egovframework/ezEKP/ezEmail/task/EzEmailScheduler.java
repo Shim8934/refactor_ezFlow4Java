@@ -136,7 +136,7 @@ public class EzEmailScheduler {
 	/**
 	 * 메일 예약발송 스케줄러
 	 */
-	@Scheduled(cron = "10 0/07 * * * *")
+	@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		Locale locale = Locale.getDefault();
