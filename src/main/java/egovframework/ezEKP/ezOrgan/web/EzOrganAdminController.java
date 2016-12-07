@@ -111,8 +111,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			topid = "Top";
 		}
 		
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "admin/ezOrgan/organRight";
 	}

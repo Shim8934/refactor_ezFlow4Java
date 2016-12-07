@@ -13,7 +13,12 @@
             </list>
         </property>
 		<property name="dataSource" ref="dataSource-${Globals.DbType}"/>
-		<property name="lobHandler" ref="lobHandler"/>		
+		<property name="lobHandler" ref="lobHandler"/>	
+		<property name="sqlMapClientProperties">
+        	<props>
+        		<prop key="companyID">${config.companyNum}</prop>
+        	</props>
+        </property>	
 	</bean>
 	
 	<!-- SqlMap setup for iBATIS Database Layer -->

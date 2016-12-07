@@ -207,8 +207,50 @@ public class LoginDAO extends EgovAbstractDAO {
         }       
     }
     
+    private void updateUserForJMocha(LoginVO vo) throws Exception {
+        logger.debug("updateUserForJMocha started. tenantId=" + vo.getTenantId() + ",userId=" + vo.getId());
+
+        String param1 = "tenantId=" + vo.getTenantId();
+        String param2 = "userId=" + URLEncoder.encode(vo.getId(), "UTF-8");
+        String param3 = "ipAddress=" + URLEncoder.encode(vo.getIp(), "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUserLoginTrackInfo";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("updateUserForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Updating User Failed!");
+        }
+    }
+    
+    private void updateUserForLocal(LoginVO vo) throws Exception {
+        update("loginDAO.updateUser", vo);
+    }
+    
     public void updateUser(LoginVO vo) throws Exception {
-    	update("loginDAO.updateUser", vo);
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            updateUserForJMocha(vo);
+        } else {
+            updateUserForLocal(vo);
+        }       
     }
     
     public void insertLog(LoginVO vo) throws Exception {
