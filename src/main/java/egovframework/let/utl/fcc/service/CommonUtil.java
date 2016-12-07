@@ -522,6 +522,10 @@ public class CommonUtil {
 		
 		return realPath;
 	}
+	
+	public String getUploadPath(String property, int tenantId) {
+		return separator + "fileroot" + separator + tenantId + config.getProperty(property);
+	}
 }
 
 

@@ -1024,7 +1024,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterUploadXCK(MultipartHttpServletRequest request) throws Exception{
+	public String mailInterUploadXCK(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception{
 		logger.debug("mailInterUploadXCK started.");
 		
 		String strXML = "";
@@ -1038,7 +1038,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (request.getParameter("cnt") != null && !request.getParameter("cnt").equals("")) {
 			cnt = Integer.parseInt(request.getParameter("cnt"));
 		}
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(request);
 		String[] pFileName = new String[cnt];
 		Long[] fileSize = new Long[cnt];
 		String[] fileLocation = new String[cnt];
@@ -1108,7 +1108,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		strXML = "<ROOT><NODES>";
-		String pDirPath = config.getProperty("upload_mail.ROOT");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
 		// check the upload mail root folder and create it if it doesn't exist.
@@ -1286,11 +1287,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (uidStr != null && !uidStr.equals("")) {
 			uid = Long.parseLong(uidStr);
 		}
-				
-		String realPath = config.getProperty("data_root");
-		String pDirTempPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "tempFileUpload";
 		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirTempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
+		
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		
@@ -1488,7 +1490,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
      */
     @RequestMapping(value="/ezEmail/mailInterUploadX.do", produces = "text/plain; charset=utf-8")
     @ResponseBody
-    public String mailInterUploadX(HttpServletRequest request) {
+    public String mailInterUploadX(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) {
         String returnedData = "";
         
         try {
@@ -1515,8 +1517,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 useExtension = config.getProperty("config.USE_FileExtension");
             }
             
-            String realPath = config.getProperty("data_root");
-            String pDirPath = config.getProperty("upload_mail.ROOT");
+            String realPath = commonUtil.getRealPath(request);
+            
+            LoginVO userInfo = commonUtil.userInfo(loginCookie);
+            String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
             pDirPath = realPath + pDirPath;
             
             if (pBigFileUpload.equals("Y")) {
@@ -1734,7 +1738,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String isEachMail = "";
 		String isReserve = "";
 		String reservedId = "";
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(request);
 		String stateName = "";
 		
 		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
@@ -2479,7 +2483,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            if (reservedId != null && !reservedId.trim().equals("")) {
 						ezEmailService.deleteMailReserved(reservedId);
 		            	
-			            String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+						String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", loginInfo.getTenantId());
 			    		pDirPath = realPath + pDirPath;
 			            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
 						if (f.exists()) {
@@ -2519,7 +2523,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        }
 		        
 		        //file system의 templist txt파일 삭제
-		        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+		        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
 		        pDirPath += commonUtil.separator + stateName + ".txt";
 		        File f = new File(pDirPath);
 		        if (f.exists()) {
@@ -2543,7 +2547,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	            	
     	            	imagePath = imagePathList.item(i).getTextContent();
     	            	
-    	            	if (!imagePath.trim().equals("") && imagePath.contains(config.getProperty("upload_common.ROOT"))) {
+    	            	if (!imagePath.trim().equals("") && imagePath.contains(commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()))) {
     	                	imagePath = new URL(imagePath).getPath();
     	                	String pDirPath = realPath + imagePath;
     	            		File f = new File(pDirPath);
@@ -2621,8 +2625,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//첨부파일 정보파일(templist) 삭제
 		String delId = request.getParameter("delid");
-        String realPath = config.getProperty("data_root");
-        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+        String realPath = commonUtil.getRealPath(request);
+        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
         File f = new File(pDirPath);
         if (f.exists()) {
@@ -2638,9 +2642,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/delAttachListFile.do", produces = "text/html")
 	@ResponseBody
 	public String delAttachListFile(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
-        String delId = request.getParameter("delid");
-        String realPath = config.getProperty("data_root");
-        String pDirPath = realPath + config.getProperty("upload_mail.ROOT") + commonUtil.separator + "templist";
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String delId = request.getParameter("delid");
+        String realPath = commonUtil.getRealPath(request);
+        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
         
         File f = new File(pDirPath);
@@ -2660,8 +2666,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	public String fileListSession(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
 		
-		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = config.getProperty("data_root");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
     	
@@ -2808,8 +2815,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	public String fileListDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
 		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
-		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = config.getProperty("data_root");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
 		
@@ -3358,7 +3367,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		File f = null;
 		
-		String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+		String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 		pDirPath = realPath + pDirPath;
 		f = new File(pDirPath);
 		if (!f.exists()) {
