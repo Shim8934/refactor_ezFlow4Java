@@ -1743,8 +1743,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strDocID = nList.item(0).getChildNodes().item(8).getTextContent();
 		String rtnVal = "";
 		
-		strSQL.append("DELETE FROM TBEXPAPRLINE WHERE DocID = '" + strDocID + "' AND TENANT_ID =" + userInfo.getTenantId() +";\n");
-		strSQL.append("DELETE FROM TBAPRLINEINFO WHERE DocID = '" + strDocID + "' AND TENANT_ID =" + userInfo.getTenantId() +";\n");
+		strSQL.append("DELETE FROM TBEXPAPRLINE WHERE DocID = '" + strDocID + "' AND TENANT_ID ='" + userInfo.getTenantId() +"';\n");
+		strSQL.append("DELETE FROM TBAPRLINEINFO WHERE DocID = '" + strDocID + "' AND TENANT_ID ='" + userInfo.getTenantId() +"';\n");
 		
 		String recDate = "";
 		String procDate = "";
@@ -1791,30 +1791,34 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append(makeRightField(nList.item(k).getChildNodes().item(20).getTextContent()) + "', '");
             strSQL.append(makeRightField(nList.item(k).getChildNodes().item(21).getTextContent()) + "', '"); 
 			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(15).getTextContent()) + "', ");
-			strSQL.append(recDate + ", " + procDate + ", '");
+			strSQL.append("TO_DATE("+recDate+",'YYYY-MM-DD HH24:MI:SS')" + ", " +"TO_DATE("+procDate+",'YYYY-MM-DD HH24:MI:SS')"  + ", '");
 			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(12).getTextContent()) + "', '");
 			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(13).getTextContent()) + "', '");
-			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(14).getTextContent()) + "'," + userInfo.getTenantId() +");\n");
+			strSQL.append(makeRightField(nList.item(k).getChildNodes().item(14).getTextContent()) + "','" + userInfo.getTenantId() +"');\n");
 
 			strSQL.append("INSERT INTO TBEXPAPRLINE (docid, aprmemberSN, orguserid, proxyuserid, ");
             strSQL.append("proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2,TENANT_ID) ");
 			strSQL.append("VALUES ('" + strDocID + "', '" + makeRightField(nList.item(k).getChildNodes().item(0).getTextContent()));
 			strSQL.append("', '" + makeRightField(nList.item(k).getChildNodes().item(9).getTextContent()));
-            strSQL.append("', '', '', '', '', '', '', '', '',"+userInfo.getTenantId()+");\n");
+            strSQL.append("', '', '', '', '', '', '', '', '','"+userInfo.getTenantId()+"');\n");
 		}
 		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
 			map.put("companyID", companyID);
-			
+			LOGGER.debug("updateLineInfo started");
+			LOGGER.debug("updateLineInfo sqlString" + strSQL.toString());
+
 			ezApprovalGDAO.transactionSQL(map);
 			
+
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			LOGGER.debug("에러" +e.getMessage());
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
-		
+		LOGGER.debug("updateLineInfo ended");
 		return rtnVal;
 	}
 
@@ -6938,10 +6942,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID.trim());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
-		
+		LOGGER.debug("doProcess v_DOCID =" + docID.trim());
+		LOGGER.debug("doProcess v_TENANTID =" + userInfo.getTenantId());
+		LOGGER.debug("doProcess v_USERID =" + userID.trim());
+
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
-		
+		LOGGER.debug("doProcess aprCount =" + aprCount);
+		LOGGER.debug("doProcess aprState =" + aprState);
+
 		if (aprCount < 1 && !aprState.equals(staASmikyul)) {
+			LOGGER.debug("여기");
+
 			rtnVal = false;
 		} else {
 			switch (aprState) {
@@ -6958,6 +6969,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			case "003":
+				LOGGER.debug("여기2" + rtnVal);
 				if (rtnVal) {
 					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
 					
@@ -11949,7 +11961,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		StringBuilder strSQL = new StringBuilder();
 		StringBuilder subSQL = new StringBuilder();
 		boolean firstFlag = true;
-		
+		LOGGER.debug("updateDocInfo started");
 		String docID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
 		String tempValue = "";
 		
@@ -12449,11 +12461,13 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
 			map.put("companyID", companyID);
-			
+			LOGGER.debug("updateDocInfo sqlString" + strSQL.toString());
+
 			ezApprovalGDAO.transactionSQL(map);
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("디버그"+ e.getMessage());
 			rtnVal = "FALSE";
 		}
 		if (rtnVal.equals("TRUE")) {
@@ -12461,7 +12475,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 				strSQL.append("\n" + insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID) + "\n");
 				strSQL.append("\n" + insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID) + "\n");
 			}
-			
+			LOGGER.debug("updateDocInfo ended");
+
 			return strSQL.toString();
 		} else {
 			return rtnVal;
