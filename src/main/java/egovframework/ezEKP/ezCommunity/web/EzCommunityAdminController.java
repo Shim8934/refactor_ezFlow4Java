@@ -6,6 +6,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -54,6 +56,8 @@ public class EzCommunityAdminController {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EzCommunityController.class);
 	
 	/**
 	 * 메인화면 호출함수
@@ -267,7 +271,7 @@ public class EzCommunityAdminController {
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
         if (!s.equals("")) {
             String v = s.substring(1, 1);
@@ -350,16 +354,17 @@ public class EzCommunityAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/commInfo.do")
 	public String commInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LOGGER.debug("commInfo started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
 		String type = request.getParameter("type");
 		String title = request.getParameter("title");
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code);
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim());
+		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim(), userInfo.getTenantId());
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
@@ -377,6 +382,8 @@ public class EzCommunityAdminController {
 		model.addAttribute("delReason", delReason);
 		model.addAttribute("newInfo", newInfo);
 		
+		LOGGER.debug("commInfo ended.");
+		
 		return "/admin/ezCommunity/communityCommInfo";
 	}
 	
@@ -389,7 +396,7 @@ public class EzCommunityAdminController {
 		
 		String code = request.getParameter("code");
 
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		ezCommunityAdminService.commCloseAll(code, userInfo);
 		
@@ -427,7 +434,7 @@ public class EzCommunityAdminController {
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (!s.equals("")) {
             String v = s.substring(1, 1);

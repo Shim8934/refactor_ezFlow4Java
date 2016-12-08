@@ -42,17 +42,17 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityCCategoryVO> getCategoryValueA() throws Exception {
-		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueA");
+	public List<CommunityCCategoryVO> getCategoryValueA(int tenantID) throws Exception {
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueA", tenantID);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityCCategoryVO> getCategoryValueB() throws Exception {
+	public List<CommunityCCategoryVO> getCategoryValueB(int tenantID) throws Exception {
 		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueB");
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityCCategoryVO> getCategoryValueC() throws Exception {
+	public List<CommunityCCategoryVO> getCategoryValueC(int tenantID) throws Exception {
 		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueC");
 	}
 	
@@ -62,8 +62,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardTreeVO> getBoardTreeGet2(String pUserID) throws Exception {
-		return (List<CommunityBoardTreeVO>) list("EzCommunityDAO.getBoardTreeGet2", pUserID);
+	public List<CommunityBoardTreeVO> getBoardTreeGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardTreeVO>) list("EzCommunityDAO.getBoardTreeGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -87,8 +87,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardInfoVO> copHomeBoardGet(String v_CN) throws Exception {
-		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.copHomeBoardGet", v_CN);
+	public List<CommunityBoardInfoVO> copHomeBoardGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.copHomeBoardGet", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -284,8 +284,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetACL", map);
 	}
 
-	public CommunityBoardPropertyVO getBoardProperty(String pBoardID) throws Exception{
-		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetBoardProperty", pBoardID);
+	public CommunityBoardPropertyVO getBoardProperty(Map<String, Object> map) throws Exception{
+		return (CommunityBoardPropertyVO) select("EzCommunityDAO.brdGetBoardProperty", map);
 	}
 	
 	public CommunityClubVO aspCommInfoGet1(Map<String, Object> map) throws Exception {
@@ -344,8 +344,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityClubVO) select("EzCommunityDAO.adminLeftGet", v_CODE);
 	}
 
-	public CommunityClubVO ezCommunityBaseGet1(String v_STRCODE) throws Exception {
-		return (CommunityClubVO) select("EzCommunityDAO.ezCommunityBaseGet1", v_STRCODE);
+	public CommunityClubVO ezCommunityBaseGet1(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.ezCommunityBaseGet1", map);
 	}
 
 	public CommunityMemberInfoVO aspCommInfoGet2(Map<String, Object> map) throws Exception {
@@ -448,8 +448,9 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.commMakeOkGet3");
 	}
 	
-	public String getClubCHK(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.getClubCHK", map);
+	@SuppressWarnings("unchecked")
+	public List<String> getClubCHK(Map<String, Object> map) throws Exception {
+		return (List<String>) select("EzCommunityDAO.getClubCHK", map);
 	}
 
 	public String commHomeGet1(Map<String, Object> map) throws Exception {
@@ -633,17 +634,15 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	public Integer checkIfLeafBoardGet(Map<String, Object> map) throws Exception {
-		select("EzCommunityDAO.checkIfLeafBoardGet", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzCommunityDAO.checkIfLeafBoardGet", map);
 	}
 	
 	public Integer bbsListGet1(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzCommunityDAO.bbsListGet1", map);
 	}
 	
-	public Integer commMakeOkGet2(Map<String, Object> map) throws Exception {
-		select("EzCommunityDAO.commMakeOkGet2", map);
-		return (Integer) map.get("v_pCount");
+	public Integer commMakeOkGet2(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.commMakeOkGet2", tenantID);
 	}
 
 	public Integer commMakeOkGet4(Map<String, Object> map) throws Exception {
@@ -682,9 +681,25 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void commMakeOkInsert1() throws Exception {
 		insert("EzCommunityDAO.commMakeOkInsert1");	
 	}
-
-	public void commMakeOkInsert2(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.commMakeOkInsert2", map);
+	
+	public void updateClubID(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateClubID", map);
+	}
+	
+	public void insertClub(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertClub", map);
+	}
+	
+	public void insertCommBoardInfo(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertCommBoardInfo", map);
+	}
+	
+	public void insretCommBoardManage(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertCommBoardManage", map);
+	}
+	
+	public void insertClubUser(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertClubUser", map);
 	}
 
 	public void joinOkInsert(Map<String, Object> map) throws Exception {
@@ -859,8 +874,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.guestEditOkDelete", map);
 	}
 	
-	public void getBoardTreeSet(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.getBoardTreeSet", map);
+	public void deleteBoardTreeChache(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteBoardTreeChache", map);
+	}
+	public void insertBoardTreeChache(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.insertBoardTreeChache", map);
 	}
 
 	public void bbsDelOkDel(Map<String, Object> map) throws Exception {
