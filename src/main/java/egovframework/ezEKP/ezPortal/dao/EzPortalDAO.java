@@ -112,8 +112,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalGetPortletParametersVO> getPortletParametres (String uID) {
-		return (List<PortalGetPortletParametersVO>) list("EzPortalDAO.getPortletPrameters", uID);
+	public List<PortalGetPortletParametersVO> getPortletParametres (Map<String, Object> map) {
+		return (List<PortalGetPortletParametersVO>) list("EzPortalDAO.getPortletPrameters", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -167,8 +167,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLPortalACLVO> getAclItems (String pUID) {
-		return (List<PortalTBLPortalACLVO>) list("EzPortalDAO.getAclItems", pUID);
+	public List<PortalTBLPortalACLVO> getAclItems (Map<String, Object> map) {
+		return (List<PortalTBLPortalACLVO>) list("EzPortalDAO.getAclItems", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -229,8 +229,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalTBLPortletBoardVO) select("EzPortalDAO.getTBLPortletBoard", pUID);
 	}
 	
-	public PortalImagePortletVO imagePortlet (String pUID) {
-		return (PortalImagePortletVO) select("EzPortalDAO.imagePortlet", pUID);
+	public PortalImagePortletVO imagePortlet (Map<String, Object> map) {
+		return (PortalImagePortletVO) select("EzPortalDAO.imagePortlet", map);
 	}
 	
 	public String getTopMenuConfigItem(Map<String, Object> map) {
@@ -325,8 +325,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.searchStartPage2", map);
 	}
 	
-	public String htmlPortlet (String uID) {
-		return (String) select("EzPortalDAO.htmlPortlet", uID);
+	public String htmlPortlet (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.htmlPortlet", map);
 	}
 	
 	public String getUserInfo3_S (Map<String, Object> map) {
@@ -400,6 +400,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void setUseMyPortalPage(Map<String, Object> map) {
 		update("EzPortalDAO.setUseMyPortalPage", map);
+	}
+	
+	public void setUseMyPortalPage_U(Map<String, Object> map) {
+		update("EzPortalDAO.setUseMyPortalPage_U", map);
 	}
 	
 	public void updateTBLPortalACL(Map<String, Object> map) {

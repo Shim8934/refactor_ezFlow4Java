@@ -991,7 +991,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID);
-		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID);
+		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID, userInfo.getTenantId());
 		
 		if (prop.getFrameType() !=null && prop.getFrameType().equals("")) {
 			portletFrameType = prop.getFrameType().trim();
@@ -1006,7 +1006,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
 		
-		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		//포탈페이지 카테고리 정보를 가져온다.
 		List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory();
@@ -1514,7 +1514,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			imageHeight = String.valueOf(result.getImageHeight());
 		}
 		
-		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		model.addAttribute("uID", uID);
 		model.addAttribute("pageID", pageID);
@@ -1887,7 +1887,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
 		
-		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		String paramHtml = "";
 		for (int i=0; i<param.size(); i++) {
@@ -2421,7 +2421,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.subMenuItemEdit1();
 		
-		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID);
+		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		String paramHtml = "";
 		for (int i=0; i<param.size(); i++) {
