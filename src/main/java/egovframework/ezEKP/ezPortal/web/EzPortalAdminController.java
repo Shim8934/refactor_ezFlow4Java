@@ -147,7 +147,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 	
 		if (commonUtil.checkAdmin(loginCookie)) {
-			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID());
+			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			model.addAttribute("result", result);
 			model.addAttribute("list", list);
@@ -616,7 +616,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 			}
 			
-			recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID());
+			recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID(), userInfo.getTenantId());
 			totalPage = (recordCnt - 1) / listPageSize + 1; // 총 페이지수
 			
 			int pStartRow = 0;

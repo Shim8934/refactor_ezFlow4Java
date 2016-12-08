@@ -348,73 +348,82 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getLogoHtml(String pOwnerPageID, String pAccessID) throws Exception {
+	public String getLogoHtml(String pOwnerPageID, String pAccessID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOWNERPAGEID", pOwnerPageID); 
-		map.put("v_pACCESSID", pAccessID);  
+		map.put("v_pACCESSID", pAccessID);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.getLogoHtml(map);
 	}
 	
 	@Override
-	public PortalMenuItemItemsImageVO getImageHtml(String pUID, String pParentUID, int pSkinNum) throws Exception {
+	public PortalMenuItemItemsImageVO getImageHtml(String pUID, String pParentUID, int pSkinNum, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID); 
 		map.put("v_pPARENTUID", pParentUID);
-		map.put("v_pSKINNUM", pSkinNum);  
+		map.put("v_pSKINNUM", pSkinNum);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.getImageHtml(map);
 	}
 	
 	@Override
-	public List<PortalTopLoadGetParametersVO> topLoadGetParameters(String pUID) throws Exception {
+	public List<PortalTopLoadGetParametersVO> topLoadGetParameters(String pUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pUID", pUID);  
+		map.put("v_pUID", pUID);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.topLoadGetParameters(map);
 	}
 	
 	@Override
-	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml(String pParentUID, String pOwnerPageID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml(String pParentUID, String pOwnerPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID); 
 		map.put("v_pOWNERPAGEID", pOwnerPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getUtilMenuHtml(map);
 	}
 	
 	@Override
-	public List<PortalGetMainMenuHtmlVO> getMainMenuHtml(String pParentUID, String pOwnerPageID, int pSkinNum) throws Exception {
+	public List<PortalGetMainMenuHtmlVO> getMainMenuHtml(String pParentUID, String pOwnerPageID, int pSkinNum, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID); 
 		map.put("v_pOWNERPAGEID", pOwnerPageID);
 		map.put("v_pSKINNUM", pSkinNum);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getMainMenuHtml(map);
 	}
 
 	@Override
-	public List<PortalMenuItemItemsMenuItemsVO> getSubMenuHtml(String pOwnerPageID, String pParentUID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsVO> getSubMenuHtml(String pOwnerPageID, String pParentUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOWNERPAGEID", pOwnerPageID); 
 		map.put("v_pPARENTUID", pParentUID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getSubMenuHtml(map);
 	}
 
 	@Override
-	public List<PortalMenuItemItemsMenuItemsSVO> getSubMenuHtml2( String pParentUID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsSVO> getSubMenuHtml2( String pParentUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getSubMenuHtml2(map);
 	}
 	
 	@Override
-	public String getPortalConfigItem(String pItemName, String pPageID) throws Exception {
+	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPAGEID", pPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getPortalConfigItem(map);
 	}
 	
 	@Override
-	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml( String pPortalPageID) throws Exception {
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml( String pPortalPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPORTALPAGEID", pPortalPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getRenderedPortalPageHtml(map);
 	}
 	
@@ -427,41 +436,48 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getPortletConfigItem(String pItemName, String pPortletID) throws Exception {
+	public String getPortletConfigItem(String pItemName, String pPortletID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPORTLETID", pPortletID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getPortletConfigItem(map);
 	}
 	
 	@Override
-	public String getItemLastPageID(String temp) throws Exception {
+	public String getItemLastPageID(String temp, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pTEMP", temp);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getItemLastPageID(map);
 	}
 	
 	@Override
-	public void updateCacheValue(String portalPageID, String accessIDList, String renderedHtml) throws Exception {
+	public void updateCacheValue(String portalPageID, String accessIDList, String renderedHtml, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PORTALPAGEID", portalPageID);
 		map.put("v_ACCESSIDLIST", portalPageID);
 		map.put("v_RENDEREDHTML", renderedHtml.replace("'", "''"));
+		map.put("tenantID", tenantID);
+		
+		ezPortalDAO.updateCacheValue_D(map);
 		ezPortalDAO.updateCacheValue(map);
 	}
 	
 	@Override
-	public String portalPageBaseType(String uID, String pCompanyID) throws Exception {
+	public String portalPageBaseType(String uID, String pCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
 		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.portalPageBaseType(map);
 	}
 	
 	@Override
-	public List<PortalGetThemeListVO> getThemeList(String pCompanyID) throws Exception {
+	public List<PortalGetThemeListVO> getThemeList(String pCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getThemeList(map);
 	}
 	
@@ -499,12 +515,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public void newMyPortalPageCreate3(String pUseFlag, String pUID, String pCompanyID, String pUserID) throws Exception {
+	public void newMyPortalPageCreate3(String pUseFlag, String pUID, String pCompanyID, String pUserID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUID", pUID);
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSERID", pUserID);
+		map.put("tenantID", tenantID);
 		ezPortalDAO.newMyPortalPageCreate3(map);
 	}
 	
@@ -519,10 +536,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalUrlPortletVO urlPortlet(String uID, String creatorID) throws Exception {
+	public PortalUrlPortletVO urlPortlet(String uID, String creatorID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_CREATORID", creatorID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.urlPortlet(map);
 	}
 	
@@ -559,9 +577,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTopLoadGetParametersVO> loadGetParameters(String pPortletID) throws Exception {
+	public List<PortalTopLoadGetParametersVO> loadGetParameters(String pPortletID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPortletID", pPortletID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.loadGetParameters(map);
 	}
 	
@@ -606,18 +625,20 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalNewMyPortalPageListVO> newMyPortalList(String pUserID, String pGubunFlag) throws Exception {
+	public List<PortalNewMyPortalPageListVO> newMyPortalList(String pUserID, String pGubunFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pDISPLAYNAME", pUserID);
 		map.put("v_pGUBUNFLAG", pGubunFlag);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.newMyPortalList(map);
 	}
 	
 	@Override
-	public List<PortalFirstMainListVO> firstMainList(String pUseTopMenuID, String deptPath) throws Exception {
+	public List<PortalFirstMainListVO> firstMainList(String pUseTopMenuID, String deptPath, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSETOPMENUID", pUseTopMenuID);
 		map.put("v_DEPTPATH", deptPath);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.firstMainList(map);
 	}
 	
@@ -795,14 +816,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		 String strPage = sb.toString();
 		 sb = null;
 		 
-		 try {
-			 if (mode.equals("view")) {
-				 updateCacheValue(topMenuID, getAccessList(userInfo), strPage);
-			 }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		 
+		 if (mode.equals("view")) {
+			 updateCacheValue(topMenuID, getAccessList(userInfo), strPage, userInfo.getTenantId());
+		 }
+		
 		 return strPage;
 		
 	}
@@ -1243,23 +1260,18 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return strHTML;
 	}
 	
-	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) {
-		try {
-			String pUID = "";
-			String pAccessIDList = getAccessList(userInfo);
+	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) throws Exception {
+		String pUID = "";
+		String pAccessIDList = getAccessList(userInfo);
+		
+		for (int i=0; i<pAccessIDList.split(",").length; i++) {
+			pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim(), userInfo.getTenantId());
 			
-			for (int i=0; i<pAccessIDList.split(",").length; i++) {
-				pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim());
-				
-				if (pUID != null) {
-					break;
-				}
+			if (pUID != null) {
+				break;
 			}
-			return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
 		}
+		return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
 	}
 	
 	public String getImageHTML (String pCallingMenuID, String pUID, boolean pIncludeTD, String pContentsUID, LoginVO userInfo) {
@@ -1273,7 +1285,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			
 			StringBuilder sb = new StringBuilder();
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum));
+			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
 
 			if (result != null) {
 				String imageNormalImagePath = result.getNormalImagePath();
@@ -1323,70 +1335,60 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) {
-		try {
-			List<PortalTopLoadGetParametersVO> result = topLoadGetParameters(pMenuItemID);
-			
-			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
-			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
-			String strParam = "";
-			
-			for (int i=0; i<result.size(); i++) {
-				if (pURL.indexOf("?") == -1) {
-					if (strParam == null || strParam.equals("")) {
-						strParam += "?";
-					} else {
-						strParam += "&";
-					}
+	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception {
+		List<PortalTopLoadGetParametersVO> result = topLoadGetParameters(pMenuItemID, userInfo.getTenantId());
+		
+		String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+		Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+		String strParam = "";
+		
+		for (int i=0; i<result.size(); i++) {
+			if (pURL.indexOf("?") == -1) {
+				if (strParam == null || strParam.equals("")) {
+					strParam += "?";
 				} else {
 					strParam += "&";
 				}
-				
-				if (result.get(i).getParamType() == 0) {
-					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
-				} else {
-					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
-				}
-				
+			} else {
+				strParam += "&";
 			}
-			return strParam;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			
+			if (result.get(i).getParamType() == 0) {
+				strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
+			} else {
+				strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+			}
+			
 		}
+		return strParam;
 	}
 	
-	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) {
-		try {
-			List<PortalTopLoadGetParametersVO> result = loadGetParameters(pPortletID);
-			
-			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
-			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
-			String strParam = "";
-			
-			for (int i=0; i<result.size(); i++) {
-				if (pURL.indexOf("?") == -1) {
-					if (strParam == null || strParam.equals("")) {
-						strParam += "?";
-					} else {
-						strParam += "&";
-					}
+	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) throws Exception {
+		List<PortalTopLoadGetParametersVO> result = loadGetParameters(pPortletID, userInfo.getTenantId());
+		
+		String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+		Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+		String strParam = "";
+		
+		for (int i=0; i<result.size(); i++) {
+			if (pURL.indexOf("?") == -1) {
+				if (strParam == null || strParam.equals("")) {
+					strParam += "?";
 				} else {
 					strParam += "&";
 				}
-				
-				if (result.get(i).getParamType() == 0) {
-					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
-				} else {
-					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
-				}
-				
+			} else {
+				strParam += "&";
 			}
-			return strParam;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			
+			if (result.get(i).getParamType() == 0) {
+				strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
+			} else {
+				strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+			}
+			
 		}
+		return strParam;
 	}
 	
 	public String loadGetParametersXML (String pURL, String pXML, LoginVO userInfo) {
@@ -1423,150 +1425,136 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID);
-			StringBuilder sb = new StringBuilder();
-			sb.append("<article class='utmenu'>\n");
-			sb.append("<ul>\n");
-			
-			String lastLogout = "";
+	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
+		StringBuilder sb = new StringBuilder();
+		sb.append("<article class='utmenu'>\n");
+		sb.append("<ul>\n");
+		
+		String lastLogout = "";
 
-			for (int i=0; i<result.size(); i++) {
-				logger.debug("uID="+result.get(i).getuID());
-				logger.debug("accessID="+getAccessList(userInfo));
-				if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId()) == false) {
+		for (int i=0; i<result.size(); i++) {
+			logger.debug("uID="+result.get(i).getuID());
+			logger.debug("accessID="+getAccessList(userInfo));
+			if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId()) == false) {
+				continue;
+			}
+			logger.debug("getUtilMenuHtml="+result.get(i));
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemImageUID = result.get(i).getImageUId();
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
+			if (menuitemLinkLocation == null) {
+				menuitemLinkLocation = "";
+			}
+			logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
+			String menuitemWindowOption = result.get(i).getWindowOption();
+			
+			if (i == result.size() - 1) {
+				lastLogout = "class='btn_logout'";
+			}
+			
+			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
+				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
+			} else {
+				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+					if (i == result.size() - 1) {
+						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
+					} else {
+						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+						sb.append(", \"" + menuitemLinkLocation + "\"");
+                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+					}
+                      
+				} else {
+					sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
+				}
+			}
+		}
+		sb.append("</ul></article>\n");
+		return sb.toString();
+	}
+	
+	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder();
+        if (userInfo.getTheme().equals("BASIC")) {
+        	sb.append("</header>\n");
+        }
+		sb.append("<nav>\n");
+        sb.append("<ul class='topmenu'>");
+        
+        for (int i=0; i<result.size(); i++) {
+			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+				continue;
+			}
+			
+			String menuitemUID = result.get(i).getuID();
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemImageUID = result.get(i).getImageUId();
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
+			String menuitemWindowOption = result.get(i).getWindowOption();
+			String menuitemNormalImagePath = result.get(i).getNormalImagePath();
+
+			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
+				sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
+			} else {
+				sb.append("<li ");
+				
+				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+                    sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+					sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
+				}
+				
+				sb.append(">" + menuitemDisplayName + "</li>");
+			}
+        }
+        
+        sb.append("</ul></nav>");
+		return sb.toString();
+	
+	}
+	
+	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(" <div class=\"topSubMenu\">");
+		
+		for (int i=0; i<result.size(); i++) {
+			String leftMargin = result.get(i).getLeftMargin();
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID(), userInfo.getTenantId());
+			
+			if (result2.size() == 0) {
+				 sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
+				continue;
+			}
+			String parentMenuID = result2.get(0).getParentMenuID();
+			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover()\" onmouseout=\"submenuout()\"><li class=\"left\">");
+			for (int j=0; j<result2.size(); j++) {
+				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 					continue;
 				}
-				logger.debug("getUtilMenuHtml="+result.get(i));
-				String menuitemDisplayName = result.get(i).getDisplayName();
-				String menuitemImageUID = result.get(i).getImageUId();
-				String menuitemLinkURL = result.get(i).getLinkURL();
-				String menuitemLinkLocation = result.get(i).getLinkLocation();
-				if (menuitemLinkLocation == null) {
-					menuitemLinkLocation = "";
-				}
-				logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
-				String menuitemWindowOption = result.get(i).getWindowOption();
-				
-				if (i == result.size() - 1) {
-					lastLogout = "class='btn_logout'";
-				}
+				String menuitemDisplayName = result2.get(j).getDisplayName();
+				String menuitemImageUID = result2.get(j).getImageUId();
+				String menuitemLinkURL = result2.get(j).getLinkURL();
+				String menuitemLinkLocation = result2.get(j).getLinkLocation();
+				String menuitemWindowOption = result2.get(j).getWindowOption();
 				
 				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
-					sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
+					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 				} else {
-					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-						if (i == result.size() - 1) {
-							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
-						} else {
-							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-							sb.append(", \"" + menuitemLinkLocation + "\"");
-	                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
-						}
-                          
-					} else {
-						sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
-					}
+					sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
 				}
 			}
-			sb.append("</ul></article>\n");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			sb.append("<li class=\"right\"></ul>");
 		}
-	}
+		sb.append("</div>\n");
+		return sb.toString();
 	
-	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()));
-			
-
-			StringBuilder sb = new StringBuilder();
-            if (userInfo.getTheme().equals("BASIC")) {
-            	sb.append("</header>\n");
-            }
-			sb.append("<nav>\n");
-            sb.append("<ul class='topmenu'>");
-            
-            for (int i=0; i<result.size(); i++) {
-				if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
-					continue;
-				}
-				
-				String menuitemUID = result.get(i).getuID();
-				String menuitemDisplayName = result.get(i).getDisplayName();
-				String menuitemImageUID = result.get(i).getImageUId();
-				String menuitemLinkURL = result.get(i).getLinkURL();
-				String menuitemLinkLocation = result.get(i).getLinkLocation();
-				String menuitemWindowOption = result.get(i).getWindowOption();
-				String menuitemNormalImagePath = result.get(i).getNormalImagePath();
-
-				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
-					sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
-				} else {
-					sb.append("<li ");
-					
-					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-                        sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-						sb.append(", \"" + menuitemLinkLocation + "\"");
-						sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
-					}
-					
-					sb.append(">" + menuitemDisplayName + "</li>");
-				}
-            }
-            
-            sb.append("</ul></nav>");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-	
-	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID);
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append(" <div class=\"topSubMenu\">");
-			
-			for (int i=0; i<result.size(); i++) {
-				String leftMargin = result.get(i).getLeftMargin();
-				List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID());
-				
-				if (result2.size() == 0) {
-					 sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
-					continue;
-				}
-				String parentMenuID = result2.get(0).getParentMenuID();
-				sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover()\" onmouseout=\"submenuout()\"><li class=\"left\">");
-				for (int j=0; j<result2.size(); j++) {
-					if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
-						continue;
-					}
-					String menuitemDisplayName = result2.get(j).getDisplayName();
-					String menuitemImageUID = result2.get(j).getImageUId();
-					String menuitemLinkURL = result2.get(j).getLinkURL();
-					String menuitemLinkLocation = result2.get(j).getLinkLocation();
-					String menuitemWindowOption = result2.get(j).getWindowOption();
-					
-					if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
-						sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
-					} else {
-						sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
-					}
-				}
-				sb.append("<li class=\"right\"></ul>");
-			}
-			sb.append("</div>\n");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
 	}
 	
 	public String getSearchHTML (String pCallingMenuID, String pUID) {
@@ -1609,7 +1597,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			
 			StringBuilder sb = new StringBuilder();
 			
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum));
+			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
 
 			if (result != null) {
                 String imageNormalImagePath = result.getNormalImagePath();
@@ -1718,16 +1706,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         
         String defaultValue = dsb.toString();
 
-        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
+        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
 
         if (result == null) {
         	return defaultValue;
         }
         
-        pageWidth = getPortalConfigItem("Width",RootParentUID);
-        pageHeight = getPortalConfigItem("Height",RootParentUID);
-        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID);
-        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID);
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
 
         if (pMode.equals("edit")) {
         	sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
@@ -1797,16 +1785,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		sb.append("</div>");
         	}
         	
-        	try {
-        		if (pMode.equals("view")) {
-            		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString());
-            	}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        	
+    		if (pMode.equals("view")) {
+        		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
+        	}
+			
 		return sb.toString();
-	
 	}
 	
 	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
@@ -1836,16 +1819,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         dsb.append("</tr></table>");
         String defaultValue = dsb.toString();
         
-        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
+        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
         
         if (result == null) {
         	return defaultValue;
         }
         
-        pageWidth = getPortalConfigItem("Width",RootParentUID);
-        pageHeight = getPortalConfigItem("Height",RootParentUID);
-        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID);
-        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID);
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
         
         if (pMode.equals("edit")) {
         	sb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
@@ -2045,7 +2028,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         			}
         			if (portletType == 0) {
         				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID);
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
         					sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
         				}
         			} else {
@@ -2061,7 +2044,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         				sb.append("<div class='section1_bg'><section class='section1'>\n");
         				if (portletType == 0) {
         					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        						portletMoveURL = getPortletConfigItem("URL",portletUID);
+        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
         						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
         					}
         				} else {
@@ -2083,7 +2066,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         				
         				if (portletType == 0) {
         					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        						portletMoveURL = getPortletConfigItem("URL",portletUID);
+        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
         						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
         					}
         				} else {
@@ -2113,7 +2096,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         String parentPortalPageID = pCallingPageID;
         int count = 0;
         
-        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID) + "'" ;
+        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
         
         while (count < 10) {
         	parentPortalPageID = getPortalParentUID(parentPortalPageID);
@@ -2170,7 +2153,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		if (userInfo.getTableViewOption().equals("D")) {
         			if (portletType == 0) {
         				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID);
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
         					if (portletWidth == 9999) {
         						String portletWidthStr = "100%"; 
         						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
@@ -2185,7 +2168,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		} else {
         			if (portletType == 0) {
         				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID);
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
         					
         					if (portletWidth == 9999) {
         						String portletWidthStr = "100%"; 
@@ -2207,80 +2190,71 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	}
 	
-	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) {
-		try {
-			List<PortalGetThemeListVO> list = getThemeList(pCompanyID);
-			
-			StringBuilder pThemeSelectObject = new StringBuilder();
-			for (int i=0; i<list.size(); i++) {
-				if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
-					switch (Integer.parseInt(userInfo.getLang())) {
-					case 1:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName() + "</option>");
-						break;
-					case 2:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName2() + "</option>");
-						break;
-					case 3:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName3() + "</option>");
-						break;
-					case 4:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName4() + "</option>");
-						break;
-					default:
-						break;
-					}
-					
-				} else {
-					switch (Integer.parseInt(userInfo.getLang())) {
-					case 1:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</option>");
-						break;
-					case 2:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName2() + "</option>");
-						break;
-					case 3:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName3() + "</option>");
-						break;
-					case 4:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName4() + "</option>");
-						break;
-					default:
-						break;
-					}
-					
+	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) throws Exception {
+		List<PortalGetThemeListVO> list = getThemeList(pCompanyID, userInfo.getTenantId());
+		
+		StringBuilder pThemeSelectObject = new StringBuilder();
+		for (int i=0; i<list.size(); i++) {
+			if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
+				switch (Integer.parseInt(userInfo.getLang())) {
+				case 1:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName() + "</option>");
+					break;
+				case 2:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName2() + "</option>");
+					break;
+				case 3:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName3() + "</option>");
+					break;
+				case 4:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName4() + "</option>");
+					break;
+				default:
+					break;
 				}
+				
+			} else {
+				switch (Integer.parseInt(userInfo.getLang())) {
+				case 1:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</option>");
+					break;
+				case 2:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName2() + "</option>");
+					break;
+				case 3:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName3() + "</option>");
+					break;
+				case 4:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName4() + "</option>");
+					break;
+				default:
+					break;
+				}
+				
 			}
-			
-			return pThemeSelectObject.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
 		}
+		
+		return pThemeSelectObject.toString();
+		
 	}
 	
-	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID) {
-		try {
-			String newPageID = UUID.randomUUID().toString();
-			int recordCnt = 0;
+	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID, int tenantID) throws Exception {
+		String newPageID = UUID.randomUUID().toString();
+		int recordCnt = 0;
+		
+		if (pPageID.length() == 0) {
+			recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "empty");
+		} else {
+			recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "full");
+		}
+		
+		if (recordCnt != 0) {
+			String baseMyPortalPageUID = newMyPortalPageCreate2("Y", pUserID, pCompanyID);
 			
-			if (pPageID.length() == 0) {
-				recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "empty");
-			} else {
-				recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "full");
-			}
-			
-			if (recordCnt != 0) {
-				String baseMyPortalPageUID = newMyPortalPageCreate2("Y", pUserID, pCompanyID);
-				
-				newMyPortalPageCreate3("Y", baseMyPortalPageUID, pCompanyID, pUserID);
-				return "OK";
-			} else {
-				return "OK";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
+			newMyPortalPageCreate3("Y", baseMyPortalPageUID, pCompanyID, pUserID, tenantID);
+			return "OK";
+		} else {
+			return "OK";
 		}
 	}
 	
@@ -2508,7 +2482,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return aclResult;
 	}
 	
-	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception {
 		String[] pAccessID = pAccessIDList.split("\\,");
 		String pIDUser = pAccessID[0].trim();
 		String pIDDept = "";
@@ -2525,12 +2499,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pIDUSER", pIDUser);
 		map.put("v_pIDDEPT", pIDDept);
 		map.put("v_pIDCOMPANY", pCompanyID);
+		map.put("tenantID", tenantID);
 		List<PortalMyPortalListVO> list = ezPortalDAO.myPortalList(map);
 		
 		return list;
 	}
 	
-	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception {
 		String[] pAccessID = pAccessIDList.split("\\,");
 		String pIDUser = pAccessID[0].trim();
 		String pIDDept = "";
@@ -2546,6 +2521,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pGUBUNFLAG", pGubunFlag);
 		map.put("v_pIDUSER", pIDUser);
 		map.put("v_pIDDEPT", pIDDept);
+		map.put("tenantID", tenantID);
 		int count = ezPortalDAO.searchMyPortalPageCount(map);
 		
 		return count;
@@ -2581,12 +2557,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return sb.toString();
 	}
 	
-	public String useTopMenuID2( String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID) throws Exception {
+	public String useTopMenuID2( String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pLANG", pLang);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		map.put("tenantID", tenantID);
 		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID2(map);
 		
 		String useTopMenuIDXml = "";
@@ -2600,11 +2577,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return useTopMenuIDXml;
 	}
 	
-	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID) throws Exception {
+	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		map.put("tenantID", tenantID);
 		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID(map);
 		
 		String useTopMenuIDXml = "";
@@ -2824,5 +2802,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 }
+
 
 

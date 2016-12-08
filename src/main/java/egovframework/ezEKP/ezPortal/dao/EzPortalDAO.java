@@ -347,8 +347,7 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	public int searchMyPortalPageCount(Map<String, Object> map) {
-		select("EzPortalDAO.searchMyPortalPageCount", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPortalDAO.searchMyPortalPageCount", map);
 	}
 	
 	public void deleteCacheValue(Map<String, Object> map) {
@@ -361,6 +360,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void deleteTBLPortalACL(Map<String, Object> map) {
 		delete("EzPortalDAO.deleteTBLPortalACL", map);
+	}
+	
+	public void updateCacheValue_D(Map<String, Object> map) {
+		delete("EzPortalDAO.updateCacheValue_D", map);
 	}
 	
 	public void getUserInfo3(Map<String, Object> map) {

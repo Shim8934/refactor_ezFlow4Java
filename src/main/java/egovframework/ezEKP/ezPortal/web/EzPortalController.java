@@ -449,7 +449,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID,userInfo.getTenantId());
 				displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID,userInfo.getTenantId());
 				pSelectThemeUID = ezPortalService.getTopMenuConfigItem("ThemeUID", pageID,userInfo.getTenantId());
-				List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID());
+				List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
 				String xmlStr = "<DATA>";
 				for (int i=0; i<list.size(); i++) {
 					xmlStr += commonUtil.getQueryResult(list.get(i));
@@ -614,7 +614,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				parentPageID = req.getParameter("parentPageID");
 			} else {
 				if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-					parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID); 
+					parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId()); 
 				} else {
 					parentPageID = "top";
 				}
@@ -684,8 +684,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			// 새로만들기
-			if (ezPortalService.getPortalConfigItem("TableViewOption", pageID) != null && !ezPortalService.getPortalConfigItem("TableViewOption", pageID).trim().equals("")) {
-				tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID);
+			if (ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()) != null && !ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("")) {
+				tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
 			} else {
 				tableViewOption = "D";
 			}
@@ -695,14 +695,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 					logger.debug("strHTML="+strHTML);
 				} else {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
-					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
 					logger.debug("strHTML="+strHTML);
 				}
 			}
@@ -716,9 +716,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 					
 			if (!mode.equals("view")) {
-				displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID);
-				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID);
-	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
+				displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
+				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
+	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
 	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
 /*	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
 	        	String xmlStr = "<DATA>";
@@ -738,9 +738,9 @@ public class EzPortalController extends EgovFileMngUtil {
 				}     */   
 	            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
 	            if (editMode.equals("new_inherit")) {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID);
+	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
 	            } else {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID);
+	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
 	            }
 	                    
 	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
@@ -951,7 +951,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
 					}
 				} else {
-					PortalUrlPortletVO result = ezPortalService.urlPortlet(uID, pUserID);
+					PortalUrlPortletVO result = ezPortalService.urlPortlet(uID, pUserID, userInfo.getTenantId());
 					String resultXML = commonUtil.getQueryResult(result);
 					Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
 					
@@ -1668,20 +1668,20 @@ public class EzPortalController extends EgovFileMngUtil {
 			parentPageID = req.getParameter("parentPageID");
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
-				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID);
+				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
 			} else {
 				parentPageID = "Top";
 			}
 		}
 		
 		gubunFlag = "1";
-		List<PortalMyPortalListVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
+		List<PortalMyPortalListVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID(), userInfo.getTenantId());
 
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
 			for (PortalMyPortalListVO myPortal : myPortalList) {
 				parentPageID = myPortal.getuID_();
-				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "");
+				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
 			}
 		}
 		
@@ -1690,7 +1690,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			sb.append("<DATA>");
 			
 			for (int i=0; i<myPortalList.size(); i++) {
-				List<PortalNewMyPortalPageListVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag);
+				List<PortalNewMyPortalPageListVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag, userInfo.getTenantId());
 				for (int t=0; t<tempNewMyPortalPageList.size(); t++) {
 					String uID = myPortalList.get(i).getuID_();
 					String newPortalParentUID = tempNewMyPortalPageList.get(t).getParentUID().trim();
@@ -1728,7 +1728,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		gubunFlag = "1c";
 		
-		recordCnt = ezPortalService.searchMyPortalPageCount(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID());
+		recordCnt = ezPortalService.searchMyPortalPageCount(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID(), userInfo.getTenantId());
 		totalPage = (recordCnt - 1) / listPageSize + 1;
 		int pStartRow = 0;
 		int pEndRow = 0;
@@ -1808,12 +1808,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String useTopMenuIDXml = ezPortalService.useTopMenuID2(userInfo.getCompanyID(), "Y", userInfo.getLang(), pUserThemeUID);
+		String useTopMenuIDXml = ezPortalService.useTopMenuID2(userInfo.getCompanyID(), "Y", userInfo.getLang(), pUserThemeUID, userInfo.getTenantId());
 		
 		if (useTopMenuIDXml.equals("<DATA></DATA>")) {
-			useTopMenuIDXml = ezPortalService.useTopMenuID(userInfo.getCompanyID(), "Y", pUserThemeUID);
+			useTopMenuIDXml = ezPortalService.useTopMenuID(userInfo.getCompanyID(), "Y", pUserThemeUID, userInfo.getTenantId());
 		}
-logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
+		logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
 		
 		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
@@ -1855,7 +1855,7 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		
 		String userDeptPath = deptPathOrgan + ",everyone";
 		
-		List<PortalFirstMainListVO> list = ezPortalService.firstMainList(parentUID, userDeptPath);
+		List<PortalFirstMainListVO> list = ezPortalService.firstMainList(parentUID, userDeptPath, userInfo.getTenantId());
 		
 		model.addAttribute("useStartPage", useStartPage);
 		model.addAttribute("list", list);
@@ -1949,7 +1949,7 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 				parentPageID = req.getParameter("parentPageID");
 			} else {
 				if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-					parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID); 
+					parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId()); 
 				} else {
 					parentPageID = "top";
 				}
@@ -2019,19 +2019,19 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 			}
 			
 			// 새로만들기
-			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID).trim().equals("") ? "D" : ezPortalService.getPortalConfigItem("TableViewOption", pageID);
+			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("") ? "D" : ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
 			if (mode.trim().equals("new")) {
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 				} else {
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
-					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
 				}
 			}
 			
@@ -2044,16 +2044,16 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 			}
 					
 			if (!mode.equals("view")) {
-				displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID);
-				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID);
-	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID);
+				displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
+				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
+	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
 	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
 	                    
 	            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
 	            if (editMode.equals("new_inherit")) {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID);
+	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
 	            } else {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID);
+	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
 	            }
 	                    
 	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
@@ -2321,67 +2321,66 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 	@RequestMapping(value = "/ezPortal/boardPortlet.do")
 	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			String uID = "";
-			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-				uID = req.getParameter("uID");
-			}
-			String pCreatorId = "";
-			String pBoardID = "";
-			String pItemCount = "";
-			String pItemFields = "";
-			String gubunFlag = "";
-			String pMoveURL = "";
-			String pUserID = userInfo.getId();
-			
-			if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
-				pUserID = req.getParameter("userID");
-			}
-			
-			Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
-
-			if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
-				gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
-
-				if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
-					
-					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
-						pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
-						pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
-						pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
-					}
-				} else {
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("v_UID", uID);
-					map.put("v_CREATORID", pUserID);
-					PortalTBLPortletBoardVO result = ezPortalService.boardPortlet(map);
-					String resultXML = commonUtil.getQueryResult(result);
-					Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
-					
-					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
-						pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
-						pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
-						pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
-					}
-				}
-			}
-			
-			if (pBoardID == null || pBoardID.equals("")) {
-				resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t275", locale) + "</font>");
-			} else {
-				if (gubunFlag.equals("2")) {
-					pMoveURL = "/ezPortal/boardListClass.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID + "&pClassID=" + pUserID;
-				} else {
-					pMoveURL = "/ezBoard/boardListPortal.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID;
-				}
-			}
-			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
-			resp.getWriter().write("<body onload='window_onload()'></body>");
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
 		}
+		String pCreatorId = "";
+		String pBoardID = "";
+		String pItemCount = "";
+		String pItemFields = "";
+		String gubunFlag = "";
+		String pMoveURL = "";
+		String pUserID = userInfo.getId();
+		
+		if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
+			pUserID = req.getParameter("userID");
+		}
+		
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
+
+		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
+			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+
+			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
+				
+				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+					pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
+					pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+					pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+				}
+			} else {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("v_UID", uID);
+				map.put("v_CREATORID", pUserID);
+				map.put("tenantID", userInfo.getTenantId());
+				PortalTBLPortletBoardVO result = ezPortalService.boardPortlet(map);
+				String resultXML = commonUtil.getQueryResult(result);
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
+				
+				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+					pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
+					pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
+					pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
+				}
+			}
+		}
+		
+		if (pBoardID == null || pBoardID.equals("")) {
+			resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t275", locale) + "</font>");
+		} else {
+			if (gubunFlag.equals("2")) {
+				pMoveURL = "/ezPortal/boardListClass.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID + "&pClassID=" + pUserID;
+			} else {
+				pMoveURL = "/ezBoard/boardListPortal.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID;
+			}
+		}
+		resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
+		resp.getWriter().write("<body onload='window_onload()'></body>");
+	
 	}	
 }
