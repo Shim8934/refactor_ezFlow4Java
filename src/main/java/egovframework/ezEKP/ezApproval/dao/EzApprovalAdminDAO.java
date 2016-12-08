@@ -84,5 +84,69 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getContainerInfoManage", userInfo);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ApprContInfoVO> getContTypeInfo(LoginVO userInfo) throws Exception{
+		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getContTypeInfo", userInfo);
+	}
+
+	public void insertContainerType(Map<String, Object> map) throws Exception{
+		insert("EzApprovalAdminDAO.insertContainerType", map);
+	}
+
+	public void deleteContainerType(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteContainerType", map);
+	}
+	
+	public void deleteContDocState(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteContDocState", map);
+	}
+
+	public int getContCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalAdminDAO.getContCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprCodeVO> getListHeader(Map<String, Object> map) throws Exception{
+		return (List<ApprCodeVO>) list("EzApprovalAdminDAO.getListHeader", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprContInfoVO> getContainerToDocStateInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getContainerToDocStateInfo", map);
+	}
+
+	public void deleteContainerToDocStateInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteContainerToDocStateInfo", map);
+	}
+
+	public void insertContainerToDocStateInfo(String insString) throws Exception{
+		insert("EzApprovalAdminDAO.insertContainerToDocStateInfo", insString);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getContainerUseDeptInfo(Map<String, Object> map) throws Exception{
+		return (List<String>) list("EzApprovalAdminDAO.getContainerUseDeptInfo", map);
+	}
+
+	public void insertContainer(Map<String, Object> map) throws Exception{
+		insert("EzApprovalAdminDAO.insertContainer", map);
+	}
+
+	public void insertContainerUseDept(String insString) throws Exception{
+		insert("EzApprovalAdminDAO.insertContainerUseDept", insString);
+	}
+
+	public void updateContainer(Map<String, Object> map) throws Exception{
+		update("EzApprovalAdminDAO.updateContainer", map);
+	}
+
+	public void deleteContainerUseDept(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteContainerUseDept", map);
+	}
+
+	public void deleteContainer(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteContainer", map);
+	}
+
 
 }

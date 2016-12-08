@@ -79,6 +79,7 @@
 	            document.getElementById("lvtForm").innerHTML = "";
 	            var xmlRtn = createXmlDom();
 	            
+//성공후에 deptID R 반환하는거 고쳐야겠지?	            
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -95,29 +96,29 @@
 			            listview.DataBind("lvtForm");
 		    		}
 		    	});
-		    	
 	        }
 	
 	        function delContainer(selRow) {
 	            var ContID = GetAttribute(listview.GetDataRows()[selRow], "DATA1");
-	            var xmlpara = createXmlDom();
 	            var xmlRtn = createXmlDom();
+	            
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/MdelCont.do",
+		    		data : {
+		    			contID : ContID,
+		    			comID  : CompanyID
+		    		},
+		    		success: function(xml){
+		    			xmlRtn = loadXMLString(xml);
+		    		}
+		    	});
 	
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "CONTID", ContID);
-	            createNodeAndInsertText(xmlpara, objNode, "ComID", CompanyID);
-	
-	            xmlHTTP.open("POST", "/myoffice/ezApproval/manage/aspx/MdelCont.aspx", false);
-	            xmlHTTP.send(xmlpara);
-	            xmlRtn = loadXMLString(xmlHTTP.responseText);
-	
-	            if (xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue == "TRUE") {
-	
-	            }
-	            else {
+	            if (xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue != "TRUE") {
 	                window.alert("<spring:message code='ezApproval.t681'/>");
-	            }
+	            } 
 	        }
 	
 	        function listAdd(pContName, pContID, pData2, pContNameLang, pData4) {
@@ -219,10 +220,10 @@
 	                para[2] = CompanyID;
 	                para[3] = DeptID;
 	
-	                var url = "/myoffice/ezApproval/manage/MinsContMain.aspx?TCheck=DContIns";
+	                var url = "/admin/ezApproval/MinsContMain.do?TCheck=DContIns";
 	                minscontmain_dialogArguments[0] = para;
 	                minscontmain_dialogArguments[1] = btnIns_onclick_Complete;
-	                var result = GetOpenWindow("/myoffice/ezApproval/manage/MinsContMain.aspx", "MinsContMain_Cross", 580, 455, "NO");
+	                var result = GetOpenWindow("/admin/ezApproval/MinsContMain.do", "MinsContMain_Cross", 580, 455, "NO");
 	            }
 	            else {
 	                alert("<spring:message code='ezApproval.t684'/>");
@@ -230,8 +231,9 @@
 	        }
 	
 	        function btnIns_onclick_Complete(retVal) {
-	            if (retVal == "TRUE")
+	            if (retVal == "TRUE") {
 	                getContInfo(retVal[1])
+	            }
 	        }
 	
 	        function btnUpdate_onclick() {
@@ -251,10 +253,10 @@
 	                para[3] = GetAttribute(selRow[0], "DATA4");
 	                para[4] = CompanyID;
 	                para[5] = DeptID;
-	                var url = "/myoffice/ezApproval/manage/MinsContMain.aspx?TCheck=DContUpdate"
+	                var url = "/admin/ezApproval/MinsContMain.do?TCheck=DContUpdate"
 	                minscontmain_dialogArguments[0] = para;
 	                minscontmain_dialogArguments[1] = btnUpdate_onclick_Complete;
-	                var result = GetOpenWindow("/myoffice/ezApproval/manage/MinsContMain.aspx", "MinsContMain_Cross", 580, 455, "NO");
+	                var result = GetOpenWindow("/admin/ezApproval/MinsContMain.do", "MinsContMain_Cross", 580, 455, "NO");
 	            }
 	            else {
 	                alert("<spring:message code='ezApproval.t685'/>");
@@ -288,7 +290,7 @@
 	            else {
 	                para["P_companyID"] = CompanyID;
 	                minsconttype_dialogArguments[0] = para;
-	                var result = GetOpenWindow("/myoffice/ezApproval/manage/MinsContType.aspx", "MinsContType_Cross", 590, 430, "NO");
+	                var result = GetOpenWindow("/admin/ezApproval/MinsContType.do", "MinsContType_Cross", 590, 430, "NO");
 	            }
 	        }
 	
@@ -311,7 +313,7 @@
 	            }
 	
 	            if (nodeIdx != "") {
-	                var url = "ManageSpecialCont.aspx?DeptID=" + escape(treeNode.GetNodeData("CN")) + "&CompanyID=" + escape(treeNode.GetNodeData("EXTENSIONATTRIBUTE2")) + "&DeptNM=" + escape(treeNode.GetNodeData("VALUE"));
+	                var url = "manageSpecialCont.do?deptID=" + escape(treeNode.GetNodeData("CN")) + "&companyID=" + escape(treeNode.GetNodeData("EXTENSIONATTRIBUTE2")) + "&deptName=" + escape(treeNode.GetNodeData("VALUE"));
 	                var result = GetOpenWindow(url, "ManageSpecialCont", 540, 296, "NO");
 	            }
 	        }

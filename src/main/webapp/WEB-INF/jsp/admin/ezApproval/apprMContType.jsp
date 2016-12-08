@@ -91,27 +91,28 @@
 	            var cnt = SelContName_Check();
 	            if (cnt == 0) {
 	                if (document.getElementById("DocTypeName").value != "") {
-	                    var xmlpara = createXmlDom();
 	                    var xmlRtn = createXmlDom();
-	                    var ParaName, ParaValue;
-	
-	                    var objNode;
-	                    createNodeInsert(xmlpara, objNode, "PARAMETER");
-	                    createNodeAndInsertText(xmlpara, objNode, "DocTypeName", document.getElementById("DocTypeName").value);
-	                    createNodeAndInsertText(xmlpara, objNode, "DocTypeName2", document.getElementById("DocTypeName2").value);
-	                    createNodeAndInsertText(xmlpara, objNode, "ComID", P_companyID);
-	
-	
-	                    xmlhttp.open("POST", "/myoffice/ezApproval/manage/aspx/InsertContType.aspx", false);
-	                    xmlhttp.send(xmlpara);
-	
-	                    xmlRtn = loadXMLString(xmlhttp.responseText);
+	                    
+	    	            $.ajax({
+	    		    		type : "POST",
+	    		    		dataType : "text",
+	    		    		async : false,
+	    		    		url : "/admin/ezApproval/insertContType.do",
+	    		    		data : {
+	    		    			docTypeName : document.getElementById("DocTypeName").value,
+	    		    			docTypeName2 : document.getElementById("DocTypeName2").value,
+	    		    			comID  : P_companyID
+	    		    		},
+	    		    		success: function(xml){
+	    			            xmlRtn = loadXMLString(xml);
+	    		    		}
+	    		    	});
+	    	            
 	                    var RtnDocType = xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue;
 	
 	                    if (RtnDocType == "FALSE") {
 	                        alert("<spring:message code='ezApproval.t691'/>");
-	                    }
-	                    else {
+	                    } else {
 	                        alert("<spring:message code='ezApproval.t692'/>");
 	                        getDocType();
 	                        document.getElementById("DocTypeName").value = "";
@@ -135,24 +136,29 @@
 	            listview.LoadFromID("lvtDocForm");
 	            if (listview.GetSelectedIndexes() > 0);
 	            ContDocInfo = listview.GetDataRows()[listview.GetSelectedIndexes()];
+	            
+	            var result = ""; 
+	            $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/deleteContType.do",
+		    		data : {
+		    			docTypeID : GetAttribute(ContDocInfo, "DATA1"),
+		    			comID  : P_companyID
+		    		},
+		    		success: function(text){
+			            result = text;
+		    		}
+		    	});
 	
-	            var xmlpara = createXmlDom();
-	            var xmlRtn = createXmlDom();
-	            var ParaName, ParaValue;
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "DocTypeID", GetAttribute(ContDocInfo, "DATA1"));
-	            createNodeAndInsertText(xmlpara, objNode, "ComID", P_companyID);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApproval/manage/aspx/DeleteContType.aspx", false);
-	            xmlhttp.send(xmlpara);
-	            if (xmlhttp.responseText == "TRUE") {
+	            if (result == "TRUE") {
 	                alert("<spring:message code='ezApproval.t695'/>");
 	                getDocType();
 	            }
-	            else if (xmlhttp.responseText == "FALSE")
+	            else if (result == "FALSE")
 	                alert("<spring:message code='ezApproval.t696'/>");
-	            else if (xmlhttp.responseText == "USE")
+	            else if (result == "USE")
 	                alert("<spring:message code='ezApproval.t697'/>");
 	        }
 	
