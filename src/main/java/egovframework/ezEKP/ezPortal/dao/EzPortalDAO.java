@@ -181,8 +181,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
 	
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID) {
-		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", uID);
+	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {
+		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", map);
 	}
 	
 	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (Map<String, Object> map) {
@@ -227,10 +227,6 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) {
 		return (PortalTBLPortletBoardVO) select("EzPortalDAO.getTBLPortletBoard", pUID);
-	}
-	
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (Map<String, Object> map) {
-		return (PortalGetRenderedTopMenuInsertVO) select("EzPortalDAO.getRenderedTopMenuInsert", map);
 	}
 	
 	public PortalImagePortletVO imagePortlet (String pUID) {
@@ -333,9 +329,12 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.htmlPortlet", uID);
 	}
 	
+	public String getUserInfo3_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getUserInfo3_S", map);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
-		select("EzPortalDAO.getMenuItemHtml", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPortalDAO.getMenuItemHtml", map);
 	}
 	
 	public int newMyPortalPageCreate(Map<String, Object> map) {
@@ -344,8 +343,7 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	public int getUserInfo4(Map<String, Object> map) {
-		select("EzPortalDAO.getUserInfo4", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPortalDAO.getUserInfo4", map);
 	}
 	
 	public int searchMyPortalPageCount(Map<String, Object> map) {
@@ -355,6 +353,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void deleteCacheValue(Map<String, Object> map) {
 		delete("EzPortalDAO.deleteCacheValue", map);
+	}
+	
+	public void deleteCacheValueAll(Map<String, Object> map) {
+		delete("EzPortalDAO.deleteCacheValueAll", map);
 	}
 	
 	public void deleteTBLPortalACL(Map<String, Object> map) {
@@ -379,6 +381,14 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void setUseMyStartPage2(Map<String, Object> map) {
 		insert("EzPortalDAO.setUseMyStartPage2", map);
+	}
+	
+	public void getUserInfo3_I1(Map<String, Object> map) {
+		insert("EzPortalDAO.getUserInfo3_I1", map);
+	}
+	
+	public void getUserInfo3_I2(Map<String, Object> map) {
+		insert("EzPortalDAO.getUserInfo3_I2", map);
 	}
 	
 	public void newMyPortalPageCreate3(Map<String, Object> map) {
