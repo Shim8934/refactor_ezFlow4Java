@@ -467,17 +467,9 @@ public class EzEmailAdminController {
 			mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
 			
 			if (mailColor != null) {
-				if (mailColor.getImportanceColor() != null) {
-					importanceColor = mailColor.getImportanceColor();
-				}
-				
-				if (mailColor.getInmailColor() != null) {
-					inColor = mailColor.getInmailColor();
-				}
-				
-				if (mailColor.getOutmailColor() != null) {
-					outColor = mailColor.getOutmailColor();
-				}
+				importanceColor = mailColor.getImportanceColor();
+				inColor = mailColor.getInmailColor();
+				outColor = mailColor.getOutmailColor();
 			}
 			
 		} catch (Exception e) {
