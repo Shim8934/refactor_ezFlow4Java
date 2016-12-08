@@ -5403,7 +5403,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (docXML.getElementsByTagName("ATTACHFILENAME").getLength() > 0) {
 			String oldYear = getDocHrefYear(docID, companyID, tenantID);
-			String source = convWebToPath(docXML.getElementsByTagName("ATTACHFILEHREF").item(0).getTextContent(), dirPath);
+			String source = convWebToPath(docXML.getElementsByTagName("ATTACHFILEHREF").item(0).getTextContent(), dirPath, tenantID);
 			String target = dirPath + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 							getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 			
@@ -5431,11 +5431,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map1.put("v_MODIFYSN", String.valueOf(strSN));
 			map1.put("v_MODIFYFLAG", modifyFlag.trim());
 			map1.put("v_PAGENUM", docXML.getElementsByTagName("PAGENUM").item(0).getTextContent());
+			map1.put("v_TENANTID", tenantID);
+
 		
 			try {
 				ezApprovalGDAO.updateHistoryForAttach(map1);
 				rtnVal = "<RESULT>TRUE</RESULT>";
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				rtnVal = "<RESULT>FALSE</RESULT>";
 			}
 		}
@@ -5520,7 +5523,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getListInfoXml(String listFlag, String listType, String companyID, String lang,LoginVO userInfo) throws Exception {
 		String typeCode = getListTypeCode(listFlag, listType, userInfo);
-		String szListXml = getListInfo(typeCode, companyID, lang);
+		String szListXml = getListInfo(typeCode, companyID, lang, userInfo.getTenantId());
 		
 		return szListXml;
 	}
@@ -10634,6 +10637,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGCabinetRecVO> apprGCabinetRecVOList = ezApprovalGDAO.setCabinetRecList(map);
 		
@@ -12733,12 +12737,13 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		return sb.toString();
 	}
 
-	public String getListInfo(String typeCode, String companyID, String lang) throws Exception{
+	public String getListInfo(String typeCode, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_LISTTYPE", typeCode);
 		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListInfoVO> apprGListInfoVOList = ezApprovalGDAO.getListInfo(map);
 		
@@ -12931,10 +12936,11 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		return tempDigit + strValue;
 	}
 
-	public String convWebToPath(String href, String dirPath) throws Exception{
+	public String convWebToPath(String href, String dirPath, int tenantID) throws Exception{
 		String tempPath = href.toLowerCase();
-		tempPath = tempPath.replace("/files/upload_approvalg/", dirPath);
-		
+		tempPath = tempPath.replace("/fileroot"+ commonUtil.separator + tenantID +"/files/upload_approvalg/", dirPath);
+//		tempPath = tempPath.replace("/files/upload_approvalg/", dirPath);
+
 		return tempPath;
 	}
 
