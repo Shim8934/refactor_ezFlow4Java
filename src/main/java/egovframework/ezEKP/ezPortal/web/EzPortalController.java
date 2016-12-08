@@ -196,7 +196,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			xmlDom = commonUtil.convertStringToDocument(strXML);
 
 			if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
-				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 
 				String myTopID = "";
 				if (xmlDomTop != null && xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
@@ -207,7 +207,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						//기본 페이지 ID
 						pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 
-						xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+						xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 						//사용자 정보
 						if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
 							skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
@@ -220,7 +220,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 						if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
 							pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-							xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+							xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 								
 							if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
 								skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
@@ -233,7 +233,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 				Document xmlDom2 = commonUtil.convertStringToDocument(strXML2);
 				if (xmlDom2.getElementsByTagName("UID_").getLength() > 0) {
-					Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+					Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 					String myTopID = "";
 					if (xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
 						myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
@@ -242,7 +242,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 						if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
 							pageID = xmlDom2.getElementsByTagName("UID_").item(i).getTextContent();
-							xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+							xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 							if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
 								skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
 							}
@@ -250,7 +250,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					}
 					if (pageID != null && pageID.equals("")) {
 						pageID = xmlDom2.getElementsByTagName("UID_").item(0).getTextContent();
-						xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+						xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 						if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
 							skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
 						}
@@ -258,7 +258,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 			
-			String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3");
+			String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId());
 			
 			Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
 			logger.debug("themeInfoXml="+themeInfoXml);
@@ -359,7 +359,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				parentPageID = req.getParameter("parentPageID");
 			} else {
 				if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
-					parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID);
+					parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID,userInfo.getTenantId());
 				} else {
 					parentPageID = "top";
 				}
@@ -395,7 +395,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 			//미리보기인 경우 자기의 캐쉬정보를 삭제한다
 			if (viewMode.equals("preView")) {
-				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo));
+				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
 			}
 
 			//스킨정보
@@ -428,14 +428,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			// 열기 : 본문HTML, width, height정보를 가져온다
 			else {
 				if (editMode.equals("new_inherit")) {
-					strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme);
-					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
-					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
+					strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
+					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()),userInfo.getTenantId());
+					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()),userInfo.getTenantId());
 					logger.debug("strHTML=" + strHTML);
 				} else {
-					strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme);
-					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID));
-					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID));
+					strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
+					width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()),userInfo.getTenantId());
+					height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()),userInfo.getTenantId());
 					logger.debug("strHTML=" + strHTML);
 				}
 			}
@@ -446,9 +446,9 @@ public class EzPortalController extends EgovFileMngUtil {
 				height = "100%";
 			}
 			if (!mode.equals("view")) {
-				displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID);
-				displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID);
-				pSelectThemeUID = ezPortalService.getTopMenuConfigItem("ThemeUID", pageID);
+				displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID,userInfo.getTenantId());
+				displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID,userInfo.getTenantId());
+				pSelectThemeUID = ezPortalService.getTopMenuConfigItem("ThemeUID", pageID,userInfo.getTenantId());
 				List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID());
 				String xmlStr = "<DATA>";
 				for (int i=0; i<list.size(); i++) {
@@ -505,7 +505,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				//스킨정보
 				
 				//권한체크
-				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1());
+				result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1(),userInfo.getTenantId());
 				logger.debug("ezAclCheck="+result);
 				String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
 				logger.debug("ezCKAdminACL="+ezCKAdminACL);
@@ -667,7 +667,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
 			if (viewMode.equals("preview")) {
-				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo));
+				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
 			}
 			
 			// 부문홈에서 호출한 경우 부문홈ID
@@ -694,14 +694,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
+					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
 					logger.debug("strHTML="+strHTML);
 				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
+					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
 					logger.debug("strHTML="+strHTML);
 				}
@@ -1816,8 +1816,8 @@ public class EzPortalController extends EgovFileMngUtil {
 logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
 		
-		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
-		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang()));
+		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {
 			myTopUID = xmlDomTop.getElementsByTagName("UID").item(0).getTextContent().trim();
 		}
@@ -2002,7 +2002,7 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 			
 			// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
 			if (viewMode.equals("preview")) {
-				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo));
+				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
 			}
 			
 			// 부문홈에서 호출한 경우 부문홈ID
@@ -2024,13 +2024,13 @@ logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption);
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID));
+					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()));
 				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption);
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID));
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID));
+					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
+					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()));
 					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID());
 				}
 			}

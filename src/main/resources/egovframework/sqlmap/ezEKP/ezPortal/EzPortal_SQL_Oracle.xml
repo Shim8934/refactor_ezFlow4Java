@@ -306,77 +306,351 @@
 		<result property="htmlData"					column="HTMLDATA"				columnIndex="3"/>
 	</resultMap>
 	
-	<procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+	<!-- <procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETTOPMENUCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			SELECT
+				$v_pITEMNAME$ 
+			FROM
+				EZPORTAL.TBL_TOPMENU_GENERAL  
+			WHERE
+				UID_ = #v_pUID# 
+			AND
+				ROWNUM <= 1
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getMenuItemConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+	<!-- <procedure id="EzPortalDAO.getMenuItemConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETMENUITEMCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getMenuItemConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			SELECT
+				$v_pITEMNAME$ 
+			FROM
+				EZPORTAL.TBL_MENUITEM_GENERAL  
+			WHERE
+				UID_ = #v_pUID# 
+			AND
+				ROWNUM <= 1
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.deleteCacheValue" parameterClass="Map" >
+	<!-- <procedure id="EzPortalDAO.deleteCacheValue" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_DELETECACHEVALUE(#v_pUID#, #v_pACCESSLISTID#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPortalDAO.checkCacheValue" parameterClass="Map" resultClass="String">
+	<delete id="EzPortalDAO.deleteCacheValue" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZPORTAL.TBL_PORTALPAGE_CACHE
+          	WHERE
+          		PORTALPAGEID = #v_pUID#
+          	AND 
+          		ACCESSIDLIST = #v_pACCESSLISTID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalDAO.deleteCacheValueAll" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZPORTAL.TBL_PORTALPAGE_CACHE
+          	WHERE
+          		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalDAO.checkCacheValue" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CHECKCACHEVALUE(#v_PORTALPAGEID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.checkCacheValue" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				RENDEREDHTML 
+       		FROM
+       			EZPORTAL.TBL_PORTALPAGE_CACHE 
+       		WHERE  
+       			PORTALPAGEID = #v_PORTALPAGEID#
+       		AND
+       			ACCESSIDLIST = #v_ACCESSIDLIST#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
+	<!-- <procedure id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_GETTOPPARENTPAGEID(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.topGetTopParentPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				PARENTUID 
+        	FROM 
+        		EZPORTAL.TBL_TOPMENU_GENERAL 
+	       	WHERE
+	       		UID_ = #v_pUID#
+	       	AND
+	       		TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
+	<!-- <procedure id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETTOPPARENTPAGEID(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
+	<select id="EzPortalDAO.getTopParentPageID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				PARENTUID 
+        	FROM 
+        		EZPORTAL.TBL_PORTALPAGE_GENERAL 
+	       	WHERE
+	       		UID_ = #v_pTEMP#
+	       	AND
+	       		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_EZACL_CHECK(#v_pCOMPANYID#, #v_pCN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.ezAclCheck" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				EXTENSIONATTRIBUTE1 
+        	FROM
+        		EZHRMASTER.TBLUSERMASTER 
+       		WHERE
+       			PHYSICALDELIVERYOFFICENAME = #v_pCOMPANYID#
+			AND
+				CN = #v_pCN#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="String" resultMap="portalGetRenderedTopMenuInsertVO">
+	<!-- <procedure id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="String" resultMap="portalGetRenderedTopMenuInsertVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETRENDEREDTOPMENUINSERT(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+	<select id="EzPortalDAO.getRenderedTopMenuInsert" parameterClass="Map" resultMap="portalGetRenderedTopMenuInsertVO">
+		<![CDATA[
+			SELECT
+				UID_ ,
+             	PARENTUID ,
+             	DISPLAYNAME ,
+	            WIDTH ,
+	            HEIGHT ,
+	            ROWLENGTH ,
+	            COLUMNLENGTH ,
+	            ROWSPLIT ,
+	            COLUMNSPLIT 
+        	FROM
+        		EZPORTAL.TBL_TOPMENU_GENERAL 
+       		WHERE
+       			UID_ = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_GETUSERINFO(#v_pUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+		<![CDATA[
+			SELECT
+				B.* 
+        	FROM
+        		EZPORTAL.TBL_TOPMENU_GENERAL A, EZPORTAL.TBL_USERINFO B
+       		WHERE
+       			( NOT EXISTS ( SELECT 
+       								 	UID_ 
+                             		 FROM 
+                             		 	EZPORTAL.TBL_TOPMENU_ITEMS 
+                              		 WHERE
+                              		 	UID_ = A.UID_ ) )
+			AND
+				A.UID_ = B.UID_
+			AND
+				A.UseFlag = 'Y'
+			AND
+				B.UserID = #v_pUSERID#
+			AND
+				A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+	<!-- <procedure id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_GETUSERINFO2(#v_pUSERID#, #v_pLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
+		<![CDATA[
+			 SELECT
+			 	B.* 
+        	FROM
+        		EZPORTAL.TBL_TOPMENU_GENERAL A, EZPORTAL.TBL_USERINFO B
+       		WHERE
+       			( NOT EXISTS ( SELECT
+       									 UID_ 
+                             		FROM
+                             			EZPORTAL.TBL_TOPMENU_ITEMS 
+                              		WHERE
+                              			UID_ = A.UID_ ) )
+            AND
+            	A.UID_ = B.UID_
+			AND
+				A.UseFlag = 'Y'
+			AND
+				B.UserID = #v_pUSERID#
+			AND
+				B.lang = #v_pLANG#
+			AND
+				A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getUserInfo3" parameterClass="Map">
+	<!-- <procedure id="EzPortalDAO.getUserInfo3" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETUSERINFO3(#v_pPARENTUID#, #v_pUSERFLAG#, #v_pUSERID#, #v_pGUBUNFLAG#, #v_pNEWPAGEID#, #v_pUSERNAME#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #v_pDEPTH#, #v_pCOMPANYID#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getUserInfo3_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			NOT EXISTS
+       				( SELECT
+       				  	B.* 
+                      FROM
+                      	EZPORTAL.TBL_PORTALPAGE_GENERAL A, EZPORTAL.TBL_PORTALPAGE_GENERAL B
+                      WHERE
+                      	( NOT EXISTS
+                      		( SELECT
+                      		  	UID_ 
+                              FROM
+                              	EZPORTAL.TBL_PORTALPAGE_ITEMS 
+							  WHERE
+							  	UID_ = A.UID_ ) )
+             		  AND
+             		  	A.UID_ = B.ParentUID
+                      AND
+                      	A.UseFlag = #v_pUSERFLAG#
+					  AND
+					  	B.CompanyID = #v_pCOMPANYID#
+					  AND
+					  	B.ParentUID = #v_pPARENTUID#
+					  AND
+					  	B.GubunFlag = #v_pGUBUNFLAG#
+					  AND
+					  	B.CreatorID = #v_pUSERID#
+					  AND 
+					  	B.TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
+	<insert id="EzPortalDAO.getUserInfo3_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_PORTALPAGE_GENERAL
+        		( UID_, PARENTUID, DEPTH, DISPLAYNAME, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, GUBUNFLAG, COMPANYID, TENANT_ID )
+        		( SELECT
+        			#v_pNEWPAGEID# ,
+                 	#v_pPARENTUID# ,
+                 	#v_pDEPTH# ,
+                 	#v_pUSERNAME# ,
+                 	#v_pUSERID# ,
+                 	#v_pUSERNAME# ,
+                 	SYSDATE ,
+                 	Width ,
+                 	Height ,
+                 	RowLength ,
+                 	ColumnLength ,
+                 	RowSplit ,
+                 	ColumnSplit ,
+                 	#v_pGUBUNFLAG# ,
+                 	#v_pCOMPANYID# ,
+                 	#tenantID# 
+          		FROM
+          			EZPORTAL.TBL_PORTALPAGE_GENERAL 
+           		WHERE
+           			UID_ = #v_pPARENTUID#
+           		AND
+           			TENANT_ID = #tenantID#	 )
+		]]>
+	</insert>
+	
+	<insert id="EzPortalDAO.getUserInfo3_I2" parameterClass="Map">
+		INSERT INTO
+			EZPORTAL.TBL_PORTAL_ACL
+        	( UID_, ACCESSID, ACCESSNAME, VIEW_RIGHT, EDIT_RIGHT )
+        VALUES
+        	( #v_pNEWPAGEID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT# )
+	</insert>
+	
+	<!-- <procedure id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETUSERINFO4(#v_pCOMPANYID#, #v_pCREATORID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(B.UID_)   
+      		FROM 
+      			EZPORTAL.TBL_PORTALPAGE_GENERAL A, EZPORTAL.TBL_PORTALPAGE_GENERAL B
+      		WHERE
+      			( NOT EXISTS ( SELECT
+      									 UID_ 
+                            		 FROM
+                            		 	EZPORTAL.TBL_PORTALPAGE_ITEMS 
+                            		 WHERE
+                            		 	UID_ = A.UID_ ) )
+            AND
+            	A.UID_ = B.ParentUID
+            AND
+            	A.UseFlag = #v_pUSEFLAG#
+            AND
+            	B.CompanyID = #v_pCOMPANYID#
+            AND
+            	B.CreatorID = #v_pCREATORID#
+            AND
+            	B.GubunFlag = #v_pGUBUNFLAG#
+            AND
+            	B.TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
 	<procedure id="EzPortalDAO.getUserInfo5" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
 		<![CDATA[
@@ -384,31 +658,99 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
+	<!-- <procedure id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CHECKEDITRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.checkEditRight" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				EDIT_RIGHT 
+      		FROM
+      			EZPORTAL.TBL_PORTAL_ACL 
+      		WHERE  
+      			UID_ = #v_UID#
+      		AND 
+      			ACCESSID = #v_ACCESSIDLIST#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
+	<!-- <procedure id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_CHECKVIEWRIGHT(#v_UID#, #v_ACCESSIDLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.checkViewRight" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				VIEW_RIGHT 
+      		FROM
+      			EZPORTAL.TBL_PORTAL_ACL 
+      		WHERE
+      			UID_ = #v_UID#
+      		AND
+      			ACCESSID = #v_ACCESSIDLIST#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.getMenuItemHtml" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzPortalDAO.getMenuItemHtml" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETMENUITEMHTML_JJH(#v_pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getMenuItemHtml" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				TYPE 
+        	FROM
+        		EZPORTAL.TBL_MENUITEM_GENERAL 
+       		WHERE  
+       			UID_ = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.searchMyPortalPage2" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
+	 <procedure id="EzPortalDAO.searchMyPortalPage2" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SEARCHMYPORTALPAGE2(#v_pACCESSIDLIST#, #v_pGUBUNFLAG#, #v_pSTRRIGHT#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> 
+	<!-- <select id="EzPortalDAO.searchMyPortalPage2" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
+		<![CDATA[
+			SELECT 
+				A.* 
+			FROM
+				EZPORTAL.TBL_PORTALPAGE_GENERAL A , EZPORTAL.TBL_PORTAL_ACL B
+			WHERE
+				(NOT EXISTS
+					(SELECT
+					 	UID_
+					 FROM
+					 	EZPORTAL.TBL_PORTALPAGE_ITEMS
+					 WHERE
+					 	UID_ = A.UID_))
+            AND
+            	A.UseFlag = 'Y' 
+            AND
+            	A.GubunFlag = #v_pGUBUNFLAG# 
+            AND
+            	A.CompanyID = #v_pCOMPANYID#
+            AND
+            	A.UID_ = B.UID_
+            AND
+            	(B.AccessID = #v_pACCESSIDLIST#|| and  ||#v_pSTRRIGHT#  )
+            AND
+            	A.TENANT_ID = #tenantID#	
+		]]>
+	</select> -->
 	
-	<procedure id="EzPortalDAO.topSearchTopMenu3" parameterClass="Map" resultMap="portalTBLTopMenuGeneralVO">
+	 <procedure id="EzPortalDAO.topSearchTopMenu3" parameterClass="Map" resultMap="portalTBLTopMenuGeneralVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_SEARCHTOPMENU3(#v_pENDROW#, #v_pDISPLAYNAME#, #v_pUSEFLAG#, #v_pCOMPANYID#, #v_pLANG#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -420,11 +762,53 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getThemeInfo" parameterClass="Map" resultMap="portalTBLThemeGeneralVO">
+	<!-- <procedure id="EzPortalDAO.getThemeInfo" parameterClass="Map" resultMap="portalTBLThemeGeneralVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GET_THEME_INFO(#v_PUID#, #v_PGUBUN#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPortalDAO.getThemeInfo" parameterClass="Map" resultMap="portalTBLThemeGeneralVO">
+		<isEqual	property="v_PGUBUN" compareValue="1">
+			<![CDATA[
+				SELECT
+					TOPURL 
+           		FROM
+           			EZPORTAL.TBL_THEME_GENERAL 
+          		WHERE 
+          			UID_ = #v_PUID#
+				AND
+					TENANT_ID = #tenantID#			
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PGUBUN" compareValue="1">
+			<isEqual property="v_PGUBUN" compareValue="2">
+				<![CDATA[
+					SELECT
+						MAINURL 
+              		FROM
+              			EZPORTAL.TBL_THEME_GENERAL 
+             		WHERE 
+             			UID_ = #v_PUID#
+             		AND
+             			TENANT_ID = #tenantID#	
+				]]>	
+			</isEqual>
+			<isNotEqual property="v_PGUBUN" compareValue="2">
+				<![CDATA[
+					SELECT 
+						* 
+              		FROM
+              			EZPORTAL.TBL_THEME_GENERAL 
+             		WHERE  
+             			UID_ = #v_PUID#
+             		AND
+             			TENANT_ID = #tenantID#	
+				]]>	
+			</isNotEqual>
+		</isNotEqual>
+		
+	</select>
 	
 	<procedure id="EzPortalDAO.useStartPageChack" parameterClass="Map" resultClass="String">
 		<![CDATA[

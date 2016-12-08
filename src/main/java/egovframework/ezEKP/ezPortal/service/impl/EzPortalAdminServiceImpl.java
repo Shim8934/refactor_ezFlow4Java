@@ -657,21 +657,28 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	public String deletePortalPage (String pUID) {
+		logger.debug("deletePortalPage Start");
+		logger.debug("pUID="+pUID);
 		List<String> list = ezPortalAdminDAO.deletePortalPage(pUID);
-		
+		logger.debug("listSize="+list.size());
 		for (int i=0; i<list.size(); i++) {
+			logger.debug("list.get("+i+")="+list.get(i));
 			ezPortalAdminDAO.deletePortalPage2(list.get(i));
 			deletePortalPage(list.get(i));
 		}
 		ezPortalAdminDAO.deletePortalPage3(pUID);
+		logger.debug("deletePortalPage End");
 		return "OK";
 	}
 	
 	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType) throws Exception {
+		logger.debug("savePortalPage Start");
+		logger.debug("pXML="+pXML);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(pXML);
+		
 		int i=0;
 		int j=0;
-		logger.debug("pXML="+pXML);
-		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		String displayName = "";
 		String displayName2 = "";
 		String width = "0";
@@ -807,6 +814,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						}
 					} else {
 						Map<String, Object> map2 = new HashMap<String, Object>();
+						logger.debug("portletUID="+portletUID);
+						logger.debug("portletPageUID="+portletPageUID);
+						logger.debug("columnPos="+String.valueOf(i+1));
 						map2.put("v_pPORTLET_UID", portletUID);
 						map2.put("v_pPORTLET_PAGEUID", portletPageUID);
 						map2.put("v_pPCOLUMNPOS", String.valueOf(i+1));
@@ -1095,6 +1105,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							}
 						} else {
 							Map<String, Object> map2 = new HashMap<String, Object>();
+							logger.debug("portletUID2="+portletUID);
+							logger.debug("portletPageUID2="+portletPageUID);
+							logger.debug("columnPos2="+String.valueOf(i+1));
 							map2.put("v_pPORTLET_UID", portletUID);
 							map2.put("v_pPORTLET_PAGEUID", portletPageUID);
 							map2.put("v_pPCOLUMNPOS", String.valueOf(i+1));
@@ -1107,7 +1120,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				//
 			}
 		}
-		
+		logger.debug("savePortalPage End");
 		return "OK";
 	}
 	
