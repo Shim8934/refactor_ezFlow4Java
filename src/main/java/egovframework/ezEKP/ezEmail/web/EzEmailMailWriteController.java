@@ -147,93 +147,47 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일 쓰기화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailWrite.do")
-	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailWrite(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
+		logger.debug("mailWrite started.");
+		
 		String to = "";
 		String cc = "";
 		String bcc = "";
-		String from = "";
+		
 		//String body = "";
+		String tempBody = "";
+		String bodyValue = "";
+		
 		String subject = "";
-		String importance = "1";
-		String postType = "0";
 		String url = "";
 		String attach = "";
-		String cmd = "";
+		String importance = "1";
 		String unread = "";
+		String reSendFlag = "N";
+		String folderPath = "";
+		
+		String mailSign1 = "";
+		String mailSign2 = "";
+		String mailSign3 = "";
+		String mailSignSel = "";
+		
 		String boardID = "";
 		String itemID = "";
 		String docHref = "";
 		String docID = "";
 		String docImagCnt = "";
 		String docTarget = "";
-		String sendFrom = "";
 		String retransType = "";
-		String useMultiLangMail = "";
-		String displayNamePrintable = "";
-		String charsetCheck = "1";
-		String userInfoApprovalG = "";
-		String userLang = "1";
-		String userPrimary = "1";
-		String reSendFlag = "N";
-		String mailAttachLimit = "20";
-		String bigSizeMailAttachLimit = "20";
-		String totBigSizeMailAttachLimit = "20";
-		String bigSizeMailAttachDelDay = "20";
-		String userTimeset = "";
-		String cmdOwn = "";
-		String urlOwn = "";
-		String mailSign1 = "";
-		String mailSign2 = "";
-		String mailSign3 = "";
-		String mailSignSel = "";
-		String bodyValue = "";
+		
 		String fileUploadType = "";
-		String folderPath = "";
-		String tempBody = "";
 		String newWindowId = "";
-		int individualMailUser = 0;
-		String pSecurity = "1";
-		String folderDate = "";
-		String stateName = null;
-		String pBigAttachDownloadDay = "";
-		String pBigAttachDownloadPeriod = "";
-		String pAutoSaveTime = "";
-		String pAttachWarning = "";
-		String mailSendObject = "";
-		String mailInnerDomain = "";
-		String inMailColor = "";
-		String outMailColor = "";
-		String useEditor = "";
 		
-		// get user credentials
-		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userIdnPw.get(1);
-				
-		// retrieve user info from db.
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		
-		String serverName = loginInfo.getServerName();
-		String userId = loginInfo.getId();
-		userPrimary = loginInfo.getPrimary();
-		userLang = loginInfo.getLang();
-		userTimeset = loginInfo.getOffset();
-		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, userPrimary, loginInfo.getTenantId());
-		
-		useEditor = config.getProperty("config.EDITOR");
-
-		//hostURL = request.getRequestURL().substring(0, request.getRequestURI().length()) + "/ezEmail/"; - 지금은 필요없는데 나중에 필요할지도?
-		folderDate = EgovDateUtil.getToday("");
-		stateName = UUID.randomUUID().toString();
-
-		if (config.getProperty("config.MailInnerDomain") != null) {
-			mailInnerDomain = config.getProperty("config.MailInnerDomain").trim();
-		}
-		
-		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
-			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
-		}
-
+		// check if parameter is valid
 		String tempStr = "";
 		if (request.getParameter("cmd") != null) {
 			tempStr = request.getParameter("cmd").toUpperCase().trim();
@@ -257,76 +211,119 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
 		
-		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		
+		// get user credentials
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		// set attributes
+		String userPrimary = loginInfo.getPrimary();
+		String userLang = loginInfo.getLang();
+		String userTimeset = loginInfo.getOffset();
+		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
+		
+		String displayNamePrintable = userInfo.getDisplayName();
+		String serverName = loginInfo.getServerName();
+		String from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
+		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName + ",from=" + from);
+		
+		String folderDate = EgovDateUtil.getToday("");
+		String stateName = UUID.randomUUID().toString();
+		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		
+		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
+		String useEditor = config.getProperty("config.EDITOR");
+		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",userInfoApprovalG=" + userInfoApprovalG);
+		
+		String sendFrom = "";
+		if (request.getParameter("sendfrom") != null) { 
+			sendFrom = request.getParameter("sendfrom");
+		}
+		logger.debug("sendFrom=" + sendFrom);
+		
+		String useMultiLangMail = "1";
+		String pSecurity = "1";
+		String charsetCheck = "1";
+		String postType = "0";
+		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
+				+ ",postType=" + postType);
+		
+		//메일 색상 관련 설정
+		String inMailColor = "black";
+		String outMailColor = "black";
+		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
 			outMailColor = vo.getOutmailColor();
-		} else {
-			inMailColor = "black";
-			outMailColor = "black";
+		}
+		logger.debug("inMailColor=" + inMailColor + ",outMailColor=" + outMailColor);
+		
+		//파일첨부 제한 관련 변수 설정 
+		String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", loginInfo.getTenantId());
+		String bigSizeMailAttachLimit = ezCommonService.getTenantConfig("BigSizeMailAttachLimit", loginInfo.getTenantId());
+		String totBigSizeMailAttachLimit = ezCommonService.getTenantConfig("totBigSizeMailAttachLimit", loginInfo.getTenantId());
+		String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", loginInfo.getTenantId());
+		logger.debug("mailAttachLimit=" + mailAttachLimit + ",bigSizeMailAttachLimit=" + bigSizeMailAttachLimit
+				+ ",totBigSizeMailAttachLimit=" + totBigSizeMailAttachLimit + ",pBigAttachDownloadDay=" + pBigAttachDownloadDay);
+		
+		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
+        String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
+        String pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
+        logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
+        		+ ",pAttachWarning=" + pAttachWarning);
+        
+        // set pAutoSaveTime,mailSendObject
+ 		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
+ 		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
+ 		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
+ 		
+ 		if (pMailSenderNM == null) {
+ 			pMailSenderNM = "";
+ 		}
+ 		
+ 		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
+ 		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
+ 		for (String pSenderNM : senderList) {
+ 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+ 		}
+        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
+ 		
+        
+        //TODO: 개별발신
+		int individualMailUser = 0;
+		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
+			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
 		}
 		
-		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
-		mailAttachLimit = config.getProperty("config.MailAttachLimit");
-		bigSizeMailAttachLimit = config.getProperty("config.BigSizeMailAttachLimit");
-		totBigSizeMailAttachLimit = config.getProperty("config.totBigSizeMailAttachLimit");
-		int day = 20;
-		if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
-			day = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
-		}
-		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), day, "yyyy-MM-dd");
-
-		displayNamePrintable = userInfo.getDisplayName();
-
-		if (request.getParameter("sendfrom") != null) {
-			sendFrom = request.getParameter("sendfrom");
-		}
-		useMultiLangMail = "1";
+		
+		String cmdOwn = "";
 		if (request.getParameter("cmd") != null) {
 			cmdOwn = request.getParameter("cmd");
 		}
+		
+		String urlOwn = "";
 		if (request.getParameter("url") != null) {
 			urlOwn = URLDecoder.decode(request.getParameter("url").replaceAll(" ", "+"),"UTF-8"); // url decode 해야하나?
 		}
+		
+		String cmd = "";
 		if (request.getParameter("cmd") != null) {
 			cmd = request.getParameter("cmd");
-		}
-		
-		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
-		
-		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
-		
-		pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
-		
-		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
-		
-		if (pMailSenderNM == null) {
-			pMailSenderNM = "";
-		}
-		
-		String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
-		mailSendObject += "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
-		for (String pSenderNM : senderList) {
-			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
 		}
 		
 		String _cmd = "";
 		if (request.getParameter("cmd") != null) {
 			_cmd = request.getParameter("cmd");
 		}
+		
 		String msgto = "";
 		if (request.getParameter("msgto") != null) {
 			msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
 		}
-        String _attach = "";
-        if (request.getParameter("attach") != null) {
-        	_attach = request.getParameter("attach");
-		}
-        String includeContent = "";
-        if (request.getParameter("include") != null) {
-        	includeContent = request.getParameter("include");
-		}
+        
         String _url = "";
         if (request.getParameter("iptURL") != null) {
         	_url = request.getParameter("iptURL");
@@ -338,6 +335,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }
         urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
+        
+        String _attach = "";
+        if (request.getParameter("attach") != null) {
+        	_attach = request.getParameter("attach");
+		}
+        String includeContent = "";
+        if (request.getParameter("include") != null) {
+        	includeContent = request.getParameter("include");
+		}
         
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
@@ -383,8 +389,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	
 			IMAPAccess ia = null;
 			try {
-				String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-				String userEmail = userId + "@" + domainName;
+				String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+				String userEmail = loginInfo.getId() + "@" + domainName;
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale);
 				
@@ -784,6 +790,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                }
 		        	}
 		        	
+		        	//set importance
 		        	if (orgMessage.getHeader("X-Priority") != null) {
 	        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
 	        			if (tempImportance.equals("1")) {
@@ -794,7 +801,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        				importance = "1";
 	        			}
 	        		}
-		        	
+		        	logger.debug("importance=" + importance);
 				}
 	        	        	
 				orgFolder.close(true);
@@ -883,17 +890,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //                MailMessage_Send(_cmd, _url, _attach, esb, orgmesg); return;
 //            }
 //        }
-		
-        int pBigAttachDownloadDaynum = 0;
-        if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
-        	pBigAttachDownloadDay = config.getProperty("config.BigSizeMailAttachDelDay");
-        	pBigAttachDownloadDaynum = Integer.parseInt(pBigAttachDownloadDay);
-        }
-        
-        pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), pBigAttachDownloadDaynum, "yyyy/MM/dd");
-        
-        pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("to", to);
@@ -927,7 +923,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("mailAttachLimit", mailAttachLimit);
 		model.addAttribute("bigSizeMailAttachLimit", bigSizeMailAttachLimit);
 		model.addAttribute("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);
-		model.addAttribute("bigSizeMailAttachDelDay", bigSizeMailAttachDelDay);
+		model.addAttribute("bigSizeMailAttachDelDate", bigSizeMailAttachDelDate);
 		model.addAttribute("userTimeset", userTimeset);
 		model.addAttribute("cmdOwn", cmdOwn);
 		model.addAttribute("urlOwn", urlOwn);
@@ -959,6 +955,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
+		logger.debug("mailWrite ended.");
 		
 		return "ezEmail/mailWrite";
 	}
@@ -1003,7 +1001,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일 CK에디터 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailCKEditor.do")
-	public String mailCKEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String mailCKEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "ezEmail/mailCKEditor";
@@ -1013,7 +1015,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일 파일첨부 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/dragAndDrop.do")
-	public String dragAndDropIframe(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String dragAndDropIframe(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "ezEmail/mailDragAndDrop";
@@ -1024,7 +1030,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterUploadXCK(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception{
+	public String mailInterUploadXCK(
+			@CookieValue("loginCookie") String loginCookie, 
+			MultipartHttpServletRequest request) throws Exception{
+		
 		logger.debug("mailInterUploadXCK started.");
 		
 		String strXML = "";
@@ -1258,7 +1267,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterAttachCK(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
+	public String mailInterAttachCK(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception{
 		String returnValue = "";
 		
 		String cmd = "";
@@ -1490,7 +1502,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
      */
     @RequestMapping(value="/ezEmail/mailInterUploadX.do", produces = "text/plain; charset=utf-8")
     @ResponseBody
-    public String mailInterUploadX(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) {
+    public String mailInterUploadX(
+    		@CookieValue("loginCookie") String loginCookie, 
+    		HttpServletRequest request) {
+    	
         String returnedData = "";
         
         try {
@@ -1696,7 +1711,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailInterSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+	public String mailInterSend(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, Model model, 
+			HttpServletRequest request) throws Exception {
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -2584,7 +2603,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/delDrafts.do", produces = "text/html")
 	@ResponseBody
-	public String delDrafts(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String delDrafts(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception {
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -2641,7 +2664,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/delAttachListFile.do", produces = "text/html")
 	@ResponseBody
-	public String delAttachListFile(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String delAttachListFile(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception {
+		
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String delId = request.getParameter("delid");
@@ -2663,7 +2690,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/fileListSession.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String fileListSession(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String fileListSession(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception {
+		
 		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2704,7 +2735,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailDelInterAttach.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
+	public String mailDelInterAttach(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception {
+		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -2812,7 +2847,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String fileListDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception{
+	public String fileListDelete(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			HttpServletRequest request) throws Exception{
+		
 		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
 		
@@ -2883,7 +2922,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailNameCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+	public String mailNameCheck(
+			@CookieValue("loginCookie") String loginCookie, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pOrganSearchList = "";
@@ -2960,7 +3003,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 사원 이름으로 메일 찾기 화면 호출 함수 
 	 */
 	@RequestMapping(value="/ezEmail/mailCheckName.do")
-	public String mailCheckName(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+	public String mailCheckName(
+			@CookieValue("loginCookie") String loginCookie, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		return "ezEmail/mailCheckName";
 	}
 	
@@ -2968,7 +3015,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일 옵션화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/letterOption.do")
-	public String mailLetterOption(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailLetterOption(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2988,7 +3040,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일쓰기 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do")
-	public String mailNewReceiverChoose(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailNewReceiverChoose(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String defaultWin = request.getParameter("defaultwin") == null ? "To" : request.getParameter("defaultwin").trim();
@@ -3010,7 +3067,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailGetDistribution(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		String returnData = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3076,7 +3138,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 메일쓰기 - 공용배포그룹 구성원 보기 및 선택 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailSelectDLMember.do")
-	public String mailSelectDLMember(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailSelectDLMember(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	    
 		String isUser = "";
@@ -3158,7 +3225,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailGetAddress(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<SimpleAddressVO> addressList = ezAddressService.getSimpleAddress(userInfo.getTenantId(), userInfo.getId());
@@ -3183,7 +3254,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailSetAddress(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailSetAddress(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		String mailList = xmlDoc.getElementsByTagName("SMEMO").item(0).getTextContent();
 		

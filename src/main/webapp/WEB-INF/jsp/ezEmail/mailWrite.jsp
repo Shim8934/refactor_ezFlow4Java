@@ -64,7 +64,7 @@
 	    var FBigSizeAttachSize = parseInt(BigSizeAttachSize);
 	    var FtotBigSizeAttachSize = parseInt(totBigSizeAttachSize);
 	    var FtotSizeAttachSize = parseInt(totSizeAttachSize);
-	    var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDay}";
+	    var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDate}";
 	    var charsetControlFlag = "${userLang}";
 	    var userTimezone = "${userTimeset}";
 	    var isPrimary = "${userPrimary}";

@@ -206,7 +206,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public MailColorVO getMailColor(int tenantId) throws Exception {
-		MailColorVO vo = new MailColorVO();
+		MailColorVO vo = null;
 		
 		String inputParams = "tenantId=" + tenantId;
 		logger.debug("inputParams=" + inputParams);
