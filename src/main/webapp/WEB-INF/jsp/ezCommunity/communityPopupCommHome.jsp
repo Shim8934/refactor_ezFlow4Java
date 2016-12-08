@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
-		<script type="text/javascript" src="/js/TreeView.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -25,7 +25,6 @@
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
 			var xmlhttp;
-			var xmlhttp2;
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
 		    var strLang2 = "<spring:message code='ezCommunity.t1082' />"; 
@@ -39,7 +38,7 @@
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/commHome/commHomeInfo.do",
-					data : { code   : code
+					data : { code : code
 					},
 					success: function(result){
 						event_get_commhomeinfo(result);
@@ -49,7 +48,7 @@
 		        getCommhomeBoardInfo();
 
 		        var treedom = loadXMLString(treedate);
-
+		        
 		        if (SelectNodes(treedom, "TREEVIEWDATA/NODE").length > 0) {
 		            for (var i = 0; i < SelectNodes(treedom, "TREEVIEWDATA/NODE").length; i++) {
 		                var h2 = document.createElement("H2");
@@ -80,15 +79,14 @@
 		        }
 		    });
 		    
-		    function getCommhomeBoardInfo() {
+		    function getCommhomeBoardInfo() {		    	
 		    	$.ajax({
 					type : "POST",
-					dataType : "text",
-					async : true,
-					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
-					data : { code   : code },
 					dataType : "json",
-					success: function(result){
+// 					async : true,
+					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
+					data : { code : code},
+					success : function(result) {
 						if (result.boardInfoList.length > 0) {
 							document.getElementById("mainboard").style.display = "";
 			                document.getElementById("makeguide").style.display = "none";
@@ -142,7 +140,7 @@
 	                            $.ajax({
 	            					type : "POST",
 	            					dataType : "text",
-	            					async : true,
+// 	            					async : true,
 	            					url : "/ezCommunity/commHome/commHomeBoardItemList.do",
 	            					data : { boardID   : infoVO.boardID
 	            					},
@@ -342,11 +340,24 @@
 		    }
 		    
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&classID=" + code, false);
-		        xmlhttp.send();
+		    	var returnVal = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : pRootBoardID,
+								subFlag : pSubFlag,
+								selectFlag : 0,
+								classID : code
+							},
+					success: function(result){
+						returnVal = loadXMLString(result.result);
+					}
+		    	});
 
-		        return xmlhttp.responseXML;
+		        return returnVal;
 		    }
 		    
 		    function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {

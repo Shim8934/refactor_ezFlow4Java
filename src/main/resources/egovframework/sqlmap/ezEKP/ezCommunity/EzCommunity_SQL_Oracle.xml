@@ -111,132 +111,134 @@
 	</resultMap>
 	
 <!-- 	<procedure id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_BRDBOARDTREE(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#, #v_pExcludeBoardID#, #v_pClubNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	
 	<select id="EzCommunityDAO.brdBoardTree"					parameterClass="Map"		resultMap="BoardTreeList">
 		<isEqual property="v_pMode" compareValue="1">
 			<isEqual property="v_pSelectBy" compareValue="3">
 				<![CDATA[
-					SELECT 
-						DISTINCT A.BoardID BoardID,
-					    A.BoardName BoardName,
-					    A.BoardName2 BoardName2,
-					    A.TreeViewOrder TreeViewOrder,
-					    A.BoardColor BoardColor,
-					    A.C_ClubNo C_ClubNo,
-					    A.Gubun 
-					FROM
-						TBL_COMM_BOARDINFO A
-					JOIN 
-						(	SELECT
-								BoardID ,
-						        AccessID ,
-						        ACCESS_ 
-							FROM
-								TBL_COMM_BOARDMANAGE
-							WHERE
-								ParentBoardID = UPPER(#v_pRootBoardID#)
-							AND
-								ACCESS_ = 1
-							AND
-								write_FG = 'TRUE'
-							AND
-								boardID <> #v_pExcludeBoardID#
-							AND (	AccessID = #v_pUserID#
-						    	OR
-							    	AccessID = #v_pDeptID#
-							    OR
-							    	AccessID = #v_pCompanyID#
-							    OR
-							    	AccessID = 'EVERYONE' ) 
-						) B
-					ON
-						A.BoardID = B.BoardID
-					AND
-						A.TENANT_ID = B.TENANT_ID
-					WHERE
-						A.C_ClubNo = #v_pClubNo#
-					ORDER BY
-						A.TreeViewOrder ASC
-				]]>
+ 					SELECT
+ 						DISTINCT A.BoardID BoardID,
+ 					    A.BoardName BoardName,
+ 					    A.BoardName2 BoardName2,
+ 					    A.TreeViewOrder TreeViewOrder,
+ 					    A.BoardColor BoardColor,
+ 					    A.C_ClubNo C_ClubNo,
+ 					    A.Gubun 
+ 					FROM
+ 						EZCOMMUNITY.TBL_COMM_BOARDINFO A
+ 					JOIN 
+ 						(	SELECT
+ 								BoardID ,
+ 						        AccessID ,
+ 						        ACCESS_ 
+ 							FROM
+ 								EZCOMMUNITY.TBL_COMM_BOARDMANAGE
+ 							WHERE
+ 								RTRIM(ParentBoardID) = UPPER(#v_pRootBoardID#)
+ 							AND
+ 								ACCESS_ = 1
+ 							AND
+ 								write_FG = 'TRUE'
+ 							AND
+ 								boardID <> #v_pExcludeBoardID#
+ 							AND (	AccessID = #v_pUserID#
+ 						    	OR
+ 							    	AccessID = #v_pDeptID#
+ 							    OR
+ 							    	AccessID = #v_pCompanyID#
+ 							    OR
+ 							    	AccessID = 'EVERYONE' ) 
+ 						) B
+ 					ON
+ 						A.BoardID = B.BoardID
+ 					AND
+ 						A.TENANT_ID = B.TENANT_ID
+ 					WHERE
+ 						RTRIM(A.C_ClubNo) = #v_pClubNo#
+ 					AND
+ 						A.TENANT_ID = #tenantID#
+ 					ORDER BY
+ 						A.TreeViewOrder ASC
+ 				]]>
             </isEqual>
             
             <isNotEqual property="v_pSelectBy" compareValue="3">
 	            <![CDATA[
-	            	SELECT
-	            		DISTINCT A.BoardID BoardID,
-						A.BoardName BoardName,
-	       				A.BoardName2 BoardName2,
-						A.TreeViewOrder TreeViewOrder,
-	                    A.BoardColor BoardColor,
-	                    A.C_ClubNo C_ClubNo,
-	                    A.Gubun 
-					FROM
-						TBL_COMM_BOARDINFO A
-					JOIN
-						(	SELECT
-								BoardID,
-		                        AccessID,
-		                        ACCESS_
-		                    FROM
-		                    	TBL_COMM_BOARDMANAGE 
-		                    WHERE
-		                    	ParentBoardID = #v_pRootBoardID#
-							AND
-								ACCESS_ = 1
-							AND
-		                   		boardID <> #v_pExcludeBoardID#
-							AND (	AccessID = #v_pUserID#
-								OR
-									AccessID = #v_pDeptID#
-								OR
-									AccessID = #v_pCompanyID#
-		                        OR
-		                        	AccessID = 'EVERYONE' )
-						) B
-					ON
-						A.BoardID = B.BoardID
+ 	            	SELECT
+ 	            		DISTINCT A.BoardID BoardID,
+ 						A.BoardName BoardName,
+ 	       				A.BoardName2 BoardName2,
+ 						A.TreeViewOrder TreeViewOrder,
+ 	                    A.BoardColor BoardColor,
+ 	                    A.C_ClubNo C_ClubNo,
+ 	                    A.Gubun 
+ 					FROM
+ 						EZCOMMUNITY.TBL_COMM_BOARDINFO A
+ 					JOIN
+ 						(	SELECT
+ 								BoardID,
+ 		                        AccessID,
+ 		                        ACCESS_
+ 		                    FROM
+ 		                    	EZCOMMUNITY.TBL_COMM_BOARDMANAGE 
+ 		                    WHERE
+ 		                    	RTRIM(ParentBoardID) = #v_pRootBoardID#
+ 							AND
+ 								ACCESS_ = 1
+ 							AND
+ 		                   		boardID <> #v_pExcludeBoardID#
+ 							AND (	AccessID = #v_pUserID#
+ 								OR
+ 									AccessID = #v_pDeptID#
+ 								OR
+ 									AccessID = #v_pCompanyID#
+ 		                        OR
+ 		                        	AccessID = 'EVERYONE' )
+ 						) B
+ 					ON
+ 						A.BoardID = B.BoardID
+ 					AND
+ 						A.TENANT_ID = B.TENANT_ID
+ 					WHERE
+ 						RTRIM(A.C_ClubNo) = #v_pClubNo#
 					AND
-						A.TENANT_ID = B.TENANT_ID
-					WHERE
-						A.C_ClubNo = #v_pClubNo#
-					ORDER BY
-						A.TreeViewOrder ASC
-				]]>
+ 						A.TENANTID_ID = #tenantID#
+ 					ORDER BY
+ 						A.TreeViewOrder ASC
+ 				]]>
             </isNotEqual>
 		</isEqual>
 		
 		<isNotEqual property="v_pMode" compareValue="1">
 			<![CDATA[
-				SELECT 
-					DISTINCT A.BoardID,
-					A.BoardName,
-					A.BoardName2,
-	                A.TreeViewOrder,
-	                A.BoardColor BoardColor,
-	                A.C_ClubNo C_ClubNo,
-	            	A.Gubun 
-				FROM
-					TBL_COMM_BOARDINFO A
-	            WHERE
-	            	ParentBoardID = v_pRootBoardID
-	            AND
-	            	A.BoardID <> v_pExcludeBoardID
-	            AND
-	            	A.C_ClubNo = #v_pClubNo#
-	            AND
-	            	A.TENANT_ID = #tenantID#
-	            ORDER BY
-	            	A.TreeViewOrder ASC
-	        ]]>
+ 				SELECT
+ 					DISTINCT A.BoardID,
+ 					A.BoardName,
+ 					A.BoardName2,
+ 	                A.TreeViewOrder,
+ 	                A.BoardColor BoardColor,
+ 	                A.C_ClubNo C_ClubNo,
+ 	            	A.Gubun
+ 				FROM
+ 					EZCOMMUNITY.TBL_COMM_BOARDINFO A
+ 	            WHERE
+ 	            	RTRIM(ParentBoardID) = #v_pRootBoardID#
+ 	            AND
+ 	            	A.BoardID <> #v_pExcludeBoardID#
+ 	            AND
+ 	            	RTRIM(A.C_ClubNo) = #v_pClubNo#
+ 	            AND
+ 	            	A.TENANT_ID = #tenantID#
+ 	            ORDER BY
+ 	            	A.TreeViewOrder ASC
+ 	        ]]>
    		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getLeftBoardList"				parameterClass="String"		resultMap="LeftBBSList"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_LEFT_BBS_LIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	
 	<select id="EzCommunityDAO.getLeftBoardList"			parameterClass="Integer"		resultMap="LeftBBSList">
 		<![CDATA[
 			SELECT
@@ -260,7 +262,6 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsListGet2"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET2(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.bbsListGet2"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<![CDATA[
@@ -336,7 +337,6 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsViewNewGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.bbsViewNewGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		<![CDATA[
 			SELECT
@@ -363,7 +363,6 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditNew"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_EDIT_NEW(#v_BNAME#, #v_NO#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.bbsEditNew"					parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		<![CDATA[
 			SELECT
@@ -388,7 +387,6 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET1(#v_BNAME#, #v_GANT#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	
 	<select id="EzCommunityDAO.bbsEditOkGet1"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
 		<![CDATA[
 			SELECT
@@ -404,35 +402,196 @@
 			<isNotEqual property="v_CODE" compareValue="">
 				<![CDATA[
 					AND
-						C_CLUBNO= #v_CODE#
+						RTRIM(C_CLUBNO) = #v_CODE#
 				]]>
 			</isNotEqual>
 		</isNotNull>
 	</select>
 	
-	<procedure id="EzCommunityDAO.getbbsDelOkGet"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
-		{CALL EZCOMMUNITY.EZSP_BBS_DEL_OK_GET(#v_BNAME#, #v_DOG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzCommunityDAO.aspCommInfoGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getbbsDelOkGet"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BBS_DEL_OK_GET(#v_BNAME#, #v_NO#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getbbsDelOkGet"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.$v_BNAME$
+			WHERE
+				NO = TO_NUMBER(#v_NO#)
+			AND
+				TENANT_ID = #tenantID# 
+		]]>
 		
-	<procedure id="EzCommunityDAO.boardItemListGet1"			parameterClass="Map"		resultClass="CommunityBoardListVO">
-		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_GET1(#v_PBOARDID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+		<isNotNull property="v_CODE">
+			<isNotEqual property="v_CODE" compareValue="">
+				<![CDATA[
+					AND
+						RTRIM(C_CLUBNO) = #v_CODE#
+				]]>
+			</isNotEqual>
+		</isNotNull>
+	</select>
+	
+<!-- 	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_CLUBNO
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				C_CLUBNAME$v_USERINFO_LANG$ = #v_CLUBNAME#
+			AND
+				C_CATE_A = #v_C_CATE_A#
+			AND
+				C_CATE_B = #v_C_CATE_B#
+			AND
+				C_CATE_C = #v_C_CATE_C#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+		
+	</select>
+	
+<!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.aspCommInfoGet1"				parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_Club.C_ClubNo,
+             	C_Club.C_RegDate,
+             	C_Club.C_ClubName,
+             	C_Club.C_ClubName2,
+             	C_CLUBGUBUN,
+             	C_CATE_A,
+             	C_CATE_B,
+             	C_CATE_C,
+             	C_CLUBCONFIRMTYPE,
+             	C_SYSOPID,
+             	C_MEMBERCNT,
+             	C_LOGO,
+             	C_CLUBDESC,
+             	C_CLUBBANNER,
+             	COMPANYID,
+             	ISIN,
+             	T1.ITEMCNT
+        	FROM
+        		EZCOMMUNITY.C_CLUB
+			CROSS JOIN
+				(	SELECT
+						COUNT(*) ITEMCNT
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO 
+					JOIN
+						EZCOMMUNITY.TBL_COMM_ITEM
+					ON
+						TBL_COMM_BOARDINFO.BoardID = TBL_COMM_ITEM.BoardID 
+					AND
+						TBL_COMM_BOARDINFO.TENANT_ID = TBL_COMM_ITEM.TENANT_ID
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						TBL_COMM_BOARDINFO.TENANT_ID = #tenantID#
+				) T1
+			WHERE
+				RTRIM(C_CLUB.C_CLUBNO) = #v_CODE#
+			AND
+				C_CLUB.TENANT_ID = #tenantID#
+		]]>
+	</select>
+		
+<!-- 	<procedure id="EzCommunityDAO.boardItemListGet1"			parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_GET1(#v_PBOARDID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.boardItemListGet1"			parameterClass="Map"		resultClass="CommunityBoardListVO">
+		<![CDATA[
+			SELECT
+				A.C_ClubGubun,
+				A.C_clubConfirmtype,
+				B.permit
+			FROM
+				EZCOMMUNITY.C_CLUB A
+			JOIN
+				EZCOMMUNITY.C_CLUBUSER B
+			ON
+				A.C_ClubNo = B.C_ClubNo
+			JOIN
+				EZCOMMUNITY.TBL_COMM_BOARDINFO C
+			ON
+				A.C_ClubNo = C.C_ClubNo
+			WHERE
+				BOARDID = #v_PBOARDID#
+			AND
+				RTRIM(B.C_ID) = #v_USERINFO_USERID#
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.getNewItemListXML"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
 		{CALL EZCOMMUNITY.EZSP_GETNEWITEMLISTXML(#v_PENDROW#, #v_PUSERID#, #v_PSORTBY#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.boardItemListGet2"			parameterClass="Map"		resultClass="CommunityBoardListVO">
-		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_GET2(#v_USERINFO_LANG#, #v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.boardItemListGet2"			parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_GET2(#v_USERINFO_LANG#, #v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.boardItemListGet2"			parameterClass="Map"		resultClass="CommunityBoardListVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT 
+					A.ITEMID,
+					A.WRITERID,
+					A.WRITERNAME$v_USERINFO_LANG$,
+					A.WRITERDEPTNAME$v_USERINFO_LANG$,
+					A.WRITERCOMPANYNAME$v_USERINFO_LANG$,
+					A.STARTDATE,
+					A.WRITEDATE,
+					A.PARENTWRITEDATE,
+   					A.IMPORTANCE,
+   					A.TITLE,
+   					A.READCOUNT,
+   					A.ATTACHMENTS,
+   					A.ITEMLEVEL,
+   					A.ABSTRACT,
+   					CASE WHEN D.TOTALCOUNT IS NULL THEN 0 ELSE 1 END READFLAG
+				FROM
+					EZCOMMUNITY.TBL_COMM_ITEM A 
+				LEFT OUTER JOIN
+					(SELECT 
+						COUNT(USERID) AS TOTALCOUNT,
+						ITEMID 
+					FROM 
+						EZCOMMUNITY.TBL_COMM_ITEM_READ  
+					WHERE
+						USERID = #v_PUSERID#
+					AND
+						BOARDID = #v_PBOARDID# 
+					GROUP BY
+						ITEMID
+					) D
+				ON
+					A.ITEMID = D.ITEMID
+  				WHERE 
+					BOARDID = #v_PBOARDID#
+				AND
+					StartDate < #v_pNow#
+				AND
+					EndDate > #v_pNow#
+				ORDER BY
+					A.PARENTWRITEDATE DESC,
+					TO_CHAR(A.UPPERITEMIDTREE) DESC,
+					A.STARTDATE ASC
+				)
+			WHERE
+				ROWNUM <= #v_PENDROW#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.searchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -498,9 +657,21 @@
 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET2(#v_USERINFO_LANG#, #v_RECORD_C_SYSOPID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET2(#v_USERINFO_LANG#, #v_RECORD_C_SYSOPID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO">
+		<![CDATA[
+			SELECT
+				USERNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO
+			WHERE
+				USERID = #v_RECORD_C_SYSOPID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -546,12 +717,110 @@
 		{CALL EZCOMMUNITY.EZSP_SEARCHCOP(#v_SEARCHNAME#, #v_SEARCHVALUE#, #v_PSTART#, #v_PEND#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.boardItemListPhotoGet1"		parameterClass="Map"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET1(#v_USERINFO_USERID#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.boardItemListPhotoGet1"		parameterClass="Map"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET1(#v_USERINFO_USERID#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.boardItemListPhotoGet1"		parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				A.C_ClubGubun,
+				A.C_clubConfirmtype ,
+				B.permit 
+			FROM
+				EZCOMMUNITY.C_CLUB A
+			JOIN
+				EZCOMMUNITY.C_CLUBUSER B
+			ON
+				A.C_ClubNo = B.C_ClubNo
+			JOIN
+				EZCOMMUNITY.TBL_COMM_BOARDINFO C
+			ON
+				A.C_ClubNo = C.C_ClubNo
+			WHERE
+				BOARDID = #v_PBOARDID#
+			AND
+				TRIM(B.C_ID) = #v_USERINFO_USERID#
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
+<!-- 	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET2(#v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_USERINFO_LANG#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
-		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET2(#v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_USERINFO_LANG#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT
+					A.ITEMID,
+					A.WRITERID,
+					A.WRITERNAME$v_USERINFO_LANG$,
+					A.WRITERDEPTNAME$v_USERINFO_LANG$,
+					A.WRITERCOMPANYNAME$v_USERINFO_LANG$,
+					A.STARTDATE,
+					A.WRITEDATE,
+					A.PARENTWRITEDATE,
+					A.IMPORTANCE,
+					A.TITLE,
+					A.READCOUNT,
+					A.ATTACHMENTS,
+					A.ITEMLEVEL,
+					A.ABSTRACT,
+					CASE WHEN D.TOTALCOUNT IS NULL THEN 0 ELSE 1 END READFLAG,
+					A.EXTENSIONATTRIBUTE5
+				FROM
+					EZCOMMUNITY.TBL_COMM_ITEM A
+				LEFT OUTER JOIN
+					(SELECT
+						COUNT(USERID) AS TOTALCOUNT,
+						ITEMID,
+						TENANT_ID
+					FROM
+						EZCOMMUNITY.TBL_COMM_ITEM_READ 
+					WHERE
+						USERID = #v_PUSERID#
+					AND
+						BOARDID = #v_PBOARDID#
+					AND
+						TENANT_ID = #tenantID#
+					GROUP BY
+						ITEMID,
+						TENANT_ID
+					) D
+				ON
+					A.ITEMID = D.ITEMID
+				AND
+					A.TENANT_ID = D.TENANT_ID
+				WHERE
+					BOARDID = #v_PBOARDID#
+				AND
+					STARTDATE <= #v_pNow#
+				AND
+					ENDDATE > #v_pNow#
+				AND
+					A.TENANT_ID = #tenantID#
+		]]>
+		
+		<isNull property="v_PSORTBY">
+			ORDER BY
+				A.PARENTWRITEDATE DESC,
+				A.STARTDATE DESC,
+				A.DOCNO DESC,
+				TO_CHAR(A.UPPERITEMIDTREE) DESC
+		</isNull>
+		
+		<isNotNull property="v_PSORTBY">
+			ORDER BY
+				#v_PSORTBY#
+		</isNotNull>
+		
+		<![CDATA[
+			)
+			WHERE
+				ROWNUM <= #v_PENDROW# 
+		]]>
 	</procedure>
 	
 	<procedure id="EzCommunityDAO.getAdjacentItemsGet2Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
@@ -578,13 +847,73 @@
 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.copHomeBoardGet"				parameterClass="String"		resultClass="CommunityBoardInfoVO">
-		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARD_GET(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.copHomeBoardGet"				parameterClass="String"		resultClass="CommunityBoardInfoVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARD_GET(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.copHomeBoardGet"				parameterClass="Map"		resultClass="CommunityBoardInfoVO">
+		<![CDATA[
+			SELECT
+				BOARDID,
+                BOARDNAME,
+                BOARDNAME2,
+                SHOWPOSITION,
+                SN,
+                GUBUN
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDINFO
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				SHOWPOSITION != ' '
+			ORDER BY
+				SN,
+				SHOWPOSITION
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.copHomeBoardItemGet"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
-		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARDITEM_GET(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.copHomeBoardItemGet"			parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARDITEM_GET(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.copHomeBoardItemGet"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				( 
+					SELECT 
+              			TBL_COMM_BOARDINFO.BoardID,
+						ITEMID,
+						TITLE,
+						WRITEDATE,
+						GUBUN,
+						EXTENSIONATTRIBUTE5 
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO
+					JOIN
+						EZCOMMUNITY.TBL_COMM_ITEM
+              		ON
+              			TBL_COMM_BOARDINFO.BoardID = TBL_COMM_ITEM.BoardID
+              		AND
+              			TBL_COMM_BOARDINFO.TENANT_ID = TBL_COMM_ITEM.TENANT_ID
+					WHERE
+						TBL_COMM_ITEM.BoardID = #v_pBoardID#
+					AND
+						TBL_COMM_BOARDINFO.TENANT_ID = #tenantID#
+					AND
+						STARTDATE <= #v_pNow#
+					AND
+						ENDDATE > #v_pNow#
+					ORDER BY 
+						PARENTWRITEDATE DESC,
+						TO_CHAR(UPPERITEMIDTREE) DESC,
+						STARTDATE ASC
+				)
+        	WHERE
+        		ROWNUM <= 5
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
 		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -622,9 +951,24 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_LEFT_GET(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.ezCommunityBaseGet1"			parameterClass="String"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET1(#v_STRCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.ezCommunityBaseGet1"			parameterClass="String"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET1(#v_STRCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzCommunityDAO.ezCommunityBaseGet1"			parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_SYSOPID,
+             	ISIN,
+             	COMPANYID
+        	FROM
+        		EZCOMMUNITY.C_CLUB
+        	WHERE
+        		C_CLUBNO = #v_STRCODE#
+        	AND
+        		TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.adminCommCloseOkGet1"			parameterClass="String"		resultMap="CommunityCComClose">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -641,7 +985,6 @@
 <!-- 	<procedure id="EzCommunityDAO.myCommunityItemGet"			parameterClass="String"		resultClass="CommunityMyCommunityVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_MYCOMMUNITYITEM_GET(#v_COPNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.myCommunityItemGet"				parameterClass="Map"		resultClass="CommunityMyCommunityVO">
 		<![CDATA[
 			SELECT
@@ -738,25 +1081,68 @@
 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_PBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_PBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(AccessID) TotalCount  
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDMANAGE
+			WHERE
+				BoardAdmin_FG = 'TRUE'
+			AND
+				(	AccessID = #v_pUserID#
+				OR
+					AccessID = #v_pDeptID#
+				OR
+					AccessID = #v_pCompanyID#
+				OR
+					AccessID = 'everyone'
+				)
+			AND
+				BoardID = (	SELECT
+								BoardGroupID
+             				FROM
+             					EZCOMMUNITY.TBL_COMM_BOARDINFO 
+             				WHERE
+             					BoardID = #v_pBoardID#
+             				AND
+             					TENANT_ID = #tenantID#
+							)
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.getBoardTreeGet1"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_GET1(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSUBFLAG#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getBoardTreeGet1"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_GET1(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSUBFLAG#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getBoardTreeGet1"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				Result 
+      		FROM
+      			EZCOMMUNITY.TBL_COMM_TREECACHE 
+			WHERE
+				QUERY = #v_pRootBoardID# ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #v_strLang#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+		
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.ezCommunityBaseGet4"			parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET4(#v_STRBOARDNAME#, #v_STRCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	
 	<select id="EzCommunityDAO.ezCommunityBaseGet4"				parameterClass="Map"		resultClass="String">
 		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBNOTICE">
 			<![CDATA[
 				SELECT
 					C_CLUBNOTICETITLE ONEVALUE  
 				FROM
-					C_Club 
+					EZCOMMUNITY.C_Club 
 				WHERE
 					C_CLUBNO = #v_STRCLUBNO#
 			]]>
@@ -766,7 +1152,7 @@
 				SELECT
 					C_CLUBBOARDTITLE ONEVALUE  
 				FROM
-					C_Club 
+					EZCOMMUNITY.C_Club 
 				WHERE
 					C_CLUBNO = #v_STRCLUBNO#
 			]]>
@@ -776,7 +1162,7 @@
 				SELECT
 					C_CLUBBOARD1TITLE ONEVALUE  
 				FROM
-					C_Club 
+					EZCOMMUNITY.C_Club 
 				WHERE
 					C_CLUBNO = #v_STRCLUBNO#
 			]]>
@@ -786,7 +1172,7 @@
 				SELECT
 					C_CLUBBOARD2TITLE ONEVALUE  
 				FROM
-					C_Club 
+					EZCOMMUNITY.C_Club 
 				WHERE
 					C_CLUBNO = #v_STRCLUBNO#
 			]]>
@@ -796,7 +1182,7 @@
 				SELECT
 					C_CLUBPDSTITLE ONEVALUE  
 				FROM
-					C_Club 
+					EZCOMMUNITY.C_Club 
 				WHERE
 					C_CLUBNO = #v_STRCLUBNO#
 			]]>
@@ -806,7 +1192,6 @@
 <!-- 	<procedure id="EzCommunityDAO.ezCommunityBaseGet2"			parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET2(#v_STRUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.ezCommunityBaseGet2"			parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
@@ -818,44 +1203,149 @@
 			AND
 				Tenant_ID = #tenantID#
 		]]>
-		
-		
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditGet1"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_EDIT_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.bbsEditGet1"						parameterClass="Map"		resultClass="String">
-		SELECT
-			FileName
-		FROM 
-			EZCOMMUNITY.$v_BNAME$  
-		WHERE
-			NO = TO_NUMBER(#v_NO#)
-		AND
-			TENANT_ID = #tenantID#
+		<![CDATA[
+			SELECT
+				FileName
+			FROM 
+				EZCOMMUNITY.$v_BNAME$  
+			WHERE
+				NO = TO_NUMBER(#v_NO#)
+			AND
+				TENANT_ID = #tenantID#
+		]]>
 	</select>
 	
-	<procedure id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET2(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET2(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				NVL(MAX(#v_MAXIDFIELDNAME#),0) 
+			FROM
+				EZCOMMUNITY.$v_BNAME$
+			WHERE
+				TENANT_ID = #tenantID#
+		]]>
+		
+		<isNotNull property="v_CODE">
+			<isNotEqual property="v_CODE" compareValue="">
+		 		AND
+		 			C_CLUBNO = #v_CODE#
+		 	</isNotEqual>
+		</isNotNull>
+	</select>
 	
-	<procedure id="EzCommunityDAO.bbsEditOkGet3"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet3"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.bbsEditOkGet3"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT 
+				FILENAME
+			FROM
+				EZCOMMUNITY.$v_BNAME$  
+			WHERE
+				#v_MAXIDFIELDNAME# = #v_STRMAXNUM#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+		
+		<isNotNull property="v_CODE">
+			<isNotEqual property="v_CODE" compareValue="">
+		 		AND
+		 			C_CLUBNO = #v_CODE#
+		 	</isNotEqual>
+		</isNotNull>
+		
+	</select>
 	
-	<procedure id="EzCommunityDAO.commMakeOkGet6"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET6(#v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commMakeOkGet6"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET6(#v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commMakeOkGet6"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				COMPANYID 
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO 
+			WHERE
+				COMPANYID = #v_USERINFO_COMPANYID#
+			AND
+				USERID = #v_USERINFO_USERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+		
+		
+	</select>
 	
 	<procedure id="EzCommunityDAO.commMakeOkGet3"				parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET3(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getClubCHK"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_GETCLUB_CHK(#v_PUSERID#, #iv_PCLUBNO#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getClubCHK"					parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GETCLUB_CHK(#v_PUSERID#, #iv_PCLUBNO#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getClubCHK"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				"1" as "open",
+  				"user"
+			FROM
+  				EZCOMMUNITY.C_Club
+			LEFT JOIN
+  				(	SELECT
+      					"1" as "user",
+      					C_CLUBNO
+    				FROM
+      					EZCOMMUNITY.C_CLUBUSER
+    				WHERE
+      					C_ID = #v_PUSERID#
+    				AND
+    	]]>
+    	
+    	<isEqual property="v_PBOARDID" compareValue="">
+    		C_ClubUser.C_CLUBNO = #v_PCLUBNO#
+    	</isEqual>
+    	<isNotEqual property="v_PBOARDID" compareValue="">
+   			C_ClubUser.C_CLUBNO = (	SELECT
+										C_CLUBNO
+                             		FROM
+										EZCOMMUNITY.TBL_COMM_BOARDINFO
+									WHERE
+										BOARDID = #v_PBOARDID#
+                             	   )
+    	</isNotEqual>
+    	
+    	<![CDATA[
+				) USER
+			ON
+  				C_Club.c_CLUBNO = USER.c_CLUBNO
+			WHERE
+				C_CLUBGUBUN = '2'
+     		AND
+    	]]>
+    	
+     	<isEqual property="v_PBOARDID" compareValue="">
+    		C_ClubUser.C_CLUBNO = #v_PCLUBNO#
+    	</isEqual>
+    	<isNotEqual property="v_PBOARDID" compareValue="">
+   			C_Club.C_CLUBNO = (	SELECT
+									C_CLUBNO
+								FROM
+									EZCOMMUNITY.TBL_COMM_BOARDINFO 
+								WHERE
+									BOARDID = #v_PBOARDID#
+                              )
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzCommunityDAO.commHomeGet1"					parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -865,9 +1355,25 @@
 		{CALL EZCOMMUNITY.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_BRDTOTALITEMCOUNT(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDTOTALITEMCOUNT(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(ItemID) TotalCount
+			FROM
+				EZCOMMUNITY.TBL_COMM_ITEM
+			WHERE
+				BoardID = #v_pBoardID#
+			AND
+				StartDate < #v_pNow#
+			AND
+				EndDate > #v_pNow#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -920,7 +1426,6 @@
 <!-- 	<procedure id="EzCommunityDAO.myCommunityGet"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_MYCOMMUNITY_GET(#v_USERID#, #v_PSTART#, #v_PEND#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.myCommunityGet"					parameterClass="Map"		resultClass="String">
 		<isEqual property="v_MODE" compareValue="LIST">
 			<![CDATA[
@@ -1115,7 +1620,6 @@
 <!-- 	<procedure id="EzCommunityDAO.categoryListItemCntGet"		parameterClass="String"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_CATEGORYLISTITEMCNT_GET(#v_C_CLUBNO#, #tenantID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	
 	<select id="EzCommunityDAO.categoryListItemCntGet"			parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1147,14 +1651,25 @@
 		{CALL EZCOMMUNITY.EZSP_CHECKONELINEOWNER(#v_REPLYID#, #v_USERINFO_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"		resultClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_CHECKIFLEAFBOARD_GET(#v_pBoardID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"		resultClass="Integer"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_CHECKIFLEAFBOARD_GET(#v_pBoardID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(BoardID)
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDINFO
+			WHERE
+				ParentBoardID = #v_pBoardID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsListGet1"					parameterClass="Map"		resultClass="Integer"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_LIST_GET1(#v_BNAME#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.bbsListGet1"						parameterClass="Map"		resultClass="Integer">
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<![CDATA[
@@ -1211,9 +1726,19 @@
 		</isNotEqual>
 	</select>
 	
-	<procedure id="EzCommunityDAO.commMakeOkGet2"				parameterClass="Map"		resultClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET2(#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commMakeOkGet2"				parameterClass="Map"		resultClass="Integer"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET2(#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commMakeOkGet2"				parameterClass="Integer"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(BOARDNO), 0) MAXBOARDNO
+      		FROM
+      			EZCOMMUNITY.TBL_COMM_BOARDINFO
+      		WHERE
+      			TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.commMakeOkGet4"				parameterClass="Map"		resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET4(#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -1243,14 +1768,42 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_SET(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSUBFLAG#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #v_STRLANG#, #v_RESULT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GETBOARDTREE_SET(#v_PROOTBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #v_PMODE#, #v_PSUBFLAG#, #v_PSELECTBY#, #v_PEXCLUDEBOARDID#, #v_PCLUBNO#, #v_STRLANG#, #v_RESULT#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityDAO.deleteBoardTreeChache"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.TBL_COMM_TREECACHE
+  			WHERE
+  				QUERY = #v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #v_strLang#
+  			AND
+  				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+	<insert id="EzCommunityDAO.insertBoardTreeChache"				parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.TBL_COMM_TREECACHE
+				(	QUERY,
+					Result,
+					TENANT_ID
+				)
+			VALUES
+				(	#v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #v_strLang#,
+					#v_result#,
+					#tenantID#
+				)
+		]]>
+	</insert>
+	
+	
+	
+	
 	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkSet1"				parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_SET1(#v_BNAME#, #v_TITLE#, #v_GANT#, #v_CODE#, #v_ATTACHLIST#, #v_TEXTCONTENT#)} -->
 <!-- 	</procedure> -->
-	
 	<update id="EzCommunityDAO.bbsEditOkSet1"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1289,7 +1842,6 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkInsert"				parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BBS_EDIT_OK_INSERT(#v_BNAME#, #v_MYREF#, #v_NEWSTEP#, #v_NEWLEVEL#, #v_ATTACHLIST#, #v_NUMBER#, #v_TEXTCONTENT#, #v_DATETIME_NOW#, #v_FILENAME#, #v_CODE#, #v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #v_USERNM#, #v_USERNM2#, #v_TITLE#, #v_MAXIDFIELDNAME#)} -->
 <!-- 	</procedure> -->
-	
 	<insert id="EzCommunityDAO.bbsEditOkInsert"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.$v_BNAME$ (
@@ -1366,9 +1918,27 @@
 		]]>
 	</insert>
 	
-	<procedure id="EzCommunityDAO.bbsDelOkDel"					parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_BBS_DEL_OK_DEL(#v_CODE#, #v_BNAME#, #v_DOG#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.bbsDelOkDel"					parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BBS_DEL_OK_DEL(#v_CODE#, #v_BNAME#, #v_DOG#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityDAO.bbsDelOkDel"					parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				EZCOMMUNITY.$v_BNAME$ 
+			WHERE
+				NO = TO_NUMBER(#v_NO#)
+			AND
+				TENANT_ID = #tenantID# 
+		]]>
+		
+		<isNotNull property="v_CODE">
+			<isNotEqual property="v_CODE" compareValue="">
+				AND
+					C_CLUBNO = #v_CODE#
+			</isNotEqual>
+		</isNotNull>
+	</delete>
 	
 	<procedure id="EzCommunityDAO.joinOkInsert"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_JOIN_OK_INSERT(#v_COMPANYID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_COMPANYNAME#, #v_COMPANYNAME2#, #v_COMPANYZIP#, #v_COMPANYADDRESS#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYTEL#, #v_COMPANYFAX#, #v_HOMETEL#, #v_HANDPHONE#, #v_EMAIL#, #v_BIRTHDAY#, #v_GENDER#)}
@@ -1382,9 +1952,165 @@
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_SET2(#v_BANNERFILENAME#, #v_FILENAME#, #v_FILESIZE#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commMakeOkInsert2"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT2(#v_TMP_CLUBID#, #v_DATETIME_NOW1#, #v_CLUBNAME#, #v_CLUBNAME2#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_CLUBTYPE#, #v_CLUBCONFIRMTYPE#, #v_INTRO#, #v_ISIN#, #v_LOGO#, #v_LOGO_THUMBNAIL#, #v_BANNER#, #v_B_BOARD_NAME1#, #v_B_BOARD_NAME2#, #v_COMATT#, #v_CODE#, #v_B_NOTI_NAME1#, #v_B_NOTI_NAME2#, #v_PNEWID#, #v_BOARDNO#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#, #v_PNEW_SUBID#, #v_DATETIME_NOW2#, #v_OPENEMAIL#, #v_OPENHP#, #v_OPENCOMP#, #v_OPENHOUSE#, #v_OPENJOB#, #v_OPENBIRTH#, #v_OPENSEX#, #v_USERINFO_COMPANYID#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.updateClubID"	parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.TBL_CLUBID
+      		SET
+      			CLUBID = #v_TMP_CLUBID#,
+      			TENANT_ID = #tenantID#
+		]]>
+	</update>
+	<insert id="EzCommunityDAO.insertClub"			parameterClass="Map">
+			<![CDATA[
+				INSERT INTO EZCOMMUNITY.C_CLUB
+     				(	C_CLUBNO,
+     					C_REGDATE,
+    					C_CLUBNAME,
+    					C_CLUBNAME2,
+    					C_CATE_A,
+    					C_CATE_B,
+    					C_CATE_C,
+    					C_CLUBGUBUN,
+    					C_CLUBCONFIRMTYPE,
+    					C_ADMINCONFIRM,
+    					C_MAKER,
+    					C_SYSOPID,
+    					C_CLUBDESC,
+    					ISIN,
+    					C_LOGO,
+    					C_LOGO_THUMBNAIL,
+    					C_CLUBBANNER,
+    					COMPANYID,
+    					TENANT_ID
+    				)
+     			VALUES
+     				(	#v_CODE#,
+     					#nowDateTime#,
+     					#v_CLUBNAME#,
+     					#v_CLUBNAME2#,
+     					#v_C_CATE_A#,
+     					#v_C_CATE_B#,
+     					#v_C_CATE_C#,
+     					#v_CLUBTYPE#,
+     					#v_CLUBCONFIRMTYPE#,
+     					'N',
+     					#v_USERINFO_USERID#,
+     					#v_USERINFO_USERID#,
+     					#v_INTRO#,
+     					#v_ISIN#,
+     					#v_LOGO#,
+     					#v_LOGO_THUMBNAIL#,
+     					#v_BANNER#,
+     					#v_USERINFO_COMPANYID#,
+     					#tenantID#
+     				)
+			]]>
+	</insert>
+	
+	<insert id="EzCommunityDAO.insertCommBoardInfo"					parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDINFO
+				(	C_CLUBNO,
+					BOARDID,
+					BOARDNAME,
+					BOARDNAME2,
+					PARENTBOARDID,
+					BOARDGROUPID,
+					ITEMEXPIRES,
+					ATTACHSIZELIMIT,
+					BOARDNO,
+					TENANT_ID
+				)
+			VALUES
+				(	#v_CODE#,
+					#v_BOARDID#,
+					#v_B_BOARD_NAME1#,
+					#v_B_BOARD_NAME2#,
+					#v_PARENTBOARDID#,
+					NULL,
+					-1,
+					#v_ATTACHSIZELIMIT#,
+					#v_BOARDNO#,
+					#tenantID#
+				)
+		]]>
+	</insert>
+	
+	<insert id="EzCommunityDAO.insertCommBoardManage"				parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDMANAGE
+     			(	BOARDID,
+     				ACCESSID,
+     				ACCESSNAME,
+     				ACCESSLEVEL,
+     				ACCESS_,
+     				PARENTBOARDID,
+     				BOARDADMIN_FG,
+     				LISTVIEW_FG,
+     				READ_FG,
+     				WRITE_FG,
+     				REPLY_FG,
+     				DELETE_FG,
+     				INHERIT_FG,
+     				TENANT_ID
+				)
+			VALUES
+				(	#v_BOARDID#,
+					#v_ACCESSID#,
+					#v_ACCESSNAME#,
+					#v_ACCESSLEVEL#,
+					#v_ACCESS_#,
+					#v_PARENTBOARDID#,
+					#v_BOARDADMIN_FG#,
+					#v_LISTVIEW_FG#,
+					#v_READ_FG#,
+					#v_WRITE_FG#,
+					#v_REPLY_FG#,
+					#v_DELETE_FG#,
+					#v_INHERIT_FG#,
+					#tenantID#
+				)
+		]]>
+	</insert>
+	
+	<insert id="EzCommunityDAO.insertClubUser"						parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.C_CLUBUSER
+     			(	C_CLUBNO,
+     				C_ID,
+    				C_INDATE,
+    				C_EMAIL,
+    				C_HPHONE,
+    				C_COMPANY,
+    				C_HOUSE,
+    				C_JOB,
+    				C_BIRTH,
+    				C_SEX,
+    				PERMIT,
+    				COMPANYID,
+    				TENANT_ID
+    			)
+     		VALUES
+     			(	#v_CODE#,
+     				#v_USERINFO_USERID#,
+     				#nowDateTime#,
+     				#v_OPENEMAIL#,
+     				#v_OPENHP#,
+     				#v_OPENCOMP#,
+     				#v_OPENHOUSE#,
+     				#v_OPENJOB#,
+     				#v_OPENBIRTH#,
+     				#v_OPENSEX#,
+     				#v_PERMIT#,
+     				#v_USERINFO_COMPANYID#,
+     				#tenantID#
+    			)
+		]]>
+	</insert>
 	
 	<procedure id="EzCommunityDAO.setAsRead"					parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
@@ -1577,27 +2303,31 @@
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="String"		resultClass="CommunityBoardPropertyVO">
+	<select id="EzCommunityDAO.brdGetBoardProperty"				parameterClass="MAP"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
 				*
 			FROM 
-	        	EZCOMMUNITY.TBL_BOARD_BOARDINFO
+	        	EZCOMMUNITY.TBL_COMM_BOARDINFO
 			WHERE  
 	       		BOARDID = #pBoardID#
+	       	AND
+	       		TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="String"		resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getBoardTreeGet2"				parameterClass="Map"		resultClass="CommunityBoardTreeVO">
 		<![CDATA[
 			SELECT 
 				BOARDID || N';' AS BOARDID 
 			FROM 
 				EZCOMMUNITY.TBL_COMM_BOARDMANAGE 
 			WHERE 
-				ACCESS_ = 0 
+				ACCESS_ = 0
 			AND 
-				ACCESSID = #pUserID#
+				ACCESSID = #userID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>		
 	</select>
 	
@@ -1613,7 +2343,7 @@
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueA"											resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueA"				parameterClass="Integer"	resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -1621,13 +2351,15 @@
 				EZCOMMUNITY.C_CATEGORY
 			WHERE
 				C_CAT=N'a'
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				C_CODE,
 				C_ORDER
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueB"											resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueB"				parameterClass="Integer"	resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -1635,13 +2367,15 @@
 				EZCOMMUNITY.C_CATEGORY
 			WHERE
 				C_CAT=N'b'
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				C_CODE,
 				C_ORDER
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.getCategoryValueC"											resultMap="CategoryValue">
+	<select id="EzCommunityDAO.getCategoryValueC"				parameterClass="Integer"	resultMap="CategoryValue">
 		<![CDATA[
 			SELECT 
 				*
@@ -1649,6 +2383,8 @@
 				EZCOMMUNITY.C_CATEGORY
 			WHERE
 				C_CAT=N'c'
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				C_CODE,
 				C_ORDER

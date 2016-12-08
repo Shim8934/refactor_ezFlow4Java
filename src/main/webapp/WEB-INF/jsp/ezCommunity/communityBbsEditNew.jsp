@@ -117,7 +117,6 @@
 	 							textcontent	:	message.GetEditorContent(),
 	 							mode	:	pMode,
 	 							no	:	pNo,
-	 							gant	:	pGant,
 	 							sRadio	:	pSradio,
 	 							keyword	:	pKeyword,
 	 							id	:	pID,
