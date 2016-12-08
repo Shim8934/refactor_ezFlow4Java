@@ -582,7 +582,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		}
 
-		serverName = config.getProperty("config.ServerName");
+		serverName = userInfo.getServerName();
 
 		logger.debug("signState : " + signState);
 		logger.debug("signature1 : " + signature1);

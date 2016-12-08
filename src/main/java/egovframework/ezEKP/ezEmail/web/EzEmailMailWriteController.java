@@ -204,7 +204,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String inMailColor = "";
 		String outMailColor = "";
 		String useEditor = "";
-		String serverName = config.getProperty("config.ServerName") != null ? config.getProperty("config.ServerName") : "";
 		
 		// get user credentials
 		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
@@ -213,6 +212,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// retrieve user info from db.
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		
+		String serverName = loginInfo.getServerName();
 		String userId = loginInfo.getId();
 		userPrimary = loginInfo.getPrimary();
 		userLang = loginInfo.getLang();

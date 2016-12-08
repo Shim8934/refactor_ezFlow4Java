@@ -93,7 +93,7 @@ public class EzEmailMailSearchController {
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password = userIdAndPassword.get(1);	
 		
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = userInfo.getServerName();
 		String userLang = userInfo.getLang();
 		String useEditor = config.getProperty("config.EDITOR");
 		

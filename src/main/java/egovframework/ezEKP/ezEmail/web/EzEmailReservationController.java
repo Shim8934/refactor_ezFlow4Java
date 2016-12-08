@@ -206,7 +206,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String pAttachWarning = "";
 		String attachCK = "";
 		String showDisplay = "";
-		String serverName = config.getProperty("config.ServerName") != null ? config.getProperty("config.ServerName") : "";
 		long uid = 0;
 		
 		// get user credentials
@@ -214,6 +213,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String password  = userIdnPw.get(1);
 		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		
+		String serverName = loginInfo.getServerName();
 		
 		stateName = UUID.randomUUID().toString();
 		folderDate = EgovDateUtil.getToday("");
