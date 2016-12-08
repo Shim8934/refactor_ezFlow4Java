@@ -608,6 +608,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
+		File file = new File (dirPath);
+		if(!file.exists()) {
+			file.mkdirs();
+		}
+		
 		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
 			mode = "APR";
 		} else if (listType.equals("4") || listType.equals("6") || listType.equals("10") || listType.equals("99")) {
@@ -1416,6 +1421,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/upload.do")
 	public String upload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		MultipartFile multilFile = request.getFile("file1");
 		String useExtension = config.getProperty("config.USE_FileExtension");
 		String companyID = request.getParameter("compid");
@@ -1443,9 +1450,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (!tFile.isDirectory()) {
-			tFile.mkdir();
+			tFile.mkdirs();
 		}
 		
+		if (!uFile.isDirectory()) {
+			uFile.mkdirs();
+		}
 		if (fileName.indexOf("\\") > -1) {
 			fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
 		}
@@ -1571,6 +1581,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
 			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
 			
+			File filePath = new File(dirPath);
+		        if (!filePath.exists()) {
+		        	filePath.mkdirs();
+		        }
 			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
 			
 			if (file.exists()) {
@@ -3769,6 +3783,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getCabinetSearchAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetSearchAll started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String companyID = request.getParameter("companyID");
 		String processDeptCode = request.getParameter("processDeptCode");

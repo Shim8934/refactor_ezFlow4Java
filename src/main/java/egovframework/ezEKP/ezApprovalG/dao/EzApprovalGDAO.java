@@ -803,8 +803,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	public int updateHistoryForAttach_M(Map<String, Object> map) throws Exception{
-		select("EzApprovalG.updateHistoryForAttach_M", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzApprovalG.updateHistoryForAttach_M", map);
 	}
 	
 	public int isCabCharger(Map<String, Object> map) throws Exception{
@@ -1072,7 +1071,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 
 	public void updateHistoryForAttach(Map<String, Object> map1) throws Exception{
-		update("EzApprovalG.updateHistoryForAttach", map1);
+		insert("EzApprovalG.updateHistoryForAttach", map1);
 	}
 	
 	public void saveRecReadHist(Map<String, Object> map) throws Exception{
