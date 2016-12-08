@@ -360,7 +360,7 @@ function setBtnEnable() {
 			prop : "extensionAttribute4"
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}        			
 	});
 	

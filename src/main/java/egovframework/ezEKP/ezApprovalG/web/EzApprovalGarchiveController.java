@@ -61,7 +61,7 @@ public class EzApprovalGarchiveController {
 
 		String sFlag = (request.getParameter("sFlag") != null ? request.getParameter("sFlag") : "");
 		String contType = "END";
-		String dirpath = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc";
+		String dirpath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + "doc";
 		String deptInfo = "";
 		String buJaeInfo = "";
 		String susinAdmin = "";
@@ -425,7 +425,7 @@ public class EzApprovalGarchiveController {
 		poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
 		maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		
-		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		  
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -621,7 +621,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
    		String realPath = commonUtil.getRealPath(request);
-		String dirPath =  realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String dirPath =  realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result=ezApprovalGService.doSendOffer(xmlDom,dirPath , userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
@@ -962,7 +962,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String result = "FALSE";
-		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo.getCompanyID());
+		String strXml = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo.getCompanyID(), userInfo.getTenantId());
 		Document resultXML = commonUtil.convertStringToDocument(strXml);
 		
 		if(resultXML.getElementsByTagName("HREF").getLength()>0){
@@ -980,7 +980,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
-		String dirpath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator ;
+		String dirpath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator ;
 		String result = ezApprovalGService.addBebu(xmlDom, dirpath , userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
@@ -1003,7 +1003,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 	    String realPath = commonUtil.getRealPath(request);
-		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result = ezApprovalGService.doReSendDoc(xmlDom,dirPath,userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;

@@ -486,7 +486,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) ActiveX 다운로드 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
-	public String progressAdmin() {
+	public String progressAdmin(Model model) {
+	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+	    
+	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+	    
 		return "/admin/ezApprovalG/apprGProgressAdmin";
 	}
 	

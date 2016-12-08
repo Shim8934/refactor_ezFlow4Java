@@ -6,9 +6,11 @@ import java.io.FilenameFilter;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -30,6 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -38,6 +41,8 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -57,6 +62,12 @@ public class EzEmailScheduler {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
@@ -142,7 +153,9 @@ public class EzEmailScheduler {
 				String password = config.getProperty("config.JMochaSuperPassword");
 	
 				String realPath = config.getProperty("data_root");
-				String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+				String serverName = userEmail.split("@")[1];
+				int tenantId = loginService.getTenantId(serverName);
+				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
 				File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
@@ -276,29 +289,39 @@ public class EzEmailScheduler {
 	public void deleteExpireAttach() throws Exception{
 		logger.debug("오전 00:00:30에 호출이 됩니다.");
 		
-		String pUploadPath = config.getProperty("upload_mail.ROOT");
 		String realPath = config.getProperty("data_root");
 		
-		File file = new File(realPath + pUploadPath);
-		if (file.exists()) {
-			File[] files = file.listFiles(new FilenameFilter() {
-				String today = EgovDateUtil.getToday("");
-				int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
-				
-				@Override
-				public boolean accept(File dir, String name) {
-					if (name != null && dir.isDirectory()) {
-						if (NumberUtils.isNumber(name)) {
-							return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
+		//get tenantIdList
+		Set<Integer> tenantIdList = new HashSet<Integer>();
+		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
+		for (TenantServerNameVO vo : tenantServerNamelist) {
+			tenantIdList.add(vo.getTenantId());
+		}
+		
+		for (Integer tenantId : tenantIdList) {
+			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+		
+			File file = new File(realPath + pUploadPath);
+			if (file.exists()) {
+				File[] files = file.listFiles(new FilenameFilter() {
+					String today = EgovDateUtil.getToday("");
+					int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
+					
+					@Override
+					public boolean accept(File dir, String name) {
+						if (name != null && dir.isDirectory()) {
+							if (NumberUtils.isNumber(name)) {
+								return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
+							}
 						}
+						return false;
 					}
-					return false;
-				}
-			});
-			
-			for (File expiredFile : files) {
-				if (deleteDirectory(expiredFile)) {
-					logger.debug(expiredFile.getName() + "is deleted.");
+				});
+				
+				for (File expiredFile : files) {
+					if (deleteDirectory(expiredFile)) {
+						logger.debug(expiredFile.getName() + "is deleted.");
+					}
 				}
 			}
 		}

@@ -768,6 +768,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.aprDeleteDocInfoFlag", map);
 	}
 	
+	public String chkDocDeleteTemp(Map<String, Object> map) {
+		return (String) select("EzApprovalG.chkDocDeleteTemp", map);
+	}
+	
 	public int getUserRecRight(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getUserRecRight", map);
 		return (int) map.get("v_RtnVal");
@@ -851,8 +855,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	public int getOpinionCount(Map<String, Object> map) throws Exception{
-		select("EzApprovalG.getOpinionCount", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzApprovalG.getOpinionCount", map);
 	}
 	
 	public int getReceiveDocListCount(Map<String, Object> map) throws Exception{
@@ -990,6 +993,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int countAttachDocInfo(Map<String, Object> map) {
 		return (int) select("EzApprovalG.countAttachDocInfo", map);
+	}
+	
+	public int getTotalAttachSizeTemp(Map<String, Object> map) {
+		return (int) select("EzApprovalG.getTotalAttachSizeTemp", map);
 	}
 
 	public void transactionSQL(Map<String, Object> map) throws Exception{
@@ -1176,6 +1183,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGRecordVO> doSendDoc_ReceiptGroupSub(Map<String, Object> map) throws Exception{
 		return (List<ApprGRecordVO>) list("EzApprovalG.doSendDoc_ReceiptGroupSub", map);
 	}
+
 
 
 }

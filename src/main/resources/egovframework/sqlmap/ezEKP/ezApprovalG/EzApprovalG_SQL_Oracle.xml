@@ -2768,7 +2768,7 @@
 	<select id="EzApprovalG.getDocInfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
-					#v_COLS# 
+					$v_COLS$ 
 			FROM 
 					EZAPPROVALG_${companyID}.TBAPRDOCINFO 
       		INNER JOIN 
@@ -2942,13 +2942,59 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORATTACH(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINEINFO(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doApproveLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+			SELECT 
+					APRMEMBERSN ,
+		            APRTYPE ,
+		            APRSTATE ,
+		            PROCESSDATE ,
+		            RECEIVEDDATE 
+		    FROM 
+		    		EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+		    WHERE  
+		    		DOCID = #v_DOCID#
+		    AND 
+		    		APRMEMBERID = #v_USERID#
+		    AND 
+		    		( APRSTATE = '002' OR APRSTATE = '005' ) 
+		    AND
+		    		TENANT_ID = #v_TENANTID#
+	</select>
 	
-	<procedure id="EzApprovalG.doApproveLineList" parameterClass="Map" resultClass="ApprGAprLineVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINELIST(#v_DOCID#, #v_APRMEMBERSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doApproveLineList" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINELIST(#v_DOCID#, #v_APRMEMBERSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doApproveLineList" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<![CDATA[
+			SELECT 
+					DOCID ,
+		            APRTYPE ,
+		            APRMEMBERSN ,
+		            APRMEMBERID ,
+		            APRMEMBERNAME ,
+		            APRMEMBERNAME2 ,
+		            APRMEMBERJOBTITLE ,
+		            APRMEMBERJOBTITLE2 ,
+		            APRMEMBERDEPTID ,
+		            APRMEMBERDEPTNAME ,
+		            APRMEMBERDEPTNAME2 ,
+		            APRMEMBERISDEPTYN ,
+		            APRMEMBERLDAPPATH 
+		     FROM 
+		     		EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+		     WHERE  
+		     		DOCID = #v_DOCID#
+		     AND 
+		     		APRMEMBERSN > #v_APRMEMBERSN#
+		     AND
+		     		TENANT_ID = #v_TENANTID#
+		     ORDER BY 
+		     		APRMEMBERSN
+		   ]]>
+	</select>
 	
 	<procedure id="EzApprovalG.setBujeInfoList" parameterClass="Map" resultClass="ApprGAprLineVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_SETBUJAEINFO_LIST(#v_DOCID#, #v_APRTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -2998,9 +3044,44 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEHABYUIRESULT_APRMEM(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getTotalAttachSize" parameterClass="Map" resultClass="ApprGAttachInfoVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETTOTALATTACHSIZE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getTotalAttachSize" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETTOTALATTACHSIZE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getTotalAttachSizeTemp" parameterClass="Map" resultClass="int">
+	 		SELECT 
+	 			COUNT(DOCID)  
+            FROM 
+            	TBRECEIPTPOINTINFO 
+            WHERE  
+            	DocID = #v_DOCID#
+            AND 
+            	ExtReceptYN = 'Y'
+	</select>
+	<select id="EzApprovalG.getTotalAttachSize" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+		<isEqual property="v_temp" compareValue="1">
+		  <![CDATA[
+		   SELECT 
+				SUM(AttachFileSize,19,0)  TOTALSIZE  ,
+                CASE 
+                     WHEN SUM(AttachFileSize)  > 6000000 THEN 'Y'
+                ELSE 
+                	'N'
+                END FLAG  
+           FROM 
+           		EZAPPROVALG_${companyID}.TBAPRATTACHINFO 
+           WHERE  
+          		DocID = #v_DOCID# 
+           AND
+           		TENANT_ID =#v_TENANTID#
+          		]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			SELECT 
+				0 TOTALSIZE  ,
+                'N' FLAG  
+           FROM DUAL
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzApprovalG.getRecViewer" parameterClass="Map" resultClass="ApprGRecordVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECVIEWER(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -3222,10 +3303,69 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETSENDOUTDOCLIST(#v_MODE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETDEPTSTACTICS(#v_pStartDate#, #v_pEndDate#, #iv_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDEPTSTACTICS(#v_pStartDate#, #v_pEndDate#, #iv_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO">
+		<![CDATA[
+		SELECT 
+				D.DisplayName$v_pLang$ AS DISPLAYNAME, 
+				WRITERDEPTID, 
+				COUNT(WRITERDEPTID) AS DRAFTCOUNT, 
+				NVL(TOTALCOUNT2, 0) AS SUSINCOUNT
+   		FROM 
+   				EZAPPROVALG_${companyID}.TBENDAPRDOCINFO A 
+   		LEFT OUTER JOIN 
+   		(
+   			SELECT 
+   					C.DisplayName$v_pLang$, 
+   					ContainerOwnDepID, 
+   					COUNT(ContainerOwnDepID) AS TOTALCOUNT2 ,
+   					A.TENANT_ID
+   			FROM 
+   					EZAPPROVALG_${companyID}.TBENDAPRDOCINFO A
+   			INNER JOIN 
+   					EZAPPROVALG_${companyID}.tbContainer B 
+   			ON 
+   					A.ContainerID = B.ContainerID
+   			AND
+   					A.TENANT_ID = B.TENANT_ID
+   			INNER JOIN 
+   					EZHRMASTER.TBLDeptmaster C 
+   			ON 
+   					B.ContainerOwnDepID = C.CN
+   			AND
+   					B.TENANT_ID = C.TENANT_ID		
+   			WHERE 
+   					ContainerTypeID = '500' 
+   			AND 
+   					(A.StartDate >= TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS') AND A.StartDate <= TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS')
+   			AND
+   					A.TENANT_ID = #v_TENANTID#)
+   			GROUP BY 
+   					B.ContainerOwnDepID, C.DisplayName$v_pLang$, A.TENANT_ID) B 
+   		ON 
+   			A.WriterDeptID = B.ContainerOwnDepID
+   		AND
+   			A.TENANT_ID = B.TENANT_ID
+   		INNER JOIN 
+   				EZHRMASTER.TBLDeptmaster D 
+   		ON 
+   				A.WriterDeptID = D.CN
+   		AND
+   				A.TENANT_ID = D.TENANT_ID
+   		AND 
+   				(A.StartDate >=  TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS') AND A.StartDate <= TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS')) 
+   		WHERE 
+   				rownum <= 5 
+   		AND
+   				A.TENANT_ID = #v_TENANTID#
+   		GROUP BY 
+   				D.DisplayName$v_pLang$, WRITERDEPTID, TOTALCOUNT2
+   		ORDER BY 
+   				DRAFTCOUNT DESC
+   		]]>
+	</select>
 	<procedure id="EzApprovalG.getDocAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETAPRLINEINFO_ID(#v_PDOCID#, #v_PUSERID#, #v_PAPRSTATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -3791,9 +3931,31 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getDocTitle" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETDOCTITLE(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getDocTitle" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDOCTITLE(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getDocTitle" parameterClass="Map" resultClass="String">
+		<isEqual property="v_FLAG" compareValue="ING">
+			SELECT 
+					DOCTITLE 
+            FROM 
+            		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+            WHERE  
+            		DOCID = #v_DOCID#
+            AND
+            		TENANT_ID = #v_TENANTID#
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="ING">
+		 	SELECT 
+		 			DOCTITLE 
+            FROM 
+            		EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+            WHERE  
+            		DOCID = #v_DOCID#
+            AND
+            		TENANT_ID = #v_TENANTID#
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzApprovalG.getDraftUserID" parameterClass="Map" resultClass="String">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDRAFTUSERID(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -3819,9 +3981,21 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECORDSCFLAG(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getDraftDate" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETDRAFTDATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getDraftDate" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDRAFTDATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getDraftDate" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 		PROCESSDATE 
+	     FROM 
+	     		EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+	     WHERE  
+	     		DOCID = #v_DOCID#
+	     AND 
+	     		APRMEMBERSN = 1 
+	     AND
+	     		TENANT_ID = #v_TENANTID#
+	</select>
 	
 	<procedure id="EzApprovalG.updateSusinResultReceipt" parameterClass="Map" resultClass="String">
 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATESUSINRESULT_RECEIPT(#v_DOCID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -3839,9 +4013,37 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEHABYUIRESULT_APRM_1(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_CHKDOCDELETE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_CHKDOCDELETE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.chkDocDeleteTemp" parameterClass="Map" resultClass="String">
+		SELECT 
+			DOCID 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+        WHERE  
+        	DOCID = #v_DOCID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+	</select>
+	<select id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String">
+		<isEqual property="v_temp" compareValue="1">
+			SELECT 
+					HREF 
+	        FROM 
+	        		EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+	        WHERE  
+	        		DOCID = #v_DOCID#
+	        AND
+	        		TENANT_ID = #v_TENANTID#
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			SELECT 
+				' ' HREF  
+			FROM 
+				DUAL
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="ApprGDocListVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_DOBANSONG_APRTYPE(#v_DOCID#, #v_APRMEMBERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -4547,9 +4749,39 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETMAXTMPDOCSN(#v_PUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getOpinionCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETOPINIONCOUNT(#v_DOCID#, #v_USERID#, #v_INGFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getOpinionCount" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETOPINIONCOUNT(#v_DOCID#, #v_USERID#, #v_INGFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getOpinionCount" parameterClass="Map" resultClass="int">
+		<isEqual property="v_INGFLAG" compareValue="ING">
+			SELECT 
+					COUNT(USERID) 
+            FROM 
+            		EZAPPROVALG_${companyID}.TBAPROPINIONINFO 
+            WHERE  
+            		DOCID = #v_DOCID#
+            AND 
+            		OPINIONGB = '001'
+            AND 
+            		USERID = #v_USERID#
+            AND
+              		TENANT_ID = #v_TENANTID#
+		</isEqual>
+		<isNotEqual property="v_INGFLAG" compareValue="ING">
+			  SELECT 
+			  		COUNT(USERID)  
+              FROM 
+              		EZAPPROVALG_${companyID}.TBENDAPROPINIONINFO 
+              WHERE  
+              		DOCID = #v_DOCID#
+              AND 
+              		OPINIONGB = '001'
+              AND 
+              		USERID = #v_USERID# 
+              AND
+              		TENANT_ID = #v_TENANTID#
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzApprovalG.compareLineHistory" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_${companyID}.EZSP_COMPARELINEHISTORY(#v_DOCID#, #v_FLAG#, #v_MODIFYSN#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -5320,13 +5552,44 @@
 	
 	</update>
 	
-	<procedure id="EzApprovalG.updateDocInfoDocTitle" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEDOCINFO_DOCTITLE(#v_DOCID#, #v_DOCTITLE#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.updateDocInfoDocTitle" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEDOCINFO_DOCTITLE(#v_DOCID#, #v_DOCTITLE#)} -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalG.updateDocInfoDocTitle" parameterClass="Map">
+			 UPDATE 
+			 		EZAPPROVALG_${companyID}.TBAPRDOCINFO
+		     SET 
+		     		DOCTITLE = #v_DOCTITLE#
+		     WHERE  
+		     		DOCID = #v_DOCID#
+		     AND
+		     		TENANT_ID =#v_TENANTID#
+	</update>
 	
-	<procedure id="EzApprovalG.updateHistoryForLine" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEHISTORYFORLINE(#v_DOCID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.updateHistoryForLine" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEHISTORYFORLINE(#v_DOCID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.updateHistoryForLine" parameterClass="Map">
+		 INSERT INTO 
+		 			EZAPPROVALG_${companyID}.TBHISTORYLINEINFO
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG )
+        ( SELECT 
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, SYSDATE, (
+        																																																																				SELECT 
+        																																																																					NVL(MAX(MODIFYSN),0) + 1 
+																																																																					    FROM 
+																																																																					    	EZAPPROVALG_${companyID}.TBHISTORYLINEINFO 
+																																																																					    WHERE  
+																																																																					    	DOCID = #v_DOCID#
+																																																																					    AND
+																																																																					    	TENANT_ID = #v_TENANTID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' 
+          FROM 
+        			EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+          WHERE  
+          			DOCID = #v_DOCID#
+          AND
+          			TENANT_ID = #v_TENANTID#)
+	</insert>
 	
 	<procedure id="EzApprovalG.setJijung" parameterClass="Map">
 		{CALL EZAPPROVALG_${companyID}.EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)}

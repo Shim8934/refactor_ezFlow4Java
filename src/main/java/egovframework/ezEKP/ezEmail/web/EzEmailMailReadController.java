@@ -727,14 +727,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
-	public void downloadAttachCommon(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadAttachCommon(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		
-		String pDirPath = config.getProperty("upload_mail.ROOT");
-		String realPath = config.getProperty("data_root");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + fileDate + commonUtil.separator + fileId;
 		logger.debug("realFilePath=" + xmlPath);

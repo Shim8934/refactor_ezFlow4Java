@@ -177,7 +177,7 @@ public class LoginController {
 				
 				//
 				//DB에서 lang 값 가져옴
-				String lang = ezCommonService.selectUserGetLang(_uid);
+				String lang = ezCommonService.selectUserGetLang(_uid, tenantId);
 				//String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
 				
 				String acceptLanguage = request.getHeader("Accept-Language");
@@ -228,10 +228,10 @@ public class LoginController {
 					logger.debug("userID="+_uid);
 					logger.debug("lang="+lang);
 					
-					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
+					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang, tenantId);
 				}
 				
-				String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
+				String timeZone = ezCommonService.selectUserGetTimeZone(_uid, tenantId);
 				
 				logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
 				

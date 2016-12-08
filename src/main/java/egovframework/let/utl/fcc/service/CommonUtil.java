@@ -128,7 +128,7 @@ public class CommonUtil {
 			
 			LoginVO user = loginService.selectUser(login);
 	
-			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID()));
+			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID(), login.getTenantId()));
 			
 			user.setLang(lang);
 			user.setTheme("BASIC");
@@ -521,6 +521,10 @@ public class CommonUtil {
 		} 
 		
 		return realPath;
+	}
+	
+	public String getUploadPath(String property, int tenantId) {
+		return separator + "fileroot" + separator + tenantId + config.getProperty(property);
 	}
 }
 
