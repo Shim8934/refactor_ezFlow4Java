@@ -6,9 +6,11 @@ import java.io.FilenameFilter;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -30,6 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -38,6 +41,8 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -59,6 +64,12 @@ public class EzEmailScheduler {
 	private EzEmailService ezEmailService;
 	
 	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
+	
+	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
 	@Autowired
@@ -69,7 +80,7 @@ public class EzEmailScheduler {
 	 */
 	@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
-		logger.debug("오전 05:00:00에 호출이 됩니다.");
+		logger.debug("autoDelete scheduler started.");
 		Locale locale = Locale.getDefault();
 		
 		List<MailDeleteVO> list = ezEmailService.getMailDeleteList();
@@ -85,10 +96,10 @@ public class EzEmailScheduler {
 				String deleteUnread = vo.getDeleteUnread();
 				int expireTime = vo.getExpireTime();
 
-				logger.debug("userEmail : " + userEmail);
-				logger.debug("path : " + path);
-				logger.debug("deleteUnread : " + deleteUnread);
-				logger.debug("expireTime : " + expireTime);
+				logger.debug("userEmail=" + userEmail);
+				logger.debug("path=" + path);
+				logger.debug("deleteUnread=" + deleteUnread);
+				logger.debug("expireTime=" + expireTime);
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale);
@@ -120,6 +131,8 @@ public class EzEmailScheduler {
 			}
 			
 		}
+		
+		logger.debug("autoDelete scheduler ended.");
 	}
 	
 	/**
@@ -133,7 +146,11 @@ public class EzEmailScheduler {
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		
 		for (MailReservationVO vo : list) {
-			logger.debug(vo.toString());
+			logger.debug("messageId=" + vo.getMessageId());
+			logger.debug("userEmail=" + vo.getConnUrl());
+			logger.debug("subject=" + vo.getSubject());
+			logger.debug("sendDate=" + vo.getSendDate());
+			
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
 			try {
@@ -142,10 +159,14 @@ public class EzEmailScheduler {
 				String password = config.getProperty("config.JMochaSuperPassword");
 	
 				String realPath = config.getProperty("data_root");
-				String pDirPath = config.getProperty("upload_mail.RESERVED_MAIL_PATH");
+				String serverName = userEmail.split("@")[1];
+				int tenantId = loginService.getTenantId(serverName);
+				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
 				File f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+				
 				if (f.exists()) {
 					fis = new FileInputStream(f);
 	
@@ -156,7 +177,7 @@ public class EzEmailScheduler {
 					
 					//SentDate 재설정
 			        message.setSentDate(Calendar.getInstance().getTime());
-					logger.debug("sentDate=" + message.getSentDate().toString());
+					logger.debug("Reset sentDate. sentDate=" + message.getSentDate().toString());
 			        
 			        Transport.send(message);
 			        logger.debug("Succeed in sending the reserved message.");
@@ -176,9 +197,10 @@ public class EzEmailScheduler {
 					f.delete();
 					logger.debug("Succeed in deleting EML file.");
 				} else {
-					logger.error("Cannot find file. filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
+					logger.error("Cannot find EML file.");
 				}
 				
+				//DB에서 메일 예약발송 정보 삭제.
 				ezEmailService.deleteMailReserved(vo.getMessageId());
 				logger.debug("Succeed in deleting data from DB.");
 				
@@ -203,7 +225,7 @@ public class EzEmailScheduler {
 	 */
 	@Scheduled(cron = "30 01 00 * * *")
 	public void processMailStatLogs() throws Exception{
-		logger.debug("오전 00:01:30에 호출이 됩니다.");
+		logger.debug("processMailStatLogs scheduler started.");
 
 		// 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
@@ -267,6 +289,8 @@ public class EzEmailScheduler {
 				}
 			}
 		}
+		
+		logger.debug("processMailStatLogs scheduler ended.");
 	}
 	
 	/**
@@ -274,34 +298,51 @@ public class EzEmailScheduler {
 	 */
 	@Scheduled(cron = "30 00 00 * * *")
 	public void deleteExpireAttach() throws Exception{
-		logger.debug("오전 00:00:30에 호출이 됩니다.");
+		logger.debug("deleteExpireAttach scheduler started.");
 		
-		String pUploadPath = config.getProperty("upload_mail.ROOT");
 		String realPath = config.getProperty("data_root");
 		
-		File file = new File(realPath + pUploadPath);
-		if (file.exists()) {
-			File[] files = file.listFiles(new FilenameFilter() {
-				String today = EgovDateUtil.getToday("");
-				int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
-				
-				@Override
-				public boolean accept(File dir, String name) {
-					if (name != null && dir.isDirectory()) {
-						if (NumberUtils.isNumber(name)) {
-							return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
-						}
-					}
-					return false;
-				}
-			});
+		//get tenantIdList
+		Set<Integer> tenantIdList = new HashSet<Integer>();
+		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
+		for (TenantServerNameVO vo : tenantServerNamelist) {
+			tenantIdList.add(vo.getTenantId());
+		}
+		
+		for (Integer tenantId : tenantIdList) {
+			logger.debug("tenantId=" + tenantId);
 			
-			for (File expiredFile : files) {
-				if (deleteDirectory(expiredFile)) {
-					logger.debug(expiredFile.getName() + "is deleted.");
+			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+		
+			File file = new File(realPath + pUploadPath);
+			logger.debug("path=" + realPath + pUploadPath);
+			
+			if (file.exists()) {
+				File[] files = file.listFiles(new FilenameFilter() {
+					String today = EgovDateUtil.getToday("");
+					int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
+					
+					@Override
+					public boolean accept(File dir, String name) {
+						if (name != null && dir.isDirectory()) {
+							if (NumberUtils.isNumber(name)) {
+								return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
+							}
+						}
+						return false;
+					}
+				});
+				
+				for (File expiredFile : files) {
+					logger.debug("expired directory name=" + expiredFile.getName());
+					if (deleteDirectory(expiredFile)) {
+						logger.debug(expiredFile.getName() + "is deleted.");
+					}
 				}
 			}
 		}
+		
+		logger.debug("deleteExpireAttach scheduler ended.");
 	}
 	
 	/**

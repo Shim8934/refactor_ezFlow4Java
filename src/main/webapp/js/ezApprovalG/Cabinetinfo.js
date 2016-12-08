@@ -91,7 +91,7 @@ function GetCabinetClassInfo(pCabID) {
     if (rtnXml == "FALSE") {
         alert(strLang483);
     }
-    return result;
+    return loadXMLString(result);
 }
 function InitCabClassInfo(objCabInfoXml) {
     g_arrInitValue[0] = getNodeText(SelectSingleNode(objCabInfoXml.documentElement, "CATECODE"));// objCabInfoXml.documentElement.selectSingleNode("CATECODE").text;

@@ -234,10 +234,12 @@ public class EzCommonController extends EgovFileMngUtil{
 	 * 게시판 ck에디터 업로드 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/ckUpload.do")
-	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
+	public String ckUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = config.getProperty("upload_common.ROOT");
+		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
@@ -271,10 +273,13 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String ckSimpleUpload(MultipartHttpServletRequest request, Model model) throws Exception{
+	public String ckSimpleUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		MultipartFile multiFile = request.getFile("upload");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = config.getProperty("upload_common.ROOT");
+		
+		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;

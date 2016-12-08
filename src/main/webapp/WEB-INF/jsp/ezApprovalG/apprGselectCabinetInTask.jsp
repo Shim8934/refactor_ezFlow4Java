@@ -419,7 +419,7 @@
 		                DivPopUpShow(400, 310, url);
 		            }
 		            else {
-		                var feature = "dialogWidth:350px;dialogHeight:435px;scroll:no;resizable:yes;status:no; help:no";
+		                var feature = "dialogWidth:370px;dialogHeight:450px;scroll:no;resizable:yes;status:no; help:no";
 		                feature = feature + GetShowModalPosition(350, 380);
 		
 		                if (url != "")

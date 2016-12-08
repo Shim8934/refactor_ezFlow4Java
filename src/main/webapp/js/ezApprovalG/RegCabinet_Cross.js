@@ -70,7 +70,12 @@ function DisplayCodeString(nodeCodeInfo, htmlObject, szValue) {
     	if (navigator.userAgent.indexOf('Trident') == -1) {
     		result = g_CodeInfoXml.selectSingleNode("CODELIST/" + nodeCodeInfo + "/CODE[CODENUM='" + szValue + "']").childNodes(1).text;
     	} else {
-    		result = g_CodeInfoXml.getElementsByTagName(nodeCodeInfo)[0].childNodes[szValue - 1].childNodes[1].textContent;
+    		if(CrossYN()) {
+        		result = g_CodeInfoXml.getElementsByTagName(nodeCodeInfo)[0].childNodes[szValue - 1].childNodes[1].textContent;
+    		} else {
+        		result = g_CodeInfoXml.selectSingleNode("CODELIST/" + nodeCodeInfo + "/CODE[CODENUM='" + szValue + "']").childNodes(1).text;
+    		}
+
     	}
     }
     

@@ -56,86 +56,6 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
         
     @Autowired
     private EzEmailUtil ezEmailUtil;
-
-    public LoginVO selectUserForJMocha(LoginVO vo) throws Exception {
-        logger.debug("selectUserForJMocha started. tenantId=" + vo.getTenantId() + ",id=" + vo.getId());
-        
-        LoginVO loginVO = new LoginVO();
-                
-        String param1 = "tenantId=" + URLEncoder.encode(vo.getTenantId() + "", "UTF-8");
-        String param2 = "userId=" + URLEncoder.encode(vo.getId(), "UTF-8");
-        String inputParams = param1 + "&" + param2;
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getLoginInfo";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONObject result = (JSONObject)responseObj.get("result");
-                    
-                    if (result != null) {
-                        loginVO.setId((String)result.get("userId"));
-                        loginVO.setPassword((String)result.get("password"));
-                        loginVO.setDisplayName1((String)result.get("displayname"));
-                        loginVO.setDisplayName2((String)result.get("displayname2"));
-                        loginVO.setDeptID((String)result.get("department"));
-                        loginVO.setDeptName1((String)result.get("description"));
-                        loginVO.setDeptName2((String)result.get("description2"));
-                        loginVO.setTitle1((String)result.get("title"));
-                        loginVO.setTitle2((String)result.get("title2"));
-                        loginVO.setCompanyID((String)result.get("companyid"));
-                        loginVO.setCompanyName1((String)result.get("company"));
-                        loginVO.setCompanyName2((String)result.get("company2"));
-                        
-                        String updateDt = (String)result.get("updatedt");
-                        
-                        if (updateDt != null) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            loginVO.setUpdateDT(sdf.parse(updateDt));
-                        }
-                        
-                        loginVO.setRollInfo((String)result.get("permissions"));
-                        loginVO.setPhone((String)result.get("telephoneNumber"));
-                        loginVO.setEmail((String)result.get("mail"));
-                        loginVO.setJikChek((String)result.get("role1"));
-                        loginVO.setJikChek2((String)result.get("role2"));
-                        loginVO.setTenantId(Integer.parseInt((String)result.get("tenantId")));
-                    }                   
-                }
-            }
-        }                       
-        
-        logger.debug("selectUserForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return loginVO;        
-    }
-    
-    public LoginVO selectUserForLocal(LoginVO vo) throws Exception {
-
-        // 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
-        LoginVO loginVO = loginDAO.selectUser(vo);
-        // 2. 결과를 리턴한다.
-        if (loginVO != null && !loginVO.getId().equals("") && !loginVO.getPassword().equals("")) {
-            return loginVO;
-        } else {
-            loginVO = new LoginVO();
-        }
-
-        return loginVO;
-    }
     
     /**
 	 * 일반 로그인을 처리한다
@@ -145,11 +65,16 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	 */
     @Override
 	public LoginVO selectUser(LoginVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            return selectUserForJMocha(vo);
+        // 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
+        LoginVO loginVO = loginDAO.selectUser(vo);
+        // 2. 결과를 리턴한다.
+        if (loginVO != null && !loginVO.getId().equals("") && !loginVO.getPassword().equals("")) {
+            return loginVO;
         } else {
-            return selectUserForLocal(vo);
+            loginVO = new LoginVO();
         }
+
+        return loginVO;        
     }
 
 
@@ -219,14 +144,12 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public void updateUser(LoginVO vo) throws Exception {
-		// TODO Auto-generated method stub
 		loginDAO.updateUser(vo);
 	}
 
 
 	@Override
 	public void insertLog(LoginVO vo) throws Exception {
-		// TODO Auto-generated method stub
 		loginDAO.insertLog(vo);
 	}
 

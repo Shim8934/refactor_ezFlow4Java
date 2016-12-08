@@ -582,7 +582,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		}
 
-		serverName = config.getProperty("config.ServerName");
+		serverName = userInfo.getServerName();
 
 		logger.debug("signState : " + signState);
 		logger.debug("signature1 : " + signature1);
@@ -674,17 +674,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 서명관리 ck에디터 업로드 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezEmail/ckUpload.do")
-	public String ckUpload(MultipartHttpServletRequest request, Model model) throws Exception{
+	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
 		logger.debug("ckUpload started.");
 		
 		MultipartFile multiFile = request.getFile("file1");
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
 
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
-
-		String filePath = config.getProperty("upload_mail.SIGNIMGS");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
 		filePath = filePath + commonUtil.separator + today;
 		File file = new File(realPath + filePath);
 		if (!file.exists()) {

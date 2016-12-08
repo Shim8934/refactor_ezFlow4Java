@@ -156,7 +156,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContTypeInfo(String type, String companyID, String primary) throws Exception {
+	public String getContTypeInfo(String type, String companyID, String primary ,int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		String strMultiData = commonUtil.getMultiData(primary);
 		
@@ -164,7 +164,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		if (type.equals("LIST")) {
 			sb.append("<LISTVIEWDATA><HEADERS><HEADER>");
-			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary, tenantID) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
 			
 			for (int i = 0; i < list.size(); i++) {
 				ApprGLeftVO vo = list.get(i);
@@ -436,7 +436,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang) throws Exception {
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
@@ -500,7 +500,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				    }
 					
 					sb.append("<ROW>");
-					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang) + "</VALUE>");
+					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID) + "</VALUE>");
 					
 					if (j == 0) {
 						if (mode.equals("GROUP") || mode.equals("JOIN")) {
@@ -669,7 +669,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInSubCategoryForManage(Document doc) throws Exception {
+	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String pSCateCode = doc.getElementsByTagName("SCATECODE").item(0).getTextContent();
@@ -688,7 +688,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType);
+		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID);
 		
 		return result;
 	}
@@ -1112,7 +1112,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getTaskHistory(String taskCode, String companyID, String lang) throws Exception {
+	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1158,7 +1158,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
-				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID) + "</VALUE></CELL>");
 			}
 			sb.append("</ROW>");
 		}
@@ -1168,7 +1168,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID) throws Exception {
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
 			
@@ -1185,7 +1185,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			sb.append("</DATA>");
 			
-			String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType);
+			String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType, tenantID);
 			
 			return result;
 		} catch (Exception e) {
@@ -1536,7 +1536,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			String apprToMonth, String apprToDay, String formID,
 			String draftDeptName, String draftDeptName2, String pageNum,
 			String pageSize, String docState, String subQuery,
-			String orderCell, String orderOption, String companyID, String primary, String approvUser)
+			String orderCell, String orderOption, String companyID, String primary, String approvUser, int tenantID)
 			throws Exception {
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -1644,7 +1644,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					}
 			    }
 
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, primary)) + "</VALUE>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, primary, tenantID)) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");

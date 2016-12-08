@@ -133,12 +133,9 @@ public class EzEmailMailListController {
 		// retrieve the mail general settings from DB.
 		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
 				
-		// 컬러 관련 설정 정보를 DB로부터 읽어인다.
+		// set importanceColor
 		String importanceColor = "#ff0000";
-		
 		MailColorVO mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
-		
-		logger.debug("mailGeneral=" + mailGeneral + ",mailColor=" + mailColor);		
 		
 		if (mailColor != null && mailColor.getImportanceColor() != null) {
 			importanceColor = mailColor.getImportanceColor();
@@ -157,6 +154,10 @@ public class EzEmailMailListController {
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("importanceColor", importanceColor);
 		
+		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
+				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
+				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor);
+		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
 		return "ezEmail/mailList";

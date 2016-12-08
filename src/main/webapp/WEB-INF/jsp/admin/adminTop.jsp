@@ -12,20 +12,22 @@
 				if("<c:out value='${use_portal}'/>" != 'YES'){
 					window.open("index_personal.aspx","bottom");
 				}else{
-				    <c:if test="${useJMochaUserRepository == 'YES'}">
+				    <c:if test="${IsJMochaStandAlone == 'YES'}">
 				    window.open("/admin/ezOrgan/organMain.do", "bottom");
 				    </c:if>
-				    <c:if test="${useJMochaUserRepository != 'YES'}">
+				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 					//메인화면 포탈로 설정 2016-10-04 지정석
 					window.open("/admin/ezPortal/portalMain.do", "bottom");
 					</c:if>
 				}
 				
+				<c:if test="${IsJMochaStandAlone != 'YES'}">
 				var ua = navigator.userAgent;
 		    	if ((/msie/i.test(ua)) || (/rv:11.0/i.test(ua))) {
 					GetObject();
 		    	}
+		    	</c:if>
 			}
 			function menu_change(width, e){
 		        var menuname = e.target.id;
@@ -117,16 +119,18 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
+        <c:if test="${IsJMochaStandAlone != 'YES'}">
 		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+        </c:if>
 		<form method="post">
 			<h1 title="logo"></h1>
 			<div id="adminmenu">
 		    	<ul>		    		
-                    <c:if test="${useJMochaUserRepository == 'YES'}">
+                    <c:if test="${IsJMochaStandAlone == 'YES'}">
                     <li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 
                     <li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
                     </c:if>
-                    <c:if test="${useJMochaUserRepository != 'YES'}">
+                    <c:if test="${IsJMochaStandAlone != 'YES'}">
 		      		<c:if test="${use_portal == 'YES'}">
 		      			<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
 		      		</c:if>			      

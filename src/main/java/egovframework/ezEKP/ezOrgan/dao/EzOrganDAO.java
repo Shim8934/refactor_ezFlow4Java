@@ -101,12 +101,13 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 
     @SuppressWarnings("unchecked")
-    public List<OrganDeptVO> getDeptSubTreeInfoForLocal(Map<String, Object> map) {      
+    private List<OrganDeptVO> getDeptSubTreeInfoForLocal(Map<String, Object> map) {      
         return (List<OrganDeptVO>) list("EzOrganDAO.getDeptSubTreeInfo", map);
     }
 	
 	public List<OrganDeptVO> getDeptSubTreeInfo(Map<String, Object> map) throws Exception {		
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            // getDeptSubTreeInfo와 getDeptTreeInfo가 동일한 것으로 판단되어 getDeptTreeInfoForJMocha를 호출하도록 함.
             return getDeptTreeInfoForJMocha(map);
         } else {
             return getDeptSubTreeInfoForLocal(map);
@@ -185,9 +186,78 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }       		
 	}
 	
-	@SuppressWarnings("unchecked")
+    private List<OrganDeptVO> getDeptMemberListPageForJMocha(Map<String, Object> map) throws Exception {
+        String type = (String)map.get("v_CLASS");
+        String deptId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        String page = (String)map.get("v_PAGE");
+        
+        logger.debug("getDeptMemberListPageForJMocha started. tenantId=" + tenantId + ",deptId=" + deptId 
+                + ",isPrimary=" + isPrimary + ",type=" + type + ",page=" + page);
+        
+        List<OrganDeptVO> returnValue = new ArrayList<OrganDeptVO>();
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String param3 = "isPrimary=" + URLEncoder.encode(isPrimary, "UTF-8");
+        String param4 = "type=" + type;
+        String param5 = "page=" + page;
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptMemberListPage";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganDeptVO deptVO = new OrganDeptVO();
+                            
+                            deptVO.setCn((String)itemObj.get("deptId"));
+                            deptVO.setDisplayName((String)itemObj.get("displayname"));
+                            deptVO.setExtensionAttribute15((String)itemObj.get("orderInfo"));
+                            deptVO.setType((String)itemObj.get("type"));
+                            
+                            returnValue.add(deptVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getDeptMemberListPageForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;              
+    }
+	
+    @SuppressWarnings("unchecked")
+    private List<OrganDeptVO> getDeptMemberListPageForLocal(Map<String, Object> map) throws Exception {
+        return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);       
+    }
+	
 	public List<OrganDeptVO> getDeptMemberListPage(Map<String, Object> map) throws Exception {
-		return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);		
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getDeptMemberListPageForJMocha(map);
+        } else {
+            return getDeptMemberListPageForLocal(map);
+        }               		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -579,8 +649,60 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }       
 	}
 	
-	public String getMemberListCount(Map<String, Object> map) throws Exception{
-		return (String) select("EzOrganDAO.getMemberListCount", map);
+    private String getMemberListCountForJMocha(Map<String, Object> map) throws Exception {
+        String deptId = (String)map.get("v_CN");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getMemberListCountForJMocha started. tenantId=" + tenantId + ",deptId=" + deptId);
+        
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptMemberListCount";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("count")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getMemberListCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return String.valueOf(returnValue);     
+    }
+	
+    private String getMemberListCountForLocal(Map<String, Object> map) throws Exception {
+        return (String) select("EzOrganDAO.getMemberListCount", map);
+    }
+	
+	public String getMemberListCount(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getMemberListCountForJMocha(map);
+        } else {
+            return getMemberListCountForLocal(map);
+        }       
 	}
 	
     private String getPropertyValueForJMocha(Map<String, Object> map) throws Exception {
@@ -645,8 +767,57 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getSIPUriList", map);
 	}
 
-	public String getDeptFullPath(String deptID) throws Exception{
-		return (String) select("EzOrganDAO.getDeptFullPath", deptID);
+    private String getDeptFullPathForJMocha(String deptID, int tenantID) throws Exception{
+        logger.debug("getDeptFullPathForJMocha started. tenantID=" + tenantID + ",deptID=" + deptID);
+        
+        String returnValue = null;
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "deptId=" + URLEncoder.encode(deptID, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getDeptCdPath";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = "top,Top," + (String)result.get("deptCdPath");
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("getDeptFullPathForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;
+    }
+	
+    private String getDeptFullPathForLocal(String deptID, int tenantID) throws Exception{
+        return (String) select("EzOrganDAO.getDeptFullPath", deptID);
+    }
+	
+	public String getDeptFullPath(String deptID, int tenantID) throws Exception{
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getDeptFullPathForJMocha(deptID, tenantID);
+        } else {
+            return getDeptFullPathForLocal(deptID, tenantID);
+        }       
 	}
 	
 	public String getEncPassword(Map<String, Object> map) throws Exception{

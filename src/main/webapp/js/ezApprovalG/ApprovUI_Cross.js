@@ -1966,9 +1966,14 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+
+        if (url != "")
+            var rtn = window.showModalDialog(url, parameter, feature);
+
+        if (rtn) {
+		  openOpinionUI("Display", CheckOpinionYN_Complete_Complete);
+        }
     }
-    return RtnVal;
 }
 
 function OpenInformationUI_Complete() {
@@ -2616,7 +2621,7 @@ function SendAckForExch(pType, pMode) {
 			body  : pBody
 		},
 		success: function(xml){
-			result = xml;
+			result = loadXMLString(xml);
 		}
 	});
 

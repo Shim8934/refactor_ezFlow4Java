@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezApproval.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -12,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApproval.dao.EzApprovalAdminDAO;
@@ -529,6 +533,447 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("getDocType ended");
 		
 		return selOption.toString();
+	}
+
+	@Override
+	public String getContainerInfoManage(String deptID, String mode, String companyID, LoginVO userInfo) throws Exception {
+		logger.debug("getContainerInfoManage started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		
+		if (mode.equals("LIST")) {
+			resultXML.append("<LISTVIEWDATA>");
+			resultXML.append("<HEADERS>");
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + getCode2Name("L02", "001", userInfo.getTenantId(), userInfo.getLang()) + "</NAME>");
+			resultXML.append("<WIDTH>" + "250" + "</WIDTH>");
+			resultXML.append("</HEADER>");
+			resultXML.append("</HEADERS>");
+			
+			userInfo.setCompanyID(companyID);
+			userInfo.setDeptID(deptID);
+			
+			List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContainerInfoManage(userInfo);
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				resultXML.append("<ROW>");
+				resultXML.append("<CELL>");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getContainerTypeName() + "</VALUE>");
+				} else {
+					resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getContainerTypeName2() + "</VALUE>");
+				}
+				resultXML.append("<DATA1>" + apprContInfoVOs.get(k).getContainerID() + "</DATA1>");
+				resultXML.append("<DATA2>" + apprContInfoVOs.get(k).getContainerTypeID() + "</DATA2>");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<DATA3>" + apprContInfoVOs.get(k).getContainerTypeName() + "</DATA3>");
+				} else {
+					resultXML.append("<DATA3>" + apprContInfoVOs.get(k).getContainerTypeName2() + "</DATA3>");
+				}
+				resultXML.append("<DATA4>" + apprContInfoVOs.get(k).getContainerOwnDepID() + "</DATA4>");
+				resultXML.append("</CELL>");
+				resultXML.append("</ROW>");
+			}
+			
+			resultXML.append("</LISTVIEWDATA>");
+		} else {
+			resultXML.append("<PARAMETER>");
+			
+			userInfo.setCompanyID(companyID);
+			userInfo.setDeptID(deptID);
+			
+			List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContainerInfoManage(userInfo);
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				resultXML.append("<CONTID" + k + ">");
+				resultXML.append(apprContInfoVOs.get(k).getContainerID());
+				resultXML.append("</CONTID" + k + ">");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					resultXML.append("<NAME" + k + ">");
+					resultXML.append(apprContInfoVOs.get(k).getContainerTypeName());
+					resultXML.append("</NAME" + k + ">");
+				} else {
+					resultXML.append("<NAME" + k + ">");
+					resultXML.append(apprContInfoVOs.get(k).getContainerTypeName2());
+					resultXML.append("</NAME" + k + ">");
+				}
+			}
+			resultXML.append("</PARAMETER>");
+			
+		}
+		
+		logger.debug("getContainerInfoManage ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getContTypeInfo(String mode, String companyID, LoginVO userInfo) throws Exception {
+		logger.debug("getContTypeInfo started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		
+		userInfo.setCompanyID(companyID);
+		
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContTypeInfo(userInfo);
+		
+		if (mode.equals("LIST")) {
+			rtnXML.append("<LISTVIEWDATA><HEADERS><HEADER>");
+			rtnXML.append("<NAME>" + getCode2Name("L02", "001", userInfo.getTenantId(), userInfo.getLang()) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				rtnXML.append("<ROW><CELL><VALUE>");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeName()));
+				} else {
+					rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeName2()));
+				}
+				rtnXML.append("</VALUE><DATA1>");
+				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeID()));
+				rtnXML.append("</DATA1></CELL></ROW>");
+			}
+			
+			rtnXML.append("</ROWS></LISTVIEWDATA>");
+		} else {
+			rtnXML.append("<PARAMETER>");
+			
+			for (int k = 0; k < apprContInfoVOs.size(); k++) {
+				rtnXML.append("<ID" + k + ">");
+				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeID()));
+				rtnXML.append("</ID" + k + ">");
+				rtnXML.append("<NAME" + k + ">");
+				
+				if (userInfo.getPrimary().equals("1")) {
+					rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
+				} else {
+					rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName2(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
+				}
+				rtnXML.append("</NAME" + k + ">");
+			}
+			rtnXML.append("</PARAMETER>");
+		}
+		
+		logger.debug("getContTypeInfo ended");
+		
+		return rtnXML.toString();
+	}
+
+	@Override
+	public String insertContainerType(String docTypeName, String docTypeName2, String companyID, int tenantID) throws Exception {
+		logger.debug("insertContainerType started");
+
+		String rtnValue = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("docTypeName", docTypeName);
+		map.put("docTypeName2", docTypeName2);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("maxID", "");
+		
+		try {
+			ezApprovalAdminDAO.insertContainerType(map);
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("insertContainerType ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String deleteContainerType(String codeID, String companyID, int tenantID) throws Exception{
+		logger.debug("deleteContainerType started");
+		
+		String rtnValue = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("codeID", codeID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			int contCnt = ezApprovalAdminDAO.getContCount(map); 
+					
+			if (contCnt <= 0) {
+				ezApprovalAdminDAO.deleteContDocState(map);
+				ezApprovalAdminDAO.deleteContainerType(map);
+				
+				rtnValue = "TRUE";
+			} else {
+				rtnValue = "USE";
+			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "FALSE";
+		}
+		
+		logger.debug("deleteContainerType ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getContainerToDocStateInfo(String companyID, Locale locale, String lang, int tenantID) throws Exception {
+		logger.debug("getContainerToDocStateInfo started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = getListHeader("108", lang, tenantID);
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContainerToDocStateInfo(map);
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < apprContInfoVOs.size(); k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + egovMessageSource.getMessage("ezApproval." + apprContInfoVOs.get(k).getDocumentStateName(), locale) + "</VALUE>");
+			resultXML.append("<DATA1>" + makeListField(apprContInfoVOs.get(k).getDocumentState()) + "</DATA1>");
+			resultXML.append("<DATA2>" + makeListField(apprContInfoVOs.get(k).getDocumentCode()) + "</DATA2>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			
+			if (commonUtil.getPrimaryData(lang).equals("1")) {
+				resultXML.append("<VALUE>" + makeListField(apprContInfoVOs.get(k).getContainerTypeName()) + "</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + makeListField(apprContInfoVOs.get(k).getContainerTypeName2()) + "</VALUE>");
+			}
+			resultXML.append("<DATA1>" + apprContInfoVOs.get(k).getContainerTypeID() + "</DATA1>");
+			resultXML.append("</CELL>");
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getContainerToDocStateInfo ended");
+		
+		return resultXML.toString();
+	}
+
+	private List<ApprCodeVO> getListHeader(String listCode, String lang, int tenantID) throws Exception{
+		logger.debug("getListHeader started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("listCode", listCode);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
+		
+		List<ApprCodeVO> apprCodeVOs = ezApprovalAdminDAO.getListHeader(map);
+		
+		logger.debug("getListHeader ended");
+		
+		return apprCodeVOs;
+	}
+
+	@Override
+	public String updateContainerToDocStateInfo(Document doc, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("updateContainerToDocStateInfo started");
+		
+		StringBuilder insString = new StringBuilder();
+		String delString = "";
+		String rtnValue = "";
+		NodeList nList = doc.getElementsByTagName("CONTTYPE");
+		
+		for (int k = 0; k < nList.getLength(); k++) {
+			if (k == 0) {
+				delString += "'" + nList.item(k).getChildNodes().item(0).getTextContent() + "'";
+			} else {
+				delString += ", '" + nList.item(k).getChildNodes().item(0).getTextContent() + "'";
+			}
+			
+			if (nList.item(k).getChildNodes().item(1).getTextContent() != null && !nList.item(k).getChildNodes().item(1).getTextContent().equals("")) {
+				insString.append("INTO TBCONTAINERTODOCSTATE ( CONTAINERTYPEID, DOCUMENTSTATE, COMPANYID, TENANT_ID ) VALUES ('" + nList.item(k).getChildNodes().item(1).getTextContent() + "', '");
+				insString.append(nList.item(k).getChildNodes().item(0).getTextContent() + "', '" + companyID + "', '" + tenantID + "')");
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("delString", delString);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			ezApprovalAdminDAO.deleteContainerToDocStateInfo(map);
+			ezApprovalAdminDAO.insertContainerToDocStateInfo(insString.toString());
+
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+ 		
+		logger.debug("updateContainerToDocStateInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getContainerUseDeptInfo(String contID, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("getContainerUseDeptInfo started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<String> userDeptIDs = ezApprovalAdminDAO.getContainerUseDeptInfo(map);
+		
+		rtnXML.append("<PARAMETER>");
+		
+		if (userDeptIDs.size() > 0) {
+			for (int k = 0; k < userDeptIDs.size(); k++) {
+				rtnXML.append("<ID" + k + ">");
+				rtnXML.append(commonUtil.cleanValue(userDeptIDs.get(k)));
+				rtnXML.append("</ID" + k + ">");
+				rtnXML.append("<NAME" + k + ">");
+				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(userDeptIDs.get(k), "displayName" + commonUtil.getMultiData(lang), tenantID)));
+				rtnXML.append("</NAME" + k + ">");
+			}
+		} else {
+			rtnXML.append("<ID0>FALSE</ID0><NAME0></NAME0>");
+		}
+		
+		rtnXML.append("</PARAMETER>");
+		
+		logger.debug("getContainerUseDeptInfo ended");
+		
+		return rtnXML.toString();
+	}
+
+	@Override
+	public String insertContainer(String contType, String contOwnDeptID, String selUseDept, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("insertContainer started");
+		
+		StringBuilder insString = new StringBuilder();
+		String[] selUseDepts = selUseDept.split(",");
+		String rtnValue = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contOwnDeptID", contOwnDeptID);
+		map.put("contType", contType);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("maxContID", "");
+		
+		try {
+			ezApprovalAdminDAO.insertContainer(map);
+			
+			if (selUseDepts.length > 0) {
+				for (int k = 0; k < selUseDepts.length; k++) {
+					insString.append("INTO TBCONTAINERUSEDEP ( CONTAINERID, USEDEPID, COMPANYID, TENANT_ID ) ");
+					insString.append("VALUES ('" + map.get("maxContID") + "', '" + selUseDepts[k] + "', '" + companyID + "', '" + tenantID + "')");
+				}
+			}
+			
+			ezApprovalAdminDAO.insertContainerUseDept(insString.toString());
+			
+			rtnValue = "<PARAMETER><RtnVal>TRUE</RtnVal></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RtnVal>FALSE</RtnVal></PARAMETER>";
+		}
+		
+		logger.debug("insertContainer ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String updateContainer(String contType, String contID, String contOwnDeptID, String selUseDept, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("updateContainer started");
+		
+		StringBuilder insString = new StringBuilder();
+		String[] selUseDepts = selUseDept.split(",");
+		String rtnValue = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contOwnDeptID", contOwnDeptID);
+		map.put("contType", contType);
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			ezApprovalAdminDAO.updateContainer(map);
+			ezApprovalAdminDAO.deleteContainerUseDept(map);
+			
+			if (selUseDepts.length > 0) {
+				for (int k = 0; k < selUseDepts.length; k++) {
+					insString.append("INTO TBCONTAINERUSEDEP ( CONTAINERID, USEDEPID, COMPANYID, TENANT_ID ) ");
+					insString.append("VALUES ('" + map.get("maxContID") + "', '" + selUseDepts[k] + "', '" + companyID + "', '" + tenantID + "')");
+				}
+			}
+			
+			ezApprovalAdminDAO.insertContainerUseDept(insString.toString());
+			
+			rtnValue = "<PARAMETER><RTNVALUE>TRUE</RTNVALUE></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RTNVALUE>FALSE</RTNVALUE></PARAMETER>";
+		}
+		
+		logger.debug("updateContainer ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String deleteContainer(String contID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("deleteContainer started");
+		
+		String rtnValue = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contID", contID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			ezApprovalAdminDAO.deleteContainerUseDept(map);
+			ezApprovalAdminDAO.deleteContainer(map);
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("deleteContainer ended");
+		
+		return rtnValue;
 	}
 	
 }

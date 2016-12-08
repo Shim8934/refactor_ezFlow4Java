@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,6 +71,22 @@ public class EzAddressController{
 	private EgovMessageSource egovMessageSource;  
 	
 	/**
+	 * 도로명 주소 팝업창 호출 함수 (Open API)
+	 */
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
+	public String addressZipCodePopup(Model model) throws Exception {
+		logger.debug("addressZipCodePopup(Open API) started.");
+		
+		String confirmKey = config.getProperty("config.ConfirmKey");
+		
+		model.addAttribute("confirmKey", confirmKey);
+		
+		logger.debug("addressZipCodePopup(Open API) ended.");
+		
+		return "ezAddress/addressZipCodePopUp";
+	}
+	
+	/**
 	 * 주소록 우편번호 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/ezAddress/address_zip_select.do")
@@ -84,18 +101,6 @@ public class EzAddressController{
 		model.addAttribute("sido", sb.toString());
 		
 		return "ezAddress/addressZipSelect";
-	}
-	
-	/**
-	 * 도로명 주소 팝업창 호출 함수 (Open API)
-	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
-	public String addressZipCodePopup(Model model) throws Exception {
-		String confirmKey = config.getProperty("config.ConfirmKey");
-		
-		model.addAttribute("confirmKey", confirmKey);
-		
-		return "ezAddress/addressZipCodePopUp";
 	}
 	
 	/**
@@ -153,8 +158,11 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetSubTree.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetSubTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
-		Document xmldom = commonUtil.convertRequestToDocument(request);
+	public String addressGetSubTree(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressGetSubTree started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String parentId = xmldom.getElementsByTagName("PARENTID").item(0).getTextContent();
 		String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 		StringBuilder sb = new StringBuilder();
@@ -176,6 +184,8 @@ public class EzAddressController{
 		
 		sb.append("</DATA>");
 		
+		logger.debug("addressGetSubTree ended.");
+		
 		return sb.toString();
 	}
 	
@@ -184,6 +194,9 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressMainList.do")
 	public String addressMainList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressMainList started.");
+		logger.debug("folderid=" + request.getParameter("folderid") + ",type=" + request.getParameter("type"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String compAdmin = "";
@@ -231,6 +244,11 @@ public class EzAddressController{
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pListType", pListType);
 		
+		logger.debug("addressMainList ended.");
+		logger.debug("userInfo=" + userInfo + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",pOwerId=" + pOwerId
+				 + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser
+				 + ",noneActiveX=" + noneActiveX + ",pListType=" + pListType);
+		
 		return "ezAddress/addressMainList";
 	}
 	
@@ -240,6 +258,8 @@ public class EzAddressController{
 	@RequestMapping(value = "/ezAddress/addressList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressList started.");
+		
 		String returnValue = "";
 		
 		try {
@@ -313,6 +333,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressList ended.");
+		
 		return returnValue;
 	}
 	
@@ -321,6 +343,10 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressWrite.do")
 	public String addressWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressWrite started.");
+		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
+				+ ",foldertype=" + request.getParameter("foldertype") + ",ownerid=" + request.getParameter("ownerid"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String addressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
@@ -377,6 +403,11 @@ public class EzAddressController{
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		
+		logger.debug("addressWrite ended.");
+		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
+				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
+				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI);
+		
 		return "ezAddress/addressWrite";
 	}
 	
@@ -385,8 +416,13 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetSearchCnt.do")
 	@ResponseBody
-	public String addressGetSearchCnt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
-		Document xmldom = commonUtil.convertRequestToDocument(request);
+	public String addressGetSearchCnt(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressGetSearchCnt started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String returnData = "";
+		
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String ownerId = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent();
 		String sEmail = xmldom.getElementsByTagName("FILTER").item(0).getTextContent();
 		
@@ -394,10 +430,15 @@ public class EzAddressController{
 		
 		boolean isDuplicate = ezAddressService.checkDuplicateAddress(userInfo.getTenantId(), ownerId, sEmail.trim());
 		if (isDuplicate) {
-			return "1";
+			returnData = "1";
 		} else {
-			return "0";
+			returnData = "0";
 		}
+		
+		logger.debug("addressGetSearchCnt ended.");
+		logger.debug("returnData=" + returnData);
+		
+		return returnData;
 	}
 	
 	/**
@@ -405,12 +446,15 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressSave.do")
 	@ResponseBody
-	public String addressSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressSave started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnVaule = "OK";
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
@@ -484,6 +528,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressSave ended. returnVaule=" + returnVaule);
+		
 		return returnVaule;
 	}
 	
@@ -492,6 +538,10 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressRead.do")
 	public String addressRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressRead started.");
+		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
+			+ ",type=" + request.getParameter("type"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = config.getProperty("config.EDITOR");
@@ -528,6 +578,11 @@ public class EzAddressController{
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
 		
+		logger.debug("addressRead ended.");
+		logger.debug("useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
+				 + ",addressInfo=" + addressInfo + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",pAddressId=" + pAddressId
+				 + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType);
+		
 		return "ezAddress/addressRead";
 	}
 	
@@ -536,6 +591,10 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressWriteGroup.do")
 	public String addressWriteGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressWriteGroup started.");
+		logger.debug("addressid=" + request.getParameter("addressid") + ",folderid=" + request.getParameter("folderid")
+				+ ",ownerid=" + request.getParameter("ownerid") + ",foldertype=" + request.getParameter("foldertype"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String addressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
@@ -547,10 +606,6 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDeptName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		
-		//TODO: delete
-		String domainName = config.getProperty("config.DomainName");
-		model.addAttribute("domainName", domainName);
-		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("ownerId", ownerId);
@@ -561,6 +616,11 @@ public class EzAddressController{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		
+		logger.debug("addressWriteGroup ended.");
+		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
+				 + ",changeKey=" + changeKey + ",userNM=" + userNM + ",userNM2=" + userNM2 + ",useOcs=" + useOcs
+				 + ",userInfo=" + userInfo);
+		
 		return "ezAddress/addressWriteGroup";
 	}
 	
@@ -569,13 +629,16 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGroupSave.do")
 	@ResponseBody
-	public String addressGroupSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+	public String addressGroupSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
+		logger.debug("addressGroupSave started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
@@ -617,6 +680,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressGroupSave ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -625,6 +690,9 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressReadGroup.do")
 	public String addressReadGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressReadGroup started.");
+		logger.debug("type=" + request.getParameter("type") + ",addressid=" + request.getParameter("addressid"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
@@ -673,6 +741,11 @@ public class EzAddressController{
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		
+		logger.debug("addressReadGroup ended.");
+		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
+				 + ",listMember=" + listMember.toString() + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
+				 + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX);
+		
 		return "ezAddress/addressReadGroup";
 	}
 	
@@ -681,13 +754,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressDelete.do")
 	@ResponseBody
-	public String addressDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressDelete started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-	        String pType = request.getParameter("pType") == null ? "" : request.getParameter("pType");
-	        
-	        Document xmldom = commonUtil.convertRequestToDocument(request);
+	        Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			NodeList ids = xmldom.getElementsByTagName("ID");
 	        
 			String[] addressIds = new String[ids.getLength()];
@@ -700,6 +774,8 @@ public class EzAddressController{
 	        returnValue = "ERROR";
 	    }
 		
+		logger.debug("addressDelete ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -708,6 +784,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressMoveCopy.do")
 	public String addressMoveCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressMoveCopy started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String checkAdmin = "";
@@ -738,6 +816,9 @@ public class EzAddressController{
 		model.addAttribute("companyAdmin", companyAdmin);
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		
+		logger.debug("addressMoveCopy ended.");
+		logger.debug("checkAdmin=" + checkAdmin + ",deptAdmin=" + deptAdmin + ",companyAdmin=" + companyAdmin);
+		
 		return "ezAddress/addressMoveCopy";
 	}
 	
@@ -746,13 +827,16 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressSaveMoveCopy.do")
 	@ResponseBody
-	public String addressSaveMoveCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressSaveMoveCopy(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressSaveMoveCopy started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue="OK";
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 			String folderId = xmldom.getElementsByTagName("NEWFOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
@@ -775,6 +859,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressSaveMoveCopy ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -783,6 +869,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressConfig.do")
 	public String addressConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressConfig started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pListType = ezAddressService.getListType(userInfo.getTenantId(), userInfo.getId());
@@ -799,6 +887,9 @@ public class EzAddressController{
 		model.addAttribute("pListType", pListType);
 		model.addAttribute("listCount", listCount);
 		
+		logger.debug("addressConfig ended.");
+		logger.debug("userInfo=" + userInfo + ",pListType=" + pListType + ",listCount=" + listCount);
+		
 		return "ezAddress/addressConfig";
 	}
 	
@@ -807,11 +898,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressSaveConfig.do")
 	@ResponseBody
-	public String addressSaveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressSaveConfig(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressSaveConfig started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String pUserID = xmldom.getElementsByTagName("USERID").item(0).getTextContent();
 			String pListCnt = xmldom.getElementsByTagName("LISTCNT").item(0).getTextContent();
 			String pListType = xmldom.getElementsByTagName("LISTTYPE").item(0).getTextContent();
@@ -825,6 +919,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressSaveConfig ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -834,12 +930,15 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetCurrentData.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetCurrentData(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressGetCurrentData(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressGetCurrentData started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "";
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String addressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
@@ -877,6 +976,9 @@ public class EzAddressController{
 		} catch (Exception e) {
 			returnValue = "<NewDataSet>" + e.getMessage() + "</NewDataSet>";
 		}
+		
+		logger.debug("addressGetCurrentData ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -885,11 +987,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetGroupEmail.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetGroupEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressGetGroupEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressGetGroupEmail started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue="";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String pAddressId = xmldom.getElementsByTagName("ADDRESSID").item(0).getTextContent();
 			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -922,6 +1027,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressGetGroupEmail ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -932,6 +1039,9 @@ public class EzAddressController{
 	@RequestMapping(value = "/ezAddress/addressGetGroupEmailList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetGroupEmailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("addressGetGroupEmailList started.");
+		logger.debug("id=" + request.getParameter("id"));
+		
 		String returnValue="";
 
 		try {
@@ -960,7 +1070,9 @@ public class EzAddressController{
 			returnValue = "ERROR";
 			e.printStackTrace();
 		}
-
+		
+		logger.debug("addressGetGroupEmailList ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -969,6 +1081,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressFolderManage.do")
 	public String addressFolderManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressFolderManage started. mode=" + request.getParameter("mode"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String companyAdmin = "";
@@ -1008,6 +1122,10 @@ public class EzAddressController{
 		model.addAttribute("title", title);
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		
+		logger.debug("addressFolderManage ended.");
+		logger.debug("companyAdmin=" + companyAdmin + ",deptAdmin=" + deptAdmin + ",noneActiveX=" + noneActiveX + ",show=" + show
+				 + ",title=" + title);
+		
 		return "ezAddress/addressFolderManage";
 	}
 	
@@ -1024,11 +1142,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressAddFolder.do")
 	@ResponseBody
-	public String addressAddFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressAddFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressAddFolder started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String parentId = xmldom.getElementsByTagName("PARENTID").item(0).getTextContent();
 			String folderName = xmldom.getElementsByTagName("NAME").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
@@ -1042,6 +1163,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressAddFolder ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -1050,11 +1173,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressModFolder.do")
 	@ResponseBody
-	public String addressModFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressModFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressModFolder started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String folderName = xmldom.getElementsByTagName("FOLDERNAME").item(0).getTextContent();
 			
@@ -1065,6 +1191,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressModFolder ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -1073,11 +1201,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressDelFolder.do")
 	@ResponseBody
-	public String addressDelFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressDelFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressDelFolder started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			
 			ezAddressService.deleteFolder(folderId);
@@ -1087,6 +1218,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressDelFolder ended. returnVaule=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -1095,11 +1228,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressMoveCopyFolder.do")
 	@ResponseBody
-	public String addressMoveCopyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressMoveCopyFolder(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressMoveCopyFolder started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "OK";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String cmd = xmldom.getElementsByTagName("CMD").item(0).getTextContent();
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String newParentId = xmldom.getElementsByTagName("NEWPARENTID").item(0).getTextContent();
@@ -1119,6 +1255,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressMoveCopyFolder ended. returnValue=" + returnValue);
+		
 		return returnValue;
 	}
 	
@@ -1127,6 +1265,9 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressMainSearch.do")
 	public String addressMainSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressMainSearch started.");
+		logger.debug("orderby=" + request.getParameter("orderby") + ",filter=" + request.getParameter("filter"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String orderBy = "SNAME:0";
@@ -1173,6 +1314,11 @@ public class EzAddressController{
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pListType", pListType);
 		
+		logger.debug("addressMainSearch ended.");
+		logger.debug("userInfo=" + userInfo + ",orderBy=" + orderBy + ",filter=" + filter + ",bAdmin=" + bAdmin
+				 + ",cAdmin=" + cAdmin + ",useEditor=" + useEditor + ",useIE11Browser=" + useIE11Browser + ",noneActiveX=" + noneActiveX
+				 + ",pListType=" + pListType);
+		
 		return "ezAddress/addressMainSearch";
 	}
 	
@@ -1181,7 +1327,10 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetSearchList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetSearchList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+	public String addressGetSearchList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Model model) throws Exception {		
+		logger.debug("addressGetSearchList started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "";
 		
 		try {
@@ -1192,7 +1341,7 @@ public class EzAddressController{
 				strListPageSize = "20";
 			}
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String pIdList = xmldom.getElementsByTagName("IDLIST").item(0).getTextContent().trim();
 			
 			String[] tempIdArr = pIdList.split(",");
@@ -1279,6 +1428,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressGetSearchList ended.");
+		
 		return returnValue;
 	}
 	
@@ -1288,6 +1439,8 @@ public class EzAddressController{
 	@RequestMapping(value = "/ezAddress/addressGetFullTree.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addressGetFullTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressGetFullTree started.");
+		
 		String returnValue = "";
 		
 		try {
@@ -1335,6 +1488,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressGetFullTree ended.");
+		
 		return returnValue;
 		
 	}
@@ -1344,11 +1499,14 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetListMailCall.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetListMailCall(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+	public String addressGetListMailCall(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
+		logger.debug("addressGetListMailCall started.");
+		logger.debug("bodyData=" + bodyData);
+		
 		String returnValue = "";
 		
 		try {
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String folderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String ownerId = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			String field = xmldom.getElementsByTagName("FIELD").item(0).getTextContent();
@@ -1410,6 +1568,8 @@ public class EzAddressController{
 			e.printStackTrace();
 		}
 		
+		logger.debug("addressGetListMailCall ended.");
+		
 		return returnValue;
 	}
 	
@@ -1418,6 +1578,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressSelectGroupMailList.do")
 	public String addressSelectGroupMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("addressSelectGroupMailList started. id=" + request.getParameter("id"));
+		
 		String addressId = request.getParameter("id") == null ? "" : request.getParameter("id");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1436,6 +1598,8 @@ public class EzAddressController{
 		
 		model.addAttribute("list", list);
 		
+		logger.debug("addressSelectGroupMailList ended.");
+		
 		return "ezAddress/addressSelectGroupMailList";
 	}
 	
@@ -1444,13 +1608,15 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/addressGetListMailSearchCall.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String addressGetListMailSearchCall(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+	public String addressGetListMailSearchCall(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {		
+		logger.debug("addressGetListMailSearchCall started.");
+		
 		String returnValue = "";
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			Document xmldom = commonUtil.convertRequestToDocument(request);
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String pFolderId = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			int pListPageSize = Integer.parseInt(xmldom.getElementsByTagName("PAGESIZE").item(0).getTextContent());
 			int pCurrentPage = Integer.parseInt(xmldom.getElementsByTagName("PAGE").item(0).getTextContent());
@@ -1511,6 +1677,9 @@ public class EzAddressController{
 			returnValue = "ERROR";
 			e.printStackTrace();
 		}
+		
+		logger.debug("addressGetListMailSearchCall ended.");
+		
 		return returnValue;
 	}
 	
@@ -1519,6 +1688,9 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/excelExport.do")
 	public void addressExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
+		logger.debug("addressExport started.");
+		logger.debug("folderid=" + request.getParameter("folderid") + ",foldertype=" + request.getParameter("foldertype") + ",ownerid=" + request.getParameter("ownerid"));
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String folderId = request.getParameter("folderid");
@@ -1659,6 +1831,7 @@ public class EzAddressController{
 			}
 		}
 	    
+		logger.debug("addressExport ended.");
 	}
 	
 	/**
@@ -1666,8 +1839,8 @@ public class EzAddressController{
 	 */
 	@RequestMapping(value = "/ezAddress/excelImport.do")
 	public String addressImport(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception {		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        
+		logger.debug("addressImport started.");
+		
 		String folderId = request.getParameter("folderid");
         String folderType = request.getParameter("foldertype");
         String ownerId = request.getParameter("ownerid");
@@ -1680,6 +1853,8 @@ public class EzAddressController{
         	model.addAttribute("result", "ERROR");
             return "ezAddress/addressImportComplete";
         }
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
         
         InputStream stream = null;
         InputStreamReader reader = null;
@@ -1930,6 +2105,9 @@ public class EzAddressController{
         }
         
         model.addAttribute("result", "OK");
+        
+        logger.debug("addressImport ended.");
+        
         return "ezAddress/addressImportComplete";
 	}
 	

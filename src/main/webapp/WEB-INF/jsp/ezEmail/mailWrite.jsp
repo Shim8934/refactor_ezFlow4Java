@@ -64,7 +64,7 @@
 	    var FBigSizeAttachSize = parseInt(BigSizeAttachSize);
 	    var FtotBigSizeAttachSize = parseInt(totBigSizeAttachSize);
 	    var FtotSizeAttachSize = parseInt(totSizeAttachSize);
-	    var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDay}";
+	    var BigSizeMailAttachDelDay = "${bigSizeMailAttachDelDate}";
 	    var charsetControlFlag = "${userLang}";
 	    var userTimezone = "${userTimeset}";
 	    var isPrimary = "${userPrimary}";
@@ -99,9 +99,6 @@
 	    var inMailColor = "${inMailColor}";
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
-	    
-	    //TODO: delete
-	    var domainName = "${domainName}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {

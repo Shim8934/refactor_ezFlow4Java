@@ -147,8 +147,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 	
 		if (commonUtil.checkAdmin(loginCookie)) {
-			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID());
-			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName());
+			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
+			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			model.addAttribute("result", result);
 			model.addAttribute("list", list);
 			model.addAttribute("userInfo", userInfo);
@@ -186,7 +186,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 				pKeyCode = req.getParameter("uID");
 			}
-			result = ezPortalService.getThemeInfo(pKeyCode, "3");
+			result = ezPortalService.getThemeInfo(pKeyCode, "3", userInfo.getTenantId());
 			
 			themeNm1 = result.getDisplayName();
 			themeNm2 = result.getDisplayName2();
@@ -390,7 +390,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	
 		if (commonUtil.checkAdmin(loginCookie)) {
 			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
-			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName());
+			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			logger.debug("ezAclCheck="+result);
 			String returnXML = "";
 			
@@ -616,7 +616,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 			}
 			
-			recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID());
+			recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID(), userInfo.getTenantId());
 			totalPage = (recordCnt - 1) / listPageSize + 1; // 총 페이지수
 			
 			int pStartRow = 0;
@@ -1716,7 +1716,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String pUID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		
-		ezPortalService.deleteCacheValue(pUID, ezPortalService.getAccessList(userInfo));
+		ezPortalService.deleteCacheValue(pUID, ezPortalService.getAccessList(userInfo), userInfo.getTenantId());
 		
 		return "OK";
 	}

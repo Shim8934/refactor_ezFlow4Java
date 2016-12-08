@@ -164,15 +164,31 @@ function MakeHeaderHTML_SUB(HeaderObject) {
         alert(e.description);
     }
 }
+
+function drag(ev) {
+    var szItemID = "";
+
+    for (var i = 0; i < listContentArry.length; i++) {
+        szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
+    }
+
+    if (szItemID != "") {
+        ev.dataTransfer.setData("text", szItemID);
+    }
+    else {
+        if (typeof (ev.target) == "undefined") {
+            ev.dataTransfer.setData("text", GetAttribute(ev.srcElement, "_href") + ",");
+        }
+        else {
+            ev.dataTransfer.setData("text", GetAttribute(ev.target, "_href") + ",");
+        }
+    }
+}
+
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
-        try {
+    	try {
             var XmlList = GetList_HTTP.responseXML;
-
-            if (XmlList == null) {
-                return;
-            }
-
             var XmlRows = SelectNodes(XmlList, "maillist/response");
             var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);            
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
@@ -191,6 +207,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Size = SelectSingleNodeValue(XmlRows[Cnt], "size");
                 var p_Read = SelectSingleNodeValue(XmlRows[Cnt], "read");
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
+                var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
                 _TR.style.cursor = "pointer";
@@ -201,52 +218,22 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_subject", p_Subject);
                 _TR.setAttribute("read", p_Read);
                 _TR.setAttribute("_contentclass", p_ContentClass);
-                if (p_ListorderValue == "GROUPSUBLIST") {
-                    _TR.onmouseover = function () { event_SublistMover(this); };
-                    _TR.onmouseout = function () { event_SublistMout(this); };
-                    _TR.onclick = function () { event_Sublistclick(this); };
-                    _TR.ondblclick = function () { event_SublistDBClick(this);};
-                    _TR.onselectstart = function () { return false; };
-                }
-                else {
-                    _TR.onmouseover = function () { event_listMover(this); };
-                    _TR.onmouseout = function () { event_listMout(this); };
-                    _TR.onclick = function () { event_listclick(this); };
-                    _TR.ondblclick = function () { event_listDBClick(this); };
-                    _TR.onselectstart = function () { return false; };
-                }
+                _TR.setAttribute("_isdraft", p_IsDraft);
+                _TR.setAttribute("draggable", true);
+                _TR.ondragstart = function () { drag(event) };
+            
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.cursor = "default";
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
-                
-                if (p_ListorderValue == "GROUPSUBLIST") { 
-                    _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); }; }
-                else { 
-                    _TDCheckBox_Sub.onclick = function () { 
-                            event.cancelBubble = true;
-                            if (event.stopPropagation) {
-                                event.stopPropagation();
-                            }
-                            
-                            event_listCheckboxclick(this);
-                        };
-                        
-                        _TDCheckBox.onclick = function () {
-                            event.cancelBubble = true;
-                            if (event.stopPropagation) {
-                                event.stopPropagation();
-                            }               
-                            
-                            this.children[0].checked = !this.children[0].checked;
-                            event_listCheckboxclick(this.children[0]);
-                        };
-                }
-                
+                if (p_ListorderValue == "GROUPSUBLIST") { _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); }; }
+                else { _TDCheckBox_Sub.onclick = function () { event_listCheckboxclick(this); }; }
                 _TDCheckBox_Sub.style.margin = "0px";
                 _TDCheckBox_Sub.style.padding = "0px";
                 _TDCheckBox_Sub.style.width = "13px";
                 _TDCheckBox_Sub.style.height = "13px";
+                _TDCheckBox_Sub.style.cursor = "pointer";
                 _TDCheckBox.appendChild(_TDCheckBox_Sub);
                 _TR.appendChild(_TDCheckBox);
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
@@ -257,31 +244,27 @@ function MakeListInfoHTML(ConentObject) {
                         case "importance":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
+                            _TDColum.style.cursor = "default";
+                            _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:default' draggable='false' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:default' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
                             break;
                         case "status":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            _TDColum.style.cursor = "default";
                             _TDColum.innerHTML = GetContentClassImg(p_ContentClass, p_Read);
                             break;
                         case "flag":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.style.cursor = "default";
-                            _TDColum.innerHTML = p_Flag == "0" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/view-flag.gif'/>" : "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-flag.gif'/>";
-                            _TDColum.onclick = function (event) { 
-                            						event_flag(this);
-                            						
-                            					    event.cancelBubble = true;
-                            					    if (event.stopPropagation) {
-                            					        event.stopPropagation();
-                            					    }                            						
-                            					};
+                            _TDColum.style.cursor = "pointer";
+                            _TDColum.innerHTML = p_Flag == "0" ? "<IMG style='cursor:pointer' draggable='false' src='/images/ImgIcon/view-flag.gif'/>" : "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-flag.gif'/>";
+                            _TDColum.onclick = function () { event_flag(this); };
                             break;
                         case "attach":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.innerHTML = p_Attach == "1" ? "<IMG id='imgCol' style='cursor:pointer' src='/images/newAttach.gif'/>" : "";
+                            _TDColum.style.cursor = "default";
+                            _TDColum.innerHTML = p_Attach == "1" ? "<IMG id='imgCol' draggable='false' style='cursor:default' src='/images/newAttach.gif'/>" : "";
                             break;
                         case "sender":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -292,6 +275,11 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Sender;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
+                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
+                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
+                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onselectstart = function () { return false; };
                             break;
                         case "subject":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -302,6 +290,11 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
+                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
+                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
+                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onselectstart = function () { return false; };
                             break;
                         case "receivedt":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -309,6 +302,11 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
+                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
+                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
+                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onselectstart = function () { return false; };
                             break;
                         case "size":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -316,6 +314,11 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = FormatSize(p_Size);
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
+                            _TDColum.onclick = function () { event_listclick(this); };
+                            _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
+                            _TDColum.onmouseout = function () { event_listMout(this.parentElement); };
+                            _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
+                            _TDColum.onselectstart = function () { return false; };
                             break;
                     }
                     _TR.appendChild(_TDColum);
@@ -326,8 +329,6 @@ function MakeListInfoHTML(ConentObject) {
                 mf_updatePageInfo(szRangeHeader)
             else
                 mf_updatePageInfoGroupList(szRangeHeader)
-
-            //MailSelect_One();
         } catch (e) {
             alert(e.description);
         }
@@ -460,7 +461,7 @@ function MakeListInfoHTML_SUB(ConentObject) {
                         case "importance":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
+                            _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:pointer' draggable='false' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
                             break;
                         case "status":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -470,12 +471,12 @@ function MakeListInfoHTML_SUB(ConentObject) {
                         case "flag":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.innerHTML = p_Flag == "0" ? "" : "<IMG style='cursor:pointer' src='/images/ImgIcon/icon-flag.gif'/>";
+                            _TDColum.innerHTML = p_Flag == "0" ? "" : "<IMG style='cursor:pointer' draggable='false' src='/images/ImgIcon/icon-flag.gif'/>";
                             break;
                         case "attach":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
-                            _TDColum.innerHTML = p_Attach == "1" ? "<IMG id='imgCol' style='cursor:pointer' src='/images/ImgIcon/view-paperclip.gif '/>" : "";
+                            _TDColum.innerHTML = p_Attach == "1" ? "<IMG id='imgCol' style='cursor:pointer' draggable='false' src='/images/ImgIcon/view-paperclip.gif '/>" : "";
                             break;
                         case "sender":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -573,7 +574,6 @@ function GetListInfo(HeaderObject, ContentObject) {
     else
         createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
 
-    // 2013.08.01 보낸 편지함 Sorting 처리 
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
 
     GetList_HTTP = createXMLHttpRequest();
@@ -625,7 +625,7 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     }
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
-    // 2013.08.01 보낸 편지함 Sorting 처리 
+    
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
 
     GetList_HTTP_SUB = createXMLHttpRequest();
@@ -640,30 +640,16 @@ function GetListIevent_ongetxmlcomplete() {
     if (GetList_HTTP != null && GetList_HTTP.readyState == 4) {
         if (GetList_HTTP.status >= 200 && GetList_HTTP.status < 300) {
             MakeListInfoHTML(GetListInfo_HeaderObject, GetListInfo_ContentObject);
-
-            if (GetList_HTTP.responseXML != null) {
-            	parent.reloadRetryCount = 1;
-            	
-                if (SelectNodes(GetList_HTTP.responseXML, "maillist/response").length == 0) {
-                    if (parseInt(document.getElementById("MailList").getAttribute("curPage")) > 1) {
-                        goToPageByNum(parseInt(document.getElementById("MailList").getAttribute("curPage")) - 1);
-                        return;
-                    }
+            if (SelectNodes(GetList_HTTP.responseXML, "maillist/response").length == 0) {
+                if (parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) > 1) {
+                    goToPageByNum(parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) - 1);
+                    return;
                 }
-
-                try {
-                    if (document.getElementById("HeaderAllCheckBox") != null)
-                        document.getElementById("HeaderAllCheckBox").checked = false;
-                } catch (e) { }
             }
-            else {
-            	parent.reloadRetryCount--;
-            	
-            	if (parent.reloadRetryCount >= 0) {
-            		location.reload(true);
-            	}
-            }
-
+            try {
+                if (document.getElementById("HeaderAllCheckBox") != null)
+                    document.getElementById("HeaderAllCheckBox").checked = false;
+            } catch (e) { }
             HiddenMailProgress();
             GetList_HTTP = null;
         }
@@ -686,7 +672,7 @@ function on_changeView(listtypeValue) {
     p_ListOrderOption = "DESC";
     switch (listtypeValue) {
         case "BASE":
-        case "PREVIEW": // preview 추가
+        case "PREVIEW": 
             p_ListorderType = "";
             p_ListorderValue = "";
             break;
@@ -816,7 +802,9 @@ function MailListRefresh() {
             on_changeView(document.getElementById("select").value);
         }
     }
-
+    
+    refreshUnreadCount();
+    
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
@@ -866,7 +854,7 @@ function selafterBlock_one() {
 function selbeforeBlock_one() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     var totalPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
-    if (parseInt(pageNum -1) > 1)
+    if (parseInt(pageNum -1) > 0)
         goToPageByNum(parseInt(parseInt(pageNum - 1)));
     else
         return;
@@ -1099,7 +1087,15 @@ function event_listOnkeyUp(event) {
     switch (event.keyCode) {
         case 16: PressShiftKey = false; break;
         case 17: PressCtrlKey = false; break;
-        case 46: deleteWork(false); break;
+        case 46:
+            if (event.shiftKey) {
+                deleteWork(true);
+                PressShiftKey = false;
+            }
+            else {
+                deleteWork(false);
+            }
+            break;
     }
 
 }
@@ -1126,6 +1122,9 @@ var listSubContentArry = new Array();
 var listEventCheckbox = false;
 var listSubEventCheckbox = false;
 function event_listclick(obj) {
+	if (obj.tagName == "TD") {
+        obj = obj.parentElement;
+    }
     if (!listEventCheckbox) {
         if (document.getElementById("HeaderAllCheckBox").checked) {
             var TemplistArray = new Array();
@@ -1148,7 +1147,7 @@ function event_listclick(obj) {
             }
         }
         else {
-            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
+            if (!event.shiftKey && !event.ctrlKey && listContentArry.length > 0) {
                 for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
                     _RowObject = document.getElementById(listContentArry[Cnt]);
                     _RowObject.style.backgroundColor = m_strColorDefault;
@@ -1156,7 +1155,7 @@ function event_listclick(obj) {
                 }
                 listContentArry = new Array();
             }
-            if (PressShiftKey) {
+            if (event.shiftKey) {
                 var SelectedPreObj = null;
                 for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
                     _RowObject = document.getElementById(listContentArry[Cnt]);
@@ -1167,12 +1166,12 @@ function event_listclick(obj) {
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
                 }
                 listContentArry = new Array();
+                _RowObject = obj;
                 var PrelistContent;
                 if (SelectedPreObj == null)
                     PrelistContent = _RowObject.getAttribute("id");
                 else
                     PrelistContent = SelectedPreObj.getAttribute("id");
-                _RowObject = obj;
 
                 var CurlistContent = obj.getAttribute("id");
                 var PrePoint = parseInt(PrelistContent.replace("Maillist_", ""));
@@ -1193,6 +1192,19 @@ function event_listclick(obj) {
                         _RowObject.style.backgroundColor = m_strColorSelect;
                         _RowObject.childNodes.item(0).childNodes.item(0).checked = true;
                         listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                    }
+                }
+                else if (PrePoint == CurPoint) {
+                    if (_RowObject.childNodes.item(0).childNodes.item(0).checked) {
+                        _RowObject.style.backgroundColor = m_strColorDefault;
+                        _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
+                        listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+                    }
+                    else {
+                        _RowObject.style.backgroundColor = m_strColorSelect;
+                        _RowObject.childNodes.item(0).childNodes.item(0).checked = true;
+                        listContentArry[listContentArry.length] = GetAttribute(_RowObject, "id");
+                        prevShow();
                     }
                 }
                 else
@@ -1341,7 +1353,7 @@ function event_SublistCheckboxclick(obj) {
     listSubEventCheckbox = true;
 }
 function event_listDBClick(obj) {
-    callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"));
+    callMsgDlg(obj.getAttribute("_contentclass"), obj.getAttribute("_href"), obj.getAttribute("_isdraft"));
     MailList_ChangeStatus(obj);
 }
 function event_SublistDBClick(obj) {
@@ -1381,7 +1393,8 @@ function event_GrouplistDBClick(obj) {
     }
     if (pGroupListClickObject != null) {
         pGroupListClickObject.style.backgroundColor = m_strColorDefault;
-        try{var SubGroupListTarget = document.getElementById(pGroupListClickObject.getAttribute("id") + "sub")
+        try{
+        	var SubGroupListTarget = document.getElementById(pGroupListClickObject.getAttribute("id") + "sub")
             SubGroupListTarget.style.display = "none";
             SubGroupListTarget.childNodes.item(0).innerHTML = ""
         } catch (e) { }
@@ -1553,5 +1566,5 @@ function GetContentClassImg(ContentClass, isRead) {
                 break;
             }
     }
-    return "<IMG style='cursor:pointer' src='" + Rvalue + "'/>";
+    return "<IMG style='cursor:pointer' draggable='false' src='" + Rvalue + "'/>";
 }

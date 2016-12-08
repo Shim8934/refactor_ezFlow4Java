@@ -57,6 +57,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTopLoadGetParametersVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopSearchTopMenu2VO;
 import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
+import egovframework.ezEKP.ezResource.service.impl.EzResourceAdminServiceImpl;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -88,59 +89,68 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	private Properties globals;
 	
 	@Override
-	public String getTopMenuConfigItem(String itemName, String uID) throws Exception{
+	public String getTopMenuConfigItem(String itemName, String uID, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pITEMNAME", itemName);
 		map.put("v_pUID", uID);
-	
+		map.put("tenantID", tenantID);
+		
 		return ezPortalDAO.getTopMenuConfigItem(map);
 	}
 
 	@Override
-	public void deleteCacheValue(String uID, String accessListID) throws Exception {
+	public void deleteCacheValue(String uID, String accessListID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
 		map.put("v_pACCESSLISTID", accessListID);
-		ezPortalDAO.deleteCacheValue(map);
+		map.put("tenantID", tenantID);
+		
+		if (uID.equals("all")) {
+			ezPortalDAO.deleteCacheValueAll(map);
+		} else {
+			ezPortalDAO.deleteCacheValue(map);
+		}
+		
+		//ezPortalDAO.deleteCacheValue(map);
 	}
 	
 	@Override
-	public String checkCacheValue(String portalPageID, String accessIDList) throws Exception {
+	public String checkCacheValue(String portalPageID, String accessIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PORTALPAGEID", portalPageID);
 		map.put("v_ACCESSIDLIST", accessIDList);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.checkCacheValue(map);
 	}
 	
 	
 	@Override
-	public String topGetTopParentPageID(String uID) throws Exception {
+	public String topGetTopParentPageID(String uID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			String temp = uID;
-			String parentTopMenuID = "";
-			int count = 0;
-			while (count < 10) {
-				map.put("v_pUID", temp);
-				parentTopMenuID = ezPortalDAO.topGetTopParentPageID(map);
-				
-				if (parentTopMenuID != null && parentTopMenuID.toLowerCase().trim().equals("top")) {
-					break;
-				}
-				temp = parentTopMenuID;
-				count ++;
+		
+		String temp = uID;
+		String parentTopMenuID = "";
+		int count = 0;
+		while (count < 10) {
+			map.put("v_pUID", temp);
+			map.put("tenantID", tenantID);
+			parentTopMenuID = ezPortalDAO.topGetTopParentPageID(map);
+			
+			if (parentTopMenuID != null && parentTopMenuID.toLowerCase().trim().equals("top")) {
+				break;
 			}
-			return temp;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			temp = parentTopMenuID;
+			count ++;
 		}
+		return temp;
 	}
 	
 	@Override
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert(String uID) throws Exception {
-		
-		return ezPortalDAO.getRenderedTopMenuInsert(uID);
+	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert(String uID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUID", uID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getRenderedTopMenuInsert(map);
 	}
 
 	@Override
@@ -176,7 +186,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 
 	@Override
 	public void getUserInfo3(String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName,
-			String accessID, String accessName, int viewRight, int editRight, int depth, String companyID) throws Exception {
+			String accessID, String accessName, int viewRight, int editRight, int depth, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", parentUID);
 		map.put("v_pUSERFLAG", userFlag);
@@ -190,21 +200,31 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pEDIT_RIGHT", editRight);
 		map.put("v_pDEPTH", depth);
 		map.put("v_pCOMPANYID", companyID);
-		ezPortalDAO.getUserInfo3(map);
+		map.put("tenantID", tenantID);
+		
+		String temp = ezPortalDAO.getUserInfo3_S(map);
+		
+		if (temp != null && temp.equals("1")) {
+			ezPortalDAO.getUserInfo3_I1(map);
+			ezPortalDAO.getUserInfo3_I2(map);
+		}
+		
+		//ezPortalDAO.getUserInfo3(map);
 	}
 	
 	@Override
-	public int getUserInfo4(String companyID, String creatorID, String gubunFlag, String useFlag) throws Exception {
+	public int getUserInfo4(String companyID, String creatorID, String gubunFlag, String useFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", companyID);
 		map.put("v_pCREATORID", creatorID);
 		map.put("v_pGUBUNFLAG", gubunFlag);
 		map.put("v_pUSEFLAG", useFlag);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getUserInfo4(map);
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageGeneralVO> getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception {
+	public List<PortalTBLPortalPageGeneralVO> getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOUNT", pCount);
 		map.put("v_pUSEFLAG", useFlag);
@@ -212,34 +232,38 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pPARENTUID", parentUID);
 		map.put("v_pUSERID", userID);
 		map.put("v_pGUBUNFLAG", gubunFlag);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getUserInfo5(map);
 				
 	}
 	
 	@Override
-	public String checkEditRight(String uID, String accessIDList) throws Exception {
+	public String checkEditRight(String uID, String accessIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_ACCESSIDLIST", accessIDList);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.checkEditRight(map);
 	}
 	
 
 	@Override
-	public List<PortalTBLPortalPageGeneralVO> searchMyPortalPage2( String pAccessIDList, String pGubunFlag, String pStrRight, String pCompanyID) throws Exception {
+	public List<PortalTBLPortalPageGeneralVO> searchMyPortalPage2( String pAccessIDList, String pGubunFlag, String pStrRight, String pCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pACCESSIDLIST", pAccessIDList);
 		map.put("v_pGUBUNFLAG", pGubunFlag);
 		map.put("v_pSTRRIGHT", pStrRight);
 		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.searchMyPortalPage2(map);
 	}
 	
 	@Override
-	public String checkViewRight(String uID, String accessIDList) throws Exception {
+	public String checkViewRight(String uID, String accessIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_ACCESSIDLIST", accessIDList);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.checkViewRight(map);
 	}
 	
@@ -255,17 +279,19 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalTBLUserInfoVO topGetUserInfo2(String pUserID, String pLang) throws Exception {
+	public PortalTBLUserInfoVO topGetUserInfo2(String pUserID, String pLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSERID", pUserID);
 		map.put("v_pLANG", pLang);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.topGetUserInfo2(map);
 	}
 	
 	@Override
-	public PortalTBLUserInfoVO topGetUserInfo(String pUserID) throws Exception {
+	public PortalTBLUserInfoVO topGetUserInfo(String pUserID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSERID", pUserID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.topGetUserInfo(map);
 	}
 	
@@ -280,10 +306,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalTBLThemeGeneralVO getThemeInfo(String pUID, String pGubun) throws Exception {
+	public PortalTBLThemeGeneralVO getThemeInfo(String pUID, String pGubun, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", pUID);
-		map.put("v_PGUBUN", pGubun); 
+		map.put("v_PGUBUN", pGubun);
+		map.put("tenantID", tenantID); 
 		return ezPortalDAO.getThemeInfo(map);
 	}
 	
@@ -305,134 +332,153 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	@Override
-	public int getMenuItemHtml(String uID) throws Exception {
+	public int getMenuItemHtml(String uID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pUID", uID); 
+		map.put("v_pUID", uID);
+		map.put("tenantID", tenantID); 
 		return ezPortalDAO.getMenuItemHtml(map);
 	}
 	
 	@Override
-	public String getMenuItemConfigItem(String itemName, String uID)throws Exception {
+	public String getMenuItemConfigItem(String itemName, String uID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pITEMNAME", itemName); 
-		map.put("v_pUID", uID); 
+		map.put("v_pUID", uID);
+		map.put("tenantID", tenantID); 
 		return ezPortalDAO.getMenuItemConfigItem(map);
 	}
 	
 	@Override
-	public String getLogoHtml(String pOwnerPageID, String pAccessID) throws Exception {
+	public String getLogoHtml(String pOwnerPageID, String pAccessID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOWNERPAGEID", pOwnerPageID); 
-		map.put("v_pACCESSID", pAccessID);  
+		map.put("v_pACCESSID", pAccessID);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.getLogoHtml(map);
 	}
 	
 	@Override
-	public PortalMenuItemItemsImageVO getImageHtml(String pUID, String pParentUID, int pSkinNum) throws Exception {
+	public PortalMenuItemItemsImageVO getImageHtml(String pUID, String pParentUID, int pSkinNum, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID); 
 		map.put("v_pPARENTUID", pParentUID);
-		map.put("v_pSKINNUM", pSkinNum);  
+		map.put("v_pSKINNUM", pSkinNum);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.getImageHtml(map);
 	}
 	
 	@Override
-	public List<PortalTopLoadGetParametersVO> topLoadGetParameters(String pUID) throws Exception {
+	public List<PortalTopLoadGetParametersVO> topLoadGetParameters(String pUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pUID", pUID);  
+		map.put("v_pUID", pUID);
+		map.put("tenantID", tenantID);  
 		return ezPortalDAO.topLoadGetParameters(map);
 	}
 	
 	@Override
-	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml(String pParentUID, String pOwnerPageID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsVO> getUtilMenuHtml(String pParentUID, String pOwnerPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID); 
 		map.put("v_pOWNERPAGEID", pOwnerPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getUtilMenuHtml(map);
 	}
 	
 	@Override
-	public List<PortalGetMainMenuHtmlVO> getMainMenuHtml(String pParentUID, String pOwnerPageID, int pSkinNum) throws Exception {
+	public List<PortalGetMainMenuHtmlVO> getMainMenuHtml(String pParentUID, String pOwnerPageID, int pSkinNum, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID); 
 		map.put("v_pOWNERPAGEID", pOwnerPageID);
 		map.put("v_pSKINNUM", pSkinNum);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getMainMenuHtml(map);
 	}
 
 	@Override
-	public List<PortalMenuItemItemsMenuItemsVO> getSubMenuHtml(String pOwnerPageID, String pParentUID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsVO> getSubMenuHtml(String pOwnerPageID, String pParentUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOWNERPAGEID", pOwnerPageID); 
 		map.put("v_pPARENTUID", pParentUID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getSubMenuHtml(map);
 	}
 
 	@Override
-	public List<PortalMenuItemItemsMenuItemsSVO> getSubMenuHtml2( String pParentUID) throws Exception {
+	public List<PortalMenuItemItemsMenuItemsSVO> getSubMenuHtml2( String pParentUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getSubMenuHtml2(map);
 	}
 	
 	@Override
-	public String getPortalConfigItem(String pItemName, String pPageID) throws Exception {
+	public String getPortalConfigItem(String pItemName, String pPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPAGEID", pPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getPortalConfigItem(map);
 	}
 	
 	@Override
-	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml( String pPortalPageID) throws Exception {
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml( String pPortalPageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPORTALPAGEID", pPortalPageID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getRenderedPortalPageHtml(map);
 	}
 	
 	@Override
-	public String getTopParentPageID(String pTemp) throws Exception {
+	public String getTopParentPageID(String pTemp, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pTEMP", pTemp);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getTopParentPageID(map);
 	}
 	
 	@Override
-	public String getPortletConfigItem(String pItemName, String pPortletID) throws Exception {
+	public String getPortletConfigItem(String pItemName, String pPortletID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPORTLETID", pPortletID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getPortletConfigItem(map);
 	}
 	
 	@Override
-	public String getItemLastPageID(String temp) throws Exception {
+	public String getItemLastPageID(String temp, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pTEMP", temp);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getItemLastPageID(map);
 	}
 	
 	@Override
-	public void updateCacheValue(String portalPageID, String accessIDList, String renderedHtml) throws Exception {
+	public void updateCacheValue(String portalPageID, String accessIDList, String renderedHtml, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PORTALPAGEID", portalPageID);
 		map.put("v_ACCESSIDLIST", portalPageID);
 		map.put("v_RENDEREDHTML", renderedHtml.replace("'", "''"));
+		map.put("tenantID", tenantID);
+		
+		ezPortalDAO.updateCacheValue_D(map);
 		ezPortalDAO.updateCacheValue(map);
 	}
 	
 	@Override
-	public String portalPageBaseType(String uID, String pCompanyID) throws Exception {
+	public String portalPageBaseType(String uID, String pCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
 		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.portalPageBaseType(map);
 	}
 	
 	@Override
-	public List<PortalGetThemeListVO> getThemeList(String pCompanyID) throws Exception {
+	public List<PortalGetThemeListVO> getThemeList(String pCompanyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PCOMPANYID", pCompanyID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getThemeList(map);
 	}
 	
@@ -470,12 +516,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public void newMyPortalPageCreate3(String pUseFlag, String pUID, String pCompanyID, String pUserID) throws Exception {
+	public void newMyPortalPageCreate3(String pUseFlag, String pUID, String pCompanyID, String pUserID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUID", pUID);
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSERID", pUserID);
+		map.put("tenantID", tenantID);
 		ezPortalDAO.newMyPortalPageCreate3(map);
 	}
 	
@@ -490,10 +537,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalUrlPortletVO urlPortlet(String uID, String creatorID) throws Exception {
+	public PortalUrlPortletVO urlPortlet(String uID, String creatorID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_CREATORID", creatorID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.urlPortlet(map);
 	}
 	
@@ -530,9 +578,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTopLoadGetParametersVO> loadGetParameters(String pPortletID) throws Exception {
+	public List<PortalTopLoadGetParametersVO> loadGetParameters(String pPortletID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPortletID", pPortletID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.loadGetParameters(map);
 	}
 	
@@ -577,18 +626,20 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalNewMyPortalPageListVO> newMyPortalList(String pUserID, String pGubunFlag) throws Exception {
+	public List<PortalNewMyPortalPageListVO> newMyPortalList(String pUserID, String pGubunFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pDISPLAYNAME", pUserID);
 		map.put("v_pGUBUNFLAG", pGubunFlag);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.newMyPortalList(map);
 	}
 	
 	@Override
-	public List<PortalFirstMainListVO> firstMainList(String pUseTopMenuID, String deptPath) throws Exception {
+	public List<PortalFirstMainListVO> firstMainList(String pUseTopMenuID, String deptPath, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSETOPMENUID", pUseTopMenuID);
 		map.put("v_DEPTPATH", deptPath);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.firstMainList(map);
 	}
 	
@@ -661,125 +712,117 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme) {
-		try {
-			if (mode.equals("view")) {
-				String cacheValue = checkCacheValue(topMenuID, getAccessList(userInfo));
-				if (cacheValue != null && !cacheValue.equals("")) {
-					return cacheValue;
-				}
+	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception {
+		if (mode.equals("view")) {
+			String cacheValue = checkCacheValue(topMenuID, getAccessList(userInfo), userInfo.getTenantId());
+			if (cacheValue != null && !cacheValue.equals("")) {
+				return cacheValue;
 			}
-			
-			if (skinNum != null && !skinNum.equals("")) {
-				userInfo.setSkinNum(skinNum);
-			}
-			
-			if (theme != null && !theme.equals("")) {
-				userInfo.setTheme(theme);
-			}
-			
-			StringBuilder sb = new StringBuilder();
-			
-			String pageWidth = "";
-			String pageHeight = "";
-			String pageColumnLength = "";
-			String pageColumnSplit = "";
-			String rootParentUID = topGetTopParentPageID(topMenuID); // 최상위 페이지 ID
-			String boarderValue = "0";
-			int i = 0;
-			
-			StringBuilder dsb = new StringBuilder();
-			if (mode.equals("edit")) {
-				boarderValue = "1";
-				  dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-                  dsb.append("<tr id='main_row'>\n");
-                  dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                  dsb.append("<TBODY>");
-                  dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-                  dsb.append("</TBODY></table></td>");
-                  dsb.append("</tr></table>");
-			}
-			String defaultValue = dsb.toString();
-			
-			PortalGetRenderedTopMenuInsertVO result = getRenderedTopMenuInsert(topMenuID);
-			
-			if (result == null) {
-				return defaultValue;
-			}
-			
-			pageWidth = getTopMenuConfigItem("WIDTH",rootParentUID);
-			pageHeight = getTopMenuConfigItem("HEIGHT",rootParentUID);
-			pageColumnLength = getTopMenuConfigItem("COLUMNLENGTH",rootParentUID);
-			pageColumnSplit = getTopMenuConfigItem("COLUMNSPLIT",rootParentUID);
-			
-			if (mode.equals("edit")) {
-				sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
-                if (!pageWidth.equals("-1") && !pageWidth.equals("0") &&  !pageWidth.toLowerCase().equals("")) {
-                	sb.append("width=" + pageWidth + "px ");
-                } else {
-                	sb.append("width=100% ");
-                }
-                if (!pageHeight.equals("-1") && !pageHeight.equals("0") &&  !pageHeight.toLowerCase().equals("")) {
-                	sb.append("height=" + pageHeight + "px ");
-                } else {
-                	sb.append("height=100% ");
-                }
-                sb.append("style='table-layout:fixed;'>\n");
-                sb.append("<tr id='main_row'>\n");
-			}
-			
-			for (int j=0; j<Integer.parseInt(pageColumnLength); j++) {
-				if (mode.equals("edit")) {
-					String columnWidth = "*";
-					if (j == Integer.parseInt(pageColumnLength) - 1) {
-						sb.append("<TD id=td0 vAlign=top>\n");
-					} else {
-						sb.append("<td id='td" + String.valueOf((i + 1)) + "' valign=top");
-						if (!pageColumnSplit.equals("")) {
-							if (!pageColumnSplit.split(";")[j].equals("") && pageColumnSplit.split(";")[j].equals("*")) {
-								columnWidth = pageColumnSplit.split(";")[j] + "px";
-								sb.append(" style='width:" + columnWidth + "'>\n");
-							}
-						} else {
-							sb.append(">\n");
-						}
-					}
-					sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                    sb.append("<TBODY>\n");
-                    sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                    sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
-                    sb.append("</tbody>\n</table>\n</td>\n");
-					} else {
-						sb.append("<div id= 'top'>\n");
-						sb.append("<header>\n");
-						sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
-						if(theme != "BASIC") {
-	                	  sb.append("</header>\n");
-						}
-					}
-				}
-			 if (mode.equals("edit")) {
-				 sb.append("</tr>\n</table>\n");
-			 } else {
-				 sb.append("</div>\n"); 
-             }
-             
-			 String strPage = sb.toString();
-			 sb = null;
-			 
-			 try {
-				 if (mode.equals("view")) {
-					 updateCacheValue(topMenuID, getAccessList(userInfo), strPage);
-				 }
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			 
-			 return strPage;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
 		}
+		
+		if (skinNum != null && !skinNum.equals("")) {
+			userInfo.setSkinNum(skinNum);
+		}
+		
+		if (theme != null && !theme.equals("")) {
+			userInfo.setTheme(theme);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		String pageWidth = "";
+		String pageHeight = "";
+		String pageColumnLength = "";
+		String pageColumnSplit = "";
+		String rootParentUID = topGetTopParentPageID(topMenuID, tenantID); // 최상위 페이지 ID
+		String boarderValue = "0";
+		int i = 0;
+		
+		StringBuilder dsb = new StringBuilder();
+		if (mode.equals("edit")) {
+			boarderValue = "1";
+			  dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+              dsb.append("<tr id='main_row'>\n");
+              dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+              dsb.append("<TBODY>");
+              dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+              dsb.append("</TBODY></table></td>");
+              dsb.append("</tr></table>");
+		}
+		String defaultValue = dsb.toString();
+		
+		PortalGetRenderedTopMenuInsertVO result = getRenderedTopMenuInsert(topMenuID, tenantID);
+		
+		if (result == null) {
+			return defaultValue;
+		}
+		
+		pageWidth = getTopMenuConfigItem("WIDTH",rootParentUID, tenantID);
+		pageHeight = getTopMenuConfigItem("HEIGHT",rootParentUID, tenantID);
+		pageColumnLength = getTopMenuConfigItem("COLUMNLENGTH",rootParentUID, tenantID);
+		pageColumnSplit = getTopMenuConfigItem("COLUMNSPLIT",rootParentUID, tenantID);
+		
+		if (mode.equals("edit")) {
+			sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+            if (!pageWidth.equals("-1") && !pageWidth.equals("0") &&  !pageWidth.toLowerCase().equals("")) {
+            	sb.append("width=" + pageWidth + "px ");
+            } else {
+            	sb.append("width=100% ");
+            }
+            if (!pageHeight.equals("-1") && !pageHeight.equals("0") &&  !pageHeight.toLowerCase().equals("")) {
+            	sb.append("height=" + pageHeight + "px ");
+            } else {
+            	sb.append("height=100% ");
+            }
+            sb.append("style='table-layout:fixed;'>\n");
+            sb.append("<tr id='main_row'>\n");
+		}
+		
+		for (int j=0; j<Integer.parseInt(pageColumnLength); j++) {
+			if (mode.equals("edit")) {
+				String columnWidth = "*";
+				if (j == Integer.parseInt(pageColumnLength) - 1) {
+					sb.append("<TD id=td0 vAlign=top>\n");
+				} else {
+					sb.append("<td id='td" + String.valueOf((i + 1)) + "' valign=top");
+					if (!pageColumnSplit.equals("")) {
+						if (!pageColumnSplit.split(";")[j].equals("") && pageColumnSplit.split(";")[j].equals("*")) {
+							columnWidth = pageColumnSplit.split(";")[j] + "px";
+							sb.append(" style='width:" + columnWidth + "'>\n");
+						}
+					} else {
+						sb.append(">\n");
+					}
+				}
+				sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+                sb.append("<TBODY>\n");
+                sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
+                sb.append("</tbody>\n</table>\n</td>\n");
+				} else {
+					sb.append("<div id= 'top'>\n");
+					sb.append("<header>\n");
+					sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
+					if(theme != "BASIC") {
+                	  sb.append("</header>\n");
+					}
+				}
+			}
+		 if (mode.equals("edit")) {
+			 sb.append("</tr>\n</table>\n");
+		 } else {
+			 sb.append("</div>\n"); 
+         }
+         
+		 String strPage = sb.toString();
+		 sb = null;
+		 
+		 if (mode.equals("view")) {
+			 updateCacheValue(topMenuID, getAccessList(userInfo), strPage, userInfo.getTenantId());
+		 }
+		
+		 return strPage;
+		
 	}
 	
 	public String getRenderedTopMenuColumn (String pTopMenuID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) {
@@ -830,11 +873,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					if (menuItemMenuItemType.equals("0")) {
 						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex*100+i+1) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'><B>" + menuItemDisplayName + "</B></TD>\n");
 					} else {
-						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex*100+i+1) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo) + "</TD>\n");
+						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex*100+i+1) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo, userInfo.getTenantId()) + "</TD>\n");
 					}
                     sb.append("</TR>\n");
 				} else {  // 보기모드 : HTML로 렌더링
-					sb.append(getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "view", userInfo));
+					sb.append(getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
 			String strPage = sb.toString();
@@ -846,291 +889,265 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getRenderedTopMenuColumnInsert (String pCallingMenuID, String pTopMenuID , String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) {
-		try {
+	public String getRenderedTopMenuColumnInsert (String pCallingMenuID, String pTopMenuID , String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception  {
+		StringBuilder sb = new StringBuilder();
+		String strSQL = "";
+		String parentTopMenuID = pTopMenuID; // 자신의 상위페이지 ID
+		
+		int count = 0;
+		
+		strSQL = "SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex;
+		
+		while (count < 10) {
+			parentTopMenuID = ezPortalDAO.getParentUID(parentTopMenuID);
 			
-			StringBuilder sb = new StringBuilder();
-			String strSQL = "";
-			String parentTopMenuID = pTopMenuID; // 자신의 상위페이지 ID
-			
-			int count = 0;
-			
-			strSQL = "SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex;
-			
-			while (count < 10) {
-				parentTopMenuID = ezPortalDAO.getParentUID(parentTopMenuID);
-				
-				if (parentTopMenuID.toLowerCase().trim().equals("top")) {
-					break;
-				}
-				String param = String.valueOf(count);
-				strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID;
-				count ++;
+			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+				break;
 			}
+			String param = String.valueOf(count);
+			strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID;
+			count ++;
+		}
 
-			List<PortalTBLTopMenuItemsVO> result = getTBLTopMenuItems(strSQL);
-			
-			if (result == null) {
-				return "";
-			}
-			
-			for (int i=0; i<result.size(); i++) {
-				String menuItemMenuItemType = result.get(i).getMenuItemType();
-				String menuItemUID = result.get(i).getuID();
-				String menuItemPageUID = result.get(i).getPageUID();
-				String menuItemDisplayName = result.get(i).getDisplayName();
-				String menuItemHeight = result.get(i).getHeight();
-				String menuItemCanRemove = result.get(i).getCanRemove();
-				String menuItemCanResize = result.get(i).getCanResize();
-				String menuItemCanReplace = result.get(i).getCanReplace();
-				
-				if (pMode.equals("edit")) {
-					if (!menuItemHeight.toLowerCase().equals(""))	{
-						sb.append("<TR style='WIDTH: 100%; HEIGHT: " + menuItemHeight + "px'>\n");
-					} else  {
-						sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
-					}
-					if (menuItemMenuItemType.equals("0")) {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'><B>" + menuItemDisplayName + "</B></TD>\n");
-					} else {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo) + "</TD>\n");
-					}
-                    sb.append("</TR>\n");
-				} else { 
-					if (menuItemMenuItemType.equals("0")) {
-						sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
-					} else {
-						sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo));
-					}
-				}
-			}
-			String strPage = sb.toString();
-			
-			return strPage;
-		} catch (Exception e) {
-			e.printStackTrace();
+		List<PortalTBLTopMenuItemsVO> result = getTBLTopMenuItems(strSQL);
+		
+		if (result == null) {
 			return "";
 		}
+		
+		for (int i=0; i<result.size(); i++) {
+			String menuItemMenuItemType = result.get(i).getMenuItemType();
+			String menuItemUID = result.get(i).getuID();
+			String menuItemPageUID = result.get(i).getPageUID();
+			String menuItemDisplayName = result.get(i).getDisplayName();
+			String menuItemHeight = result.get(i).getHeight();
+			String menuItemCanRemove = result.get(i).getCanRemove();
+			String menuItemCanResize = result.get(i).getCanResize();
+			String menuItemCanReplace = result.get(i).getCanReplace();
+			
+			if (pMode.equals("edit")) {
+				if (!menuItemHeight.toLowerCase().equals(""))	{
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: " + menuItemHeight + "px'>\n");
+				} else  {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+				}
+				if (menuItemMenuItemType.equals("0")) {
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'><B>" + menuItemDisplayName + "</B></TD>\n");
+				} else {
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%' align=middle uid='" + menuItemUID + "' pageuid='" + menuItemPageUID + "' canremove='" + menuItemCanRemove + "' canresize='" + menuItemCanResize + "' canreplace='" + menuItemCanReplace + "'>" + getRenderedTopMenuHTMLInsert(pTopMenuID, menuItemUID, "", "edit", userInfo, userInfo.getTenantId()) + "</TD>\n");
+				}
+                sb.append("</TR>\n");
+			} else { 
+				if (menuItemMenuItemType.equals("0")) {
+					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
+				} else {
+					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
+				}
+			}
+		}
+		String strPage = sb.toString();
+		
+		return strPage;
+		
 	}
 	
-	public String getRenderedTopMenuHTMLInsert (String pCallingMenuID, String pTopMenuID, String pAccessIDList, String pMode, LoginVO userInfo) {
-		try {
-			StringBuilder sb = new StringBuilder();
-			
-			String rootParentUID = topGetTopParentPageID(pTopMenuID);
-			String boarderValue = "0";
-			
-			if (pMode.equals("edit")) {
-				boarderValue = "1";
-			}
-			
-			StringBuilder dsb = new StringBuilder();
-			if (pMode.equals("edit")) {
-				dsb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-                dsb.append("<tr id='main_row'>\n");
-                dsb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                dsb.append("<TBODY>");
-                dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-                dsb.append("</TBODY></table></td>");
-                dsb.append("</tr></table>");
-			}
-			
-			String defaultValue = dsb.toString();
-			dsb = null;
-			
-			PortalGetRenderedTopMenuInsertVO result = getRenderedTopMenuInsert(pTopMenuID);
-			
-			if (result == null) {
-				return defaultValue;
-			}
-			
-			String pageWidth = getTopMenuConfigItem("WIDTH",rootParentUID);
-			String pageHeight = getTopMenuConfigItem("HEIGHT",rootParentUID);
-			String pageColumnLength = getTopMenuConfigItem("COLUMNLENGTH",rootParentUID);
-			String pageColumnSplit = getTopMenuConfigItem("COLUMNSPLIT",rootParentUID);
-			
-			if (pMode.equals("edit")) {
-				sb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
-				if (!pageWidth.equals("0") && !pageWidth.equals("-1") && !pageWidth.equals("")) {
-					sb.append("width=" + pageWidth + "px ");
-				} else {
-					sb.append("width=100% ");
-				}
-				if (!pageHeight.equals("0") && !pageHeight.equals("-1") && !pageHeight.equals("")) {
-					sb.append("height=" + pageHeight + "px ");
-				} else {
-					sb.append("height=100% ");
-				}
-				sb.append("style='table-layout:fixed;'>\n");
-                sb.append("<tr id='main_row'>\n");
-			}
-			
-			for (int i=0; i<Integer.parseInt(pageColumnLength); i++) {
-				if (pMode.equals("edit")) {
-					String columnWidth = "*";
-					if (i == Integer.parseInt(pageColumnLength) - 1) {
-						sb.append("<TD id='td0" + UUID.randomUUID().toString().substring(0, 4) + "' vAlign=top>\n");
-					} else {
-						sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
-						if (!pageColumnSplit.equals("")) {
-							if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-								columnWidth = pageColumnSplit.split(";")[i] + "px";
-								sb.append(" style='width:" + columnWidth + "'>\n");
-							}
-						} else {
-							sb.append(">\n");
-						}
-					}
-					sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                    sb.append("<TBODY>\n");
-                    if (pMode == "edit") {
-                    	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                    }
-                    sb.append(getRenderedTopMenuColumnInsert(pCallingMenuID, pTopMenuID, pAccessIDList, i + 1, pMode, userInfo));
-                    sb.append("</tbody>\n</table>\n</td>\n");
-				} else {
-					sb.append(getRenderedTopMenuColumnInsert(pCallingMenuID, pTopMenuID, pAccessIDList, i + 1, pMode, userInfo));
-					}
-				}
-				if (pMode.equals("edit")) {
-					sb.append("</tr>\n</table>\n");
-				}
-				String strPage = sb.toString();
-				sb = null;
-				
-				return strPage;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+	public String getRenderedTopMenuHTMLInsert (String pCallingMenuID, String pTopMenuID, String pAccessIDList, String pMode, LoginVO userInfo, int tenantID) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		String rootParentUID = topGetTopParentPageID(pTopMenuID, tenantID);
+		String boarderValue = "0";
+		
+		if (pMode.equals("edit")) {
+			boarderValue = "1";
 		}
+		
+		StringBuilder dsb = new StringBuilder();
+		if (pMode.equals("edit")) {
+			dsb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+            dsb.append("<tr id='main_row'>\n");
+            dsb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+            dsb.append("<TBODY>");
+            dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+            dsb.append("</TBODY></table></td>");
+            dsb.append("</tr></table>");
+		}
+		
+		String defaultValue = dsb.toString();
+		dsb = null;
+		
+		PortalGetRenderedTopMenuInsertVO result = getRenderedTopMenuInsert(pTopMenuID, tenantID);
+		
+		if (result == null) {
+			return defaultValue;
+		}
+		
+		String pageWidth = getTopMenuConfigItem("WIDTH",rootParentUID, tenantID);
+		String pageHeight = getTopMenuConfigItem("HEIGHT",rootParentUID, tenantID);
+		String pageColumnLength = getTopMenuConfigItem("COLUMNLENGTH",rootParentUID, tenantID);
+		String pageColumnSplit = getTopMenuConfigItem("COLUMNSPLIT",rootParentUID, tenantID);
+		
+		if (pMode.equals("edit")) {
+			sb.append("<table id='main_table_" + UUID.randomUUID().toString().substring(0, 4) + "' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+			if (!pageWidth.equals("0") && !pageWidth.equals("-1") && !pageWidth.equals("")) {
+				sb.append("width=" + pageWidth + "px ");
+			} else {
+				sb.append("width=100% ");
+			}
+			if (!pageHeight.equals("0") && !pageHeight.equals("-1") && !pageHeight.equals("")) {
+				sb.append("height=" + pageHeight + "px ");
+			} else {
+				sb.append("height=100% ");
+			}
+			sb.append("style='table-layout:fixed;'>\n");
+            sb.append("<tr id='main_row'>\n");
+		}
+		
+		for (int i=0; i<Integer.parseInt(pageColumnLength); i++) {
+			if (pMode.equals("edit")) {
+				String columnWidth = "*";
+				if (i == Integer.parseInt(pageColumnLength) - 1) {
+					sb.append("<TD id='td0" + UUID.randomUUID().toString().substring(0, 4) + "' vAlign=top>\n");
+				} else {
+					sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
+					if (!pageColumnSplit.equals("")) {
+						if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+							columnWidth = pageColumnSplit.split(";")[i] + "px";
+							sb.append(" style='width:" + columnWidth + "'>\n");
+						}
+					} else {
+						sb.append(">\n");
+					}
+				}
+				sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+                sb.append("<TBODY>\n");
+                if (pMode == "edit") {
+                	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                }
+                sb.append(getRenderedTopMenuColumnInsert(pCallingMenuID, pTopMenuID, pAccessIDList, i + 1, pMode, userInfo));
+                sb.append("</tbody>\n</table>\n</td>\n");
+			} else {
+				sb.append(getRenderedTopMenuColumnInsert(pCallingMenuID, pTopMenuID, pAccessIDList, i + 1, pMode, userInfo));
+				}
+			}
+			if (pMode.equals("edit")) {
+				sb.append("</tr>\n</table>\n");
+			}
+			String strPage = sb.toString();
+			sb = null;
+			
+			return strPage;
+			
+	
 	}
 		
-	public boolean checkEditRightBln (String pUID, String pAccessIDList) {
-		try {
-			for (int i=0; i<pAccessIDList.split(",").length; i++) {
-				String right = checkEditRight(pUID, pAccessIDList.split(",")[i].trim());
-				if (right != null && right.equals("2")) {
-					return true;
-				}
-				if (right != null && right.equals("1")) {
-					return false;
-				}
+	public boolean checkEditRightBln (String pUID, String pAccessIDList, int tenantID) throws Exception {
+		for (int i=0; i<pAccessIDList.split(",").length; i++) {
+			String right = checkEditRight(pUID, pAccessIDList.split(",")[i].trim(), tenantID);
+			if (right != null && right.equals("2")) {
+				return true;
 			}
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			if (right != null && right.equals("1")) {
+				return false;
+			}
 		}
+		return false;
 	}
 	
-	public boolean checkViewRightBln (String pUID, String pAccessIDList) {
-		try {
-			for (int i=0; i<pAccessIDList.split("\\,").length; i++) {
-				String right = checkViewRight(pUID, pAccessIDList.split("\\,")[i].trim());
+	public boolean checkViewRightBln (String pUID, String pAccessIDList, int tenantID) throws Exception {
+		for (int i=0; i<pAccessIDList.split("\\,").length; i++) {
+			String right = checkViewRight(pUID, pAccessIDList.split("\\,")[i].trim(), tenantID);
 
-				if (right != null && right.equals("2")) {
-					return true;
-				}
-				if (right != null && right.equals("1")) {
-					return false;
-				}
+			if (right != null && right.equals("2")) {
+				return true;
 			}
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			if (right != null && right.equals("1")) {
+				return false;
+			}
 		}
+		return false;
 	}
 	
-	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale) {
-		try {
-			if (("edit").equals(pMode)) {
-				if (checkEditRightBln(parentUID, getAccessList(userInfo)) == true) {
-					String newPageID = UUID.randomUUID().toString();
-					getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, egovMessageSource.getMessage("ezPortal.t990038", locale), egovMessageSource.getMessage("ezPortal.t990037", locale), 2, 2, 2, pCompanyID);
-				}
+	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale, int tenantID) throws Exception {
+		if (("edit").equals(pMode)) {
+			if (checkEditRightBln(parentUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+				String newPageID = UUID.randomUUID().toString();
+				getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, egovMessageSource.getMessage("ezPortal.t990038", locale), egovMessageSource.getMessage("ezPortal.t990037", locale), 2, 2, 2, pCompanyID, userInfo.getTenantId());
 			}
-			
-			int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y");
-			
-			List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag);
-			
-			String result = "";
-			result = "<DATA>";
-			for (int i=0; i<resultXML.size(); i++) {
-				result += commonUtil.getQueryResult(resultXML.get(i));
-			}
-			result += "</DATA>";
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "</DATA>";
 		}
+		
+		int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y", userInfo.getTenantId());
+		logger.debug("resultNumber="+resultNumber);
+		logger.debug("pCompanyID="+pCompanyID);
+		logger.debug("pUserID="+pUserID);
+		logger.debug("pGubunFlag="+pGubunFlag);
+		List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag, userInfo.getTenantId());
+		
+		String result = "";
+		result = "<DATA>";
+		for (int i=0; i<resultXML.size(); i++) {
+			result += commonUtil.getQueryResult(resultXML.get(i));
+		}
+		result += "</DATA>";
+		return result;
 	}
 	
-	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) {
-		try {
-			List<PortalTBLPortalPageGeneralVO> result = new ArrayList<PortalTBLPortalPageGeneralVO>();
-			String strRight = "";
+	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception {
+		List<PortalTBLPortalPageGeneralVO> result = new ArrayList<PortalTBLPortalPageGeneralVO>();
+		String strRight = "";
+		if (pMode.equals("view")) {
+			strRight = "B.View_Right=2";
+		} else {
+			strRight = "B.Edit_Right=2";
+		}
+		
+		boolean bExist = false;
+		String pAccessIDList = getAccessList(userInfo);
+		
+		for (int i=0; i<pAccessIDList.split(",").length; i++) {
+			result = searchMyPortalPage2(pAccessIDList.split(",")[i].trim(), pGubunFlag, strRight, pCompanyID, userInfo.getTenantId());
+			if (result.size() > 0) {
+				bExist = true;
+			}
+			
+			if (bExist == true) {
+				break;
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		for (int i=0; i<result.size(); i++) {
 			if (pMode.equals("view")) {
-				strRight = "B.View_Right=2";
+				if (checkViewRightBln(result.get(i).getuID().trim(), pAccessIDList,userInfo.getTenantId()) == true) {
+					sb.append("<ROW>");
+					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
+                    sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+                    sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
+                    sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
+                    sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
+                    sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
+                    sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
+                    sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+                    sb.append("</ROW>");
+				}
 			} else {
-				strRight = "B.Edit_Right=2";
-			}
-			
-			boolean bExist = false;
-			String pAccessIDList = getAccessList(userInfo);
-			
-			for (int i=0; i<pAccessIDList.split(",").length; i++) {
-				result = searchMyPortalPage2(pAccessIDList.split(",")[i].trim(), pGubunFlag, strRight, pCompanyID);
-				if (result.size() > 0) {
-					bExist = true;
-				}
-				
-				if (bExist == true) {
-					break;
+				if (checkEditRightBln(result.get(i).getuID().trim(), pAccessIDList, userInfo.getTenantId()) == true) {
+					sb.append("<ROW>");
+					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
+                    sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+                    sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
+                    sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
+                    sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
+                    sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
+                    sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
+                    sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+                    sb.append("</ROW>");
 				}
 			}
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<DATA>");
-			for (int i=0; i<result.size(); i++) {
-				if (pMode.equals("view")) {
-					if (checkViewRightBln(result.get(i).getuID().trim(), pAccessIDList) == true) {
-						sb.append("<ROW>");
-						sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-                        sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
-                        sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-                        sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-                        sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                        sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-                        sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                        sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
-                        sb.append("</ROW>");
-					}
-				} else {
-					if (checkEditRightBln(result.get(i).getuID().trim(), pAccessIDList) == true) {
-						sb.append("<ROW>");
-						sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-                        sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
-                        sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-                        sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-                        sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                        sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-                        sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                        sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
-                        sb.append("</ROW>");
-					}
-				}
-			}
-			sb.append("</DATA>");
-			
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "</DATA>";
 		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 	
 	public String searchTopMenu (String pDisplayName, String pUseFlag, int pStartRow, int pEndRow, String pAccessIDList, String langStr, String pCompanyID) {
@@ -1190,99 +1207,72 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getUserInfo (String pUserID, String langStr) {
-		try {
-			PortalTBLUserInfoVO result = topGetUserInfo2(pUserID, langStr);
-			String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+	public String getUserInfo (String pUserID, String langStr, int tenantID) throws Exception {
+		PortalTBLUserInfoVO result = topGetUserInfo2(pUserID, langStr, tenantID);
+		String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 
-			if (resultXML.equals("<DATA></DATA>")) {
-				resultXML = getUserInfo(pUserID);
-			}
-			return resultXML;	
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "</DATA>";
+		if (resultXML.equals("<DATA></DATA>")) {
+			resultXML = getUserInfo(pUserID, tenantID);
 		}
+		return resultXML;	
 	}
 		
-	public String getUserInfo (String pUserID) {
-		try {
-			PortalTBLUserInfoVO result = topGetUserInfo(pUserID);
-				
-			String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
-				
-			return resultXML;	
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "</DATA>";
-		}
+	public String getUserInfo (String pUserID, int tenantID) throws Exception {
+		PortalTBLUserInfoVO result = topGetUserInfo(pUserID, tenantID);
+			
+		String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+		return resultXML;	
 	}
 	
-	public String getThemeInfoStr (String pThemeUID, String pGubun) {
-		try {
-			PortalTBLThemeGeneralVO result = getThemeInfo(pThemeUID, pGubun); 
-			return "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
-		}
+	public String getThemeInfoStr (String pThemeUID, String pGubun, int tenantID) throws Exception {
+		PortalTBLThemeGeneralVO result = getThemeInfo(pThemeUID, pGubun, tenantID); 
+		return "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 	}
 	
 	public String getMenuItemHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
-		try {
-			String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID) + "' frameborder=0 scrolling=no></iframe>";
-			
-			int result = getMenuItemHtml(pUID);
-			
-			switch (result) {
-			case 1:
-				 strHTML = "<div class='logo'>";
-				 strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
-                 strHTML += "</div>";
-				break;
-			case 2:
-				strHTML = getUtilMenuHTML(pCallingMenuID, pUID, userInfo);
-				break;
-			case 3:
-				strHTML = getMainMenuHTML(pCallingMenuID, pUID, userInfo);
-				break;
-			case 4:
-				strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);
-				break;
-			case 5:
-				strHTML = getSearchHTML(pCallingMenuID, pUID);
-				break;
-			case 7:
-				strHTML = getUserInfoHTML(pCallingMenuID, pUID);
-				break;
-			default:
-				break;
-			}
-			
-			return strHTML;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID) + "' frameborder=0 scrolling=no></iframe>";
+		String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID, userInfo.getTenantId()) + "' frameborder=0 scrolling=no></iframe>";
+		
+		int result = getMenuItemHtml(pUID, userInfo.getTenantId());
+		
+		switch (result) {
+		case 1:
+			 strHTML = "<div class='logo'>";
+			 strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
+             strHTML += "</div>";
+			break;
+		case 2:
+			strHTML = getUtilMenuHTML(pCallingMenuID, pUID, userInfo);
+			break;
+		case 3:
+			strHTML = getMainMenuHTML(pCallingMenuID, pUID, userInfo);
+			break;
+		case 4:
+			strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);
+			break;
+		case 5:
+			strHTML = getSearchHTML(pCallingMenuID, pUID);
+			break;
+		case 7:
+			strHTML = getUserInfoHTML(pCallingMenuID, pUID);
+			break;
+		default:
+			break;
 		}
+		return strHTML;
 	}
 	
-	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) {
-		try {
-			String pUID = "";
-			String pAccessIDList = getAccessList(userInfo);
+	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) throws Exception {
+		String pUID = "";
+		String pAccessIDList = getAccessList(userInfo);
+		
+		for (int i=0; i<pAccessIDList.split(",").length; i++) {
+			pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim(), userInfo.getTenantId());
 			
-			for (int i=0; i<pAccessIDList.split(",").length; i++) {
-				pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim());
-				
-				if (pUID != null) {
-					break;
-				}
+			if (pUID != null) {
+				break;
 			}
-			return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
 		}
+		return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
 	}
 	
 	public String getImageHTML (String pCallingMenuID, String pUID, boolean pIncludeTD, String pContentsUID, LoginVO userInfo) {
@@ -1296,7 +1286,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			
 			StringBuilder sb = new StringBuilder();
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum));
+			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
 
 			if (result != null) {
 				String imageNormalImagePath = result.getNormalImagePath();
@@ -1346,70 +1336,60 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) {
-		try {
-			List<PortalTopLoadGetParametersVO> result = topLoadGetParameters(pMenuItemID);
-			
-			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
-			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
-			String strParam = "";
-			
-			for (int i=0; i<result.size(); i++) {
-				if (pURL.indexOf("?") == -1) {
-					if (strParam == null || strParam.equals("")) {
-						strParam += "?";
-					} else {
-						strParam += "&";
-					}
+	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception {
+		List<PortalTopLoadGetParametersVO> result = topLoadGetParameters(pMenuItemID, userInfo.getTenantId());
+		
+		String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+		Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+		String strParam = "";
+		
+		for (int i=0; i<result.size(); i++) {
+			if (pURL.indexOf("?") == -1) {
+				if (strParam == null || strParam.equals("")) {
+					strParam += "?";
 				} else {
 					strParam += "&";
 				}
-				
-				if (result.get(i).getParamType() == 0) {
-					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
-				} else {
-					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
-				}
-				
+			} else {
+				strParam += "&";
 			}
-			return strParam;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			
+			if (result.get(i).getParamType() == 0) {
+				strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
+			} else {
+				strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+			}
+			
 		}
+		return strParam;
 	}
 	
-	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) {
-		try {
-			List<PortalTopLoadGetParametersVO> result = loadGetParameters(pPortletID);
-			
-			String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
-			Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
-			String strParam = "";
-			
-			for (int i=0; i<result.size(); i++) {
-				if (pURL.indexOf("?") == -1) {
-					if (strParam == null || strParam.equals("")) {
-						strParam += "?";
-					} else {
-						strParam += "&";
-					}
+	public String loadGetParameters (String pURL, String pPortletID, LoginVO userInfo) throws Exception {
+		List<PortalTopLoadGetParametersVO> result = loadGetParameters(pPortletID, userInfo.getTenantId());
+		
+		String userInfoXML = "<DATA>"+commonUtil.getQueryResult(userInfo)+"</DATA>";
+		Document xmlDomUserInfo = commonUtil.convertStringToDocument(userInfoXML);
+		String strParam = "";
+		
+		for (int i=0; i<result.size(); i++) {
+			if (pURL.indexOf("?") == -1) {
+				if (strParam == null || strParam.equals("")) {
+					strParam += "?";
 				} else {
 					strParam += "&";
 				}
-				
-				if (result.get(i).getParamType() == 0) {
-					strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
-				} else {
-					strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
-				}
-				
+			} else {
+				strParam += "&";
 			}
-			return strParam;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			
+			if (result.get(i).getParamType() == 0) {
+				strParam += result.get(i).getParamName() + "=" + result.get(i).getParamValue();
+			} else {
+				strParam += result.get(i).getParamName() + "=" + xmlDomUserInfo.getElementsByTagName(result.get(i).getParamInfo());
+			}
+			
 		}
+		return strParam;
 	}
 	
 	public String loadGetParametersXML (String pURL, String pXML, LoginVO userInfo) {
@@ -1446,150 +1426,136 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID);
-			StringBuilder sb = new StringBuilder();
-			sb.append("<article class='utmenu'>\n");
-			sb.append("<ul>\n");
-			
-			String lastLogout = "";
+	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
+		StringBuilder sb = new StringBuilder();
+		sb.append("<article class='utmenu'>\n");
+		sb.append("<ul>\n");
+		
+		String lastLogout = "";
 
-			for (int i=0; i<result.size(); i++) {
-				logger.debug("uID="+result.get(i).getuID());
-				logger.debug("accessID="+getAccessList(userInfo));
-				if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo)) == false) {
+		for (int i=0; i<result.size(); i++) {
+			logger.debug("uID="+result.get(i).getuID());
+			logger.debug("accessID="+getAccessList(userInfo));
+			if (checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId()) == false) {
+				continue;
+			}
+			logger.debug("getUtilMenuHtml="+result.get(i));
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemImageUID = result.get(i).getImageUId();
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
+			if (menuitemLinkLocation == null) {
+				menuitemLinkLocation = "";
+			}
+			logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
+			String menuitemWindowOption = result.get(i).getWindowOption();
+			
+			if (i == result.size() - 1) {
+				lastLogout = "class='btn_logout'";
+			}
+			
+			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
+				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
+			} else {
+				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+					if (i == result.size() - 1) {
+						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
+					} else {
+						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+						sb.append(", \"" + menuitemLinkLocation + "\"");
+                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+					}
+                      
+				} else {
+					sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
+				}
+			}
+		}
+		sb.append("</ul></article>\n");
+		return sb.toString();
+	}
+	
+	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder();
+        if (userInfo.getTheme().equals("BASIC")) {
+        	sb.append("</header>\n");
+        }
+		sb.append("<nav>\n");
+        sb.append("<ul class='topmenu'>");
+        
+        for (int i=0; i<result.size(); i++) {
+			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+				continue;
+			}
+			
+			String menuitemUID = result.get(i).getuID();
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemImageUID = result.get(i).getImageUId();
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			String menuitemLinkLocation = result.get(i).getLinkLocation();
+			String menuitemWindowOption = result.get(i).getWindowOption();
+			String menuitemNormalImagePath = result.get(i).getNormalImagePath();
+
+			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
+				sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
+			} else {
+				sb.append("<li ");
+				
+				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+                    sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+					sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
+				}
+				
+				sb.append(">" + menuitemDisplayName + "</li>");
+			}
+        }
+        
+        sb.append("</ul></nav>");
+		return sb.toString();
+	
+	}
+	
+	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(" <div class=\"topSubMenu\">");
+		
+		for (int i=0; i<result.size(); i++) {
+			String leftMargin = result.get(i).getLeftMargin();
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID(), userInfo.getTenantId());
+			
+			if (result2.size() == 0) {
+				 sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
+				continue;
+			}
+			String parentMenuID = result2.get(0).getParentMenuID();
+			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover()\" onmouseout=\"submenuout()\"><li class=\"left\">");
+			for (int j=0; j<result2.size(); j++) {
+				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 					continue;
 				}
-				logger.debug("getUtilMenuHtml="+result.get(i));
-				String menuitemDisplayName = result.get(i).getDisplayName();
-				String menuitemImageUID = result.get(i).getImageUId();
-				String menuitemLinkURL = result.get(i).getLinkURL();
-				String menuitemLinkLocation = result.get(i).getLinkLocation();
-				if (menuitemLinkLocation == null) {
-					menuitemLinkLocation = "";
-				}
-				logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
-				String menuitemWindowOption = result.get(i).getWindowOption();
-				
-				if (i == result.size() - 1) {
-					lastLogout = "class='btn_logout'";
-				}
+				String menuitemDisplayName = result2.get(j).getDisplayName();
+				String menuitemImageUID = result2.get(j).getImageUId();
+				String menuitemLinkURL = result2.get(j).getLinkURL();
+				String menuitemLinkLocation = result2.get(j).getLinkLocation();
+				String menuitemWindowOption = result2.get(j).getWindowOption();
 				
 				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
-					sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
+					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 				} else {
-					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-						if (i == result.size() - 1) {
-							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
-						} else {
-							sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-							sb.append(", \"" + menuitemLinkLocation + "\"");
-	                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
-						}
-                          
-					} else {
-						sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
-					}
+					sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
 				}
 			}
-			sb.append("</ul></article>\n");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			sb.append("<li class=\"right\"></ul>");
 		}
-	}
+		sb.append("</div>\n");
+		return sb.toString();
 	
-	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()));
-			
-
-			StringBuilder sb = new StringBuilder();
-            if (userInfo.getTheme().equals("BASIC")) {
-            	sb.append("</header>\n");
-            }
-			sb.append("<nav>\n");
-            sb.append("<ul class='topmenu'>");
-            
-            for (int i=0; i<result.size(); i++) {
-				if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo))) {
-					continue;
-				}
-				
-				String menuitemUID = result.get(i).getuID();
-				String menuitemDisplayName = result.get(i).getDisplayName();
-				String menuitemImageUID = result.get(i).getImageUId();
-				String menuitemLinkURL = result.get(i).getLinkURL();
-				String menuitemLinkLocation = result.get(i).getLinkLocation();
-				String menuitemWindowOption = result.get(i).getWindowOption();
-				String menuitemNormalImagePath = result.get(i).getNormalImagePath();
-
-				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
-					sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
-				} else {
-					sb.append("<li ");
-					
-					if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-                        sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-						sb.append(", \"" + menuitemLinkLocation + "\"");
-						sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
-					}
-					
-					sb.append(">" + menuitemDisplayName + "</li>");
-				}
-            }
-            
-            sb.append("</ul></nav>");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-	
-	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) {
-		try {
-			List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID);
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append(" <div class=\"topSubMenu\">");
-			
-			for (int i=0; i<result.size(); i++) {
-				String leftMargin = result.get(i).getLeftMargin();
-				List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID());
-				
-				if (result2.size() == 0) {
-					 sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
-					continue;
-				}
-				String parentMenuID = result2.get(0).getParentMenuID();
-				sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover()\" onmouseout=\"submenuout()\"><li class=\"left\">");
-				for (int j=0; j<result2.size(); j++) {
-					if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo))) {
-						continue;
-					}
-					String menuitemDisplayName = result2.get(j).getDisplayName();
-					String menuitemImageUID = result2.get(j).getImageUId();
-					String menuitemLinkURL = result2.get(j).getLinkURL();
-					String menuitemLinkLocation = result2.get(j).getLinkLocation();
-					String menuitemWindowOption = result2.get(j).getWindowOption();
-					
-					if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
-						sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
-					} else {
-						sb.append("<li onclick=\"javascript:submenuclick('" + result2.get(j).getuID() + "');OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
-					}
-				}
-				sb.append("<li class=\"right\"></ul>");
-			}
-			sb.append("</div>\n");
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
 	}
 	
 	public String getSearchHTML (String pCallingMenuID, String pUID) {
@@ -1632,7 +1598,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			
 			StringBuilder sb = new StringBuilder();
 			
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum));
+			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
 
 			if (result != null) {
                 String imageNormalImagePath = result.getNormalImagePath();
@@ -1694,221 +1660,196 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption) {
-		try {
-			if (pTheme != null && !pTheme.trim().equals("")) {
-				userInfo.setTheme(pTheme);
-			}
-			
-			if (pTableViewOption != null && !pTableViewOption.trim().equals("")) {
-				userInfo.setTableViewOption(pTableViewOption);
-			}
-			
-			if (pMode.equals("view")) {
-				if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo))) {
-					return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
-				}
-				String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo));
-
-				if (cacheValue != null && !cacheValue.trim().equals("")) {
-					return cacheValue;
-				}
-			}
-		
-			StringBuilder sb = new StringBuilder();
-            String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
-
-            String RootParentUID = getTopParentPageIDStr(pPortalPageID);
-
-            String boarderValue = "0";
-            int i= 0;
-            if (pPortalPageID.equals(RootParentUID)) {
-            	userInfo.setRootPage(true);
-            }
-            if (pMode.equals("edit")) {
-            	boarderValue = "1";
-            }
-
-            StringBuilder dsb = new StringBuilder();
-            dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-            dsb.append("<tr id='main_row'>\n");
-            dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-            dsb.append("<TBODY>");
-            if (pMode.equals("edit")) {
-            	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-            }
-            dsb.append("</TBODY></table></td>");
-            dsb.append("</tr></table>");
-            
-            String defaultValue = dsb.toString();
-
-            PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
-
-            if (result == null) {
-            	return defaultValue;
-            }
-            
-            pageWidth = getPortalConfigItem("Width",RootParentUID);
-            pageHeight = getPortalConfigItem("Height",RootParentUID);
-            pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID);
-            pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID);
-
-            if (pMode.equals("edit")) {
-            	sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
-                if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
-                else sb.append("width=100% ");
-                if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
-                else sb.append("height=100% ");
-                sb.append("style='table-layout:fixed;'>\n");
-                sb.append("<tr id='main_row'>\n");
-            } else {
-            	if (userInfo.getTheme().equals("BASIC")) {
-            		sb.append("<div id='Center'>");
-            	}
-            }
-            	for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
-            		if (pMode.equals("edit")) {
-            			String columnWidth = "*";
-            			if (i == Integer.parseInt(pageColumnLength) - 1) {
-            				sb.append("<TD id=td0 vAlign=top");
-            				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
-            					if (pageColumnSplit.split("\\;")[i] != null && !pageColumnSplit.split("\\;")[i].equals("") && !pageColumnSplit.split("\\;")[i].equals("*")) {
-            						columnWidth = pageColumnSplit.split("\\;")[i] + "px";
-            						if (columnWidth.equals("9999px")) {
-            							sb.append(">\n");
-            						} else {
-            							sb.append(" style='width:" + columnWidth + "'>\n");
-            						}
-            					} else {
-            						sb.append(">\n");
-            					}
-            				} else {
-            					sb.append(">\n");
-            				}
-            			} else {
-            				sb.append("<td id='td" + String.valueOf(i + 1) + "' valign=top");
-            				if (!pageColumnSplit.equals("")) {
-            					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-            						columnWidth = pageColumnSplit.split(";")[i] + "px";
-            						if (columnWidth.equals("9999px")) {
-            							sb.append(">\n");
-            						} else {
-            							sb.append(" style='width:" + columnWidth + "'>\n");
-            						}
-            					}
-            				} else {
-            					sb.append(">\n");
-            				}
-            			} 
-            			sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                        sb.append("<TBODY>\n");
-                        if (columnWidth.equals("9999px")) {
-                        	columnWidth = "*";
-                        }
-                        if (pMode.equals("edit")) {
-                        	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                        }
-                        sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
-                        sb.append("</tbody>\n</table>\n</td>\n");
-            		} else {
-            			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
-            		}
-            	}
-            	
-            	if (pMode.equals("edit")) {
-            		sb.append("</tr>\n</table>\n");
-            	} else {
-            		sb.append("</div>");
-            	}
-            	
-            	try {
-            		if (pMode.equals("view")) {
-                		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString());
-                	}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-            	
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption, int tenantID) throws Exception {
+		if (pTheme != null && !pTheme.trim().equals("")) {
+			userInfo.setTheme(pTheme);
 		}
+		
+		if (pTableViewOption != null && !pTableViewOption.trim().equals("")) {
+			userInfo.setTableViewOption(pTableViewOption);
+		}
+		
+		if (pMode.equals("view")) {
+			if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId())) {
+				return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
+			}
+			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
+
+			if (cacheValue != null && !cacheValue.trim().equals("")) {
+				return cacheValue;
+			}
+		}
+	
+		StringBuilder sb = new StringBuilder();
+        String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
+
+        String RootParentUID = getTopParentPageIDStr(pPortalPageID, tenantID);
+
+        String boarderValue = "0";
+        int i= 0;
+        if (pPortalPageID.equals(RootParentUID)) {
+        	userInfo.setRootPage(true);
+        }
+        if (pMode.equals("edit")) {
+        	boarderValue = "1";
+        }
+
+        StringBuilder dsb = new StringBuilder();
+        dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+        dsb.append("<tr id='main_row'>\n");
+        dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        dsb.append("<TBODY>");
+        if (pMode.equals("edit")) {
+        	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+        }
+        dsb.append("</TBODY></table></td>");
+        dsb.append("</tr></table>");
+        
+        String defaultValue = dsb.toString();
+
+        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
+
+        if (result == null) {
+        	return defaultValue;
+        }
+        
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+
+        if (pMode.equals("edit")) {
+        	sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+            if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
+            else sb.append("width=100% ");
+            if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
+            else sb.append("height=100% ");
+            sb.append("style='table-layout:fixed;'>\n");
+            sb.append("<tr id='main_row'>\n");
+        } else {
+        	if (userInfo.getTheme().equals("BASIC")) {
+        		sb.append("<div id='Center'>");
+        	}
+        }
+        	for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
+        		if (pMode.equals("edit")) {
+        			String columnWidth = "*";
+        			if (i == Integer.parseInt(pageColumnLength) - 1) {
+        				sb.append("<TD id=td0 vAlign=top");
+        				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+        					if (pageColumnSplit.split("\\;")[i] != null && !pageColumnSplit.split("\\;")[i].equals("") && !pageColumnSplit.split("\\;")[i].equals("*")) {
+        						columnWidth = pageColumnSplit.split("\\;")[i] + "px";
+        						if (columnWidth.equals("9999px")) {
+        							sb.append(">\n");
+        						} else {
+        							sb.append(" style='width:" + columnWidth + "'>\n");
+        						}
+        					} else {
+        						sb.append(">\n");
+        					}
+        				} else {
+        					sb.append(">\n");
+        				}
+        			} else {
+        				sb.append("<td id='td" + String.valueOf(i + 1) + "' valign=top");
+        				if (!pageColumnSplit.equals("")) {
+        					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+        						columnWidth = pageColumnSplit.split(";")[i] + "px";
+        						if (columnWidth.equals("9999px")) {
+        							sb.append(">\n");
+        						} else {
+        							sb.append(" style='width:" + columnWidth + "'>\n");
+        						}
+        					}
+        				} else {
+        					sb.append(">\n");
+        				}
+        			} 
+        			sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+                    sb.append("<TBODY>\n");
+                    if (columnWidth.equals("9999px")) {
+                    	columnWidth = "*";
+                    }
+                    if (pMode.equals("edit")) {
+                    	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                    }
+                    sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
+                    sb.append("</tbody>\n</table>\n</td>\n");
+        		} else {
+        			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
+        		}
+        	}
+        	
+        	if (pMode.equals("edit")) {
+        		sb.append("</tr>\n</table>\n");
+        	} else {
+        		sb.append("</div>");
+        	}
+        	
+    		if (pMode.equals("view")) {
+        		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
+        	}
+			
+		return sb.toString();
 	}
 	
-	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) {
-		try {
-			StringBuilder sb = new StringBuilder();
-           
-            String pageWidth, pageHeight, pageColumnLength,	pageColumnSplit;
-            String RootParentUID = getTopParentPageIDStr(pPortalPageID);
-            String boarderValue = "0";
-            int i= 0;
-            if (pPortalPageID.equals(RootParentUID)) {
-            	//bRootPage = true;
-            	userInfo.setRootPage(true);
-            }
-            if (pMode.equals("edit")) {
-            	boarderValue = "1";
-            }
-            
-            StringBuilder dsb = new StringBuilder();
-            dsb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4)  +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-            dsb.append("<tr id='main_row'>\n");
-            dsb.append("<td id='td"+ UUID.randomUUID().toString().substring(0, 4) +"' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-            dsb.append("<TBODY>");
-            if (pMode.equals("edit")) {
-            	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-            }
-            dsb.append("</TBODY></table></td>");
-            dsb.append("</tr></table>");
-            String defaultValue = dsb.toString();
-            
-            PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID);
-            
-            if (result == null) {
-            	return defaultValue;
-            }
-            
-            pageWidth = getPortalConfigItem("Width",RootParentUID);
-            pageHeight = getPortalConfigItem("Height",RootParentUID);
-            pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID);
-            pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID);
-            
-            if (pMode.equals("edit")) {
-            	sb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
-                if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
-                else sb.append("width=100% ");
-                if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
-                else sb.append("height=100% ");
-                sb.append("style='table-layout:fixed;'>\n");
-                sb.append("<tr id='main_row'>\n");
-            }
-            
-            for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
-            	if (pMode.equals("edit")) {
-            		String columnWidth = "*";
-            		if (i == Integer.parseInt(pageColumnLength) - 1) {
-            			if (i ==0) {
-            				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top>\n");
-            			} else {
-            				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
-            				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
-                				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-                					columnWidth = pageColumnSplit.split(";")[i] + "px";
-                					if (columnWidth.equals("9999px")) {
-                						sb.append(">\n");
-                					} else {
-                						sb.append(" style='width:" + columnWidth + "'>\n");
-                					}
-                				} 
-                			} else {
-                				sb.append(">\n");
-                			}
-            			}
-            		} else {
-            			sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
-            			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
+		StringBuilder sb = new StringBuilder();
+       
+        String pageWidth, pageHeight, pageColumnLength,	pageColumnSplit;
+        String RootParentUID = getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId());
+        String boarderValue = "0";
+        int i= 0;
+        if (pPortalPageID.equals(RootParentUID)) {
+        	//bRootPage = true;
+        	userInfo.setRootPage(true);
+        }
+        if (pMode.equals("edit")) {
+        	boarderValue = "1";
+        }
+        
+        StringBuilder dsb = new StringBuilder();
+        dsb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4)  +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+        dsb.append("<tr id='main_row'>\n");
+        dsb.append("<td id='td"+ UUID.randomUUID().toString().substring(0, 4) +"' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        dsb.append("<TBODY>");
+        if (pMode.equals("edit")) {
+        	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+        }
+        dsb.append("</TBODY></table></td>");
+        dsb.append("</tr></table>");
+        String defaultValue = dsb.toString();
+        
+        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
+        
+        if (result == null) {
+        	return defaultValue;
+        }
+        
+        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
+        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
+        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
+        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+        
+        if (pMode.equals("edit")) {
+        	sb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+            if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
+            else sb.append("width=100% ");
+            if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
+            else sb.append("height=100% ");
+            sb.append("style='table-layout:fixed;'>\n");
+            sb.append("<tr id='main_row'>\n");
+        }
+        
+        for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
+        	if (pMode.equals("edit")) {
+        		String columnWidth = "*";
+        		if (i == Integer.parseInt(pageColumnLength) - 1) {
+        			if (i ==0) {
+        				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top>\n");
+        			} else {
+        				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+        				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
             				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
             					if (columnWidth.equals("9999px")) {
@@ -1916,415 +1857,405 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             					} else {
             						sb.append(" style='width:" + columnWidth + "'>\n");
             					}
-            				}
+            				} 
             			} else {
             				sb.append(">\n");
             			}
-            		} 
-            		sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-            		sb.append("<TBODY>\n");
-                    if (columnWidth.equals("9999px")) {
-                    	columnWidth = "*";
-                    }
-                    if (pMode.equals("edit")) {
-                    	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                        sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-                        sb.append("</tbody>\n</table>\n</td>\n");
-                    }
-            	} else {
-            		if (userInfo.getTableViewOption().equals("D")) {
-            			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+        			}
+        		} else {
+        			sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
+        			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+        				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+        					columnWidth = pageColumnSplit.split(";")[i] + "px";
+        					if (columnWidth.equals("9999px")) {
+        						sb.append(">\n");
+        					} else {
+        						sb.append(" style='width:" + columnWidth + "'>\n");
+        					}
+        				}
+        			} else {
+        				sb.append(">\n");
+        			}
+        		} 
+        		sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        		sb.append("<TBODY>\n");
+                if (columnWidth.equals("9999px")) {
+                	columnWidth = "*";
+                }
+                if (pMode.equals("edit")) {
+                	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                    sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                    sb.append("</tbody>\n</table>\n</td>\n");
+                }
+        	} else {
+        		if (userInfo.getTableViewOption().equals("D")) {
+        			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+        		} else {
+        			String columnWidth = "*";
+            		if (i == Integer.parseInt(pageColumnLength) - 1) {
+           				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style='padding-left:20px;'>\n");
             		} else {
-            			String columnWidth = "*";
-                		if (i == Integer.parseInt(pageColumnLength) - 1) {
-               				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style='padding-left:20px;'>\n");
-                		} else {
-                			sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
-                			if (!pageColumnSplit.equals("")) {
-                				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-                					columnWidth = pageColumnSplit.split(";")[i] + "px";
-                					if (columnWidth.equals("9999px")) {
-                						columnWidth = "100%";
-                						if (i == 0) {
-                							sb.append(" style='width:" + columnWidth + ";padding-right:20px;padding-left:5px;'>\n");
-                						} else {
-                							sb.append(" style='width:" + columnWidth + "'>\n");
-                						}
-                					} 
-                				} 
-                			} else {
-                				sb.append(">\n");
-                			}
-                		}
-                		if (pMode == "edit") sb.append(columnWidth);
-                		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
-                        sb.append("</td>\n");
+            			sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+            			if (!pageColumnSplit.equals("")) {
+            				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+            					columnWidth = pageColumnSplit.split(";")[i] + "px";
+            					if (columnWidth.equals("9999px")) {
+            						columnWidth = "100%";
+            						if (i == 0) {
+            							sb.append(" style='width:" + columnWidth + ";padding-right:20px;padding-left:5px;'>\n");
+            						} else {
+            							sb.append(" style='width:" + columnWidth + "'>\n");
+            						}
+            					} 
+            				} 
+            			} else {
+            				sb.append(">\n");
+            			}
             		}
-            	}
-            }
-            if (pMode.equals("edit")) {
-    			sb.append("</tr>\n</table>\n");
-    		}
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+            		if (pMode == "edit") sb.append(columnWidth);
+            		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                    sb.append("</td>\n");
+        		}
+        	}
+        }
+        if (pMode.equals("edit")) {
+			sb.append("</tr>\n</table>\n");
 		}
+		return sb.toString();
+	
 	}
 	
-	public String getTopParentPageIDStr (String pPortalPageID) {
-		try {
-			String temp = pPortalPageID;
-			String parentPortalPageID = "";
-			String previousPageID = pPortalPageID;
-			int count = 0;
-			while (count < 10) {
-				parentPortalPageID = getTopParentPageID(temp);
-				
-				if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
-					break;
-				}
-				if (parentPortalPageID == null || parentPortalPageID.trim().equals("")) {
-					temp = previousPageID;
-					break;
-				} else {
-					previousPageID = temp;
-					temp = parentPortalPageID;
-				}
-				count++;
+	public String getTopParentPageIDStr (String pPortalPageID, int tenantID) throws Exception {
+		String temp = pPortalPageID;
+		String parentPortalPageID = "";
+		String previousPageID = pPortalPageID;
+		int count = 0;
+		while (count < 10) {
+			parentPortalPageID = getTopParentPageID(temp, tenantID);
+			
+			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+				break;
 			}
-			return temp;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+			if (parentPortalPageID == null || parentPortalPageID.trim().equals("")) {
+				temp = previousPageID;
+				break;
+			} else {
+				previousPageID = temp;
+				temp = parentPortalPageID;
+			}
+			count++;
 		}
+		return temp;
 	}
 	
-	public String getRenderedPortalPageColumn (String pPortalPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) {
-		try {
-			List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
-			StringBuilder sb = new StringBuilder();
-			String strSQL = "";
-            
-            String parentPortalPageID = pPortalPageID;
-            int count = 0;
+	public String getRenderedPortalPageColumn (String pPortalPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
+		StringBuilder sb = new StringBuilder();
+		String strSQL = "";
+        
+        String parentPortalPageID = pPortalPageID;
+        int count = 0;
 
-            strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex;
-            
-            while (count < 10) {
-            	parentPortalPageID = getPortalParentUID(parentPortalPageID);
+        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex;
+        
+        while (count < 10) {
+        	parentPortalPageID = getPortalParentUID(parentPortalPageID);
 
-            	if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
-            		break;
-            	}
-            	//String param = String.valueOf(count);
-            	String param = parentPortalPageID;
-            	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + pColumnIndex;
-            	count ++;
-            }
-            
-            if (userInfo.isRootPage() == true) {
-            	result = getTBLPortalPageItemsT(strSQL);
-            } else {
-            	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID));
+        	if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+        		break;
+        	}
+        	//String param = String.valueOf(count);
+        	String param = parentPortalPageID;
+        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + pColumnIndex;
+        	count ++;
+        }
+        
+        if (userInfo.isRootPage() == true) {
+        	result = getTBLPortalPageItemsT(strSQL);
+        } else {
+        	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId()));
 
-            }
+        }
 
-            if (result == null) {
-            	return "";
-            }
-            
-            boolean loadFlag = true;
-            
-            for (int i=0; i<result.size(); i++) {
-            	int portletType = result.get(i).getPortletType();
-            	String portletUID = result.get(i).getuID();
-            	String portletPageUID = result.get(i).getPageUID();
-            	String portletDisplayName = result.get(i).getDisplayName();
-            	int portletWidth = result.get(i).getWidth();
-            	int portletHeight = result.get(i).getHeight();
-            	int portletCanRemove = result.get(i).getCanRemove();
-            	int portletCanResize = result.get(i).getCanResize();
-            	int portletCanReplace = result.get(i).getCanRemove();
-            	int portletPaddingLeft = result.get(i).getLeftMargin();
-            	int portletPaddingRight = result.get(i).getRightMargin();
-            	int portletPaddingTop = result.get(i).getTopMargin();
-            	int portletPaddingBottom = result.get(i).getBottomMargin();
-            	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-            	String portletMandatory = result.get(i).getMandatory();
-            	String portletMoveURL = "";
-            	
-            	if (pMode.equals("edit")) {
-            		if (portletHeight != 0) {
-            			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
-            		} else {
-            			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
-            		}
-            		if (portletType == 0) {
-            			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
-            			}
-            		} else {
-            			sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
-            		}
-            		sb.append("</TR>\n");
-            	} else {
-            		if (userInfo.getTableViewOption().equals("D")) {
-            			if (i == 0) {
-            				sb.append("<div class='section1_bg'><section class='section1'>\n");
-            			} else {
-            				if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
-            					sb.append("<div id='Center'>");
-                                loadFlag = false;
-            				}
-            				
-            				sb.append("<section class='section" + (i + 1) + "'>\n");
-            			}
-            			if (portletType == 0) {
-            				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem("URL",portletUID);
-            					sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            				}
-            			} else {
-            				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
-            			}
-            			if (i == 0) {
-            				sb.append("</section></div>\n");
-            			} else {
-            				sb.append("</section>\n");
-            			}
-            		} else {
-            			if (i == 0) {
-            				sb.append("<div class='section1_bg'><section class='section1'>\n");
-            				if (portletType == 0) {
-            					if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            						portletMoveURL = getPortletConfigItem("URL",portletUID);
-            						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            					}
-            				} else {
-            					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
-            				}
-            				if (i == 0) {
-            					sb.append("</section></div>\n");
-            				} else {
-            					sb.append("</section>\n");
-            				}
-            			} else {
-            				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
-            					sb.append("<div id='Center' style=' margin-top: 15px; '>");
-                                sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
-                                sb.append("<tbody>");
-            				}
-            				
-            				sb.append("<TR>");
-            				
-            				if (portletType == 0) {
-            					if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            						portletMoveURL = getPortletConfigItem("URL",portletUID);
-            						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
-            					}
-            				} else {
-            					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
-            				}
-            				sb.append("</TR>\n");
-            				
-            				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
-            					 sb.append("</tbody>");
-                                 sb.append("</table>");
-                                 sb.append("</div>\n");
-                                 loadFlag = false;
-            				}
-            			}
-            		}
-            	}
-            }
-            
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+        if (result == null) {
+        	return "";
+        }
+        
+        boolean loadFlag = true;
+        
+        for (int i=0; i<result.size(); i++) {
+        	int portletType = result.get(i).getPortletType();
+        	String portletUID = result.get(i).getuID();
+        	String portletPageUID = result.get(i).getPageUID();
+        	String portletDisplayName = result.get(i).getDisplayName();
+        	int portletWidth = result.get(i).getWidth();
+        	int portletHeight = result.get(i).getHeight();
+        	int portletCanRemove = result.get(i).getCanRemove();
+        	int portletCanResize = result.get(i).getCanResize();
+        	int portletCanReplace = result.get(i).getCanRemove();
+        	int portletPaddingLeft = result.get(i).getLeftMargin();
+        	int portletPaddingRight = result.get(i).getRightMargin();
+        	int portletPaddingTop = result.get(i).getTopMargin();
+        	int portletPaddingBottom = result.get(i).getBottomMargin();
+        	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
+        	String portletMandatory = result.get(i).getMandatory();
+        	String portletMoveURL = "";
+        	
+        	if (pMode.equals("edit")) {
+        		if (portletHeight != 0) {
+        			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+        		} else {
+        			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+        		}
+        		if (portletType == 0) {
+        			if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+        			}
+        		} else {
+        			sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+        		}
+        		sb.append("</TR>\n");
+        	} else {
+        		if (userInfo.getTableViewOption().equals("D")) {
+        			if (i == 0) {
+        				sb.append("<div class='section1_bg'><section class='section1'>\n");
+        			} else {
+        				if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
+        					sb.append("<div id='Center'>");
+                            loadFlag = false;
+        				}
+        				
+        				sb.append("<section class='section" + (i + 1) + "'>\n");
+        			}
+        			if (portletType == 0) {
+        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+        					sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        				}
+        			} else {
+        				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+        			}
+        			if (i == 0) {
+        				sb.append("</section></div>\n");
+        			} else {
+        				sb.append("</section>\n");
+        			}
+        		} else {
+        			if (i == 0) {
+        				sb.append("<div class='section1_bg'><section class='section1'>\n");
+        				if (portletType == 0) {
+        					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        					}
+        				} else {
+        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+        				}
+        				if (i == 0) {
+        					sb.append("</section></div>\n");
+        				} else {
+        					sb.append("</section>\n");
+        				}
+        			} else {
+        				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
+        					sb.append("<div id='Center' style=' margin-top: 15px; '>");
+                            sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
+                            sb.append("<tbody>");
+        				}
+        				
+        				sb.append("<TR>");
+        				
+        				if (portletType == 0) {
+        					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+        						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+        					}
+        				} else {
+        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+        				}
+        				sb.append("</TR>\n");
+        				
+        				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
+        					 sb.append("</tbody>");
+                             sb.append("</table>");
+                             sb.append("</div>\n");
+                             loadFlag = false;
+        				}
+        			}
+        		}
+        	}
+        }
+        
+		return sb.toString();
+	
 	}
 	
-	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) {
-		try {
-			List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
-			StringBuilder sb = new StringBuilder();
-			String strSQL = "";
-            String parentPortalPageID = pCallingPageID;
-            int count = 0;
-            
-            strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID) + "'" ;
-            
-            while (count < 10) {
-            	parentPortalPageID = getPortalParentUID(parentPortalPageID);
+	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
+		StringBuilder sb = new StringBuilder();
+		String strSQL = "";
+        String parentPortalPageID = pCallingPageID;
+        int count = 0;
+        
+        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+        
+        while (count < 10) {
+        	parentPortalPageID = getPortalParentUID(parentPortalPageID);
 
-            	String param = parentPortalPageID;
-            	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
-            	count ++;
-            }
-            
-            if (userInfo.isRootPage() == true) {
-            	result = getTBLPortalPageItemsT(strSQL);
-            } else {
-            	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID));
-            }
-            
-            if (result == null) {
-            	return "";
-            }
-            
-            for (int i=0; i<result.size(); i++) {
-            	int portletType = result.get(i).getPortletType();
-            	String portletUID = result.get(i).getuID();
-            	String portletPageUID = result.get(i).getPageUID();
-            	String portletDisplayName = result.get(i).getDisplayName();
-            	int portletWidth = result.get(i).getWidth();
-            	int portletHeight = result.get(i).getHeight();
-            	int portletCanRemove = result.get(i).getCanRemove();
-            	int portletCanResize = result.get(i).getCanResize();
-            	int portletCanReplace = result.get(i).getCanRemove();
-            	int portletPaddingLeft = result.get(i).getLeftMargin();
-            	int portletPaddingRight = result.get(i).getRightMargin();
-            	int portletPaddingTop = result.get(i).getTopMargin();
-            	int portletPaddingBottom = result.get(i).getBottomMargin();
-            	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-            	String portletMandatory = result.get(i).getMandatory();
-            	String portletMoveURL = "";
+        	String param = parentPortalPageID;
+        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+        	count ++;
+        }
+        
+        if (userInfo.isRootPage() == true) {
+        	result = getTBLPortalPageItemsT(strSQL);
+        } else {
+        	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID, userInfo.getTenantId()));
+        }
+        
+        if (result == null) {
+        	return "";
+        }
+        
+        for (int i=0; i<result.size(); i++) {
+        	int portletType = result.get(i).getPortletType();
+        	String portletUID = result.get(i).getuID();
+        	String portletPageUID = result.get(i).getPageUID();
+        	String portletDisplayName = result.get(i).getDisplayName();
+        	int portletWidth = result.get(i).getWidth();
+        	int portletHeight = result.get(i).getHeight();
+        	int portletCanRemove = result.get(i).getCanRemove();
+        	int portletCanResize = result.get(i).getCanResize();
+        	int portletCanReplace = result.get(i).getCanRemove();
+        	int portletPaddingLeft = result.get(i).getLeftMargin();
+        	int portletPaddingRight = result.get(i).getRightMargin();
+        	int portletPaddingTop = result.get(i).getTopMargin();
+        	int portletPaddingBottom = result.get(i).getBottomMargin();
+        	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
+        	String portletMandatory = result.get(i).getMandatory();
+        	String portletMoveURL = "";
 
-            	if (pMode.equals("edit")) {
-            		if (portletHeight != 0) {
-            			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
-            		} else {
-            			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+        	if (pMode.equals("edit")) {
+        		if (portletHeight != 0) {
+        			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+        		} else {
+        			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
             		}
   
             		if (portletType == 0) {
-            			if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
+            			if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
             				sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
-            			}
-            		} else {
-            			sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
-            		}
-            		sb.append("</TR>\n");
-            	} else {
-            		if (userInfo.getTableViewOption().equals("D")) {
-            			if (portletType == 0) {
-            				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem("URL",portletUID);
-            					if (portletWidth == 9999) {
-            						String portletWidthStr = "100%"; 
-            						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            					} else {
-            						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            					}
-            				}
-            			} else {
-            				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+        			}
+        		} else {
+        			sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+        		}
+        		sb.append("</TR>\n");
+        	} else {
+        		if (userInfo.getTableViewOption().equals("D")) {
+        			if (portletType == 0) {
+        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+        					if (portletWidth == 9999) {
+        						String portletWidthStr = "100%"; 
+        						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        					} else {
+        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        					}
+        				}
+        			} else {
+        				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
 
-            			}
-            		} else {
-            			if (portletType == 0) {
-            				if (checkViewRightBln(portletUID, getAccessList(userInfo)) == true) {
-            					portletMoveURL = getPortletConfigItem("URL",portletUID);
-            					
-            					if (portletWidth == 9999) {
-            						String portletWidthStr = "100%"; 
-            						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            					} else {
-            						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-            					}
-            					
-            					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
-            					}
-            				} else {
-            					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
-            				}
-            			}
-            		}
-            	}
-            
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+        			}
+        		} else {
+        			if (portletType == 0) {
+        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+        					
+        					if (portletWidth == 9999) {
+        						String portletWidthStr = "100%"; 
+        						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        					} else {
+        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+        					}
+        					
+        					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+        					}
+        				} else {
+        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+        				}
+        			}
+        		}
+        	}
+        
+		return sb.toString();
+	
 	}
 	
-	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) {
-		try {
-			List<PortalGetThemeListVO> list = getThemeList(pCompanyID);
-			
-			StringBuilder pThemeSelectObject = new StringBuilder();
-			for (int i=0; i<list.size(); i++) {
-				if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
-					switch (Integer.parseInt(userInfo.getLang())) {
-					case 1:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName() + "</option>");
-						break;
-					case 2:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName2() + "</option>");
-						break;
-					case 3:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName3() + "</option>");
-						break;
-					case 4:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName4() + "</option>");
-						break;
-					default:
-						break;
-					}
-					
-				} else {
-					switch (Integer.parseInt(userInfo.getLang())) {
-					case 1:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</option>");
-						break;
-					case 2:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName2() + "</option>");
-						break;
-					case 3:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName3() + "</option>");
-						break;
-					case 4:
-						pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName4() + "</option>");
-						break;
-					default:
-						break;
-					}
-					
+	public String getThemeInfoPortal(String pCompanyID, LoginVO userInfo, String pSelectThemeUID) throws Exception {
+		List<PortalGetThemeListVO> list = getThemeList(pCompanyID, userInfo.getTenantId());
+		
+		StringBuilder pThemeSelectObject = new StringBuilder();
+		for (int i=0; i<list.size(); i++) {
+			if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
+				switch (Integer.parseInt(userInfo.getLang())) {
+				case 1:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName() + "</option>");
+					break;
+				case 2:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName2() + "</option>");
+					break;
+				case 3:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName3() + "</option>");
+					break;
+				case 4:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "' selected>" + list.get(i).getDisplayName4() + "</option>");
+					break;
+				default:
+					break;
 				}
+				
+			} else {
+				switch (Integer.parseInt(userInfo.getLang())) {
+				case 1:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName() + "</option>");
+					break;
+				case 2:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName2() + "</option>");
+					break;
+				case 3:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName3() + "</option>");
+					break;
+				case 4:
+					pThemeSelectObject.append("<option value='" + list.get(i).getuID() + "'>" + list.get(i).getDisplayName4() + "</option>");
+					break;
+				default:
+					break;
+				}
+				
 			}
-			
-			return pThemeSelectObject.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
 		}
+		
+		return pThemeSelectObject.toString();
+		
 	}
 	
-	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID) {
-		try {
-			String newPageID = UUID.randomUUID().toString();
-			int recordCnt = 0;
+	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID, int tenantID) throws Exception {
+		String newPageID = UUID.randomUUID().toString();
+		int recordCnt = 0;
+		
+		if (pPageID.length() == 0) {
+			recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "empty");
+		} else {
+			recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "full");
+		}
+		
+		if (recordCnt != 0) {
+			String baseMyPortalPageUID = newMyPortalPageCreate2("Y", pUserID, pCompanyID);
 			
-			if (pPageID.length() == 0) {
-				recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "empty");
-			} else {
-				recordCnt = newMyPortalPageCreate(pParentPageID, pPageID, pUserID, pGubunFlag, newPageID, 2, pCompanyID, "everyone", "최상위회사", 2, 2, "full");
-			}
-			
-			if (recordCnt != 0) {
-				String baseMyPortalPageUID = newMyPortalPageCreate2("Y", pUserID, pCompanyID);
-				
-				newMyPortalPageCreate3("Y", baseMyPortalPageUID, pCompanyID, pUserID);
-				return "OK";
-			} else {
-				return "OK";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "ERROR";
+			newMyPortalPageCreate3("Y", baseMyPortalPageUID, pCompanyID, pUserID, tenantID);
+			return "OK";
+		} else {
+			return "OK";
 		}
 	}
 	
@@ -2519,10 +2450,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return days; 
 	}
 	
-	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm) {
+	public String ezAclCheck (String pCN, String pCompanyID, String pCompanyNm, int tenantID) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pCN", pCN);
+		map.put("tenantID", tenantID);
 		String result = ezPortalDAO.ezAclCheck(map);
 		String cnACL = result;
 		String totalAdmin = "0";
@@ -2551,7 +2483,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return aclResult;
 	}
 	
-	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception {
 		String[] pAccessID = pAccessIDList.split("\\,");
 		String pIDUser = pAccessID[0].trim();
 		String pIDDept = "";
@@ -2568,12 +2500,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pIDUSER", pIDUser);
 		map.put("v_pIDDEPT", pIDDept);
 		map.put("v_pIDCOMPANY", pCompanyID);
+		map.put("tenantID", tenantID);
 		List<PortalMyPortalListVO> list = ezPortalDAO.myPortalList(map);
 		
 		return list;
 	}
 	
-	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID) throws Exception {
+	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception {
 		String[] pAccessID = pAccessIDList.split("\\,");
 		String pIDUser = pAccessID[0].trim();
 		String pIDDept = "";
@@ -2589,6 +2522,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pGUBUNFLAG", pGubunFlag);
 		map.put("v_pIDUSER", pIDUser);
 		map.put("v_pIDDEPT", pIDDept);
+		map.put("tenantID", tenantID);
 		int count = ezPortalDAO.searchMyPortalPageCount(map);
 		
 		return count;
@@ -2624,12 +2558,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return sb.toString();
 	}
 	
-	public String useTopMenuID2( String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID) throws Exception {
+	public String useTopMenuID2( String pCompanyID, String pUseFlag, String pLang, String pUserThemeUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pLANG", pLang);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		map.put("tenantID", tenantID);
 		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID2(map);
 		
 		String useTopMenuIDXml = "";
@@ -2643,11 +2578,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return useTopMenuIDXml;
 	}
 	
-	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID) throws Exception {
+	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
+		map.put("tenantID", tenantID);
 		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID(map);
 		
 		String useTopMenuIDXml = "";
@@ -2760,7 +2696,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow -1) {
 				if (pMode.equals("view")) {
-					if (checkViewRightBln(list.get(i).getuID_(), getAccessList(userInfo)) == true) {
+					if (checkViewRightBln(list.get(i).getuID_(), getAccessList(userInfo), userInfo.getTenantId()) == true) {
 						retXML += "<ROW>";
                         retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
@@ -2783,7 +2719,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                         retXML += "</ROW>";
 					}
 				} else if (pMode.equals("edit")) {
-					if (checkEditRightBln(list.get(i).getuID_(), getAccessList(userInfo)) == true) {
+					if (checkEditRightBln(list.get(i).getuID_(), getAccessList(userInfo), userInfo.getTenantId()) == true) {
 						retXML += "<ROW>";
                         retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
                         retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
@@ -2808,7 +2744,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 			}
 		}
-System.out.println("retXML:"+retXML);		
 		retXML += "</DATA>";
 
 		return retXML;
@@ -2868,5 +2803,6 @@ System.out.println("retXML:"+retXML);
 	}
 	
 }
+
 
 

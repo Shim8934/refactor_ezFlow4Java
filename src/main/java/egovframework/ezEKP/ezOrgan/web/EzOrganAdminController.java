@@ -111,8 +111,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			topid = "Top";
 		}
 		
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -462,15 +465,26 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveOrderList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        logger.debug("saveOrderList started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String pClass = request.getParameter("pClass");
 		String cn = request.getParameter("cn");
 		String[] cnDatas = cn.split(",");
 		String result = "";
 		
+		logger.debug("pClass=" + pClass + ",cn=" + cn);
+		
 		for (int i=0; i<cnDatas.length; i++) {
-			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass);	
+			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
 		}
+		
+		logger.debug("saveOrderList ended.");
 		
 		return result;
 	}
@@ -560,17 +574,30 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/changePassword.do")
 	public void changePassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("changePassword started.");
+	    
 		String pw = request.getParameter("password");
 		String cn[] = request.getParameter("cn").split(",");
 		
+		logger.debug("cn=" + request.getParameter("cn")); 
+		
 		// dhlee
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);		
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		
+		logger.debug("domain=" + domain);
 		// dhlee - end
 		
 		for (int i=0; i < cn.length; i++) {		
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
+			
+			logger.debug("mailAddr=" + mailAddr);
+			
 			// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
 			String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
 			
@@ -578,10 +605,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				// 이메일 계정의 암호를 새 암호로 설정한다.
 				int rc = ezEmailUserAdminService.updateUserPassword(mailAddr, pw);
 				
+				logger.debug("updateUserPassword rc=" + rc);
+				
 				if (rc == 0) { // updateUserPassword 성공													
 					try {
 						// 로컬 시스템에서 해당 User의 암호를 변경한다.
-						ezOrganAdminService.setPassword(cn[i], pw);
+						ezOrganAdminService.setPassword(cn[i], pw, tenantID);
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
 						
@@ -595,6 +624,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 			// dhlee - end
 		}
+		
+		logger.debug("changePassword ended.");
 	}
 	
 	/**
@@ -1177,7 +1208,14 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveSubTitle(@RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
+        logger.debug("saveSubTitle started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -1193,9 +1231,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 		}
 		
-		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user");
+		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
 		
 		ezOrganAdminService.addJob(userID, titleInfo);
+		
+		logger.debug("saveSubTitle ended.");
 		
 		return "OK";
 	}

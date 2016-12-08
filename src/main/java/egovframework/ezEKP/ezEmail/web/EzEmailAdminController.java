@@ -480,6 +480,8 @@ public class EzEmailAdminController {
 		model.addAttribute("inColor", inColor);
 		model.addAttribute("outColor", outColor);
 		
+		logger.debug("importanceColor=" + importanceColor + ",inColor=" + inColor + ",outColor=" + outColor);
+		
 		return "admin/ezEmail/mailColor";
 	}
 	

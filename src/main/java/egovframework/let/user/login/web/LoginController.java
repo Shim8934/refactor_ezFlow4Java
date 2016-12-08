@@ -158,22 +158,26 @@ public class LoginController {
 			} else {			    
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
+				
 				//IP Address,  마지막 login시간 저장
 				loginService.updateUser(loginVO);
+				
 				//접속 로그정보 저장
 				resultVO.setIp(ip);
 				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
 				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+				resultVO.setTenantId(tenantId);
 
 				if(resultVO.getTitle2() == null){
 					resultVO.setTitle2("");
 				}
+				
 				loginService.insertLog(resultVO);
 				
 				//
 				//DB에서 lang 값 가져옴
-				String lang = ezCommonService.selectUserGetLang(_uid);
+				String lang = ezCommonService.selectUserGetLang(_uid, tenantId);
 				//String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
 				
 				String acceptLanguage = request.getHeader("Accept-Language");
@@ -224,10 +228,10 @@ public class LoginController {
 					logger.debug("userID="+_uid);
 					logger.debug("lang="+lang);
 					
-					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang);
+					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang, tenantId);
 				}
 				
-				String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
+				String timeZone = ezCommonService.selectUserGetTimeZone(_uid, tenantId);
 				
 				logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
 				
@@ -253,7 +257,11 @@ public class LoginController {
 	        	response.addCookie(cookieName);
 	        	
 	        	//return "redirect:/cmm/main/mainPage.do";
-	        	return "redirect:/ezPortal/portalMain.do";
+	        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+	        	    return "redirect:/ezEmail/mailAloneMain.do";
+	        	} else {
+	        	    return "redirect:/ezPortal/portalMain.do";
+	        	}
 			}
         } else {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));

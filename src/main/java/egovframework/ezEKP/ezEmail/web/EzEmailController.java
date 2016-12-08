@@ -36,4 +36,17 @@ public class EzEmailController {
 		return "ezEmail/mailMain";
 	}
 
+    /**
+     * 메일 단독 모드에서의 메인화면 호출 함수
+     */
+    @RequestMapping(value="/ezEmail/mailAloneMain.do")
+    public String showMailAloneMain(Model model, HttpServletRequest request) throws Exception{
+        return "ezEmail/mailAloneMain";
+    }
+	
+    @RequestMapping(value="/ezEmail/mailAloneTop.do")
+    public String showMailAloneTop(Model model, HttpServletRequest request) throws Exception{
+        return "ezEmail/mailAloneTop";
+    }
+    
 }
