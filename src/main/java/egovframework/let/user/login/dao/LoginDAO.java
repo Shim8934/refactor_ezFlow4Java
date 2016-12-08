@@ -252,9 +252,54 @@ public class LoginDAO extends EgovAbstractDAO {
             updateUserForLocal(vo);
         }       
     }
+
+    private void insertLogForJMocha(LoginVO vo) throws Exception {
+        logger.debug("insertLogForJMocha started. tenantId=" + vo.getTenantId() + ",userId=" + vo.getId());
+
+        String param1 = "tenantId=" + vo.getTenantId();
+        String param2 = "userId=" + URLEncoder.encode(vo.getId(), "UTF-8");
+        String param3 = "connectIp=" + URLEncoder.encode(vo.getIp(), "UTF-8");
+        String param4 = "connectBrowser=" + URLEncoder.encode(vo.getBrowser(), "UTF-8");
+        String param5 = "connectOS=" + URLEncoder.encode(vo.getOs(), "UTF-8");
+        String param6 = "connectAgent=" + URLEncoder.encode(vo.getAgent(), "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addLoginLog";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("insertLogForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Inserting Log Failed!");
+        }        
+    }
+    
+    private void insertLogForLocal(LoginVO vo) throws Exception {
+        update("loginDAO.insertLog", vo);
+    }
     
     public void insertLog(LoginVO vo) throws Exception {
-    	update("loginDAO.insertLog", vo);
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            insertLogForJMocha(vo);
+        } else {
+            insertLogForLocal(vo);
+        }       
     }
 
 	@SuppressWarnings("unchecked")

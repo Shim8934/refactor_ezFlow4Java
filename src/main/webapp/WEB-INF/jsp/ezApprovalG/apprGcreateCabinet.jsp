@@ -162,7 +162,7 @@
 <!-- 		</OBJECT>  -->
 		<h1><spring:message code='ezApprovalG.t996'/></h1>
 		
-		<div id="cabinetdiv" style="height:100%;overflow:auto;">
+		<div id="cabinetdiv" style="height:100%;">
 		<table class="content">
 		  <tr>
 		    <th > <spring:message code='ezApprovalG.t577'/>(<spring:message code='ezApprovalG.t1746'/>)</th>

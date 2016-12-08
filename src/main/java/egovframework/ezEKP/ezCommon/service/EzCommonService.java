@@ -25,9 +25,9 @@ public interface EzCommonService {
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
-	public String selectUserGetLang(String userID) throws Exception;
+	public String selectUserGetLang(String userID, int tenantID) throws Exception;
 	
-	public String selectUserGetTimeZone(String userID) throws Exception;
+	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception;
 	
 	public String getTenantConfig(String property, int tenantID) throws Exception;
 	
@@ -39,6 +39,6 @@ public interface EzCommonService {
 	
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	public void insertTblUserLocalInfo(String userID, String timeZone, String lang) throws Exception;
+	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception;
 
 }

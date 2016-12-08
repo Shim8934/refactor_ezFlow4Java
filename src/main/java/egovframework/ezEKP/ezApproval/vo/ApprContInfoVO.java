@@ -49,6 +49,14 @@ public class ApprContInfoVO {
 	private String subQuery;
 	/** 컨테이너시퀀스*/
 	private String maxContainerID;
+	/** */
+	private String companyID;
+	/** */
+	private String documentState;
+	/** */
+	private String documentStateName;
+	/** */
+	private String documentCode;
 	
 	public String getMyDeptID() {
 		return myDeptID;
@@ -193,6 +201,30 @@ public class ApprContInfoVO {
 	}
 	public void setMaxContainerID(String maxContainerID) {
 		this.maxContainerID = maxContainerID;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public String getDocumentState() {
+		return documentState;
+	}
+	public void setDocumentState(String documentState) {
+		this.documentState = documentState;
+	}
+	public String getDocumentStateName() {
+		return documentStateName;
+	}
+	public void setDocumentStateName(String documentStateName) {
+		this.documentStateName = documentStateName;
+	}
+	public String getDocumentCode() {
+		return documentCode;
+	}
+	public void setDocumentCode(String documentCode) {
+		this.documentCode = documentCode;
 	}
 
 }

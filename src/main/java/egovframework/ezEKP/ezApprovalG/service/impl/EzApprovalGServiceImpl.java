@@ -1088,7 +1088,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String oldYear = getDocHrefYear(docID, companyID, tenantID);
-		String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
+		String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
 				getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
 		
 		String docState = StaDSHesong;
@@ -1187,9 +1187,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String href = ezApprovalGDAO.getDocInfoHref(map);
 			String extFileName = getExtendedFileName(href);
-			String susinDocURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
+			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
 					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
-			String fileURL = dirPath + href.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 			String target = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 					getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
 			
@@ -1340,9 +1340,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String href = ezApprovalGDAO.getDocInfoHref(map);
 			String extFileName = getExtendedFileName(href);
-			String susinDocURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
+			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
 					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
-			String fileURL = dirPath + href.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 			String target = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 					getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
 			
@@ -2176,7 +2176,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DocID", docID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_MODE", mode);
+		
 		String delFlag = ezApprovalGDAO.aprDeleteDocInfoFlag(map);
+
 		if (delFlag.equals("Y") || mode.toUpperCase().equals("MUST")) {
 			try {
 				ezApprovalGDAO.aprDeleteDocInfo(map);
@@ -2184,9 +2186,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} catch (Exception e) {
 				rtnVal = "<RESULT>FALSE</RESULT>";
 		}
-//		strSQL = "APRDeleteDocInfo('" + docID + "', '" + mode.toUpperCase() + "');\n";
 		} else {
-			rtnVal = delFlag;
+			rtnVal = "<RESULT>TRUE</RESULT>";
 		}
 		
 		return rtnVal;
@@ -3823,7 +3824,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String docState = getDocAprState(docID, userID, companyID);
-		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", companyID);
+		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", companyID, userInfo.getTenantId());
 		
 		if (docType.equals("004") || docType.equals("015")) {
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
@@ -4038,7 +4039,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			proxySign = "代 ";
 		}
 		
-		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", companyID);
+		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", companyID, userInfo.getTenantId());
 		
 		if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
 			String receiveRet = getReceivedDocInfo(docID, companyID, strLang, userInfo.getTenantId());
@@ -4342,7 +4343,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "Link ERROR";
 		}
 		
-		String result2 = updateHistoryForLine(docID, orgUID, displayName, displayName2, pTitle, pTitle, department, description, description2, chkFlag, companyID);
+		String result2 = updateHistoryForLine(docID, orgUID, displayName, displayName2, pTitle, pTitle, department, description, description2, chkFlag, companyID, userInfo.getTenantId());
 		
 		Document xmlResult = commonUtil.convertStringToDocument(result2);
 		
@@ -4482,7 +4483,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
 			
-			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + config.getProperty("upload_approvalG.ROOT"), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
+			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
 			
 			Document xmlResult2 = commonUtil.convertStringToDocument(pDocResult);
 			
@@ -4947,12 +4948,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public List<ApprGgetDeptStacticsVO> getDeptStactics(String pStartDate, String pEndDate, String pLang ,String  companyID) throws Exception {
+	public List<ApprGgetDeptStacticsVO> getDeptStactics(String pStartDate, String pEndDate, String pLang ,String  companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pStartDate", pStartDate);
 		map.put("v_pEndDate", pEndDate);
 		map.put("iv_pLang", pLang);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		if(pLang.equals("1")){
+			map.put("v_pLang", "");
+		} else{
+			map.put("v_pLang", pLang);
+		}
 		
 		return ezApprovalGDAO.getDeptStactics(map);
 	}
@@ -5377,7 +5385,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String rtnVal = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ATTACHFILESN", attachSN.trim());
 		map.put("v_TENANTID", tenantID);
@@ -5402,7 +5409,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			FileUtils.copyFile(new File(source), new File(target));
 			
-			target = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
+			target = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					 getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 		
 			Map<String, Object> map1 = new HashMap<String, Object>();
@@ -6240,7 +6247,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocInfo(String docID, String mode, String selected, String companyID) throws Exception {
+	public String getDocInfo(String docID, String mode, String selected, String companyID, int tenantID) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		String selectSQL = "";
 		
@@ -6273,7 +6280,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID);
 		map.put("v_MODE", mode.toUpperCase());
 		map.put("v_COLS", selectSQL);
-
+		map.put("v_TENANTID", tenantID);
+		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfo(map);
 		
 		if (apprGDocListVOList.size() == 0) {
@@ -6522,7 +6530,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerSepAttach(Document doc) throws Exception {
+	public String registerSepAttach(Document doc, int tenantID) throws Exception {
 		String strSQL = "";
 		
 		String recID = doc.getElementsByTagName("RECORDID").item(0).getTextContent();
@@ -6534,7 +6542,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String recType = doc.getElementsByTagName("AVTYPE").item(0).getTextContent();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
-		strSQL = registerSepAttachEx(recID, cabID, title, numOfPage, regType, summary, recType, companyID, "");
+		strSQL = registerSepAttachEx(recID, cabID, title, numOfPage, regType, summary, recType, companyID, "", tenantID);
 		
 		if (strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
@@ -7066,11 +7074,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getTotalAttachSize(String docID, String companyID) throws Exception {
+	public String getTotalAttachSize(String docID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
-		
+		map.put("v_TENANTID", tenantID);
+		int temp = ezApprovalGDAO.getTotalAttachSizeTemp(map);
+		if ( temp > 0 ) {
+			map.put("v_temp" , "1");
+		} else {
+			map.put("v_temp" , "0");
+		}
 		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getTotalAttachSize(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -7123,12 +7136,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang) throws Exception {
+	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
 		map.put("v_USERID", userID);
 		map.put("v_INGFLAG", ingFlag.trim().toUpperCase());
+		map.put("v_TENANTID", tenantID);
 		
 		int result = ezApprovalGDAO.getOpinionCount(map);
 		
@@ -7137,7 +7150,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
-			String userDeptName2, String chkFlag, String companyID) throws Exception{
+			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception{
 		boolean addFlag = true;
 		
 		if (!chkFlag.equals("MUST")) {
@@ -7148,7 +7161,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (addFlag) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
 			map.put("v_DOCID", docID.trim());
 			map.put("v_USERID", userID.trim());
 			map.put("v_USERNAME", userName.trim());
@@ -7158,7 +7170,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DEPTID", userDeptID.trim());
 			map.put("v_DEPTNAME", userDeptName.trim());
 			map.put("v_DEPTNAME2", userDeptName2.trim());
-			
+			map.put("v_TENANTID", tenantID);
+
 			try {
 				ezApprovalGDAO.updateHistoryForLine(map);
 				rtn = true;
@@ -7273,7 +7286,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		rtnVal.append("</DOCFLAGINFO>");
 		rtnVal.append("<DOCINFO>");
-		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID));
+		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID));
@@ -7783,7 +7796,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(receivedDeptID);				
         rtnVal.append("</RECEIPTDEPTID>");
 		rtnVal.append("<DOCINFO>");
-		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID));
+		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID));
@@ -8362,9 +8375,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
 				"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT"), "");
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 		
 		boolean rtnVal = copyFile(fileURL, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + 
@@ -8761,8 +8774,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!docID.trim().equals("")) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
 			map.put("v_DOCID", docID.trim());
+			map.put("v_TENANTID", tenantID);
 			
 			String processDate = ezApprovalGDAO.getDraftDate(map);
 			
@@ -8776,13 +8789,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("iv_Type1", type1);
 		map.put("iv_Type2", type2);
 		map.put("iv_Type3", type3);
 		map.put("v_AccountYear", accountYear);
+		map.put("v_TENANTID", tenantID);
 		
 		int result = ezApprovalGDAO.spGetSerialNo(map);
+		map.put("v_CurSN", result);
+		if (result == 0) {
+			ezApprovalGDAO.insertSerialNo(map);
+			map.put("v_CurSN", "1");
+		}
+		
+		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
+		
+		if (rollBackFlag == 1) {
+			 ezApprovalGDAO.deleteSerialNo(map);
+		} else {
+			ezApprovalGDAO.updateSerialNo(map);
+		}
 		
 		return String.valueOf(result);
 	}
@@ -9065,9 +9091,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (chkFlag) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
 			map.put("v_DOCID", orgDocID);
+			map.put("v_TENANTID", tenantID);
+			String temp =ezApprovalGDAO.chkDocDeleteTemp(map);
 			
+			if(temp!=null){
+				map.put("v_temp", "1");
+			} else {
+				map.put("v_temp", "0");
+			}
 			String fileName = makeListField(ezApprovalGDAO.chkDocDelete(map));
 			String oldYear = getDocHrefYear(orgDocID, companyID, tenantID);
 			
@@ -9184,12 +9216,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception{
+		LOGGER.debug("doApprove started");
 		StringBuilder strSQL = new StringBuilder();
 		String subSQL = "";
 		boolean rtnVal = false;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
@@ -9226,12 +9258,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append(", ReceivedDate = SYSDATE ");
 			}
 			
-			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "'" + "AND TENANT_ID="+ userInfo.getTenantId() +" ;\n");
+			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "'" + " AND TENANT_ID='"+ userInfo.getTenantId() +"' ;\n");
 		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
+			LOGGER.debug("insertProxyUserInfo started");
 			subSQL = insertProxyUserInfo(docID, curAprMemberSN, userID, proxyUserID, companyID, lang, userInfo.getTenantId());
-			
+			LOGGER.debug("insertProxyUserInfo subSQL = " + subSQL);
+
+			LOGGER.debug("insertProxyUserInfo ended");
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
 				
@@ -9243,20 +9278,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (curAprType.equals(staATByungRyulHyubJo) || curAprType.equals(staATBuSeuByungRyulHyubJo)) {
 			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("companyID", companyID);
 			map1.put("v_DOCID", docID);
 			map1.put("v_TENANTID", userInfo.getTenantId());
 			map1.put("v_APRTYPE", curAprType);
-			
+			LOGGER.debug("doApproveLineCnt started");
+
 			int subCount = ezApprovalGDAO.doApproveLineCnt(map1);
-			
+			LOGGER.debug("doApproveLineCnt subCount = " +subCount);
+
+			LOGGER.debug("doApproveLineCnt ended");
+
 			if (subCount > 1) {
 				return strSQL.toString();
 			}
 		}
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		map2.put("companyID", companyID);
 		map2.put("v_DOCID", docID);
 		map2.put("v_TENANTID", userInfo.getTenantId());
 		map2.put("v_APRMEMBERSN", curAprMemberSN);
@@ -9287,10 +9324,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
 				sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-				
+
 				whileFlag = false;
 				
 				break;
@@ -9301,7 +9338,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
                 sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 				
@@ -9316,7 +9353,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(", ProcessDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
                 k += 1;				
 				
@@ -9328,7 +9365,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 					strSQL.append("', ReceivedDate = SYSDATE");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
                     sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 					
@@ -9340,7 +9377,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					strSQL.append("', ReceivedDate = SYSDATE");
 					strSQL.append(", ProcessDate = SYSDATE");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
 					k += 1;
 				}
@@ -9353,7 +9390,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(", ProcessDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
 
 				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
@@ -9386,7 +9423,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
 				absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId());
 				
@@ -9405,7 +9442,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
 						strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 						strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
                         k += 1;
 					}
@@ -9420,7 +9457,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 						strSQL.append("', ReceivedDate = SYSDATE");
 						strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
 						absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId());
 						
@@ -9438,7 +9475,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
 								strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 								strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-								strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+								strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 							}
 						}
 						k += 1;
@@ -9456,7 +9493,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
                 subSQL = doDeptAssist(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
                 		docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
@@ -9481,7 +9518,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 						strSQL.append("', ReceivedDate = SYSDATE");
 						strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
                         subSQL = doDeptAssist(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
                         		docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
@@ -9510,7 +9547,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID= '" + userInfo.getTenantId() + "';\n");
 				
                 subSQL = doDeptAssist(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
                 		docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
@@ -9532,7 +9569,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
                 subSQL = doDeptAssist(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
                 		docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
@@ -9555,7 +9592,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(", ProcessDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
 				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
 						docXML2.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent(),
@@ -9585,7 +9622,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
                 sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID,lang, userInfo.getTenantId());
 				
@@ -9598,7 +9635,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
 				absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId());
 				
@@ -9617,7 +9654,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
 						strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 						strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
                         k += 1;
 					}
@@ -9630,7 +9667,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
 				strSQL.append("', ReceivedDate = SYSDATE");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + "AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
+				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
 				sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 				
@@ -9660,10 +9697,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal) {
+			LOGGER.debug("doApprove return = " + strSQL.toString() );
+			LOGGER.debug("doApprove ended");
 			return strSQL.toString();
 		} else {
 			return "FALSE";
 		}
+		
 	}
 
 	public String doDocComplete(String docID, String userID, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception{
@@ -9672,7 +9712,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean rtnVal = true;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", userInfo.getTenantId());
 		
@@ -9780,9 +9819,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10802,7 +10839,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         strSQL.append("ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, ");
 		strSQL.append("SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate, ");
 		strSQL.append("DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag, ManualRegFlag, ");
-		strSQL.append("DocType) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
+		strSQL.append("DocType,TENANT_ID) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
         strSQL.append("', N'" + makeRightField(deptName) + "', N'" + makeRightField(deptName2) + "', '" + makeRightField(deptCode));
 		strSQL.append("', '" + makeRightField(regYear) + "', SYSDATE");
         strSQL.append(", '" + makeRightField(registerSN) + "', N'" + makeRightField(aprMemberTitle) + "', N'" + makeRightField(aprMemberTitle2));
@@ -10814,9 +10851,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("', NULL, '" + makeRightField("0") + "', " + makeRightField(specialCatalogFlag));
 		strSQL.append(", '" + makeRightField(attachFlag) + "', SYSDATE" );
 		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
-        strSQL.append("', '" + makeRightField(docType) + "');\n");
+        strSQL.append("', '" + makeRightField(docType) + "','" + tenantID +"');\n");
         
-        subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"));
+        subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
         
         if (subSQL.equals("FALSE")) {
         	return "FALSE";
@@ -10827,7 +10864,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (objParam.getElementsByTagName("SEPATTACH").getLength() > 0) {
         	for (int k = 0; k < objParam.getElementsByTagName("SEPATTACH").getLength(); k++) {
         		int tempValue = k + 1;
-        		subSQL = registerSepAttachEx(recordID, objParam.getElementsByTagName("CABINETID").item(k).getTextContent(), objParam.getElementsByTagName("TITLE").item(k).getTextContent(), objParam.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), objParam.getElementsByTagName("REGTYPE").item(k).getTextContent(), objParam.getElementsByTagName("SUMMARY").item(k).getTextContent(), objParam.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)));
+        		subSQL = registerSepAttachEx(recordID, objParam.getElementsByTagName("CABINETID").item(k).getTextContent(), objParam.getElementsByTagName("TITLE").item(k).getTextContent(), objParam.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), objParam.getElementsByTagName("REGTYPE").item(k).getTextContent(), objParam.getElementsByTagName("SUMMARY").item(k).getTextContent(), objParam.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID);
         		
         		if (subSQL.equals("FALSE")) {
         			return "FALSE";
@@ -10971,19 +11008,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String containerID = returnContainerID(orgDeptID, docState, companyID);
 				String extFileName = getExtendedFileName(href);
 				String oldYear = getDocHrefYear(docID, companyID, tenantID);
-				String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
-				String source = dirPath + commonUtil.separator + href.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+				String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
+				String source = dirPath + commonUtil.separator + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 				
 				rtnVal = copyFile(source, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
 
 				if (rtnVal) {
-					strSQL = "APRApproveEnd('" + docID + "', '" + endURL + "','" + containerID + "');\n";
-				}
-				
+					strSQL = " INSERT INTO TBENDAPRDOCINFO ( DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )" +
+							"( SELECT '" + docID +"', FormID, OrgDocID, DocType, DocState, '003','" + endURL +"', DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, SYSDATE, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, '"+ containerID + "', isPublic, TENANT_ID  FROM TBAPRDOCINFO  WHERE  DocID = '" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							" INSERT INTO TBENDAPRLINEINFO ( DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )"+
+							"(SELECT '" + docID +"', AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID FROM TBAPRLINEINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"INSERT INTO TBENDATTACHINFO ( DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )"+
+							"(SELECT '" + docID +"', AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  FROM TBAPRATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"INSERT INTO TBENDAPRDOCATTACHINFO ( DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID )"+
+							"(SELECT '" + docID +"', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID FROM TBAPRDOCATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"INSERT INTO TBENDAPROPINIONINFO ( DocID, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID )" +
+							"(SELECT '" + docID +"', UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  FROM TBAPROPINIONINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							" INSERT INTO TBENDRECEIPTPOINTINFO ( DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID )"+
+							"(SELECT '" + docID +"', ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID FROM TBRECEIPTPOINTINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"INSERT INTO TBENDRECEIPTPROCESSINFO ( DocID, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID )"+
+							"(SELECT '" + docID +"', ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   FROM TBAPRRECEIPTPROCESSINFO     WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							" INSERT INTO TBEXPENDAPRDOCINFO ( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )"+
+							" (SELECT '" + docID +"', SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   FROM TBEXPAPRDOCINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"INSERT INTO TBEXPENDAPRLINE ( docid, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID )"+
+							"(SELECT '" + docID +"', aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   FROM TBEXPAPRLINE   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" ;
+							
+					//							"	"APRApproveEnd('" + docID + "', '" + endURL + "','" + containerID + "');\n";
 				break;
 			}
+			}
 		}
-		
 		if (rtnVal) {
 			return strSQL;
 		} else {
@@ -11163,7 +11217,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						String fileName = ezApprovalGDAO.getDocInfoHref(map3);
 						String extFileName = getExtendedFileName(fileName);
-						String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
+						String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 						
 						if (rtnVal) {
 							strSQL.append("INSERT INTO TBAPRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
@@ -11208,7 +11262,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSQL.append("WHERE DocID = '" + docID + "';\n");
 							
 							if (!flag.equals("G")) {
-								strSQL.append("UPDATE TBAPRDOCINFO SET DocState = '014' WHERE DocID = '" + docID + "'"+ "TENANT_ID="+ tenantID +";\n");
+								strSQL.append("UPDATE TBAPRDOCINFO SET DocState = '014' WHERE DocID = '" + docID + "'"+ "AND TENANT_ID="+ tenantID +";\n");
 								
 								subSQL = updateProcessYN(docID, receiptPointID, "S", "QUERY", companyID, lang, tenantID);
 								
@@ -11414,8 +11468,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + 
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + 
 				"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 
 		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) +
@@ -11641,8 +11695,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 				getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 				getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
@@ -11743,7 +11797,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 
 	public String sendMsg(String docID, String nextUserID, String mode, String companyID, String lang, int tenantID) throws Exception{
 		boolean notiFlag = false;
-		
+		LOGGER.debug("sendMsg started");
+
 		if (getCode2Name("A43", "001", companyID, lang, tenantID).equals("Y")) {
 			notiFlag = true;
 		}
@@ -11752,7 +11807,6 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			String docTitle = "";
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_DOCID", docID);
 			map.put("v_FLAG", "ING");
@@ -11761,7 +11815,6 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			
 			if (docTitle.trim().equals("")) {
 				Map<String, Object> map1 = new HashMap<String, Object>();
-				map1.put("companyID", companyID);
 				map1.put("v_DOCID", docID);
 				map1.put("v_TENANTID", tenantID);
 				map1.put("v_FLAG", "END");
@@ -11773,7 +11826,6 @@ System.out.println("copyFile Exception : " + e.getMessage());
 				} else {
 					if (nextUserID.trim().equals("")) {
 						Map<String, Object> map2 = new HashMap<String, Object>();
-						map2.put("companyID", companyID);
 						map2.put("v_DOCID", docID);
 						map2.put("v_TENANTID", tenantID);
 						map2.put("v_FLAG", "END");
@@ -11784,7 +11836,6 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			} else {
 				if (nextUserID.trim().equals("")) {
 					Map<String, Object> map3 = new HashMap<String, Object>();
-					map3.put("companyID", companyID);
 					map3.put("v_DOCID", docID);
 					map3.put("v_TENANTID", tenantID);
 					map3.put("v_FLAG", "ING");
@@ -11838,7 +11889,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			}
 			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID);
 		}
-		
+		LOGGER.debug("sendMsg ended");
+
 		return "TRUE";
 	}
 
@@ -12148,7 +12200,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			}
 		}
 		
-		strSQL.append(" WHERE DocID = '" + docID + "'" + "AND TENANT_ID = " + tenantID +";\n");
+		strSQL.append(" WHERE DocID = '" + docID + "'" + " AND TENANT_ID = '" + tenantID +"';\n");
 		
 		if (firstFlag) {
 			strSQL.delete(0, strSQL.length());
@@ -12380,7 +12432,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			}
 		}
 		
-		subSQL.append(" WHERE DocID = '" + docID + "' " + "AND TENANT_ID = " + tenantID +";\n");
+		subSQL.append(" WHERE DocID = '" + docID + "' " + " AND TENANT_ID = '" + tenantID +"';\n");
 		
 		if (firstFlag) {
 			subSQL.delete(0, subSQL.length());
@@ -12425,7 +12477,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
             strSQL.append(userID + "','" + formID + "', ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ");
 			strSQL.append("'N', ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ");
             strSQL.append("ReceiptMemberName, ReceiptMemberName2, NULL, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID");
-			strSQL.append("FROM TBRECEIPTPOINTINFO WHERE DOCID = '" + docID + "';\n");
+			strSQL.append("FROM TBRECEIPTPOINTINFO WHERE DOCID = '" + docID + "'"+" AND TENANT_ID='"+tenantID+"';\n");
 			
             return strSQL.toString();
 		} else {
@@ -12448,7 +12500,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			strSQL.append(userID + "','" + formID + "', AprMemberSN, AprType, '001', AprMemberID, ");
             strSQL.append("AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, ");
             strSQL.append("AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, NULL, NULL, ReasonDoNotApprov, ");
-            strSQL.append("isProposerYN, isBriefUserYN,TENANT_ID FROM TBAPRLINEINFO WHERE DOCID = '" + docID + "';\n");
+            strSQL.append("isProposerYN, isBriefUserYN,TENANT_ID FROM TBAPRLINEINFO WHERE DOCID = '" + docID + "'"+"AND TENANT_ID='"+tenantID+"';\n");
 			
             return strSQL.toString();
 		} else {
@@ -12456,7 +12508,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		}
 	}
 
-	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN) throws Exception{
+	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		String sepAttSN = tempSepAttSN;
 		
@@ -12469,11 +12521,14 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		strSQL.append("Insert Into TBSEPERATEATTACH (RecordID, SeperateAttachNo, CabinetID, ");
 		strSQL.append("RegisterType, Title, NumOfPage, DelFlag, CreateDate, ModifyFlag, ");
-		strSQL.append("CatalogTransferFlag, DocTransferFlag) Values ('" + makeRightField(recID));
+		strSQL.append("CatalogTransferFlag, DocTransferFlag, TENANT_ID) Values ('" + makeRightField(recID));
 		strSQL.append("', '" + makeRightField(sepAttSN) + "', '" + makeRightField(cabID) + "', '");
 		strSQL.append(makeRightField(regType) + "', N'" + makeRightField(title) + "', '");
 		strSQL.append(makeRightField(numOfPage) + "', '0', SYSDATE");
-        strSQL.append(", '0', '0', '0');\n");
+        strSQL.append(", '0', '0', '0','"+tenantID+"');\n");
+        strSQL.append("INSERT INTO TBRECROLEINFO  ( RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID )Values");
+        strSQL.append("('"+ makeRightField(recID) + "','" +makeRightField(sepAttSN)+ "' , 'All_User' , 1 ,   '모든 이용자' , 'All User' ,"+tenantID+" );");
+
         
         if (regType.equals("5") || regType.equals("6")) {
         	String subSQL = saveAudioVisualExtraInfo(recID, sepAttSN, summary, recType);
@@ -13114,7 +13169,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 				
 				String fileName = ezApprovalGDAO.getDocInfoHref(map1);
 				String extFileName = getExtendedFileName(fileName);
-				String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+				String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 				
 				File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
 				
@@ -13649,9 +13704,9 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 		
 		boolean rtnVal = copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + 
@@ -15710,7 +15765,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
 		strSQL.append("', '" + makeRightField(docType) + "');\n");
         // '## 기록물 분리첨부 테이블에 저장
-		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"));
+		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
 		
         if (subSQL.equals("FALSE")){
         	return "<RESULT>FALSE</RESULT>";
@@ -15726,10 +15781,10 @@ System.out.println("copyFile Exception : " + e.getMessage());
             if (docID != "")
             {
                 subSQL2.append(" INSERT INTO TBENDATTACHINFO (DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, ");
-                subSQL2.append("	AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2) ");
+                subSQL2.append("	AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID) ");
                 subSQL2.append(" SELECT '" + docID + "', AttachFileSN,AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , ");
-                subSQL2.append(" AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2");
-                subSQL2.append(" FROM TBAPRATTACHINFO WHERE DOCID = '" + docID + "' ;\n");
+                subSQL2.append(" AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID");
+                subSQL2.append(" FROM TBAPRATTACHINFO WHERE DOCID = '" + docID + "',"+tenantID+" ;\n");
 
                 subSQL2.append(" DELETE FROM TBAPRATTACHINFO WHERE DOCID = '" + docID + "' ;\n");
 
@@ -15754,7 +15809,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 	        if (xmlDom.getElementsByTagName("SEPATTACH").getLength() > 0) {
 	        	for (int k = 0; k < xmlDom.getElementsByTagName("SEPATTACH").getLength(); k++) {
 	        		int tempValue = k + 1;
-	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)));
+	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID);
 	        		
 	        		if (subSQL.equals("FALSE")) {
 	        			return "FALSE";

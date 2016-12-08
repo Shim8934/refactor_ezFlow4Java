@@ -328,6 +328,143 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getContainerInfoManage" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				tbContainer.ContainerID ,
+             	tbContainer.ContainerTypeID ,
+             	tbContainer.ContainerOwnDepID ,
+             	tbContainerType.ContainerTypeName ,
+             	tbContainerType.ContainerTypeName2 
+        	FROM 
+        		tbContainer 
+            JOIN 
+            	tbContainerType
+            ON 
+            	tbContainer.tenant_id = tbContainerType.tenant_id
+            AND
+            	tbContainer.companyid = tbContainerType.companyid
+            AND
+            	tbContainer.ContainerTypeID = tbContainerType.ContainerTypeID
+       		WHERE
+       			tbContainer.tenant_id = #tenantId#
+       		AND
+       			tbContainer.companyid = #companyID#
+       		AND  
+       			CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContTypeInfo" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT
+				containerTypeName,
+				containerTypeName2,
+				containerTypeID
+			FROM
+				tbcontainertype
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(tbContainer.ContainerID) 
+		    FROM 
+		    	tbContainer 
+		    JOIN 
+		    	tbContainerType 
+		    ON 
+		    	tbContainer.tenant_id = tbContainerType.tenant_id
+		    AND
+		    	tbContainer.companyid = tbContainerType.companyid
+		    AND
+		    	tbContainer.ContainerTypeID = tbContainerType.ContainerTypeID
+   			WHERE  
+   				tbContainer.tenant_id = #tenantID#
+   			AND
+   				tbContainer.companyid = #companyID#
+   			AND
+   				tbContainer.ContainerTypeID = #codeID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getListHeader" parameterClass="Map" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT 
+				NAME$lang$ AS NAME, 
+				WIDTH, 
+				COLNAME 
+			FROM 
+				TBLISTOPTION  
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				LISTTYPE = #listCode# 
+			AND 
+				DTYPE IS NULL 
+			ORDER BY 
+				SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContainerToDocStateInfo" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				CTDS.CONTAINERTYPEID, 
+				CTDS.DOCUMENTSTATE,
+				CT.CONTAINERTYPENAME, 
+				CT.CONTAINERTYPENAME2, 
+   				CDS.NAME1 AS DOCUMENTSTATENAME,
+   				CDS.CODE AS DOCUMENTCODE
+   			FROM 
+   				TBCODEDOCSTATE CDS 
+   			LEFT JOIN 
+   				TBCONTAINERTODOCSTATE CTDS  
+   			ON  
+   				CTDS.TENANT_ID = CDS.TENANT_ID
+   			AND
+   				CTDS.COMPANYID = CDS.COMPANYID
+   			AND
+   				CTDS.DOCUMENTSTATE = CDS.CODE  
+   			LEFT JOIN 
+   				TBCONTAINERTYPE CT  
+   			ON 
+   				CTDS.TENANT_ID = CT.TENANT_ID
+   			AND
+   				CTDS.COMPANYID = CT.COMPANYID
+   			AND 
+   				CTDS.CONTAINERTYPEID = CT.CONTAINERTYPEID 
+   			WHERE 
+   				CDS.TENANT_ID = #tenantID#
+   			AND
+   				CDS.COMPANYID = #companyID#
+   			AND
+   				CDS.ISUSE = '1' 
+   			ORDER BY 
+   				DOCUMENTSTATENAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContainerUseDeptInfo" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USEDEPID 
+        	FROM 
+        		tbContainerUseDep 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			CONTAINERID = #contID#
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
@@ -339,13 +476,14 @@
 					tenant_id = #tenantID#
 			]]>
 		</selectKey>
-		
-		INSERT INTO TBUSERCONT ( 
-			USERCONTID, 	  USERCONTNAME,   PARENTCONTID,   DESCRIPTION,   OWNUSERID, TENANT_ID 
-		)
-     	VALUES ( 
-     		#maxContainerID#, #userContName#, #parentContID#, #description#, #userID#, 	#tenantID# 
-     	)
+		<![CDATA[
+			INSERT INTO TBUSERCONT ( 
+				USERCONTID, 	  USERCONTNAME,   PARENTCONTID,   DESCRIPTION,   OWNUSERID, TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #userContName#, #parentContID#, #description#, #userID#, 	#tenantID# 
+	     	)
+		]]>
 	</insert>
 	
 	<insert id="EzApprovalAdminDAO.createDeptCont" parameterClass="ApprContInfoVO">
@@ -359,13 +497,159 @@
 					tenant_id = #tenantID#
 			]]>
 		</selectKey>
-		
-		INSERT INTO TBDEPTCONT ( 
-			DEPTCONTID, 	  DEPTCONTNAME,   PARENTCONTID,   SN,   DESCRIPTION,   OWNDEPTID, MANAGEUSERID,   TENANT_ID 
-		)
-     	VALUES ( 
-     		#maxContainerID#, #deptContName#, #parentContID#, #sn#, #description#, #deptID#,  #manageUserID#, #tenantID# 
-     	)
+		<![CDATA[
+			INSERT INTO TBDEPTCONT ( 
+				DEPTCONTID, 	  DEPTCONTNAME,   PARENTCONTID,   SN,   DESCRIPTION,   OWNDEPTID, MANAGEUSERID,   TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #deptContName#, #parentContID#, #sn#, #description#, #deptID#,  #manageUserID#, #tenantID# 
+	     	)
+		]]>
 	</insert>
 	
+	<insert id="EzApprovalAdminDAO.insertContainerType" parameterClass="Map">
+		<selectKey keyProperty="maxID" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(CONTAINERTYPEID) IS NULL
+						THEN '100'
+						ELSE MAX(CONTAINERTYPEID)
+					END maxID
+			    FROM 
+			    	tbContainerType
+			    WHERE
+			    	tenant_id = #tenantID#
+			    AND
+			    	companyid = #companyID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO tbContainerType ( 
+				CONTAINERTYPEID, CONTAINERTYPENAME, CONTAINERTYPENAME2, COMPANYID, 		TENANT_ID 
+			)
+        	VALUES ( 
+        		#maxID# + 10, 	 #docTypeName#, 	#docTypeName2#, 	#companyID#, 	#tenantID# 
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainerToDocStateInfo" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL	
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainer" parameterClass="Map">
+		<selectKey keyProperty="maxContID" resultClass="String">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN LPAD(MAX(CONTAINERID), 10, '0') IS NULL
+						THEN '0000000001'
+						ELSE LPAD(MAX(CONTAINERID) + 1, 10, '0')
+					END maxContID
+				FROM
+					TBCONTAINER
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+			]]>
+		</selectKey>
+		
+		INSERT INTO TBCONTAINER (
+			ContainerID, ContainerTypeID, ContainerOwnDepID, companyid,   tenant_id
+		)
+		VALUES (
+			#maxContID#, #contType#,	  #contOwnDeptID#,	 #companyID#, #tenantID#
+		)
+		
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainerUseDept" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL
+		]]>
+	</insert>
+	
+	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBCONTAINER 
+			SET 
+				ContainerTypeID = #contType#,
+				ContainerOwnDepID = #contOwnDeptID#
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				ContainerID = #contID#
+				
+		]]>
+	</update>
+	
+	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBCONTAINERTODOCSTATE
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+      			CONTAINERTYPEID = #codeID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerType" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM tbContainerType
+      		WHERE
+      			TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND  
+      			CONTAINERTYPEID = #codeID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerToDocStateInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBContainerToDocState 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				DocumentState IN ($delString$)
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerUseDept" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM tbContainerUseDep 
+			WHERE 
+				TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+				ContainerID = #contID# 
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainer" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM tbContainer
+	        WHERE  
+	        	TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+	        	CONTAINERID = #contID#
+		]]>
+	</delete>
 </sqlMap>

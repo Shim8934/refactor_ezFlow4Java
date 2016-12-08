@@ -10,7 +10,7 @@ public interface EzOrganService {
 
 	public String getSIPUriList(String pCNList, String eMailList) throws Exception;
 	
-	public String getDeptFullPath(String deptID) throws Exception;
+	public String getDeptFullPath(String deptID, int tenantID) throws Exception;
 	
 	public String getDeptTreeInfo(String userID, String deptID, String topID, String propList, String primary, int tenantID) throws Exception;
 

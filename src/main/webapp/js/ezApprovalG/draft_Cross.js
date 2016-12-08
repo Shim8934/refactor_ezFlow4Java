@@ -1506,7 +1506,7 @@ function openAaprDocAttachUI() {
             DivPopUpShow(800, 370, url);
         }
         else {
-            var feature = "status:no;dialogWidth:675px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
+            var feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
             feature = feature + GetShowModalPosition(675, 395);
 
             var ret = window.showModalDialog(url, parameter, feature);
@@ -1970,9 +1970,14 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+
+        if (url != "")
+            var rtn = window.showModalDialog(url, parameter, feature);
+
+        if (rtn) {
+        	 window.close();
+        }
     }
-    return RtnVal;
 }
 
 function OpenInformationUI_Complete() {

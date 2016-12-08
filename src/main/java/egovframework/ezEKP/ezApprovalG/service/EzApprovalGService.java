@@ -16,7 +16,7 @@ public interface EzApprovalGService {
 
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception;
 	
-	public List<ApprGgetDeptStacticsVO> getDeptStactics (String pStartDate, String pEndDate, String pLang, String companyID) throws Exception;
+	public List<ApprGgetDeptStacticsVO> getDeptStactics (String pStartDate, String pEndDate, String pLang, String companyID, int tenantID) throws Exception;
 
 	public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception;
 
@@ -147,7 +147,7 @@ public interface EzApprovalGService {
 	
 	public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getDocInfo(String docID, String mode, String selected, String companyID) throws Exception;
+	public String getDocInfo(String docID, String mode, String selected, String companyID, int tenantID) throws Exception;
 	
 	public String saveRecReadHist(String readRecXML) throws Exception;
 	
@@ -161,7 +161,7 @@ public interface EzApprovalGService {
 	
 	public String getCabinetInfo(String cabinetID, String companyID, String strType, int tenantID) throws Exception;
 	
-	public String registerSepAttach(Document doc) throws Exception;
+	public String registerSepAttach(Document doc, int tenantID) throws Exception;
 	
 	public String getHistoryForDoc(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -176,16 +176,16 @@ public interface EzApprovalGService {
 	public String doProcess(String aprState, String docID, String userID, String userName, String userName2, String dirPath, String deptID, String html,
 			Document strXML, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
-	public String getTotalAttachSize(String docID, String companyID) throws Exception;
+	public String getTotalAttachSize(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String chkAprLines(Document doc, String lang, LoginVO userInfo) throws Exception;
 	
 	public String chkDeptLines(Document doc, String companyID, String lang, LoginVO userInfo) throws Exception;
 
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang) throws Exception;
+	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
-			String userDeptName2, String chkFlag, String companyID) throws Exception;
+			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception;
 	
 	public String getApprovalPWD1(String dUserID) throws Exception;
 	

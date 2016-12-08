@@ -13,6 +13,10 @@ public class ApprCodeVO {
 	private String code;
 	/** */
 	private int tenantID;
+	/** header 길이*/
+	private String width;
+	/** header 컬럼명*/
+	private String colName;
 	
 	public String getCode1() {
 		return code1;
@@ -49,6 +53,18 @@ public class ApprCodeVO {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public String getWidth() {
+		return width;
+	}
+	public void setWidth(String width) {
+		this.width = width;
+	}
+	public String getColName() {
+		return colName;
+	}
+	public void setColName(String colName) {
+		this.colName = colName;
 	}
 	
 }
