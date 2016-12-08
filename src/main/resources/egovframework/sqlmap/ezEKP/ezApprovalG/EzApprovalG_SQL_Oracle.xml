@@ -3299,7 +3299,7 @@
 	 		SELECT 
 	 			COUNT(DOCID)  
             FROM 
-            	TBRECEIPTPOINTINFO 
+            	EZAPPROVALG_${companyID}.TBRECEIPTPOINTINFO 
             WHERE  
             	DocID = #v_DOCID#
             AND 
@@ -3309,7 +3309,7 @@
 		<isEqual property="v_temp" compareValue="1">
 		  <![CDATA[
 		   SELECT 
-				SUM(AttachFileSize,19,0)  TOTALSIZE  ,
+				SUM(AttachFileSize)  TOTALSIZE  ,
                 CASE 
                      WHEN SUM(AttachFileSize)  > 6000000 THEN 'Y'
                 ELSE 

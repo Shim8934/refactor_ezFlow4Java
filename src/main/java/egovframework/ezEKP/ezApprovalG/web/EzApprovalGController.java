@@ -608,6 +608,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
+		File file = new File (dirPath);
+		if(!file.exists()) {
+			file.mkdirs();
+		}
+		
 		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
 			mode = "APR";
 		} else if (listType.equals("4") || listType.equals("6") || listType.equals("10") || listType.equals("99")) {
