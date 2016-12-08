@@ -1088,7 +1088,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String oldYear = getDocHrefYear(docID, companyID, tenantID);
-		String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
+		String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
 				getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
 		
 		String docState = StaDSHesong;
@@ -1187,9 +1187,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String href = ezApprovalGDAO.getDocInfoHref(map);
 			String extFileName = getExtendedFileName(href);
-			String susinDocURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
+			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
 					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
-			String fileURL = dirPath + href.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 			String target = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 					getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
 			
@@ -1340,9 +1340,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String href = ezApprovalGDAO.getDocInfoHref(map);
 			String extFileName = getExtendedFileName(href);
-			String susinDocURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
+			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + 
 					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
-			String fileURL = dirPath + href.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 			String target = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 					getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
 			
@@ -4483,7 +4483,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
 			
-			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + config.getProperty("upload_approvalG.ROOT"), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
+			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
 			
 			Document xmlResult2 = commonUtil.convertStringToDocument(pDocResult);
 			
@@ -5385,7 +5385,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String rtnVal = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ATTACHFILESN", attachSN.trim());
 		map.put("v_TENANTID", tenantID);
@@ -5410,7 +5409,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			FileUtils.copyFile(new File(source), new File(target));
 			
-			target = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
+			target = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					 getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 		
 			Map<String, Object> map1 = new HashMap<String, Object>();
@@ -8376,9 +8375,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
 				"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT"), "");
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
 		
 		boolean rtnVal = copyFile(fileURL, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + 
@@ -11009,8 +11008,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String containerID = returnContainerID(orgDeptID, docState, companyID);
 				String extFileName = getExtendedFileName(href);
 				String oldYear = getDocHrefYear(docID, companyID, tenantID);
-				String endURL = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
-				String source = dirPath + commonUtil.separator + href.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+				String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
+				String source = dirPath + commonUtil.separator + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 				
 				rtnVal = copyFile(source, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
 
@@ -11218,7 +11217,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						String fileName = ezApprovalGDAO.getDocInfoHref(map3);
 						String extFileName = getExtendedFileName(fileName);
-						String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
+						String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 						
 						if (rtnVal) {
 							strSQL.append("INSERT INTO TBAPRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
@@ -11469,8 +11468,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + 
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + 
 				"1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 
 		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getToday("").substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) +
@@ -11696,8 +11695,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 				getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 		boolean rtnVal = copyFile(fileURL, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator +
 				getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + commonUtil.separator + pCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator +
@@ -13170,7 +13169,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 				
 				String fileName = ezApprovalGDAO.getDocInfoHref(map1);
 				String extFileName = getExtendedFileName(fileName);
-				String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+				String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 				
 				File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
 				
@@ -13705,9 +13704,9 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		String fileName = ezApprovalGDAO.getDocInfoHref(map);
 		String extFileName = getExtendedFileName(fileName);
-		String url = config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
+		String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
-		String fileURL = dirPath + commonUtil.separator + fileName.replace(config.getProperty("upload_approvalG.ROOT") + commonUtil.separator, "");
+		String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 		
 		boolean rtnVal = copyFile(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + EgovDateUtil.getTodayTime().substring(0, 4) + commonUtil.separator + "1000" +
 				commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + 
