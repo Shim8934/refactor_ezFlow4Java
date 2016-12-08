@@ -654,7 +654,7 @@
 	
 	<procedure id="EzPortalDAO.getUserInfo5" parameterClass="Map" resultMap="portalTBLPortalPageGeneralVO">
 		<![CDATA[
-			{CALL EZPORTAL.EZSP_GETUSERINFO5(#v_pCOUNT#, #v_pUSEFLAG#, #v_pCOMPANYID#, #v_pPARENTUID#, #v_pUSERID#, #v_pGUBUNFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZPORTAL.EZSP_GETUSERINFO5(#v_pCOUNT#, #v_pUSEFLAG#, #v_pCOMPANYID#, #v_pPARENTUID#, #v_pUSERID#, #v_pGUBUNFLAG#, #tenantID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure>
 	
@@ -1303,7 +1303,8 @@
                			A.UID_ NOT IN ( SELECT UID_ 
                         		               FROM EZPORTAL.TBL_PORTAL_ACL 
                                    		       WHERE  ACCESSID = #v_pIDUSER#
-                                      			AND VIEW_RIGHT = '1' )
+                                      			AND VIEW_RIGHT = '1'
+                                      			AND TENANT_ID = #tenantID# )
                		)
                 OR
                 	( ( companyACL.AccessID = #v_pIDCOMPANY#
@@ -1312,8 +1313,9 @@
                 	AND
                 		A.UID_ NOT IN ( SELECT UID_ 
                           			           FROM EZPORTAL.TBL_PORTAL_ACL 
-                                     		   WHERE  accessid IN ( #v_pIDUSER#,#v_pIDDEPT# )
-                                               AND View_Right = '1' )
+                                     		   WHERE  ACCESSID IN ( #v_pIDUSER#,#v_pIDDEPT# )
+                                               AND View_Right = '1'
+                                               AND TENANT_ID = #tenantID# )
                		) )
             AND
             	A.TENANT_ID = #tenantID#   		

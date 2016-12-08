@@ -126,182 +126,179 @@ public class EzPortalController extends EgovFileMngUtil {
 		String topUrl = "";
 		String topHeight = "78";
 		
-		try {
-			String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID(), locale);
-			
-			Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
-			logger.debug("userPortalPage="+userPortalPage);
-			String pUserThemeUID = "";
-			if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
+		
+		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
+		logger.debug("userPortalPage="+userPortalPage);
+		String pUserThemeUID = "";
+		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+			pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
+		} else {
+			//searchMyPortalPage
+			String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
+			xmlDom = commonUtil.convertStringToDocument(portalPageXml);
+			if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
+				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+					if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
+						pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
+						break;
+					}
+				}
+			} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
 				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 			} else {
-				//searchMyPortalPage
-				String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
-				xmlDom = commonUtil.convertStringToDocument(portalPageXml);
-				if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
-					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-						if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
-							pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
-							break;
-						}
-					}
-				} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
-					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
-				} else {
-					if (pUserThemeUID == null || pUserThemeUID.equals("")) {
-						String commentHtml = "<!DOCTYPE html><HTML>" +
-								"<HEAD>" +
-                                "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
-                                "<style type='text/css'>" +
-                                "<!--" +
-                                ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
-                                ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
-                                ".warnintxt01 { position:relative ;padding-bottom:10px;}" +
-                                ".warningimg { position:absolute; top:0px; left:0px;}" +
-                                ".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
-                                ".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
-                                ".warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}" +
-                                ".warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}" +
-                                "-->" +
-                                "</style>" +
-                                "</HEAD>" +
-                                "<BODY>" +
-                                "<div class='warningbox01' style='margin-top:100px;'>" +
-                                "  <div class='warningbox02'>" +
-                                "    <div class='warnintxt01' >" +
-                                "    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
-                                "    <dl class='warningdl'>" +
-                                "    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
-                                "    <dd>" +
-                                "        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-						
-								if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-									commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
-								}
-								commentHtml += "    </dd>" +
-								"    </dl>" +
-								"    </div>" +
-								"    </div>" +
-								"</div>" +
-								"</BODY>" +
-								"</HTML>";
-								resp.setCharacterEncoding("UTF-8");
-								resp.setContentType("text/html; charset=UTF-8");
-								resp.getWriter().write(commentHtml);
-								resp.getWriter().flush();
+				if (pUserThemeUID == null || pUserThemeUID.equals("")) {
+					String commentHtml = "<!DOCTYPE html><HTML>" +
+							"<HEAD>" +
+                            "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
+                            "<style type='text/css'>" +
+                            "<!--" +
+                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+                            ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
+                            ".warnintxt01 { position:relative ;padding-bottom:10px;}" +
+                            ".warningimg { position:absolute; top:0px; left:0px;}" +
+                            ".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
+                            ".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
+                            ".warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}" +
+                            ".warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}" +
+                            "-->" +
+                            "</style>" +
+                            "</HEAD>" +
+                            "<BODY>" +
+                            "<div class='warningbox01' style='margin-top:100px;'>" +
+                            "  <div class='warningbox02'>" +
+                            "    <div class='warnintxt01' >" +
+                            "    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
+                            "    <dl class='warningdl'>" +
+                            "    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
+                            "    <dd>" +
+                            "        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
+					
+							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+								commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
+							}
+							commentHtml += "    </dd>" +
+							"    </dl>" +
+							"    </div>" +
+							"    </div>" +
+							"</div>" +
+							"</BODY>" +
+							"</HTML>";
+							resp.setCharacterEncoding("UTF-8");
+							resp.setContentType("text/html; charset=UTF-8");
+							resp.getWriter().write(commentHtml);
+							resp.getWriter().flush();
+				}
+			}
+		}
+		String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID());
+		xmlDom = commonUtil.convertStringToDocument(strXML);
+
+		if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
+			Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+
+			String myTopID = "";
+			if (xmlDomTop != null && xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
+				myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
+			}
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
+					//기본 페이지 ID
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+
+					xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+					//사용자 정보
+					if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
+						skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
 					}
 				}
 			}
-			String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID());
-			xmlDom = commonUtil.convertStringToDocument(strXML);
 
-			if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
-				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+			if (pageID == null || pageID.trim().equals("")) {
+				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
 
-				String myTopID = "";
-				if (xmlDomTop != null && xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
-					myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
-				}
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
-					if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
-						//기본 페이지 ID
+					if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
 						pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-
 						xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-						//사용자 정보
+							
 						if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
 							skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
 						}
 					}
 				}
-
-				if (pageID == null || pageID.trim().equals("")) {
-					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-	
-						if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
-							pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-							xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-								
-							if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
-								skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
-							}
-						}
-					}
+			}
+		} else {   // 다국어로 설정된 페이지가 없는경우 첫번째 사용으로 되어 있는 레이아웃 보여준다.
+			String strXML2 = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getCompanyID());
+			
+			Document xmlDom2 = commonUtil.convertStringToDocument(strXML2);
+			if (xmlDom2.getElementsByTagName("UID_").getLength() > 0) {
+				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+				String myTopID = "";
+				if (xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
+					myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
 				}
-			} else {   // 다국어로 설정된 페이지가 없는경우 첫번째 사용으로 되어 있는 레이아웃 보여준다.
-				String strXML2 = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getCompanyID());
 				
-				Document xmlDom2 = commonUtil.convertStringToDocument(strXML2);
-				if (xmlDom2.getElementsByTagName("UID_").getLength() > 0) {
-					Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-					String myTopID = "";
-					if (xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
-						myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
-					}
-					
-					for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
-						if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
-							pageID = xmlDom2.getElementsByTagName("UID_").item(i).getTextContent();
-							xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-							if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
-								skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
-							}
-						}
-					}
-					if (pageID != null && pageID.equals("")) {
-						pageID = xmlDom2.getElementsByTagName("UID_").item(0).getTextContent();
+				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+					if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
+						pageID = xmlDom2.getElementsByTagName("UID_").item(i).getTextContent();
 						xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 						if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
 							skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
 						}
 					}
 				}
-			}
-			
-			String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId());
-			
-			Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
-			logger.debug("themeInfoXml="+themeInfoXml);
-			if (xmlDomACL != null) {
-				if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
-					topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
+				if (pageID != null && pageID.equals("")) {
+					pageID = xmlDom2.getElementsByTagName("UID_").item(0).getTextContent();
+					xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+					if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
+						skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
+					}
 				}
 			}
-			
-			//masterAdmin nullPoint처리
-			topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
-			topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
-			
-			String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
-
-			if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
-				mainUrl = "/myoffice/main/index_environment2.htm";
-			} else if ("mail".equals(req.getParameter("mode"))) {
-				mainUrl = "/ezEmail/mailMain.do?funCode=1";
-			} else if ("approval".equals(req.getParameter("mode"))) {
-				mainUrl = "/myoffice/ezApproval/index_approval.aspx";
-			} else if (!useStartPageURL.trim().equals("NO")) {
-				mainUrl = useStartPageURL;
-			} else {
-				mainUrl = "/ezPortal/myPortal.do";
-			}
-			
-			if (userInfo.getLang().equals("1")) {
-				//responseCookie
-			} else if (userInfo.getLang().equals("2")) {
-				//
-			} else if (userInfo.getLang().equals("3")) {
-				
-			} else if (userInfo.getLang().equals("4")) {
-				
-			}
-
-			model.addAttribute("mainUrl", mainUrl);
-			model.addAttribute("topUrl", topUrl);
-			model.addAttribute("topHeight", topHeight);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		
+		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId());
+		
+		Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
+		logger.debug("themeInfoXml="+themeInfoXml);
+		if (xmlDomACL != null) {
+			if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
+				topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
+			}
+		}
+		
+		//masterAdmin nullPoint처리
+		topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
+		topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+		
+		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
+
+		if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
+			mainUrl = "/myoffice/main/index_environment2.htm";
+		} else if ("mail".equals(req.getParameter("mode"))) {
+			mainUrl = "/ezEmail/mailMain.do?funCode=1";
+		} else if ("approval".equals(req.getParameter("mode"))) {
+			mainUrl = "/myoffice/ezApproval/index_approval.aspx";
+		} else if (!useStartPageURL.trim().equals("NO")) {
+			mainUrl = useStartPageURL;
+		} else {
+			mainUrl = "/ezPortal/myPortal.do";
+		}
+		
+		if (userInfo.getLang().equals("1")) {
+			//responseCookie
+		} else if (userInfo.getLang().equals("2")) {
+			//
+		} else if (userInfo.getLang().equals("3")) {
+			
+		} else if (userInfo.getLang().equals("4")) {
+			
+		}
+
+		model.addAttribute("mainUrl", mainUrl);
+		model.addAttribute("topUrl", topUrl);
+		model.addAttribute("topHeight", topHeight);
+	
 		
 		return "/ezPortal/portalMain";
 	}
@@ -804,7 +801,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			// 권한이 있는 Root페이지 정보를 가져온다.
-			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale);
+			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 
 			Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
 
@@ -1788,7 +1785,7 @@ public class EzPortalController extends EgovFileMngUtil {
         String useStartPage = "";
         String deptPathOrgan = "";
 		
-		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale);
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 		
 		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {

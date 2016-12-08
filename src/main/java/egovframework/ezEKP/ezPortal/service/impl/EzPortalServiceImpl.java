@@ -224,7 +224,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageGeneralVO> getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag) throws Exception {
+	public List<PortalTBLPortalPageGeneralVO> getUserInfo5(int pCount, String useFlag, String companyID, String parentUID, String userID, String gubunFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOUNT", pCount);
 		map.put("v_pUSEFLAG", useFlag);
@@ -232,6 +232,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pPARENTUID", parentUID);
 		map.put("v_pUSERID", userID);
 		map.put("v_pGUBUNFLAG", gubunFlag);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getUserInfo5(map);
 				
 	}
@@ -1066,7 +1067,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return false;
 	}
 	
-	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale) throws Exception {
+	public String getUserInfo(String pUserID, String pUserName, String parentUID, String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID, Locale locale, int tenantID) throws Exception {
 		if (("edit").equals(pMode)) {
 			if (checkEditRightBln(parentUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 				String newPageID = UUID.randomUUID().toString();
@@ -1079,7 +1080,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("pCompanyID="+pCompanyID);
 		logger.debug("pUserID="+pUserID);
 		logger.debug("pGubunFlag="+pGubunFlag);
-		List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag);
+		List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag, userInfo.getTenantId());
 		
 		String result = "";
 		result = "<DATA>";
