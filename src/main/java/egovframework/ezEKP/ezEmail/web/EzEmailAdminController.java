@@ -467,9 +467,17 @@ public class EzEmailAdminController {
 			mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
 			
 			if (mailColor != null) {
-				importanceColor = mailColor.getImportanceColor();
-				inColor = mailColor.getInmailColor();
-				outColor = mailColor.getOutmailColor();
+				if (mailColor.getImportanceColor() != null) {
+					importanceColor = mailColor.getImportanceColor();
+				}
+				
+				if (mailColor.getInmailColor() != null) {
+					inColor = mailColor.getInmailColor();
+				}
+				
+				if (mailColor.getOutmailColor() != null) {
+					outColor = mailColor.getOutmailColor();
+				}
 			}
 			
 		} catch (Exception e) {
@@ -479,6 +487,8 @@ public class EzEmailAdminController {
 		model.addAttribute("importanceColor", importanceColor);
 		model.addAttribute("inColor", inColor);
 		model.addAttribute("outColor", outColor);
+		
+		logger.debug("importanceColor=" + importanceColor + ",inColor=" + inColor + ",outColor=" + outColor);
 		
 		return "admin/ezEmail/mailColor";
 	}
