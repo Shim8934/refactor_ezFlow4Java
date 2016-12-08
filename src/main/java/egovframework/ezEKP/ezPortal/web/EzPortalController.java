@@ -136,6 +136,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else {
 			//searchMyPortalPage
 			String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
+			logger.debug("portalPageXml="+portalPageXml);
 			xmlDom = commonUtil.convertStringToDocument(portalPageXml);
 			if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
 				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -920,65 +921,63 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/urlPortlet.do")
 	public void urlPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			String uID = "";
-			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-				uID = req.getParameter("uID");
-			}
-			//String pCreatorId = "";
-			String pMoveURL = "";
-			String gubunFlag = "";
-			String pUserID = userInfo.getId();
-			
-			if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
-				pUserID = req.getParameter("userID");
-			}
-			
-			Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
-			logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID));
-			if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
-				gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
-
-				if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-					logger.debug("getPortletSubProperties="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
-					Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
-					
-					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
-						pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
-					}
-				} else {
-					PortalUrlPortletVO result = ezPortalService.urlPortlet(uID, pUserID, userInfo.getTenantId());
-					String resultXML = commonUtil.getQueryResult(result);
-					Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
-					
-					if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-						//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
-						pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
-					}
-				}
-			}
-			
-			String parametersXML = ezPortalService.getPortletParameters(uID);
-			
-			if (pMoveURL != null && !pMoveURL.equals("")) {
-				pMoveURL = pMoveURL + ezPortalService.loadGetParametersXML(pMoveURL, parametersXML, userInfo);
-				
-				if (gubunFlag.equals("2")) {
-					if (pMoveURL.indexOf("?") == -1) {
-						pMoveURL = pMoveURL + "?pClassID=" + pUserID;
-					} else {
-						pMoveURL = pMoveURL + "&pClassID=" + pUserID;
-					}
-				}
-				resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
-				resp.getWriter().write("<body onload='window_onload()'></body>");
-			} else {
-				resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t276", locale) + "</font>");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		String uID = "";
+		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
+			uID = req.getParameter("uID");
 		}
+		//String pCreatorId = "";
+		String pMoveURL = "";
+		String gubunFlag = "";
+		String pUserID = userInfo.getId();
+		
+		if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
+			pUserID = req.getParameter("userID");
+		}
+		
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
+		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID));
+		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
+			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+
+			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
+				logger.debug("getPortletSubProperties="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
+				
+				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+					//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+					pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
+				}
+			} else {
+				PortalUrlPortletVO result = ezPortalService.urlPortlet(uID, pUserID, userInfo.getTenantId());
+				String resultXML = commonUtil.getQueryResult(result);
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
+				
+				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
+					//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+					pMoveURL = xmlDomSubProp.getElementsByTagName("URL").item(0).getTextContent();
+				}
+			}
+		}
+		
+		String parametersXML = ezPortalService.getPortletParameters(uID, userInfo.getTenantId());
+		
+		if (pMoveURL != null && !pMoveURL.equals("")) {
+			pMoveURL = pMoveURL + ezPortalService.loadGetParametersXML(pMoveURL, parametersXML, userInfo);
+			
+			if (gubunFlag.equals("2")) {
+				if (pMoveURL.indexOf("?") == -1) {
+					pMoveURL = pMoveURL + "?pClassID=" + pUserID;
+				} else {
+					pMoveURL = pMoveURL + "&pClassID=" + pUserID;
+				}
+			}
+			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
+			resp.getWriter().write("<body onload='window_onload()'></body>");
+		} else {
+			resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t276", locale) + "</font>");
+		}
+	
 	}
 	
 	/**
@@ -1878,7 +1877,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			oldUID = req.getParameter("oldUID");
 		}
 		
-		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang());
+		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1898,7 +1897,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		String result = ezPortalService.setUseMyPortalPage(uID, userInfo.getId(), userInfo.getCompanyID(), gubunFlag);
+		String result = ezPortalService.setUseMyPortalPage(uID, userInfo.getId(), userInfo.getCompanyID(), gubunFlag, userInfo.getTenantId());
 		return result;
 	}
 	
@@ -2196,7 +2195,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
-		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID);
+		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		model.addAttribute("list", list);
 		model.addAttribute("uID", uID);
 		return "/ezPortal/portalPortalPageACL";
@@ -2221,7 +2220,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String menuItemSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mainHTML = "";
-		String strXML = ezPortalService.searchMenuItem("", 1, 10, "");
+		String strXML = ezPortalService.searchMenuItem("", 1, 10, "", userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("DISPLAYNAME").getLength(); i++) {
@@ -2286,7 +2285,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		String htmlData = ezPortalService.htmlPortlet(uID);
+		String htmlData = ezPortalService.htmlPortlet(uID, userInfo.getTenantId());
 		model.addAttribute("htmlData", htmlData);
 		
 		return "/ezPortal/portalHtmlPortlet";
@@ -2303,7 +2302,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalImagePortletVO result = ezPortalService.imagePortlet(uID);
+		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId());
 		
 		if (result.getImagePath() != null && !result.getImagePath().equals("")) {
 			model.addAttribute("result", result);
