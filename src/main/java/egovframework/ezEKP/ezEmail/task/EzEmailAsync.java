@@ -41,7 +41,8 @@ public class EzEmailAsync {
 	@Async
 	public void cancelMailDelete(String num) {
 		try {
-			logger.debug("회수처리 비동기 함수 호출됨");
+			logger.debug("cancelMailDelete async methoed started.");
+			logger.debug("num=" + num);
 			
 			final String messageId = ezEmailService.getMailReceiveMessageId(num);
 			if (messageId == null) {
@@ -58,9 +59,11 @@ public class EzEmailAsync {
 			
 			for (String address : addresses) {
 				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
-				//config.IS_READ_DELETE가 YES이면 읽었어도 지우기 때문에 jobCode=1
+				//config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
 				String jobCode = "3";
+				
 				IMAPAccess ia = null;
+				
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							address, password, egovMessageSource, locale);
@@ -118,6 +121,7 @@ public class EzEmailAsync {
 					}
 				}
 				
+				logger.debug("address=" + address + ",jobCode=" + jobCode);
 				receiveDetailList.add(new String[]{address, jobCode});
 			}
 			
@@ -126,6 +130,8 @@ public class EzEmailAsync {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		logger.debug("cancelMailDelete async methoed ended.");
 	}
 
 }
