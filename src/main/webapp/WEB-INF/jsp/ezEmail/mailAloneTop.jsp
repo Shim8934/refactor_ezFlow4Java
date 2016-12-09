@@ -1500,9 +1500,9 @@
                 </div>
                 <article class='utmenu'>
                     <ul>
-                        
+                        <c:if test="${checkAdmin == true}">
                             <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'>관리자</span></li>
-                        
+                        </c:if>
                         <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'>직원조회</span></li>
                         <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'>환경설정</span></li>
                         <li class='btn_logout'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'>로그아웃</span></li>

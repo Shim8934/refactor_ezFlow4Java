@@ -2,9 +2,13 @@ package egovframework.ezEKP.ezEmail.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
  * @Description [Controller] 메일
@@ -21,11 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class EzEmailController {
 	
+    @Autowired
+    private CommonUtil commonUtil;
+    
 	/**
 	 * 메일 메인화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailMain.do")
-	public String showMailMain(Model model, HttpServletRequest request) throws Exception{
+	public String showMailMain(Model model, HttpServletRequest request) throws Exception {
 		String funCode = "1";
 		if(request.getParameter("funCode") != null) {
 			funCode = request.getParameter("funCode");
@@ -40,12 +47,15 @@ public class EzEmailController {
      * 메일 단독 모드에서의 메인화면 호출 함수
      */
     @RequestMapping(value="/ezEmail/mailAloneMain.do")
-    public String showMailAloneMain(Model model, HttpServletRequest request) throws Exception{
+    public String showMailAloneMain(Model model, HttpServletRequest request) throws Exception {
         return "ezEmail/mailAloneMain";
     }
 	
     @RequestMapping(value="/ezEmail/mailAloneTop.do")
-    public String showMailAloneTop(Model model, HttpServletRequest request) throws Exception{
+    public String showMailAloneTop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+        boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
+        model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
+        
         return "ezEmail/mailAloneTop";
     }
     
