@@ -77,7 +77,7 @@
 <!-- 	</procedure> -->
 		<select id ="EzApprovalG.getAprDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 			<isEqual property="v_LISTTYPE" compareValue="1">
-			<!--ѡgȒ ٮܭ, Ѹ׷ٮܭՂ fࠜȑՙ. AprType <> ''015'' -->
+			
 				<![CDATA[
 				SELECT 
 					* 
@@ -154,7 +154,7 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
-			<!--Ң߈ȑ ٮܭ -->
+			
 				<![CDATA[
 				SELECT 
 					* 
@@ -236,7 +236,7 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
-			<!--ѡg¸Ƞٮܭ, Ѹ׷ٮܭՂ fࠜȑՙ. AprType <> '015' -->
+			
 			<![CDATA[
 			SELECT 
 				* 
@@ -413,7 +413,7 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="10">
-			<!--Ѹ׷ȑ ٮܭ -->
+			
 			<![CDATA[
 			SELECT 
 				* 
@@ -1838,7 +1838,7 @@
 		</isNotEqual>
 	
 		<isNotEmpty property="v_ORDEROPTION" >
-			<isGreaterEqual property="v_ORDEROPTIONLENGHT" compareValue="11">
+			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="11">
 			<isEqual property="v_ORDEROPTIONVALUE" compareValue="deptmembersn">
 				ORDER BY $v_ORDEROPTION$
 			</isEqual>
@@ -1846,7 +1846,7 @@
 				ORDER BY $v_ORDEROPTION$, DEPTMEMBERSN DESC
 			</isNotEqual>
 			</isGreaterEqual>
-			<isLessThan property="v_ORDEROPTIONLENGHT" compareValue="11">
+			<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="11">
 			 	ORDER BY $v_ORDEROPTION$, DEPTMEMBERSN DESC
 			</isLessThan>
 		</isNotEmpty>
@@ -1940,7 +1940,7 @@
 		</isNotEqual>
 		
 		<isNotEmpty property="v_ORDEROPTION" >
-			<isGreaterEqual property="v_ORDEROPTIONLENGHT" compareValue="9">
+			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="9">
 			<isEqual property="v_ORDEROPTIONVALUE" compareValue="opinionsn">
 				ORDER BY $v_ORDEROPTION$
 			</isEqual>
@@ -1948,7 +1948,7 @@
 				ORDER BY $v_ORDEROPTION$, OPINIONSN DESC
 			</isNotEqual>
 			</isGreaterEqual>
-			<isLessThan property="v_ORDEROPTIONLENGHT" compareValue="9">
+			<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="9">
 			 	ORDER BY $v_ORDEROPTION$, OPINIONSN DESC
 			</isLessThan>
 		</isNotEmpty>
@@ -3125,13 +3125,61 @@
 	       	   		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<procedure id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORDOC(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORDOC(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
+		SELECT 
+				DOCID, 
+				CHANGESN, 
+				URL, 
+				CHANGEUSERID, 
+				CHANGEUSERJOBTITLE, 
+				CHANGEUSERJOBTITLE2,
+   				CHANGEUSERNAME, 
+   				CHANGEUSERNAME2, 
+   				CHANGEUSERDEPTID, 
+   				CHANGEUSERDEPTNAME, 
+   				CHANGEUSERDEPTNAME2, 
+   				CHANGEDATE, 
+   				CHKFLAG
+   		FROM 
+   				TBHISTORYDOCINFO 
+   		WHERE 
+   				DOCID = #v_DOCID#
+   		AND
+   				TENANT_ID =#v_TENANTID#
+   		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
+   				<isEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
+   				ORDER BY 
+   						$v_ORDEROPTION$ 
+   				</isEqual>
+   				<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
+   				ORDER BY 
+   						$v_ORDEROPTION$, CHANGEDATE DESC
+   				</isNotEqual>
+   			</isGreaterEqual>
+   			<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
+   			 	ORDER BY 
+   			 			$v_ORDEROPTION$, CHANGEDATE DESC
+   			</isLessThan>
+   		</isGreaterThan>
+   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   			  ORDER BY 
+   			 			CHANGEDATE DESC
+   		</isLessThan>
+	</select>
+<!-- 	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO">
+			SELECT 
+					DISTINCT DOCID, MODIFYDATE, MODIFYSN, MODIFYUSERID,
+		   		MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG
+		   	FROM TBHISTORYLINEINFO 
+		   	WHERE DOCID = '''||v_DOCID||''' ' ;
+	</select>
 	
 	<procedure id="EzApprovalG.getHistoryForLineDetail" parameterClass="Map" resultClass="ApprGHistoryLineVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORLINEDETAIL(#v_DOCID#, #v_MODIFYSN#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -4357,7 +4405,7 @@
          	FROM 
          			EZAPPROVALG_${companyID}.VAPRWILLDOCLIST 
          	WHERE 
-         			APRMEMBERID = $v_USERID$
+         			APRMEMBERID = #v_USERID#
          	AND 
          			APRMEMBERSN = 1 
          	AND 
@@ -4377,7 +4425,7 @@
            	FROM 
            			EZAPPROVALG_${companyID}.VAPRWILLDOCLIST 
            	WHERE 
-           			APRMEMBERID = $v_USERID$ 
+           			APRMEMBERID = #v_USERID# 
            	AND 
            			AprType <> '015'
            	AND

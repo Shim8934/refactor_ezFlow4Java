@@ -28,6 +28,10 @@
 		            window.close();
 		        }
 		        else
+	        	   if( document.getElementById("pMessageContent").innerHTML == "<spring:message code='ezApprovalG.t146'/>")
+	            	{
+			            window.returnValue = true;
+	            	}
 		            window.close();
 		    }
 		    var ReturnFunction;

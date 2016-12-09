@@ -2255,7 +2255,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
 		

@@ -1945,8 +1945,14 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
+        if (url != "")
+        	var rtn = window.showModalDialog(url, parameter, feature);
+        
+        if(rtn) {
+        	Complete_Deaft2();
+        }
     }
+
 }
 
 function OpenAlertUI_Complete() {
@@ -1973,8 +1979,9 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
 
         if (url != "")
             var rtn = window.showModalDialog(url, parameter, feature);
-
+alert(rtn);
         if (rtn) {
+        	alert(300);
         	 window.close();
         }
     }
