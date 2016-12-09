@@ -6603,6 +6603,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if (orderOption1.length() > 0) {
+			map.put("v_ORDEROPTIONVALUE", orderOption1.toLowerCase().substring(0,10));
+		}
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGHistoryDocVO> apprGHistoryDocVOList = ezApprovalGDAO.getHistoryForDoc(map);
 		
@@ -14051,7 +14057,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		map.put("v_DOCID", docID);
 		map.put("v_MODE", mode);
 		map.put("v_ORDEROPTION", orderOption1);
-		map.put("v_ORDEROPTIONLENGHT", orderOption1.length());
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		if (orderOption1.length() > 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 11).toLowerCase());
 		}
