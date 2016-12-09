@@ -5,7 +5,9 @@
 	<typeAlias  alias="UserInfo" 						type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="ApprCodeVO" 						type="egovframework.ezEKP.ezApproval.vo.ApprCodeVO"/>
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
+	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
+	<typeAlias  alias="ApprFormContVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormContVO"/>
 	
 	<select id="EzApprovalAdminDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
 		<isEqual property="ownFlag" compareValue="1">
@@ -176,6 +178,8 @@
 				TBCODELIST  
 			WHERE 
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 			AND
 				CODE1 = #code1# 
 			AND 
@@ -358,8 +362,7 @@
 	<select id="EzApprovalAdminDAO.getContTypeInfo" parameterClass="UserInfo" resultClass="ApprContInfoVO">
 		<![CDATA[
 			SELECT
-				containerTypeName,
-				containerTypeName2,
+				containerTypeName$primary$,
 				containerTypeID
 			FROM
 				tbcontainertype
@@ -403,6 +406,8 @@
 				TBLISTOPTION  
 			WHERE 
 				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
 			AND
 				LISTTYPE = #listCode# 
 			AND 
@@ -465,11 +470,297 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getSpecialContList" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+             	CONTTYPE ,
+             	SN ,
+             	CONTNAME ,
+             	SUBQUERY 
+        	FROM 
+        		TBSPECIALCONTAINERINFO 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			DEPTID = #deptID#
+        	ORDER BY 
+        		CONTTYPE,
+                SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfoContTypeName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				containertypename$lang$ as containerTypeName
+			FROM
+				TBCONTAINERTYPE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #contType#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT 
+				CODE2, NAME$lang$ AS NAME 
+			FROM 
+				TBCODELIST 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				CODE1 = #code1# 
+   			AND 
+   				ISUSE = '1' 
+   			ORDER BY 
+   				CODE2
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+        		CONTTYPE ,
+        		SN ,
+        		CONTNAME ,
+        		SUBQUERY 
+   			FROM 
+   				TBSPECIALCONTAINERINFO 
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				COMPANYID = #companyID#
+  			AND  
+  				DEPTID = #deptID#
+           	AND 
+           		CONTTYPE = #contType#
+           	AND 
+           		SN = #sn#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfoFormName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CONCAT(CONCAT(FORMID,';'), FORMNAME$lang$) AS FORMIDNAME 
+			FROM 
+				TBFORMINFO  
+			WHERE 
+			  	$subQuery$
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContainerInfo" parameterClass="Map" resultClass="ApprFormContVO">
+		<isEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					FORMCONTID ,
+                	FORMCONTNAME$lang$ as FORMCONTNAME ,
+                	FORMCONTOWNDEPID ,
+                	FORMCONTPARENTS ,
+                	FORMCONTDESCRIPTION 
+           		FROM 
+           			TBFormContainer 
+          		WHERE
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND  
+          			FORMCONTPARENTS = #id#
+			]]>
+		</isEmpty>
+		<isNotEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					DISTINCT fc.FormContID ,
+                   	fc.FormContName$lang$ as FormContName ,
+                    fc.FormContOwnDepID ,
+                    fc.FormContParents ,
+                    fc.FormContdescription 
+           		FROM 
+           			TBFormContainer fc
+                LEFT JOIN 
+                	TBFormContUserGroup fcug   
+                ON
+                	fc.tenant_id = fcug.tenant_id
+                AND
+                	fc.companyid = fcug.companyid
+                AND 
+                	fc.FormContID = fcug.FormContID
+          		WHERE
+          			fc.tenant_id = #tenantID#
+          		AND
+          			fc.companyid = #companyID#
+          		AND  
+          			fc.FormContParents = #id#
+                AND 
+                	( fc.FormContOwnDepID = 'ALL' 
+                      OR fc.FormContOwnDepID = #deptID# 
+                	  OR fcug.FormContUserDepID = #deptID# )
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContainerCntChild" parameterClass="Map" resultClass="Integer">
+		<isEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					COUNT(FORMCONTID)
+           		FROM 
+           			TBFormContainer 
+          		WHERE  
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND
+          			FORMCONTPARENTS = #id#
+			]]>
+		</isEmpty>
+		<isNotEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					DISTINCT COUNT(fc.FormContID)
+           		FROM 
+           			TBFormContainer fc 
+                LEFT JOIN 
+                	TBFormContUserGroup fcug    
+                ON 
+                	fc.tenant_id = fcug.tenant_id
+                AND
+                	fc.companyid = fcug.companyid
+                AND
+                	fc.FormContID = fcug.FormContID
+          		WHERE
+          			fc.tenant_id = #tenantID#
+          		AND
+          			fc.companyid = #companyID#
+          		AND  
+          			fc.FormContParents = #id#
+                AND 
+                	( fc.FormContOwnDepID = 'ALL'
+                	OR fc.FormContOwnDepID = #deptID#
+                	OR fcug.FormContUserDepID = #deptID# )
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormInfo" parameterClass="ApprFormInfoVO" resultClass="ApprFormInfoVO">
+		<isEqual property="formKind" compareValue="A01000">
+			<![CDATA[
+				SELECT 
+					formid,
+					formDescription,
+					formDocType,
+					formFileLocation,
+					formName,
+					formName2 
+           		FROM 
+           			TBFormInfo 
+          		WHERE  
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND
+          			FORMCONTID = #formContID#
+                AND 
+                	( CASE
+                		WHEN #searchType# = '0' AND #lang# = '1'
+                			THEN FORMNAME
+                        WHEN #searchType# = '0' AND #lang# != '1' 
+                       		THEN FORMNAME2
+                        WHEN #searchType# = '1' 
+                       		THEN FORMDESCRIPTION
+                 	    ELSE FORMNAME
+                    END ) LIKE '%' || #searchName# || '%'
+           		ORDER BY 
+           			FORMORDER
+			]]>
+		</isEqual>
+		<isNotEqual property="formKind" compareValue="A01000">
+			<isEqual property="formKind" compareValue="BASE">
+				<![CDATA[
+					SELECT 
+						formid,
+						formDescription,
+						formDocType,
+						formFileLocation,
+						formName,
+						formName2 
+	           		FROM 
+	           			TBFormInfo 
+	          		WHERE  
+	          			TENANT_ID = #tenantID#
+	          		AND
+	          			COMPANYID = #companyID#
+	          		AND  
+	          			FORMCONTID = #formContID#
+	                AND 
+	                	( FORMDOCTYPE = 'A01001' OR FORMDOCTYPE = 'A01002' OR FORMDOCTYPE = 'A01003' )
+	                AND 
+	                	( CASE
+	                		WHEN #searchType# = '0' AND #lang# = '1' 
+	                        	THEN FORMNAME
+	                        WHEN #searchType# = '0' AND #lang# != '1' 
+	                       		THEN FORMNAME2
+	                        WHEN #searchType# = '1' 
+	                        	THEN FORMDESCRIPTION
+	                    	ELSE FORMNAME
+	                      END ) LIKE '%' || #searchName# || '%'
+	              	ORDER BY 
+	              		FORMORDER
+				]]>
+			</isEqual>
+			<isNotEqual property="formKind" compareValue="BASE">
+				<![CDATA[
+					SELECT 
+						formid,
+						formDescription,
+						formDocType,
+						formFileLocation,
+						formName,
+						formName2 
+	           		FROM 
+	           			TBFormInfo 
+	          		WHERE  
+	          			TENANT_ID = #tenantID#
+	          		AND
+	          			COMPANYID = #companyID#
+	          		AND  
+	          			FORMCONTID = #formContID#
+                    AND 
+                    	FORMDOCTYPE = #formKind#
+                    AND 
+                    	( CASE
+                    		WHEN #searchType# = '0' AND #lang# = '1' 
+                    			THEN FORMNAME
+                            WHEN #searchType# = '0' AND #lang# != '1' 
+                            	THEN FORMNAME2
+                            WHEN #searchType# = '1' 
+                            	THEN FORMDESCRIPTION
+                    		ELSE FORMNAME
+                       	  END ) LIKE '%' || #searchName# || '%'
+              		ORDER BY 
+              			FORMORDER
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
 				SELECT
-					 NVL(MAX(usercontid), '0000000000') + 1
+					NVL(MAX(usercontid), '0000000000') + 1
 				FROM 
 					TBUSERCONT
 				WHERE
@@ -577,6 +868,38 @@
 		]]>
 	</insert>
 	
+	<insert id="EzApprovalAdminDAO.insertSpecialContInfo" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="sn" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(SN) IS NULL
+						THEN 1
+						ELSE MAX(SN) + 1
+					END SN
+        		FROM 
+        			TBSPECIALCONTAINERINFO 
+       			WHERE
+       				TENANT_ID = #tenantID#
+       			AND
+       				COMPANYID = #companyID#
+       			AND  
+       				DEPTID = #deptID#
+                AND 
+                	CONTTYPE = #contType#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBSPECIALCONTAINERINFO (
+				DeptID,   ContType,   SN, 	contName, 	subquery, 	companyid, 	 tenant_id
+			)
+			VALUES (
+				#deptID#, #contType#, #sn#, #contName#, #subQuery#, #companyID#, #tenantID#
+			) 
+		]]>
+	</insert>
+	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBCONTAINER 
@@ -590,6 +913,60 @@
 			AND 
 				ContainerID = #contID#
 				
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN1" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE TBSPECIALCONTAINERINFO
+      		SET 
+      			SN = '0'
+    		WHERE  
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND
+    			DeptID = #deptID#
+     		AND 
+     			ContType = #contType#
+     		AND 
+     			SN = #sn#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN2" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE TBSPECIALCONTAINERINFO
+      		SET 
+      			SN = #sn#
+    		WHERE
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+    			DeptID = #deptID#
+     		AND 
+     			ContType = #contType2#
+     		AND 
+     			SN = #sn2#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN3" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE TBSPECIALCONTAINERINFO
+         	SET 
+         		SN = #sn2#
+       		WHERE
+       			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+       			DeptID = #deptID#
+        	AND 
+        		ContType = #contType#
+        	AND 
+        		SN = '0'
 		]]>
 	</update>
 	
@@ -650,6 +1027,22 @@
       			COMPANYID = #companyID#
       		AND
 	        	CONTAINERID = #contID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteSpecialContInfo" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			DELETE FROM TBSPECIALCONTAINERINFO 
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				DeptID = #deptID#
+			AND
+				contType = #contType#
+			AND
+				sn = #sn#
 		]]>
 	</delete>
 </sqlMap>

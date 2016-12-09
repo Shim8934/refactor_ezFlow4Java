@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -147,6 +149,65 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 	public void deleteContainer(Map<String, Object> map) throws Exception{
 		delete("EzApprovalAdminDAO.deleteContainer", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprContInfoVO> getSpecialContList(Map<String, Object> map) throws Exception{
+		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getSpecialContList", map);
+	}
+
+	public String getSpecialContInfoContTypeName(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalAdminDAO.getSpecialContInfoContTypeName", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprCodeVO> getCodeType(Map<String, Object> map) throws Exception{
+		return (List<ApprCodeVO>) list("EzApprovalAdminDAO.getCodeType", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprContInfoVO> getSpecialContInfo(ApprContInfoVO apprContInfoVO) throws Exception{
+		return (List<ApprContInfoVO>) list("EzApprovalAdminDAO.getSpecialContInfo", apprContInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getSpecialContInfoFormName(Map<String, Object> map) throws Exception{
+		return (List<String>) list("EzApprovalAdminDAO.getSpecialContInfoFormName", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprFormContVO> getFormContainerInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprFormContVO>) list("EzApprovalAdminDAO.getFormContainerInfo", map);
+	}
+
+	public int getFormContainerCntChild(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalAdminDAO.getFormContainerCntChild", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprFormInfoVO> getFormInfo(ApprFormInfoVO apprFormInfoVO) throws Exception{
+		return (List<ApprFormInfoVO>) list("EzApprovalAdminDAO.getFormInfo", apprFormInfoVO);
+	}
+
+	public void deleteSpecialContInfo(ApprContInfoVO apprContInfoVO) throws Exception{
+		delete("EzApprovalAdminDAO.deleteSpecialContInfo", apprContInfoVO);
+	}
+
+	public void insertSpecialContInfo(ApprContInfoVO apprContInfoVO) throws Exception{
+		insert("EzApprovalAdminDAO.insertSpecialContInfo", apprContInfoVO);
+	}
+
+	public void changeSpecialContSN1(ApprContInfoVO apprContInfoVO) throws Exception{
+		update("EzApprovalAdminDAO.changeSpecialContSN1", apprContInfoVO);
+	}
+
+	public void changeSpecialContSN2(ApprContInfoVO apprContInfoVO) {
+		update("EzApprovalAdminDAO.changeSpecialContSN2", apprContInfoVO);
+	}
+	
+	public void changeSpecialContSN3(ApprContInfoVO apprContInfoVO) {
+		update("EzApprovalAdminDAO.changeSpecialContSN3", apprContInfoVO);
+	}
+
 
 
 }
