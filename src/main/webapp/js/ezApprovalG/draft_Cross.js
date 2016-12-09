@@ -1979,9 +1979,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
 
         if (url != "")
             var rtn = window.showModalDialog(url, parameter, feature);
-alert(rtn);
         if (rtn) {
-        	alert(300);
         	 window.close();
         }
     }
