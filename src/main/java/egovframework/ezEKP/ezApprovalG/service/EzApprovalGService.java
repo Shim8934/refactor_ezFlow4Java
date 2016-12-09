@@ -199,7 +199,7 @@ public interface EzApprovalGService {
 	
 	public String rollbackCabinetNum(String deptID, String subID, String sn, String companyID, String docID, String lang, int tenantID) throws Exception;
 	
-	public String updateSignInfo(Document xmlDom, String companyID, String mode) throws Exception;
+	public String updateSignInfo(Document xmlDom, String companyID, String mode, int tenantID) throws Exception;
 	
 	public String getCallBackYN(String docID, String tempUserID, String companyID) throws Exception;
 	
@@ -243,7 +243,7 @@ public interface EzApprovalGService {
 	
 	public String doCallBack(String docID, String userID, String companyID) throws Exception;
 	
-	public String getFormConnFlag(String docID, String companyID) throws Exception;
+	public String getFormConnFlag(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID) throws Exception;
 	
