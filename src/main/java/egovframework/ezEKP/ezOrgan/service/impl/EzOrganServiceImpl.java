@@ -873,13 +873,17 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception {
+	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception {
 		String strXML = null;
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_PCN", id);
 		map.put("v_PDEPT", pDeptID);
 		map.put("v_LANGDATA", primary);
+		
 		OrganUserVO userVO = (ezOrganDAO.getUserAddjobInfo(map));
+		
 		if(userVO!=null){
 			StringBuilder stb = new StringBuilder();		
 			

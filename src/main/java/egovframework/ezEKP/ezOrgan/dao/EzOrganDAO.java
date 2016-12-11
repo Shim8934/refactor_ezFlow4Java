@@ -947,8 +947,68 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }       
 	}
 
+    private OrganUserVO getUserAddjobInfoForJMocha(Map<String, Object> map) throws Exception{
+        String userId = (String)map.get("v_PCN");
+        String deptId = (String)map.get("v_PDEPT");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getUserAddjobInfoForJMocha started. tenantId=" + tenantId + ",userId=" + userId 
+                + ",deptId=" + deptId + ",isPrimary=" + isPrimary);
+        
+        OrganUserVO userVO = null;
+                
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String param3 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String param4 = "isPrimary=" + URLEncoder.encode(isPrimary, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserAddJobInfo";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        userVO = new OrganUserVO();
+                                                        
+                        userVO.setDisplayName((String)result.get("displayname"));
+                        userVO.setTitle((String)result.get("title"));
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("getUserAddjobInfoForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return userVO;
+    }
+	
+    private OrganUserVO getUserAddjobInfoForLocal(Map<String, Object> map) throws Exception{
+        return (OrganUserVO) select("EzOrganDAO.getUserAddjobInfo", map);
+    }
+	
 	public OrganUserVO getUserAddjobInfo(Map<String, Object> map) throws Exception{
-		return (OrganUserVO) select("EzOrganDAO.getUserAddjobInfo", map);
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getUserAddjobInfoForJMocha(map);
+        } else {
+            return getUserAddjobInfoForLocal(map);
+        }       
 	}
 
     private List<OrganDeptVO> organSearchListPageForJMocha(Map<String, Object> map) throws Exception{

@@ -26,7 +26,7 @@ public interface EzOrganService {
 	
 	public String getPropertyList(String id, String proplist, String primary, int tenantID) throws Exception;
 
-	public String getUserAddjobInfo(String id, String pDeptID, String primary) throws Exception;	
+	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
 	
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
