@@ -461,6 +461,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         if (pLimit != 0) {
             if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                // MySQL에 의존적인 부분이라 후에 수정 필요함.
                 strSize = " LIMIT " + pLimit;
             } else {
                 strSize = " AND ROWNUM <= " + pLimit;
@@ -912,7 +913,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		pLangCode = commonUtil.convertLangCode(pLangCode);
 		
 		String strSQL="";
@@ -924,9 +924,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		String[] SearchParemeta=null;
 		String type = "";
 		
-		if(pLimit != 0){
-			strSize= " AND ROWNUM <= " + pLimit;
-		}
+        if (pLimit != 0) {
+            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                // Pagination에서는 페이지에 따른 행 범위가 따로 지정되기 때문에 최대 제한을 별도로 두지 않는다.
+            } else {
+                strSize = " AND ROWNUM <= " + pLimit;
+            }
+        }
 		
 		if (pSearchList != ""){
 			   pSearchList = pSearchList.replace(";;", "##");
@@ -986,25 +990,39 @@ public class EzOrganServiceImpl implements EzOrganService {
 		if (pClass.equals("user") || pClass.equals("all")){
 			 strSQL = strSQL.replace("cn", "a.cn");
              strSQL = strSQL.replace("title", "a.title");
+             
+             if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                 strSQL = strSQL.replace("displayname", "a.displayname");
+             }
+             
              type = "U";
     	}
 		else{
 			type = "G";
     	}
-		String tempstrSQL = strSQL;
+
 		if(page.equals(null) || page.equals("")){
 			page = "1";
 		}
+		
 		 int startRow = (Integer.parseInt(page) - 1) * 50 + 1;
          int endRow = Integer.parseInt(page) * 50 + 1;
          
          Map<String , Object> map = new HashMap<String , Object>();
+         
+         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+             strSQL += " AND a.tenant_id=" + tenantID;
+         }
+         
          map.put("strSQL" , strSQL + strSize);
          map.put("type", type);
          map.put("class", pClass);
          map.put("startRow", startRow);
          map.put("endRow", endRow);
+         map.put("v_TENANT_ID", tenantID);
+         
          List<OrganDeptVO> list = ezOrganDAO.organSearchListPage(map);
+         
          //여기까지 구현
          StringBuilder memberlist2 = null;
          int totalcount = ezOrganDAO.getSearchListCount(map);
@@ -1029,11 +1047,13 @@ public class EzOrganServiceImpl implements EzOrganService {
  					map1.put("v_CN", organVO.getCn());
  	        		map1.put("v_DEPTCD", organVO.getDisplayName());
  	        		map1.put("v_LANGDATA", pLangCode);
+ 	        		map1.put("v_TENANT_ID", tenantID);
  	        		
  	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
  	        	}else{
  	        		map1.put("v_CN", organVO.getCn());
  					map1.put("v_LANGDATA", pLangCode);
+ 					map1.put("v_TENANT_ID", tenantID);
  					
  					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
  				}
