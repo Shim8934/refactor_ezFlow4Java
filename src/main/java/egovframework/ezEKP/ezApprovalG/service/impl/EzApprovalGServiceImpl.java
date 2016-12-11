@@ -785,7 +785,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
 			
 			if (proxyOption.equals("1")) {
-				userIDs = getProxyUser(userID, lang);
+				userIDs = getProxyUser(userID, lang, tenantID);
 			}
 		}
 		
@@ -7941,7 +7941,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
 		
 		if (proxyOption.equals("1")) {
-			userIDs = getProxyUser(userID, lang);
+			userIDs = getProxyUser(userID, lang, tenantID);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -11377,7 +11377,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String sendRecvMsg(String deptID, String docID, String mode, String companyID, String lang, int tenantID) throws Exception{
-		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang));
+		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang), tenantID);
 		Document docXML = commonUtil.convertStringToDocument(rtnXML);
 		
 		for (int k = 0; k < docXML.getElementsByTagName("DATA2").getLength(); k++) {
@@ -14159,7 +14159,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		StringBuffer resultXML = new StringBuffer();
 		
 		if (proxyOption.equals("1")) {
-			userIDs = getProxyUser(userID, userLang);
+			userIDs = getProxyUser(userID, userLang, tenantID);
 		}
 		
 		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
@@ -14505,8 +14505,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		return ezApprovalGDAO.getAprDocListCount(map);
 	}
 	@Override
-	public String getProxyUser(String userID, String userLang) throws Exception{
-		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, commonUtil.getPrimaryData(userLang));
+	public String getProxyUser(String userID, String userLang, int tenantID) throws Exception{
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, commonUtil.getPrimaryData(userLang), tenantID);
 		Document doc = commonUtil.convertStringToDocument(rtnXML);
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;
@@ -15026,7 +15026,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		String proxyOption = getIsUse("A23", "001", companyID, strLang, tenantID);
 		
 		if (proxyOption.equals("1")) {
-			userIDs = getProxyUser(userID, strLang);
+			userIDs = getProxyUser(userID, strLang, tenantID);
 		}
 		
 		resultXML.append("<DOCLIST>");
@@ -17785,7 +17785,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		if (listType.equals("1")) {
 			proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
 			if (proxyOption.equals("1")) {
-				userIDS = getProxyUser(userID, lang);
+				userIDS = getProxyUser(userID, lang, tenantID);
 			}
 		}
 		

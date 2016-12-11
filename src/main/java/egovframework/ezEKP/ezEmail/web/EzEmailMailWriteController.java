@@ -2929,6 +2929,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String pOrganSearchList = "";
 		String pOrganCellList = "displayname";
 		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
@@ -2993,7 +2997,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
         
-        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType);
+        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, tenantID);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
@@ -3273,10 +3277,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
-	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType) {
+	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, int tenantID) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, config.getProperty("config.primary"));
+            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, config.getProperty("config.primary"), tenantID);
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";

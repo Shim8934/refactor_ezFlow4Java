@@ -18,7 +18,7 @@ public interface EzOrganService {
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
-	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang) throws Exception;
+	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
 	
@@ -32,7 +32,7 @@ public interface EzOrganService {
 	
 	public String getEncPassword(String dUserID) throws Exception;
 	
-	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page) throws Exception;
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID) throws Exception;
 	
 	public String updateProperty(String userID, String propName, String propValue, String pClass) throws Exception;
 	

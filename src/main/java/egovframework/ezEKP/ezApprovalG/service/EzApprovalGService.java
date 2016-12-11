@@ -22,7 +22,7 @@ public interface EzApprovalGService {
 
 	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID) throws Exception;
 
-	public String getProxyUser(String id, String lang) throws Exception;
+	public String getProxyUser(String id, String lang, int tenantID) throws Exception;
 
 	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID) throws Exception;
 	

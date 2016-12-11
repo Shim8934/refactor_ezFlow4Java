@@ -398,10 +398,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
-					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 					String[] proxyUserArray = proxyUser.split(",");
 					boolean checkPermission = true;
 					if (proxyUserArray.length > 1) {
@@ -580,6 +584,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/draftui.do")
 	public String draftui(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String useEditor = config.getProperty("config.EDITOR");
 		String susinAdmin = "";
 		String formURL = request.getParameter("formURL");
@@ -623,7 +632,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
@@ -2550,6 +2559,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String approvui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String crossEditor = config.getProperty("config.EDITOR");
 		String susinAdmin = "";
 		
@@ -2590,7 +2603,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optJunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
@@ -32,6 +33,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+    @Autowired
+    private Properties config;
 	
 	@Override
 	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
@@ -444,7 +447,7 @@ public class EzOrganServiceImpl implements EzOrganService {
     }	
 
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, int tenantID) throws Exception {
 		pLangCode = commonUtil.convertLangCode(pLangCode);	
 		
         String[] searchParemeta = null;
@@ -456,8 +459,12 @@ public class EzOrganServiceImpl implements EzOrganService {
         String type = "";        
         int i = 0;
         
-        if (pLimit != 0){
-            strSize = " AND ROWNUM <= " + pLimit;
+        if (pLimit != 0) {
+            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                strSize = " LIMIT " + pLimit;
+            } else {
+                strSize = " AND ROWNUM <= " + pLimit;
+            }
         }
         
         if (pSearchList != ""){
@@ -515,6 +522,11 @@ public class EzOrganServiceImpl implements EzOrganService {
         if (pClass.equals("user") || pClass.equals("all")){
             strSQL = strSQL.replace("cn", "a.cn");
             strSQL = strSQL.replace("title", "a.title");
+            
+            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                strSQL = strSQL.replace("displayname", "a.displayname");
+            }
+            
             type = "U";
         }else{
         	type = "G";
@@ -522,9 +534,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         Map<String, Object> map = new HashMap<String, Object>();
         
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            strSQL += " AND a.tenant_id=" + tenantID;
+        }
+        
         map.put("strSQL", strSQL + strSize);
         map.put("type", type);
         map.put("class", pClass);
+        map.put("v_TENANT_ID", tenantID);
         
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
@@ -543,11 +560,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
 	        		map1.put("v_LANGDATA", pLangCode);
+	        		map1.put("v_TENANT_ID", tenantID);
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
 					map1.put("v_LANGDATA", pLangCode);
+					map1.put("v_TENANT_ID", tenantID);
 					
 					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
 				}
@@ -892,7 +911,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page) throws Exception {
+	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
 		// TODO Auto-generated method stub
 		pLangCode = commonUtil.convertLangCode(pLangCode);
 		
