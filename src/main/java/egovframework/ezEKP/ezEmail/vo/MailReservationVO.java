@@ -1,9 +1,5 @@
 package egovframework.ezEKP.ezEmail.vo;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import egovframework.let.utl.fcc.service.CommonUtil;
-
 public class MailReservationVO {
 	
 	private String messageId;
@@ -11,9 +7,6 @@ public class MailReservationVO {
 	private String subject;
 	private String modify;
 	private String connUrl;
-	
-	@Autowired
-	private CommonUtil commonUtil;
 	
 	public String getMessageId() {
 		return messageId;
