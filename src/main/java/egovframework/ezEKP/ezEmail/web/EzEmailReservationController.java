@@ -112,7 +112,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), userInfo.getId());
 		
 		for (MailReservationVO vo : list) {
-			vo.setTimeZoneDate(userInfo.getOffset());
+			vo.setSendDate(commonUtil.getDateStringInUTC(vo.getSendDate(), userInfo.getOffset(), false));
 		}
 		
 		model.addAttribute("draftUrl", draftUrl);

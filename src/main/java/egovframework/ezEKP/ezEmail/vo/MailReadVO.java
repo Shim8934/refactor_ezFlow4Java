@@ -32,10 +32,6 @@ public class MailReadVO {
 		this.readerName = readerName;
 	}
 	
-	public void setTimeZoneDate(String offset) {
-		readDate = commonUtil.getDateStringInUTC(readDate, offset, false);
-	}
-	
 	@Override
 	public String toString() {
 		return "MailReadVO [readDate=" + readDate + ", readerEmail=" + readerEmail + ", readerName=" + readerName + "]";

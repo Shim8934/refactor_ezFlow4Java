@@ -46,10 +46,6 @@ public class MailReservationVO {
 		this.connUrl = connUrl;
 	}
 	
-	public void setTimeZoneDate(String offset) {
-		sendDate = commonUtil.getDateStringInUTC(sendDate, offset, false);
-	}
-	
 	@Override
 	public String toString() {
 		return "MailReservationVO [messageId=" + messageId + ", sendDate=" + sendDate + ", subject=" + subject
