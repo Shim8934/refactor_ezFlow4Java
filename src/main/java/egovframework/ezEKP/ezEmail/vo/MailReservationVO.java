@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezEmail.vo;
 
-import egovframework.let.utl.fcc.service.EgovDateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 public class MailReservationVO {
 	
@@ -9,6 +11,9 @@ public class MailReservationVO {
 	private String subject;
 	private String modify;
 	private String connUrl;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	public String getMessageId() {
 		return messageId;
@@ -42,7 +47,7 @@ public class MailReservationVO {
 	}
 	
 	public void setTimeZoneDate(String offset) {
-		sendDate = EgovDateUtil.getDateStringInUTC(sendDate, offset, false);
+		sendDate = commonUtil.getDateStringInUTC(sendDate, offset, false);
 	}
 	
 	@Override

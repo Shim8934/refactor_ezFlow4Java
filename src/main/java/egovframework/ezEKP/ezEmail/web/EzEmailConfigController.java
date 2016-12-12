@@ -1275,7 +1275,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			String dateStr = sdf.format(new Date());
 			
 			//get user time from UTC time
-			dateStr = EgovDateUtil.getDateStringInUTC(dateStr, offset, false);
+			dateStr = commonUtil.getDateStringInUTC(dateStr, offset, false);
 			logger.debug("userCurrentTime=" + dateStr);
 			
 			String date = dateStr.substring(0, 10);
@@ -1285,8 +1285,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			gEndDate = EgovDateUtil.addYMDtoDayTime(date, hour + ":00", 0, 0, 1, 0, 0, "yyyy-MM-dd HH:mm");
 		} else {
 			//set user time from UTC time
-			gStartDate = EgovDateUtil.getDateStringInUTC(gStartDate, offset, false);
-			gEndDate = EgovDateUtil.getDateStringInUTC(gEndDate, offset, false);
+			gStartDate = commonUtil.getDateStringInUTC(gStartDate, offset, false);
+			gEndDate = commonUtil.getDateStringInUTC(gEndDate, offset, false);
 		}
 		
 		logger.debug("gOofState=" + gOofState + ",gStartDate=" + gStartDate + ",gEndDate=" + gEndDate
@@ -1326,8 +1326,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		//set UTC time
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
-		startDate = EgovDateUtil.getDateStringInUTC(startDate, offset, true);
-		endDate = EgovDateUtil.getDateStringInUTC(endDate, offset, true);
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userId = userInfo.getId() + "@" + domainName;

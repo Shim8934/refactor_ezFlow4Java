@@ -309,11 +309,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			urlOwn = URLDecoder.decode(request.getParameter("url").replaceAll(" ", "+"),"UTF-8"); // url decode 해야하나?
 		}
 		
-		String cmd = "";
-		if (request.getParameter("cmd") != null) {
-			cmd = request.getParameter("cmd");
-		}
-		
 		String _cmd = "";
 		if (request.getParameter("cmd") != null) {
 			_cmd = request.getParameter("cmd");
@@ -903,7 +898,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("postType", postType);
 		model.addAttribute("url", url);
 		model.addAttribute("attach", attach);
-		model.addAttribute("cmd", cmd);
+		model.addAttribute("_cmd", _cmd);
 		model.addAttribute("unread", unread);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("itemID", itemID);
@@ -960,7 +955,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		return "ezEmail/mailWrite";
 	}
-
+	
 	/**
 	 * 메일 저장 여부를 묻는 확인 다이알로그 표시
 	 */
@@ -2421,7 +2416,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        if (!delaySendTime.equals("")) {
 		        	//예약발송
-		        	delaySendTime = EgovDateUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
+		        	delaySendTime = commonUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
 		        	
 		            doDelaySend(loginInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTime, userId, realPath);
 		        	

@@ -233,7 +233,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID);
 			
 			//utc에서 timezone으로 시간변경
-			pReservedSaveTime = EgovDateUtil.getDateStringInUTC(pReservedSaveTime, loginInfo.getOffset(), false);
+			pReservedSaveTime = commonUtil.getDateStringInUTC(pReservedSaveTime, loginInfo.getOffset(), false);
 			
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, 30);

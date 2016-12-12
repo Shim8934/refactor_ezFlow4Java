@@ -475,7 +475,7 @@ public class EzEmailMailListController {
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String receivedDateStr = sdf.format(receivedDate);
 				
-				receivedDateStr = EgovDateUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
 				
 				sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
 				

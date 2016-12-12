@@ -1,12 +1,17 @@
 package egovframework.ezEKP.ezEmail.vo;
 
-import egovframework.let.utl.fcc.service.EgovDateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 public class MailReadVO {
 	
 	private String readDate;
 	private String readerEmail;
 	private String readerName;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	public String getReadDate() {
 		return readDate;
@@ -28,7 +33,7 @@ public class MailReadVO {
 	}
 	
 	public void setTimeZoneDate(String offset) {
-		readDate = EgovDateUtil.getDateStringInUTC(readDate, offset, false);
+		readDate = commonUtil.getDateStringInUTC(readDate, offset, false);
 	}
 	
 	@Override

@@ -24,10 +24,13 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -525,6 +528,75 @@ public class CommonUtil {
 	
 	public String getUploadPath(String property, int tenantId) {
 		return separator + "fileroot" + separator + tenantId + config.getProperty(property);
+	}
+	
+	/**
+	 * <pre>
+	 * timeZoneToUTC가 true면 TimeZone Date 문자열을 UTC타임 Date 문자열로 바꿔서 반환한다.
+	 * timeZoneToUTC가 false면 UTC타임 Date 문자열을 TimeZone Date 문자열로 바꿔서 반환한다.
+	 * - dateStr 형식 : yyyy-MM-dd HH:mm:ss, yyyy-MM-dd HH:mm, yyyy-MM-dd
+	 * 				   yyyy/MM/dd HH:mm:ss, yyyy/MM/dd HH:mm, yyyy/MM/dd, yyMMdd
+	 * - offset 형식 : ex) 235|+09:00
+	 * </pre>
+	 */
+	public String getDateStringInUTC(String dateStr, String offset, boolean timeZoneToUTC) {
+		logger.debug("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
+		
+		if (dateStr == null) {
+			return null;
+		}
+		
+		if (offset == null || offset.indexOf("|") == -1) {
+			logger.error("offset is null or offset format is wrong.");
+			return dateStr;
+		}
+		
+		String pattern = "";
+		if (dateStr.length() == 8) {
+			pattern = "yyyyMMdd";
+		} else if (dateStr.length() == 10) {
+			if (dateStr.indexOf("/") > -1) {
+				pattern = "yyyy/MM/dd";
+			} else {
+				pattern = "yyyy-MM-dd";
+			}
+		} else if (dateStr.length() == 16) {
+			if (dateStr.indexOf("/") > -1) {
+				pattern = "yyyy/MM/dd HH:mm";
+			} else {
+				pattern = "yyyy-MM-dd HH:mm";
+			}
+		} else {
+			if (dateStr.indexOf("/") > -1) {
+				pattern = "yyyy/MM/dd HH:mm:ss";
+			} else {
+				pattern = "yyyy-MM-dd HH:mm:ss";
+			}
+		}
+		logger.debug("pattern=" + pattern);
+		
+		String[] offsetArr = offset.split("\\|");
+		
+		SimpleDateFormat userFormat = new SimpleDateFormat(pattern);
+		userFormat.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
+		
+		SimpleDateFormat utcFormat = new SimpleDateFormat(pattern);
+		utcFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		String resultDateStr = "";
+		try {
+			if (timeZoneToUTC) {
+				resultDateStr = utcFormat.format(userFormat.parse(dateStr));
+			} else {
+				resultDateStr = userFormat.format(utcFormat.parse(dateStr));
+			}
+		} catch (ParseException e) {
+			logger.error("Check the dateStr format.");
+			return dateStr;
+		}
+		
+		logger.debug("resultDateStr=" + resultDateStr);
+		return resultDateStr;
 	}
 }
 
