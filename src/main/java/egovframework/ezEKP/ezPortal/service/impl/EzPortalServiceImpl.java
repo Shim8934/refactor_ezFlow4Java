@@ -573,8 +573,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalGetPortletParametersVO> getPortletParametres(String pUID) throws Exception {
-		return ezPortalDAO.getPortletParametres(pUID);
+	public List<PortalGetPortletParametersVO> getPortletParametres(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getPortletParametres(map);
 	}
 	
 	@Override
@@ -644,18 +647,27 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTBLPortalACLVO> getAclItems(String pUID) throws Exception {
-		return ezPortalDAO.getAclItems(pUID);
+	public List<PortalTBLPortalACLVO> getAclItems(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getAclItems(map);
 	}
 	
 	@Override
-	public String htmlPortlet(String uID) throws Exception {
-		return ezPortalDAO.htmlPortlet(uID);
+	public String htmlPortlet(String uID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", uID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.htmlPortlet(map);
 	}
 	
 	@Override
-	public PortalImagePortletVO imagePortlet(String pUID) throws Exception {
-		return ezPortalDAO.imagePortlet(pUID);
+	public PortalImagePortletVO imagePortlet(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_UID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.imagePortlet(map);
 	}
 	
 	@Override
@@ -2293,20 +2305,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getPortletParameters (String pUID) {
-		try {
-			List<PortalGetPortletParametersVO> result = getPortletParametres(pUID);
-			String resultXML = "";
-			resultXML = "<DATA>";
-			for (int i=0; i<result.size(); i++) {
-				resultXML += commonUtil.getQueryResult(result.get(i));
-			}
-			resultXML += "</DATA>";
-			return resultXML;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+	public String getPortletParameters (String pUID, int tenantID) throws Exception {
+		List<PortalGetPortletParametersVO> result = getPortletParametres(pUID, tenantID);
+		String resultXML = "";
+		resultXML = "<DATA>";
+		for (int i=0; i<result.size(); i++) {
+			resultXML += commonUtil.getQueryResult(result.get(i));
 		}
+		resultXML += "</DATA>";
+		return resultXML;
 	}
 	
 	public String getBoardProperty (String pBoardID, String lang, int tenantID) {
@@ -2614,37 +2621,30 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return ezPortalDAO.searchStartPage2(map1);
 	}
 	
-	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr) throws Exception {
-		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pOLDUID", pOldUID);
-			map.put("v_pUSERID", pUserID);
-			map.put("v_pCOMPANYID", pCompanyID);
-			map.put("v_pLANGSTR", langStr);
-			map.put("v_pUID", pUID);
-			
-			ezPortalDAO.setUseMyStartPage2(map);
-			return "OK";
-		} catch (Exception e) {
-			return "";
-		}
+	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pOLDUID", pOldUID);
+		map.put("v_pUSERID", pUserID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pLANGSTR", langStr);
+		map.put("v_pUID", pUID);
+		map.put("tenantID", tenantID);
+		
+		ezPortalDAO.setUseMyStartPage2(map);
+		return "OK";
 	}
 	
-	public String setUseMyPortalPage (String pUID, String pUserID, String pCompanyID, String pGubunFlag) throws Exception {
-		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pUID", pUID);
-			map.put("v_pUSERID", pUserID);
-			map.put("v_pCOMPANYID", pCompanyID);
-			map.put("v_pGUBUNFLAG", pGubunFlag);
-			map.put("v_pUSEFLAG", "Y");
-			
-			ezPortalDAO.setUseMyPortalPage(map);
-			return "OK";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+	public String setUseMyPortalPage (String pUID, String pUserID, String pCompanyID, String pGubunFlag, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUID", pUID);
+		map.put("v_pUSERID", pUserID);
+		map.put("v_pCOMPANYID", pCompanyID);
+		map.put("v_pGUBUNFLAG", pGubunFlag);
+		map.put("v_pUSEFLAG", "Y");
+		map.put("tenantID", tenantID);
+		ezPortalDAO.setUseMyPortalPage(map);
+		ezPortalDAO.setUseMyPortalPage_U(map);
+		return "OK";
 	}
 	
 	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList) throws Exception {
@@ -2753,12 +2753,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
 	}
 	
-	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList) throws Exception {
+	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception {
 		String retXML = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pENDROW", pEndRow);
 		map.put("v_pDISPLAYNAME", pDisplayName);
+		map.put("tenantID", tenantID);
 		List<PortalSearchMenuItemVO> list = ezPortalDAO.searchMenuItem(map);
 		
 		String strXML = "<DATA>";

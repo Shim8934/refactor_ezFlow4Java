@@ -358,7 +358,11 @@ public class EzEmailUtil {
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
 		
-		if (part.getDisposition()!=null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+		//아래 if문 조건에 disposition이 attachment인지 체크했는데
+		//iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
+		//이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
+		//disposition이 attachment인지 체크하는 조건을 뺐다.
+		if (part.getDisposition() != null) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             

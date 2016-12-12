@@ -734,7 +734,9 @@
 					 FROM
 					 	EZPORTAL.TBL_PORTALPAGE_ITEMS
 					 WHERE
-					 	UID_ = A.UID_))
+					 	UID_ = A.UID_
+					 AND
+					 	TENANT_ID = #tenantID#	))
             AND
             	A.UseFlag = 'Y' 
             AND
@@ -1175,8 +1177,10 @@
 	</procedure> -->
 	
 	<select id="EzPortalDAO.getPortalPageCategory" resultMap="portalTBLPortalPageCategoryVO">
-		SELECT * 
-        FROM TBL_PortalPage_Category
+		SELECT 
+			* 
+        FROM
+        	EZPORTAL.TBL_PORTALPAGE_CATEGORY
 	</select>
 	
 	<procedure id="EzPortalDAO.newMyPortalPageCreate" parameterClass="Map" resultClass="Integer">
@@ -1395,11 +1399,11 @@
 		]]>
 	</procedure>
 	
-	<!-- <procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+	 <!-- <procedure id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_TOPMENUID2(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pLANG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure> -->
+	</procedure>  -->
 	
 	<select id="EzPortalDAO.useTopMenuID2" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
@@ -1427,9 +1431,9 @@
 			AND
 				a.TENANT_ID = #tenantID#	
 		]]>
-	</select>
+	</select> 
 	
-	<!-- <procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
+	<!--  <procedure id="EzPortalDAO.useTopMenuID" parameterClass="Map" resultClass="PortalUseTopMenuID2VO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_USE_TOPMENUID(#v_pCOMPANYID#, #v_pUSEFLAG#, #v_pUSERTHEMEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
@@ -1466,7 +1470,7 @@
 			AND
 				a.TENANT_ID = #tenantID#	
 		]]>
-	</select>
+	</select> 
 	
 	<procedure id="EzPortalDAO.searchStartPage2" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -1555,14 +1559,81 @@
 	
 	<insert id="EzPortalDAO.setUseMyStartPage2" parameterClass="Map">
 		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_USERSTARTPAGE_ITEM
+        		( SELECT
+        			a.UID_ ,
+                 	a.OwnerPageID ,
+                 	a.ImageUID ,
+                 	#v_pUSERID# ,
+                 	#v_pCOMPANYID# ,
+                 	a.LinkURL ,
+                 	#v_pLANGSTR# 
+          		 FROM
+          		 	EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS a,
+               		( SELECT
+               			 UID_ 
+                 	  FROM
+                 	  	EZPORTAL.TBL_TOPMENU_GENERAL 
+                  	  WHERE
+                  	  	COMPANYID = #v_pCOMPANYID#
+                      AND
+                      	USEFLAG = 'Y'
+                      AND
+                      	TENANT_ID = #tenantID#	 ) b
+           		WHERE
+           			a.PARENTUID = '203'
+				AND
+					a.OWNERPAGEID = b.UID_
+				AND
+					A.UID_ = #v_pUID#
+				AND
+					A.TENANT_ID = #tenantID#	 )
 		]]>
 	</insert>
 	
-	<procedure id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
+	<!-- <procedure id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SETUSEMYPOTALPAGE(#v_pUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#, #v_pUSEFLAG#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<update id="EzPortalDAO.setUseMyPortalPage" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				EZPORTAL.TBL_PORTALPAGE_GENERAL
+      		SET 
+      			USEFLAG = NULL
+    		WHERE  
+    			UID_ != #v_pUID#
+     		AND 
+     			DISPLAYNAME = #v_pUSERID#
+     		AND 
+     			COMPANYID = #v_pCOMPANYID#
+     		AND 
+     			GUBUNFLAG = #v_pGUBUNFLAG#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalDAO.setUseMyPortalPage_U" parameterClass="Map">
+		<![CDATA[
+     		 UPDATE
+     		 	EZPORTAL.TBL_PORTALPAGE_GENERAL
+         	SET 
+         		USEFLAG = #v_pUSEFLAG#
+       		WHERE
+       			UID_ = #v_pUID#
+        	AND
+        		DISPLAYNAME = #v_pUSERID#
+        	AND
+        		COMPANYID = #v_pCOMPANYID#
+        	AND
+        		GUBUNFLAG = #v_pGUBUNFLAG#
+        	AND
+        		TENANT_ID = #tenantID#		
+		]]>
+	</update>
 	
 	<procedure id="EzPortalDAO.searchPortalPage" parameterClass="Map" resultClass="PortalSearchPortalPageVO">
 		<![CDATA[
@@ -1576,11 +1647,25 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
+	<!-- <procedure id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SEARCHMENUITEM(#v_pENDROW#, #v_pDISPLAYNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.searchMenuItem" parameterClass="Map" resultClass="PortalSearchMenuItemVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM (
+   					SELECT
+   						ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM, UID_, DISPLAYNAME
+          			FROM EZPORTAL.TBL_MENUITEM_GENERAL 
+   					WHERE DISPLAYNAME like '%' || #v_pDISPLAYNAME# || '%'
+   					AND TENANT_ID = #tenantID#)
+          	WHERE
+          		RNUM <= $v_pENDROW$
+		]]>
+	</select>
 	
 	<procedure id="EzPortalDAO.ezCkAdminACL" parameterClass="Map"  resultClass="String" >
 		<![CDATA[
@@ -1594,29 +1679,91 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
+	<!-- <procedure id="EzPortalDAO.getPortletPrameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETPORLETPARAMETERS(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPortalDAO.getAclItems" parameterClass="String"  resultClass="PortalTBLPortalACLVO" >
+	<select id="EzPortalDAO.getPortletPrameters" parameterClass="Map"  resultClass="PortalGetPortletParametersVO">
+		<![CDATA[
+			SELECT 
+				A.UID_ ,
+             	A.PARAMNAME ,
+             	A.PARAMVALUE ,
+             	A.PARAMTYPE ,
+             	B.PARAMINFO ,
+             	B.DESCRIPTION 
+        	FROM
+        		EZPORTAL.TBL_PORTLET_PARAMETERS A
+			JOIN
+				TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
+       		WHERE
+       			UID_ = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalDAO.getAclItems" parameterClass="String"  resultClass="PortalTBLPortalACLVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_GETACLITEMS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	<select id="EzPortalDAO.getAclItems" parameterClass="Map"  resultClass="PortalTBLPortalACLVO">
+		<![CDATA[
+			SELECT 
+				* 
+        	FROM
+        		EZPORTAL.TBL_PORTAL_ACL 
+       		WHERE  
+       			UID_ = #v_UID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
-	<procedure id="EzPortalDAO.imagePortlet" parameterClass="String"  resultClass="PortalImagePortletVO" >
+	<!-- <procedure id="EzPortalDAO.imagePortlet" parameterClass="String"  resultClass="PortalImagePortletVO" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_IMAGEPORTLET(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPortalDAO.htmlPortlet" parameterClass="String"  resultClass="String" >
+	<select id="EzPortalDAO.imagePortlet" parameterClass="Map"  resultClass="PortalImagePortletVO">
+		<![CDATA[
+			SELECT
+				A.MaxURL ,
+             	B.* 
+        	FROM
+        		EZPORTA.TBL_PORTLET_GENERAL A,
+             	EZPORTAL.TBL_PORTLET_IMAGE B
+       		WHERE
+       			A.UID_ = B.UID_
+			AND
+				A.UID_ = #v_UID#
+			AND
+				A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalDAO.htmlPortlet" parameterClass="String"  resultClass="String" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_HTMLPORTLET(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPortalDAO.htmlPortlet" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				HTMLDATA 
+        	FROM
+        		EZPORTAL.TBL_PORTLET_HTMLPAGE 
+       		WHERE
+       			UID_ = #v_UID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
 	<select id="EzPortalDAO.getParentUID" parameterClass="String" resultClass="String">
 		<![CDATA[

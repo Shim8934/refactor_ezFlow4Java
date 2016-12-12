@@ -23,8 +23,8 @@
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";
-	    var g_cmd = "${cmd}";
-	    var Org_cmd = "${cmd}";
+	    var g_cmd = "${_cmd}";
+	    var Org_cmd = "${_cmd}";
 	    var g_servername = "${serverName}";
 	    var g_myname = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";

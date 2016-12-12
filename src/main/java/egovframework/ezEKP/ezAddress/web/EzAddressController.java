@@ -603,7 +603,7 @@ public class EzAddressController{
 		String folderType = request.getParameter("foldertype") == null ? "" : request.getParameter("foldertype");
 		String changeKey = "";
 		String userNM = userInfo.getDisplayName1();
-		String userNM2 = userInfo.getDeptName2();
+		String userNM2 = userInfo.getDisplayName2();
 		String useOcs = config.getProperty("config.USE_OCS");
 		
 		model.addAttribute("addressId", addressId);

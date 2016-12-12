@@ -37,12 +37,18 @@ public class ApprContInfoVO {
 	private String deptContID;
 	/** 시리얼넘버*/
 	private String sn;
+	/** 교체시리얼넘버*/
+	private String sn2;
 	/** 관리자아이디*/
 	private String manageUserID;
 	/** 부서아이디*/
 	private String deptID;
 	/** */
 	private String contType;
+	/** 교체 contType*/
+	private String contType2;
+	/** */
+	private String contYN;
 	/** */
 	private String contName;
 	/** */
@@ -57,6 +63,8 @@ public class ApprContInfoVO {
 	private String documentStateName;
 	/** */
 	private String documentCode;
+	/** */
+	private String formIDs;
 	
 	public String getMyDeptID() {
 		return myDeptID;
@@ -225,6 +233,30 @@ public class ApprContInfoVO {
 	}
 	public void setDocumentCode(String documentCode) {
 		this.documentCode = documentCode;
+	}
+	public String getContYN() {
+		return contYN;
+	}
+	public void setContYN(String contYN) {
+		this.contYN = contYN;
+	}
+	public String getFormIDs() {
+		return formIDs;
+	}
+	public void setFormIDs(String formIDs) {
+		this.formIDs = formIDs;
+	}
+	public String getSn2() {
+		return sn2;
+	}
+	public void setSn2(String sn2) {
+		this.sn2 = sn2;
+	}
+	public String getContType2() {
+		return contType2;
+	}
+	public void setContType2(String contType2) {
+		this.contType2 = contType2;
 	}
 
 }

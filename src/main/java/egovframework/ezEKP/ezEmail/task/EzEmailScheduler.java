@@ -25,6 +25,8 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +83,13 @@ public class EzEmailScheduler {
 	@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
+		
+		if (!betSchedulerServer("autoDelete")) {
+			logger.debug("no SchedulerServer.");
+			logger.debug("autoDelete scheduler ended.");
+			return;
+		}
+		
 		Locale locale = Locale.getDefault();
 		
 		List<MailDeleteVO> list = ezEmailService.getMailDeleteList();
@@ -141,6 +150,13 @@ public class EzEmailScheduler {
 	@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
+		
+		if (!betSchedulerServer("reservedMailSend")) {
+			logger.debug("no SchedulerServer.");
+			logger.debug("reservedMailSend scheduler ended.");
+			return;
+		}
+		
 		Locale locale = Locale.getDefault();
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
@@ -226,7 +242,13 @@ public class EzEmailScheduler {
 	@Scheduled(cron = "30 01 00 * * *")
 	public void processMailStatLogs() throws Exception{
 		logger.debug("processMailStatLogs scheduler started.");
-
+		
+		if (!betSchedulerServer("processMailStatLogs")) {
+			logger.debug("no SchedulerServer.");
+			logger.debug("processMailStatLogs scheduler ended.");
+			return;
+		}
+		
 		// 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";			
 		String response = ezEmailUtil.getWebServiceResult(requestURL, null);		
@@ -300,6 +322,12 @@ public class EzEmailScheduler {
 	public void deleteExpireAttach() throws Exception{
 		logger.debug("deleteExpireAttach scheduler started.");
 		
+		if (!betSchedulerServer("deleteExpireAttach")) {
+			logger.debug("no SchedulerServer.");
+			logger.debug("deleteExpireAttach scheduler ended.");
+			return;
+		}
+		
 		String realPath = config.getProperty("data_root");
 		
 		//get tenantIdList
@@ -348,7 +376,7 @@ public class EzEmailScheduler {
 	/**
 	 * recursive하게 파일/폴더 삭제하는 함수
 	 */
-	public boolean deleteDirectory(File path) {
+	private boolean deleteDirectory(File path) {
 		if(path.exists()) {
 			File[] files = path.listFiles();
 			for(int i=0; i<files.length; i++) {
@@ -363,4 +391,58 @@ public class EzEmailScheduler {
 		return path.delete();
 	}
 	
+	private boolean betSchedulerServer(String scheduler) {
+		logger.debug("betSchedulerServer started.");
+		
+		boolean isSchedulerServer = false;
+		
+		try {
+			//set SchedulerServer
+			String server = config.getProperty("config.SchedulerServer");
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
+			
+			String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
+			String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
+			
+			String inputParams = schedulerParam + "&" + serverParam;
+			logger.debug("inputParams=" + inputParams);
+			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
+			logger.debug("response=" + response);
+			
+			//sleep 10 seconds
+			logger.debug(scheduler + " is sleeping...");
+			Thread.sleep(10000);
+			
+			//get SchedulerServer
+			requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
+			
+			inputParams = schedulerParam;
+			logger.debug("inputParams=" + inputParams);
+			
+			response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("response=" + response);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(response);
+	        
+	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+	        	String schedulerServer = (String)object.get("result");
+	        	
+	        	if (schedulerServer.equals(server)) {
+	        		isSchedulerServer = true;
+	        	}
+	        } else {
+	        	logger.error("Cannot get SchedulerServer.");
+	        }
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("betSchedulerServer ended.");
+		
+		return isSchedulerServer;
+	}
 }

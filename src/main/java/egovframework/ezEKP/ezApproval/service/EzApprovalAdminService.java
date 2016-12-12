@@ -45,4 +45,20 @@ public interface EzApprovalAdminService {
 
 	public String deleteContainer(String contID, String companyID, String lang, int tenantID) throws Exception;
 
+	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID) throws Exception;
+
+	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception;
+
+	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception;
+
+	public String getFormContainerInfo(String id, String deptID, String companyID, String lang, int tenantID) throws Exception;
+
+	public String getFormInfo(String formContID, String formKind, String searchType, String searchName, String companyID, String lang, int tenantID) throws Exception;
+
+	public String addSpecialCont(ApprContInfoVO apprContInfoVO, int tenantID) throws Exception;
+
+	public String delSpecialCont(ApprContInfoVO apprContInfoVO, int tenantID) throws Exception;
+
+	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
+
 }

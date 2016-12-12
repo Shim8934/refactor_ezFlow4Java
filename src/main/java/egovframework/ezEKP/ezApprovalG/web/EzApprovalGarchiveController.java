@@ -8,6 +8,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class EzApprovalGarchiveController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(EzApprovalGarchiveController.class);
+            
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -576,6 +581,11 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/ezSelectOne.do"  ,produces="text/xml;charset=utf-8")
 	public String ezSelectOne(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String susinAdmin ="";
 		String serverName = request.getServerName();
 		String susinXML="";
@@ -588,7 +598,7 @@ public class EzApprovalGarchiveController {
 		}
     	
     	String searchList ="extensionAttribute4::" + userInfo.getCompanyID().trim();
-    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang());
+    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang(), tenantID);
     	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
     	
     	if(xmlResult.getElementsByTagName("DATA2").getLength() > 0){

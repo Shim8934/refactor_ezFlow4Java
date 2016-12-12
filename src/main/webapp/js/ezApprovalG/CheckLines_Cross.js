@@ -17,6 +17,7 @@ function checkLines() {
     if (CheckAprLinesXML != "") {
         var xmlHTTP = createXMLHttpRequest();
         xmlHTTP.open("POST", "/ezApprovalG/checkAprLines.do", false);
+        xmlHTTP.setRequestHeader('Content-Type','text/html;charset=utf-8');
         xmlHTTP.send(CheckAprLinesXML);
 
         var dataNodes = GetChildNodes(xmlHTTP.responseXML, OpenAlertUILong_Complete);

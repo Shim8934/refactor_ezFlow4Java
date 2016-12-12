@@ -17,6 +17,8 @@ public class ApprCodeVO {
 	private String width;
 	/** header 컬럼명*/
 	private String colName;
+	/** 회사명*/
+	private String companyID;
 	
 	public String getCode1() {
 		return code1;
@@ -65,6 +67,12 @@ public class ApprCodeVO {
 	}
 	public void setColName(String colName) {
 		this.colName = colName;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
 	}
 	
 }
