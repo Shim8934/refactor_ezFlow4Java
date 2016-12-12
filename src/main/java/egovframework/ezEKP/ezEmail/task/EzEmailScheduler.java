@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezEmail.task;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -84,6 +86,7 @@ public class EzEmailScheduler {
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("autoDelete")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("autoDelete scheduler ended.");
@@ -151,6 +154,7 @@ public class EzEmailScheduler {
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("reservedMailSend")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("reservedMailSend scheduler ended.");
@@ -243,6 +247,7 @@ public class EzEmailScheduler {
 	public void processMailStatLogs() throws Exception{
 		logger.debug("processMailStatLogs scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("processMailStatLogs")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("processMailStatLogs scheduler ended.");
@@ -322,6 +327,7 @@ public class EzEmailScheduler {
 	public void deleteExpireAttach() throws Exception{
 		logger.debug("deleteExpireAttach scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("deleteExpireAttach")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("deleteExpireAttach scheduler ended.");
@@ -374,13 +380,71 @@ public class EzEmailScheduler {
 	}
 	
 	/**
+	 * delete garbage files
+	 */
+	@Scheduled(cron = "30 02 00 * * *")
+	public void dailyFileManage() throws Exception{
+		logger.debug("dailyFileManage scheduler started.");
+		
+		//choose scheduler running server
+		if (!betSchedulerServer("dailyFileManage")) {
+			logger.debug("no SchedulerServer.");
+			logger.debug("dailyFileManage scheduler ended.");
+			return;
+		}
+		
+		//get tenantIdList
+		Set<Integer> tenantIdList = new HashSet<Integer>();
+		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
+		for (TenantServerNameVO vo : tenantServerNamelist) {
+			tenantIdList.add(vo.getTenantId());
+		}
+		
+		//set directory
+		//TODO: set upload_common directory
+		List<String> directoryList = new ArrayList<String>();
+		for (Integer tenantId : tenantIdList) {
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload");
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "templist");
+		}
+		
+		int dayLimit = 2;
+		String realPath = config.getProperty("data_root");
+		long nowTime = new Date().getTime();
+		
+		for (String directory : directoryList) {
+			File file = new File(realPath + directory);
+			logger.debug("path=" + realPath + directory);
+			if (file.exists()) {
+				File[] files = file.listFiles();
+				
+				for (File f : files) {
+					logger.debug("f.getName()=" + f.getName());
+					logger.debug("nowTime=" + nowTime);
+					logger.debug("f.lastModified()=" + f.lastModified());
+					
+					if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
+						if (deleteDirectory(f)) {
+							logger.debug(f.getName() + "is deleted.");
+						}
+					}
+					
+				}
+			}
+		}
+		
+		logger.debug("dailyFileManage scheduler ended.");
+	}
+	
+	/**
 	 * recursive하게 파일/폴더 삭제하는 함수
 	 */
 	private boolean deleteDirectory(File path) {
-		if(path.exists()) {
+		if (path.isDirectory()) {
 			File[] files = path.listFiles();
-			for(int i=0; i<files.length; i++) {
-				if(files[i].isDirectory()) {
+			
+			for (int i=0; i<files.length; i++) {
+				if (files[i].isDirectory()) {
 					deleteDirectory(files[i]);
 				}
 				else {
@@ -388,6 +452,7 @@ public class EzEmailScheduler {
 				}
 			}
 		}
+		
 		return path.delete();
 	}
 	
@@ -411,9 +476,9 @@ public class EzEmailScheduler {
 			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
 			logger.debug("response=" + response);
 			
-			//sleep 10 seconds
+			//sleep 20 seconds
 			logger.debug(scheduler + " is sleeping...");
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 			
 			//get SchedulerServer
 			requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
