@@ -189,7 +189,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 이미지 출력함수(ezCommon_Interface)
 	 */
 	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do")
-	public void getCommunityThumInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getCommunityThumInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String pType = request.getParameter("type");
 		String pFileName = request.getParameter("fileName");
 		String pFilePath = "", pBoardID = "";
@@ -199,7 +200,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO");
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO", userInfo.getTenantId());
 			
 	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
@@ -207,7 +208,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM");
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM", userInfo.getTenantId());
 			
 	        if (pFilePath != null && !pFilePath.equals("")) {
 	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
@@ -259,10 +260,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티만들기 IE9 로고 업로드
 	 */
 	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
-	public String commMakeUpload(Model model, HttpServletRequest request) {
+	public String commMakeUpload(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
 		LOGGER.debug("commMakeUpload started.");
 		
-		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
 		String mode = request.getParameter("mode");
 		String fileName = request.getParameter("fileName");
 		String fileData = request.getParameter("fileData");
@@ -582,8 +584,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
 
         if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
-        	totalCount = Integer.parseInt(ezCommunityService.searchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime));
-            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()));
+        	totalCount = Integer.parseInt(ezCommunityService.searchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime, userInfo.getTenantId()));
+            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
             
             if (totalCount > 0) {
 				if (totalCount > boardInfo.getSs_SearchBoard_MaxRows()) {
@@ -662,7 +664,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         String strXML = "";
 		
         if (!title.equals("") || !writerName.equals("") || !strAbstract.equals("") || !searchStart.equals("")) {
-            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, strAbstract, searchStart, searchEnd, 1, 1000, commonUtil.getMultiData(userInfo.getLang()));
+            strXML = ezCommunityService.searchItemXML(userInfo.getId(), boardID, title, writerName, strAbstract, searchStart, searchEnd, 1, 1000, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
         }
 		
 		model.addAttribute("userInfo", userInfo);
@@ -724,7 +726,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
 		String hasAttach = "NO";
-		String uploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -785,8 +787,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/upload.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception { 
-		return ezCommunityService.upload(request, response);
+	public String upload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		return ezCommunityService.upload(request, response, userInfo);
 	}
 	
 	/**
@@ -830,7 +833,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         fileName = fileName.replace("~", "%7e");
         fileName = fileName.replace("=", "%3d");
         
-        String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+        String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
         
         if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
         	returnVal = "denied";
@@ -920,7 +923,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		fileName = fileName.replace("~", "%7e");
 		fileName = fileName.replace("=", "%3d");
 		
-		String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		if (!new File(dirPath + "tempUploadFile").exists()) {
 			new File(dirPath + "tempUploadFile").mkdirs();
@@ -1025,7 +1028,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID);
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 
@@ -1052,7 +1055,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 암호확인화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/checkPassword.do")
-	public String checkPassword(Model model, HttpServletRequest request) throws Exception {
+	public String checkPassword(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("checkPassword started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
 		String publicModulus = egovFileScrty.getPbm();
@@ -1060,12 +1066,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String pItemID = request.getParameter("itemID");
 		
-		String password = ezCommunityService.checkPassword(pItemID).trim();
+		String password = ezCommunityService.checkPassword(pItemID, userInfo.getTenantId()).trim();
 
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("password", password);
+		
+		LOGGER.debug("checkPassword ended.");
 		
 		return "/ezCommunity/communityCheckPassword";
 	}
@@ -1101,7 +1109,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(commonUtil.getMultiData(userInfo.getLang()), pBoardID, pItemID);
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(commonUtil.getMultiData(userInfo.getLang()), pBoardID, pItemID, userInfo.getTenantId());
 		
 		model.addAttribute("oneLineReplyList", oneLineReplyList);
 		
@@ -1209,8 +1217,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int pStartRow =  (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
 		int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
 
-		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang());
-		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId());
+		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang(), userInfo.getTenantId());
+		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
 		
 		if (totalCount > 0) {
 			if (totalCount > boardInfo.getSs_Board_MaxRows()) {
@@ -1325,7 +1333,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String userDeptPath = userInfo.getDeptPathCode();
 			
 			for(String pAccessID : userDeptPath.split(",")) {
-				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID);
+				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID, userInfo.getTenantId());
 				
 				if (boardInfo != null) {
 					model.addAttribute("boardInfo", boardInfo);
@@ -1800,7 +1808,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		item.setUserName2(userInfo.getDisplayName2());
 		
 		if (mode.equals("edit")) {
-			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId());
+			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId(), userInfo.getTenantId());
 			item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			if (item != null) {
 				bIsMyContent = true;
@@ -2403,10 +2411,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/adminLogoUpload.do")
-	public String adminLogoUpload(HttpServletRequest request, Model model) throws Exception {
+	public String adminLogoUpload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("adminLogoUpload started. IE9 ");
 		
-		String logoPath = commonUtil.getRealPath(request) + config.getProperty("upload_community.LOGO") + commonUtil.separator;
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
 		String fileName = request.getParameter("fileName");
 		String fileData = request.getParameter("fileData");
 		String code = request.getParameter("code");
@@ -2438,7 +2447,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityService.adminLogoOk(request);
+		ezCommunityService.adminLogoOk(request, userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
@@ -2908,8 +2917,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
 
         if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
-        	totalCount = Integer.parseInt(ezCommunityService.adminSearchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime));
-            strXML = ezCommunityService.adminSearchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()));
+        	totalCount = Integer.parseInt(ezCommunityService.adminSearchItemCount(userInfo.getId(), boardID, title, writerName, abstracts, startDateTime, endDateTime, userInfo.getTenantId()));
+            strXML = ezCommunityService.adminSearchItemXML(userInfo.getId(), boardID, title, writerName, abstracts, searchStart, searchEnd, pStartRow, pEndRow, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
             
             if (totalCount > 0) {
 				if (totalCount > boardInfo.getSs_SearchBoard_MaxRows()) {
@@ -3576,7 +3585,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		Calendar calendar = Calendar.getInstance();
 		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		
-		String rtnVal = ezCommunityService.todayCopGet1();
+		String rtnVal = ezCommunityService.todayCopGet1(userInfo.getTenantId());
 		
 		if (rtnVal == null) {
 			num = 1;
@@ -3584,7 +3593,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			num = (dayOfYear % Integer.parseInt(rtnVal)) + 1;
 		}
 		
-		CommunityClubVO club = ezCommunityService.todayCopGet2(num);
+		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());
 		
 		if (!club.getC_Cate_A().equals("0")){
 			cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A");
@@ -3611,27 +3620,32 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
-	public String myCategoryCop (Model model, HttpServletRequest request) throws Exception {
+	public String myCategoryCop (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("mainPageCategory started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder sb = new StringBuilder();
 		String mode = request.getParameter("mode");
 		
 		sb.append("<ITEM>");
 		
 		if (mode.equals("A")) {
-			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("a");
+			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("a", userInfo.getTenantId());
 			
 			for(CommunityCCategoryVO category : categoryList) {
-				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "a")));
+				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getTenantId())));
 			}
 		} else {
-			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("b");
+			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("b", userInfo.getTenantId());
 			
 			for(CommunityCCategoryVO category : categoryList) {
-				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "b")));
+				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getTenantId())));
 			}
 		}
 		
 		sb.append("</ITEM>");
+		
+		LOGGER.debug("mainPageCategory ended.");
 		
 		return sb.toString();
 	}
@@ -3651,7 +3665,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int endRow = 5 * page;
 		StringBuilder sb = new StringBuilder();
 		
-		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow);
+		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, userInfo.getTenantId());
 		
 		sb.append("<DATA>");
 		
@@ -3671,6 +3685,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/searchCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String searchCop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("searchCop started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String search = "";
 		StringBuilder sb = new StringBuilder();
@@ -3692,7 +3708,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			search = "C_CLUBDESC";
 		}
 		
-		List<CommunityClubVO> clubList = ezCommunityService.searchCop(search, keyword, startRow, endRow, "SEA");
+		List<CommunityClubVO> clubList = ezCommunityService.searchCop(search, keyword, startRow, endRow, "SEA", userInfo.getTenantId());
 		
 		if (clubList.size() == 0) {
 			return "NOTIME";
@@ -3709,6 +3725,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append(clubList.size());
 		sb.append("</COPCNT>");
 		sb.append("</DATA>");
+		
+		LOGGER.debug("searchCop ended.");
 		
 		return sb.toString();
 	}
@@ -3763,7 +3781,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	    int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
 	    
 	    if (boardInfo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-	    	strXML = ezCommunityService.getNewItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy);
+	    	strXML = ezCommunityService.getNewItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getTenantId());
 	    	totalCount = Integer.parseInt(ezCommunityService.getNewItemListCount(userInfo.getId()));
 	    } else {
 	    	showAdjacent = "1";
@@ -3808,7 +3826,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String newBoardItemPhoto (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("config.EDITOR");
-		String pUploadFilePath = config.getProperty("upload_community.ROOT") + commonUtil.separator;
+		String pUploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		CommunityBoardItemVO item = null;
 		CommunityBoardPropertyVO boardInfo = null;
 		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "", strAbstract = "";
@@ -3844,7 +3862,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			expireDays = boardInfo.getExpireDays();
 			
 			if (!mode.equals("new")) {
-				item = ezCommunityService.getItemXML(boardID, itemID);
+				item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
 				
 				if (userInfo.getLang().equals("2")) {
 					item.setWriterName(item.getWriterName2());
@@ -3991,7 +4009,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			response.getWriter().flush();
 		}
 		
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID);
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
 		ezCommunityService.setAsRead(userInfo, boardID, itemID);
 		
 		if (item == null) {
@@ -4011,7 +4029,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
-			Map<String, String> map = ezCommunityService.getAdjacentItemsPhoto(boardID, item);
+			Map<String, String> map = ezCommunityService.getAdjacentItemsPhoto(boardID, item, userInfo.getTenantId());
 			
             previousItemID = map.get("previousItemID");
             previousTitle = map.get("previousTitle");
@@ -4030,7 +4048,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (item.getExtensionAttribute5().length() > 0) {
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
-			String pFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_community.ROOT") + commonUtil.separator + item.getExtensionAttribute5();
+			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
 			
 			File file = new File(pFilePath);
@@ -4088,7 +4106,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID);
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
 		
 		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
 			item.setWriteDate(item.getParentWriteDate());
