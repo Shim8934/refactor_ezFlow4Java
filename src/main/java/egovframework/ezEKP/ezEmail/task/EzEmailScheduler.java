@@ -321,20 +321,18 @@ public class EzEmailScheduler {
 	}
 	
 	/**
-	 * 만료된 대용량 메일 첨부폴더 삭제 스케줄러
+	 * delete garbage files
 	 */
-	@Scheduled(cron = "30 00 00 * * *")
-	public void deleteExpireAttach() throws Exception{
-		logger.debug("deleteExpireAttach scheduler started.");
+	@Scheduled(cron = "30 02 00 * * *")
+	public void dailyFileManage() throws Exception{
+		logger.debug("dailyFileManage scheduler started.");
 		
 		//choose scheduler running server
-		if (!betSchedulerServer("deleteExpireAttach")) {
+		if (!betSchedulerServer("dailyFileManage")) {
 			logger.debug("no SchedulerServer.");
-			logger.debug("deleteExpireAttach scheduler ended.");
+			logger.debug("dailyFileManage scheduler ended.");
 			return;
 		}
-		
-		String realPath = config.getProperty("data_root");
 		
 		//get tenantIdList
 		Set<Integer> tenantIdList = new HashSet<Integer>();
@@ -342,6 +340,53 @@ public class EzEmailScheduler {
 		for (TenantServerNameVO vo : tenantServerNamelist) {
 			tenantIdList.add(vo.getTenantId());
 		}
+		
+		String realPath = config.getProperty("data_root");
+		
+		//delete expired big-attachment files
+		deleteExpireAttach(tenantIdList, realPath);
+		
+		//set directory
+		//TODO: set upload_common directory
+		List<String> directoryList = new ArrayList<String>();
+		for (Integer tenantId : tenantIdList) {
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload");
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "templist");
+		}
+		
+		int dayLimit = 2;
+		long nowTime = new Date().getTime();
+		
+		//delete garbage files from directoryList
+		for (String directory : directoryList) {
+			File file = new File(realPath + directory);
+			logger.debug("path=" + realPath + directory);
+			if (file.exists()) {
+				File[] files = file.listFiles();
+				
+				for (File f : files) {
+					logger.debug("f.getName()=" + f.getName());
+					logger.debug("nowTime=" + nowTime);
+					logger.debug("f.lastModified()=" + f.lastModified());
+					
+					if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
+						if (deleteDirectory(f)) {
+							logger.debug(f.getName() + " is deleted.");
+						}
+					}
+					
+				}
+			}
+		}
+		
+		logger.debug("dailyFileManage scheduler ended.");
+	}
+	
+	/**
+	 * 만료된 대용량 메일 첨부폴더 삭제 함수
+	 */
+	private void deleteExpireAttach(Set<Integer> tenantIdList, String realPath) throws Exception{
+		logger.debug("deleteExpireAttach started.");
 		
 		for (Integer tenantId : tenantIdList) {
 			logger.debug("tenantId=" + tenantId);
@@ -370,70 +415,13 @@ public class EzEmailScheduler {
 				for (File expiredFile : files) {
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
-						logger.debug(expiredFile.getName() + "is deleted.");
+						logger.debug(expiredFile.getName() + " is deleted.");
 					}
 				}
 			}
 		}
 		
-		logger.debug("deleteExpireAttach scheduler ended.");
-	}
-	
-	/**
-	 * delete garbage files
-	 */
-	@Scheduled(cron = "30 02 00 * * *")
-	public void dailyFileManage() throws Exception{
-		logger.debug("dailyFileManage scheduler started.");
-		
-		//choose scheduler running server
-		if (!betSchedulerServer("dailyFileManage")) {
-			logger.debug("no SchedulerServer.");
-			logger.debug("dailyFileManage scheduler ended.");
-			return;
-		}
-		
-		//get tenantIdList
-		Set<Integer> tenantIdList = new HashSet<Integer>();
-		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
-		for (TenantServerNameVO vo : tenantServerNamelist) {
-			tenantIdList.add(vo.getTenantId());
-		}
-		
-		//set directory
-		//TODO: set upload_common directory
-		List<String> directoryList = new ArrayList<String>();
-		for (Integer tenantId : tenantIdList) {
-			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload");
-			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "templist");
-		}
-		
-		int dayLimit = 2;
-		String realPath = config.getProperty("data_root");
-		long nowTime = new Date().getTime();
-		
-		for (String directory : directoryList) {
-			File file = new File(realPath + directory);
-			logger.debug("path=" + realPath + directory);
-			if (file.exists()) {
-				File[] files = file.listFiles();
-				
-				for (File f : files) {
-					logger.debug("f.getName()=" + f.getName());
-					logger.debug("nowTime=" + nowTime);
-					logger.debug("f.lastModified()=" + f.lastModified());
-					
-					if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
-						if (deleteDirectory(f)) {
-							logger.debug(f.getName() + "is deleted.");
-						}
-					}
-					
-				}
-			}
-		}
-		
-		logger.debug("dailyFileManage scheduler ended.");
+		logger.debug("deleteExpireAttach ended.");
 	}
 	
 	/**
