@@ -398,10 +398,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
-					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 					String[] proxyUserArray = proxyUser.split(",");
 					boolean checkPermission = true;
 					if (proxyUserArray.length > 1) {
@@ -580,6 +584,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/draftui.do")
 	public String draftui(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String useEditor = config.getProperty("config.EDITOR");
 		String susinAdmin = "";
 		String formURL = request.getParameter("formURL");
@@ -623,7 +632,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
@@ -1521,10 +1530,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String fileName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
+		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String fileAttachFormatSN = "00000" + attachSN;
-		
-		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, 4);
+		System.out.println(fileAttachFormatSN.length());
+		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4);
 		
 		String fileSpec = upd + docID + fileAttachFormatSN + fileName;
 		
@@ -2550,6 +2559,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String approvui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
+		
 		String crossEditor = config.getProperty("config.EDITOR");
 		String susinAdmin = "";
 		
@@ -2590,7 +2603,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optJunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1");
+			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID);
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
@@ -2782,7 +2795,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.updateSignInfo(xmlDom, userInfo.getCompanyID(), "SET");
+		String result = ezApprovalGService.updateSignInfo(xmlDom, userInfo.getCompanyID(), "SET", userInfo.getTenantId());
 		
 		return result;
 	}
@@ -2926,7 +2939,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
+		System.out.println(xmlPara);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -4004,10 +4017,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/getFormConnFlag.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getFormConnFlag(HttpServletRequest request) throws Exception{
+	public String getFormConnFlag(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String docID = request.getParameter("docID");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.getFormConnFlag(docID, companyID);
+		String result = ezApprovalGService.getFormConnFlag(docID, companyID, userInfo.getTenantId());
 		
 		return result;
 	}

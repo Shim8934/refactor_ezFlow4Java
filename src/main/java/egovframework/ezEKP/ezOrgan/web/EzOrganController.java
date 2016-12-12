@@ -191,7 +191,13 @@ public class EzOrganController {
 	@RequestMapping(value = "/ezOrgan/getSearchList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("getSearchList started.");
+	    
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);       
 		
 		String searchlist = request.getParameter("search").trim();
 		String celllist = request.getParameter("cell");
@@ -201,11 +207,14 @@ public class EzOrganController {
 		String page = request.getParameter("page");
 		String infoXML = "";
 		
+		logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
+		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page);
+		
 		if (page == null) {
-			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang);
+			infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
 		} else {
 			/* TODO 2016-03-29 장진혁과장 pagination 작업 필요 */
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
@@ -242,6 +251,8 @@ public class EzOrganController {
 		
 		String result = commonUtil.convertDocumentToString(doc);
 		result = result.replaceAll("null", "");
+		
+		logger.debug("getSearchList ended.");
 		
 		return result;
 	}

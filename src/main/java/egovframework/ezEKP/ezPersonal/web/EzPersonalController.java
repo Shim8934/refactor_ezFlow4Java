@@ -693,10 +693,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		SSL = req.getRequestURL().toString();
 		usePortal = config.getProperty("config.Use_Portal");
 		
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "/ezPersonal/persLeftEnvirionment";
 	}

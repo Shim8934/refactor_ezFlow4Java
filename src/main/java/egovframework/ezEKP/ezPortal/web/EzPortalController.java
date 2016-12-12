@@ -1622,6 +1622,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String usePortal = "";
 		String url = "";
 		String funCode = "";
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
 		usePortal = config.getProperty("config.Use_Portal");
 		
@@ -1637,6 +1638,7 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("url", url);
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "/ezPortal/portalEnvironmentMain";
 	}

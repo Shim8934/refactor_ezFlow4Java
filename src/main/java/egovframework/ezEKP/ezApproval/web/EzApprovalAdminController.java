@@ -19,6 +19,7 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
+import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -87,7 +88,7 @@ public class EzApprovalAdminController {
 	 * 전자결재 일반 관리자 레프트메뉴 호출
 	 */
 	@RequestMapping(value = "/admin/ezApproval/apprLeft.do")
-	public String apprLeft(Model model, HttpServletRequest request) throws Exception{
+	public String apprLeft(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("apprLeft started");
 		
 		String browser = ClientUtil.getClientInfo(request, "browser");
@@ -148,7 +149,7 @@ public class EzApprovalAdminController {
 	 * 전자결재 일반 관리자 문서함관리 메인 호출
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MCont.do")
-	public String MCont(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
+	public String MCont(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("MCont started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -188,7 +189,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MgetContinfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MgetContinfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MgetContinfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MgetContinfo started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -227,7 +228,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MLgetDoctype.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MLgetDoctype(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MLgetDoctype(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MLgetDoctype started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -245,7 +246,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/insertContType.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String insertContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String insertContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("insertContType started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -265,7 +266,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/deleteContType.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String deleteContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String deleteContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteContType started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -295,7 +296,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/getContDocType.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getContDocType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String getContDocType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getContDocType started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -313,7 +314,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/updateContDoctype.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String updateContDoctype(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception{
+	public String updateContDoctype(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
 		logger.debug("updateContDoctype started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -331,7 +332,7 @@ public class EzApprovalAdminController {
 	 * 전자결재 일반 관리자 문서함관리 추가,수정 호출
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MinsContMain.do")
-	public String MinsContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String MinsContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("MinsContMain started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -360,7 +361,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MgetContGroup.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MgetContGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MgetContGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MgetContGroup started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -379,7 +380,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MinsCont.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MinsCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MinsCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MinsCont started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -400,7 +401,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MupdateCont.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MupdateCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MupdateCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MupdateCont started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -422,7 +423,7 @@ public class EzApprovalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MdelCont.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MdelCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String MdelCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("MdelCont started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -435,9 +436,195 @@ public class EzApprovalAdminController {
 		
 		return result;
 	}
-	
+
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/manageSpecialCont.do")
-	public String manageSpecialCont() throws Exception{
+	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageSpecialCont started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String deptName = request.getParameter("deptName");
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("deptName", deptName);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("manageSpecialCont ended");
+		
 		return "admin/ezApproval/apprManageSpecialCont";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/specialContListInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("specialContListInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.getSpecialContList(deptID, companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("specialContListInfo ended");
+	
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/manageSpecialContInfo.do")
+	public String manageSpecialContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageSpecialContInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String contType = request.getParameter("contType");
+		String sn = request.getParameter("sn");
+		String companyID = request.getParameter("companyID");
+		
+		String codeXML = ezApprovalAdminService.getSpecialContCode(contType, companyID, userInfo.getLang(), userInfo.getTenantId());
+		String infoXML = ezApprovalAdminService.getSpecialContInfo(deptID, contType, sn, companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("contType", contType);
+		model.addAttribute("sn", sn);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("codeXML", codeXML);
+		model.addAttribute("infoXML", infoXML);
+		
+		logger.debug("manageSpecialContInfo ended");
+		
+		return "admin/ezApproval/apprManageSpecialContInfo";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가 양식함리스트 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/MgetFormContinfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String MgetFormContinfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("MgetFormContinfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String id = request.getParameter("id");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.getFormContainerInfo(id, "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("MgetFormContinfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가 양식함리스트 양식리스트 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/MgetForm.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String MgetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("MgetForm started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String id = request.getParameter("id");
+		String kind = request.getParameter("kind");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.getFormInfo(id, kind, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("MgetForm ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 확인창 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/ezAprAlert.do")
+	public String aprAlert() {
+		logger.debug("aprAlert started");
+		logger.debug("aprAlert ended");
+		
+		return "admin/ezApproval/apprAprAlert";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가/수정 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/specialContAdd.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String specialContAdd(@CookieValue("loginCookie") String loginCookie, ApprContInfoVO apprContInfoVO) throws Exception {
+		logger.debug("specialContAdd started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalAdminService.addSpecialCont(apprContInfoVO, userInfo.getTenantId());
+		
+		logger.debug("specialContAdd ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 의견창 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/ezAprOpinion.do")
+	public String aprOpinion(HttpServletRequest request, Model model) {
+		logger.debug("aprOpinion started");
+		
+		String type = request.getParameter("type");
+		
+		model.addAttribute("type", type);
+		
+		logger.debug("aprOpinion ended");
+		
+		return "admin/ezApproval/apprAprOpinion";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/specialContDelete.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String specialContDelete(@CookieValue("loginCookie") String loginCookie, ApprContInfoVO apprContInfoVO) throws Exception {
+		logger.debug("specialContDelete started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalAdminService.delSpecialCont(apprContInfoVO, userInfo.getTenantId());
+		
+		logger.debug("specialContDelete ended");
+		
+		return result;
+	}
+
+	@RequestMapping(value = "/admin/ezApproval/specialContChangeSN.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String specialContChangeSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("specialContChangeSN started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String sContType = request.getParameter("contType");
+		String sSn = request.getParameter("sn");
+		String tContType = request.getParameter("contType2");
+		String tSn = request.getParameter("sn2");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.changeSpecialContSN(deptID, sContType, sSn, tContType, tSn, companyID, userInfo.getTenantId());
+		
+		logger.debug("specialContChangeSN ended");
+		
+		return result;
 	}
 }

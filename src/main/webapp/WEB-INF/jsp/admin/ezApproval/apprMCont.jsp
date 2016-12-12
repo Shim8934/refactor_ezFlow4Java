@@ -313,7 +313,7 @@
 	            }
 	
 	            if (nodeIdx != "") {
-	                var url = "manageSpecialCont.do?deptID=" + escape(treeNode.GetNodeData("CN")) + "&companyID=" + escape(treeNode.GetNodeData("EXTENSIONATTRIBUTE2")) + "&deptName=" + escape(treeNode.GetNodeData("VALUE"));
+	                var url = "manageSpecialCont.do?deptID=" + escape(treeNode.GetNodeData("CN")) + "&companyID=" + escape(treeNode.GetNodeData("EXTENSIONATTRIBUTE2")) + "&deptName=" + encodeURI(treeNode.GetNodeData("VALUE"));
 	                var result = GetOpenWindow(url, "ManageSpecialCont", 540, 296, "NO");
 	            }
 	        }

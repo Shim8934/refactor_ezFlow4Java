@@ -23,6 +23,8 @@ import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -184,7 +186,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("parentContID :: " + parentContID);
 		
 		StringBuilder rtnXML = new StringBuilder();
-		String strLangDeptDocFolder = getCode2Name("L03", "001", userInfo.getTenantId(), userInfo.getLang());
+		String strLangDeptDocFolder = getCode2Name("L03", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentContID", parentContID);
@@ -305,7 +307,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		return isLeaf;
 	}
 
-	public String getCode2Name(String code1, String code2, int tenantId, String lang) throws Exception{
+	public String getCode2Name(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
 		logger.debug("getCode2Name started");
 		logger.debug("code1 :: " + code1 + "|| code2 :: " + code2);
 		
@@ -317,7 +319,8 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		apprCodeVO.setCode1(code1);
 		apprCodeVO.setCode2(code2);
 		apprCodeVO.setLang(lang);
-		apprCodeVO.setTenantID(tenantId);
+		apprCodeVO.setCompanyID(companyID);
+		apprCodeVO.setTenantID(tenantID);
 		
 		String rtnValue = ezApprovalAdminDAO.getCode2Name(apprCodeVO);
 		
@@ -373,7 +376,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("parentContID :: " + parentContID);
 		
 		StringBuilder rtnXML = new StringBuilder();
-		String strLangDeptDocFolder = getCode2Name("L03", "002", userInfo.getTenantId(), userInfo.getLang());
+		String strLangDeptDocFolder = getCode2Name("L03", "002", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentContID", parentContID);
@@ -545,7 +548,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			resultXML.append("<LISTVIEWDATA>");
 			resultXML.append("<HEADERS>");
 			resultXML.append("<HEADER>");
-			resultXML.append("<NAME>" + getCode2Name("L02", "001", userInfo.getTenantId(), userInfo.getLang()) + "</NAME>");
+			resultXML.append("<NAME>" + getCode2Name("L02", "001", companyID, userInfo.getLang(), userInfo.getTenantId()) + "</NAME>");
 			resultXML.append("<WIDTH>" + "250" + "</WIDTH>");
 			resultXML.append("</HEADER>");
 			resultXML.append("</HEADERS>");
@@ -617,21 +620,17 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		StringBuilder rtnXML = new StringBuilder();
 		
 		userInfo.setCompanyID(companyID);
+		userInfo.setPrimary(commonUtil.getMultiData(userInfo.getLang()));
 		
 		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContTypeInfo(userInfo);
 		
 		if (mode.equals("LIST")) {
 			rtnXML.append("<LISTVIEWDATA><HEADERS><HEADER>");
-			rtnXML.append("<NAME>" + getCode2Name("L02", "001", userInfo.getTenantId(), userInfo.getLang()) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
+			rtnXML.append("<NAME>" + getCode2Name("L02", "001", companyID, userInfo.getLang(), userInfo.getTenantId()) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
 			
 			for (int k = 0; k < apprContInfoVOs.size(); k++) {
 				rtnXML.append("<ROW><CELL><VALUE>");
-				
-				if (userInfo.getPrimary().equals("1")) {
-					rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeName()));
-				} else {
-					rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeName2()));
-				}
+				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeName()));
 				rtnXML.append("</VALUE><DATA1>");
 				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeID()));
 				rtnXML.append("</DATA1></CELL></ROW>");
@@ -646,12 +645,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeID()));
 				rtnXML.append("</ID" + k + ">");
 				rtnXML.append("<NAME" + k + ">");
-				
-				if (userInfo.getPrimary().equals("1")) {
-					rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
-				} else {
-					rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName2(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
-				}
+				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
 				rtnXML.append("</NAME" + k + ">");
 			}
 			rtnXML.append("</PARAMETER>");
@@ -727,7 +721,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("getContainerToDocStateInfo started");
 		
 		StringBuilder resultXML = new StringBuilder();
-		List<ApprCodeVO> headerList = getListHeader("108", lang, tenantID);
+		List<ApprCodeVO> headerList = getListHeader("108", lang, companyID, tenantID);
 		
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
@@ -775,13 +769,14 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		return resultXML.toString();
 	}
 
-	private List<ApprCodeVO> getListHeader(String listCode, String lang, int tenantID) throws Exception{
+	private List<ApprCodeVO> getListHeader(String listCode, String lang, String companyID, int tenantID) throws Exception{
 		logger.debug("getListHeader started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("listCode", listCode);
 		map.put("lang", lang);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		List<ApprCodeVO> apprCodeVOs = ezApprovalAdminDAO.getListHeader(map);
@@ -972,6 +967,438 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		}
 		
 		logger.debug("deleteContainer ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getSpecialContList started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = getListHeader("109", lang, companyID, tenantID);
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getSpecialContList(map);
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < apprContInfoVOs.size(); k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>");
+			
+			String contType = apprContInfoVOs.get(k).getContType();
+			
+			if (Integer.parseInt(contType) >= 100) {
+				map.put("lang", commonUtil.getMultiData(lang));
+				map.put("contType", contType);
+				
+				String contTypeName = ezApprovalAdminDAO.getSpecialContInfoContTypeName(map);
+				
+				resultXML.append(contTypeName);
+			} else {
+				resultXML.append(getCode2Name("A60", contType, companyID, lang, tenantID));
+			}
+			resultXML.append("</VALUE>");
+			resultXML.append("<DATA1>" + apprContInfoVOs.get(k).getDeptID() + "</DATA1>");
+			resultXML.append("<DATA2>" + contType + "</DATA2>");
+			resultXML.append("<DATA3>" + apprContInfoVOs.get(k).getSn() + "</DATA3>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getContName() + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprContInfoVOs.get(k).getSubQuery() + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getSpecialContList ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getSpecialContCode started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code1", "A60");
+		map.put("companyID", companyID);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
+		
+		List<ApprCodeVO> apprCodeVOs = ezApprovalAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < apprCodeVOs.size(); k++) {
+			String code = apprCodeVOs.get(k).getCode2();
+			
+			if (code.equals(contType)) {
+				rtnXML.append("<OPTION value=" + code + " selected>" + apprCodeVOs.get(k).getName() + "</OPTION>");
+			} else {
+				rtnXML.append("<OPTION value=" + code + ">" + apprCodeVOs.get(k).getName() + "</OPTION>");
+			}
+		}
+		
+		LoginVO userInfo = new LoginVO();
+		
+		userInfo.setCompanyID(companyID);
+		userInfo.setTenantId(tenantID);
+		userInfo.setPrimary(commonUtil.getMultiData(lang));
+		
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContTypeInfo(userInfo);
+		
+		for (int k = 0; k < apprContInfoVOs.size(); k++) {
+			String typeID = apprContInfoVOs.get(k).getContainerTypeID();
+			
+			if (typeID.equals(contType)) {
+				rtnXML.append("<OPTION value =" + typeID + " selected>" + apprContInfoVOs.get(k).getContainerTypeName() + "</OPTION>");
+			} else {
+				rtnXML.append("<OPTION value =" + typeID + ">" + apprContInfoVOs.get(k).getContainerTypeName() + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getSpecialContCode ended");
+		
+		return rtnXML.toString();
+	}
+
+	@Override
+	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getSpecialContInfo started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		ApprContInfoVO apprContInfoVO = new ApprContInfoVO();
+		
+		apprContInfoVO.setDeptID(deptID);
+		apprContInfoVO.setContType(contType);
+		apprContInfoVO.setSn(sn);
+		apprContInfoVO.setCompanyID(companyID);
+		apprContInfoVO.setTenantID(tenantID);
+		
+		try {
+			List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getSpecialContInfo(apprContInfoVO);
+			
+			resultXML.append("<CONTINFO>");
+			resultXML.append("<DEPTID>" + apprContInfoVOs.get(0).getDeptID() + "</DEPTID>");
+			resultXML.append("<CONTTYPE>" + apprContInfoVOs.get(0).getContType() + "</CONTTYPE>");
+			resultXML.append("<SN>" + apprContInfoVOs.get(0).getSn() + "</SN>");
+			resultXML.append("<CONTNAME>" + apprContInfoVOs.get(0).getContName() + "</CONTNAME>");
+			
+			String subQuery = apprContInfoVOs.get(0).getSubQuery();
+			
+			if (subQuery != null && subQuery.indexOf("NOT") > 0) {
+				resultXML.append("<CONTYN>N</CONTYN>");
+			} else {
+				resultXML.append("<CONTYN>Y</CONTYN>");
+			}
+			resultXML.append("<FORMIDS>");
+			
+			if (subQuery != null && subQuery.length() > 0) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("lang", commonUtil.getMultiData(lang));
+				map.put("subQuery", subQuery);
+				map.put("companyID", companyID);
+				map.put("tenantID", tenantID);
+				
+				List<String> formIDName = ezApprovalAdminDAO.getSpecialContInfoFormName(map);
+				
+				for (int k = 0; k < formIDName.size(); k++) {
+					resultXML.append("<FORMID>" + formIDName.get(k) + "</FORMID>");
+				}
+			}
+			resultXML.append("</FORMIDS>");
+			resultXML.append("</CONTINFO>");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			resultXML.append("<CONTINFO><DEPTID></DEPTID><CONTTYPE></CONTTYPE><SN></SN><CONTNAME></CONTNAME><CONTYN></CONTYN><FORMIDS></FORMIDS></CONTINFO>");
+		}
+		
+		logger.debug("getSpecialContInfo ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getFormContainerInfo(String id, String deptID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getFormContainerInfo started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("id", id);
+		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprFormContVO> apprFormContVOs = ezApprovalAdminDAO.getFormContainerInfo(map);
+		
+		rtnXML.append("<NODES>");
+		
+		for (int k = 0; k < apprFormContVOs.size(); k++) {
+			rtnXML.append("<NODE>");
+			
+			if (k == 0) {
+				rtnXML.append("<SELECT></SELECT>");
+			}
+			
+			int childCnt = getCountChildFormCont(apprFormContVOs.get(k).getFormContID(), deptID, companyID, tenantID);
+			String isLeaf = "FALSE";
+			
+			if (childCnt < 1) {
+				isLeaf = "TRUE";
+			}
+			
+			rtnXML.append("<EXPANDED>FALSE</EXPANDED>");
+			rtnXML.append("<ISLEAF>" + isLeaf + "</ISLEAF>");
+			rtnXML.append("<VALUE>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContName()) + "</VALUE>");
+			
+			if (deptID == null || deptID.equals("")) {
+				rtnXML.append("<DATA1>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContID()) + "</DATA1>");
+				rtnXML.append("<DATA2>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContName()) + "</DATA2>");
+				rtnXML.append("<DATA3>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContOwnDepID()) + "</DATA3>");
+				rtnXML.append("<DATA4>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContParents()) + "</DATA4>");
+				rtnXML.append("<DATA5>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContDescription()) + "</DATA5>");
+				
+				if (apprFormContVOs.get(k).getFormContOwnDepID().equals("ALL")) {
+					rtnXML.append("<DATA6>ALL</DATA6>");
+				} else {
+					rtnXML.append("<DATA6>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(apprFormContVOs.get(k).getFormContOwnDepID(), "displayName" + commonUtil.getMultiData(lang), tenantID)) + "</DATA6>");
+				}
+			} else {
+				rtnXML.append("<DATA1>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContID()) + "</DATA1>");
+				rtnXML.append("<DATA2>" + commonUtil.cleanValue(deptID) + "</DATA2>");
+				rtnXML.append("<DATA3>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContDescription()) + "</DATA3>");
+			}
+			
+			rtnXML.append("</NODE>");
+		}
+		
+		rtnXML.append("</NODES>");
+		
+		logger.debug("getFormContainerInfo ended");
+		
+		return rtnXML.toString();
+	}
+
+	private int getCountChildFormCont(String formContID, String deptID, String companyID, int tenantID) throws Exception{
+		logger.debug("getCountChildFormCont started");
+		
+		int rtnVal = 1;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("formContID", formContID);
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		rtnVal = ezApprovalAdminDAO.getFormContainerCntChild(map);
+		
+		logger.debug("getCountChildFormCont ended");
+		
+		return rtnVal;
+	}
+
+	@Override
+	public String getFormInfo(String formContID, String formKind, String searchType, String searchName, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getFormInfo started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = getListHeader("101", lang, companyID, tenantID);
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		ApprFormInfoVO apprFormInfoVO = new ApprFormInfoVO();
+		
+		apprFormInfoVO.setFormContID(formContID);
+		apprFormInfoVO.setFormKind(formKind);
+		apprFormInfoVO.setSearchType(searchType);
+		apprFormInfoVO.setSearchName(searchName);
+		apprFormInfoVO.setLang(lang);
+		apprFormInfoVO.setTenantID(tenantID);
+		apprFormInfoVO.setCompanyID(companyID);
+		
+		List<ApprFormInfoVO> apprFormInfoVOs = ezApprovalAdminDAO.getFormInfo(apprFormInfoVO);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprFormInfoVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprFormInfoVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = headerList.get(h).getColName().toUpperCase();
+				
+				if (fieldName.equals("FORMNAME")) {
+					fieldName = fieldName + commonUtil.getMultiData(lang);
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(fieldValue)) + "</VALUE>");
+				
+				if (h == 0) {
+					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("FORMDESCRIPTION").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("FORMDOCTYPE").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("FORMFILELOCATION").item(k).getTextContent()) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "</DATA6>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+				
+		logger.debug("getFormInfo ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String addSpecialCont(ApprContInfoVO apprContInfoVO, int tenantID) throws Exception {
+		logger.debug("addSpecialCont started");
+
+		String rtnValue = "";
+		
+		apprContInfoVO.setTenantID(tenantID);
+		
+		try {
+			if (apprContInfoVO.getSn() == null || apprContInfoVO.getSn().equals("") || apprContInfoVO.getSn().equals("0")) {
+				apprContInfoVO.setSn("new");
+			} else {
+				ezApprovalAdminDAO.deleteSpecialContInfo(apprContInfoVO);
+			}
+			
+			String subQuery = "";
+			
+			if (apprContInfoVO.getFormIDs() != null && !apprContInfoVO.getFormIDs().equals("")) {
+				if (apprContInfoVO.getContYN().equals("Y")) {
+					subQuery = " formID IN (" + apprContInfoVO.getFormIDs() + ")"; 
+				} else {
+					subQuery = " formID NOT IN (" + apprContInfoVO.getFormIDs() + ")"; 
+				}
+			}
+			
+			apprContInfoVO.setSubQuery(subQuery);
+			
+			ezApprovalAdminDAO.insertSpecialContInfo(apprContInfoVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("addSpecialCont ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String delSpecialCont(ApprContInfoVO apprContInfoVO, int tenantID) throws Exception {
+		logger.debug("delSpecialCont started");
+
+		String rtnValue = "";
+		
+		apprContInfoVO.setTenantID(tenantID);
+		
+		try {
+			ezApprovalAdminDAO.deleteSpecialContInfo(apprContInfoVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("delSpecialCont ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception {
+		logger.debug("changeSpecialContSN started");
+		
+		String rtnValue = "";
+		
+		try {
+			ApprContInfoVO apprContInfoVO = new ApprContInfoVO();
+			
+			apprContInfoVO.setDeptID(deptID);
+			apprContInfoVO.setContType(sContType);
+			apprContInfoVO.setContType2(tContType);
+			apprContInfoVO.setSn(sSn);
+			apprContInfoVO.setSn2(tSn);
+			apprContInfoVO.setCompanyID(companyID);
+			apprContInfoVO.setTenantID(tenantID);
+			
+			ezApprovalAdminDAO.changeSpecialContSN1(apprContInfoVO);
+			ezApprovalAdminDAO.changeSpecialContSN2(apprContInfoVO);
+			ezApprovalAdminDAO.changeSpecialContSN3(apprContInfoVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("changeSpecialContSN ended");
 		
 		return rtnValue;
 	}
