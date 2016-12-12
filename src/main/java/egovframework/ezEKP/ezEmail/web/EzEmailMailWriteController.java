@@ -2426,6 +2426,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
 		            }
 		            
+		            //임시보관함에서 삭제
+		            Message draftMessage = ((IMAPFolder)folder).getMessageByUID(draftUID);
+	        		draftMessage.setFlag(Flags.Flag.DELETED, true);
+	        		
 		            rtnStatus = "OK";
 		        } else {                        
 		
