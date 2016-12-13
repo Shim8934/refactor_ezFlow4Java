@@ -180,7 +180,8 @@
 	                	(  SELECT 
 	                	   	   boardid ,
 	                           accessid ,
-	                           access_ 
+	                           access_,
+	                           tenant_id
 	                       FROM 
 	                       	   EZBOARDSTD.TBL_Board_BoardManage 
 	                       WHERE
@@ -224,7 +225,8 @@
 	                		C.BoardID ,
 	                        C.AccessID ,
 	                        C.Access_ ,
-	                        C.BoardGroupACL 
+	                        C.BoardGroupACL ,
+	                        C.tenant_id
 	                      FROM 
 	                      	EZBOARDSTD.TBL_Board_BoardManage C
 	                      LEFT JOIN 
