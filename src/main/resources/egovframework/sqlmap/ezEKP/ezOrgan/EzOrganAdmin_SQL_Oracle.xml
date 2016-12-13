@@ -342,4 +342,15 @@
       	]]>		
 	</update>
 	
+    <delete id="EzOrganAdminDAO.deleteAddJob" parameterClass="Map">
+        DELETE 
+            ezHrmaster.TBLADDJOBMASTER
+        WHERE  
+            cn = #v_CN#
+        AND 
+            deptid = #v_DEPTID#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+    </delete>
+ 
 </sqlMap>

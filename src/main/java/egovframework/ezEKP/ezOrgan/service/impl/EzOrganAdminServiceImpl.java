@@ -60,9 +60,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_LANGDATA", strLang);
 		
@@ -70,9 +71,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception {
+	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", strLang);
 		
@@ -396,13 +398,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo) throws Exception {
+	public void addJob(String userID, String titleInfo, int tenantID) throws Exception {
 		String sTitle1 = "";
         String sTitle2 = "";
         String delFlag = "1";
         String pDeptID = "";
         
-        if(!titleInfo.equals("")){
+        if (!titleInfo.equals("")) {
+            delFlag = "2";
+            
         	String[] addJobinfo = titleInfo.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
@@ -420,29 +424,40 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 
                 Map<String, Object> map = new HashMap<String, Object>();		
         		
+                map.put("v_TENANT_ID", tenantID);
         		map.put("v_CN", userID);
         		map.put("v_DEPTID", pDeptID);
         		map.put("v_TITLE1", sTitle1);
         		map.put("v_TITLE2", sTitle2);
         		map.put("v_DELFLAG", delFlag);
                 
-        		ezOrganAdminDao.setAddJob(map);
-        		
-        		delFlag = "2";
+        		ezOrganAdminDao.setAddJob(map);        		
             }
-        } else {
-        	Map<String, Object> map = new HashMap<String, Object>();		
-    		
-    		map.put("v_CN", userID);
-    		map.put("v_DEPTID", "");
-    		map.put("v_TITLE1", "");
-    		map.put("v_TITLE2", "");
-    		map.put("v_DELFLAG", delFlag);
-    		
-    		ezOrganAdminDao.setAddJob(map);
-        }		
+        }
 	}
 
+    @Override
+    public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
+        String pDeptID = "";
+        
+        if (!titleInfo.equals("")) {
+            String[] addJobinfo = titleInfo.split(";");
+            
+            for (int i = 0; i < addJobinfo.length; i++) {
+                String[] userInfo = addJobinfo[i].split(":");
+                pDeptID = userInfo[0];
+                
+                Map<String, Object> map = new HashMap<String, Object>();        
+                
+                map.put("v_TENANT_ID", tenantID);
+                map.put("v_CN", userID);
+                map.put("v_DEPTID", pDeptID);
+                
+                ezOrganAdminDao.deleteAddJob(map);             
+            }
+        }       
+    }
+    
 	@Override
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
