@@ -1152,8 +1152,57 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		delete("EzOrganDAO.delProxyUserInfo", map);
 	}
 
-	public String getCNByEmail(String email) throws Exception{
-		return (String) select("EzOrganDAO.getCNByEmail", email);
+    private String getCNByEmailForJMocha(String email, int tenantID) throws Exception{
+        logger.debug("getCNByEmailForJMocha started. email=" + email + ",tenantID=" + tenantID);
+        
+        String returnValue = null;
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "email=" + URLEncoder.encode(email, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserIdByEmail";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = (String)result.get("userId");
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getCNByEmailForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;             
+    }
+	
+    private String getCNByEmailForLocal(String email, int tenantID) throws Exception{
+        return (String) select("EzOrganDAO.getCNByEmail", email);
+    }
+	
+	public String getCNByEmail(String email, int tenantID) throws Exception{
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getCNByEmailForJMocha(email, tenantID);
+        } else {
+            return getCNByEmailForLocal(email, tenantID);
+        }                       
 	}
 
 }
