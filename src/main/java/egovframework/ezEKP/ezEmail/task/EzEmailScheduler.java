@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -335,23 +336,19 @@ public class EzEmailScheduler {
 		}
 		
 		//get tenantIdList
-		Set<Integer> tenantIdList = new HashSet<Integer>();
-		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
-		for (TenantServerNameVO vo : tenantServerNamelist) {
-			tenantIdList.add(vo.getTenantId());
-		}
+		List<TenantVO> tenantList = ezCommonService.getTenantList();
 		
 		String realPath = config.getProperty("data_root");
 		
 		//delete expired big-attachment files
-		deleteExpireAttach(tenantIdList, realPath);
+		deleteExpireAttach(tenantList, realPath);
 		
 		//set directory
 		//TODO: set upload_common directory
 		List<String> directoryList = new ArrayList<String>();
-		for (Integer tenantId : tenantIdList) {
-			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload");
-			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "templist");
+		for (TenantVO tenantVO : tenantList) {
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "tempFileUpload");
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "templist");
 		}
 		
 		int dayLimit = 2;
@@ -385,13 +382,13 @@ public class EzEmailScheduler {
 	/**
 	 * 만료된 대용량 메일 첨부폴더 삭제 함수
 	 */
-	private void deleteExpireAttach(Set<Integer> tenantIdList, String realPath) throws Exception{
+	private void deleteExpireAttach(List<TenantVO> tenantList, String realPath) throws Exception{
 		logger.debug("deleteExpireAttach started.");
 		
-		for (Integer tenantId : tenantIdList) {
-			logger.debug("tenantId=" + tenantId);
+		for (TenantVO tenantVO : tenantList) {
+			logger.debug("tenantId=" + tenantVO.getTenantId());
 			
-			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId());
 		
 			File file = new File(realPath + pUploadPath);
 			logger.debug("path=" + realPath + pUploadPath);
