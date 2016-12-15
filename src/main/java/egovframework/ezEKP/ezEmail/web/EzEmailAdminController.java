@@ -120,6 +120,12 @@ public class EzEmailAdminController {
 		logger.debug("mailGetDistribution started.");
 		logger.debug("bodyData=" + bodyData);
 		
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+		
 		String returnData = "";
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -191,6 +197,12 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailAddDistributionList.do")
 	public String mailAddDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String deptID = user.getDeptID();
@@ -214,6 +226,12 @@ public class EzEmailAdminController {
 	public String mailSaveDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailSaveDistributionList started.");
 		logger.debug("bodyData=" + bodyData);
+		
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
@@ -406,6 +424,12 @@ public class EzEmailAdminController {
 		logger.debug("mailDelDistributionList started.");
 		logger.debug("bodyData=" + bodyData);
 		
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		
@@ -447,6 +471,12 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailConfigColor.do")
 	public String mailConfigColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+	    
 		return "admin/ezEmail/mailConfigColor";
 	}
 	
@@ -455,6 +485,12 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailColor.do")
 	public String mailColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+	    
 		String importanceColor = "#ff0000";
 		String inColor = "#808080";
 		String outColor = "#0080ff";
@@ -493,6 +529,12 @@ public class EzEmailAdminController {
 	public String mailSaveColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailSaveColor started.");
 		logger.debug("bodyData=" + bodyData);
+		
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
 		
 		String returnValue = "OK";
 		

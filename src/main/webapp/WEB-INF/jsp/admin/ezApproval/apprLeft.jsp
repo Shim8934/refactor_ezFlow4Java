@@ -31,11 +31,11 @@
 						break;
 						
 				    case 5:
-			            url = "/myoffice/ezApproval/Manage/MoveContainer2.aspx";
+			            url = "/admin/ezApproval/moveContainer.do";
 						break;
 						
 				    case 6:
-			            url = "/myoffice/ezApproval/Manage/docdelete.aspx";
+			            url = "/admin/ezApproval/docDelete.do";
 						break;
 						
 				    case 7:

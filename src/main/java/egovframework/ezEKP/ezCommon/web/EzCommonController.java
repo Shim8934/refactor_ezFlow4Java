@@ -335,7 +335,7 @@ public class EzCommonController extends EgovFileMngUtil{
         if (id.equals("")) {
         	
         	if (!email.equals("")) {
-        		id = ezOrganService.getCNByEmail(email);
+        		id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
         	}
         }
         

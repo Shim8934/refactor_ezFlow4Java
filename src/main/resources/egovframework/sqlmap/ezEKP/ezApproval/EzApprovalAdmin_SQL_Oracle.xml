@@ -510,7 +510,8 @@
 	<select id="EzApprovalAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprCodeVO">
 		<![CDATA[
 			SELECT 
-				CODE2, NAME$lang$ AS NAME 
+				CODE2, 
+				NAME$lang$ AS NAME 
 			FROM 
 				TBCODELIST 
 			WHERE 
@@ -756,6 +757,194 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getUserSecurityCode" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CASE
+					WHEN extensionattribute6 IS NULL
+					THEN '0'
+					ELSE extensionattribute6
+				END userSecurityCode
+			FROM
+				EZHRMASTER.TBLUSERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN = #userID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getCodeIsUse" parameterClass="ApprCodeVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				isuse
+			FROM
+				TBCODELIST
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1#
+			AND
+				code2 = #code2#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContDocListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(DISTINCT A.DOCID)
+   			FROM 
+   				TBENDAPRDOCINFO A  
+   			LEFT OUTER JOIN 
+   				TBENDAPRLINEINFO  
+   			ON 
+   				A.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID
+   			AND
+   				A.DOCID = TBENDAPRLINEINFO.DOCID 
+       		LEFT OUTER JOIN 
+       			TBEXPENDAPRLINE  
+       		ON 
+       			A.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID
+       		AND
+       			A.DOCID = TBEXPENDAPRLINE.DOCID    
+   			INNER JOIN 
+   				TBEXPENDAPRDOCINFO  
+   			ON 
+   				A.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID
+   			AND
+   				A.DOCID = TBEXPENDAPRDOCINFO.DOCID
+   			WHERE
+   				A.TENANT_ID = #tenantID#
+   			AND
+				TBEXPENDAPRDOCINFO.DELFLAG IS NULL
+		]]>
+		<isEmpty property="contID" prepend="AND">
+			TBENDAPRLINEINFO.APRMEMBERID = #userID#
+		</isEmpty>
+		<isNotEmpty property="contID">
+			<isEqual property="contID" compareValue="ADMIN" prepend="AND">
+				CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="contID" compareValue="ADMIN" prepend="AND">
+				CONTAINERID IN (#contID#)
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEqual property="userSecurityCode" compareValue="0">
+			<isNotEqual property="contID" compareValue="ADMIN">
+				<isEqual property="securityFlag" compareValue="Y" prepend="AND">
+					<![CDATA[
+							( #userSecurityCode# <= TBEXPENDAPRDOCINFO.SECURITYCODE OR ( SELECT 
+																							CASE
+																								WHEN COUNT(DocID) > 0
+																								THEN 'Y'
+																								ELSE 'N'
+																							END getIsLineInfo
+																						 FROM 
+																						 	TBENDAPRLINEINFO 
+       																					 WHERE  
+       																					 	tenant_id = #tenantID#
+       																					 AND
+       																					 	companyid = #companyID#
+       																					 AND
+       																					 	DocID = A.DOCID
+                																		 AND 
+                																		 	AprMemberID = #userID# )  = 'Y')
+					]]>
+				</isEqual>
+				<isNotEqual property="securityFlag" compareValue="Y" prepend="AND">
+					<![CDATA[
+						#userSecurityCode# <= TBEXPENDAPRDOCINFO.SECURITYCODE
+					]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+		<isEqual property="publicFlag" compareValue="Y">
+			<isNotEmpty property="contID">
+				<![CDATA[
+					AND 
+						( (A.ISPUBLIC <> 'N' OR A.ISPUBLIC IS NULL)
+	      			OR 
+	      				(A.ISPUBLIC = 'N' AND TBENDAPRLINEINFO.APRMEMBERID = #userID# ))
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty property="subQuery" prepend="AND">
+			$subQuery$
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getProcessYN" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+     		FROM ( SELECT 
+     					ProcessYN 
+     			   FROM 
+     			   		TBENDRECEIPTPOINTINFO 
+    			   WHERE
+    			   		tenant_id = #tenantID#
+    			   AND	
+    			   		companyid = #companyID#
+    			   AND  
+    			   		DocID = #docID#
+     			   ORDER BY 
+     			   		ProcessYN )
+     		WHERE 
+     			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContDocList" parameterClass="Map" resultClass="ApprDocInfoVO">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM 
+				( SELECT 
+						A.* ,
+						B.NAME1 AS DOCTYPENAME,
+				   		C.NAME1 AS DOCSTATENAME, 
+				   		D.NAME1 AS FUNCTIONTYPENAME ,
+				   		GETSENDSTATUS(A.DOCID) AS SENDFLAG
+   				  FROM 
+   				  		( $strSubQuery$ ) 
+   				  WHERE
+   				  		TENANT_ID = #tenantID#
+   				  AND
+   				  		COMPANYID = #companyID#
+   				  AND 
+   				  		ROWNUM <= #querySizeSub#) A 
+   				  INNER JOIN 
+   				  		TBCODEDOCTYPE B  
+   				  ON 
+   				  		A.TENANT_ID = B.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = B.COMPANYID
+   				  AND
+   				  		A.DOCTYPE = B.CODE 
+   				  INNER JOIN 
+   				  		TBCODEDOCSTATE C  
+   				  ON	
+   				  		A.TENANT_ID = C.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = C.COMPANYID
+   				  AND 
+   				  		A.DOCSTATE = C.CODE
+   				  INNER JOIN 
+   				  		TBCODEAPRSTATE D  
+   				  ON 
+   				  		A.TENANT_ID = D.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = D.COMPANYID
+   				  AND
+   				  		A.FUNCTIONTYPE = D.CODE 
+   				  $orderByMain$ ) 
+   		  	 WHERE 
+   		  	 	 ROWNUM <= #querySizeMain#
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
@@ -967,6 +1156,114 @@
         		ContType = #contType#
         	AND 
         		SN = '0'
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveAllDocList1" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBEXPENDAPRDOCINFO 
+			SET 
+				OrgContID = #sourceContID#
+			WHERE 
+				TBEXPENDAPRDOCINFO.DocID IN ( SELECT 
+												DocID 
+											  From 
+											  	TBENDAPRDOCINFO A 
+											  WHERE
+											  	A.tenant_id = #tenantID#
+											  AND
+											  	A.companyid = #companyID#
+											  AND
+											  	A.ContainerID = #sourceContID# )
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveAllDocList2" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBENDAPRDOCINFO 
+			SET 
+				ContainerID = #targetContID#
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #sourceContID# 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveDocList1" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBENDAPRDOCINFO 
+			SET 
+				ContainerID = #targetContID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #sourceContID#
+			AND
+				docID IN ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveDocList2" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBEXPENDAPRDOCINFO 
+			SET 
+				OrgContID = #sourceContID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid IN ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.deleteAllDocList" parameterClass="Map">
+		UPDATE TBEXPENDAPRDOCINFO 
+		SET 
+			DelFlag = 'Y'
+		WHERE
+			TBEXPENDAPRDOCINFO.DocID IN ( SELECT
+											docid
+										  FROM
+										  	TBENDAPRDOCINFO
+										  WHERE
+										  	tenant_id = #tenantID#
+										  AND
+										  	companyid = #companyID#
+										  AND
+										  	containerid = #contID#
+										  <isEmpty property="startPeriod">
+										  	<![CDATA[
+										  		AND 
+										  			enddate >= #startDate# 
+										  		AND 
+										  			enddate <= #endDate# 
+										  	]]>
+										  </isEmpty> 
+										 )
+		AND
+			delflag IS NULL
+		<isEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isEmpty> 
+	</update>
+	
+	<update id="EzApprovalAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBEXPENDAPRDOCINFO
+			SET
+				delflag = 'Y'
+			WHERE
+				tenant_id = #tenantID#
+		  	AND
+		  		companyid = #companyID#
+		  	AND
+		  		docid IN ( $subQuery$ )
 		]]>
 	</update>
 	

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Service("EzOrganAdminService")
 public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
+    private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminServiceImpl.class);
+    
 	@Autowired
 	private EzOrganService ezOrganService;
 	
@@ -60,9 +64,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_LANGDATA", strLang);
 		
@@ -70,9 +75,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception {
+	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", strLang);
 		
@@ -80,9 +86,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow) throws Exception {
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TYPE", type);
 		map.put("v_LANGDATA", strLang);
@@ -277,9 +284,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getPermissionListCount(String companyID, String type, String strLang) throws Exception {
+	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TYPE", type);
 		map.put("v_LANGDATA", strLang);
@@ -396,13 +404,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo) throws Exception {
+	public void addJob(String userID, String titleInfo, int tenantID) throws Exception {
 		String sTitle1 = "";
         String sTitle2 = "";
         String delFlag = "1";
         String pDeptID = "";
         
-        if(!titleInfo.equals("")){
+        if (!titleInfo.equals("")) {
+            delFlag = "2";
+            
+            String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+            
         	String[] addJobinfo = titleInfo.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
@@ -418,31 +430,71 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     sTitle2 = userInfo[2];
                 }
                 
-                Map<String, Object> map = new HashMap<String, Object>();		
-        		
-        		map.put("v_CN", userID);
-        		map.put("v_DEPTID", pDeptID);
-        		map.put("v_TITLE1", sTitle1);
-        		map.put("v_TITLE2", sTitle2);
-        		map.put("v_DELFLAG", delFlag);
+                // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  
+                String groupAddr = pDeptID + "@" + domain;
+                String mailAddr = userID + "@" + domain;
+                int rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
                 
-        		ezOrganAdminDao.setAddJob(map);
-        		
-        		delFlag = "2";
+                logger.debug("updateGroupAdd rc=" + rc);
+                
+                if (rc == 0) { // updateGroup 성공
+                    Map<String, Object> map = new HashMap<String, Object>();		
+            		
+                    map.put("v_TENANT_ID", tenantID);
+            		map.put("v_CN", userID);
+            		map.put("v_DEPTID", pDeptID);
+            		map.put("v_TITLE1", sTitle1);
+            		map.put("v_TITLE2", sTitle2);
+            		map.put("v_DELFLAG", delFlag);
+                    
+            		try {
+            		    ezOrganAdminDao.setAddJob(map);
+            		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
+            		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+            		}
+                }
             }
-        } else {
-        	Map<String, Object> map = new HashMap<String, Object>();		
-    		
-    		map.put("v_CN", userID);
-    		map.put("v_DEPTID", "");
-    		map.put("v_TITLE1", "");
-    		map.put("v_TITLE2", "");
-    		map.put("v_DELFLAG", delFlag);
-    		
-    		ezOrganAdminDao.setAddJob(map);
-        }		
+        }
 	}
 
+    @Override
+    public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
+        String pDeptID = "";
+        
+        if (!titleInfo.equals("")) {
+            String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+            
+            String[] addJobinfo = titleInfo.split(";");
+            
+            for (int i = 0; i < addJobinfo.length; i++) {
+                String[] userInfo = addJobinfo[i].split(":");
+                pDeptID = userInfo[0];
+                
+                // 겸직 부서의 Group Email 주소로부터 해당 User를 제거한다.                  
+                String groupAddr = pDeptID + "@" + domain;
+                String mailAddr = userID + "@" + domain;
+                
+                int rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+                
+                logger.debug("updateGroupDel rc=" + rc);
+                
+                if (rc == 0) { // updateGroupDel 성공
+                    Map<String, Object> map = new HashMap<String, Object>();        
+                    
+                    map.put("v_TENANT_ID", tenantID);
+                    map.put("v_CN", userID);
+                    map.put("v_DEPTID", pDeptID);
+                    
+                    try {
+                        ezOrganAdminDao.deleteAddJob(map);   
+                    } catch (Exception e) { // Exception이 발생하면 Group Email 주소에 해당 User를 다시 등록한다.
+                        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+                    }                    
+                }
+            }
+        }       
+    }
+    
 	@Override
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		

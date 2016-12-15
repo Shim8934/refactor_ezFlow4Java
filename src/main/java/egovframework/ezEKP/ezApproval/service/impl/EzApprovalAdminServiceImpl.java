@@ -1402,5 +1402,470 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		return rtnValue;
 	}
+
+	@Override
+	public String getContDocList(String contID, String userID, StringBuilder subQuery, int pageSize, int pageNum, String sortHeader, String sortOption, String companyID, LoginVO userInfo) throws Exception {
+		logger.debug("getContDocList started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String userSecurityCode = ""; 
+		String securityFlag = "";
+		String securityLineFlag = "";
+		String isUse = "";
+		String publicFlag = "";
+		String strSubQuery = "";
+		int querySizeSub = 0;
+		int querySizeMain = 0;
+		
+		List<ApprCodeVO> headerList = new ArrayList<ApprCodeVO>();
+		
+		if (contID != null && contID.equals("ADMIN"))	{
+			headerList = getListHeader("082", userInfo.getLang(), companyID, userInfo.getTenantId());
+		} else {
+			headerList = getListHeader("006", userInfo.getLang(), companyID, userInfo.getTenantId());
+		}
+		
+		resultXML.append("<DOCLIST>");
+		
+		//보안등급사용여부
+		isUse = getCodeIsUse("A22", "001", companyID, userInfo.getTenantId());
+		
+		if (isUse.equals("1")) {
+			securityFlag = "Y";
+			
+			isUse = getCodeIsUse("A22", "005", companyID, userInfo.getTenantId());
+			
+			if (isUse.equals("1")) {
+				securityLineFlag = "Y";
+			}
+			
+			if (userID != null && !userID.equals("")) {
+				userSecurityCode = getUserSecurityCode(userID, userInfo.getTenantId());
+			}
+		}
+		
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
+			userSecurityCode = "0";
+		}
+		//공개/비공개 사용여부
+		isUse = getCodeIsUse("A22", "004", companyID, userInfo.getTenantId());
+		
+		if (isUse.equals("1")) {
+			publicFlag = "Y";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contID", contID);
+		map.put("userID", userID);
+		map.put("userSecurityCode", userSecurityCode);
+		map.put("publicFlag", publicFlag);
+		map.put("securityFlag", securityFlag);
+		map.put("subQuery", subQuery);
+		map.put("companyID", companyID);
+		map.put("userInfo.getTenantId()", userInfo.getTenantId());
+		
+		int totalCount = ezApprovalAdminDAO.getContDocListCount(map);
+		
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + headerList.get(k).getColName() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+			
+			if (sortHeader != null && sortHeader.equals(headerList.get(k).getName())) {
+				if (sortOption == null || sortOption.equals("")) {
+					orderOption1 = headerList.get(k).getColName() + " ";
+					orderOption2 = headerList.get(k).getColName() + " desc ";
+				} else {
+					orderOption1 = headerList.get(k).getColName() + " desc ";
+					orderOption2 = headerList.get(k).getColName() + " ";
+				}
+			}
+		}
+		resultXML.append("</HEADERS>");
+		
+		querySizeSub = pageSize * pageNum;
+		querySizeMain = totalCount - (pageSize * (pageNum - 1));
+		
+		if (querySizeMain >= pageSize) {
+			querySizeMain = pageSize;
+		}
+		
+		if (orderOption1.indexOf("SendFlag") > 0) {
+			orderOption1 = " ";
+		}
+		
+		if (orderOption2.indexOf("SendFlag") > 0) {
+			orderOption2 = " ";
+		}
+		
+		if (orderOption1.indexOf("DocStateName") > 0) {
+			orderOption1 = orderOption1.replace("DocStateName", "DOCSTATE");
+		}
+		
+		if (orderOption2.indexOf("DocStateName") > 0) {
+			orderOption2 = orderOption2.replace("DocStateName", "DOCSTATE");
+		}
+		
+		if (orderOption1.length() > 0) {
+			if (orderOption1.length() >= 7) {
+				if (orderOption1.substring(0, 7).toLowerCase().equals("enddate")) {
+					orderOption1 = " ORDER BY '" + orderOption1 + "' ";
+				} else {
+					orderOption1 = " ORDER BY '" + orderOption1 + "', ENDDATE DESC ";
+				}
+			} else {
+				orderOption1 = " ORDER BY '" + orderOption1 + "', ENDDATE DESC ";
+			}
+		} else {
+			orderOption1 = " ORDER BY ENDDATE DESC ";
+		}
+		
+		if (orderOption2.length() > 0) {
+			if (orderOption2.length() >= 7) {
+				if (orderOption2.substring(0, 7).toLowerCase().equals("enddate")) {
+					orderOption2 = " ORDER BY '" + orderOption2 + "' ";
+				} else {
+					orderOption2 = " ORDER BY '" + orderOption2 + "', ENDDATE DESC ";
+				}
+			} else {
+				orderOption2 = " ORDER BY '" + orderOption2 + "', ENDDATE DESC ";
+			}
+		} else {
+			orderOption2 = " ORDER BY ENDDATE DESC ";
+		}
+		
+		strSubQuery = "SELECT * FROM (SELECT DISTINCT A.DOCID, A.DOCTYPE, A.DOCSTATE, A.FUNCTIONTYPE, A.HREF, "
+				+ "A.DOCTITLE, A.DOCNO, A.HASATTACHYN, A.HASOPINIONYN, A.STARTDATE, A.ENDDATE, A.WRITERID, A.WRITERNAME , "
+				+ "A.WRITERNAME2, A.WRITERJOBTITLE, A.WRITERJOBTITLE2, A.WRITERDEPTID, A.WRITERDEPTNAME, A.WRITERDEPTNAME2, "
+				+ "A.FORMID, A.CONTAINERID, TBEXPENDAPRDOCINFO.FORMNAME, TBEXPENDAPRDOCINFO.FORMNAME2, TBEXPENDAPRDOCINFO.STATUS, "
+				+ "A.ORGDOCID, A.ISPUBLIC, TBEXPENDAPRDOCINFO.EDMSYN, A.TENANT_ID, A.COMPANYID "
+				+ "FROM TBENDAPRDOCINFO A  LEFT OUTER JOIN TBENDAPRLINEINFO ON A.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID AND A.COMPANYID = TBENDAPRLINEINFO.COMPANYID AND A.DOCID = TBENDAPRLINEINFO.DOCID  "
+				+ "LEFT OUTER JOIN TBEXPENDAPRLINE ON A.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID AND A.COMPANYID = TBEXPENDAPRLINE.COMPANYID AND A.DOCID = TBEXPENDAPRLINE.DOCID "
+				+ "INNER JOIN TBEXPENDAPRDOCINFO ON A.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID AND A.COMPANYID = TBEXPENDAPRDOCINFO.COMPANYID AND A.DOCID = TBEXPENDAPRDOCINFO.DOCID "
+				+ "WHERE A.TENANT_ID = '" + userInfo.getTenantId() + "' AND A.COMPANYID = '" + companyID + "' AND TBEXPENDAPRDOCINFO.DELFLAG IS NULL ";
+		
+		if (contID == null || contID.equals("")) {
+			strSubQuery += " AND TBENDAPRLINEINFO.APRMEMBERID = '" + userID + "' ";
+		} else if (contID.equals("ADMIN")){
+			strSubQuery += " AND CONTAINERID IS NOT NULL ";
+		} else {
+			strSubQuery += " AND CONTAINERID IN ('" + contID + "') ";
+		}
+		
+		if (!userSecurityCode.equals("0") && contID != null && !contID.equals("ADMIN")) {
+			if (securityLineFlag.equals("Y")) {
+				strSubQuery += " AND ( '" + userSecurityCode + "' <= TBEXPENDAPRDOCINFO.SECURITYCODE OR " + getIsLineInfo("A.DOCID", userID, companyID, userInfo.getTenantId()) + ") = 'Y') ";
+			} else {
+				strSubQuery += " AND ( '" + userSecurityCode + "' <= TBEXPENDAPRDOCINFO.SECURITYCODE ";
+			}
+		}
+		
+		if (publicFlag.equals("Y") && contID != null && !contID.equals("")) {
+			strSubQuery += " AND ( (A.ISPUBLIC <> 'N' OR A.ISPUBLIC IS NULL) OR (A.ISPUBLIC = 'N' AND TBENDAPRLINEINFO.APRMEMBERID = '" + userID + "')) ";
+		}
+		
+		if (subQuery.length() > 0) {
+			strSubQuery += " AND " + subQuery + " ";
+		}
+		
+		
+		map.put("strSubQuery", strSubQuery + orderOption1);
+		map.put("orderByMain", orderOption2);
+		map.put("querySizeSub", querySizeSub);
+		map.put("querySizeMain", querySizeMain);
+		
+		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalAdminDAO.getContDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprDocInfoVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprDocInfoVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = headerList.get(h).getColName().toUpperCase();
+				
+				if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					fieldName = fieldName + commonUtil.getMultiData(userInfo.getLang());
+				}
+				
+				if (fieldName.equals("DOCSTATENAME") && docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent().equals(staDTExcuteDoc)) {
+					fieldValue = egovMessageSource.getMessage("ezApproval.t885", userInfo.getLocale());
+				} else if (fieldName.equals("SENDFLAG")) {
+					fieldValue = getSendStatus(docXML.getElementsByTagName("SENDFLAG").item(k).getTextContent(), userInfo.getLocale());
+				} else if (fieldName.equals("STARTDATE")) {
+					fieldValue = commonUtil.getDateStringInUTC(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent(), userInfo.getOffset(), false);
+				} else if (fieldName.equals("ENDDATE")) {
+					fieldValue = commonUtil.getDateStringInUTC(docXML.getElementsByTagName("ENDDATE").item(k).getTextContent(), userInfo.getOffset(), false);
+				} else {
+					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(fieldValue)) + "</VALUE>");
+				
+				if (h == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
+					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+				}
+				
+				if (fieldName.equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (fieldName.equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		
+		logger.debug("getContDocList ended");
+		
+		return resultXML.toString();
+	}
+	
+	private String getSendStatus(String sendFlag, Locale locale) throws Exception {
+		logger.debug("getSendStatus started");
+		
+		String rtnValue = "";
+		
+		if (sendFlag != null) {
+			if (sendFlag.equals("H")) {
+				rtnValue = egovMessageSource.getMessage("ezApproval.t497", locale);
+			} else if (sendFlag.equals("I")) {
+				rtnValue = egovMessageSource.getMessage("ezApproval.t856", locale);
+			} else if (sendFlag.equals("N")) {
+				rtnValue = egovMessageSource.getMessage("ezApproval.t859", locale);
+			} else if (sendFlag.equals("Y")) {
+				rtnValue = egovMessageSource.getMessage("ezApproval.t854", locale);
+			}
+		} else {
+			rtnValue = egovMessageSource.getMessage("ezApproval.t854", locale);
+		}
+		
+		logger.debug("getSendStatus ended");
+		
+		return rtnValue;
+	}
+	
+	private String getIsLineInfo(String docID, String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getIsLineInfo started");
+		
+		String strSQL = "SELECT "
+						+ "CASE WHEN COUNT(DocID) > 0 THEN 'Y' ELSE 'N' END getIsLineInfo "
+						+ "FROM TBENDAPRLINEINFO "
+						+ "WHERE tenant_id = '" + tenantID + "' AND companyid = '" + companyID + "' AND DocID = " + docID + " AND AprMemberID = '" + userID + "' ";
+		
+		logger.debug("getIsLineInfo ended");
+		
+		return strSQL;
+	}
+
+	private String getCodeIsUse(String code1, String code2, String companyID, int tenantID) throws Exception {
+		logger.debug("getCodeIsUse started");
+		
+		ApprCodeVO apprCodeVO = new ApprCodeVO();
+		apprCodeVO.setCode1(code1);
+		apprCodeVO.setCode2(code2);
+		apprCodeVO.setCompanyID(companyID);
+		apprCodeVO.setTenantID(tenantID);
+		
+		String rtnValue = ezApprovalAdminDAO.getCodeIsUse(apprCodeVO);
+		
+		logger.debug("getCodeIsUse ended");
+		
+		return rtnValue;
+	}
+
+	private String getUserSecurityCode(String userID, int tenantID) throws Exception {
+		logger.debug("getUserSecurityCode started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		String userSecurityCode = ezApprovalAdminDAO.getUserSecurityCode(map);
+		
+		logger.debug("getUserSecurityCode ended");
+		
+		return userSecurityCode;
+	}
+
+	@Override
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception {
+		logger.debug("moveDocList started");
+		
+		String rtnValue = "";
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String sourceContID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String targetContID = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String moveAll = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("sourceContID", sourceContID);
+		map.put("targetContID", targetContID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			if (moveAll.toLowerCase().equals("true")) {
+				ezApprovalAdminDAO.moveAllDocList1(map);
+				ezApprovalAdminDAO.moveAllDocList2(map);
+			} else {
+				String subQuery = "";
+				
+				for (int k = 3; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k == 3) {
+						subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					} else {
+						subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					}
+				}
+				
+				map.put("subQuery", subQuery);
+				
+				ezApprovalAdminDAO.moveDocList1(map);
+				ezApprovalAdminDAO.moveDocList2(map);
+			}
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("moveDocList ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getKeepType(String selected, LoginVO userInfo) throws Exception {
+		logger.debug("getKeepType started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code1", "A52");
+		map.put("lang", userInfo.getLang());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprCodeVO> apprCodeVOs = ezApprovalAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < apprCodeVOs.size(); k++) {
+			String[] colOption = apprCodeVOs.get(k).getName().split(";");
+			
+			if (colOption[1].equals("selected")) {
+				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getKeepType ended");
+		
+		return rtnXML.toString();
+	}
+
+	@Override
+	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteDocList started");
+		
+		String rtnValue = "";
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String contID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String startPeriod = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String storagePeriod = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String deleteAll = docXML.getDocumentElement().getChildNodes().item(3).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contID", contID);
+		map.put("storagePeriod", storagePeriod);
+		map.put("startPeriod", startPeriod);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		if (startPeriod != null && !startPeriod.equals("")) {
+			map.put("startDate", commonUtil.getDateStringInUTC(commonUtil.makeDate(startPeriod, "1", "1", true), offset, true));
+			map.put("endDate", commonUtil.getDateStringInUTC(commonUtil.makeDate(startPeriod, "12", "31", false), offset, true));
+		}
+		
+		try {
+			if (deleteAll.equals("true")) {
+				ezApprovalAdminDAO.deleteAllDocList(map);
+			} else {
+				String subQuery = "";
+				for (int k = 4; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k == 4) {
+						subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					} else {
+						subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					}
+				}
+				
+				map.put("subQuery", subQuery);
+				
+				ezApprovalAdminDAO.deleteDocList(map);
+			}
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("deleteDocList ended");
+		
+		return rtnValue;
+	}
 	
 }

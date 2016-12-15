@@ -208,6 +208,51 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalAdminDAO.changeSpecialContSN3", apprContInfoVO);
 	}
 
+	public String getUserSecurityCode(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalAdminDAO.getUserSecurityCode", map);
+	}
+
+	public String getCodeIsUse(ApprCodeVO apprCodeVO) throws Exception {
+		return (String) select("EzApprovalAdminDAO.getCodeIsUse", apprCodeVO);
+	}
+
+	public int getContDocListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalAdminDAO.getContDocListCount", map);
+	}
+
+	public String getProcessYN(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalAdminDAO.getProcessYN", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprDocInfoVO> getContDocList(Map<String, Object> map) throws Exception{
+		return (List<ApprDocInfoVO>) list("EzApprovalAdminDAO.getContDocList", map);
+	}
+
+	public void moveAllDocList1(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveAllDocList1", map);
+	}
+
+	public void moveAllDocList2(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveAllDocList2", map);
+	}
+
+	public void moveDocList1(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveDocList1", map);
+	}
+
+	public void moveDocList2(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveDocList2", map);
+	}
+
+	public void deleteAllDocList(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.deleteAllDocList", map);
+	}
+
+	public void deleteDocList(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.deleteDocList", map);
+	}
+
 
 
 }

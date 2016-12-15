@@ -9,11 +9,11 @@ public interface EzOrganAdminService {
 	
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang) throws Exception;
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserAddJobList(String cn, String strLang) throws Exception;
+	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow) throws Exception;
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception;
 		
 	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID) throws Exception;
 	
@@ -37,7 +37,7 @@ public interface EzOrganAdminService {
 	
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID) throws Exception;
 	
-	public int getPermissionListCount(String companyID, String type, String strLang) throws Exception;
+	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception;
 
 	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID) throws Exception;
 	
@@ -57,7 +57,9 @@ public interface EzOrganAdminService {
 
 	public void insertDBData_user(OrganUserVO vo) throws Exception;
 
-	public void addJob(String userID, String titleInfo) throws Exception;
+	public void addJob(String userID, String titleInfo, int tenantID) throws Exception;
+	
+    public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception;
 

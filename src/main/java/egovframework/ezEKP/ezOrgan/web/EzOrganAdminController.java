@@ -1103,13 +1103,20 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addJobList.do")
 	public String addJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("addJobList started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);		
+		
+        int tenantID = user.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		String strLang = config.getProperty("config.primary");
+		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
@@ -1130,6 +1137,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		
+		logger.debug("addJobList ended.");
+		
 		return "/admin/ezOrgan/addJobList";
 	}
 	
@@ -1138,11 +1147,18 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getAddJobList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String getAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+        logger.debug("getAddJobList started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String companyID = request.getParameter("companyID");
-		String strLang = config.getProperty("config.primary");
+		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
 				
-		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang);
+		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID);
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
         result.append("<ROWS>");
@@ -1175,6 +1191,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         result.append("</ROWS>");
         result.append("</LISTVIEWDATA>");
 		
+        logger.debug("getAddJobList ended.");
+        
 		return result.toString();
 	}
 	
@@ -1184,10 +1202,17 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/getUserAddJobList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getUserAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+        logger.debug("getUserAddJobList started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String cn = request.getParameter("cn");
-		String strLang = config.getProperty("config.primary");
+		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
 		
-		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(cn, strLang);
+		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(cn, strLang, tenantID);
 		
 		StringBuilder result = new StringBuilder();
 		result.append("<DATA>");
@@ -1199,6 +1224,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			result.append(rows.toString());
 		}
         result.append("</DATA>");
+        
+        logger.debug("getUserAddJobList ended.");
         
 		return result.toString();
 	}
@@ -1220,20 +1247,33 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String titleInfo = "";
+		String deleteTitleInfo = "";
 				
-		if (!doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
-			for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
-				if (titleInfo.equals("")) {
-					titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
-				} else {
-					titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
-				}
-			}
+		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
+		    if (!doc.getElementsByTagName("TITLE").item(i).getTextContent().equals("")) {
+    			if (titleInfo.equals("")) {
+    				titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
+    			} else {
+    				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
+    			}
+		    } else {
+                if (deleteTitleInfo.equals("")) {
+                    deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
+                } else {
+                    deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
+                }		        
+		    }
 		}
+		
+		logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
 		
 		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
 		
-		ezOrganAdminService.addJob(userID, titleInfo);
+		if (!deleteTitleInfo.equals("")) {
+		    ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
+		} else {
+		    ezOrganAdminService.addJob(userID, titleInfo, tenantID);
+		}
 		
 		logger.debug("saveSubTitle ended.");
 		
@@ -1297,13 +1337,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/permissionsList.do")	
 	public String permissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("permissionsList started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		String strLang = config.getProperty("config.primary");
+		String strLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
@@ -1324,6 +1366,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		
+		logger.debug("permissionsList ended.");
+		
 		return "admin/ezOrgan/permissionsList";
 	}	
 	
@@ -1333,17 +1377,27 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@RequestMapping(value = "/admin/ezOrgan/getPermissionsList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("getPermissionsList started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
 		String companyID = request.getParameter("companyID");
 		String type = request.getParameter("type");
-		String strLang = config.getProperty("config.primary");
+		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
         
-        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang);
+        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow);
         
-        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow);
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang, tenantID);
+        
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow, tenantID);
         
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<ROWS>");
@@ -1384,6 +1438,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         }
         result.append("</ROWS>");
         result.append("</LISTVIEWDATA>");
+        
+        logger.debug("getPermissionsList ended.");
         
 		return result.toString();
 	}

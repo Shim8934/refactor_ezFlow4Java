@@ -1582,10 +1582,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_DEPTNAME2", draftDeptName2);
 		map1.put("v_FORMID", formID);
 		map1.put("v_DOCSTATE", docState);
-		map1.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
-		map1.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
-		map1.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
-		map1.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
+		map1.put("v_STARTDATE1", commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
+		map1.put("v_STARTDATE2", commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, false));
+		map1.put("v_ENDDATE1", commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
+		map1.put("v_ENDDATE2", commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map1.put("v_LANGTYPE", commonUtil.getMultiData(primary));
 		map1.put("v_APPROVUSER", approvUser);
 		map1.put("companyID", companyID);
@@ -1613,10 +1613,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map2.put("v_DEPTNAME2", draftDeptName2);
 		map2.put("v_FORMID", formID);
 		map2.put("v_DOCSTATE", docState);
-		map2.put("v_STARTDATE1", makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
-		map2.put("v_STARTDATE2", makeDate(draftToYear, draftToMonth, draftToDay, false));
-		map2.put("v_ENDDATE1", makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
-		map2.put("v_ENDDATE2", makeDate(apprToYear, apprToMonth, apprToDay, false));
+		map2.put("v_STARTDATE1", commonUtil.makeDate(draftFromYear, draftFromMonth, draftFromDay, true));
+		map2.put("v_STARTDATE2", commonUtil.makeDate(draftToYear, draftToMonth, draftToDay, false));
+		map2.put("v_ENDDATE1", commonUtil.makeDate(apprFromYear, apprFromMonth, apprFromDay, true));
+		map2.put("v_ENDDATE2", commonUtil.makeDate(apprToYear, apprToMonth, apprToDay, false));
 		map2.put("v_LANGTYPE", commonUtil.getMultiData(primary));
 		map2.put("v_APPROVUSER", approvUser);
 		map2.put("companyID", companyID);
@@ -1956,25 +1956,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} catch(Exception e) {
 			return "FALSE";
 		}
-	}
-	
-	private String makeDate (String year, String month, String day, boolean startFlag) throws Exception {
-		String result = "";
-		
-		if (month.length() == 1) {
-			month = "0" + month;
-		}
-		
-		if (!year.equals("") && !month.equals("") && !day.equals("")) {
-			result = year + "-" + month + "-" + day;
-			
-			if (startFlag) {
-				result += " 00:00:00";
-			} else {
-				result += " 23:59:59";
-			}
-		}
-		return result;
 	}
 	
 	private String deleteForm(String formID, String companyID) throws Exception {

@@ -30,24 +30,297 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     @Autowired
     private EzEmailUtil ezEmailUtil;
     
-	@SuppressWarnings("unchecked")
-	public List<OrganDeptVO> getCompanyList(Map<String, Object> map) throws Exception{
-		return (List<OrganDeptVO>) list("EzOrganAdminDAO.getCompanyList", map);
+    private List<OrganDeptVO> getCompanyListForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("tenantID");
+        String isPrimary = (String)map.get("lang");
+        
+        logger.debug("getCompanyListForJMocha started. tenantId=" + tenantId + ",isPrimary=" + isPrimary);
+        
+        List<OrganDeptVO> returnValue = new ArrayList<OrganDeptVO>();
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "isPrimary=" + isPrimary;
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getCompanyList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganDeptVO deptVO = new OrganDeptVO();
+                            
+                            deptVO.setCn((String)itemObj.get("companyId"));
+                            deptVO.setDisplayName((String)itemObj.get("displayname"));
+                            deptVO.setDisplayName2((String)itemObj.get("displayname2"));
+                            
+                            returnValue.add(deptVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getCompanyListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;               
+    }
+    
+    @SuppressWarnings("unchecked")
+    private List<OrganDeptVO> getCompanyListForLocal(Map<String, Object> map) throws Exception {
+        return (List<OrganDeptVO>) list("EzOrganAdminDAO.getCompanyList", map);
+    }
+    
+	public List<OrganDeptVO> getCompanyList(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getCompanyListForJMocha(map);
+        } else {
+            return getCompanyListForLocal(map);
+        }       
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getAddJobList(Map<String, Object> map) throws Exception{
-		return (List<OrganUserVO>) list("EzOrganAdminDAO.getAddJobList", map);
+    private List<OrganUserVO> getAddJobListForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        String companyId = (String)map.get("v_COMPANYID");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        
+        logger.debug("getAddJobListForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId + ",isPrimary=" + isPrimary);
+        
+        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "companyId=" + companyId;
+        String param3 = "isPrimary=" + isPrimary;
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getAddJobList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganUserVO userVO = new OrganUserVO();
+                            
+                            userVO.setCn((String)itemObj.get("userId"));
+                            userVO.setDisplayName((String)itemObj.get("displayname"));
+                            userVO.setDescription(((String)itemObj.get("description")));
+                            userVO.setTitle((String)itemObj.get("title"));
+                            userVO.setMail((String)itemObj.get("mail"));
+                            userVO.setTelephoneNumber((String)itemObj.get("telephoneNumber"));
+                            userVO.setCompany((String)itemObj.get("company"));
+                            userVO.setExtensionAttribute4((String)itemObj.get("extensionAttribute4"));
+                            
+                            returnValue.add(userVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getAddJobListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;                       
+    }
+	
+    @SuppressWarnings("unchecked")
+    private List<OrganUserVO> getAddJobListForLocal(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.getAddJobList", map);
+    }
+	
+	public List<OrganUserVO> getAddJobList(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getAddJobListForJMocha(map);
+        } else {
+            return getAddJobListForLocal(map);
+        }       
+	}
+
+    private List<OrganUserVO> getUserAddJobListForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        String userId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        
+        logger.debug("getUserAddJobListForJMocha started. tenantId=" + tenantId + ",userId=" + userId + ",isPrimary=" + isPrimary);
+        
+        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + userId;
+        String param3 = "isPrimary=" + isPrimary;
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserAddJobList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganUserVO userVO = new OrganUserVO();
+                            
+                            userVO.setCn((String)itemObj.get("userId"));
+                            userVO.setDepartment((String)itemObj.get("deptId"));
+                            userVO.setTitle((String)itemObj.get("title"));
+                            userVO.setDisplayName((String)itemObj.get("displayName"));
+                            userVO.setDescription((String)itemObj.get("deptName"));
+                            userVO.setCompany((String)itemObj.get("companyName"));
+                            userVO.setTitle1((String)itemObj.get("title1"));
+                            userVO.setTitle2((String)itemObj.get("title2"));
+                            
+                            returnValue.add(userVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getUserAddJobListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;                               
+    }
+	
+    @SuppressWarnings("unchecked")
+    private List<OrganUserVO> getUserAddJobListForLocal(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.getUserAddJobList", map);
+    }
+	
+	public List<OrganUserVO> getUserAddJobList(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getUserAddJobListForJMocha(map);
+        } else {
+            return getUserAddJobListForLocal(map);
+        }       
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getUserAddJobList(Map<String, Object> map) throws Exception{
-		return (List<OrganUserVO>) list("EzOrganAdminDAO.getUserAddJobList", map);
-	}
+    private List<OrganUserVO> getPermissionListForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        String companyId = (String)map.get("v_COMPANYID");
+        String type = (String)map.get("v_TYPE");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int startRow = (int)map.get("v_PSTARTROW");
+        int endRow = (int)map.get("v_PENDROW");
+        
+        logger.debug("getPermissionListForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId 
+                + ",type=" + type + ",isPrimary=" + isPrimary + ",startRow=" + startRow
+                + ",endRow=" + endRow);
+        
+        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "companyId=" + companyId;
+        String param3 = "type=" + type;
+        String param4 = "isPrimary=" + isPrimary;
+        String param5 = "startRow=" + startRow;
+        String param6 = "endRow=" + endRow;
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getPermissionList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganUserVO userVO = new OrganUserVO();
+                            
+                            userVO.setCn((String)itemObj.get("userId"));
+                            userVO.setDisplayName((String)itemObj.get("displayname"));
+                            userVO.setDescription(((String)itemObj.get("description")));
+                            userVO.setTitle((String)itemObj.get("title"));
+                            userVO.setMail((String)itemObj.get("mail"));
+                            userVO.setTelephoneNumber((String)itemObj.get("telephoneNumber"));
+                            userVO.setCompany((String)itemObj.get("company"));
+                            userVO.setExtensionAttribute1((String)itemObj.get("extensionAttribute1"));
+                            
+                            returnValue.add(userVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getPermissionListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;               
+    }
 	
-	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getPermissionList(Map<String, Object> map) throws Exception{
-		return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);
+    @SuppressWarnings("unchecked")
+    private List<OrganUserVO> getPermissionListForLocal(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);
+    }
+	
+	public List<OrganUserVO> getPermissionList(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getPermissionListForJMocha(map);
+        } else {
+            return getPermissionListForLocal(map);
+        }       
 	}
 
     private List<OrganUserVO> getRetireListForJMocha(Map<String, Object> map) throws Exception {
@@ -458,11 +731,66 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       
 	}
 	
-	public int getPermissionListCount(Map<String, Object> map) throws Exception{
-		select("EzOrganAdminDAO.getPermissionListCount", map);
-		int ret = (int) map.get("v_pCount");
-		
-		return ret;
+    private int getPermissionListCountForJMocha(Map<String, Object> map) throws Exception {
+        String companyId = (String)map.get("v_COMPANYID");
+        String type = (String)map.get("v_TYPE");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getPermissionListCountForJMocha started. companyId=" + companyId 
+                + ",type=" + type + ",tenantId=" + tenantId);
+        
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+        String param3 = "type=" + URLEncoder.encode(type, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getPermissionListCount";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("count")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getPermissionListCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;                     
+    }
+	
+    private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
+        select("EzOrganAdminDAO.getPermissionListCount", map);
+        int ret = (int) map.get("v_pCount");
+        
+        return ret;
+    }
+	
+	public int getPermissionListCount(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getPermissionListCountForJMocha(map);
+        } else {
+            return getPermissionListCountForLocal(map);
+        }       
 	}
 
     private int getRetireListCountForJMocha(Map<String, Object> map) throws Exception {
@@ -813,27 +1141,88 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 
         String param1 = "tenantId=" + vo.getTenantId();
         String param2 = "userId=" + URLEncoder.encode(vo.getCn(), "UTF-8");
-        String param3 = "displayName=" + URLEncoder.encode(vo.getDisplayName(), "UTF-8");
-        String param4 = "displayName2=" + URLEncoder.encode(vo.getDisplayName2(), "UTF-8");
-        String param5 = "title=" + URLEncoder.encode(vo.getTitle(), "UTF-8");
-        String param6 = "title2=" + URLEncoder.encode(vo.getTitle2(), "UTF-8");
-        String param7 = "telephoneNumber=" + URLEncoder.encode(vo.getTelephoneNumber(), "UTF-8");
-        String param8 = "homePhone=" + URLEncoder.encode(vo.getHomePhone(), "UTF-8");
-        String param9 = "facsimileTelephoneNumber=" + URLEncoder.encode(vo.getFacsimileTelephoneNumber(), "UTF-8");
-        String param10 = "mobile=" + URLEncoder.encode(vo.getMobile(), "UTF-8");
-        String param11 = "postalCode=" + URLEncoder.encode(vo.getPostalCode(), "UTF-8");
-        String param12 = "streetAddress=" + URLEncoder.encode(vo.getStreetAddress(), "UTF-8");
-        String param13 = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
-        String param14 = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");
-        String param15 = "extensionAttribute102=" + URLEncoder.encode(vo.getExtensionAttribute102(), "UTF-8");
-        String param16 = "extensionAttribute14=" + URLEncoder.encode(vo.getExtensionAttribute14(), "UTF-8");
-        String param17 = "extensionAttribute15=" + URLEncoder.encode(vo.getExtensionAttribute15(), "UTF-8");
-        String param18 = "birth=" + URLEncoder.encode(vo.getBirth(), "UTF-8");
-        String param19 = "birthType=" + URLEncoder.encode(vo.getBirthType(), "UTF-8");
-        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
-                    + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
-                    + "&" + param13 + "&" + param14 + "&" + param15 + "&" + param16 + "&" + param17 + "&" + param18
-                    + "&" + param19;
+        String inputParams = param1 + "&" + param2;
+        
+        if (vo.getDisplayName() != null) {
+            String param = "displayName=" + URLEncoder.encode(vo.getDisplayName(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getDisplayName2() != null) {
+            String param = "displayName2=" + URLEncoder.encode(vo.getDisplayName2(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getTitle() != null) {
+            String param = "title=" + URLEncoder.encode(vo.getTitle(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getTitle2() != null) {
+            String param = "title2=" + URLEncoder.encode(vo.getTitle2(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getTelephoneNumber() != null) {
+            String param = "telephoneNumber=" + URLEncoder.encode(vo.getTelephoneNumber(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getHomePhone() != null) {
+            String param = "homePhone=" + URLEncoder.encode(vo.getHomePhone(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getFacsimileTelephoneNumber() != null) {
+            String param = "facsimileTelephoneNumber=" + URLEncoder.encode(vo.getFacsimileTelephoneNumber(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getMobile() != null) {
+            String param = "mobile=" + URLEncoder.encode(vo.getMobile(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getPostalCode() != null) {
+            String param = "postalCode=" + URLEncoder.encode(vo.getPostalCode(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getStreetAddress() != null) {
+            String param = "streetAddress=" + URLEncoder.encode(vo.getStreetAddress(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute1() != null) {
+            String param = "extensionAttribute1=" + URLEncoder.encode(vo.getExtensionAttribute1(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute2() != null) {
+            String param = "extensionAttribute2=" + URLEncoder.encode(vo.getExtensionAttribute2(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute3() != null) {
+            String param = "extensionAttribute3=" + URLEncoder.encode(vo.getExtensionAttribute3(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute6() != null) {
+            String param = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute10() != null) {
+            String param = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute102() != null) {
+            String param = "extensionAttribute102=" + URLEncoder.encode(vo.getExtensionAttribute102(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute14() != null) {
+            String param = "extensionAttribute14=" + URLEncoder.encode(vo.getExtensionAttribute14(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute15() != null) {
+            String param = "extensionAttribute15=" + URLEncoder.encode(vo.getExtensionAttribute15(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getBirth() != null) {
+            String param = "birth=" + URLEncoder.encode(vo.getBirth(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getBirthType() != null) {
+            String param = "birthType=" + URLEncoder.encode(vo.getBirthType(), "UTF-8");
+            inputParams += "&" + param;
+        }
 
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
@@ -1147,10 +1536,104 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       
 	}
 
-	public void setAddJob(Map<String, Object> map) throws Exception{
-		delete("EzOrganAdminDAO.setAddJob", map);
+    private void setAddJobForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String userId = (String)map.get("v_CN");
+        String deptId = (String)map.get("v_DEPTID");
+        String title1 = (String)map.get("v_TITLE1");
+        String title2 = (String)map.get("v_TITLE2");
+        
+        logger.debug("setAddJobForJMocha started. tenantId=" + tenantId + ",userId=" + userId
+                + ",deptId=" + deptId + ",title1=" + title1 + ",title2=" + title2);
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String param3 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String param4 = "title1=" + URLEncoder.encode(title1, "UTF-8");
+        String param5 = "title2=" + URLEncoder.encode(title2, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setAddJob";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+                
+        logger.debug("setAddJobForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+    }
+	
+    private void setAddJobForLocal(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.setAddJob", map);
+    }
+	
+	public void setAddJob(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            setAddJobForJMocha(map);
+        } else {
+            setAddJobForLocal(map);
+        }       
 	}
 
+    private void deleteAddJobForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String userId = (String)map.get("v_CN");
+        String deptId = (String)map.get("v_DEPTID");
+        
+        logger.debug("deleteAddJobForJMocha started. tenantId=" + tenantId + ",userId=" + userId
+                + ",deptId=" + deptId);
+        
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String param3 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteAddJob";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+                
+        logger.debug("deleteAddJobForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+    }
+    
+    private void deleteAddJobForLocal(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteAddJob", map);
+    }
+    
+    public void deleteAddJob(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            deleteAddJobForJMocha(map);
+        } else {
+            deleteAddJobForLocal(map);
+        }
+    }
+	
     private int userCountCheckForJMocha(String cn, int tenantID) throws Exception {
         logger.debug("userCountCheckForJMocha started. tenantID=" + tenantID + ",cn=" + cn);
         

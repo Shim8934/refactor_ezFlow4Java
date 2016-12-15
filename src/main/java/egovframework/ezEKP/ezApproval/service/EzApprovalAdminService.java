@@ -61,4 +61,12 @@ public interface EzApprovalAdminService {
 
 	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
 
+	public String getContDocList(String contID, String userID, StringBuilder subQuery, int pageSize, int pageNum, String sortHeader, String sortOption, String companyID, LoginVO userInfo) throws Exception;
+
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
+
+	public String getKeepType(String selected, LoginVO userInfo) throws Exception;
+
+	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
+
 }
