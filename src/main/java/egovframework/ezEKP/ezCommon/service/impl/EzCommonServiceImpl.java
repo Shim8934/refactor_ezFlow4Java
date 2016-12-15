@@ -1031,17 +1031,25 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", userInfo.getTenantId());
 		map.put("userID", pUserID);
-		ezCommonDAO.deleteUserLLocalInfo(map);
+		
+		ezCommonDAO.deleteUserLocalInfo(map);
 	
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		
 		logger.debug("pUserID="+pUserID);
 		logger.debug("timeZone="+userInfo.getOffset());
 		logger.debug("lang="+userInfo.getLang());
+		
+		map1.put("v_TENANT_ID", userInfo.getTenantId());
 		map1.put("userID", pUserID);
 		map1.put("timeZone", userInfo.getOffset());
 		map1.put("lang", userInfo.getLang());
+		
 		ezCommonDAO.insertTblUserLocalInfo(map1);
+		
 		return "OK";
 	}
 	

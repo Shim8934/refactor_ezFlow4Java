@@ -203,9 +203,53 @@ public class EzCommonDAO extends EgovAbstractDAO{
             insertTblUserLocalInfoForLocal(map);
         }               
 	}
+
+    private void deleteUserLocalInfoForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String userId = (String)map.get("userID");
+        
+        logger.debug("deleteUserLocalInfoForJMocha started. tenantId=" + tenantId + ",userId=" + userId);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "userId=" + URLEncoder.encode(userId, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/deleteUserLocalInfo";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("deleteUserLocalInfoForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Deleting User Local Info Failed!");
+        }
+    }
 	
-	public void deleteUserLLocalInfo(Map<String, Object> map) throws Exception {
-		delete("EzCommonDAO.deleteUserLLocalInfo",map);
+    private void deleteUserLocalInfoForLocal(Map<String, Object> map) throws Exception {
+        delete("EzCommonDAO.deleteUserLLocalInfo",map);
+    }
+	
+	public void deleteUserLocalInfo(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            deleteUserLocalInfoForJMocha(map);
+        } else {
+            deleteUserLocalInfoForLocal(map);
+        }               
 	}
 
 	@SuppressWarnings("unchecked")
