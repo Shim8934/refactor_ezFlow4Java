@@ -2448,11 +2448,11 @@
         	FROM
         		EZPORTAL.TBL_PORTLET_PARAMETERS A
 			JOIN
-				TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
+				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
