@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -53,8 +54,11 @@ public class EzEmailController {
 	
     @RequestMapping(value="/ezEmail/mailAloneTop.do")
     public String showMailAloneTop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
         boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
+        
         model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
+        model.addAttribute("lang", userInfo.getLang());
         
         return "ezEmail/mailAloneTop";
     }
