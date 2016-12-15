@@ -227,10 +227,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String pResult = "";
 		String pThemeID = xmlDom.getElementsByTagName("THEMEID").item(0).getTextContent();
 		
-		pResult = ezPortalAdminService.useThemeInfo(pThemeID);
+		pResult = ezPortalAdminService.useThemeInfo(pThemeID, userInfo.getTenantId());
 		
 		if (pResult != null && pResult.equals("NO")) {
-			ezPortalAdminService.deleteTheme(pThemeID); 
+			ezPortalAdminService.deleteTheme(pThemeID, userInfo.getTenantId()); 
 		}
 		
 		return "OK";
@@ -389,7 +389,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 	
 		if (commonUtil.checkAdmin(loginCookie)) {
-			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			logger.debug("ezAclCheck="+result);
 			String returnXML = "";
@@ -447,7 +447,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		ezPortalAdminService.deleteTopPage(uID);
+		ezPortalAdminService.deleteTopPage(uID, userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -465,7 +465,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		ezPortalAdminService.topSetUsePage2(uID, userInfo.getCompanyID());
+		ezPortalAdminService.topSetUsePage2(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -483,7 +483,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		ezPortalAdminService.topOutOfSetUsePage(uID, userInfo.getCompanyID());
+		ezPortalAdminService.topOutOfSetUsePage(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -544,7 +544,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				skinFontOverColor = list.get(0).getSkinFontOverColor();
 			}
 			
-			ezPortalAdminService.portalSaveSkin(pageID, skinName, skinBgFlag, skinBgColor, skinBgImage, skinFontColor, skinFontOverColor);
+			ezPortalAdminService.portalSaveSkin(pageID, skinName, skinBgFlag, skinBgColor, skinBgImage, skinFontColor, skinFontOverColor, userInfo.getTenantId());
 			
 		}
 		
@@ -570,7 +570,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			parentPageID = req.getParameter("parentPageID");
 		}
 		
-		String ret = ezPortalAdminService.saveTopMenu(pageID, parentPageID, userInfo.getId(), userInfo.getDisplayName(), xmlStr, userInfo.getCompanyID());
+		String ret = ezPortalAdminService.saveTopMenu(pageID, parentPageID, userInfo.getId(), userInfo.getDisplayName(), xmlStr, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return ret;
 	}
@@ -624,7 +624,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pStartRow = intPage * listPageSize - listPageSize + 1;
 			pEndRow = intPage * listPageSize;
 			
-			String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
+			String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 
 			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -694,7 +694,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		
-		String ret = ezPortalAdminService.deletePortalPage(uID);
+		String ret = ezPortalAdminService.deletePortalPage(uID, userInfo.getTenantId());
 		
 		return ret;
 	}
@@ -725,7 +725,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			type = req.getParameter("type");
 		}
 		
-		String ret = ezPortalAdminService.savePortalPage(callPageID, pageID, parentPageID, xmlStr, userInfo.getCompanyID(), type);
+		String ret = ezPortalAdminService.savePortalPage(callPageID, pageID, parentPageID, xmlStr, userInfo.getCompanyID(), type, userInfo.getTenantId());
 		return ret;
 	}
 	
@@ -747,7 +747,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			gubunFlag = req.getParameter("gubunFlag");
 		}
 		
-		String result = ezPortalAdminService.setUsePage(uID, gubunFlag, userInfo.getCompanyID());
+		String result = ezPortalAdminService.setUsePage(uID, gubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -770,7 +770,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			gubunFlag = req.getParameter("gubunFlag");
 		}
 		
-		String result = ezPortalAdminService.outOfSetUsePage(uID, gubunFlag, userInfo.getCompanyID());
+		String result = ezPortalAdminService.outOfSetUsePage(uID, gubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -788,7 +788,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String pGubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 		String pFlag = xmlDom.getElementsByTagName("FLAG").item(0).getTextContent();
 		
-		ezPortalAdminService.setDefaultPage(pUID, pFlag, pGubunFlag, userInfo.getCompanyID());
+		ezPortalAdminService.setDefaultPage(pUID, pFlag, pGubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -801,7 +801,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	public String addRight(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String ret = ezPortalAdminService.insertAclItem(xmlStr);
+		String ret = ezPortalAdminService.insertAclItem(xmlStr, userInfo.getTenantId());
 		return ret;
 	}
 	
@@ -813,7 +813,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	public String removeACL(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String ret = ezPortalAdminService.deleteAclItem(xmlStr);
+		String ret = ezPortalAdminService.deleteAclItem(xmlStr, userInfo.getTenantId());
 		return ret;
 	}
 	
@@ -894,7 +894,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			portletCategoryXML += "</DATA>";
 			portletCategoryXML.replace("\"", "\\\"");
 			
-			recordCnt = ezPortalAdminService.searchPortletCount(pSearchString, portalGubun, portalPageGubun, userInfo.getCompanyID());
+			recordCnt = ezPortalAdminService.searchPortletCount(pSearchString, portalGubun, portalPageGubun, userInfo.getCompanyID(), userInfo.getTenantId());
 			logger.debug("recordCnt="+recordCnt);
 			totalPage = (recordCnt - 1) / listPageSize + 1;
 			logger.debug("intPage="+intPage);
@@ -905,7 +905,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pEndRow = intPage * listPageSize;
 			
 			logger.debug("pSearchString="+pSearchString);
-			String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID());
+			String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			String strHtml = "";
 
@@ -982,7 +982,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		portletCategoryXML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
 		
 		if (mode.equals("new")) {
-			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID());
+			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (uID == null || uID.equals("")) {
 				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t175", locale));
@@ -1110,7 +1110,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/savePortletProperty.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePortletProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
-		String ret = ezPortalAdminService.savePortletProperties(xmlStr);
+		userInfo = commonUtil.userInfo(loginCookie);
+		String ret = ezPortalAdminService.savePortletProperties(xmlStr, userInfo.getTenantId());
 		return ret;
 	}
 	
@@ -1162,7 +1163,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_USERTYPE", userType);
 			map.put("v_USERID", userInfo.getId());
 			map.put("v_URL", moveUrl);
-			ezPortalAdminService.savePortletSubProperty(map);
+			map.put("tenantID", userInfo.getTenantId());
+			ezPortalAdminService.savePortletSubProperty(oldUserType, uID, oldCreatorID, userType, userInfo.getId(), moveUrl, userInfo.getTenantId());
 		} else if (portletType.equals("2")) {
 			String realPath = commonUtil.getRealPath(req);
 			// html 포틀릿
@@ -1178,6 +1180,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				map.put("v_UID", uID);
 				map.put("v_DISPLAYNAME", displayName);
 				map.put("v_HTMLDATA", mhtFilePath);
+				map.put("tenantID", userInfo.getTenantId());
 				ezPortalAdminService.savePortletSubProperty2(map);
 			}
 		} else if (portletType.equals("3")) {
@@ -1198,6 +1201,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_IMAGETYPE", imageType);
 			map.put("v_OPENMODE", openMode);
 			map.put("v_WINDOWSOPTION", windowOption);
+			map.put("tenantID", userInfo.getTenantId());
 			ezPortalAdminService.savePortletSubProperty3(map);
 		} else if (portletType.equals("4")) {
 			//게시판 포틀릿
@@ -1209,16 +1213,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			oldCreatorID = xmlDom.getElementsByTagName("OLDCREATORID").item(0).getTextContent();
 			oldUserType = xmlDom.getElementsByTagName("OLDUSERTYPE").item(0).getTextContent();
 			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_OLDUSERTYPE", oldUserType);
-			map.put("v_UID", uID);
-			map.put("v_CREATORID", oldCreatorID);
-			map.put("v_BOARDID", boardID);
-			map.put("v_USERTYPE", userType);
-			map.put("v_USERID", userInfo.getId());
-			map.put("v_ITEMCOUNT", itemCount);
-			map.put("v_ITEMFIELDS", itemFields);
-			ezPortalAdminService.savePortletSubProperty4(map);
+			ezPortalAdminService.savePortletSubProperty4(oldUserType, uID, oldCreatorID, boardID, userType, userInfo.getId(), itemCount, itemFields, userInfo.getTenantId());
 		}
 		return "OK";
 	}
@@ -1258,6 +1253,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/removeParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	
 	public void removeParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String uID = "";
 		String paramName = "";
 		String mode = "";
@@ -1276,7 +1273,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			mode = "0";
 		}
 		
-		ezPortalAdminService.removeParameter(Integer.parseInt(mode), uID, paramName);
+		ezPortalAdminService.removeParameter(Integer.parseInt(mode), uID, paramName, userInfo.getTenantId());
 		
 	}
 	
@@ -1286,6 +1283,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/addParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "";
 		String ret = "";
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
@@ -1293,9 +1291,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		if (mode.equals("1")) {
-			ret = ezPortalAdminService.savePortletParameters(xmlStr);
+			ret = ezPortalAdminService.savePortletParameters(xmlStr, userInfo.getTenantId());
 		} else {
-			ret = ezPortalAdminService.saveMenuItemParameters(xmlStr);
+			ret = ezPortalAdminService.saveMenuItemParameters(xmlStr, userInfo.getTenantId());
 		}
 		
 		return ret;
@@ -1325,12 +1323,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/deletePortlet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deletePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
 		
-		String ret = ezPortalAdminService.deletePortlet(uID);
+		String ret = ezPortalAdminService.deletePortlet(uID, userInfo.getTenantId());
 		
 		return ret;
 	}
@@ -1395,7 +1394,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String logoAreaExist = "NO";  // layout에 로고영역이 존재하는지 여부
 		
 		if (commonUtil.checkAdmin(loginCookie)) {
-			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				pageID = req.getParameter("pageID");
@@ -1420,12 +1419,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			layoutList = sb.toString();
 			
-			String gXmlStr = ezPortalAdminService.loadLogoItems(pageID);
+			String gXmlStr = ezPortalAdminService.loadLogoItems(pageID, userInfo.getTenantId());
 			Document gXmlDom = commonUtil.convertStringToDocument(gXmlStr);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "201");
 			map.put("v_pPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
 			String xmlStr = "<DATA>";
 			for (int i=0; i<result.size(); i++) {
@@ -1498,10 +1498,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				parentUID = req.getParameter("parentUID");
 			}
-			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID);
+			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, userInfo.getTenantId());
 		}
 
-		PortalMenuItemItemsImageVO result = ezPortalAdminService.logoEdit(uID, pageID);
+		PortalMenuItemItemsImageVO result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
 		
 		if (result != null) {
 			displayName = result.getDisplayName();
@@ -1544,6 +1544,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/saveLogoImage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveLogoImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pageID = "";
 		String mode = "";
 		String uID = "";
@@ -1599,6 +1601,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("v_LINKURL", linkUrl);
 			map.put("v_LINKLOCATION", linkLocation);
 			map.put("v_WINDOWOPTION", windowOption);
+			map.put("tenantID", userInfo.getTenantId());
 			ezPortalAdminService.saveLogoImage(map);
 		} else if (mode.equals("DEL")) {
 			//기존 저장된 파일명
@@ -1616,6 +1619,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_UID", uID);
 			map.put("v_OWNERPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			ezPortalAdminService.saveLogoImage2(map);
 		}
 		return "OK";
@@ -1647,6 +1651,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPUID", "201");
 		map.put("v_pPAGEID", pageID);
+		map.put("tenantID", userInfo.getTenantId());
 		List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
 		String xmlStr = "<DATA>";
 		for (int i=0; i<result.size(); i++) {
@@ -1695,12 +1700,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/savePositionSettings.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePositionSettings(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 			pageID = req.getParameter("pageID");
 		}
 		
-		String ret = ezPortalAdminService.savePositionSettings(xmlStr, pageID);
+		String ret = ezPortalAdminService.savePositionSettings(xmlStr, pageID, userInfo.getTenantId());
 		
 		return ret;
 	}
@@ -1733,7 +1739,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String utilAreaExist = "NO";
         
 		if (commonUtil.checkAdmin(loginCookie)) {
-			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				pageID = req.getParameter("pageID");
@@ -1760,7 +1766,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			//유틸메뉴목록
 			
-			List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("202", pageID);
+			List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("202", pageID, userInfo.getTenantId());
 			String listStr = "<DATA>";
 			for (int i=0; i<list.size(); i++) {
 				listStr += commonUtil.getQueryResult(list.get(i));
@@ -1772,6 +1778,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "202");
 			map.put("v_pPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
 			String xmlStr = "<DATA>";
 			for (int i=0; i<result.size(); i++) {
@@ -1849,14 +1856,14 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				parentUID = req.getParameter("parentUID");
 			}
-			uID = ezPortalAdminService.createNewMenuItem(parentUID, pageID);
+			uID = ezPortalAdminService.createNewMenuItem(parentUID, pageID, userInfo.getTenantId());
 		} else {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				menuType = req.getParameter("parentUID");
 			}
 		}
 		
-		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1");
+		String strXML = ezPortalAdminService.loadMenuItemConfig(uID, pageID, "1", userInfo.getTenantId());
 
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
@@ -1883,7 +1890,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			tempUID = uID;
 		}
 		
-		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID);
+		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID, userInfo.getTenantId());
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
 		
@@ -1953,7 +1960,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pageID = req.getParameter("pageID");
 		}
 		
-		String ret = ezPortalAdminService.saveMenuItemConfig(xmlStr, pageID, userInfo.getCompanyID());
+		String ret = ezPortalAdminService.saveMenuItemConfig(xmlStr, pageID, userInfo.getCompanyID(), userInfo.getTenantId());
 		return ret;
 	}
 	
@@ -1978,7 +1985,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			parentUID = req.getParameter("parentUID");
 		}
 		
-		ezPortalAdminService.removeMenuItem(uID, parentUID, pageID);
+		ezPortalAdminService.removeMenuItem(uID, parentUID, pageID, userInfo.getTenantId());
 		return "OK";
 	}
 	
@@ -2003,7 +2010,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			parentUID = req.getParameter("parentUID");
 		}
 		
-		ezPortalAdminService.removeSubMenuItem(uID, parentUID, pageID);
+		ezPortalAdminService.removeSubMenuItem(uID, parentUID, pageID, userInfo.getTenantId());
 		return "OK";
 	}
 	
@@ -2025,7 +2032,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pageID = req.getParameter("pageID");
 		}
 		
-		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems(parentUID, pageID);
+		List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems(parentUID, pageID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<list.size(); i++) {
@@ -2057,7 +2064,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
-			ezPortalAdminService.updateMenuItemSetOrder(i + 1, xmlDom.getElementsByTagName("UID").item(i).getTextContent(), pageID);
+			ezPortalAdminService.updateMenuItemSetOrder(i + 1, xmlDom.getElementsByTagName("UID").item(i).getTextContent(), pageID, userInfo.getTenantId());
 		}
 	}
 	
@@ -2074,7 +2081,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String subAreaExist = "NO";
         
 		if (commonUtil.checkAdmin(loginCookie)) {
-			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				pageID = req.getParameter("pageID");
@@ -2101,7 +2108,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			//유틸메뉴목록
 			
-			List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("203", pageID);
+			List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("203", pageID, userInfo.getTenantId());
 			String listStr = "<DATA>";
 			for (int i=0; i<list.size(); i++) {
 				listStr += commonUtil.getQueryResult(list.get(i));
@@ -2114,6 +2121,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "203");
 			map.put("v_pPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> list1 = ezPortalAdminService.loadPositionSettings(map);
 			String xmlStr = "<DATA>";
 			for (int i=0; i<list1.size(); i++) {
@@ -2130,6 +2138,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
+			map1.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result1 = ezPortalAdminService.loadPositionSettings(map1);
 			String xmlStr1 = "<DATA>";
 			for (int i=0; i<result1.size(); i++) {
@@ -2178,7 +2187,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String subAreaExist = "NO";
         
 		if (commonUtil.checkAdmin(loginCookie)) {
-			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID());
+			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				pageID = req.getParameter("pageID");
@@ -2213,6 +2222,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pPUID", "203");
 			map.put("v_pPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result = ezPortalAdminService.loadPositionSettings(map);
 			String xmlStr = "<DATA>";
 			for (int i=0; i<result.size(); i++) {
@@ -2229,6 +2239,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
+			map.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result1 = ezPortalAdminService.loadPositionSettings(map1);
 			String xmlStr1 = "<DATA>";
 			for (int i=0; i<result1.size(); i++) {
@@ -2243,7 +2254,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 
 			// 메인, 서브가 모두 존재하는 경우
 			if (mainAreaExist.equals("YES") && subAreaExist.equals("YES")) {
-				List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("203", pageID);
+				List<PortalMenuItemItemsMenuItemsVO> list = ezPortalAdminService.loadMenuItems("203", pageID, userInfo.getTenantId());
 				String listStr = "<DATA>";
 				for (int i=0; i<list.size(); i++) {
 					listStr += commonUtil.getQueryResult(list.get(i));
@@ -2274,7 +2285,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				menuList = sb.toString();	
 			
 			}
-			List<PortalMenuItemItemsMenuItemsSVO> subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+			List<PortalMenuItemItemsMenuItemsSVO> subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID, userInfo.getTenantId());
 			String listStr1 = "<DATA>";
 			for (int i=0; i<subList.size(); i++) {
 				listStr1 += commonUtil.getQueryResult(subList.get(i));
@@ -2284,7 +2295,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Document gXmlDom = commonUtil.convertStringToDocument(listStr1);
 			//서브메뉴 정보를 가져온다
 			if (parentUID != null && !parentUID.equals("")) {
-				subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+				subList = ezPortalAdminService.loadSubMenuItems(parentUID, pageID, userInfo.getTenantId());
 			}
 		
 			String mainHTML = "";
@@ -2328,7 +2339,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pageID = req.getParameter("pageID");
 		}
 		
-		List<PortalMenuItemItemsMenuItemsSVO> list = ezPortalAdminService.loadSubMenuItems(parentUID, pageID);
+		List<PortalMenuItemItemsMenuItemsSVO> list = ezPortalAdminService.loadSubMenuItems(parentUID, pageID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<list.size(); i++) {
@@ -2390,10 +2401,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("parentUID") != null && !req.getParameter("parentUID").equals("")) {
 				parentUID = req.getParameter("parentUID");
 			}
-			uID = ezPortalAdminService.createNewSubMenuItem(parentUID, pageID);
+			uID = ezPortalAdminService.createNewSubMenuItem(parentUID, pageID, userInfo.getTenantId());
 		}
 		
-		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID);
+		String strXML = ezPortalAdminService.loadSubMenuItemConfig(uID, pageID, userInfo.getTenantId());
 		logger.debug("strXML="+strXML);
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		if (xmlDom.getElementsByTagName("IMAGEWIDTH").getLength() > 0) {
@@ -2417,7 +2428,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			tempUID = uID;
 		}
 		
-		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID);
+		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID, userInfo.getTenantId());
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.subMenuItemEdit1();
 		
@@ -2487,7 +2498,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pageID = req.getParameter("pageID");
 		}
 		logger.debug("xmlStr="+xmlStr);
-		String ret = ezPortalAdminService.saveSubMenuItemConfig(xmlStr, pageID);
+		String ret = ezPortalAdminService.saveSubMenuItemConfig(xmlStr, pageID, userInfo.getTenantId());
 		return ret;
 	}
 	

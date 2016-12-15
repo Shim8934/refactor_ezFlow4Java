@@ -285,6 +285,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.newMyPortalPageCreate2", map);
 	}
 	
+	public String newMyPortalPageCreate2_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.newMyPortalPageCreate2_S", map);
+	}
+	
 	public String getTopUrl (String pUID) {
 		return (String) select("EzPortalDAO.getTopUrl", pUID);
 	}
@@ -333,6 +337,26 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.getUserInfo3_S", map);
 	}
 	
+	public String newMyPortalPageCreate_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.newMyPortalPageCreate_S", map);
+	}
+	
+	public String getPorletProperties_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getPorletProperties_S", map);
+	}
+	
+	public String searchStartPage2_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.searchStartPage2_S", map);
+	}
+	
+	public String ezCkAdminACL2_S1 (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.ezCkAdminACL2_S1", map);
+	}
+	
+	public String ezCkAdminACL2_S2 (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.ezCkAdminACL2_S2", map);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		return (int) select("EzPortalDAO.getMenuItemHtml", map);
 	}
@@ -350,6 +374,14 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (int) select("EzPortalDAO.searchMyPortalPageCount", map);
 	}
 	
+	public int useStartPageChack_S1(Map<String, Object> map) {
+		return (int) select("EzPortalDAO.useStartPageChack_S1", map);
+	}
+	
+	public int useStartPageChack2_S(Map<String, Object> map) {
+		return (int) select("EzPortalDAO.useStartPageChack2_S", map);
+	}
+	
 	public void deleteCacheValue(Map<String, Object> map) {
 		delete("EzPortalDAO.deleteCacheValue", map);
 	}
@@ -364,6 +396,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void updateCacheValue_D(Map<String, Object> map) {
 		delete("EzPortalDAO.updateCacheValue_D", map);
+	}
+	
+	public void ezCkAdminACL2_D1(Map<String, Object> map) {
+		delete("EzPortalDAO.ezCkAdminACL2_D1", map);
 	}
 	
 	public void getUserInfo3(Map<String, Object> map) {
@@ -394,6 +430,26 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		insert("EzPortalDAO.getUserInfo3_I2", map);
 	}
 	
+	public void newMyPortalPageCreate_I1(Map<String, Object> map) {
+		insert("EzPortalDAO.newMyPortalPageCreate_I1", map);
+	}
+	
+	public void newMyPortalPageCreate_I2(Map<String, Object> map) {
+		insert("EzPortalDAO.newMyPortalPageCreate_I2", map);
+	}
+	
+	public void newMyPortalPageCreate_I3(Map<String, Object> map) {
+		insert("EzPortalDAO.newMyPortalPageCreate_I3", map);
+	}
+	
+	public void newMyPortalPageCreate_I4(Map<String, Object> map) {
+		insert("EzPortalDAO.newMyPortalPageCreate_I4", map);
+	}
+	
+	public void ezCkAdminACL2_I1(Map<String, Object> map) {
+		insert("EzPortalDAO.ezCkAdminACL2_I1", map);
+	}
+	
 	public void newMyPortalPageCreate3(Map<String, Object> map) {
 		update("EzPortalDAO.newMyPortalPageCreate3", map);
 	}
@@ -418,18 +474,9 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		update("EzPortalDAO.updateUseFlagDefault", map);
 	}
 	
-	public void ezCkAdminACL2(Map<String, Object> map) {
-		if (map.get("v_pACL").equals("3")) {
-			//삭제 쿼리 실행
-			delete("EzPortalDAO.ezCkAdminACL2", map);
-		} else {
-			//체크 쿼리 실행
-			update("EzPortalDAO.ezCkAdminACL2", map);
-		}
-		
+	public void ezCkAdminACL2_U1(Map<String, Object> map) {
+		update("EzPortalDAO.ezCkAdminACL2_U1", map);
 	}
-	
-	
 	
 	
 }

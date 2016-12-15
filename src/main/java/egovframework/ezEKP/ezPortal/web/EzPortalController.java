@@ -192,7 +192,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 		}
-		String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID());
+		String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 		xmlDom = commonUtil.convertStringToDocument(strXML);
 
 		if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
@@ -229,7 +229,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 		} else {   // 다국어로 설정된 페이지가 없는경우 첫번째 사용으로 되어 있는 레이아웃 보여준다.
-			String strXML2 = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getCompanyID());
+			String strXML2 = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(strXML2);
 			if (xmlDom2.getElementsByTagName("UID_").getLength() > 0) {
@@ -272,7 +272,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
 		topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 		
-		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID);
+		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID, userInfo.getTenantId());
 
 		if (req.getParameter("mode") != null && req.getParameter("mode").equals("new")) {
 			mainUrl = "/myoffice/main/index_environment2.htm";
@@ -526,7 +526,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 				
 					//체크, 삭제 쿼리 실행
-				ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang());
+				ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang(), userInfo.getTenantId());
 				
 				strHTML = strHTML.replace("table-layout:fixed;", "");
 				
@@ -935,8 +935,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
-		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID));
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
+		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
@@ -1733,7 +1733,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		pStartRow = intPage * listPageSize - listPageSize + 1;
 		pEndRow = intPage * listPageSize;
 		
-		searchNewMyPortalPageList = ezPortalService.searchMyPortal(userInfo.getId(), gubunFlag, pStartRow, pEndRow, userInfo.getCompanyID());
+		searchNewMyPortalPageList = ezPortalService.searchMyPortal(userInfo.getId(), gubunFlag, pStartRow, pEndRow, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
@@ -1840,7 +1840,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("parentUID="+parentUID);
 		logger.debug("imageUID="+imageUID);
 		logger.debug("linkURL="+linkURL);
-		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL);
+		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getTenantId());
 		logger.debug("useStartPage="+useStartPage);
 		String deptPath = userInfo.getDeptPathCode();
 		for (int ch = 0; ch < deptPath.split("\\,").length; ch++) {
@@ -2116,7 +2116,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String strXML = ezPortalService.searchPortalPage("", "", portalGubun, 1, 100, "");
+		String strXML = ezPortalService.searchPortalPage("", "", portalGubun, 1, 100, "", userInfo.getTenantId());
 
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
@@ -2183,7 +2183,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			mode = req.getParameter("mode");
 		}
 		
-		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID());
+		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 		return strXML;
 	}
 	
@@ -2336,7 +2336,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID)); 
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
 
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();

@@ -24,18 +24,18 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzPortaAdminDAO")
 public class EzPortalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
-	public List<String> deleteTopPage (String pageUID) {
-		return  (List<String>)list("EzPortalAdminDAO.deleteTopPage", pageUID);
+	public List<String> deleteTopPage (Map<String, Object> map) {
+		return  (List<String>)list("EzPortalAdminDAO.deleteTopPage", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> deletePortalPage (String pUID) {
-		return  (List<String>)list("EzPortalAdminDAO.deletePortalPage", pUID);
+	public List<String> deletePortalPage (Map<String, Object> map) {
+		return  (List<String>)list("EzPortalAdminDAO.deletePortalPage", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalDeleteSubPageVO> topDeleteSubPage (String pageUID) {
-		return  (List<PortalDeleteSubPageVO>)list("EzPortalAdminDAO.topDeleteSubPage", pageUID);
+	public List<PortalDeleteSubPageVO> topDeleteSubPage (Map<String, Object> map) {
+		return  (List<PortalDeleteSubPageVO>)list("EzPortalAdminDAO.topDeleteSubPage", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -55,7 +55,7 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<PortalSearchPortalPage2VO> searchPortalPage2(Map<String, Object> map) {
-		return (List<PortalSearchPortalPage2VO>)list("EzPortalDAO.searchPortalPage2", map);
+		return (List<PortalSearchPortalPage2VO>)list("EzPortalAdminDAO.searchPortalPage2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -79,8 +79,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalLoadLogoItemsVO> loadLogoItems (String pPageID) {
-		return (List<PortalLoadLogoItemsVO>) list("EzPortalAdminDAO.loadLogoItems", pPageID); 
+	public List<PortalLoadLogoItemsVO> loadLogoItems (Map<String, Object> map) {
+		return (List<PortalLoadLogoItemsVO>) list("EzPortalAdminDAO.loadLogoItems", map); 
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -94,8 +94,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalGetPortletParametersVO> getMenuItemParameters (String pUID) {
-		return (List<PortalGetPortletParametersVO>) list("EzPortalAdminDAO.getMenuItemParameters", pUID); 
+	public List<PortalGetPortletParametersVO> getMenuItemParameters (Map<String, Object> map) {
+		return (List<PortalGetPortletParametersVO>) list("EzPortalAdminDAO.getMenuItemParameters", map); 
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -103,12 +103,12 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (List<PortalTBLTopMenuItemsVO>)list("EzPortalAdminDAO.loadPositionSettings", map);
 	}
 	
-	public PortalUseThemeCheckVO useThemeCheck(String uID) {
-		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", uID);
+	public PortalUseThemeCheckVO useThemeCheck(Map<String, Object> map) {
+		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", map);
 	}
 	
-	public PortalPortletGeneralVO getPortletProperties (String pUID) {
-		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties", pUID);
+	public PortalPortletGeneralVO getPortletProperties_S2 (String pUID) {
+		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties_S2", pUID);
 	}
 	
 	public PortalMenuItemItemsImageVO logoEdit (Map<String, Object> map) {
@@ -131,29 +131,48 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (PortalMenuItemItemsImageVO)select("EzPortalAdminDAO.loadSubMenuItemConfig2", map);
 	}
 	
-	public String getParentPageIDList (String pTemp) {
-		return (String)select("EzPortalAdminDAO.getParentPageIDList", pTemp);
+	public String getParentPageIDList (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.getParentPageIDList", map);
 	}
 	
-	public int savePortalPage (String pageID) {
-		return (int)select("EzPortalAdminDAO.savePortalPage", pageID);
+	public String savePortletSubProperty_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.savePortletSubProperty_S", map);
+	}
+	
+	public String savePortletSubProperty4_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.savePortletSubProperty4_S", map);
+	}
+	
+	public String removeMenuItem_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.removeMenuItem_S", map);
+	}
+	
+	public String removeSubMenuItem_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.removeSubMenuItem_S", map);
+	}
+	
+	public String getPortletProperties_S1 (String pUID) {
+		return (String)select("EzPortalAdminDAO.getPortletProperties_S1", pUID);
+	}
+	
+	public int savePortalPage (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.savePortalPage", map);
 	}
 
-	public int saveTopMenu (String uID) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu", uID);
+	public int saveTopMenu (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.saveTopMenu", map);
 	}
 	
-	public int saveTopMenu2 (String pUID) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu2", pUID);
+	public int saveTopMenu2 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.saveTopMenu2", map);
 	}
 	
-	public int saveTopMenu5 (String pUID) {
-		return (int)select("EzPortalAdminDAO.saveTopMenu5", pUID);
+	public int saveTopMenu5 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.saveTopMenu5", map);
 	}
 	
 	public int savePortalPage7 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage7", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage7", map);
 	}
 	
 	public int savePortalPage3 (Map<String, Object> map) {
@@ -162,18 +181,15 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int savePortalPage4 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage4", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage4", map);
 	}
 	
 	public int savePortalPage5 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage5", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage5", map);
 	}
 	
 	public int savePortalPage6 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage6", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage6", map);
 	}
 	
 	public int savePortalPage8 (Map<String, Object> map) {
@@ -182,38 +198,35 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int savePortalPage2 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage2", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage2", map);
 	}
 	
 	public int saveTopMenu3 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.saveTopMenu3", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.saveTopMenu3", map);
 	}
 	
 	public int saveTopMenu4 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.saveTopMenu4", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.saveTopMenu4", map);
 	}
 	
 	public int saveTopMenu6 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.saveTopMenu6", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.saveTopMenu6", map);
 	}
 	
 	public int searchPortalPageCount2 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.searchPortalPageCount2", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.searchPortalPageCount2", map);
 	}
 	
 	public int getItemsCount (Map<String, Object> map) {
-		select("EzPortalAdminDAO.getItemsCount", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.getItemsCount", map);
 	}
 	
 	public int searchPortletCount2 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.searchPortletCount2", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.searchPortletCount2", map);
+	}
+	
+	public int saveMenuItemConfig_S1 (Map<String, Object> map) {
+		return (int)select("EzPortalAdminDAO.saveMenuItemConfig_S1", map);
 	}
 	
 	public void createNewPortlet (Map<String, Object> map) {
@@ -226,6 +239,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public void createNewLogoItem (Map<String, Object> map) {
 		insert("EzPortalAdminDAO.createNewLogoItem", map);
+	}
+	
+	public void createNewLogoItem_I (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.createNewLogoItem_I", map);
 	}
 	
 	public void portalSaveSkin (Map<String, Object> map) {
@@ -280,6 +297,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.saveLogoImage", map);
 	}
 	
+	public void saveLogoImage_I (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveLogoImage_I", map);
+	}
+	
 	public void createNewMenuItem (Map<String, Object> map) {
 		insert("EzPortalAdminDAO.createNewMenuItem", map);
 	}
@@ -292,8 +313,52 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.saveDelPortletInfo", map);
 	}
 	
-	public void saveMenuItemConfig (Map<String, Object> map) {
-		update("EzPortalAdminDAO.saveMenuItemConfig", map);
+	public void saveMenuItemConfig_I1 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveMenuItemConfig_I1", map);
+	}
+	
+	public void saveSubMenuItemConfig_I1 (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveSubMenuItemConfig_I1", map);
+	}
+	
+	public void saveMenuItemConfig_U1 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U1", map);
+	}
+	
+	public void saveMenuItemConfig_U2 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U2", map);
+	}
+	
+	public void saveMenuItemConfig_U3 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U3", map);
+	}
+	
+	public void saveMenuItemConfig_U4 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U4", map);
+	}
+	
+	public void saveMenuItemConfig_U5 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U5", map);
+	}
+	
+	public void saveMenuItemConfig_U6 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U6", map);
+	}
+	
+	public void saveMenuItemConfig_U7 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U7", map);
+	}
+	
+	public void saveMenuItemConfig_U8 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U8", map);
+	}
+	
+	public void saveMenuItemConfig_U9 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U9", map);
+	}
+	
+	public void saveMenuItemConfig_U10 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveMenuItemConfig_U10", map);
 	}
 	
 	public void updateTopMenuGeneral (Map<String, Object> map) {
@@ -352,36 +417,48 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		update("EzPortalAdminDAO.updateMenuItemSetOrder", map);
 	}
 	
-	public void saveSubMenuItemConfig (Map<String, Object> map) {
-		update("EzPortalAdminDAO.saveSubMenuItemConfig", map);
+	public void saveSubMenuItemConfig_U1 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveSubMenuItemConfig_U1", map);
 	}
 	
-	public void deleteTheme (String uID) {
-		delete("EzPortalAdminDAO.deleteTheme", uID);
+	public void saveSubMenuItemConfig_U2 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveSubMenuItemConfig_U2", map);
 	}
 	
-	public void deleteTopMenuGeneralUID (String pUID) {
-		delete("EzPortalAdminDAO.deleteTopMenuGeneralUID", pUID);
+	public void saveSubMenuItemConfig_U3 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveSubMenuItemConfig_U3", map);
 	}
 	
-	public void deletePortalPageGeneralUID (String pUID) {
-		delete("EzPortalAdminDAO.deletePortalPageGeneralUID", pUID);
+	public void saveSubMenuItemConfig_U4 (Map<String, Object> map) {
+		update("EzPortalAdminDAO.saveSubMenuItemConfig_U4", map);
 	}
 	
-	public void deleteTblMenuItemsS (String pUID) {
-		delete("EzPortalAdminDAO.deleteTblMenuItemsS", pUID);
+	public void deleteTheme (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTheme", map);
 	}
 	
-	public void deleteTblMenuItems (String pUID) {
-		delete("EzPortalAdminDAO.deleteTblMenuItems", pUID);
+	public void deleteTopMenuGeneralUID (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTopMenuGeneralUID", map);
 	}
 	
-	public void deleteTblMenuItemsImage (String pUID) {
-		delete("EzPortalAdminDAO.deleteTblMenuItemsImage", pUID);
+	public void deletePortalPageGeneralUID (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPageGeneralUID", map);
 	}
 	
-	public void deleteTopMenuItems (String pUID) {
-		delete("EzPortalAdminDAO.deleteTopMenuItems", pUID);
+	public void deleteTblMenuItemsS (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTblMenuItemsS", map);
+	}
+	
+	public void deleteTblMenuItems (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTblMenuItems", map);
+	}
+	
+	public void deleteTblMenuItemsImage (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTblMenuItemsImage", map);
+	}
+	
+	public void deleteTopMenuItems (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteTopMenuItems", map);
 	}
 	
 	public void deleteTopMenuItems2 (Map<String, Object> map) {
@@ -400,40 +477,136 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		delete("EzPortalAdminDAO.deleteAclItem", map);
 	}
 	
-	public void deleteSkinItemsUID (String pUID) {
-		delete("EzPortalAdminDAO.deleteSkinItemsUID", pUID);
+	public void deleteSkinItemsUID (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deleteSkinItemsUID", map);
 	}
 	
-	public void deletePortalPageCache (String pPageID) {
-		delete("EzPortalAdminDAO.deletePortalPageCache", pPageID);
+	public void deletePortalPageCache (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPageCache", map);
 	}
 	
-	public void deletePortalPage2 (String pUID) {
-		delete("EzPortalAdminDAO.deletePortalPage2", pUID);
+	public void deletePortalPage2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage2", map);
 	}
 	
-	public void deletePortalPage3 (String pUID) {
-		delete("EzPortalAdminDAO.deletePortalPage3", pUID);
+	public void deletePortalPage3 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage3", map);
+	}
+	
+	public void deletePortalPage3_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage3_D1", map);
+	}
+	
+	public void deletePortalPage3_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage3_D2", map);
+	}
+	
+	public void deletePortalPage3_D3 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage3_D3", map);
+	}
+	
+	public void deletePortalPage3_D4 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortalPage3_D4", map);
 	}
 	
 	public void removeParameter (Map<String, Object> map) {
 		delete("EzPortalAdminDAO.removeParameter", map);
 	}
 	
-	public void deletePortlet (String pUID) {
-		delete("EzPortalAdminDAO.deletePortlet", pUID);
+	public void deletePortlet (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet", map);
+	}
+	
+	public void deletePortlet_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D1", map);
+	}
+	
+	public void deletePortlet_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D2", map);
+	}
+	
+	public void deletePortlet_D3 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D3", map);
+	}
+	
+	public void deletePortlet_D4 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D4", map);
+	}
+	
+	public void deletePortlet_D5 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D5", map);
+	}
+	
+	public void deletePortlet_D6 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D6", map);
+	}
+	
+	public void deletePortlet_D7 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.deletePortlet_D7", map);
 	}
 	
 	public void saveLogoImage2 (Map<String, Object> map) {
 		delete("EzPortalAdminDAO.saveLogoImage2", map);
 	}
 	
-	public void removeMenuItem (Map<String, Object> map) {
-		delete("EzPortalAdminDAO.removeMenuItem", map);
+	public void saveLogoImage2_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveLogoImage2_D1", map);
 	}
 	
-	public void removeSubMenuItem (Map<String, Object> map) {
-		delete("EzPortalAdminDAO.removeSubMenuItem", map);
+	public void saveLogoImage2_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveLogoImage2_D2", map);
+	}
+	
+	public void removeSubMenuItem_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeSubMenuItem_D1", map);
+	}
+	
+	public void removeSubMenuItem_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeSubMenuItem_D2", map);
+	}
+	
+	public void removeSubMenuItem_D3 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeSubMenuItem_D3", map);
+	}
+	
+	public void savePortletSubProperty3_D (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.savePortletSubProperty3_D", map);
+	}
+	
+	public void savePortletSubProperty_D (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.savePortletSubProperty_D", map);
+	}
+	
+	public void savePortletSubProperty4_D (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.savePortletSubProperty4_D", map);
+	}
+	
+	public void removeParameter_D (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeParameter_D", map);
+	}
+	
+	public void saveLogoImage_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveLogoImage_D1", map);
+	}
+	
+	public void saveLogoImage_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveLogoImage_D2", map);
+	}
+	
+	public void saveMenuItemConfig_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.saveMenuItemConfig_D1", map);
+	}
+	
+	public void removeMenuItem_D1 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeMenuItem_D1", map);
+	}
+	
+	public void removeMenuItem_D2 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeMenuItem_D2", map);
+	}
+	
+	public void removeMenuItem_D3 (Map<String, Object> map) {
+		delete("EzPortalAdminDAO.removeMenuItem_D3", map);
 	}
 	
 }
