@@ -153,7 +153,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
 					sb.append("<READERNAME><![CDATA[" + vo.getReaderName() + "]]></READERNAME>");
 					
-					vo.setTimeZoneDate(loginInfo.getOffset());
+					vo.setReadDate(commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false));
 					sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
 					
 					String status = "";

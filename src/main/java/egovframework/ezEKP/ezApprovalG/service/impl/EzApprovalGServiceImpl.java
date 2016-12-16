@@ -3369,12 +3369,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
-		String tmpStartDate1 = makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true).trim();
-		String tmpStartDate2 = makeDate(draftToYEAR, draftToMONTH, draftToDAY, false).trim();
-		String tmpEndDate1 = makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true).trim();
-		String tmpEndDate2 = makeDate(apprToYEAR, apprToMONTH, apprToDAY, false).trim();
-		String tmpProcessDate1 = makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true).trim();
-		String tmpProcessDate2 = makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false).trim();
+		String tmpStartDate1 = commonUtil.makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true).trim();
+		String tmpStartDate2 = commonUtil.makeDate(draftToYEAR, draftToMONTH, draftToDAY, false).trim();
+		String tmpEndDate1 = commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true).trim();
+		String tmpEndDate2 = commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false).trim();
+		String tmpProcessDate1 = commonUtil.makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true).trim();
+		String tmpProcessDate2 = commonUtil.makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false).trim();
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		int totalCount = getGamSaSearchDocListCount(containerID, userID, deptID, userSecurityCode, publicFlag, subQuery, makeSearchField(docNumber.trim()), makeSearchField(docTitle.trim()), makeSearchField(drafter.trim()), makeSearchField(draftDeptName.trim()), formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
@@ -13518,12 +13518,12 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
-		String tmpStartDate1 = makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true).trim();
-		String tmpStartDate2 = makeDate(draftToYEAR, draftToMONTH, draftToDAY, false).trim();
-		String tmpEndDate1 = makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true).trim();
-		String tmpEndDate2 = makeDate(apprToYEAR, apprToMONTH, apprToDAY, false).trim();
-		String tmpProcessDate1 = makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true).trim();
-		String tmpProcessDate2 = makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false).trim();
+		String tmpStartDate1 = commonUtil.makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true).trim();
+		String tmpStartDate2 = commonUtil.makeDate(draftToYEAR, draftToMONTH, draftToDAY, false).trim();
+		String tmpEndDate1 = commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true).trim();
+		String tmpEndDate2 = commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false).trim();
+		String tmpProcessDate1 = commonUtil.makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true).trim();
+		String tmpProcessDate2 = commonUtil.makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false).trim();
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		int totalCount = getSearchDocListCount(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
@@ -13744,22 +13744,6 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		int resultCnt = ezApprovalGDAO.getSearchDocListCount(map);
 		
 		return resultCnt;
-	}
-
-	private String makeDate(String year, String month, String day, boolean startFlag) throws Exception{
-		String rtnVal = "";
-		
-		if (!year.trim().equals("") && !month.trim().equals("") && !day.trim().equals("")) {
-			rtnVal = year.trim() + "-" + month.trim() + "-" + day.trim();
-			
-			if (startFlag) {
-				rtnVal += " 00:00:00";
-			} else {
-				rtnVal += " 23:59:59";
-			}
-		}
-		
-		return rtnVal;
 	}
 
 	private String doSendHesongDoc(String docID, String dirPath, String companyID, String orgCompanyID, int tenantID) throws Exception{

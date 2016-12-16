@@ -1152,8 +1152,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	//TODO eMail 값으로 ID 를 찾는 함수
 	@Override
-	public String getCNByEmail(String email) throws Exception {
-			String result = ezOrganDAO.getCNByEmail(email);
+	public String getCNByEmail(String email, int tenantID) throws Exception {
+			String result = ezOrganDAO.getCNByEmail(email, tenantID);
 			
 			return result;
 	}

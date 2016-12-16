@@ -26,6 +26,10 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -598,6 +602,43 @@ public class CommonUtil {
 		logger.debug("resultDateStr=" + resultDateStr);
 		return resultDateStr;
 	}
+	
+	/**
+	 * 현재시간 UTC로 가져오기
+	 * @return 투데이
+	 */
+	public String getTodayUTCTime() throws Exception {
+		logger.debug("getTodayUTCTime started");
+		
+		ZoneId utc = ZoneId.of("UTC");
+		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String today = getTime.format(formatter);
+		
+		logger.debug("getTodayUTCTime ended");
+		
+		return today;
+	}
+	
+	public String makeDate (String year, String month, String day, boolean startFlag) {
+		String result = "";
+		
+		if (month.length() == 1) {
+			month = "0" + month;
+		}
+		
+		if (!year.equals("") && !month.equals("") && !day.equals("")) {
+			result = year + "-" + month + "-" + day;
+			
+			if (startFlag) {
+				result += " 00:00:00";
+			} else {
+				result += " 23:59:59";
+			}
+		}
+		return result;
+	}
+	
 }
 
 

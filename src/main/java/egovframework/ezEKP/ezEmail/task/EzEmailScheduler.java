@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezEmail.task;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -45,6 +47,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -84,6 +87,7 @@ public class EzEmailScheduler {
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("autoDelete")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("autoDelete scheduler ended.");
@@ -151,6 +155,7 @@ public class EzEmailScheduler {
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("reservedMailSend")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("reservedMailSend scheduler ended.");
@@ -243,6 +248,7 @@ public class EzEmailScheduler {
 	public void processMailStatLogs() throws Exception{
 		logger.debug("processMailStatLogs scheduler started.");
 		
+		//choose scheduler running server
 		if (!betSchedulerServer("processMailStatLogs")) {
 			logger.debug("no SchedulerServer.");
 			logger.debug("processMailStatLogs scheduler ended.");
@@ -316,31 +322,73 @@ public class EzEmailScheduler {
 	}
 	
 	/**
-	 * 만료된 대용량 메일 첨부폴더 삭제 스케줄러
+	 * delete garbage files
 	 */
-	@Scheduled(cron = "30 00 00 * * *")
-	public void deleteExpireAttach() throws Exception{
-		logger.debug("deleteExpireAttach scheduler started.");
+	@Scheduled(cron = "30 02 00 * * *")
+	public void dailyFileManage() throws Exception{
+		logger.debug("dailyFileManage scheduler started.");
 		
-		if (!betSchedulerServer("deleteExpireAttach")) {
+		//choose scheduler running server
+		if (!betSchedulerServer("dailyFileManage")) {
 			logger.debug("no SchedulerServer.");
-			logger.debug("deleteExpireAttach scheduler ended.");
+			logger.debug("dailyFileManage scheduler ended.");
 			return;
 		}
 		
+		//get tenantIdList
+		List<TenantVO> tenantList = ezCommonService.getTenantList();
+		
 		String realPath = config.getProperty("data_root");
 		
-		//get tenantIdList
-		Set<Integer> tenantIdList = new HashSet<Integer>();
-		List<TenantServerNameVO> tenantServerNamelist = ezCommonService.getTenantServerNameList();
-		for (TenantServerNameVO vo : tenantServerNamelist) {
-			tenantIdList.add(vo.getTenantId());
+		//delete expired big-attachment files
+		deleteExpireAttach(tenantList, realPath);
+		
+		//set directory
+		//TODO: set upload_common directory
+		List<String> directoryList = new ArrayList<String>();
+		for (TenantVO tenantVO : tenantList) {
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "tempFileUpload");
+			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "templist");
 		}
 		
-		for (Integer tenantId : tenantIdList) {
-			logger.debug("tenantId=" + tenantId);
+		int dayLimit = 2;
+		long nowTime = new Date().getTime();
+		
+		//delete garbage files from directoryList
+		for (String directory : directoryList) {
+			File file = new File(realPath + directory);
+			logger.debug("path=" + realPath + directory);
+			if (file.exists()) {
+				File[] files = file.listFiles();
+				
+				for (File f : files) {
+					logger.debug("f.getName()=" + f.getName());
+					logger.debug("nowTime=" + nowTime);
+					logger.debug("f.lastModified()=" + f.lastModified());
+					
+					if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
+						if (deleteDirectory(f)) {
+							logger.debug(f.getName() + " is deleted.");
+						}
+					}
+					
+				}
+			}
+		}
+		
+		logger.debug("dailyFileManage scheduler ended.");
+	}
+	
+	/**
+	 * 만료된 대용량 메일 첨부폴더 삭제 함수
+	 */
+	private void deleteExpireAttach(List<TenantVO> tenantList, String realPath) throws Exception{
+		logger.debug("deleteExpireAttach started.");
+		
+		for (TenantVO tenantVO : tenantList) {
+			logger.debug("tenantId=" + tenantVO.getTenantId());
 			
-			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+			String pUploadPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId());
 		
 			File file = new File(realPath + pUploadPath);
 			logger.debug("path=" + realPath + pUploadPath);
@@ -364,23 +412,24 @@ public class EzEmailScheduler {
 				for (File expiredFile : files) {
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
-						logger.debug(expiredFile.getName() + "is deleted.");
+						logger.debug(expiredFile.getName() + " is deleted.");
 					}
 				}
 			}
 		}
 		
-		logger.debug("deleteExpireAttach scheduler ended.");
+		logger.debug("deleteExpireAttach ended.");
 	}
 	
 	/**
 	 * recursive하게 파일/폴더 삭제하는 함수
 	 */
 	private boolean deleteDirectory(File path) {
-		if(path.exists()) {
+		if (path.isDirectory()) {
 			File[] files = path.listFiles();
-			for(int i=0; i<files.length; i++) {
-				if(files[i].isDirectory()) {
+			
+			for (int i=0; i<files.length; i++) {
+				if (files[i].isDirectory()) {
 					deleteDirectory(files[i]);
 				}
 				else {
@@ -388,6 +437,7 @@ public class EzEmailScheduler {
 				}
 			}
 		}
+		
 		return path.delete();
 	}
 	
@@ -411,9 +461,9 @@ public class EzEmailScheduler {
 			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
 			logger.debug("response=" + response);
 			
-			//sleep 10 seconds
+			//sleep 20 seconds
 			logger.debug(scheduler + " is sleeping...");
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 			
 			//get SchedulerServer
 			requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";

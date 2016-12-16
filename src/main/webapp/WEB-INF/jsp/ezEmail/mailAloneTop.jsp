@@ -9,11 +9,17 @@
             
         <link href="/css/main.css" rel="stylesheet" type="text/css">
         
-        
         <style type="text/css">
-            
-            
-        </style>
+            <c:if test="${lang == '2'}">
+                #input_search { background:#333437 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
+            </c:if>
+            <c:if test="${lang == '3'}">
+                #input_search { background:#333437 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
+            </c:if>
+            <c:if test="${lang == '4'}">
+                #input_search { background:#333437 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
+            </c:if>
+        </style>        
     
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
         <script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>          
@@ -164,7 +170,7 @@
             
             if (xmlHTTP.status == 200 && xmlHTTP.responseText == "LOGOUT") {
                 blogout = true;
-                alert("사용자가 다른곳에서 로그인해서 강제로 로그아웃합니다.");
+                alert("<spring:message code='ezPortal.t346' />");
                 window.top.location.href = "/user/login/actionLogout.do";
             }
         }
@@ -277,7 +283,7 @@
         {
             if (txtDisplayName.value == "")
             {               
-                alert("포탈 페이지 이름을 입력하세요.");
+                alert("<spring:message code='ezPortal.t361' />");
                 txtDisplayName.focus();
                 return;     
             }
@@ -292,7 +298,7 @@
             if (SkinExist == "NO")
                 SaveSkin(pageid);
             
-            alert("저장했습니다.");
+            alert("<spring:message code='ezPortal.t84' />");
             document.location.href = "/ezPortal/topMenu.do?pageID=" + pageid;
         }
         
@@ -590,13 +596,13 @@
         {
             if (selectedCell == "")
             {
-                alert("컨텐츠를 추가할 열을 선택하세요.");
+                alert("<spring:message code='ezPortal.t347' />");
                 return;
             }
             
             if (eval(selectedCell).children.item(0).children.item(0).children.length > 9)
             {
-                alert("하나의 열에 10개 이상의 컨텐츠를 추가할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t348' />");
                 return;
             }
             
@@ -612,7 +618,7 @@
                 if (typeof (ret) == "undefined") return;
 
                 if (CheckDuplicate(ret[0]) && ret[0] != "206") {
-                    alert("이미 추가된 컨텐츠입니다.");
+                    alert("<spring:message code='ezPortal.t349' />");
                     return;
                 }
 
@@ -678,7 +684,7 @@
                 if (typeof (ret) == "undefined") return;
 
                 if (CheckDuplicate(ret[0]) && ret[0] != "206") {
-                    alert("이미 추가된 컨텐츠입니다.");
+                    alert("<spring:message code='ezPortal.t349' />");
                     return;
                 }
 
@@ -710,13 +716,13 @@
         {
             if (bInherit)
             {
-                alert("상속받은 포탈 페이지에는 열을 추가할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t294' />");
                 return;
             }
             
             if (selectedCell == "")
             {
-                alert("열을 삽입할 위치를 선택해주세요");
+                alert("<spring:message code='ezPortal.t295' />");
                 return;
             }
             
@@ -739,13 +745,13 @@
         {
             if (bInherit)
             {
-                alert("상속받은 포탈 페이지에는 열을 삭제할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t350' />");
                 return;
             }
 
             if (selectedCell == "")
             {   
-                alert("삭제할 열을 선택하세요.");
+                alert("<spring:message code='ezPortal.t297' />");
                 return;
             }
             
@@ -753,7 +759,7 @@
             
             if (selectedCell.substr(0,3) == "td0")
             {
-                if (confirm("삽입된 페이지를 삭제하시겠습니까?"))
+                if (confirm("<spring:message code='ezPortal.t298' />"))
                 {
                     eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.removeChild(eval(selectedCell).parentElement.parentElement.parentElement.parentElement.parentElement);
                     selectedCell = "";
@@ -780,7 +786,7 @@
         {
             if (selectedSubCell == "")
             {   
-                alert("삭제할 컨텐츠를 선택하세요.");
+                alert("<spring:message code='ezPortal.t351' />");
                 return;
             }
             
@@ -788,7 +794,7 @@
             
             if (cell.getAttribute("canremove") != 1)
             {
-                alert("삭제할 수 없는 컨텐츠입니다.");
+                alert("<spring:message code='ezPortal.t352' />");
                 return;
             }
             
@@ -797,7 +803,7 @@
                 parentPageid = pageid;
             if (cell.getAttribute("pageuid") != parentPageid)
             {
-                alert("상속받은 컨텐츠는 삭제할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t353' />");
                 return;
             }
             
@@ -835,7 +841,7 @@
         {
             if (selectedSubCell == "")
             {   
-                alert("컨텐츠를 선택하세요.");
+                alert("<spring:message code='ezPortal.t354' />");
                 return;
             }
 
@@ -843,7 +849,7 @@
 
             if (cell.getAttribute("canreplace") != 1)
             {
-                alert("위치를 변경할 수 없는 컨텐츠입니다.");
+                alert("<spring:message code='ezPortal.t355' />");
                 return;
             }
             var parentPageid = GetPageID(cell);
@@ -851,7 +857,7 @@
                 parentPageid = pageid;
             if (cell.getAttribute("pageuid") != parentPageid)
             {
-                alert("상속받은 컨텐츠는 위치를 변경할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t356' />");
                 return;
             }
 
@@ -917,7 +923,7 @@
                 
                 if (getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).children.length > 9)
                 {
-                    alert("하나의 열에 10개 이상의 컨텐츠를 추가할 수 없습니다.");
+                    alert("<spring:message code='ezPortal.t348' />");
                     return;
                 }
                 getPreviousSibling(cell.parentElement.parentElement.parentElement.parentElement.previousSibling).children.item(0).children.item(0).appendChild(cell.parentElement);
@@ -928,7 +934,7 @@
             
                 if (getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).children.length > 9)
                 {
-                    alert("하나의 열에 10개 이상의 컨텐츠를 추가할 수 없습니다.");
+                    alert("<spring:message code='ezPortal.t348' />");
                     return;
                 }
                 getNextSibling(cell.parentElement.parentElement.parentElement.parentElement.nextSibling).children.item(0).children.item(0).appendChild(cell.parentElement);
@@ -940,13 +946,13 @@
         {
             if (selectedCell == "")
             {   
-                alert("컨텐츠를 선택하세요.");
+                alert("<spring:message code='ezPortal.t354' />");
                 return;
             }
             
             if (bInherit)
             {
-                alert("상속받은 포탈 페이지는 크기를 조정할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t305' />");
                 return;
             }
 
@@ -980,7 +986,7 @@
         {
             if (selectedSubCell == "")
             {   
-                alert("행을 선택하세요.");
+                alert("<spring:message code='ezPortal.t306' />");
                 return;
             }
 
@@ -988,13 +994,13 @@
             
             if (cell.getAttribute("canresize") != 1)
             {
-                alert("크기를 변경할 수 없는 컨텐츠입니다.");
+                alert("<spring:message code='ezPortal.t357' />");
                 return;
             }
             
             if (cell.getAttribute("pageuid") != GetPageID(cell))
             {
-                alert("상속받은 컨텐츠는 크기를 변경할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t358' />");
                 return;
             }
             
@@ -1030,7 +1036,7 @@
         {
             if (selectedCell == "")
             {
-                alert("크기를 변경할 페이지를 선택해 주세요.");
+                alert("<spring:message code='ezPortal.t311' />");
                 return;
             }
             
@@ -1038,18 +1044,18 @@
             
             if (bInherit)
             {
-                alert("상속받은 포탈 페이지는 크기를 조정할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t305' />");
                 return;
             }
 
             if (tblObject.width == "100%" && (pDirection == "left" || pDirection == "right"))
             {
-                alert("최대화 된 너비는 크기를 조절할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t309' />");
                 return;
             }
             if (tblObject.height == "100%" && (pDirection == "up" || pDirection == "down"))
             {
-                alert("최대화 된 높이는 크기를 조절할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t310' />");
                 return;
             }
 
@@ -1104,13 +1110,13 @@
         {
             if (selectedCell == "")
             {
-                alert("행을 추가할 열을 선택하세요.");
+                alert("<spring:message code='ezPortal.t312' />");
                 return;
             }
             
             if (eval(selectedCell).children.item(0).children.item(0).children.length > 9)
             {
-                alert("하나의 열에 10개 이상의 컨텐츠를 추가할 수 없습니다.");
+                alert("<spring:message code='ezPortal.t348' />");
                 return;
             }
             
@@ -1298,7 +1304,7 @@
             {
                 if (selectedCell == "")
                 {
-                    alert("변경할 셀을 선택해 주십시요.");
+                    alert("<spring:message code='ezPortal.t314' />");
                     return;
                 }
                 
@@ -1309,7 +1315,7 @@
                 {
                     if (!is_num(txtWidth.value))
                     {
-                        alert("너비에 숫자를 입력해 주십시요.");
+                        alert("<spring:message code='ezPortal.t315' />");
                         return;
                     }
                     cell.style.width = document.getElementById("txtWidth").value;
@@ -1323,7 +1329,7 @@
                 
                 if (!is_num(txtHeight.value))
                 {
-                    alert("높이에 숫자를 입력해 주십시요.");
+                    alert("<spring:message code='ezPortal.t316' />");
                     return;
                 }
                 tblObject.height = document.getElementById("txtHeight").value;
@@ -1333,7 +1339,7 @@
             {
                 if (selectedSubCell == "")
                 {   
-                    alert("행을 선택하세요.");
+                    alert("<spring:message code='ezPortal.t306' />");
                     return;
                 }
 
@@ -1341,7 +1347,7 @@
                 
                 if (cell.getAttribute("canresize") != 1)
                 {
-                    alert("선택하신 행은 크기를 변경할 수 없습니다.");
+                    alert("<spring:message code='ezPortal.t317' />");
                     return;
                 }
                 
@@ -1351,7 +1357,7 @@
             }
             else
             {
-                alert("선택된 셀이 없습니다.");
+                alert("<spring:message code='ezPortal.t318' />");
             }
             
             //event.cancelBubble = true;
@@ -1501,11 +1507,11 @@
                 <article class='utmenu'>
                     <ul>
                         <c:if test="${checkAdmin == true}">
-                            <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'>관리자</span></li>
+                            <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'><spring:message code='ezResource.t106' /></span></li>
                         </c:if>
-                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'>직원조회</span></li>
-                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'>환경설정</span></li>
-                        <li class='btn_logout'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'>로그아웃</span></li>
+                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'><spring:message code='ezPersonal.t210' /></span></li>
+                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'><spring:message code='ezPersonal.t999900011' /></span></li>
+                        <li class='btn_logout'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
                     </ul>
                 </article>
                 <div class='top_search'>
@@ -1548,8 +1554,19 @@
                         <img src='/files/upload_portal/S907000/Menu/top_menu11(4)(2).gif' id="top_menu11(4)(2)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu11o(4)(2).gif', this);" onmouseout="img_onMouseOut(this);" name='4203ff61-93f2-4c8c-b439-3a8a8b79c767' style='cursor:pointer' onclick='OpenWindow(event, "/myoffice/ezSNS/SNSMain.aspx", "main", "null")' width='101' height='33'>
                     </li> -->
                     
-                        <li>
+                    <li>
+                        <c:if test="${lang == '1'}">
                         <img src='/files/upload_portal/S907000/Menu/top_menu02.gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o.gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
+                        </c:if>
+                        <c:if test="${lang == '2'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu02(3).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(1).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
+                        </c:if>
+                        <c:if test="${lang == '3'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu02(5).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(3).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
+                        </c:if>           
+                        <c:if test="${lang == '4'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu02(4).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(2).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
+                        </c:if>                                                                                                
                     </li>   
                     
                 </ul>
@@ -1565,8 +1582,8 @@
                 <ul id="menu62ef609e-ab67-4b30-bde9-0412c3378290" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
                 <ul id="menu_1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx" onmouseover="submenuover()" onmouseout="submenuout()">
                     <li class="left">
-                        <li class="right"></ul><ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()"><li class="left"><li onclick="javascript:submenuclick('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e');OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')">메일</li>
-                        <li onclick="javascript:submenuclick('8d13543c-7747-4828-a141-1e28045ff722');OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')">주소록</li>
+                        <li class="right"></ul><ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()"><li class="left"><li onclick="javascript:submenuclick('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e');OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')"><spring:message code='main.t78' /></li>
+                        <li onclick="javascript:submenuclick('8d13543c-7747-4828-a141-1e28045ff722');OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')"><spring:message code='main.t205' /></li>
                         <li class="right"></ul><ul id="menu23ced55b-ace8-48cb-9834-19b8d9fb8d8b" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu0fbe027c-9241-4922-bf97-cc6d10e402c9" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menue254ef6f-d602-4d40-8e39-b44177a8737c" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu2016a429-cb39-4653-b92c-c9595c12acec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu8593cc87-7630-420b-a6d5-f7a8577c5a31" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu8e9ebb41-5631-4c6f-9887-ec824464bce3" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuf6f7ecd7-1969-4025-9bcc-bbc181e41073" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuce2fd9b5-3934-4cba-b13f-a32d36a5d63a" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuba0d5a0d-7ea9-469a-a981-a00e2b8825ec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu698d7b32-1fe1-4fcc-af02-643b08fddfce" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuf5c278f0-b62d-4437-8b08-1a81c2410497" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx">
                     </ul>
                 </div>

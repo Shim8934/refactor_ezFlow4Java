@@ -29,7 +29,7 @@
 	        window.onload = function () {
 	            try
 	            {
-	                if ("<%= type %>" == "") {
+	                if ("${type}" == "") {
 	                    document.getElementById("pMessageContent").innerHTML = parent.ezapropinion_cross_dialogArgument[0];
 	                    ReturnFunction = parent.ezapropinion_cross_dialogArgument[1];
 	                    ReturnFunctionName = parent.ezapropinion_cross_dialogArgument[2];

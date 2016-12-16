@@ -38,7 +38,6 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -46,6 +45,7 @@ import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCommonService")
@@ -1031,20 +1031,77 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", userInfo.getTenantId());
 		map.put("userID", pUserID);
-		ezCommonDAO.deleteUserLLocalInfo(map);
+		
+		ezCommonDAO.deleteUserLocalInfo(map);
 	
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		
 		logger.debug("pUserID="+pUserID);
 		logger.debug("timeZone="+userInfo.getOffset());
 		logger.debug("lang="+userInfo.getLang());
+		
+		map1.put("v_TENANT_ID", userInfo.getTenantId());
 		map1.put("userID", pUserID);
 		map1.put("timeZone", userInfo.getOffset());
 		map1.put("lang", userInfo.getLang());
+		
 		ezCommonDAO.insertTblUserLocalInfo(map1);
+		
 		return "OK";
 	}
+	
+	@Override
+	public List<TenantVO> getTenantList() throws Exception {
+		logger.debug("getTenantList started.");
+        
+		List<TenantVO> list = new ArrayList<TenantVO>();
 
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray resultArray = (JSONArray)responseObj.get("result");
+                    
+                    for (int i=0; i<resultArray.size(); i++) {
+                		JSONObject obj = (JSONObject)resultArray.get(i);
+                		
+                		TenantVO vo = new TenantVO();
+                		
+                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
+                		vo.setTenantName((String)obj.get("tenantName"));
+                		
+        				list.add(vo);
+                	}
+                }
+            }
+        }                       
+        
+        for(TenantVO vo : list) {
+        	logger.debug("tenantId=" + vo.getTenantId() + ",tenantName=" + vo.getTenantName());
+        }
+        
+        logger.debug("getTenantList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return list;
+	}
+	
 	@Override
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
 		logger.debug("getTenantServerNameList started.");

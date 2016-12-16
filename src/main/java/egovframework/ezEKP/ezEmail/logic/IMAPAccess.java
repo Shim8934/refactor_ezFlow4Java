@@ -141,66 +141,58 @@ public class IMAPAccess {
 		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		
 		try{
-			Store store = getStore();
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			Folder rootFolder = getStore().getDefaultFolder();
+			
+			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
+			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
+			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
+			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
+			
+			// if default folders are not exist, create the folders.
+			if(!inbox.exists()){
+				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", locale) + " created");
+			if(!sent.exists()){
+				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000027", locale) + " created");
+			if(!draft.exists()){
+				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t99000028", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000028", locale) + " created");
+			if(!trash.exists()){
+				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
-			if(!store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t648", locale)).exists()){
-				store.getDefaultFolder().getFolder(egovMessageSource.getMessage("ezEmail.t648", locale)).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+			if(!personal.exists()){
+				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
-			Folder[] f = getStore().getDefaultFolder().list();
+			//add default folders into top-level folder list
+			topLevelFolders.add(inbox);
+			topLevelFolders.add(sent);
+			topLevelFolders.add(draft);
+			topLevelFolders.add(trash);
+			topLevelFolders.add(personal);
 			
-			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))){
-					topLevelFolders.add(fd);
-					break;
+			Folder[] folderList = rootFolder.list();
+			
+			//add the other folders into top-level folder list
+			for (Folder folder : folderList) {
+				String folderName = folder.getName();
+				if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))
+						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
+						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
+						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
+						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+						) {
+					topLevelFolders.add(folder);
 				}
 			}
-			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026", locale))){
-					topLevelFolders.add(fd);
-					break;
-				}
-			}
-			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027", locale))){
-					topLevelFolders.add(fd);
-					break;
-				}
-			}
-			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))){
-					topLevelFolders.add(fd);
-					break;
-				}
-			}
-			for(Folder fd : f){
-				if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))){
-					topLevelFolders.add(fd);
-					break;
-				}
-			}
-			for(Folder fd : f){
-				if(!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000026", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000027", locale))&&
-						!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000028", locale))&&!fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))){
-					topLevelFolders.add(fd);
-				}
-			}
+			
 		} catch(MessagingException e){
 			logger.error("Error get default folder: " + e.getMessage());
 		}
