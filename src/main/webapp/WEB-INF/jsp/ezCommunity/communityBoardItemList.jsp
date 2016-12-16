@@ -351,9 +351,7 @@
     		}
 
     		function refresh_onclick() {
-    			alert(1);
     			window.location.reload(false);
-    			alert(2);
     		}
 
     		function AddToMyBoards() {

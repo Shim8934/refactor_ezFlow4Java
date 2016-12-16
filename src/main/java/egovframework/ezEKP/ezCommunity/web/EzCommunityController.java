@@ -333,8 +333,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/goAdminOk.do")
 	@ResponseBody
-	public String goAdminOk(@RequestBody String data, HttpServletRequest request, CommunityClubVO communityClubVO) throws Exception {
-		return ezCommunityService.goAdminOk(data, request, communityClubVO);
+	public String goAdminOk(@RequestBody String data, @CookieValue("loginCookie") String loginCookie, CommunityClubVO communityClubVO) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		StringBuilder resultXML = new StringBuilder();
+		
+		String aspXML = ezCommunityService.goAdminOkGet1(data, userInfo);
+		String masterXML = ezCommunityService.goAdminOkGet2(data, userInfo);
+		
+		resultXML.append("<COMMUNITY>");
+		resultXML.append(aspXML.toString());
+		resultXML.append("<SITE><VALUE></VALUE></SITE>");
+		resultXML.append(masterXML);
+		resultXML.append("</COMMUNITY>");
+		
+		return resultXML.toString();
 	}
 	
 	/**
@@ -1143,14 +1155,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 삭제 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", method = RequestMethod.POST)
+	public void deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pReplyID = request.getParameter("replyID");
 		String gubun = request.getParameter("gubun");
 		
-		return ezCommunityService.deleteOneLineReply(userInfo.getId(), pReplyID, gubun);
+		ezCommunityService.deleteOneLineReply(userInfo.getId(), pReplyID, gubun, userInfo.getTenantId());
 	}
 	
 	/**
@@ -1179,10 +1190,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/getItemAttachments.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getItemAttachments(HttpServletRequest request) throws Exception {
+	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemID = request.getParameter("itemID");
 		
-		String strXML = ezCommunityService.getItemAttachmentXML(itemID);
+		String strXML = ezCommunityService.getItemAttachmentXML(itemID, userInfo.getTenantId());
 		
 		if (strXML.substring(0, 5).equals("ERROR")) {
 			strXML = "<RESULT>" + strXML + "</RESULT>";
@@ -1251,11 +1263,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 게시판 첨부파일 다운로드 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do")
-	public void getCommunityAttachInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getCommunityAttachInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("getCommunityAttachInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pFileName = request.getParameter("fileName");
 		String pFilePath = request.getParameter("filePath");
+		pFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + pFilePath;
+		LOGGER.debug("fileName : " + pFileName);
+		LOGGER.debug("filePath : " + pFilePath);
 		
 		ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+		
+		LOGGER.debug("getCommunityAttachInfo ended.");
 	}
 	
 	/**
@@ -1268,7 +1288,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID);
+		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("readList", readList);
@@ -1529,7 +1549,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191");
 		String nextTitle = egovMessageSource.getMessage("ezCommunity.t193");
 		
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsViewNewGet2(bName);
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsViewNewGet2(bName, userInfo.getTenantId());
 		
 		for (int i = 0; i < cBoardList.size(); i++) {
 			if (cBoardList.get(i).getNo() == grsNo) {
@@ -1866,7 +1886,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = request.getParameter("userLevel");
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
-		userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code);
+		userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code, userInfo.getTenantId());
 		
 		if (userLevel == null) {
 			userLevel = "0";
@@ -2024,12 +2044,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
 		String pollState = request.getParameter("pollState");
+		int tenantID = userInfo.getTenantId();
 		
-		String userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code);
-		
-		if (userLevel == null) {
-			userLevel = "0";
-		}
+		//TODO 2016-12-15 이효진 사용되지 않음
+//		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
@@ -2062,16 +2080,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 날짜변경화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollEdit.do")
-	public String pollEdit(Model model,HttpServletRequest request) throws Exception {
+	public String pollEdit(@CookieValue("loginCookie") String loginCookie, Model model,HttpServletRequest request) throws Exception {
+		LOGGER.debug("pollEdit started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pClubNo = request.getParameter("pClubNo");
 		String managerID = request.getParameter("managerID");
+		int tenantID = userInfo.getTenantId();
 		
-		CommunityCPollManagerVO managerVO = ezCommunityService.pollEditGet1(managerID);
+		CommunityCPollManagerVO managerVO = ezCommunityService.pollEditGet1(managerID, tenantID);
 		
 		String pStartDate = managerVO.getPollStartDate().split(" ")[0];
 		String pEndDate = managerVO.getPollEndDate().split(" ")[0];
 		
-		CommunityCPollQuestionVO questionVO = ezCommunityService.pollEditGet2(managerID);
+		CommunityCPollQuestionVO questionVO = ezCommunityService.pollEditGet2(managerID, tenantID);
 		
 		model.addAttribute("pClubNo", pClubNo);
 		model.addAttribute("managerID", managerID);
@@ -2080,6 +2102,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pEndDate", pEndDate);
 		model.addAttribute("questionVO", questionVO);
 		
+		LOGGER.debug("pollEdit ended.");
+		
 		return "/ezCommunity/communityPollEdit";
 	}
 	
@@ -2087,13 +2111,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 날짜변경 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollEditOk.do")
-	public void pollEditOk(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void pollEditOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
 		String pClubNo = request.getParameter("pClubNo");
 		String managerID = request.getParameter("managerID");
 		String subject = request.getParameter("pollSubject");
 		String startDate = request.getParameter("startPollYear") + "-" + request.getParameter("startPollMonth") + "-" + request.getParameter("startPollDay");
 		String endDate = request.getParameter("endPollYear") + "-" + request.getParameter("endPollMonth") + "-" + request.getParameter("endPollDay");
-		
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		ezCommunityService.pollEditOk(pClubNo, subject, startDate, endDate, managerID, response);
 	}
 	
@@ -2101,19 +2128,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 설문조사 답변 응답보기화면 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/pollETCView.do")
-	public String pollETCView(Model model, HttpServletRequest request) throws Exception {
+	public String pollETCView(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("pollETCView started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String questionID = request.getParameter("questionID");
 		String etc = request.getParameter("etc");
 		
-		String etcTotal = ezCommunityService.pollETCViewGet(questionID);
-		
-		if (etcTotal == null) {
-			etcTotal = "0";
-		}
+		int etcTotal = ezCommunityService.pollETCViewGet(questionID, userInfo.getTenantId());
 		
 		model.addAttribute("questionID", questionID);
 		model.addAttribute("etc", etc);
 		model.addAttribute("ETCTotal", etcTotal);
+		
+		LOGGER.debug("pollETCView ended.");
 		
 		return "/ezCommunity/communityPollETCView";
 	}
@@ -2195,7 +2223,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()));
+		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
 		
@@ -2390,7 +2418,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, commonUtil.getMultiData(userInfo.getLang()));
+		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		String copType = ezCommunityService.commHomeGet4(code);
 		
 		clubVO.setC_Type(copType);
@@ -2580,7 +2608,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			boardProp.setBoardColor("#000000");
 		}
 		
-		if (ezCommunityService.boardPropertyGet(boardID) > 0) {
+		if (ezCommunityService.boardPropertyGet(boardID, userInfo.getTenantId()) > 0) {
 			style = "display:none";
 		}
 		
@@ -3082,12 +3110,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
 		
-		LOGGER.debug("getMemberInfo(" + companyID + ", " + cID + ")");
-		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID);
+		LOGGER.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
 		if (memberInfoVO != null) {
-			LOGGER.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ")");
-			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID);
+			LOGGER.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
 			
 			if (clubUser != null) {
 				if (clubUser.getC_birth() != 0 && memberInfoVO.getBirthDay() != null) {
@@ -3329,7 +3357,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		
-		String userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code);
+		String userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code, userInfo.getTenantId());
 		
 		if (userLevel != null) {
 			bCanJoin = false;
@@ -3401,7 +3429,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.joinOkSet1(code, userInfo.getId(), EgovDateUtil.getTodayTime(), userInfo.getCompanyID());
 		
 		String cID = ezCommunityService.joinOkGet2(code, userInfo.getId());
-		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang()));
+		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 
 		if(clubVO.getC_ClubConfirmType().equals("1") || clubVO.getC_ClubConfirmType().equals("2")) {
 			if (openBirth.equals("1")) {
@@ -3411,7 +3439,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			ezCommunityService.JoinOkUpdate1(userInfo.getId(), code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse);
-			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId());
+			CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId(), userInfo.getTenantId());
 			
 			if (memberInfoVO != null) {
 				ezCommunityService.JoinOkUpdate3(userInfo.getCompanyID(), userInfo.getId(), birthDay);
@@ -3431,7 +3459,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 				
 				ezCommunityService.JoinOkUpdate1(userInfo.getId(), code, cIntro, openEmail, openHp, openComp, openBirth, openSex, openHouse);
-				CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId());
+				CommunityMemberInfoVO memberInfoVO = ezCommunityService.joinOkGet4(userInfo.getCompanyID(), userInfo.getId(), userInfo.getTenantId());
 				
 				if (memberInfoVO != null) {
 					ezCommunityService.JoinOkUpdate3(userInfo.getCompanyID(), userInfo.getId(), birthDay);

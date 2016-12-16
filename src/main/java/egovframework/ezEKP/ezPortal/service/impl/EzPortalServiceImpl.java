@@ -2430,6 +2430,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(cNo, userInfo.getId());
+		map.put("tenantID", userInfo.getTenantId());
 		CommunityCClubUserVO result = ezCommunityDAO.getCateDetailViewGet4(map);
 		if (result != null) {
 			ret = "1";

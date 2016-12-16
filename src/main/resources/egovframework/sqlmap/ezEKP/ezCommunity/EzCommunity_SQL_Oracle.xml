@@ -777,7 +777,7 @@
 					FROM
 						EZCOMMUNITY.TBL_COMM_ITEM_READ  
 					WHERE
-						USERID = #v_pUserID#
+						RTRIM(USERID) = #v_pUserID#
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
@@ -881,7 +881,7 @@
 				FROM
 					EZCOMMUNITY.TBL_COMM_ITEM_READ
 				WHERE
-					USERID = #v_PUSERID#
+					RTRIM(USERID) = #v_PUSERID#
 				AND
 					TENANT_ID = #tenantID#
 				GROUP BY
@@ -1166,7 +1166,7 @@
 				CONTENT,
 				WRITEDATE
 			FROM
-				EZCOMMUNITY.TBL_COMM_ONELINEREPLY 
+				EZCOMMUNITY.TBL_COMM_ONELINEREPLY
 			WHERE
 				BOARDID = #v_pBoardID#
 			AND
@@ -1391,13 +1391,42 @@
 		]]>
 	</select>
 	
-	<procedure id="EzCommunityDAO.commOutGet"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
-		{CALL EZCOMMUNITY.EZSP_COMM_OUT_GET(#v_C_SYSOPID#, #v_COMPANYID#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commOutGet"					parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_GET(#v_C_SYSOPID#, #v_COMPANYID#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commOutGet"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
+		<![CDATA[
+			SELECT
+				USERNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO
+			WHERE
+				RTRIM(USERID) = #v_C_SYSOPID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.commOutOkGet1"				parameterClass="Map"		resultMap="communityCOutApplicationVO">
-		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commOutOkGet1"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commOutOkGet1"				parameterClass="Map"		resultMap="communityCOutApplicationVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_OUTAPPLICATION
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				RTRIM(USERID) = #v_USERINFO_USERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+		 
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET2(#v_USERINFO_LANG#, #v_RECORD_C_SYSOPID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -1415,37 +1444,262 @@
 		]]>
 	</select>
 	
-	<procedure id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_LOGO,
+				C_CLUBBANNER,
+				C_CLUBNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_CLUB 
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO">
-		{CALL EZCOMMUNITY.EZSP_GETBOARDLIST(#v_CODE#, #v_LANG#, #v_POSITION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GETBOARDLIST(#v_CODE#, #v_LANG#, #v_POSITION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getBoardList"					parameterClass="Map"		resultClass="CommunityBoardInfoVO">
+		<isEqual property="v_POSITION" compareValue="ALL">
+			<![CDATA[
+				SELECT
+					BOARDNAME$v_LANG$ AS BOARDNAME,
+					BOARDID
+				FROM
+					EZCOMMUNITY.TBL_COMM_BOARDINFO
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CODE#
+				AND
+					(SHOWPOSITION = ' ' OR SHOWPOSITION IS NULL)
+				AND
+					PARENTBOARDID != 'TOP'
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_POSITION" compareValue="ALL">
+			<isEqual property="v_POSITION" compareValue="LEFT">
+				<![CDATA[
+					SELECT
+						BOARDNAME$v_LANG$ AS BOARDNAME,
+						BOARDID
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						SHOWPOSITION =  '1'
+					AND
+						TENANT_ID = #tenantID#
+					ORDER BY
+						SN
+				]]>
+			</isEqual>
+			
+			<isNotEqual property="v_POSITION" compareValue="LEFT">
+				<![CDATA[
+					SELECT
+						BOARDNAME$v_LANG$ AS BOARDNAME,
+						BOARDID
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						SHOWPOSITION = '2'
+					AND
+						TENANT_ID = #tenantID#
+					ORDER BY
+						SN
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityDAO.adminOuterListGet2"			parameterClass="Map"		resultMap="communityCOutApplicationVO">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_OUTER_LIST_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminOuterListGet2"			parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_OUTER_LIST_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.adminOuterListGet2"			parameterClass="Map"		resultMap="communityCOutApplicationVO">
+		<![CDATA[
+			SELECT
+				COUNT(C_CLUBNO)
+			FROM
+				EZCOMMUNITY.C_OUTAPPLICATION
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.adminMemberListGet3"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET3(#v_CODE#, #v_FLAG#, #v_USERINFO_LANG#, #v_SER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminMemberListGet3"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET3(#v_CODE#, #v_FLAG#, #v_USERINFO_LANG#, #v_SER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.adminMemberListGet3"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
+		<isEqual property="v_FLAG" compareValue="ID">
+			<![CDATA[
+				SELECT
+					A.C_ID,
+					A.COMPANYID,
+					B.USERNAME$v_USERINFO_LANG$
+				FROM
+					EZCOMMUNITY.C_CLUBUSER A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					A.C_ID = B.USERID
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CODE#
+				AND
+					PERMIT != 0
+				AND
+					A.C_ID LIKE '%' || #v_SER# || '%'
+				AND
+					A.TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="ID">
+			<isEqual property="v_FLAG" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						A.C_ID,
+						A.COMPANYID,
+						B.USERNAME$v_USERINFO_LANG$
+					FROM
+						EZCOMMUNITY.C_CLUBUSER A
+					INNER JOIN
+						EZCOMMUNITY.C_MEMBERINFO B
+					ON
+						A.C_ID = B.USERID
+					AND
+						A.TENANT_ID = B.TENANT_ID
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						PERMIT != 0
+					AND
+						B.USERNAME$v_USERINFO_LANG$  LIKE '%' || #v_SER# || '%'
+					AND
+						A.TENANT_ID = #tenantID#
+				]]>
+			</isEqual>
+			<isNotEqual property="v_FLAG" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						A.C_ID,
+						A.COMPANYID,
+						B.USERNAME$v_USERINFO_LANG$
+					FROM
+						EZCOMMUNITY.C_CLUBUSER A
+					INNER JOIN
+						EZCOMMUNITY.C_MEMBERINFO B
+					ON
+						A.C_ID = B.USERID
+					AND
+						A.TENANT_ID = B.TENANT_ID
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						PERMIT != 0
+					AND
+						A.TENANT_ID = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityDAO.adminMemberListOkGet"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GET(#v_CODE#, #v_C_ID#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminMemberListOkGet"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GET(#v_CODE#, #v_C_ID#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.adminMemberListOkGet"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				RTRIM(C_ID) = #v_C_ID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.joinOkGet3"					parameterClass="Map"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_JOIN_OK_GET3(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.joinOkGet3"					parameterClass="Map"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_JOIN_OK_GET3(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.joinOkGet3"					parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_CLUBGUBUN,
+				C_CLUBNAME$v_USERINFO_LANG$,
+				C_MEMBERCNT,
+				C_CLUBCONFIRMTYPE
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.joinOkGet4"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
-		{CALL EZCOMMUNITY.EZSP_JOIN_OK_GET4(#v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.joinOkGet4"					parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_JOIN_OK_GET4(#v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.joinOkGet4"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO
+			WHERE
+				COMPANYID = #v_USERINFO_COMPANYID#
+			AND
+				RTRIM(USERID) = #v_USERINFO_USERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.adminMemPermitGet2"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_MEM_PERMIT_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminMemPermitGet2"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEM_PERMIT_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.adminMemPermitGet2"			parameterClass="Map"		resultClass="CommunityCClubUserVO">
+		<![CDATA[
+			SELECT
+				A.C_ID,
+				A.COMPANYID,
+				A.C_INDATE,
+				B.USERNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_CLUBUSER A
+			INNER JOIN
+				EZCOMMUNITY.C_MEMBERINFO B
+			ON
+				A.C_ID = B.USERID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				RTRIM(A.C_CLUBNO) = #v_CODE#
+			AND
+				PERMIT = '0'
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.mainPageCategory"				parameterClass="Map"		resultClass="CommunityCCategoryVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_MAIN_PAGE_CATEGORY(#v_PC_CAT#, #v_CAT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -1699,7 +1953,7 @@
 			WHERE
 				BOARDID = #v_PBOARDID#
 			AND
-				TRIM(B.C_ID) = #v_USERINFO_USERID#
+				RTRIM(B.C_ID) = #v_USERINFO_USERID#
 			AND
 				A.TENANT_ID = #tenantID#
 		]]>
@@ -1708,7 +1962,7 @@
 <!-- 	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET2(#v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_USERINFO_LANG#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
+	<select id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
 		<![CDATA[
 			SELECT
 				*
@@ -1740,7 +1994,7 @@
 					FROM
 						EZCOMMUNITY.TBL_COMM_ITEM_READ 
 					WHERE
-						USERID = #v_PUSERID#
+						RTRIM(USERID) = #v_PUSERID#
 					AND
 						BOARDID = #v_PBOARDID#
 					AND
@@ -1781,12 +2035,11 @@
 			WHERE
 				ROWNUM <= #v_PENDROW#
 		]]>
-	</procedure>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getAdjacentItemsGet2Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET2_PHO(#v_PPARENTWRITEDATE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-
 	<select id="EzCommunityDAO.getAdjacentItemsGet2Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
 		<![CDATA[
 			SELECT
@@ -1821,7 +2074,7 @@
 <!-- 	<procedure id="EzCommunityDAO.getAdjacentItemsGet3Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GETADJACENTITEMS_GET3_PHO(#v_PPARENTWRITEDATE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<procedure id="EzCommunityDAO.getAdjacentItemsGet3Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
+	<select id="EzCommunityDAO.getAdjacentItemsGet3Pho"		parameterClass="Map"		resultClass="CommunityBoardItemVO">
 		<![CDATA[
 			SELECT *
 				FROM
@@ -1849,23 +2102,98 @@
 			WHERE
 				ROWNUM <= 20
 		]]>
-	</procedure>
+	</select>
 	
-	<procedure id="EzCommunityDAO.getCateDetailViewGet4"		parameterClass="Map"		resultClass="CommunityCClubUserVO">
-		{CALL EZCOMMUNITY.EZSP_CATE_DETAIL_VIEW_GET4(#v_STRNO#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getCateDetailViewGet4"		parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_CATE_DETAIL_VIEW_GET4(#v_STRNO#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getCateDetailViewGet4"		parameterClass="Map"		resultClass="CommunityCClubUserVO">
+		<![CDATA[
+			SELECT
+				C_ID,
+				PERMIT
+			FROM
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_STRNO#
+			AND
+				RTRIM(C_ID) = #v_USERINFO_USERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET2(#v_PCLUBID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.goAdminOkGet2"				parameterClass="String"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_SYSOPID,
+				ISIN
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_PCLUBID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO">
-		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.leftCommunityGet3"			parameterClass="Map"		resultClass="CommunityLeftCommunityVO">
+		<![CDATA[
+			SELECT
+				C_CLUBUSER.C_ClubNo,
+				C_CLUBUSER.permit,
+				C_CLUBUSER.C_Visited,
+				C_CLUB.C_ClubName,
+				C_CLUB.C_ClubName2,
+				C_CLUB.C_memberCnt,
+				C_CLUB.C_SysopID,
+				C_CLUB.C_ClubGubun,
+				C_CLUB.C_clubConfirmtype,
+				C_CLUB.C_Logo_Thumbnail
+			FROM
+				EZCOMMUNITY.C_CLUBUSER 
+			JOIN
+				EZCOMMUNITY.C_CLUB
+			ON
+				C_CLUBUSER.C_ClubNo = C_CLUB.C_ClubNo
+			AND
+				C_CLUBUSER.TENANT_ID = C_CLUB.TENANT_ID
+			WHERE
+				RTRIM(C_CLUBUSER.C_ID) = #v_USERID#
+			AND
+				C_CLUB.C_adminConfirm = 'Y'
+			AND
+				PERMIT <> 0
+			AND
+				C_CLUBUSER.TENANT_ID = #tenantID#
+			ORDER BY
+				C_CLUBUSER.C_Visited DESC
+		]]>
+
+	</select>
 	
-	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true">
-		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="String"		resultClass="CommunityCBoardVO"				remapResults="true"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_GET2(#v_BNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.bbsViewNewGet2"				parameterClass="Map"		resultClass="CommunityCBoardVO"				remapResults="true">
+		<![CDATA[
+			SELECT
+				NO,
+				TITLE
+			FROM
+				EZCOMMUNITY.$v_BNAME$
+			WHERE
+				TENANT_ID = #tenantID#
+			ORDER BY
+				NO DESC
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.copHomeBoardGet"				parameterClass="String"		resultClass="CommunityBoardInfoVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COPHOME_BOARD_GET(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -1935,33 +2263,114 @@
 		]]>
 	</select>
 	
-	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO">
-		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="String"		resultClass="CommunityBoardItemAttachmentVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDGETITEMATTACHMENTINFO(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getItemAttachmentXML"			parameterClass="Map"		resultClass="CommunityBoardItemAttachmentVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.TBL_COMM_ITEM_ATTACHMENTS
+			WHERE
+				ItemID = #v_pItemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollMainGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollMainGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollMainGet2"					parameterClass="Map"		resultClass="CommunityCPollManagerVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY
+				POLLGROUPNO DESC
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollDeleteGet2"				parameterClass="String"		resultClass="CommunityCPollQuestionVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET2(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommunityDAO.pollDeleteGet2"				parameterClass="Map"		resultClass="CommunityCPollQuestionVO">
+		<![CDATA[
+			SELECT
+				QUESTIONID
+			FROM
+				EZCOMMUNITY.C_POLLQUESTION
+			WHERE
+				RTRIM(POLLMANAGERID) = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollResGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET2(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollResGet2"					parameterClass="String"		resultClass="CommunityCPollManagerVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET2(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollResGet2"					parameterClass="Map"		resultClass="CommunityCPollManagerVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(MANAGERID) = #v_POLLMANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollResGet3"					parameterClass="String"		resultClass="CommunityCPollQuestionVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET3(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollResGet3"					parameterClass="String"		resultClass="CommunityCPollQuestionVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET3(#v_POLLMANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollResGet3"					parameterClass="Map"		resultClass="CommunityCPollQuestionVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_POLLQUESTION
+			WHERE
+				RTRIM(POLLMANAGERID) = #v_POLLMANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollEditGet1"					parameterClass="String"		resultClass="CommunityCPollManagerVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollEditGet1"					parameterClass="String"		resultClass="CommunityCPollManagerVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollEditGet1"					parameterClass="Map"		resultClass="CommunityCPollManagerVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(MANAGERID) = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollEditGet2"					parameterClass="String"		resultClass="CommunityCPollQuestionVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET2(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollEditGet2"					parameterClass="String"		resultClass="CommunityCPollQuestionVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_GET2(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollEditGet2"					parameterClass="Map"		resultClass="CommunityCPollQuestionVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				EZCOMMUNITY.C_POLLQUESTION
+			WHERE
+				RTRIM(POLLMANAGERID) = #v_MANAGERID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.pollETCTableGet"				parameterClass="String"		resultClass="CommunityCPollResponseVO">
 		{CALL EZCOMMUNITY.EZSP_POLL_ETC_TABLE_GET(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -2129,9 +2538,21 @@
 		]]>
 	</select>
 		
-	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteGet4"				parameterClass="Integer"	resultClass="CommunityCPollAnswerVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET4(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollDeleteGet4"					parameterClass="Map"	resultClass="CommunityCPollAnswerVO">
+		<![CDATA[
+			SELECT
+				ANSWERID
+			FROM
+				EZCOMMUNITY.C_POLLANSWER
+			WHERE
+				POLLQUESTIONID = #v_QUESTIONID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 			
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet2"					parameterClass="Integer"	resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_TODAYCOP_GET2(#iv_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -2320,9 +2741,9 @@
 				SELECT
 					C_CLUBNOTICETITLE ONEVALUE  
 				FROM
-					EZCOMMUNITY.C_Club 
+					EZCOMMUNITY.C_Club
 				WHERE
-					C_CLUBNO = #v_STRCLUBNO#
+					RTRIM(C_CLUBNO) = #v_STRCLUBNO#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -2332,9 +2753,9 @@
 				SELECT
 					C_CLUBBOARDTITLE ONEVALUE  
 				FROM
-					EZCOMMUNITY.C_Club 
+					EZCOMMUNITY.C_Club
 				WHERE
-					C_CLUBNO = #v_STRCLUBNO#
+					RTRIM(C_CLUBNO) = #v_STRCLUBNO#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -2344,9 +2765,9 @@
 				SELECT
 					C_CLUBBOARD1TITLE ONEVALUE  
 				FROM
-					EZCOMMUNITY.C_Club 
+					EZCOMMUNITY.C_Club
 				WHERE
-					C_CLUBNO = #v_STRCLUBNO#
+					RTRIM(C_CLUBNO) = #v_STRCLUBNO#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -2356,9 +2777,9 @@
 				SELECT
 					C_CLUBBOARD2TITLE ONEVALUE  
 				FROM
-					EZCOMMUNITY.C_Club 
+					EZCOMMUNITY.C_Club
 				WHERE
-					C_CLUBNO = #v_STRCLUBNO#
+					RTRIM(C_CLUBNO) = #v_STRCLUBNO#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -2368,9 +2789,9 @@
 				SELECT
 					C_CLUBPDSTITLE ONEVALUE  
 				FROM
-					EZCOMMUNITY.C_Club 
+					EZCOMMUNITY.C_Club
 				WHERE
-					C_CLUBNO = #v_STRCLUBNO#
+					RTRIM(C_CLUBNO) = #v_STRCLUBNO#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -2425,7 +2846,7 @@
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 		 		AND
-		 			C_CLUBNO = #v_CODE#
+		 			RTRIM(C_CLUBNO) = #v_CODE#
 		 	</isNotEqual>
 		</isNotNull>
 	</select>
@@ -2448,7 +2869,7 @@
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 		 		AND
-		 			C_CLUBNO = #v_CODE#
+		 			RTRIM(C_CLUBNO) = #v_CODE#
 		 	</isNotEqual>
 		</isNotNull>
 		
@@ -2510,7 +2931,7 @@
     	]]>
     	
     	<isEqual property="v_PBOARDID" compareValue="">
-    		C_ClubUser.C_CLUBNO = #v_PCLUBNO#
+    		RTRIM(C_ClubUser.C_CLUBNO) = #v_PCLUBNO#
     	</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
    			C_ClubUser.C_CLUBNO = (	SELECT
@@ -2536,7 +2957,7 @@
     	]]>
     	
      	<isEqual property="v_PBOARDID" compareValue="">
-    		C_ClubUser.C_CLUBNO = #v_PCLUBNO#
+    		RTRIM(C_ClubUser.C_CLUBNO) = #v_PCLUBNO#
     	</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
    			C_Club.C_CLUBNO = (	SELECT
@@ -2695,29 +3116,122 @@
 		{CALL EZCOMMUNITY.EZSP_CHECKREPLYPASSWORD(#v_PITEMID#, #v_REPLYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.deleteOneLineReply"			parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.deleteOneLineReply"			parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.deleteOneLineReplySelect"			parameterClass="Map"		resultClass="Integer">
+		<isEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(REPLYID), 0)
+				FROM
+					TBL_COMM_ONELINEREPLY
+				WHERE
+					RTRIM(REPLYID) = #v_REPLYID#
+				AND
+					USERID = #v_USERINFO_USERID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+			
+		</isEqual>
+		<isNotEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(REPLYID), 0)
+				FROM
+					EZCOMMUNITY.TBL_COMM_ONELINEREPLY
+				WHERE
+					RTRIM(REPLYID) = #v_REPLYID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isNotEqual>
+	</select>
+	<delete id="EzCommunityDAO.deleteOneLineReplyDelete"			parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.TBL_COMM_ONELINEREPLY
+			WHERE
+				RTRIM(REPLYID) = #v_REPLYID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 	
 	<procedure id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET1(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
+<!-- 	<procedure id="EzCommunityDAO.pollMainGet1"					parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	<procedure id="EzCommunityDAO.pollMainGet1"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		<![CDATA[
+			SELECT
+				PERMIT
+			FROM
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				RTRIM(C_ID) = #v_USERINFO_USERID#
+			AND
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
 	</procedure>
 	
-	<procedure id="EzcommunityDAO.pollAddOkGoGet2"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET2(#v_CODE#, #v_MAXNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzcommunityDAO.pollAddOkGoGet2"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET2(#v_CODE#, #v_MAXNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzcommunityDAO.pollAddOkGoGet2"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				MANAGERID GETID
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				POLLGROUPNO = #v_MAXNO#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollResGet1"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollResGet1"					parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollResGet1"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				PERMIT
+			FROM
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				RTRIM(C_ID) = #v_USERINFO_USERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET4(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET4(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				USERNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_MEMBERINFO
+			WHERE
+				USERID = #v_POLLREGUSER#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.commViewMemberGet2"			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_COMM_VIEW_MEMBER_GET2(#v_CODE#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -2869,37 +3383,137 @@
 		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFHASREPLY(#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.getVersionInfo"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_MODIFYVERSIONCOPY_GET4(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.getVersionInfo"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_MODIFYVERSIONCOPY_GET4(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.getVersionInfo"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				VERSIONUSE 
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDINFO 
+			WHERE
+				BOARDID = #v_PBOARDID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollMainGet3"					parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET3(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollMainGet3"					parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET3(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollMainGet3"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				QUESTIONID
+			FROM
+				EZCOMMUNITY.C_POLLQUESTION
+			WHERE
+				POLLMANAGERID = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollMainGet4"					parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET4(#v_STRQUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollMainGet4"					parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET4(#v_STRQUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollMainGet4"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(QUESTIONID)
+			FROM
+				EZCOMMUNITY.C_POLLRESPONSE
+			WHERE
+				QUESTIONID = #v_STRQUESTIONID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollAddOkGoGet1"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollAddOkGoGet1"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollAddOkGoGet1"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(POLLGROUPNO), 0) GETID
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollAddOkGoGet3"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET3(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollAddOkGoGet3"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET3(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollAddOkGoGet3"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				QUESTIONID GETID
+			FROM
+				EZCOMMUNITY.C_POLLQUESTION 
+			WHERE
+				RTRIM(POLLMANAGERID) = #v_MANAGERID#
+			AND
+				QUESTIONNO = 1
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollDeleteGet1"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteGet1"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET1(#v_MANAGERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollDeleteGet1"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				POLLREGUSER
+			FROM
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				RTRIM(MANAGERID) = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollDeleteGet3"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteGet3"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollDeleteGet3"				parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				C_SYSOPID 
+			FROM
+				EZCOMMUNITY.C_CLUB 
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityDAO.pollETCViewGet"				parameterClass="String"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_ETC_VIEW_GET(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollETCViewGet"				parameterClass="String"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ETC_VIEW_GET(#v_QUESTIONID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollETCViewGet"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(QUESTIONID), 0)
+			FROM
+				EZCOMMUNITY.C_POLLRESPONSE
+			WHERE
+				QUESTIONID = #v_QUESTIONID#
+			AND
+				ANSWERETC IS NOT NULL
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.adminMemberListGet2"			parameterClass="String"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET2(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -2953,15 +3567,25 @@
 	        AND
 	        	TBL_Comm_BoardInfo.Tenant_ID = TBL_Comm_Item.Tenant_ID
 	        WHERE
-	        	C_CLUBNO = #v_C_CLUBNO#
+	        	RTRIM(C_CLUBNO) = #v_C_CLUBNO#
 	        AND
 	        	TBL_Comm_BoardInfo.Tenant_ID = #tenantID#
 		]]>    
 	</select>
 
-	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.goAdminOkGet1"				parameterClass="Integer"		resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				EZCOMMUNITY.ASPADMIN
+			WHERE
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3080,9 +3704,23 @@
 		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET2(#v_CODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.boardPropertyGet"				parameterClass="Map"		resultClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_BOARDPROPERTY_GET(#v_BOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.boardPropertyGet"				parameterClass="Map"		resultClass="Integer"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BOARDPROPERTY_GET(#v_BOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.boardPropertyGet"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(BOARDID) TOTALCOUNT
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDINFO
+			WHERE
+				BOARDID = #v_BOARDID#
+			AND
+				PARENTBOARDID = 'TOP'
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
 	<procedure id="EzCommunityDAO.saveBoardOrder"				parameterClass="Map"		resultClass="Integer">
 		{CALL EZCOMMUNITY.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -3162,7 +3800,7 @@
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				AND
-					C_CLUBNO = #v_CODE#
+					RTRIM(C_CLUBNO) = #v_CODE#
 			</isNotEqual>
 		</isNotNull>
 	</update>
@@ -3186,7 +3824,7 @@
 		<isNotNull property="v_code">
 			<isNotEqual property="v_code" compareValue="">
 				AND
-					C_CLUBNO = #v_code#
+					RTRIM(C_CLUBNO) = #v_code#
 			</isNotEqual>
 		</isNotNull>
 		
@@ -3288,7 +3926,7 @@
 		<isNotNull property="v_CODE">
 			<isNotEqual property="v_CODE" compareValue="">
 				AND
-					C_CLUBNO = #v_CODE#
+					RTRIM(C_CLUBNO) = #v_CODE#
 			</isNotEqual>
 		</isNotNull>
 	</delete>
@@ -3317,6 +3955,7 @@
       			TENANT_ID = #tenantID#
 		]]>
 	</update>
+	
 	<insert id="EzCommunityDAO.insertClub"			parameterClass="Map">
 			<![CDATA[
 				INSERT INTO EZCOMMUNITY.C_CLUB
@@ -3465,9 +4104,83 @@
 		]]>
 	</insert>
 	
-	<procedure id="EzCommunityDAO.setAsRead"					parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.setAsRead"					parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.setAsReadSelectBoardID"				parameterClass="Map">
+		<![CDATA[
+			SELECT
+				BoardID
+			FROM
+				EZCOMMUNITY.TBL_COMM_ITEM 
+			WHERE
+				ItemID = #v_pItemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.setAsReadSelectTemp"					parameterClass="Map"	resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(ItemID), 0)
+			FROM
+				EZCOMMUNITY.TBL_COMM_ITEM_READ
+			WHERE
+				ItemID = #v_pItemID#
+			AND
+				RTRIM(UserID) = #v_pUserID#
+			AND
+				BoardID = #v_pBoardID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	<insert id="EzCommunityDAO.setAsReadInsert"						parameterClass="Map">
+		<![CDATA[
+		INSERT INTO EZCOMMUNITY.TBL_COMM_ITEM_READ
+			(BoardID,
+			ItemID,
+			UserID,
+			UserName,
+			UserName2,
+			UserDeptName,
+			UserDeptName2,
+			UserCompanyName,
+			UserCompanyName2,
+			UserTitle,
+			UserTitle2,
+			ReadDate,
+			TENANT_ID)
+		VALUES
+			(#v_pBoardID#,
+			#v_pItemID#,
+			#v_pUserID#,
+			#v_pUserName#,
+			#v_pUserName2#,
+			#v_pUserDeptName#,
+			#v_pUserDeptName2#,
+			#v_pUserCompanyName#,
+			#v_pUserCompanyName2#,
+			#v_pUserTitle#,
+			#v_pUserTitle2#,
+			SYSDATE,
+			#tenantID#)
+		]]>
+	</insert>
+	
+	<update id="EzCommunityDAO.setAsReadUpdate"					parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.TBL_COMM_ITEM
+			SET
+				ReadCount = ReadCount + 1
+			WHERE
+				ItemID = #v_pItemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 	
 <!-- 	<procedure id="EzCommunityDAO.brdNewItem" 					parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BRDNEWITEM(#v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterName2#, #v_pWriterDeptID#, #v_pWriterDeptName#, #v_pWriterDeptName2#, #v_pWriterCompanyID#, #v_pWriterCompanyName#, #v_pWriterCompanyName2#, #v_pWriteDate#, #v_pParentWriteDate#, #v_pImportance#, #v_pTitle#, #v_pContentLocation#, #v_pStartDate#, #v_pEndDate#, #v_pAbstract#, #v_pAttachments#, #v_pUpperItemIDTree#, #v_pItemLevel#, #v_pExtensionAttribute1#, #v_pExtensionAttribute2#, #v_pExtensionAttribute3#, #v_pExtensionAttribute32#, #v_pExtensionAttribute4#, #v_pExtensionAttribute5#, #v_pDocPassWord#)} -->
@@ -3577,9 +4290,17 @@
 		{CALL EZCOMMUNITY.EZSP_BRDUPDATEITEM(#v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterName2#, #v_pWriterDeptID#, #v_pWriterDeptName#, #v_pWriterDeptName2#, #v_pWriterCompanyID#, #v_pWriterCompanyName#, #v_pWriterCompanyName2#, #v_pWriteDate#, #v_pParentWriteDate#, #v_pImportance#, #v_pTitle#, #v_pContentLocation#, #v_pStartDate#, #v_pEndDate#, #v_pAbstract#, #v_pAttachments#, #v_pUpperItemIDTree#, #v_pItemLevel#, #v_pExtensionAttribute1#, #v_pExtensionAttribute2#, #v_pExtensionAttribute3#, #v_pExtensionAttribute32#, #v_pExtensionAttribute4#, #v_pExtensionAttribute5#, #v_pDocPassWord#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_SAVEONELINEREPLY(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_PCONTENT#, #v_PPASSWORD#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_SAVEONELINEREPLY(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_PCONTENT#, #v_PPASSWORD#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.TBL_COMM_ONELINEREPLY
+				(ITEMID, REPLYID, BOARDID, USERID, USERNAME, USERNAME2, WRITEDATE, CONTENT, PASSWORD, TENANT_ID)
+			VALUES
+				(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, SYSDATE, #v_PCONTENT#, #v_PPASSWORD#, #tenantID#)
+		]]>
+	</insert>
 	
 <!-- 	<procedure id="EzCommunityDAO.guestEditOkInsert"			parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GUEST_EDIT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME1#, #v_USERINFO_DISPLAYNAME2#, #v_USERINFO_COMPANYID#, #v_MEMO#)} -->
@@ -3594,7 +4315,8 @@
        		CONTENT,
        		READNUM,
        		WRITEDAY,
-       		C_CLUBNO)
+       		C_CLUBNO,
+       		TENANT_ID)
 		VALUES
 			((SELECT
 				NVL(MAX(C_NO) , 0) + 1
@@ -3611,7 +4333,8 @@
 			#v_MEMO#,
 			0,
 			SYSDATE,
-			#v_CODE#)
+			#v_CODE#,
+			#tenantID#)
 	</insert>
 	
 <!-- 	<procedure id="EzCommunityDAO.guestEditOkUpdate"			parameterClass="Map"> -->
@@ -3649,21 +4372,176 @@
 		]]>
 	</update>
 	
-	<procedure id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT1(#v_CODE#, #v_MAXNO#, #v_SUBJECT#, #v_STARTDATE#, #v_ENDDATE# ,#v_USERINFO_USERID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT1(#v_CODE#, #v_MAXNO#, #v_SUBJECT#, #v_STARTDATE#, #v_ENDDATE# ,#v_USERINFO_USERID#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.C_POLLMANAGER
+				(C_CLUBNO,
+				POLLGROUPNO,
+				POLLSUBJECT,
+				QUESTIONCOUNT,
+				POLLREGDATE,
+				POLLSTARTDATE,
+				POLLENDDATE,
+				POLLREGUSER,
+				TENANT_ID
+				)
+			VALUES
+				(#v_CODE#,
+				#v_MAXNO#,
+				#v_SUBJECT#,
+				1,
+				SYSDATE,
+				TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				#v_USERINFO_USERID#,
+				#tenantID#
+				)
+		]]>
+	</insert>
 	
-	<procedure id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT2(#v_MANAGERID#, #v_SUBJECT#, #v_ANSWERCOUNT#, #v_SELTYPE#, #v_ANSWERVIEWTYPE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_INSERT2(#v_MANAGERID#, #v_SUBJECT#, #v_ANSWERCOUNT#, #v_SELTYPE#, #v_ANSWERVIEWTYPE#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.C_POLLQUESTION
+				(POLLMANAGERID,
+				QUESTIONNO,
+				QUESTIONCONTENT,
+				ANSWERCOUNT,
+				ANSWERTYPE,
+				ANSWERVIEWTYPE,
+				TENANT_ID)
+			VALUES
+				(#v_MANAGERID#,
+				1,
+				#v_SUBJECT#,
+				#v_ANSWERCOUNT#,
+				#v_SELTYPE#,
+				#v_ANSWERVIEWTYPE#,
+				#tenantID#)
+		]]>
+	</insert>
 	
-	<procedure id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL1(#v_QUESTIONID#, #v_ANSWERID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL1(#v_QUESTIONID#, #v_ANSWERID#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_POLLRESPONSE
+			WHERE
+				QUESTIONID = #v_QUESTIONID#
+			AND
+				ANSWERID = #v_ANSWERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 	
-	<procedure id="EzCommunityDAO.pollResOkSet"					parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_POLL_RES_OK_SET(#v_QUESTIONID#, #v_POLLSELECT#, #v_ANSWERETC#, #v_USERINFO_USERID#, #v_USERINFO_COMPANYID#, #v_ISSAVE#, #v_ANSWERTYPE#, #v_ANSWERCOUNT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollResOkSet"					parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_OK_SET(#v_QUESTIONID#, #v_POLLSELECT#, #v_ANSWERETC#, #v_USERINFO_USERID#, #v_USERINFO_COMPANYID#, #v_ISSAVE#, #v_ANSWERTYPE#, #v_ANSWERCOUNT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.pollResOkSetSelect"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				ANSWERID
+			FROM
+				EZCOMMUNITY.C_POLLANSWER
+			WHERE
+				POLLQUESTIONID = #v_QUESTIONID#
+			AND
+				ANSWERNO = #v_POLLSELECT#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	<insert id="EzCommunityDAO.pollResOkSetInsert"					parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.C_POLLRESPONSE
+				(QUESTIONID,
+				ANSWERID,
+				ANSWERNO,
+				ANSWERETC,
+				USERID,
+				COMPANYID,
+				TENANT_ID) 
+			VALUES
+				(#v_QUESTIONID#,
+				#v_ANSWERID#,
+				#v_POLLSELECT#,
+		]]>
+		
+		<isEqual property="v_ANSWERTYPE" compareValue="3">
+			<![CDATA[
+				#v_ANSWERETC#,
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_ANSWERTYPE" compareValue="3">
+			<isEqual property="v_ANSWERTYPE" compareValue="2">
+				<![CDATA[
+					#v_ANSWERETC#,
+				]]>
+			</isEqual>
+			
+			<isNotEqual property="v_ANSWERTYPE" compareValue="2">
+				<isEqual property="v_POLLSELECT" compareProperty="v_ANSWERCOUNT">
+					<![CDATA[
+						#v_ANSWERETC#,
+					]]>
+				</isEqual>
+				
+				<isNotEqual property="v_POLLSELECT" compareProperty="v_ANSWERCOUNT">
+					<![CDATA[
+						' ',
+					]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+		
+		<![CDATA[
+			#v_USERINFO_USERID#,
+			#v_USERINFO_COMPANYID#,
+			#tenantID#)
+		]]>
+	</insert>
+	<update id="EzCommunityDAO.pollResOkSetUpdate"					parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_POLLRESPONSE
+			SET
+				ANSWERID = #v_ANSWERID#,
+				ANSWERNO = #v_POLLSELECT#
+		]]>
+		
+		<isEqual property="v_ANSWERTYPE" compareValue="3">
+			<![CDATA[
+				ANSWERETC = #v_ANSWERETC#,
+			]]>
+		</isEqual>
+		
+		<isEqual property="v_ANSWERTYPE" compareValue="2">
+			<![CDATA[
+				ANSWERETC = #v_ANSWERETC#,
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+			WHERE
+				QUESTIONID = #v_QUESTIONID#
+			AND
+				RTRIM(USERID) = #v_USERINFO_USERID#
+			AND
+				COMPANYID = #v_USERINFO_COMPANYID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+
 	
 	<procedure id="EzCommunityDAO.pollEditOkUpdate"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_OK_UPDATE(#v_SUBJECT#, #v_POLLSTARTDATE#, #v_POLLENDDATE#, #v_MANAGERID#)}
@@ -3745,13 +4623,44 @@
 		{CALL EZCOMMUNITY.EZSP_BBS_VIEW_NEW_UPDATE(#v_BNAME#, #v_NO#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL2(#v_QUESTIONID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL2(#v_QUESTIONID#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityDAO.pollDeleteDel2"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_POLLANSWER
+			WHERE
+				POLLQUESTIONID = #v_QUESTIONID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 	
-	<procedure id="EzCommunityDAO.pollDeleteDel3"				parameterClass="String">
-		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL3(#v_MANAGERID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollDeleteDel3"				parameterClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_DELETE_DEL3(#v_MANAGERID#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityDAO.pollDeleteDel3"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_POLLQUESTION
+			WHERE
+				POLLMANAGERID = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+	<delete id="EzCommunityDAO.pollDeleteDel4"				parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_POLLMANAGER
+			WHERE
+				MANAGERID = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 	
 	<procedure id="EzCommunityDAO.brdDeleteBoard"				parameterClass="String">
 		{CALL EZCOMMUNITY.EZSP_BRDDELETEBOARD(#v_pBoardID#)}
@@ -3761,9 +4670,19 @@
 		{CALL EZCOMMUNITY.EZSP_COPYITEM_UPDATE(#v_pItemID#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.newItemDel"					parameterClass="String">
-		{CALL EZCOMMUNITY.EZSP_NEWITEM_DEL(#v_PITEMID#)}
-	</procedure>	
+<!-- 	<procedure id="EzCommunityDAO.newItemDel"					parameterClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_NEWITEM_DEL(#v_PITEMID#)} -->
+<!-- 	</procedure> -->
+	<procedure id="EzCommunityDAO.newItemDel"					parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.TBL_COMM_ITEM_ATTACHMENTS
+			WHERE
+				ITEMID = #v_PITEMID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</procedure>
 	
 	<procedure id="EzCommunityDAO.commMakeOkInsert1">
 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()}
@@ -3802,6 +4721,8 @@
 	       		RTRIM(USERID) = #v_USERINFO_USERID#
 	       	AND
 	       		COMPANYID = #v_USERINFO_COMPANYID#
+	       	AND
+	       		TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -3815,6 +4736,8 @@
 	       		COMPANYID = #v_COMPANYID#
 	       	AND
 	       		RTRIM(USERID) = #v_C_ID#
+	       	AND
+	       		TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -3846,7 +4769,7 @@
 		]]>		
 	</select>
 	
-	<select id="EzCommunityDAO.pollResGet6"						parameterClass="Integer"	resultClass="CommunityCPollAnswerVO">
+	<select id="EzCommunityDAO.pollResGet6"						parameterClass="Map"	resultClass="CommunityCPollAnswerVO">
 		<![CDATA[
 			SELECT 
 				*
@@ -3854,6 +4777,8 @@
 	        	EZCOMMUNITY.C_POLLANSWER
 			WHERE  
 	       		POLLQUESTIONID = #v_QUESTIONID#
+	       	AND
+	       		TENANT_ID = #tenantID#
 	       	ORDER BY ANSWERNO
 		]]>
 	</select>
@@ -3935,13 +4860,15 @@
 	<select id="EzCommunityDAO.pollResGetCount"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(*)
+				NVL(COUNT(*), 0)
         	FROM 
         		EZCOMMUNITY.C_POLLRESPONSE
        		WHERE 
        			QUESTIONID = #v_QUESTIONID#
        		AND
        			ANSWERID = #v_ANSWERID#
+       		AND
+       			TENANT_ID = #tenantID#
 		]]>		
 	</select>
 	
@@ -3987,17 +4914,24 @@
         	INTO
         		EZCOMMUNITY.TBL_COMM_ITEM_ATTACHMENTS
        		VALUES
-       			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#)
+       			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#, #tenantID#)
 		]]>
 	</insert>
 	
 	<insert id="EzCommunityDAO.pollAddOkGoInsert3"				parameterClass="Map">
 		<![CDATA[
-			INSERT
-        	INTO
-        		EZCOMMUNITY.C_POLLANSWER(ANSWERID, POLLQUESTIONID, ANSWERNO, ANSWERCONTENT)
+			INSERT INTO EZCOMMUNITY.C_POLLANSWER
+				(ANSWERID,
+				POLLQUESTIONID,
+				ANSWERNO,
+				ANSWERCONTENT,
+				TENANT_ID)
        		VALUES
-       			(EZCOMMUNITY.C_POLLANSWER_ANSWERID_SEQ.NEXTVAL, #v_POLLQUESTIONID#, #v_ANSWERNO#, #v_ANSWERCONTENT#)
+       			(EZCOMMUNITY.C_POLLANSWER_ANSWERID_SEQ.NEXTVAL,
+       			#v_POLLQUESTIONID#,
+       			#v_ANSWERNO#,
+       			#v_ANSWERCONTENT#,
+       			#tenantID#)
 		]]>
 	</insert>
 	

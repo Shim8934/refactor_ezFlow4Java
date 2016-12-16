@@ -364,7 +364,7 @@
 	                filename = filepath.substr(89, filepath.length - 88);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
-	                filepath = "/files/upload_community/" + filepath;
+	                filepath = filepath;
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
