@@ -223,11 +223,23 @@
 				if (CrossYN()) {
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
+				    
+				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
+				    </c:if>
+                    <c:if test="${IsJMochaStandAlone == 'YES'}">
+                    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 270));
+                    </c:if>
+				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
+				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
-
+                    </c:if>
+                    <c:if test="${IsJMochaStandAlone == 'YES'}">
+                    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
+                    </c:if>
+                    
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
 				    }
@@ -305,10 +317,22 @@
 				    deptinfo_dialogArguments = new Array();
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));				    
+				    
+				    <c:if test="${IsJMochaStandAlone != 'YES'}">
+				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
+				    </c:if>
+                    <c:if test="${IsJMochaStandAlone == 'YES'}">
+                    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 270));
+                    </c:if>
+				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
+				    <c:if test="${IsJMochaStandAlone != 'YES'}">
 				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
+				    </c:if>
+                    <c:if test="${IsJMochaStandAlone == 'YES'}">
+                    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
+                    </c:if>
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
