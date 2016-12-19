@@ -740,12 +740,13 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public Integer responseListCnt(String brdID, String itemNo, String responseYN, String lang) throws Exception {
+	public Integer responseListCnt(String brdID, String itemNo, String responseYN, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pResYN", responseYN);
 		map.put("v_pLang", lang);
+		map.put("tenantID", tenantID);
 		return Integer.parseInt(ezQuestionDAO.responseListCnt(map));
 	}
 	
@@ -842,18 +843,20 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<QstResponseVO> gwPollPositionSearch(String vItemNo, String vQuesNo) throws Exception {
+	public List<QstResponseVO> gwPollPositionSearch(String vItemNo, String vQuesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pItemNo", vItemNo);
-		map.put("v_pQuesNo", vQuesNo);
+		map.put("v_item_num", vItemNo);
+		map.put("v_Que_num", vQuesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.gwPollPositionSearch(map);
 	}
 
 	@Override
-	public List<QstResponseVO> gwPollJikgubSearch(String vItemNo, String vQuesNo) throws Exception {
+	public List<QstResponseVO> gwPollJikgubSearch(String vItemNo, String vQuesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", vQuesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.gwPollJikgubSearch(map);
 	}
 	
@@ -955,6 +958,5 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezQuestionDAO.getQstResponse(map);
 	}
 	
-	
-	
 }
+

@@ -122,6 +122,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
+		logger.debug("qstList Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
 		String brdID = "5", title = "", responseRange = "", postDate = "", pollEndDate = "", lang = "";
@@ -211,10 +212,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 				qst.setTitle(strbuilder.toString());
 			}				
 		}
+		logger.debug("receve="+receve);
 		model.addAttribute("qstListVO", qstListVO);
 		model.addAttribute("list", list);
 		model.addAttribute("receve", receve);
 		
+		logger.debug("qstList End");
 		return "/ezQuestion/qstList";
 	}
 	
@@ -759,7 +762,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pollEndDate = request.getParameter("pollEndDate");
 		if(request.getParameter("currPage")!=null)
 			currPage = request.getParameter("currPage");
-		
+		logger.debug("currPage="+request.getParameter("currPage"));
 		String receve = "brdID=" + request.getParameter("brdID") +
 						"&itemNo=" + request.getParameter("itemNo") +
 		                "&title=" + commonUtil.cleanValue(request.getParameter("title")) +
@@ -767,7 +770,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		                "&postDate=" + request.getParameter("postDate") +
 		                "&pollEndDate=" + request.getParameter("pollEndDate") +
 		                "&currPage=" + request.getParameter("currPage");		
-		
+		logger.debug("receve="+receve);
 		/** EZSP_GETUSERIDADMIN*/
 		boolean adminYN = false;
 		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(brdID));
@@ -1937,7 +1940,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
         responseRange = qstUserPermissionVO.getResponseRange();
         /** EZSP_RESPONSELISTCNT*/
-        pTotalCnt = ezQuestionService.responseListCnt(brdID, itemNo, responseYN.trim(), lang);
+        pTotalCnt = ezQuestionService.responseListCnt(brdID, itemNo, responseYN.trim(), lang, loginVO.getTenantId());
+        logger.debug("pTotalCnt="+pTotalCnt);
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
         if (pageCount == 0){
@@ -1945,6 +1949,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         }else{
             pageCount = pageCount - 1;
         }
+        logger.debug("pageCount="+pageCount);
         /** EZSP_RESPONSELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdID, itemNo, responseYN.trim(), pTotalCnt, pPageSize, lang, loginVO.getTenantId());
         		
@@ -1962,7 +1967,10 @@ public class EzQuestionController extends EgovFileMngUtil {
             iNum++;
             int iCurrNumber = 0;
             iCurrNumber = iNum + (pCurrPage - 1) * pPageSize;
-            
+            logger.debug("iNum="+iNum);
+            logger.debug("pCurrPage="+pCurrPage);
+            logger.debug("pPageSize="+pPageSize);
+            logger.debug("iCurrNumber="+iCurrNumber);
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
             newRow.appendChild(No);
@@ -1977,6 +1985,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         model.addAttribute("pTotalCnt", pTotalCnt);
         model.addAttribute("pAnsType", pAnsType);
         model.addAttribute("publicFlg", publicFlg);
+        logger.debug("pageCount="+pageCount);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
         
@@ -2450,7 +2459,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         Node rNode = resultXML.createElement("ROW");
         
         /** EZSP_GWPOLLPOSITIONSEARCH*/
-        List<QstResponseVO> responseVOList = ezQuestionService.gwPollPositionSearch(vItemNo, vQuesNo);
+        List<QstResponseVO> responseVOList = ezQuestionService.gwPollPositionSearch(vItemNo, vQuesNo, loginVO.getTenantId());
         
         for(QstResponseVO qstResponseVO : responseVOList){
         	iDataCount++;
@@ -2629,7 +2638,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         Node rNode = resultXML.createElement("ROW");
         
         /** EZSP_GWPOLLJIKGUBSEARCH*/
-        List<QstResponseVO> responseVOList = ezQuestionService.gwPollJikgubSearch(vItemNo, vQuesNo);
+        List<QstResponseVO> responseVOList = ezQuestionService.gwPollJikgubSearch(vItemNo, vQuesNo, loginVO.getTenantId());
         
         for(QstResponseVO qstResponseVO : responseVOList){
         	iDataCount++;
@@ -4490,3 +4499,4 @@ public class EzQuestionController extends EgovFileMngUtil {
     }
 	
 }
+
