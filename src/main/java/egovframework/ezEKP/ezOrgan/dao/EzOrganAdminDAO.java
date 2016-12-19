@@ -399,11 +399,66 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             return getRetireListForLocal(map);
         }       
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getUserCnList() throws Exception {
-		return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList");
-	}
+
+    private List<OrganUserVO> getUserCnListForJMocha(int tenantID) throws Exception {
+        logger.debug("getUserCnListForJMocha started. tenantID=" + tenantID);
+        
+        List<OrganUserVO> returnValue = new ArrayList<OrganUserVO>();
+        
+        String param1 = "tenantId=" + tenantID;
+        String inputParams = param1;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserIdList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray result = (JSONArray)responseObj.get("result");
+                    
+                    if (result != null) {
+                        for (int i = 0; i < result.size(); i++) {
+                            JSONObject itemObj = (JSONObject)result.get(i);
+                            OrganUserVO userVO = new OrganUserVO();
+                            
+                            userVO.setCn((String)itemObj.get("userId"));
+                            
+                            returnValue.add(userVO);
+                        }
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getUserCnListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;                       
+    }
+    
+    @SuppressWarnings("unchecked")
+    private List<OrganUserVO> getUserCnListForLocal(int tenantID) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList");
+    }
+    
+    public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getUserCnListForJMocha(tenantID);
+        } else {
+            return getUserCnListForLocal(tenantID);
+        }       
+    }	
 
     private OrganUserVO getUserInfoForJMocha(Map<String, Object> map) throws Exception {
         String userId = (String)map.get("v_CN");

@@ -110,10 +110,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return ezOrganAdminDao.getRetireList(map);
 	}
 
-	@Override
-	public List<OrganUserVO> getUserCnList() throws Exception {		
-		return ezOrganAdminDao.getUserCnList();
-	}
+    @Override
+    public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {     
+        return ezOrganAdminDao.getUserCnList(tenantID);
+    }
 	
 	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode, int tenantID) throws Exception {

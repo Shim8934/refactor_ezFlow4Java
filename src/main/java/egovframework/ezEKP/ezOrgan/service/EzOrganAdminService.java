@@ -17,7 +17,7 @@ public interface EzOrganAdminService {
 		
 	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserCnList() throws Exception;
+	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 	
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception;
 	
