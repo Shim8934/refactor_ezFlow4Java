@@ -2373,7 +2373,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		boolean firstFlag = true;
 		int val = 0;
 		
-		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(commonUtil.getMultiData(userInfo.getLang()));
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+		map.put("tenantID", userInfo.getTenantId());
+		
+		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
 		boolean readTF = false;
 		
