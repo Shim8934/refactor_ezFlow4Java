@@ -208,6 +208,7 @@
 		    function btnOK_onclick() {
 		        listview2.LoadFromID("lvTDocForm");
 		        var length = listview2.GetRowCount();
+alert(length);
 		        if (document.getElementById('DelALL').checked != true) {
 		            if (length > 0 && Check == false) {
 		                DocDel();
@@ -275,8 +276,8 @@
 		            getDocList();
 		        }
 		    }
-	</SCRIPT>
-	</HEAD>
+		</script>
+	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<xml id="FORMLIST" style="display:none";>

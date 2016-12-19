@@ -4,10 +4,14 @@
 <sqlMap namespace="ezApprovalAdmin">
 	<typeAlias  alias="UserInfo" 						type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="ApprCodeVO" 						type="egovframework.ezEKP.ezApproval.vo.ApprCodeVO"/>
+	<typeAlias  alias="ApprDocNumVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocNumVO"/>
+	<typeAlias  alias="ApprDocItemVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocItemVO"/>
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
 	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
 	<typeAlias  alias="ApprFormContVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormContVO"/>
+	<typeAlias  alias="ApprDocGroupVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO"/>
+	<typeAlias  alias="ApprReceiveGroupVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO"/>
 	
 	<select id="EzApprovalAdminDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
 		<isEqual property="ownFlag" compareValue="1">
@@ -945,6 +949,162 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getReceiveGroupInfo" parameterClass="Map" resultClass="ApprReceiveGroupVO" remapResults="true">
+		<isEqual property="mode" compareValue="ITEM">
+			<![CDATA[
+				SELECT 
+					mainid,
+					subid,
+					deptid,
+					deptname$lang$ as deptname,
+					addcompanyid 
+              	FROM 
+              		TBADMINRECEIPTGROUP_SUB 
+             	WHERE  
+             		tenant_id = #tenantID#
+             	AND	
+             		companyid = #companyID#
+             	AND
+             		MAINID = #groupID#
+              	ORDER BY 
+              		SUBID
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="ITEM">
+			<isEqual property="mode" compareValue="JOIN">
+				<![CDATA[
+					SELECT 
+						DISTINCT M.MAINID ,
+                        M.MAINNAME 
+                 	FROM 
+                 		TBADMINRECEIPTGROUP_MAIN M 
+                    JOIN 
+                    	TBADMINRECEIPTGROUP_SUB S 
+                    ON 
+                    	M.tenant_id = S.tenant_id
+                    AND
+                    	M.companyid = S.companyid
+                    AND
+                    	M.MAINID = S.MAINID
+                    WHERE
+                    	tenant_id = #tenantID#
+                    AND
+                    	companyid = #companyid#
+                 	ORDER BY 
+                 		M.MAINID
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="JOIN">
+				<![CDATA[
+					SELECT 
+						mainid,
+						mainname
+                 	FROM 
+                 		TBADMINRECEIPTGROUP_MAIN
+                 	WHERE
+                 		tenant_id = #tenantID#
+                 	AND
+                 		companyid = #companyID# 
+                 	ORDER BY 
+                 		MAINID
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeGroup" parameterClass="ApprDocGroupVO" resultClass="ApprDocGroupVO">
+		SELECT 
+			groupid,
+			g_level,
+			g_upperid,
+			groupname,
+			groupname2,
+			etc
+   		FROM 
+   			TBDOCNUM_GROUP 
+  		WHERE  
+  			TENANT_ID = #tenantID#
+  		AND
+  			COMPANYID = #companyID#
+  		AND
+  			G_LEVEL = #g_level#
+		<isNotEqual property="groupID" compareValue="0" prepend="AND">
+			g_upperid = #groupID#
+		</isNotEqual>
+   		ORDER 
+   			BY GROUPID
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeGroupLeaf" parameterClass="ApprDocGroupVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+           	FROM 
+           		TBDOCNUM_GROUP 
+          	WHERE  
+          		TENANT_ID = #tenantID#
+          	AND
+          		COMPANYID = #companyID#
+          	AND
+          		G_UPPERID = #groupID#
+           	ORDER BY 
+           		GROUPID
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeItem" parameterClass="ApprDocGroupVO" resultClass="ApprDocItemVO">
+		<![CDATA[
+			SELECT 
+				groupid,
+				itemcode,
+				itemname,
+				itemname2,
+				itemlimit,
+				itemsecurity,
+				itempublic 
+        	FROM 
+        		TBDOCNUM_ITEM 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND  
+       			GROUPID = #groupID#
+        	ORDER BY 
+        		ITEMCODE
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getEtcName" parameterClass="ApprCodeVO" resultClass="String">
+		<![CDATA[
+			SELECT 
+				NAME$lang$ AS NAME 
+			FROM 
+				TBCODELIST  
+			WHERE 
+				CODE1 = #code1# 
+			AND 
+				NAME$lang$ LIKE CONCAT('%', #code2#)
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getMaxItemCode" parameterClass="UserInfo" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				CASE
+					WHEN LPAD(MAX(itemcode), 3, '0') IS NULL
+					THEN '0000000001'
+					ELSE LPAD(MAX(itemcode) + 1, 3, '0')
+				END maxContID
+			FROM
+				TBDOCNUM_ITEM
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
@@ -1089,6 +1249,65 @@
 		]]>
 	</insert>
 	
+	<insert id="EzApprovalAdminDAO.insertReceiveGroupInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			INSERT INTO TBADMINRECEIPTGROUP_MAIN ( 
+				MAINNAME,	 COMPANYID,   TENANT_ID 
+			)
+     		VALUES ( 
+     			#groupName#, #companyID#, #tenantID#
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertReceiveGroupItemInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			INSERT INTO TBADMINRECEIPTGROUP_SUB (
+				MAINID,    DEPTID, 	 DEPTNAME, 	 DEPTNAME2,   ADDCOMPANYID,   COMPANYID,   TENANT_ID
+			)
+     		VALUES (
+     			#groupID#, #deptID#, #deptName#, #deptName2#, #addCompanyID#, #companyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<selectKey keyProperty="groupID" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN MAX(groupid) IS NULL
+						THEN 1
+						ELSE MAX(groupid) + 1
+					END groupid 
+     			FROM 
+     				TBDOCNUM_GROUP
+     			WHERE
+     				tenant_id = #tenantID#
+     			AND
+     				companyid = #companyID#
+			]]>
+		</selectKey>
+		
+		INSERT INTO TBDOCNUM_GROUP ( 
+			GROUPID,   G_LEVEL,   G_UPPERID, 	  GROUPNAME,   GROUPNAME2,   ETC,  COMPANYID,   TENANT_ID 
+		)
+     	VALUES ( 
+     		#groupID#, #g_level#, #g_upperID#,    #groupName#, #groupName2#, NULL, #companyID#, #tenantID# 
+     	)
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			INSERT INTO TBDOCNUM_ITEM ( 
+				GROUPID,   ITEMCODE,   ITEMNAME,   ITEMNAME2,   ITEMLIMIT,   ITEMSECURITY,   ITEMPUBLIC,   COMPANYID,   TENANT_ID 
+			)
+     		VALUES ( 
+     			#groupID#, #itemCode#, #itemName#, #itemName2#, #itemLimit#, #itemSecurity#, #itemPublic#, #companyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBCONTAINER 
@@ -1101,7 +1320,6 @@
 				COMPANYID = #companyID#
 			AND 
 				ContainerID = #contID#
-				
 		]]>
 	</update>
 	
@@ -1267,6 +1485,55 @@
 		]]>
 	</update>
 	
+	<update id="EzApprovalAdminDAO.updateGroupMainInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			UPDATE TBADMINRECEIPTGROUP_MAIN
+      		SET 
+      			MAINNAME = #groupName#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			MAINID = #groupID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<![CDATA[
+			UPDATE TBDOCNUM_GROUP
+      		SET 
+      			GROUPNAME = #groupName#,
+          		GROUPNAME2 = #groupName2#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			UPDATE TBDOCNUM_ITEM
+      		SET 
+      			ITEMNAME = #itemName#,
+          		ITEMNAME2 = #itemName2#,
+          		ITEMLIMIT = #itemLimit#,
+          		ITEMSECURITY = #itemSecurity#,
+          		ITEMPUBLIC = #itemPublic#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+     		AND 
+     			ITEMCODE = #itemCode#
+		]]>
+	</update>
+	
 	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM TBCONTAINERTODOCSTATE
@@ -1340,6 +1607,56 @@
 				contType = #contType#
 			AND
 				sn = #sn#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteGroupMainInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE TBADMINRECEIPTGROUP_MAIN
+    		WHERE
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND  
+    			MAINID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteGroupSubItemInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE TBADMINRECEIPTGROUP_SUB
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND  
+				SUBID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<![CDATA[
+			DELETE TBDOCNUM_GROUP
+		    WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	GROUPID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			DELETE TBDOCNUM_ITEM
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+            AND 
+            	ITEMCODE = #itemCode#
 		]]>
 	</delete>
 </sqlMap>

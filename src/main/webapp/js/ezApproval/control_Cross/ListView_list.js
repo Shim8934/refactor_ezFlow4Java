@@ -528,7 +528,8 @@ function ListView() {
        if(_rowCount == 0)
         {
             var objTr = document.createElement("TR");
-            objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
+//            objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
+            objTr.setAttribute("id", _thisID + "_" + "noItems");
             oTbody.appendChild(objTr);
             var oText = document.createTextNode(strLang535);
             var objTd = document.createElement("TD");

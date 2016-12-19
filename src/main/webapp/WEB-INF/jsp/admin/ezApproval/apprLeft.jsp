@@ -23,7 +23,7 @@
 					switch(idx)
 					{
 					case 1:
-					    url = "/myoffice/ezApproval/manage/FormMaker/Form_Admin.aspx";
+					    url = "/admin/ezApproval/formAdmin.do";
 						break;
 						
 				    case 4:
@@ -39,15 +39,15 @@
 						break;
 						
 				    case 7:
-			            url = "/myoffice/ezApproval/Manage/admin_receivegroup.aspx";
+			            url = "/admin/ezApproval/receiveGroup.do";
 						break;
 						
 				    case 8:
-			            url = "/myoffice/ezApproval/Manage/mdocnumui.aspx";
+			            url = "/admin/ezApproval/docNumUI.do";
 						break;
 						
 				    case 9:
-			            url = "/myoffice/ezApproval/ezSealInfo/ManageSeal.aspx";
+			            url = "/admin/ezApproval/manageSeal.do";
 						break;
 						
 				    case 10:

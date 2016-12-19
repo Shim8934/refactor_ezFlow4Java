@@ -20,6 +20,9 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -964,5 +967,445 @@ public class EzApprovalAdminController {
 		logger.debug("delDocList ended");
 		
 		return result;
+	}
+
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/receiveGroup.do")
+	public String receiveGroup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("receiveGroup started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		String topID = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("topID", topID);
+		model.addAttribute("serverName", userInfo.getServerName());
+		
+		logger.debug("receiveGroup ended");
+		
+		return "admin/ezApproval/apprReceiveGroup";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 그룹리스트 표출
+	 */
+	@RequestMapping(value = "admin/ezApproval/getAdminReceivGroup.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getAdminReceivGroup started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String groupID = request.getParameter("groupID");
+		String mode = request.getParameter("mode");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.getReceiveGroupInfo(groupID, mode, companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("getAdminReceivGroup ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 서브리스트 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/setGroupSubItemInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setGroupSubItemInfo(@CookieValue("loginCookie") String loginCookie, ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		logger.debug("setGroupSubItemInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprReceiveGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.insertReceiveGroupItemInfo(apprReceiveGroupVO);
+		
+		logger.debug("setGroupSubItemInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 그룹추가 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/setGroupMainInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setGroupMainInfo(@CookieValue("loginCookie") String loginCookie, ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		logger.debug("setGroupMainInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprReceiveGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.insertReceiveGroupInfo(apprReceiveGroupVO);
+		
+		logger.debug("setGroupMainInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 그룹이름변경 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/updateGroupMainInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateGroupMainInfo(@CookieValue("loginCookie") String loginCookie, ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		logger.debug("updateGroupMainInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprReceiveGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.updateGroupMainInfo(apprReceiveGroupVO);
+		
+		logger.debug("updateGroupMainInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 그룹삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/deleteGroupMainInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteGroupMainInfo(@CookieValue("loginCookie") String loginCookie, ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		logger.debug("deleteGroupMainInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprReceiveGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.deleteGroupMainInfo(apprReceiveGroupVO);
+		
+		logger.debug("deleteGroupMainInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 수신처 그룹지정 서브그룹삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/deleteGroupSubItemInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteGroupSubItemInfo(@CookieValue("loginCookie") String loginCookie, ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		logger.debug("deleteGroupSubItemInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprReceiveGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.deleteGroupSubItemInfo(apprReceiveGroupVO);
+		
+		logger.debug("deleteGroupSubItemInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/docNumUI.do")
+	public String docNumUI(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("docNumUI started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("serverName", userInfo.getServerName());
+		model.addAttribute("primaryStr", userInfo.getPrimary());
+		
+		logger.debug("docNumUI ended");
+		
+		return "admin/ezApproval/apprDocNumUI";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 메인화면 그룹 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/getDocNumGroupNode.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDocNumGroupNode(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("getDocNumGroupNode started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocGroupVO.setTenantID(userInfo.getTenantId());
+		apprDocGroupVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getItemCodeGroup(apprDocGroupVO);
+		
+		logger.debug("getDocNumGroupNode ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 체계추가 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/minsGroupMain.do")
+	public String minsGroupMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("minsGroupMain started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String title = "";
+		String tCheck = request.getParameter("tCheck");
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
+		if (tCheck != null && tCheck.equals("Ins")) {
+			title = messageSource.getMessage("ezApproval.t765", userInfo.getLocale());
+		} else {
+			title = messageSource.getMessage("ezApproval.t766", userInfo.getLocale());
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("title", title);
+		
+		logger.debug("minsGroupMain ended");
+		
+		return "admin/ezApproval/apprMinsGroupMain";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 체계추가 추가 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mInsDocNumGroup.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mInsDocNumGroup(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("mInsDocNumGroup started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocGroupVO.setTenantID(userInfo.getTenantId());
+		
+		int result = ezApprovalAdminService.insertItemCodeGroup(apprDocGroupVO);
+		
+		logger.debug("mInsDocNumGroup ended");
+		
+		return String.valueOf(result);
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 체계삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mDelDocnumGroup.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mDelDocnumGroup(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("mDelDocnumGroup started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.deleteItemCodeGroup(apprDocGroupVO);
+		
+		logger.debug("mDelDocnumGroup ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 체계수정 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mUpdateDocNumGroup.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mUpdateDocNumGroup(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("mUpdateDocNumGroup started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocGroupVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.updateItemCodeGroup(apprDocGroupVO);
+		
+		logger.debug("mUpdateDocNumGroup ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 리스트갯수 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mGetDocNumItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mGetDocNumItem(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("mGetDocNumItem started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocGroupVO.setTenantID(userInfo.getTenantId());
+		apprDocGroupVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getItemCodeItem(apprDocGroupVO);
+		
+		logger.debug("mGetDocNumItem ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 분류추가 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mInsCodeMain.do")
+	public String mInsCodeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("mInsCodeMain started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (request.getParameter("companyID") != null) {
+			userInfo.setCompanyID(request.getParameter("companyID"));
+		}
+		
+		String title = "";
+		String tCheck = request.getParameter("tCheck");
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String periodNode = ezApprovalAdminService.getKeepType("", userInfo);
+		String securityNode = ezApprovalAdminService.getSecurityType("", userInfo);
+		
+		if (tCheck != null && tCheck.equals("Ins")) {
+			title = messageSource.getMessage("ezApproval.t733", userInfo.getLocale());
+		} else {
+			title = messageSource.getMessage("ezApproval.t734", userInfo.getLocale());
+		}
+		
+		int maxItemCode = ezApprovalAdminService.getMaxItemCode(userInfo);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("title", title);
+		model.addAttribute("periodNode", periodNode);
+		model.addAttribute("securityNode", securityNode);
+		model.addAttribute("maxItemCode", maxItemCode);
+		
+		logger.debug("mInsCodeMain ended");
+		
+		return "admin/ezApproval/apprMinsCodeMain";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 분류추가 추가 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mInsDocNumItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mInsDocNumItem(@CookieValue("loginCookie") String loginCookie, ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("mInsDocNumItem started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocItemVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.insertItemCodeItem(apprDocItemVO);
+		
+		logger.debug("mInsDocNumItem ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 분류수정 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mUpdateDocNumItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mUpdateDocNumItem(@CookieValue("loginCookie") String loginCookie, ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("mUpdateDocNumItem started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocItemVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.updateItemCodeItem(apprDocItemVO);
+
+		logger.debug("mUpdateDocNumItem ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 분류코드관리 분류삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/mDelDocnumItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mDelDocnumItem(@CookieValue("loginCookie") String loginCookie, ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("mDelDocnumItem started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprDocItemVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.deleteItemCodeItem(apprDocItemVO);
+
+		logger.debug("mDelDocnumItem ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 관인대장 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/manageSeal.do")
+	public String manageSeal(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("manageSeal started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("serverName", userInfo.getServerName());
+		model.addAttribute("primaryStr", userInfo.getPrimary());
+		
+		logger.debug("manageSeal ended");
+		
+		return "admin/ezApproval/apprManageSeal";
 	}
 }

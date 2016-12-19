@@ -22,9 +22,12 @@ import egovframework.ezEKP.ezApproval.dao.EzApprovalAdminDAO;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1801,7 +1804,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		for (int k = 0; k < apprCodeVOs.size(); k++) {
 			String[] colOption = apprCodeVOs.get(k).getName().split(";");
 			
-			if (colOption[1].equals("selected")) {
+			if (colOption[1].equals(selected)) {
 				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
 			} else {
 				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
@@ -1864,6 +1867,519 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		}
 		
 		logger.debug("deleteDocList ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getReceiveGroupInfo(String groupID, String mode, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getReceiveGroupInfo started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = new ArrayList<ApprCodeVO>();
+		
+		if (mode.equals("ITEM")) {
+			headerList = getListHeader("092", lang, companyID, tenantID);
+		} else {
+			headerList = getListHeader("091", lang, companyID, tenantID);
+		}
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + headerList.get(k).getColName() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("groupID", groupID);
+		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("mode", mode);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprReceiveGroupVO> apprReceiveGroupVOs = ezApprovalAdminDAO.getReceiveGroupInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprReceiveGroupVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprReceiveGroupVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = headerList.get(h).getColName().toUpperCase();
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(fieldValue)) + "</VALUE>");
+				
+				if (h == 0) {
+					if (mode.equals("GROUP") || mode.equals("JOIN")) {
+						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("MAINID").item(k).getTextContent()) + "</DATA1>");
+					} else {
+						resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("SUBID").item(k).getTextContent()) + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("MAINID").item(k).getTextContent()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DEPTID").item(k).getTextContent()) + "</DATA3>");
+						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "</DATA4>");
+					}
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getReceiveGroupInfo ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String insertReceiveGroupInfo(ApprReceiveGroupVO apprReceiveGroupVO) {
+		logger.debug("insertReceiveGroupInfo started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.insertReceiveGroupInfo(apprReceiveGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("insertReceiveGroupInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String insertReceiveGroupItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) {
+		logger.debug("insertReceiveGroupItemInfo started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.insertReceiveGroupItemInfo(apprReceiveGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("insertReceiveGroupItemInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String updateGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) {
+		logger.debug("updateGroupMainInfo started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.updateGroupMainInfo(apprReceiveGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("updateGroupMainInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String deleteGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) {
+		logger.debug("deleteGroupMainInfo started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.deleteGroupMainInfo(apprReceiveGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("deleteGroupMainInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String deleteGroupSubItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) {
+		logger.debug("deleteGroupSubItemInfo started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.deleteGroupSubItemInfo(apprReceiveGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("deleteGroupSubItemInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("getItemCodeGroup started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		
+		List<ApprDocGroupVO> apprDocGroupVOs = ezApprovalAdminDAO.getItemCodeGroup(apprDocGroupVO);
+		
+		rtnXML.append("<NODES>");
+		
+		if (apprDocGroupVOs != null) {
+			for (int k = 0; k < apprDocGroupVOs.size(); k++) {
+				if (commonUtil.getPrimaryData(apprDocGroupVO.getLang()).equals("1")) {
+					rtnXML.append("<NODE>");
+					rtnXML.append("<EXPANDED>FALSE</EXPANDED>");
+					rtnXML.append("<ISLEAF>" + getItemCodeGroupLeaf(apprDocGroupVOs.get(k).getGroupID(), apprDocGroupVO) + "</ISLEAF>");
+					rtnXML.append("<VALUE>" + commonUtil.cleanValue(apprDocGroupVOs.get(k).getGroupName()) + "</VALUE>");
+					rtnXML.append("<DATA1>" + apprDocGroupVOs.get(k).getGroupID() + "</DATA1>");
+					rtnXML.append("<DATA2>" + apprDocGroupVOs.get(k).getG_upperID() + "</DATA2>");
+					rtnXML.append("<DATA3>" + apprDocGroupVOs.get(k).getG_level() + "</DATA3>");
+					rtnXML.append("<DATA4>" + commonUtil.cleanValue(apprDocGroupVOs.get(k).getGroupName2()) + "</DATA4>");
+					rtnXML.append("</NODE>");
+				} else {
+					rtnXML.append("<NODE>");
+					rtnXML.append("<EXPANDED>FALSE</EXPANDED>");
+					rtnXML.append("<ISLEAF>" + getItemCodeGroupLeaf(apprDocGroupVOs.get(k).getGroupID(), apprDocGroupVO) + "</ISLEAF>");
+					rtnXML.append("<VALUE>" + commonUtil.cleanValue(apprDocGroupVOs.get(k).getGroupName2()) + "</VALUE>");
+					rtnXML.append("<DATA1>" + apprDocGroupVOs.get(k).getGroupID() + "</DATA1>");
+					rtnXML.append("<DATA2>" + apprDocGroupVOs.get(k).getG_upperID() + "</DATA2>");
+					rtnXML.append("<DATA3>" + apprDocGroupVOs.get(k).getG_level() + "</DATA3>");
+					rtnXML.append("<DATA4>" + commonUtil.cleanValue(apprDocGroupVOs.get(k).getGroupName()) + "</DATA4>");
+					rtnXML.append("</NODE>");
+				}
+			}
+		}
+			
+		rtnXML.append("</NODES>");
+		
+		logger.debug("getItemCodeGroup ended");
+		
+		return rtnXML.toString();
+	}
+
+	private String getItemCodeGroupLeaf(int groupID, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("getItemCodeGroupLeaf started");
+		
+		String rtnValue = "";
+		
+		apprDocGroupVO.setGroupID(groupID);
+		
+		int tempCount = ezApprovalAdminDAO.getItemCodeGroupLeaf(apprDocGroupVO);
+		
+		if (tempCount > 0) {
+			rtnValue = "FALSE";
+		} else {
+			rtnValue = "TRUE";
+		}
+		
+		logger.debug("getItemCodeGroupLeaf ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public int insertItemCodeGroup(ApprDocGroupVO apprDocGroupVO) {
+		logger.debug("insertItemCodeGroup started");
+		
+		int groupID = 0;
+		
+		try {
+			groupID = ezApprovalAdminDAO.insertItemCodeGroup(apprDocGroupVO);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			groupID = 0;
+		}
+		
+		logger.debug("insertItemCodeGroup ended");
+		
+		return groupID;
+	}
+
+	@Override
+	public String deleteItemCodeGroup(ApprDocGroupVO apprDocGroupVO) {
+		logger.debug("deleteItemCodeGroup started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.deleteItemCodeGroup(apprDocGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("deleteItemCodeGroup ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String updateItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("updateItemCodeGroup started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.updateItemCodeGroup(apprDocGroupVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+		
+		logger.debug("updateItemCodeGroup ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getItemCodeItem(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("getItemCodeItem started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" + getCode2Name("L05", "001", apprDocGroupVO.getCompanyID(), apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()) + "</NAME>");
+		resultXML.append("<WIDTH>50</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" + getCode2Name("L05", "002", apprDocGroupVO.getCompanyID(), apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()) + "</NAME>");
+		resultXML.append("<WIDTH>290</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" + getCode2Name("L05", "003", apprDocGroupVO.getCompanyID(), apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()) + "</NAME>");
+		resultXML.append("<WIDTH>90</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" + getCode2Name("L05", "004", apprDocGroupVO.getCompanyID(), apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()) + "</NAME>");
+		resultXML.append("<WIDTH>80</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" + getCode2Name("L05", "005", apprDocGroupVO.getCompanyID(), apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()) + "</NAME>");
+		resultXML.append("<WIDTH>80</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("</HEADERS>");
+		
+		List<ApprDocItemVO> apprDocItemVOs = ezApprovalAdminDAO.getItemCodeItem(apprDocGroupVO);
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < apprDocItemVOs.size(); k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprDocItemVOs.get(k).getItemCode() + "</VALUE>");
+			resultXML.append("<DATA1>" + apprDocItemVOs.get(k).getGroupID() + "</DATA1>");
+			resultXML.append("<DATA2>" + apprDocItemVOs.get(k).getItemLimit() + "</DATA2>");
+			resultXML.append("<DATA3>" + apprDocItemVOs.get(k).getItemSecurity() + "</DATA3>");
+			resultXML.append("<DATA4>" + apprDocItemVOs.get(k).getItemPublic() + "</DATA4>");
+			
+			if (commonUtil.getPrimaryData(apprDocGroupVO.getLang()).equals("1")) {
+				resultXML.append("<DATA5>" + apprDocItemVOs.get(k).getItemName2() + "</DATA5>");
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + apprDocItemVOs.get(k).getItemName() + "</VALUE>");
+				resultXML.append("</CELL>");
+			} else {
+				resultXML.append("<DATA5>" + apprDocItemVOs.get(k).getItemName() + "</DATA5>");
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + apprDocItemVOs.get(k).getItemName2() + "</VALUE>");
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + getEtcName("A52", ";" + apprDocItemVOs.get(k).getItemLimit(), apprDocGroupVO) + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + getEtcName("A51", ";" + apprDocItemVOs.get(k).getItemSecurity(), apprDocGroupVO) + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprDocItemVOs.get(k).getItemPublic() + "</VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getItemCodeItem ended");
+		
+		return resultXML.toString();
+	}
+
+	private String getEtcName(String code1, String code2, ApprDocGroupVO apprDocGroupVO) throws Exception {
+		logger.debug("getEtcName started");
+		
+		String etcName = "";
+		ApprCodeVO apprCodeVO = new ApprCodeVO();
+		
+		apprCodeVO.setCode1(code1);
+		apprCodeVO.setCode2(code2);
+		apprCodeVO.setLang(apprDocGroupVO.getLang());
+		apprCodeVO.setTenantID(apprDocGroupVO.getTenantID());
+		apprCodeVO.setCompanyID(apprDocGroupVO.getCompanyID());
+		
+		String nameResult = ezApprovalAdminDAO.getEtcName(apprCodeVO);
+		
+		String[] tempResult = nameResult.split(";");
+		
+		if (tempResult.length >= 2) {
+			etcName = tempResult[1];
+		} else {
+			etcName = "";
+		}
+		
+		logger.debug("getEtcName ended");
+		
+		return etcName;
+	}
+
+	@Override
+	public String getSecurityType(String selected, LoginVO userInfo) throws Exception {
+		logger.debug("getSecurityType started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code1", "A51");
+		map.put("lang", userInfo.getLang());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprCodeVO> apprCodeVOs = ezApprovalAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < apprCodeVOs.size(); k++) {
+			String[] colOption = apprCodeVOs.get(k).getName().split(";");
+			
+			if (colOption[1].equals(selected)) {
+				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getSecurityType ended");
+		
+		return rtnXML.toString();
+	}
+
+	@Override
+	public int getMaxItemCode(LoginVO userInfo) throws Exception {
+		logger.debug("getMaxItemCode started");
+		
+		int maxItemCode = ezApprovalAdminDAO.getMaxItemCode(userInfo);
+		
+		logger.debug("getMaxItemCode ended");
+		
+		return maxItemCode;
+	}
+
+	@Override
+	public String insertItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("insertItemCodeItem started");
+
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.insertItemCodeItem(apprDocItemVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+
+		logger.debug("insertItemCodeItem ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String updateItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("updateItemCodeItem started");
+		
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.updateItemCodeItem(apprDocItemVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+
+		logger.debug("updateItemCodeItem ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		logger.debug("deleteItemCodeItem started");
+
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.deleteItemCodeItem(apprDocItemVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+
+		logger.debug("deleteItemCodeItem ended");
 		
 		return rtnValue;
 	}

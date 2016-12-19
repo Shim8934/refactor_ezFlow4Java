@@ -6,7 +6,10 @@ import java.util.Locale;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalAdminService {
@@ -68,5 +71,37 @@ public interface EzApprovalAdminService {
 	public String getKeepType(String selected, LoginVO userInfo) throws Exception;
 
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
+
+	public String getReceiveGroupInfo(String groupID, String mode, String companyID, String lang, int tenantID) throws Exception;
+
+	public String insertReceiveGroupInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception;
+
+	public String insertReceiveGroupItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception;
+
+	public String updateGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception;
+
+	public String deleteGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception;
+
+	public String deleteGroupSubItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception;
+
+	public String getItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception;
+
+	public int insertItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception;
+
+	public String deleteItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception;
+
+	public String updateItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception;
+
+	public String getItemCodeItem(ApprDocGroupVO apprDocGroupVO) throws Exception;
+
+	public String getSecurityType(String string, LoginVO userInfo) throws Exception;
+
+	public int getMaxItemCode(LoginVO userInfo) throws Exception;
+
+	public String insertItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
+
+	public String updateItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
+
+	public String deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
 
 }

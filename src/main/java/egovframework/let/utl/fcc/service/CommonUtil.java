@@ -429,33 +429,33 @@ public class CommonUtil {
 	}
 	
 	public String convertLangCode(String lang){   
-		if (lang != "2"){
+		if (lang != "2") {
             return "1";
-        }else{
+        } else {
             return "2";
         }        
     }
 	
 	public String getMultiData(String lang){
-		if(!lang.equals(config.getProperty("config.primary"))){
+		if (!lang.equals(config.getProperty("config.primary"))) {
 			return "2";
-		}else{
+		} else {
 			return "";
 		}
 	}
 	
 	public String getPrimaryData(String lang){
-		if(lang.equals(config.getProperty("config.primary"))){
+		if (lang.equals(config.getProperty("config.primary"))) {
 			return "1";
-		}else{
+		} else {
 			return "2";
 		}
 	}
 	
 	public String getLangData(String lang){
-		if(lang.equals("1")){
+		if (lang.equals("1")) {
 			return "";
-		}else{
+		} else {
 			return lang;
 		}
 	}	
@@ -463,7 +463,7 @@ public class CommonUtil {
 	public String cleanValue(String pOrgString) {
 		String value = ""; 
 				
-		if(pOrgString != null){
+		if (pOrgString != null) {
 			value = pOrgString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	        value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 	        value = value.replaceAll("'", "&#39;");

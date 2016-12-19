@@ -7,9 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -253,6 +256,75 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalAdminDAO.deleteDocList", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ApprReceiveGroupVO> getReceiveGroupInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprReceiveGroupVO>) list("EzApprovalAdminDAO.getReceiveGroupInfo", map);
+	}
 
+	public void insertReceiveGroupInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertReceiveGroupInfo", apprReceiveGroupVO);
+	}
 
+	public void insertReceiveGroupItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertReceiveGroupItemInfo", apprReceiveGroupVO);
+	}
+
+	public void updateGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		update("EzApprovalAdminDAO.updateGroupMainInfo", apprReceiveGroupVO);
+	}
+
+	public void deleteGroupMainInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteGroupMainInfo", apprReceiveGroupVO);
+	}
+
+	public void deleteGroupSubItemInfo(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteGroupSubItemInfo", apprReceiveGroupVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprDocGroupVO> getItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		return (List<ApprDocGroupVO>) list("EzApprovalAdminDAO.getItemCodeGroup", apprDocGroupVO);
+	}
+
+	public int getItemCodeGroupLeaf(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		return (int) select("EzApprovalAdminDAO.getItemCodeGroupLeaf", apprDocGroupVO);
+	}
+
+	public int insertItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		return (int) insert("EzApprovalAdminDAO.insertItemCodeGroup", apprDocGroupVO);
+	}
+
+	public void deleteItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteItemCodeGroup", apprDocGroupVO);
+	}
+
+	public void updateItemCodeGroup(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		update("EzApprovalAdminDAO.updateItemCodeGroup", apprDocGroupVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprDocItemVO> getItemCodeItem(ApprDocGroupVO apprDocGroupVO) throws Exception {
+		return (List<ApprDocItemVO>) list("EzApprovalAdminDAO.getItemCodeItem", apprDocGroupVO);
+	}
+
+	public String getEtcName(ApprCodeVO apprCodeVO) throws Exception {
+		return (String) select("EzApprovalAdminDAO.getEtcName", apprCodeVO);
+	}
+
+	public int getMaxItemCode(LoginVO userInfo) throws Exception {
+		return (int) select("EzApprovalAdminDAO.getMaxItemCode", userInfo);
+	}
+
+	public void insertItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertItemCodeItem", apprDocItemVO);
+	}
+
+	public void updateItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		update("EzApprovalAdminDAO.updateItemCodeItem", apprDocItemVO);
+	}
+
+	public void deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteItemCodeItem", apprDocItemVO);
+	}
+	
 }
