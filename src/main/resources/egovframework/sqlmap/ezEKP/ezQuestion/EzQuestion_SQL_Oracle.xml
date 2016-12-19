@@ -786,17 +786,219 @@
 		
 	</select>
 	
-	<procedure id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
+	<!-- <procedure id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
 		<![CDATA[
 			{CALL EZQUESTION.GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
+	<select id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
+		<isEqual property="v_Que_num" compareValue="0">
+			<![CDATA[
+				SELECT
+					NVL(r.QUESTION_NO, NULL) question_no ,
+                	r.ANSWER_OBJECTIVITY ,
+                	/* 수정(2005.06.28) : 직급이 없는 경우 ' ' 반환하여 빈공백과 구별되도록 수정 */ 
+                	CASE 
+                		r.RESPONSEUSER_POSITION
+					WHEN
+						u'' THEN u' '
+                	ELSE r.RESPONSEUSER_POSITION
+                   	END RESPONSEUSER_POSITION  ,
+                	MAX(Q.QUESCONTENT)  quescontent  ,
+                	MAX(TBLPOLL_ANSWER.ANSWERCONTENT)  answer  ,
+                	COUNT(*)  Q_count  
+           		FROM
+           			EZQUESTION.TBLPOLL_RESPONSE r
+				JOIN
+					EZQUESTION.TBLPOLL_QUESTION Q
+				ON
+					r.QUESTION_NO = Q.QUESTION_NO
+				AND
+					r.ITEM_NO = Q.ITEM_NO
+				AND
+					r.TENANT_ID = Q.TENANT_ID	
+				JOIN
+					EZQUESTION.TBLPOLL_ANSWER
+				ON
+					EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+				AND
+					r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+				AND
+					EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+				AND
+					EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+          		WHERE
+          			( r.ITEM_NO = #v_item_num# )
+				AND
+					( EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
+				AND
+					r.TENANT_ID = #tenantID#
+				AND
+					EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = #tenantID#		
+           		GROUP BY
+           			ROLLUP( r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_POSITION )
+           		ORDER BY
+           			r.QUESTION_NO DESC,
+                    r.ANSWER_OBJECTIVITY DESC,
+                    r.RESPONSEUSER_POSITION DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_Que_num" compareValue="0">
+			<![CDATA[
+				SELECT
+					NVL(r.question_no,NULL) question_no ,
+                	r.ANSWER_OBJECTIVITY ,
+                	CASE
+                		r.RESPONSEUSER_POSITION
+                    WHEN
+                    	u'' THEN u' '
+                	ELSE
+                		r.RESPONSEUSER_POSITION
+                   	END
+                   		RESPONSEUSER_POSITION  ,
+                	MAX(Q.QUESCONTENT)  quescontent  ,
+                	MAX(TBLPOLL_ANSWER.ANSWERCONTENT)  answer  ,
+                	COUNT(*)  Q_count  
+           		FROM
+           			EZQUESTION.TBLPOLL_RESPONSE r
+               	JOIN
+               		EZQUESTION.TBLPOLL_QUESTION Q
+               	ON
+               		r.QUESTION_NO = Q.QUESTION_NO
+               	AND
+               		r.ITEM_NO = Q.ITEM_NO
+               	AND
+               		r.TENANT_ID = Q.TENANT_ID	
+               	JOIN
+               		EZQUESTION.TBLPOLL_ANSWER
+               	ON
+               		EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+               	AND
+               		r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+          		WHERE
+          			( r.ITEM_NO = #v_item_num# )
+                AND
+                	( EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
+                AND
+                	( Q.QUESTION_NO = #v_Que_num# )
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = #tenantID#
+                AND
+                	Q.TENANT_ID = #tenantID#		
+           		GROUP BY
+           			ROLLUP( r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_POSITION )
+           		ORDER BY
+           			r.QUESTION_NO DESC,
+                    r.ANSWER_OBJECTIVITY DESC,
+                    r.RESPONSEUSER_POSITION DESC
+			]]>
+		</isNotEqual>
+		
+	</select>
+	
+	<!-- <procedure id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
 		<![CDATA[
 			{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
+		<isEqual property="v_Que_num" compareValue="0">
+			<![CDATA[
+				SELECT
+					NVL(r.question_no, NULL) as question_no,
+                	NVL(r.answer_objectivity, NULL) as answer_objectivity,
+                	/* 수정(2005.06.28) : 직급이 없는 경우 ' ' 반환하여 빈공백과 구별되도록 수정 */
+                	/* CASE r.responseUser_jikGub2 WHEN N'' THEN N'' ELSE r.responseUser_jikGub2 END AS responseUser_jikGub, */
+                	r.RESPONSEUSER_JIKGUB2 as responseUser_JikGub,
+                	MAX(Q.QUESCONTENT) as quescontent,
+                	MAX(EZQUESTION.TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
+                	COUNT(*) AS Q_count  
+           		FROM
+           			EZQUESTION.TBLPOLL_RESPONSE r
+                INNER JOIN
+                	EZQUESTION.TBLPOLL_QUESTION Q
+                ON
+                	r.QUESTION_NO = Q.QUESTION_NO
+                AND
+                	r.ITEM_NO = Q.ITEM_NO
+                AND
+                	r.TENANT_ID = Q.TENANT_ID	
+                INNER JOIN
+                	EZQUESTION.TBLPOLL_ANSWER
+                ON
+                	EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+                AND
+                	r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+          		WHERE
+          			(r.ITEM_NO = #v_item_num#)
+               	AND
+               		(EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
+          		GROUP BY
+          			ROLLUP(r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
+          		ORDER BY
+          			r.QUESTION_NO DESC,
+                  	r.ANSWER_OBJECTIVITY DESC,
+                  	r.RESPONSEUSER_JIKGUB2 DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_Que_num" compareValue="0">
+			<![CDATA[
+				SELECT
+					NVL(r.QUESTION_NO, NULL) as question_no,
+                	NVL(r.ANSWER_OBJECTIVITY, NULL) as answer_objectivity,
+                	/* 수정(2005.06.28) : 직급이 없는 경우 ' ' 반환하여 빈공백과 구별되도록 수정 */
+                 	/* CASE r.responseUser_jikGub2 WHEN N'' THEN N' ' ELSE r.responseUser_jikGub2 END AS responseUser_jikGub, */
+                	r.RESPONSEUSER_JIKGUB2 AS responseUser_jikGub,
+                	MAX(Q.QUESCONTENT) as quescontent,
+                	MAX(EZQUESTION.TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
+                	COUNT(*) AS Q_count  
+           		FROM
+           			EZQUESTION.TBLPOLL_RESPONSE r
+               	INNER JOIN
+               		EZQUESTION.TBLPOLL_QUESTION Q
+               	ON
+               		r.QUESTION_NO = Q.QUESTION_NO
+                AND
+                	r.ITEM_NO = Q.ITEM_NO
+                AND
+                	r.TENANT_ID = Q.TENANT_ID	
+                INNER JOIN
+                	EZQUESTION.TBLPOLL_ANSWER
+                ON
+                	EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+                AND
+                	r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                AND
+                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+          		WHERE
+          			(r.ITEM_NO = #v_item_num#)
+                AND
+                	(EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
+                AND
+                	(Q.QUESTION_NO = #v_Que_num#)
+           		GROUP BY
+           			ROLLUP (r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
+           		ORDER BY
+           			r.QUESTION_NO DESC,
+                    r.ANSWER_OBJECTIVITY DESC,
+                    r.RESPONSEUSER_JIKGUB2 DESC
+			]]>
+		</isNotEqual>
+	</select>
 	
 	<!-- <procedure id="EzQuestionDAO.getResponsePersonForResultTotalSave" parameterClass="Integer" resultMap="qstResponseVO">
 		<![CDATA[
@@ -983,11 +1185,71 @@
 <!-- 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 		
-	<procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
+	 <!-- <procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> --> 
+	
+	 <select id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
+		<isEqual property="v_pResYN" compareValue="Y">
+			<![CDATA[
+				SELECT
+					COUNT(*) AS CNT 
+				FROM ( SELECT
+								RESPONSEUSER_ID AS USER_ID, 
+                        		MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
+                        		MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
+                        		MAX(RESPONSEUSER_EMAIL) AS USER_EMAIL,
+                        		MAX(RESPONSEUSER_POSITION$v_pLang$) AS USER_POSITION, 
+                        		MAX(RESPONSEUSER_DEPT_NAME$v_pLang$) AS USER_DEPT_NAME,
+                        		MAX(RESPONSEUSER_JIKGUB$v_pLang$) AS USER_JIKGUB,
+                        		MAX(RESPONSEUSER_GENDER) AS USER_GENDER,
+                        		MAX(RESPONSEUSER_AGE) AS USER_AGE,
+                        		MAX(RESPONSE_DATE) AS RESPONSE_DATE 
+                        	FROM
+                        		EZQUESTION.TBLPOLL_RESPONSE  
+                        	WHERE
+                        		BRD_ID= #v_pstrBrdID#
+                        	AND
+                        		ITEM_NO=#v_pItemNo#
+                        	AND
+                        		TENANT_ID = #tenantID#	
+                        	GROUP BY
+                        		RESPONSEUSER_ID
+                      ) P
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_pResYN" compareValue="Y">
+			<![CDATA[
+				SELECT
+					COUNT(*) AS CNT 
+				FROM ( SELECT
+								USER_ID	AS USER_ID,
+                      			USER_NM$v_pLang$ AS USER_NAME,
+                      			USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
+                      			USER_DEPT_ID AS USER_DEPT_ID,	
+                      			USER_EMAIL AS USER_EMAIL,
+                      			USER_POS$v_pLang$ AS USER_POSITION,
+                      			USER_JIKGUB$v_pLang$ AS USER_JIKGUB,
+                      			USER_GENDER AS USER_GENDER,
+                      			USER_AGE AS USER_AGE,
+                      			RESPONSE_DATE AS RESPONSE_DATE
+                    		FROM
+                    			EZQUESTION.TBLPOLL_RESPONSEPERSON 
+                    		WHERE
+                    			BRD_ID = #v_pstrBrdID#
+                    		AND
+                    			ITEM_NO =  #v_pItemNo#
+                    		AND
+                    			RESPONSE_DATE IS NULL
+                    		AND
+                    			TENANT_ID = #tenantID#	
+                    	)P
+			]]>
+		</isNotEqual>
+	</select> 
 	
 	<!-- <procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -2222,3 +2484,4 @@
 		]]>
 	</update>
 </sqlMap>
+

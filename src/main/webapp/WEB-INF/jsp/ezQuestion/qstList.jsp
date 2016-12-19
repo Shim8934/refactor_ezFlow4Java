@@ -33,7 +33,7 @@
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
-		    var receve = "<c:out value='${receve}'/>";
+		    var receve = "${receve}";
 		    
 			document.onselectstart = function(){ return false; };
 			window.onload = function(){
