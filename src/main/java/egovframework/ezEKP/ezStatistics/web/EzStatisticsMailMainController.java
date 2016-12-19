@@ -93,6 +93,12 @@ public class EzStatisticsMailMainController {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailMain(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+        //관리자 권한체크
+        boolean auth = commonUtil.checkAdmin(loginCookie);
+        if (!auth) {
+            return "cmm/error/adminDenied";
+        }
+        	    
 		logger.debug("getMailMain started");		
 		logger.debug("bodyData=" + bodyData);
 		
