@@ -483,7 +483,7 @@
         		EZCOMMUNITY.C_CLUB
 			CROSS JOIN
 				(	SELECT
-						COUNT(*) ITEMCNT
+						NVL(COUNT(*), 0) ITEMCNT
 					FROM
 						EZCOMMUNITY.TBL_COMM_BOARDINFO 
 					JOIN
@@ -714,7 +714,7 @@
 					EZCOMMUNITY.TBL_COMM_ITEM A 
 				LEFT OUTER JOIN
 					(SELECT 
-						COUNT(USERID) AS TOTALCOUNT,
+						NVL(COUNT(USERID), 0) AS TOTALCOUNT,
 						ITEMID 
 					FROM 
 						EZCOMMUNITY.TBL_COMM_ITEM_READ  
@@ -771,7 +771,7 @@
 					EZCOMMUNITY.TBL_COMM_ITEM A 
 				LEFT OUTER JOIN
 					(SELECT
-						COUNT(USERID) AS TOTALCOUNT,
+						NVL(COUNT(USERID), 0) AS TOTALCOUNT,
 						ITEMID,
 						TENANT_ID
 					FROM
@@ -815,12 +815,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATA(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pStartDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATA(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pEndDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+				ENDDATE > #v_pEndDate#
 		</isNotEqual>
 		
 		<![CDATA[
@@ -875,7 +875,7 @@
 				A.TENANT_ID = B.TENANT_ID
             LEFT OUTER JOIN
             	(SELECT
-            		COUNT(USERID) AS TOTALCOUNT,
+            		NVL(COUNT(USERID), 0) AS TOTALCOUNT,
             		ITEMID,
             		TENANT_ID
 				FROM
@@ -915,12 +915,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATA(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pStartDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pStartDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATA(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pEndDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+				TO_DATE(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pEndDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 		</isNotEqual>
 		
 		<![CDATA[
@@ -1529,7 +1529,7 @@
 	<select id="EzCommunityDAO.adminOuterListGet2"			parameterClass="Map"		resultMap="communityCOutApplicationVO">
 		<![CDATA[
 			SELECT
-				COUNT(C_CLUBNO)
+				NVL(COUNT(C_CLUBNO), 0)
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
@@ -1710,7 +1710,7 @@
 				SELECT
 					C_NAME,
 					C_CATE_A CATE,
-					COUNT(C_CODE) CNT
+					NVL(COUNT(C_CODE), 0) CNT
 				FROM
 					EZCOMMUNITY.C_CLUB
 				JOIN
@@ -1738,7 +1738,7 @@
 				SELECT
 					C_NAME,
 					C_CATE_B CATE,
-					COUNT(C_CODE) CNT
+					NVL(COUNT(C_CODE), 0) CNT
 				FROM
 					EZCOMMUNITY.C_CLUB
 				JOIN
@@ -1988,7 +1988,7 @@
 					EZCOMMUNITY.TBL_COMM_ITEM A
 				LEFT OUTER JOIN
 					(SELECT
-						COUNT(USERID) AS TOTALCOUNT,
+						NVL(COUNT(USERID), 0) AS TOTALCOUNT,
 						ITEMID,
 						TENANT_ID
 					FROM
@@ -2458,7 +2458,7 @@
                 	A.TENANT_ID = B.TENANT_ID
                 CROSS JOIN
                 	(SELECT
-						COUNT(*) ITEMCNT  
+						NVL(COUNT(*), 0) ITEMCNT  
 					FROM
 						EZCOMMUNITY.TBL_COMM_BOARDINFO A
 					JOIN
@@ -2683,10 +2683,10 @@
 <!-- 	<procedure id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_PBOARDID#, #v_PUSERID#, #v_PDEPTID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.brdCheckIfBoardGroupAdmin"	parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(AccessID) TotalCount  
+				NVL(COUNT(AccessID), 0) TotalCount  
 			FROM
 				EZCOMMUNITY.TBL_COMM_BOARDMANAGE
 			WHERE
@@ -2976,17 +2976,68 @@
 		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.brdNewItemCount"				parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.brdNewItemCount"				parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_BRDNEWITEMCOUNT(#v_pUserID#, #v_pNow#, #v_pFromNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.brdNewItemCount"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(A.ItemID), 0)
+			FROM
+				EZCOMMUNITY.TBL_COMM_ITEM A
+			JOIN
+				(SELECT
+					BoardID
+				FROM
+					EZCOMMUNITY.TBL_COMM_MYBOARDS
+				WHERE
+					RTRIM(UserID) = #v_pUserID#
+				AND
+					TENANT_ID = #tenantID#
+				) B
+			ON
+				A.BoardID = B.BoardID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				EZCOMMUNITY.TBL_COMM_BOARDINFO P
+			ON
+				P.BoardID = B.BoardID
+			AND
+				P.Gubun <> 3
+			AND
+				P.TENANT_ID = B.TENANT_ID
+			WHERE
+				(NOT EXISTS (SELECT
+								UserID
+							FROM
+								EZCOMMUNITY.TBL_COMM_ITEM_READ 
+							WHERE
+								RTRIM(UserID) = #v_pUserID#
+							AND
+								ItemID = A.ItemID
+							AND
+								ReadDate > utils.dateadd('DAY', -5, TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'))
+							AND
+								TENANT_ID = #tenantID#
+							)
+				)
+			AND
+				A.StartDate < #v_pNow#
+			AND
+				A.StartDate > #v_pFromNow#
+			AND
+				A.EndDate > #v_pNow#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BRDTOTALITEMCOUNT(#v_pBoardID#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.getBoardTotalItemCount"		parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(ItemID) TotalCount
+				NVL(COUNT(ItemID), 0) TotalCount
 			FROM
 				EZCOMMUNITY.TBL_COMM_ITEM
 			WHERE
@@ -3003,10 +3054,10 @@
 <!-- 	<procedure id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.searchItemCount"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(A.ITEMID) AS TOTALCOUNT
+				NVL(COUNT(A.ITEMID), 0)
 			FROM
 				EZCOMMUNITY.TBL_COMM_ITEM A
 			INNER JOIN
@@ -3016,7 +3067,7 @@
 			AND
 				A.TENANT_ID = P.TENANT_ID
 			WHERE
-				A.BOARDID = #v_PBOARDID#
+				A.BOARDID = #v_pBoardID#
 			AND
 				ENDDATE > #v_pNow#
 			AND
@@ -3042,22 +3093,22 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATA(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pStartDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATA(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATA(#v_pEndDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+				EndDate > #v_pEndDate#
 		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.adminSearchItemCount"			parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMINSEARCHITEMCOUNT(#v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminSearchItemCount"			parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.adminSearchItemCount"			parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(A.ITEMID) AS TOTALCOUNT
+				NVL(COUNT(A.ITEMID), 0) AS TOTALCOUNT
 			FROM
 				EZCOMMUNITY.TBL_COMM_ITEM A 
 			WHERE
@@ -3159,14 +3210,54 @@
 		]]>
 	</delete>
 	
-	<procedure id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET1(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET1(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.guestOneGet1"				parameterClass="Map"		resultClass="Integer">
+		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(C_CLUBNO), 0)  
+				FROM
+					EZCOMMUNITY.C_CLUBGUEST
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CODE#
+				AND
+					CONTENT LIKE '%' || #v_KEYWORD# || '%'
+				AND
+					TENANT_ID = #tenantID#
+			]]>			
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
+			<isEqual property="v_S_RADIO" compareValue="WRITER">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(C_CLUBNO), 0)
+					FROM
+						EZCOMMUNITY.C_CLUBGUEST
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						USERNAME$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+				]]>
+			</isEqual>
+			<isNotEqual property="v_S_RADIO" compareValue="WRITER">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(C_CLUBNO), 0)
+					FROM
+						EZCOMMUNITY.C_CLUBGUEST
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.pollMainGet1"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_POLL_MAIN_GET1(#v_USERINFO_USERID#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<procedure id="EzCommunityDAO.pollMainGet1"					parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.pollMainGet1"					parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
 				PERMIT
@@ -3179,7 +3270,7 @@
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
 	
 <!-- 	<procedure id="EzcommunityDAO.pollAddOkGoGet2"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_POLL_ADD_OK_GO_GET2(#v_CODE#, #v_MAXNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3233,9 +3324,62 @@
 		]]>
 	</select>
 	
-	<procedure id="EzCommunityDAO.commViewMemberGet2"			parameterClass="Map"		resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_COMM_VIEW_MEMBER_GET2(#v_CODE#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commViewMemberGet2"			parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_VIEW_MEMBER_GET2(#v_CODE#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.commViewMemberGet2"			parameterClass="Map"		resultClass="Integer">
+		<isEqual property="v_S_RADIO" compareValue="ID">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(C_CLUBNO), 0)  
+				FROM
+					EZCOMMUNITY.C_CLUBUSER 
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CODE#
+				AND
+					RTRIM(C_ID) LIKE '%'|| #v_KEYWORD# ||'%'
+				AND
+					PERMIT IN (1,4)
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_S_RADIO" compareValue="ID">
+			<isEqual property="v_S_RADIO" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(C_CLUBNO), 0)
+					FROM
+						EZCOMUNITY.C_CLUBUSER,
+						EZCOMMUNITY.C_MEMBERINFO
+					WHERE
+						RTRIM(C_CLUBUSER.C_CLUBNO) = #v_CODE#
+					AND
+						RTRIM(C_MEMBERINFO.USERID) = RTRIM(C_CLUBUSER.C_ID)
+					AND 
+						C_MEMBERINFO.USERNAME$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'  
+					AND
+						PERMIT IN (1,4)
+					AND
+						C_CLUBUSER.TENANT_ID = #tenantID#
+				]]>
+			</isEqual>
+			<isNotEqual  property="v_S_RADIO" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(C_CLUBNO), 0)  
+					FROM
+						EZCOMMUNITY.C_CLUBUSER
+					WHERE
+						RTRIM(C_CLUBNO) = #v_CODE#
+					AND
+						PERMIT IN (1,4)
+					AND
+						TENANT_ID = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzCommunityDAO.ezCommunityBaseGet3"			parameterClass="Map"		resultClass="String">
 		{CALL EZCOMMUNITY.EZSP_EZCOMMUNITYBASE_GET3(#v_C_CODE#, #v_C_CAT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -3421,7 +3565,7 @@
 	<select id="EzCommunityDAO.pollMainGet4"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(QUESTIONID)
+				NVL(COUNT(QUESTIONID), 0)
 			FROM
 				EZCOMMUNITY.C_POLLRESPONSE
 			WHERE
@@ -3554,10 +3698,10 @@
 <!-- 	<procedure id="EzCommunityDAO.categoryListItemCntGet"		parameterClass="String"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_CATEGORYLISTITEMCNT_GET(#v_C_CLUBNO#, #tenantID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.categoryListItemCntGet"			parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.categoryListItemCntGet"			parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(*) CNT  
+				NVL(COUNT(*), 0) CNT  
 			FROM
 				EZCOMMUNITY.TBL_Comm_BoardInfo
 	        JOIN
@@ -3590,10 +3734,10 @@
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>	 -->
-	<select id="EzCommunityDAO.todayCopGet1"				parameterClass="Integer"		resultClass="String">
+	<select id="EzCommunityDAO.todayCopGet1"				parameterClass="Integer"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(*) CNT
+				NVL(COUNT(*), 0) CNT
 			FROM
 				EZCOMMUNITY.C_Club
 			WHERE
@@ -3613,7 +3757,7 @@
 	<select id="EzCommunityDAO.checkIfLeafBoardGet"			parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(BoardID)
+				NVL(COUNT(BoardID), 0)
 			FROM
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			WHERE
@@ -3630,7 +3774,7 @@
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<![CDATA[
 				SELECT
-					COUNT(TITLE) 
+					NVL(COUNT(TITLE), 0) 
 				FROM
 					EZCOMMUNITY.$v_BNAME$ 
 				WHERE
@@ -3644,7 +3788,7 @@
 			<isEqual property="v_S_RADIO" compareValue="TITLE">
 				<![CDATA[
 					SELECT
-						COUNT(TITLE) 
+						NVL(COUNT(TITLE), 0)
 					FROM
 						EZCOMMUNITY.$v_BNAME$
 					WHERE
@@ -3658,7 +3802,7 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							COUNT(USERNAME$v_USERINFO_LANG$) 
+							NVL(COUNT(USERNAME$v_USERINFO_LANG$), 0) 
 						FROM
 							EZCOMMUNITY.$v_BNAME$ 
 						WHERE
@@ -3671,7 +3815,7 @@
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							COUNT(*)
+							NVL(COUNT(*), 0)
 						FROM
 							EZCOMMUNITY.$v_BNAME$
 						WHERE
@@ -3710,7 +3854,7 @@
 	<select id="EzCommunityDAO.boardPropertyGet"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(BOARDID) TOTALCOUNT
+				NVL(COUNT(BOARDID), 0) TOTALCOUNT
 			FROM
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			WHERE
@@ -3981,7 +4125,7 @@
     				)
      			VALUES
      				(	#v_CODE#,
-     					#nowDateTime#,
+     					#v_pNow#,
      					#v_CLUBNAME#,
      					#v_CLUBNAME2#,
      					#v_C_CATE_A#,
@@ -4089,7 +4233,7 @@
      		VALUES
      			(	#v_CODE#,
      				#v_USERINFO_USERID#,
-     				#nowDateTime#,
+     				#v_pNow#,
      				#v_OPENEMAIL#,
      				#v_OPENHP#,
      				#v_OPENCOMP#,
@@ -4164,7 +4308,7 @@
 			#v_pUserCompanyName2#,
 			#v_pUserTitle#,
 			#v_pUserTitle2#,
-			SYSDATE,
+			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
 			#tenantID#)
 		]]>
 	</insert>
@@ -4188,7 +4332,7 @@
 	<select id="EzCommunityDAO.brdNewItemSelect1" 					parameterClass="Integer"	resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(ItemID)
+				NVL(COUNT(ItemID), 0)
 			FROM
 				EZCOMMUNITY.TBL_COMM_ITEM
 			WHERE
@@ -4296,9 +4440,27 @@
 	<insert id="EzCommunityDAO.saveOneLineReply"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_ONELINEREPLY
-				(ITEMID, REPLYID, BOARDID, USERID, USERNAME, USERNAME2, WRITEDATE, CONTENT, PASSWORD, TENANT_ID)
+				(ITEMID,
+				REPLYID,
+				BOARDID,
+				USERID,
+				USERNAME,
+				USERNAME2,
+				WRITEDATE,
+				CONTENT,
+				PASSWORD,
+				TENANT_ID)
 			VALUES
-				(#v_PITEMID#, #v_PREPLYID#, #v_PBOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, SYSDATE, #v_PCONTENT#, #v_PPASSWORD#, #tenantID#)
+				(#v_PITEMID#,
+				#v_PREPLYID#,
+				#v_PBOARDID#,
+				#v_USERID#,
+				#v_USERNAME#,
+				#v_USERNAME2#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				#v_PCONTENT#,
+				#v_PPASSWORD#,
+				#tenantID#)
 		]]>
 	</insert>
 	
@@ -4332,7 +4494,7 @@
 			#v_USERINFO_COMPANYID#,
 			#v_MEMO#,
 			0,
-			SYSDATE,
+			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
 			#v_CODE#,
 			#tenantID#)
 	</insert>
@@ -4393,7 +4555,7 @@
 				#v_MAXNO#,
 				#v_SUBJECT#,
 				1,
-				SYSDATE,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
 				TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
 				TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'),
 				#v_USERINFO_USERID#,
@@ -4543,9 +4705,36 @@
 	</update>
 
 	
-	<procedure id="EzCommunityDAO.pollEditOkUpdate"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_OK_UPDATE(#v_SUBJECT#, #v_POLLSTARTDATE#, #v_POLLENDDATE#, #v_MANAGERID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.pollEditOkUpdate"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_POLL_EDIT_OK_UPDATE(#v_SUBJECT#, #v_POLLSTARTDATE#, #v_POLLENDDATE#, #v_MANAGERID#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.pollEditOkUpdateManager"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_POLLMANAGER
+			SET
+				POLLSUBJECT = #v_SUBJECT#,
+				POLLSTARTDATE = TO_DATE(#v_POLLSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				POLLENDDATE = TO_DATE(#v_POLLENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				MANAGERID = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzCommunityDAO.pollEditOkUpdateQuestion"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_POLLQUESTION
+			SET
+				QUESTIONCONTENT = #v_SUBJECT#
+			WHERE
+				POLLMANAGERID = #v_MANAGERID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 	
 	<procedure id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_DATETIME_NOW#, #v_REASON#)}
@@ -4875,7 +5064,7 @@
 	<select id="EzCommunityDAO.pollResGetAllCount"				parameterClass="Integer"	resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(*)
+				NVL(COUNT(*), 0)
         	FROM 
         		EZCOMMUNITY.C_POLLRESPONSE
        		WHERE 
@@ -4894,6 +5083,8 @@
        			RTRIM(C_CLUBNO) = #CODE#
        		AND
        			RTRIM(C_ID) = #ID#
+       		AND
+       			TENANT_ID = #tenantID#
 		]]>
 	</update>
 	

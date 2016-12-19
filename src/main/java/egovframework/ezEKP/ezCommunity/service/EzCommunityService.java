@@ -169,9 +169,9 @@ public interface EzCommunityService {
 
 	public String getCategory(String strSelCateA, String strSelCateB, String strSelCateC, LoginVO userInfo) throws Exception;
 	
-	public String searchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String strLang, int tenantID) throws Exception;
+	public String searchItemXML(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow) throws Exception;
 	
-	public String searchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime, int tenantID) throws Exception;
+	public int searchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 	
 	public String checkIfHasReply(String itemList) throws Exception;
 
@@ -189,7 +189,7 @@ public interface EzCommunityService {
 
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception;
 
-	public String guestOneGet1(String sRadio, String keyword, String code, String lang) throws Exception;
+	public Integer guestOneGet1(String sRadio, String keyword, String code, String lang, int tenantID) throws Exception;
 	
 	public String pollMainGet1(String id, String code, int tenantID) throws Exception;
 	
@@ -197,7 +197,7 @@ public interface EzCommunityService {
 	
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
-	public String commViewMemberGet2(String code, String lang, String keyword, String sRadio) throws Exception;
+	public int commViewMemberGet2(String code, String lang, String keyword, String sRadio, int tenantID) throws Exception;
 
 	public String adminMemberListGet2(String code) throws Exception;
 	
@@ -217,9 +217,9 @@ public interface EzCommunityService {
 
 	public String brdDeleteBoard(String boardID) throws Exception;
 
-	public String adminSearchItemCount(String id, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime, int tenantID) throws Exception;
+	public int adminSearchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 
-	public String adminSearchItemXML(String id, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow, String lang, int tenantID) throws Exception;
+	public String adminSearchItemXML(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow) throws Exception;
 	
 	public String saveBoardProperty(String id, String xmlData) throws Exception;
 	
@@ -243,25 +243,25 @@ public interface EzCommunityService {
 
 	public String adminMemPermit(LoginVO userInfo, String code) throws Exception;
 	
-	public String todayCopGet1(int tenantID) throws Exception;
+	public int todayCopGet1(int tenantID) throws Exception;
 	
 	public String todayCopGet3(String c_Cate, String type) throws Exception;
 
-	public String categoryListItemCntGet(String c_ClubNo, int tenantID) throws Exception;
+	public int categoryListItemCntGet(String c_ClubNo, int tenantID) throws Exception;
 	
-	public String getNewItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, int tenantID) throws Exception;
+	public String getNewItemListXML(LoginVO userInfo, int pStartRow, int pEndRow, String pSortBy) throws Exception;
 	
-	public String getNewItemListCount(String id) throws Exception;
+	public int getNewItemListCount(String id, int tenantID) throws Exception;
 	
-	public String getBoardListItemPhotoXML(String id, String pBoardID, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID) throws Exception;
+	public String getBoardListItemPhotoXML(LoginVO userInfo, String pBoardID, int pStartRow, int pEndRow, String pSortBy) throws Exception;
 	
-	public String getBoardTotalItemCount(String pBoardID, int tenantID) throws Exception;
+	public int getBoardTotalItemCount(String pBoardID, int tenantID) throws Exception;
 	
 	public String leftCommunityGet2(String code) throws Exception;
 	
 	public String checkPassword(String pItemID, int tenantID) throws Exception;
 	
-	public Integer boardPropertyGet(String boardID, int tenantID) throws Exception;
+	public int boardPropertyGet(String boardID, int tenantID) throws Exception;
 
 	public Integer adminOuterListGet1(String code) throws Exception;
 	
@@ -297,7 +297,7 @@ public interface EzCommunityService {
 	
 	public void pollResOk(LoginVO userInfo, String code, String questionID, String pollSelect, String answerETC, String isSave, String answerType, String answerCount, HttpServletResponse response) throws Exception;
 	
-	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, HttpServletResponse response) throws Exception;
+	public void pollEditOk(String pClubNo, String subject, String startDate, String endDate, String managerID, int tenantID, HttpServletResponse response) throws Exception;
 	
 	public void adminLogoOk(MultipartHttpServletRequest request, int tenantID) throws Exception;
 
