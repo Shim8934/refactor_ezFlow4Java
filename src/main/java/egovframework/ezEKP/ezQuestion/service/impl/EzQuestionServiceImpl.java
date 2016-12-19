@@ -61,23 +61,28 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public Integer getItemNoCnt(int brdID, int itemNo) throws Exception {
+	public Integer getItemNoCnt(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getItemNoCnt(map);
 	}
 	
 	@Override
-	public void insertItemSeq(String brdID) throws Exception {
-		ezQuestionDAO.insertItemSeq(brdID);
+	public void insertItemSeq(String brdID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdID);
+		map.put("tenantID", tenantID);
+		ezQuestionDAO.insertItemSeq(map);
 	}
 
 	@Override
-	public void updateItemSeq(int brdID, int itemNo) throws Exception {
+	public void updateItemSeq(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateItemSeq(map);
 	}
 
@@ -100,6 +105,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pSDate", map.get("startdate"));
 		map.put("v_pEdate", map.get("enddate"));
 		map.put("v_pDataCount", map.get("dataCount"));
+		
 		ezQuestionDAO.stepSave(map);
 	}
 
@@ -116,32 +122,38 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public String getItemSeq(String brdID) throws Exception {
-		return ezQuestionDAO.getItemSeq(brdID);
+	public String getItemSeq(String brdID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("brdID", brdID);
+		map.put("tenantID", tenantID);
+		return ezQuestionDAO.getItemSeq(map);
 	}
 	
 	@Override
-	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO userPollItemVO) throws Exception {
+	public QstUserPollItemVO getUserPollItem(QstUserPollItemVO userPollItemVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPollItemVO.getBrdID());
 		map.put("v_pItemNo", userPollItemVO.getItemNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getUserPollItem(map);
 	}
 
 	@Override
-	public QstUserPermissionVO getUserPermission(QstUserPermissionVO userPermissionVO) throws Exception {
+	public QstUserPermissionVO getUserPermission(QstUserPermissionVO userPermissionVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdID());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getUserPermission(map);
 	}
 
 	@Override
-	public Integer getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userID) throws Exception {
+	public Integer getUserResponseCnt(QstUserPermissionVO userPermissionVO,String userID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdID());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
 		map.put("v_puserID", userID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getUserResponseCnt(map);
 	}
 	
@@ -151,7 +163,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public void callCreateMother(QstCompleteVO qstCompleteVO) throws Exception {
+	public void callCreateMother(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -159,11 +171,13 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pGubunID", qstCompleteVO.getGubunID());
 		map.put("v_pGubunNm", qstCompleteVO.getGubunNm());
 		map.put("v_pGubunNm2", qstCompleteVO.getGubunNm2());
+		map.put("v_temp", "");
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callCreateMother(map);
 	}
 
 	@Override
-	public void callInsertPollResponsep1(QstCompleteVO qstCompleteVO) throws Exception {
+	public void callInsertPollResponsep1(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -176,11 +190,13 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserDeptNM2", qstCompleteVO.getUserDeptNm2());
 		map.put("v_pUserPOS", qstCompleteVO.getUserPOS());
 		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
+		map.put("v_temp", "");
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callInsertPollResponsep1(map);
 	}
 
 	@Override
-	public void callInsertPollResponseper(QstCompleteVO qstCompleteVO) throws Exception {
+	public void callInsertPollResponseper(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -195,19 +211,22 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
 		map.put("v_pUserGender", qstCompleteVO.getUserGender());
 		map.put("v_pUserAge", qstCompleteVO.getUserAge());
+		map.put("v_temp", "");
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callInsertPollResponseper(map);
 	}
 
 	@Override
-	public Integer getQuestionNo(int brdID, int itemNo) throws Exception {
+	public Integer getQuestionNo(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID",brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getQuestionNo(map);
 	}
 
 	@Override
-	public void insertQuestion(QstCompleteVO qstCompleteVO) throws Exception {
+	public void insertQuestion(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -215,11 +234,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pQuesContent", qstCompleteVO.getQuesContent());
 		map.put("v_pAnswerType", qstCompleteVO.getAnswerType());
 		map.put("v_pmultiselect", qstCompleteVO.getMultiSelect());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertQuestion(map);
 	}
 
 	@Override
-	public void pollSaveAttach(QstCompleteVO qstCompleteVO) throws Exception {
+	public void pollSaveAttach(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -229,89 +249,106 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pAttachName", qstCompleteVO.getAttachName());
 		map.put("v_pAttachURL", qstCompleteVO.getAttachURL());
 		map.put("v_pAttachType", qstCompleteVO.getAttachType());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.pollSaveAttach(map);
 	}
 
 	@Override
-	public void insertAnswerAnswerContent(QstCompleteVO qstCompleteVO) throws Exception {
+	public void insertAnswerAnswerContent(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
 		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
 		map.put("v_pAnswerNo", qstCompleteVO.getAnswerNo());
 		map.put("v_pAnswer_AnswerContent", qstCompleteVO.getAnswerAnswerContent());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertAnswerAnswerContent(map);
 	}
 
 	@Override
-	public void insertAnswerContent(QstCompleteVO qstCompleteVO) throws Exception {
+	public void insertAnswerContent(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
 		map.put("v_pQuesNo", qstCompleteVO.getQuesNo());
 		map.put("v_pAnswerNo", qstCompleteVO.getAnswerNo());
 		map.put("v_pAnswerContent", qstCompleteVO.getAnswerContent());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertAnswerContent(map);
 	}
 
 	@Override
-	public void updatePollItem(QstCompleteVO qstCompleteVO) throws Exception {
+	public void updatePollItem(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updatePollItem(map);
 	}
 
 	@Override
-	public void deleteItem(QstCompleteVO qstCompleteVO) throws Exception {
+	public void deleteItem(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
+		map.put("tenantID", tenantID);
+		ezQuestionDAO.deleteItem_D1(map);
+		ezQuestionDAO.deleteItem_D2(map);
+		ezQuestionDAO.deleteItem_D3(map);
+		ezQuestionDAO.deleteItem_D4(map);
+		ezQuestionDAO.deleteItem_D5(map);
+		ezQuestionDAO.deleteItem_D6(map);
+		ezQuestionDAO.deleteItem_D7(map);
 		ezQuestionDAO.deleteItem(map);
 	}
 
 	@Override
-	public Integer getResponseDateCnt(QstUserPermissionVO userPermissionVO,String userID) {
+	public Integer getResponseDateCnt(QstUserPermissionVO userPermissionVO,String userID, int tenantID) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", userPermissionVO.getBrdID());
 		map.put("v_pItemNo", userPermissionVO.getItemNo());
 		map.put("v_pUserID", userID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getResponseDateCnt(map);
 	}
 
 	@Override
-	public Integer resCount(String brdID, String itemNo) {
+	public Integer resCount(String brdID, String itemNo, int tenantID) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", Integer.parseInt(brdID));
 		map.put("v_pItemNo", Integer.parseInt(itemNo));
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.resCount(map);
 	}
 
 	@Override
-	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO) {
+	public void updateReadCnt(QstUserPollItemVO qstUserPollItemVO, int tenantID) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pReadCnt", qstUserPollItemVO.getReadCnt());
 		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdID());
 		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateReadCnt(map);
 	}
 
 	@Override
-	public Integer getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userID) {
+	public Integer getReadDateItem(QstUserPollItemVO qstUserPollItemVO, String userID, int tenantID) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdID());
 		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
 		map.put("v_pUserID", userID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getReadDateItem(map);
 	}
 	
 	@Override
-	public void updateReadDate(QstUserPollItemVO qstUserPollItemVO, String readDate,String userID) {
+	public void updateReadDate(QstUserPollItemVO qstUserPollItemVO, String readDate,String userID, int tenantID) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdID());
 		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
 		map.put("v_pUserID", userID);
 		map.put("v_pReadDate", readDate);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateReadDate(map);
 	}
 
@@ -329,108 +366,120 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserDeptNM2", loginVO.getDeptName2());
 		map.put("v_pUserPosNM", loginVO.getTitle1());
 		map.put("v_pUserPosNM2", loginVO.getTitle2());
+		map.put("tenantID", loginVO.getTenantId());
 		ezQuestionDAO.insertItemRead(map);
 	}
 
 	@Override
-	public List<QstVO> getQuestionForResponse(QstVO questionVO) throws Exception {
+	public List<QstVO> getQuestionForResponse(QstVO questionVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", questionVO.getBrdID());
 		map.put("v_pItemNo", questionVO.getItemNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getQuestionForResponse(map);
 	}
 
 	@Override
-	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO)	throws Exception {
+	public List<QstAttachVO> getAttachInfo(QstAttachVO qstAttachVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstAttachVO.getBrdID());
 		map.put("v_pItemNo", qstAttachVO.getItemNo());
 		map.put("v_pQuesNo", qstAttachVO.getQuestionNo());
 		map.put("v_pAnswerNo", qstAttachVO.getAnswerNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAttachInfo(map);
 	}
 	
 	@Override
-	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO)	throws Exception {
+	public List<QstAttachVO> getAttachInfo3(QstAttachVO qstAttachVO, int tenantID)	throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstAttachVO.getBrdID());
 		map.put("v_pItemNo", qstAttachVO.getItemNo());
 		map.put("v_pQuesNo", qstAttachVO.getQuestionNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAttachInfo03(map);
 	}
 
 	@Override
-	public List<QstAnswerVO> getAnswerAnswerCnt(int brdID, int itemNo, int qstNo) throws Exception {
+	public List<QstAnswerVO> getAnswerAnswerCnt(int brdID, int itemNo, int qstNo, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", qstNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAnswerAnswerCnt(map);
 	}
 
 	@Override
-	public List<QstAnswerVO> getAnswerCnt(int brdID, int itemNo, int qstNo) throws Exception {
+	public List<QstAnswerVO> getAnswerCnt(int brdID, int itemNo, int qstNo, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", qstNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAnswerCnt(map);
 	}
 
 	@Override
-	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO) throws Exception {
+	public QstUserPermissionVO getResponseRange(QstUserPermissionVO qstUserPermissionVO, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstUserPermissionVO.getBrdID());
 		map.put("v_pItemNo", qstUserPermissionVO.getItemNo());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getResponseRange(map);
 	}
 
 	@Override
-	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO) throws Exception {
+	public QstResponsePersonVO getResponsePerson(QstResponsePersonVO qstResponsePersonVO, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", qstResponsePersonVO.getBrdID());
 		map.put("v_pItemNo", qstResponsePersonVO.getItemNo());
 		map.put("v_pUserID", qstResponsePersonVO.getUserID());
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getResponsePerson(map);
 	}
 
 	@Override
-	public void updateResponsePerson(QstResponsePersonVO qstResponsePersonVO)throws Exception {
+	public void updateResponsePerson(QstResponsePersonVO qstResponsePersonVO, int tenantID)throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", qstResponsePersonVO.getBrdID());
 		map.put("v_pItemNo", qstResponsePersonVO.getItemNo());
 		map.put("v_pUserID", qstResponsePersonVO.getUserID());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateResponsePerson(map);
 	}
 
 	@Override
-	public void updateResCnt(int brdID,int itemNo) throws Exception {
+	public void updateResCnt(int brdID,int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateResCnt(map);	
 	}
 
 	@Override
-	public Integer getResponseMaxNo(int brdID, int itemNo, int questionNo) throws Exception {
+	public Integer getResponseMaxNo(int brdID, int itemNo, int questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getResponseMaxNo(map);
 	}
 
 	@Override
-	public Integer getAnsCnt(int brdID, int itemNo, int quesNo) throws Exception {
+	public Integer getAnsCnt(int brdID, int itemNo, int quesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", quesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAnsCnt(map);
 	}
 
 	@Override
-	public void insertResponse(QstResponseVO qstResponseVO) throws Exception {
+	public void insertResponse(QstResponseVO qstResponseVO, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", qstResponseVO.getBrdID());
 		map.put("v_pItemNo", qstResponseVO.getItemNo());
@@ -452,11 +501,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pAge", qstResponseVO.getResponseUserAge());
 		map.put("v_pResDate", qstResponseVO.getResponseDate());
 		map.put("v_pResUserIP", qstResponseVO.getResponseUserIp());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertResponse(map);
 	}
 
 	@Override
-	public void insertResponse2(QstResponseVO qstResponseVO) throws Exception {
+	public void insertResponse2(QstResponseVO qstResponseVO, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", qstResponseVO.getBrdID());
 		map.put("v_pItemNo", qstResponseVO.getItemNo());
@@ -478,40 +528,45 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pAge", qstResponseVO.getResponseUserAge());
 		map.put("v_pResDate", qstResponseVO.getResponseDate());
 		map.put("v_pResUserIP", qstResponseVO.getResponseUserIp());
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertResponse2(map);
 	}
 
 	@Override
-	public Integer getResPersonCnt(int brdID, int itemNo, int questionNo) throws Exception {
+	public Integer getResPersonCnt(int brdID, int itemNo, int questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getResponsePersonCnt(map);
 	}
 
 	@Override
-	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userID) throws Exception {
+	public String getReadDateItemForResult(QstUserPollItemVO qstUserPollItemVO, String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", qstUserPollItemVO.getBrdID());
 		map.put("v_pItemNo", qstUserPollItemVO.getItemNo());
 		map.put("v_pUserID", userID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getReadDateItemForResult(map);
 	}
 	
 	@Override
-	public void deletePermission(int brdID, int itemNo) throws Exception {
+	public void deletePermission(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.deletePermission(map);
 	}
 	@Override
-	public String getTableAnswer(int brdID, int itemNo, int questionNo) throws Exception {
+	public String getTableAnswer(int brdID, int itemNo, int questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pStrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuestionNo", questionNo);
+		map.put("tenantID", tenantID);
 		List<String> list = ezQuestionDAO.getTableAnswer(map);
 		StringBuilder sb = new StringBuilder();
 		if(list != null){
@@ -529,11 +584,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String tableAnswerValue(int brdID, int itemNo, int questionNo) throws Exception {
+	public String tableAnswerValue(int brdID, int itemNo, int questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_PSTRBRDID", brdID);
 		map.put("v_PITEMNO", itemNo);
 		map.put("v_PQUESNO", questionNo);
+		map.put("tenantID", tenantID);
 		List<String> list = ezQuestionDAO.tableAnswerValue(map);
 		
 		StringBuilder sb = new StringBuilder();
@@ -552,11 +608,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public String getResponseAnswer(int brdID, int itemNo, int questionNo) throws Exception {
+	public String getResponseAnswer(int brdID, int itemNo, int questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_PSTRBRDID", brdID);
 		map.put("v_PITEMNO", itemNo);
 		map.put("v_PQUESNO", questionNo);
+		map.put("tenantID", tenantID);
 		List<String> list = ezQuestionDAO.getResponseAnswer(map);
 		StringBuilder sb = new StringBuilder();
 		if(list != null){
@@ -574,38 +631,41 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public Integer pollRespCnt(int brdID, int itemNo, int questionNo, int iAnsCnt) throws Exception{
+	public Integer pollRespCnt(int brdID, int itemNo, int questionNo, int iAnsCnt, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
 		map.put("v_piCount", iAnsCnt);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.pollRespCnt(map);
 	}
 
 	@Override
-	public Integer pollRespCnt2(int brdID, int itemNo, int questionNo, int iAnsCnt) throws Exception{
+	public Integer pollRespCnt2(int brdID, int itemNo, int questionNo, int iAnsCnt, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object> ();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
 		map.put("v_piCount", iAnsCnt);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.pollRespCnt2(map);
 	}
 
 	@Override
-	public QstAttachVO getAttachInfo2(String vBrdID, String vItemNo, String strQuestionNo, String strAnswer, String strAttID) throws Exception {
+	public QstAttachVO getAttachInfo2(String vBrdID, String vItemNo, String strQuestionNo, String strAnswer, String strAttID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", vBrdID);
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", strQuestionNo);
 		map.put("v_pAnswerNo", strAnswer);
 		map.put("v_pAttachNo", strAttID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getAttachInfo2(map);
 	}
 	
 	@Override
-	public void changePermission(QstUserPermissionVO qstUserPermissionVO, QstUserPollItemVO qstUserPollItemVO) throws Exception {
+	public void changePermission(QstUserPermissionVO qstUserPermissionVO, QstUserPollItemVO qstUserPollItemVO, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstUserPermissionVO.getBrdID());
 		map.put("v_pItemNo", qstUserPermissionVO.getItemNo());
@@ -619,39 +679,45 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pmultiflg", qstUserPermissionVO.getMultiResponseFlg());
 		map.put("v_pendflg", qstUserPermissionVO.getEndFlg());
 		map.put("v_presponserange", qstUserPermissionVO.getResponseRange());
+		map.put("tenantID", tenantID);
+		ezQuestionDAO.changePermission_U(map);
 		ezQuestionDAO.changePermission(map);
 	}
 	
 	@Override
-	public void updatePollEndDate(int brdID, int itemNo, String endDate, String endFlag) throws Exception {
+	public void updatePollEndDate(int brdID, int itemNo, String endDate, String endFlag, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_penddate", endDate);
 		map.put("v_pendflg", endFlag);
+		map.put("tenantID", tenantID);
+		ezQuestionDAO.updatePollEndDate_U(map);
 		ezQuestionDAO.updatePollEndDate(map);
 	}
 	
 	@Override
-	public QstReuseQuestionVO reUseQuestionData(int brdID, int itemNo) throws Exception {
+	public QstReuseQuestionVO reUseQuestionData(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BRD_ID", brdID);
 		map.put("v_ITEM_NO", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.reUseQuestionData(map);
 	}
 
 	@Override
-	public Integer resultSubjectiveListCnt(int brdID, int itemNo, int questionNo, String lang) throws Exception {
+	public Integer resultSubjectiveListCnt(int brdID, int itemNo, int questionNo, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
 		map.put("v_pLang", lang);
+		map.put("tenantID", tenantID);
 		return Integer.parseInt(ezQuestionDAO.resultSubjectiveListCnt(map));
 	}
 
 	@Override
-	public List<QstResponseVO> resultSubjectiveList(String brdID, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang) throws Exception {
+	public List<QstResponseVO> resultSubjectiveList(String brdID, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
@@ -659,15 +725,17 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.resultSubjectiveList(map);
 	}
 
 	@Override
-	public QstVO getQuestionForSubjective(String brdID, String itemNo, String questionNo) throws Exception {
+	public QstVO getQuestionForSubjective(String brdID, String itemNo, String questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", questionNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getQuestionForSubjective(map);
 	}
 
@@ -682,7 +750,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang) throws Exception {
+	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
@@ -690,76 +758,86 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.responseList(map);
 	}
 
 	@Override
-	public List<QstVO> getObjQuestion(String pBrdID, String pItemNo) throws Exception {
+	public List<QstVO> getObjQuestion(String pBrdID, String pItemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", pBrdID);
 		map.put("v_pItemNo", pItemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getObjQuestion(map);
 	}
 
 	@Override
-	public List<QstVO> getQuestion(String vBrdID, String vItemNo, String vQuesNo) throws Exception {
+	public List<QstVO> getQuestion(String vBrdID, String vItemNo, String vQuesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", vBrdID);
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", vQuesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getQuestion(map);
 	}
 	
 	@Override
-	public int callGetItemSeq(int brdID) throws Exception {
+	public int callGetItemSeq(int brdID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.callGetItemSeq(map);
 	}
 
 	@Override
-	public void callUpdateItemSeq(int brdID, int itemNo) throws Exception {
+	public void callUpdateItemSeq(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callUpdateItemSeq(map);
 	}
 	
 	@Override
-	public void callInsertItemSeq(int brdID) throws Exception {
+	public void callInsertItemSeq(int brdID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callInsertItemSeq(map);
 	}
 
 	@Override
-	public void callDeleteItemSeq(int brdID, int itemNo) throws Exception {
+	public void callDeleteItemSeq(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callDeleteItemSeq(map);
 	}
 
 	@Override
-	public void callDeletePollResponseper(int brdID, int itemNo) throws Exception {
+	public void callDeletePollResponseper(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.callDeletePollResponseper(map);
 	}
 	@Override
-	public String analysisCount(String vItemNo, String vQuesNo) throws Exception {
+	public String analysisCount(String vItemNo, String vQuesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", vQuesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.analysisCount(map);
 	}
 
 	@Override
-	public List<QstResponseVO> gwPollGetSearch(String vItemNo, String vQuesNo) throws Exception {
+	public List<QstResponseVO> gwPollGetSearch(String vItemNo, String vQuesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pItemNo", vItemNo);
-		map.put("v_pQuesNo", vQuesNo);
+		map.put("v_item_num", vItemNo);
+		map.put("v_Que_num", vQuesNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.gwPollGetSearch(map);
 	}
 
@@ -780,53 +858,64 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo) throws Exception {
+	public List<QstDeleteAttachUrlVO> getDeleteAttachUrl(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getDeleteAttachUrl(map);
 	}
 
 	@Override
-	public String getQuestionNoCnt(String itemNo) throws Exception {
-		return ezQuestionDAO.getQuestionNoCnt(itemNo);
+	public String getQuestionNoCnt(String itemNo, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
+		return ezQuestionDAO.getQuestionNoCnt(map);
 	}
 
 	@Override
-	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo) throws Exception {
-		return ezQuestionDAO.getResponsePersonForResultTotalSave(itemNo);
+	public List<QstResponseVO> getRespersonForResultTotalSave(int itemNo, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
+		return ezQuestionDAO.getResponsePersonForResultTotalSave(map);
 	}
 
 	@Override
-	public List<QstTempSaveVO> tempSave(int brdID, int itemNo) throws Exception {
+	public List<QstTempSaveVO> tempSave(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.tempSave(map);
 	}
 
 	@Override
-	public void questionDelete2(int brdID, int itemNo) throws Exception {
+	public void questionDelete2(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.questionDelete2(map);
 	}
 
 	@Override
-	public void questionDelete1(int brdID, int itemNo, int quesNo) throws Exception {
+	public void questionDelete1(int brdID, int itemNo, int quesNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", quesNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.questionDelete2(map);
 	}
 
 	@Override
-	public void deletePollAttach(int brdID, int itemNo) throws Exception {
+	public void deletePollAttach(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.deletePollAttach(map);
 	}
 
@@ -838,28 +927,31 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public void updateTblPollItem(String endDate, int brdID, int itemNo) throws Exception {
+	public void updateTblPollItem(String endDate, int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("endDate", endDate);
 		map.put("brdID", brdID);
 		map.put("itemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateTblPollItem(map);
 	}
 
 	@Override
-	public void updateTblPollPermission(String endFlag, int brdID, int itemNo) throws Exception {
+	public void updateTblPollPermission(String endFlag, int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("endFlag", endFlag);
 		map.put("brdID", brdID);
 		map.put("itemNo", itemNo);
+		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateTblPollPermission(map);
 	}
 
 	@Override
-	public int getQstResponse(int brdID, int itemNo) throws Exception {
+	public int getQstResponse(int brdID, int itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
+		map.put("tenantID", tenantID);
 		return ezQuestionDAO.getQstResponse(map);
 	}
 	
