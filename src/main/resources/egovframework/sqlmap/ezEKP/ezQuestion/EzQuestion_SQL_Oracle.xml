@@ -1272,11 +1272,161 @@
 		]]>
 	</select>
 	
-	<procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(P.ITEM_NO) 
+			FROM (	SELECT  
+      						A.BRD_ID,  
+      						A.ITEM_NO, 
+      						A.USER_ID, 
+      						A.USER_NM$v_PLANG$ AS USER_NM, 
+      						A.USER_EMAIL, 
+      						A.TITLE, 
+      						A.CONTENT, 
+      						A.POLL_ENDDATE, 
+      						A.POST_DATE, 
+      						B.PUBLIC_RESULT_FLG, 
+      						B.PUBLIC_FLG, 
+      						B.MULTI_RESPONSE_FLG, 
+      						B.END_FLG, 
+      						B.RESPONSE_RANGE 
+  						FROM  
+      						EZQUESTION.TBLPOLL_ITEM A INNER JOIN EZQUESTION.TBLPOLL_PERMISSION B
+        				ON
+        					A.BRD_ID = B.BRD_ID 
+      					AND
+      						A.BRD_ID = #v_PSTRBRDID#
+      					AND
+      						A.ITEM_NO = B.ITEM_NO
+      					AND
+      						A.TENANT_ID = B.TENANT_ID	
+    					WHERE ( 	A.BRD_ID = #v_PSTRBRDID# 
+    								AND
+    									A.COMPLETE_FLAG = 'Y'	
+      								AND
+      									(	B.RESPONSE_RANGE = '0' AND SYSDATE
+           								BETWEEN
+           									TO_DATE(A.POLL_STARTDATE,'yyyy-MM-DD HH24:MI:ss')
+           								AND
+           									TO_DATE(A.POLL_ENDDATE ,'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM
+           								)
+           							AND
+           								A.TENANT_ID = #tenantID#
+           							AND
+           								B.TENANT_ID = #tenantID#		
+      								OR
+      									(A.USER_ID = #v_PUSERID#)
+      							) ]]>
+		<isNotEmpty property="v_PTITLE">
+			<![CDATA[
+				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+			]]>
+		</isNotEmpty>
+		
+		<isNotEqual property="rangeLength" compareValue="0">
+			<isNotEqual property="v_PRANGE" compareValue="2">
+				<![CDATA[
+					AND B.RESPONSE_RANGE = #v_PRANGE#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		
+		<isNotEqual property="eDateLength" compareValue="0">
+			<![CDATA[
+				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+			]]>
+		</isNotEqual>
+		
+		<isNotEqual property="sDateLength" compareValue="0">
+			<![CDATA[
+				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			UNION 
+   				SELECT 
+      				A.BRD_ID, 
+      				A.ITEM_NO, 
+				    A.USER_ID, 
+				    A.USER_NM$v_PLANG$ AS USER_NM, 
+				    A.USER_EMAIL, 
+				    A.TITLE, 
+				    A.CONTENT, 
+				    A.POLL_ENDDATE, 
+				    A.POST_DATE, 
+				    B.PUBLIC_RESULT_FLG, 
+				    B.PUBLIC_FLG, 
+				    B.MULTI_RESPONSE_FLG, 
+				    B.END_FLG, 
+				    B.RESPONSE_RANGE 
+   				FROM 
+      				EZQUESTION.TBLPOLL_ITEM A, 
+      				EZQUESTION.TBLPOLL_PERMISSION B, 
+      				EZQUESTION.TBLPOLL_RESPONSEPERSON D
+    			WHERE (  	A.BRD_ID = B.BRD_ID 
+      						AND
+      							A.ITEM_NO = B.ITEM_NO
+      						AND
+      							B.RESPONSE_RANGE = '1' 
+      						AND
+      							A.BRD_ID = D.BRD_ID 
+      						AND
+      							A.ITEM_NO = D.ITEM_NO
+      						AND
+      							#v_PUSERID# = D.USER_ID
+      						AND
+      							A.BRD_ID = #v_PSTRBRDID#
+      						AND
+      							A.COMPLETE_FLAG = 'Y'
+      						AND
+      							TO_DATE(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM >= SYSDATE
+      						AND
+      							A.TENANT_ID = B.TENANT_ID
+      						AND
+      							A.TENANT_ID = D.TENANT_ID
+      						AND
+      							A.TENANT_ID = #tenantID#			
+      					)
+		]]>
+		
+		<isNotEmpty property="v_PTITLE">
+			<![CDATA[
+				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+			]]>
+		</isNotEmpty>
+		
+		<isNotEqual property="rangeLength" compareValue="0">
+			<isNotEqual property="v_PRANGE" compareValue="2">
+				<![CDATA[
+					AND B.RESPONSE_RANGE = #v_PRANGE#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		
+		<isNotEqual property="eDateLength" compareValue="0">
+			<![CDATA[
+				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+			]]>
+		</isNotEqual>
+		
+		<isNotEqual property="sDateLength" compareValue="0">
+			<![CDATA[
+				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			) P
+		]]>
+	</select>
 	
 	<!-- <procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1612,7 +1762,7 @@
 				EZQUESTION.TBLPOLL_QUESTION
         		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
         	VALUES
-        		( #v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #v_PQUESCONTENT#, #v_PANSWERTYPE#, #v_PMULTISELECT#, #v_PQUES_SN#, #tenantID# )
+        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_PQUES_SN#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -2177,11 +2327,85 @@
 		]]>
 	</delete>
 	
-	<procedure id="EzQuestionDAO.wpCountPollCount" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzQuestionDAO.wpCountPollCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZQUESTION.EZSP_WPCONT_POLLCOUNT(#v_pUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzQuestionDAO.wpCountPollCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(ITEM_NO)
+        	FROM
+	        		( 	SELECT
+	        				A.ITEM_NO 
+	               		FROM
+	               			EZQUESTION.TBLPOLL_RESPONSEPERSON A
+	                    LEFT JOIN
+	                    	EZQUESTION.TBLPOLL_ITEM B
+	                    ON
+	                    	A.BRD_ID = B.BRD_ID
+	                    AND
+	                    	A.ITEM_NO = B.ITEM_NO
+	                    AND
+	                    	A.TENANT_ID = B.TENANT_ID	
+	                	WHERE
+	                		A.USER_ID = #v_pUSERID#
+	                    AND
+	                    	A.TENANT_ID = #tenantID#
+	                    AND	
+	                    	#nowDate#
+	                    BETWEEN
+	                    	B.POLL_STARTDATE
+	                    AND
+	                    	B.POLL_ENDDATE
+	                    AND
+	                    	RESPONSE_DATE IS NULL
+	                    AND
+	                    	B.COMPLETE_FLAG = 'Y'
+               		UNION
+		            	SELECT
+		            		A.ITEM_NO 
+	               		FROM
+	               			EZQUESTION.TBLPOLL_ITEM A
+						LEFT JOIN
+							EZQUESTION.TBLPOLL_RESPONSE B
+						ON
+							A.BRD_ID = B.BRD_ID
+	                    AND
+	                    	A.ITEM_NO = B.ITEM_NO
+	                    AND
+	                    	A.TENANT_ID = B.TENANT_ID	
+	                    AND
+	                    	B.RESPONSEUSER_ID = #v_pUSERID#
+	                    LEFT JOIN
+	                    	EZQUESTION.TBLPOLL_PERMISSION C 
+	                    ON
+	                    	A.BRD_ID = C.BRD_ID
+	                    AND
+	                    	A.ITEM_NO = C.ITEM_NO
+	                    AND
+	                    	A.TENANT_ID = C.TENANT_ID	
+	                	WHERE
+	                		#nowDate#
+	                	BETWEEN
+	                		A.POLL_STARTDATE
+	                	AND
+	                		A.POLL_ENDDATE
+	                    AND
+	                    	B.RESPONSEUSER_NAME IS NULL
+	                    AND
+	                    	A.COMPLETE_FLAG = 'Y'
+	                    AND
+	                    	B.RESPONSEUSER_ID IS NULL
+	                    AND
+	                    	A.TENANT_ID = #tenantID#	
+	                    AND
+	                    	C.RESPONSE_RANGE = '0' ) CNT
+	                    	
+		]]>
+	</select>
 	
 	<select id="EzQuestionDAO.getItemSeq" parameterClass="Map" resultClass="String">
 		<![CDATA[

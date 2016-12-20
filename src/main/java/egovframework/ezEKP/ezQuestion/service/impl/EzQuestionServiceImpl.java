@@ -2,12 +2,15 @@ package egovframework.ezEKP.ezQuestion.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezQuestion.dao.EzQuestionDAO;
@@ -25,23 +28,38 @@ import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements EzQuestionService{
+	@Autowired
+	private CommonUtil commonUtil;
+	
 	@Resource(name="EzQuestionDAO")
 	private EzQuestionDAO ezQuestionDAO;
 	
 	@Override
-	public Integer getQstListCnt(QstListVO questionListVO) throws Exception {
+	public Integer getQstListCnt(QstListVO questionListVO, int tenantID, String offset) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String dateStr = sdf.format(new Date());
+		
+		String nowDate = commonUtil.getDateStringInUTC(dateStr, offset, false);
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdID());
 		map.put("v_PUSERID", questionListVO.getUserID());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
-		map.put("v_PSDATE", questionListVO.getPostDate());
-		map.put("v_PEDATE", questionListVO.getPollEndDate());
+		map.put("v_PSDATE", commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
+		map.put("v_PEDATE", commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
 		map.put("v_PLANG", questionListVO.getLang());
+		map.put("rangeLength", questionListVO.getResponseRange().length());
+		map.put("eDateLength", questionListVO.getPollEndDate().length());
+		map.put("sDateLength", questionListVO.getPostDate().length());
+		map.put("tenantID", tenantID);
+		map.put("nowDate", nowDate);
 		return ezQuestionDAO.getQstListCnt(map);
 	}
 
@@ -234,6 +252,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pQuesContent", qstCompleteVO.getQuesContent());
 		map.put("v_pAnswerType", qstCompleteVO.getAnswerType());
 		map.put("v_pmultiselect", qstCompleteVO.getMultiSelect());
+		map.put("v_PQUES_SN", "");
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertQuestion(map);
 	}
@@ -923,9 +942,17 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public int wpCountPollCount(String userID) throws Exception {
+	public int wpCountPollCount(String userID, int tenantID, String offset) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String dateStr = sdf.format(new Date());
+		
+		String nowDate = commonUtil.getDateStringInUTC(dateStr, offset, false);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUSERID", userID);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", nowDate);
 		return ezQuestionDAO.wpCountPollCount(map);
 	}
 
