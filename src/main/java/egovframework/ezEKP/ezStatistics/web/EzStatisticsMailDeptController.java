@@ -90,13 +90,14 @@ public class EzStatisticsMailDeptController {
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
 		String deptId = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
 		
+		String tenantIdParam = "tenantId=" + user.getTenantId();
 		String sDateParam = "sDate=" + sDate + "01";
 		String eDateParam = "eDate=" + eDate + "12";
 		String searchIdParam = "searchId=" + deptId;
 		String typeParam = "type=1";
 		String userLangParam = "userLang=" + user.getPrimary();
 		
-		String inputParams = sDateParam + "&" + eDateParam + "&" + searchIdParam
+		String inputParams = tenantIdParam + "&" + sDateParam + "&" + eDateParam + "&" + searchIdParam
 								+ "&" + typeParam + "&" + userLangParam;
 
 		logger.debug("inputParams=" + inputParams);

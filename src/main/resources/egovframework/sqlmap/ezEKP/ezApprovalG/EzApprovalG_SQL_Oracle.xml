@@ -1603,7 +1603,7 @@
             WHERE  
             	DOCID = #v_PDOCID#
             AND 
-            	ReceivedDeptID = #v_PDEPTID#
+            	RECEIVEDDEPTID = #v_PDEPTID#
             AND
 				TENANT_ID = #v_TENANTID#  
 				]]>
@@ -1611,7 +1611,7 @@
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="REC">
-			<isEqual property="v_temp1" compareValue="1">
+			<isEqual property="v_temp" compareValue="1">
 			<isEqual property="v_temp2" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -1644,9 +1644,9 @@
 						TENANT_ID = #v_TENANTID#  	
 						]]>	
 			</isNotEqual>
-		</isEqual>
-		<isNotEqual property="v_temp1" compareValue="1">
-			<isEqual property="v_temp2" compareValue="1">
+		    </isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<isEqual property="v_temp3" compareValue="0">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -1655,8 +1655,8 @@
                   FROM DUAL  
                   ]]>
 			</isEqual>
-			<isNotEqual property="v_temp2" compareValue="1">
-				<isEqual property="v_temp3" compareValue="1">
+			<isNotEqual property="v_temp3" compareValue="0">
+				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
 				 		DOCID ,
@@ -1669,8 +1669,8 @@
                  AND
 						TENANT_ID = #v_TENANTID#	
 						]]>	
-				</isEqual>
-				<isNotEqual property="v_temp3" compareValue="1">
+				</isGreaterThan>
+				<isLessEqual property="v_temp4" compareValue="0">
 				<![CDATA[
 				     SELECT 
 					     	DOCID ,
@@ -1685,7 +1685,7 @@
                       AND
 							TENANT_ID = #v_TENANTID#	
 							]]>	
-				</isNotEqual>
+				</isLessEqual>
 			</isNotEqual>
 		</isNotEqual>
 		</isEqual>
@@ -1737,7 +1737,7 @@
 			]]>
 	</select>
 	
-	<select id ="EzApprovalG.countRecTempDocID" parameterClass="Map" resultClass="Integer">
+	<select id ="EzApprovalG.countRecTempDocID" parameterClass="Map" resultClass="int">
 	<![CDATA[
 		SELECT 
 			COUNT(DOCID)  
@@ -1750,7 +1750,7 @@
 			]]>
 	</select>
 		
-	<select id ="EzApprovalG.countRecTempDocID2" parameterClass="Map" resultClass="Integer">
+	<select id ="EzApprovalG.countRecTempDocID2" parameterClass="Map" resultClass="int">
 	<![CDATA[
 			SELECT 
 				COUNT(DOCID)  
@@ -2725,9 +2725,42 @@
 	   		 		TBCABINET.CREATEDATE DESC, TBCABINET.CABINETID DESC
 	</select>
 	
-	<procedure id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
+		SELECT 
+				DISTINCT TASKCODE, 
+						 TASKNAME,  
+						 TASKNAME2, 
+						 KEEPINGPERIOD, 
+						 DISPLAYRECFLAG, 
+						 DISPLAYRECTRASTIME,
+   						 SPECIALCATALOGFLAG, 
+   						 SC1, 
+   						 SC2, 
+   						 SC3, 
+   						 TEMPFLAG, 
+   						 KEEPINGMETHOD, 
+   						 KEEPINGPLACE, 
+   						 PROCESSDEPTCODE,
+   						 PROCESSDEPTNAME, 
+   						 NVL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
+   						 CATEGORYCODE, 
+   						 CNAME, 
+   						 CNAME2, 
+   						 MCATEGORYCODE, 
+   						 MCNAME, 
+   						 MCNAME2, 
+   						 SUBCATEGORYCODE, 
+   						 SCNAME, 
+   						 SCNAME2
+   		FROM 
+   				EZAPPROVALG_${companyID}.VTASKCLASS
+   		$v_subQuery$
+   		ORDER BY 
+   				TASKCODE
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAttachFileInfo" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETATTACHFILEINFO(#v_DOCID#, #v_MODE#, #v_ORDERBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3397,18 +3430,83 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_SETBUJAEINFO_LIST(#v_DOCID#, #v_APRTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.doDocCompleteDocInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DODOCCOMPLETE_DOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doDocCompleteDocInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DODOCCOMPLETE_DOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doDocCompleteDocInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+			 SELECT 
+			 		 A.DocType ,
+		             A.DocState ,
+		             A.OrgDocID ,
+		             B.AprMemberID ,
+		             B.AprMemberName ,
+		             B.AprMemberName2 ,
+		             B.AprMemberDeptID ,
+		             B.AprMemberDeptName ,
+		             B.AprMemberDeptName2 ,
+		             C.companyID 
+		        FROM 
+		        	 EZAPPROVALG_${companyID}.TBAPRDOCINFO A
+		        LEFT JOIN 
+		        	 EZAPPROVALG_${companyID}.TBAPRLINEINFO B   
+		        ON 
+		        	 A.DocID = B.DocID
+		        AND 
+		        	 B.AprMemberSN = '1'
+		        AND
+		        	A.TENANT_ID = B.TENANT_ID
+		        LEFT JOIN 
+		        	 EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO C   
+		        ON 
+		        	 A.DocID = C.DocID
+		        AND
+		        	A.TENANT_ID = C.TENANT_ID
+		        WHERE  
+		       		 A.DocID = #v_DOCID#
+		       	AND
+		       		A.TENANT_ID = #v_TENANTID#
+	</select>
 	
-	<procedure id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_RECEIPTINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_RECEIPTINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO">
+		SELECT 
+				 RECEIPTPOINTID ,
+	             RECEIPTPOINTNAME ,
+	             RECEIPTPOINTNAME2 ,
+	             RECEIPTMEMBERID ,
+	             RECEIPTMEMBERNAME ,
+	             RECEIPTMEMBERNAME2 ,
+	             RECEIPTMEMBERJOBTITLE ,
+	             RECEIPTMEMBERJOBTITLE2 ,
+	             EXTRECEPTEMAIL 
+	     FROM 
+	     		 EZAPPROVALG_${companyID}.TBRECEIPTPOINTINFO 
+	     WHERE  
+	     		 DOCID = #v_DOCID#
+	     AND 
+	     		 PROCESSSN = 1
+	     AND 
+	     	     EXTRECEPTYN = 'N'
+	     AND
+	     		 TENANT_ID = #v_TENANTID#
+	</select>
 	
-	<procedure id="EzApprovalG.doSendDocAprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_APRDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.doSendDocAprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_APRDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doSendDocAprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+	   SELECT 
+	 		 ORGDOCID ,
+             DOCSTATE 
+       FROM 
+       		 EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+       WHERE  
+       		 DOCID = #v_DOCID#
+       AND
+       		 TENANT_ID = #v_TENANTID#
+	</select>
 	<procedure id="EzApprovalG.doSendDocReceiptGroupSub" parameterClass="Map" resultClass="ApprGReceiptVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_RECEIPTGROUPSUB(#v_MAINID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -3417,10 +3515,29 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEPROCESSYN_RECEIPT(#v_DOCID#, #v_RECEIPTPOINTID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.doApproveEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVEEND_DOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.doApproveEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVEEND_DOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doApproveEndDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			 DOCSTATE ,
+             HREF ,
+             APRMEMBERDEPTID 
+        FROM 
+        	 EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+        LEFT JOIN 
+        	 EZAPPROVALG_${companyID}.TBAPRLINEINFO    
+        ON 
+        	 TBAPRDOCINFO.DocID = TBAPRLINEINFO.DocID
+        AND 
+        	 TBAPRLINEINFO.AprMemberSN = 1
+        AND
+        	 TBAPRDOCINFO.TENANT_ID = TBAPRLINEINFO.TENANT_ID
+        WHERE  
+        	 TBAPRDOCINFO.DocID = #v_DOCID#
+        AND
+        	 TBAPRDOCINFO.TENANT_ID = #v_TENANTID#
+	</select>
 <!-- 	<procedure id="EzApprovalG.setCabinetRecList" parameterClass="Map" resultClass="ApprGCabinetRecVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_SETCABINETREC_LIST(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -3575,25 +3692,296 @@
        	WHERE  
        		DOCID = #v_DOCID#
 	</select>
-	<procedure id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETCALLBACKYN_LINELIST(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCALLBACKYN_LINELIST(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getCallBackYNLineList" parameterClass="Map" resultClass="ApprGLineTempletVO">
+	     <![CDATA[ 
+	      SELECT 
+	         * 
+          FROM 
+          		( SELECT 
+        				APRMEMBERSN ,
+                     	APRTYPE ,
+                      	APRSTATE 
+        		  FROM 
+        				EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+       			  WHERE  ( 
+       						APRMEMBERSN >= ( 
+       										 SELECT 
+       										    * 
+                                             FROM 
+                                             	   ( SELECT 
+                                             	   	       APRMEMBERSN
+                                                      FROM 
+                                                           EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+                                                      WHERE  
+                                                           DOCID = #v_DOCID#
+                                                      AND 
+                                                           APRMEMBERID = #v_USERID#
+                                                      AND 
+                                                            APRSTATE = '003'
+                                                      AND
+                                                      		TENANT_ID = #v_TENANTID#
+                                                      ORDER BY 
+                                                            APRMEMBERSN DESC )
+                                              WHERE 
+                                                    ROWNUM <= 1
+                                               AND
+                                                    TENANT_ID = #v_TENANTID# ) )
+                    AND 
+                          ( DOCID = #v_DOCID# )
+                    AND
+                          TENANT_ID = #v_TENANTID#
+                    ORDER BY 
+                           APRMEMBERSN )
+              WHERE 
+                     ROWNUM <= 2 
+
+                     ]]>
+	</select>
 	
-	<procedure id="EzApprovalG.getCallBackYNForceLine" parameterClass="Map" resultClass="ApprGLineTempletVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETCALLBACKYNFORCE_LINE(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getCallBackYNForceLine" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCALLBACKYNFORCE_LINE(#v_DOCID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getCallBackYNForceLine" parameterClass="Map" resultClass="ApprGLineTempletVO">
+	<![CDATA[ 
+			 SELECT 
+			 		APRMEMBERSN ,
+		            APRTYPE ,
+		            APRSTATE 
+		     FROM 
+		     		EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+		     WHERE  ( 
+		     			APRMEMBERSN >= 
+		     							( SELECT 
+		     							     * 
+		                                  FROM 
+		                                  	   ( SELECT 
+		                                  	   			APRMEMBERSN 
+		                                 		 FROM 
+		                                 		        EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+		                                         WHERE  
+		                                                DOCID = #v_DOCID#
+		                                         AND 
+		                                         		APRMEMBERID = #v_USERID#
+		                                         AND 
+		                                         		APRSTATE = '003'
+		                                         AND
+		                                         		TENANT_ID = #v_TENANTID#
+		                                         ORDER BY 
+		                                                APRMEMBERSN DESC )
+		                                  WHERE 
+		                                         ROWNUM <= 1 
+		                                  AND
+		                                         TENANT_ID = #v_TENANTID#) )
+		       AND 
+		            ( DOCID = #v_DOCID# )
+		       AND
+		             TENANT_ID = #v_TENANTID#
+		       ORDER BY 
+		       		 APRMEMBERSN
+	]]>
+	</select>
 	
 	<procedure id="EzApprovalG.getTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETTOTALDOWNLOAD(#v_PDOCID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEDOCLIST(#v_MODE#, #v_USERID#, #v_DEPTID#, #v_DEPTIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEDOCLIST(#v_MODE#, #v_USERID#, #v_DEPTID#, #v_DEPTIDS#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getReceiveDocList" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+		SELECT 
+		   * 
+		FROM (
+				SELECT  
+				    * 
+				 FROM ( 
+			<isEqual property="v_MODE" compareValue="simsa">
+			<![CDATA[
+				SELECT 
+				   * 
+				FROM (
+						SELECT 
+							TBAPRDOCINFO.ORGDOCID,
+		      				TBAPRDOCINFO.HREF, 
+		      				TBAPRDOCINFO.HASOPINIONYN, 
+		      				TBAPRDOCINFO.HASATTACHYN,
+		      				TBAPRDOCINFO.ISPUBLIC,
+		      				TBAPRDOCINFO.DOCTYPE, 
+		      				TBAPRDOCINFO.DOCTITLE, 
+		      				TBAPRDOCINFO.WRITERDEPTID,
+		      				TBAPRRECEIPTPROCESSINFO.DOCSTATE, 
+		      				TBAPRRECEIPTPROCESSINFO.APRSTATE,
+		      				TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME, 
+		      				TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME2, 
+		      				TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID,
+		      				TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME, 
+		      				TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME2, 
+		      				TBAPRRECEIPTPROCESSINFO.PROCESSDATE,
+		      				TBAPRRECEIPTPROCESSINFO.RECEIVESN, 
+		      				TBAPRRECEIPTPROCESSINFO.DOCID,
+		      				TBAPRRECEIPTPROCESSINFO.PROCESSORID,
+		      				TBEXPAPRDOCINFO.FORMNAME, 
+		      				TBEXPAPRDOCINFO.FORMNAME2, 
+		      				TBEXPAPRDOCINFO.URGENTAPPROVAL
+		      		FROM 
+		      				EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+		      		INNER JOIN 
+		      				EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+		      		ON 
+		      				TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+		      		INNER JOIN 
+		      				EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+		      		ON 
+		      				TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+		      		WHERE 
+		      				(TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
+		      		AND 
+		      				(TBAPRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBAPRRECEIPTPROCESSINFO.APRSTATE = '004')
+		      		AND 
+		      				TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+	      	]]>
+			</isEqual>
+			<isNotEqual property="v_MODE" compareValue="simsa">
+			<![CDATA[
+			SELECT 
+			   * 
+			FROM 
+				(SELECT 
+					TBAPRDOCINFO.ORGDOCID,
+	      			TBAPRDOCINFO.HREF, 
+	      			TBAPRDOCINFO.HASOPINIONYN, 
+	      			TBAPRDOCINFO.HASATTACHYN, 
+	      			TBAPRDOCINFO.ISPUBLIC,
+	      			TBAPRDOCINFO.DOCTYPE, 
+	      			TBAPRDOCINFO.DOCTITLE, 
+	      			TBAPRDOCINFO.WRITERDEPTID,
+	      			TBAPRRECEIPTPROCESSINFO.DOCSTATE, 
+	      			TBAPRRECEIPTPROCESSINFO.APRSTATE,
+	      			TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME, 
+	      			TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME2, 
+	      			TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID,
+	      			TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME, 
+	      			TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME2, 
+	      			TBAPRRECEIPTPROCESSINFO.PROCESSDATE,
+	      			TBAPRRECEIPTPROCESSINFO.RECEIVESN, 
+	      			TBAPRRECEIPTPROCESSINFO.DOCID,
+	      			TBAPRRECEIPTPROCESSINFO.PROCESSORID,
+	      			TBEXPAPRDOCINFO.FORMNAME, 
+	      			TBEXPAPRDOCINFO.FORMNAME2, 
+	      			TBEXPAPRDOCINFO.URGENTAPPROVAL
+	      		FROM 
+	      			EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+	      		INNER JOIN 
+	      			EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+	      		ON 
+	      			TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+	      		AND
+	      			TBAPRRECEIPTPROCESSINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      		INNER JOIN 
+	      			EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+	      		ON 
+	      			TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+	      		AND
+	      			TBEXPAPRDOCINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      		WHERE 
+	      			TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+	      		AND 
+	      			(((TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+	      		AND 
+	      			(TBAPRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBAPRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      		AND
+	      			TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	      	]]>
+	      	<isEqual property="v_MODE" compareValue="admin">
+	      		OR 
+	      			(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+	         	AND 
+	         		TBAPRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
+	         	OR 
+	         		(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)
+	         	AND 
+	         		 TBAPRRECEIPTPROCESSINFO.APRSTATE = '015')
+	      	</isEqual>
+	      	)
+			</isNotEqual>
+			<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
+			AND
+				$v_SPSUBQUERY$
+			</isGreaterThan>
+			<isNotEmpty property="v_ORDEROPTION">
+			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="11">
+			<isEqual property="v_ORDEROPTIONVALUE" compareValue="processdate">
+				 ORDER BY
+				 		$v_ORDEROPTION$
+			</isEqual>
+			<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="processdate">
+				 ORDER BY 
+				 		$v_ORDEROPTION$, PROCESSDATE $v_BASICORDER$
+			</isNotEqual>
+			</isGreaterEqual>
+			<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="11">
+				ORDER BY 
+						$v_ORDEROPTION$, PROCESSDATE $v_BASICORDER$
+			</isLessThan>
+			</isNotEmpty>
+			<isEmpty property="v_ORDEROPTION">
+				ORDER BY 
+						PROCESSDATE $v_BASICORDER$
+			</isEmpty>
+			<![CDATA[
+			)
+			WHERE 
+				ROWNUM <= #v_PAGESIZE#) A 
+			]]>
+			<isNotEmpty property="v_ORDEROPTION2">
+				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">
+					<isEqual compareValue="v_ORDEROPTION2VALUE" compareProperty="processdate">
+						ORDER BY 
+								$v_ORDEROPTION2$
+					</isEqual>
+					<isNotEqual compareValue="v_ORDEROPTION2VALUE" compareProperty="processdate">
+						ORDER BY 
+								$v_ORDEROPTION2$, PROCESSDATE $v_BASICORDER2$
+					</isNotEqual>
+				</isGreaterEqual>
+				<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="11">
+						 ORDER BY 
+						 		$v_ORDEROPTION2$, PROCESSDATE $v_BASICORDER2$
+				</isLessThan>
+			</isNotEmpty>
+			<isEmpty property="v_ORDEROPTION2">
+					ORDER BY 
+							PROCESSDATE $v_BASICORDER2$
+			</isEmpty>
+			<![CDATA[
+			) WHERE 
+					ROWNUM <= #v_PAGESIZE2#
+			]]>
+	</select>
 	
-	<procedure id="EzApprovalG.getOrgDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETORGDOCINFO(#v_PDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getOrgDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETORGDOCINFO(#v_PDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getOrgDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+	 SELECT 
+	 		 B.Href OrgHref  ,
+             A.Href Href  
+     FROM 
+     		 EZAPPROVALG_${companyID}.TBAPRDOCINFO A
+     JOIN 
+     		 EZAPPROVALG_${companyID}.TBENDAPRDOCINFO B   
+     ON 
+     		 A.OrgDocID = B.DocID
+     AND
+     		 A.TENANT_ID = B.TENANT_ID
+     WHERE  
+     		 A.DocID = #v_PDOCID#
+     AND
+     		A.TENANT_ID = #v_TENANTID#
+	</select>
 	
 	<procedure id="EzApprovalG.getReceivedDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -3725,9 +4113,136 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETAPRLINEINFO_APRSTATE(#v_PDOCID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETINNERLINEINFO(#v_DOCID#, #v_DOCSTATE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getInnerLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<isEqual property="v_DOCSTATE" compareValue="000">
+		 SELECT 
+		 		DOCID DOCID  ,
+                FLAG FLAG  
+         FROM ( SELECT 
+           				 DOCID ,
+                         'APR' FLAG  
+                  FROM 
+                  		 EZAPPROVALG_${companyID}.TBAPRDOCINFO
+                  WHERE
+	         			 TENANT_ID = #v_TENANTID# 
+                  
+                  UNION ALL 
+                  
+                  SELECT 
+                  		 DOCID ,
+                         'END' FLAG  
+                  FROM 
+                  		 EZAPPROVALG_${companyID}.TBENDAPRDOCINFO  ) A
+          WHERE  
+          		DOCID IN ( SELECT 
+          						ORGDOCID 
+                            FROM 
+                            	EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+                            WHERE  
+                            	DOCID = #v_DOCID#
+                            
+                            UNION ALL 
+                            
+                            SELECT 
+                            	ORGDOCID 
+                            FROM 
+                            	EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+                            WHERE  
+                            	DOCID = #v_DOCID# 
+                            AND
+	         					TENANT_ID = #v_TENANTID#)
+	       AND
+	         		TENANT_ID = #v_TENANTID#
+		</isEqual>
+		<isEqual property="v_DOCSTATE" compareValue="015">
+			 SELECT 
+			 		DOCID ,
+	                'APR' FLAG  
+	         FROM 
+	         		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+	         WHERE  
+	         		ORGDOCID = #v_DOCID#
+	         AND 
+	         		DOCSTATE = '015'
+	         AND
+	         		TENANT_ID = #v_TENANTID#
+		</isEqual>
+		<isNotEqual property="v_DOCSTATE" compareValue="000">
+		<isNotEqual property="v_DOCSTATE" compareValue="015">
+		 <![CDATA[
+		 SELECT 
+		 		C.DocID ,
+                C.FLAG ,
+                   ( SELECT 
+                   			DocID 
+                     FROM 
+                     		EZAPPROVALG_${companyID}.TBAPRDOCINFO D
+                     WHERE  
+                      		D.OrgDocID = C.DOCID
+                     AND 
+                     		D.WriterDeptID = C.WRITERDEPTID
+                     AND
+                     		D.TENANT_ID = #v_TENANTID# ) GDOCID  
+          FROM ( 
+          			SELECT 
+          					A.DOCID DOCID  ,
+                            'END' FLAG  ,
+                            B.WRITERDEPTID 
+                     FROM 
+                     		EZAPPROVALG_${companyID}.TBENDRECEIPTPROCESSINFO A
+                     JOIN 
+                     		EZAPPROVALG_${companyID}.TBENDAPRDOCINFO B   
+                     ON 
+                     		A.DocID = B.DocID
+                     AND
+                     		A.TENANT_ID = B.TENANT_ID
+                     WHERE  
+                     		A.ReceivedDeptID = #v_DEPTID#
+                     AND 
+                     		A.DocState = #v_DOCSTATE#
+                     AND 
+                     		B.OrgDocID = #v_DOCID#
+                     AND
+                     		A.TENANT_ID = #v_TENANTID# 
+                     AND 
+                     		ROWNUM <= 1
+                     
+                     UNION ALL 
+                     
+                     SELECT 
+                        * 
+                     FROM ( 
+                     		SELECT 
+                     				A.DocID DocID  ,
+                                    'APR' FLAG  ,
+                                    B.WriterDeptID 
+                     		FROM 
+                     				EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO A
+                            JOIN 
+                            		EZAPPROVALG_${companyID}.TBAPRDOCINFO B   
+                            ON 
+                            		A.DocID = B.DocID
+                            AND
+                            		A.TENANT_ID = B.TENANT_ID
+	                        WHERE  
+	                       			A.ReceivedDeptID = #v_DEPTID#
+	                        AND 
+	                       			A.DocState = #v_DOCSTATE#
+	                        AND 
+	                       			B.OrgDocID = #v_DOCID#
+	                        AND
+	                       			A.TENANT_ID = #v_TENANTID#
+	                        ORDER BY 
+	                       			FLAG DESC, DOCID DESC )
+            WHERE 
+            		ROWNUM <= 1 ) C 
+         ]]>
+		</isNotEqual>
+		</isNotEqual>
+	</select>
 	
 	<procedure id="EzApprovalG.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETSEARCHDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -4533,9 +5048,21 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMDOCINFO(#v_ORGDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMDOCINFO(#v_ORGDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String">
+		SELECT 
+				DOCID 
+	    FROM 
+	    		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+	    WHERE  
+	    		ORGDOCID = #v_ORGDOCID#
+	    AND 
+	    		DOCSTATE = '015'
+	    AND
+	    		TENANT_ID = #v_TENANTID#
+	</select>
 	
 	<procedure id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String">
 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDOCRECVSTATE(#v_DOCID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -4655,7 +5182,7 @@
 		<isEqual property="v_LISTTYPE" compareValue="10">
 		<![CDATA[
 			 SELECT 
-			 		COUNT(DocID)
+			 		COUNT(TBAPRDOCINFO.DocID)
              FROM 
              		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
              INNER JOIN 
@@ -5324,10 +5851,81 @@
 		{CALL EZAPPROVALG_${companyID}.EZSP_COMPARELINEHISTORY(#v_DOCID#, #v_FLAG#, #v_MODIFYSN#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzApprovalG.getReceiveDocListCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEDOCLISTCOUNT(#v_MODE#, #v_USERID#, #v_DEPTID#, #v_DEPTIDS#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.getReceiveDocListCount" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEDOCLISTCOUNT(#v_MODE#, #v_USERID#, #v_DEPTID#, #v_DEPTIDS#, #v_SPSUBQUERY#, #v_SDOCNO#, #v_SDOCTITLE#, #v_SWRITERNAME#, #v_SWRITERDEPTNAME#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getReceiveDocListCount" parameterClass="Map" resultClass="int">
+		<isEqual property="v_MODE" compareValue="simsa">
+		<![CDATA[
+			SELECT 
+				COUNT(TBAPRRECEIPTPROCESSINFO.DOCID)
+	      	FROM 
+	      		EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+	      	INNER JOIN 
+	      		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+	      	ON 
+	      		TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+	      	AND
+	      		TBAPRRECEIPTPROCESSINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      	INNER JOIN 
+	      		EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+	      	ON 
+	      		TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+	      	AND
+	      		TBEXPAPRDOCINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      	WHERE 
+	      		(TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
+	      	AND 
+	      		(TBAPRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBAPRRECEIPTPROCESSINFO.APRSTATE = '004')
+	      	AND 
+	      		TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
+	      	AND
+	      		TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	      	]]>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="simsa">
+			<![CDATA[
+			SELECT 
+				COUNT(TBAPRRECEIPTPROCESSINFO.DOCID)
+	      	FROM 
+	      		EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+	      	INNER JOIN 
+	      		EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+	      	ON 
+	      		TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+	      	AND
+	      		TBAPRRECEIPTPROCESSINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      	INNER JOIN 
+	      		EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+	      	ON 
+	      		TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+	      	AND
+	      		TBEXPAPRDOCINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+	      	WHERE 
+	      		TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+	      	AND 
+	      		((
+	      			(TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+	      			AND 
+	      				(TBAPRRECEIPTPROCESSINFO.APRSTATE = '012'
+	      			OR 
+	      				 TBAPRRECEIPTPROCESSINFO.APRSTATE = '015'))
+	      	AND
+	      		TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	      			]]>
+	     <isEqual property="v_MODE" compareValue="admin">
+	     OR 
+	     	(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$)  AND  TBAPRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014')) 
+          OR 
+          	(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND   TBAPRRECEIPTPROCESSINFO.APRSTATE = '015')
+	     </isEqual>
+	     	)  
+		</isNotEqual>
+		<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0">
+		AND 
+				$v_SPSUBQUERY$
+		</isGreaterThan>
+	</select>
 	<procedure id="EzApprovalG.updateDeliveryListCount" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATEDELIVERYLIST_COUNT(#v_DOCID#, #v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 	</procedure>
