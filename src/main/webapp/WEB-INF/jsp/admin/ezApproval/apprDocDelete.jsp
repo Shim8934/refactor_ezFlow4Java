@@ -207,10 +207,11 @@
 		
 		    function btnOK_onclick() {
 		        listview2.LoadFromID("lvTDocForm");
+		        var noItems = document.getElementById("lvTDocForm").rows[1].id.indexOf("TR_noItems");
 		        var length = listview2.GetRowCount();
-alert(length);
+
 		        if (document.getElementById('DelALL').checked != true) {
-		            if (length > 0 && Check == false) {
+		            if (noItems < 0 && length > 0 && Check == false) {
 		                DocDel();
 		                getDocList();
 		            }

@@ -25,7 +25,7 @@ function getDocType() {
     	
         xmlRtn = loadXMLString(result);
         objNode = xmlRtn.documentElement.childNodes;
-        var len = objNode.length;
+        var len = objNode.length / 2;
 
         index = document.getElementsByName('selSContName')[0].length;
 
@@ -43,7 +43,7 @@ function getDocType() {
                 }
             }
         }
-    } catch (e) { }
+    } catch (e) { alert("DocDelete_Cross.js :: getDocType()"); }
 }
 
 function Add_ContType1(Name, ID) {

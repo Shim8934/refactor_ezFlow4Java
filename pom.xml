@@ -222,11 +222,9 @@
 		</dependency>
 		<!-- ThumbNail Image 관련 -->
 		<dependency>
-		    <groupId>org.imgscalr</groupId>
-		    <artifactId>imgscalr-lib</artifactId>
-		    <version>4.2</version>
-		    <type>jar</type>
-		    <scope>compile</scope>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.8</version>
 		</dependency>
 		<!--  zip 한글깨짐 문제  -->
 		<dependency>

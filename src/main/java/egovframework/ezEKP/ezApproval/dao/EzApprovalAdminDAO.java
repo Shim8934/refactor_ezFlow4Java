@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
+import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -325,6 +326,11 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 
 	public void deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception {
 		delete("EzApprovalAdminDAO.deleteItemCodeItem", apprDocItemVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprSealInfoVO> getSealList(ApprSealInfoVO apprSealInfoVO) throws Exception {
+		return (List<ApprSealInfoVO>) list("EzApprovalAdminDAO.getSealList", apprSealInfoVO);
 	}
 	
 }

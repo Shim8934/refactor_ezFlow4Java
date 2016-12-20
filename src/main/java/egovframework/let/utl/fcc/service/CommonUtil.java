@@ -523,7 +523,7 @@ public class CommonUtil {
 	public String getRealPath(HttpServletRequest request) {
 		String realPath = request.getServletContext().getRealPath("");
 		
-		if (realPath.substring(realPath.length() - 1).equals(separator)) {
+		if (realPath.substring(realPath.length() - 1).equals(separator) || realPath.substring(realPath.length() - 1).equals("\\")) {
 			realPath = realPath.substring(0, realPath.length() - 1);
 		} 
 		
@@ -607,12 +607,25 @@ public class CommonUtil {
 	 * 현재시간 UTC로 가져오기
 	 * @return 투데이
 	 */
-	public String getTodayUTCTime() throws Exception {
+	public String getTodayUTCTime(String format) throws Exception {
 		logger.debug("getTodayUTCTime started");
 		
 		ZoneId utc = ZoneId.of("UTC");
 		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		DateTimeFormatter formatter = null;
+		
+		if (format == null || format.equals("")) {
+			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		} else {
+			try {
+				formatter = DateTimeFormatter.ofPattern(format);
+			} catch (Exception e) {
+				logger.error("formatter error :: " + e.getMessage());
+				formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			}
+		}
+		
 		String today = getTime.format(formatter);
 		
 		logger.debug("getTodayUTCTime ended");

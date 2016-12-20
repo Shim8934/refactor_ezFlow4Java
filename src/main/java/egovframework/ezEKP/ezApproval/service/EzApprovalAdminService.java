@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
+import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalAdminService {
@@ -103,5 +104,7 @@ public interface EzApprovalAdminService {
 	public String updateItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
 
 	public String deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
+
+	public String getSealList(ApprSealInfoVO apprSealInfoVO) throws Exception;
 
 }

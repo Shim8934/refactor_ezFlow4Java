@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
+import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2382,6 +2383,57 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("deleteItemCodeItem ended");
 		
 		return rtnValue;
+	}
+
+	@Override
+	public String getSealList(ApprSealInfoVO apprSealInfoVO) throws Exception {
+		logger.debug("getSealList started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		
+		apprSealInfoVO.setLang(commonUtil.getMultiData(apprSealInfoVO.getLang()));
+
+		List<ApprSealInfoVO> apprSealInfoVOs = ezApprovalAdminDAO.getSealList(apprSealInfoVO);
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < apprSealInfoVOs.size(); k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + commonUtil.cleanValue(apprSealInfoVOs.get(k).getSealName()) + "</VALUE>");
+			resultXML.append("<DATA1>" + apprSealInfoVOs.get(k).getSealNum() + "</DATA1>");
+			resultXML.append("<DATA2>" + apprSealInfoVOs.get(k).getSealPath() + "</DATA2>");
+			resultXML.append("<DATA3>" + apprSealInfoVOs.get(k).getRegUserID() + "</DATA3>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprSealInfoVOs.get(k).getSealWidth() + "</VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprSealInfoVOs.get(k).getSealHeight() + "</VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + commonUtil.getDateStringInUTC(apprSealInfoVOs.get(k).getRegDate(), apprSealInfoVO.getOffSet(), false) + "</VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + commonUtil.getDateStringInUTC(apprSealInfoVOs.get(k).getDelDate(), apprSealInfoVO.getOffSet(), false) + "</VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + commonUtil.cleanValue(apprSealInfoVOs.get(k).getRegUserName()) + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("</ROW>");
+			
+		}
+		
+		resultXML.append("</ROWS>");
+
+		logger.debug("getSealList ended");
+		
+		return resultXML.toString();
 	}
 	
 }

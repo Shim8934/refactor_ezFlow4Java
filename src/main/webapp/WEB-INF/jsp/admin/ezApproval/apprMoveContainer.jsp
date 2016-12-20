@@ -215,10 +215,11 @@
 			
 			function bt_OK_onclick() {
 			    listview2.LoadFromID("lvTDocForm");
+			    var noItems = document.getElementById("lvTDocForm").rows[1].id.indexOf("TR_noItems");
 			    var length = listview2.GetRowCount();
 			
 			    if (MoveALL.checked != true) {
-			        if (length > 0 && Check == false) {
+			        if (noItems < 0 && length > 0 && Check == false) {
 			            if (document.getElementsByName("selTContName")[0].value == "")
 			                alert("<spring:message code='ezApproval.t769'/>")
 						else {

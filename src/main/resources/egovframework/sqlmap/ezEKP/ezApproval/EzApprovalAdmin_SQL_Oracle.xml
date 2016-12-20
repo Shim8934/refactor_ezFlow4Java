@@ -9,6 +9,7 @@
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
 	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
+	<typeAlias  alias="ApprSealInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO"/>
 	<typeAlias  alias="ApprFormContVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormContVO"/>
 	<typeAlias  alias="ApprDocGroupVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO"/>
 	<typeAlias  alias="ApprReceiveGroupVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO"/>
@@ -1103,6 +1104,27 @@
 			AND
 				companyid = #companyID#
 		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSealList" parameterClass="ApprSealInfoVO" resultClass="ApprSealInfoVO">
+		SELECT 
+			SEALNUM, 
+			SEALNAME, 
+			SEALPATH, 
+			SEALWIDTH, 
+			SEALHEIGHT, 
+            REGDATE, 
+            DELDATE, 
+            REGUSERID, 
+            REGUSERNAME$lang$ AS REGUSERNAME 
+        FROM 
+        	TBSEALINFO  
+		<isNotEqual property="listFlag" compareValue="ADMIN">
+			WHERE 
+				DELDATE IS NULL
+		</isNotEqual>
+        ORDER BY 
+        	REGDATE DESC
 	</select>
 	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">

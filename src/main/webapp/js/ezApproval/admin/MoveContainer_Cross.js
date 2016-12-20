@@ -31,8 +31,7 @@
 
         xmlRtn = loadXMLString(result);
         objNode = xmlRtn.documentElement.childNodes;
-        var len = objNode.length;
-
+        var len = objNode.length / 2 ;
 
         if (Flag == "SDeptName") {
             index = document.getElementsByName('selSContName')[0].length;
@@ -42,7 +41,7 @@
                     document.getElementsByName('selSContName')[0].remove(i - 1);
             }
             if (objNode.length > 0) {
-                for (Cnt = 0 ; Cnt < len ; Cnt++) {
+                for (Cnt = 0 ; Cnt < len; Cnt++) {
                     var nodevalue = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
                     if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
                         contID[Cnt] = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
@@ -60,7 +59,7 @@
                     document.getElementsByName('selTContName')[0].remove(i - 1);
             }
             if (objNode.length > 0) {
-                for (Cnt = 0 ; Cnt < len ; Cnt++) {
+                for (Cnt = 0 ; Cnt < len; Cnt++) {
                     var nodevalue = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
                     if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
                         contID[Cnt] = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;

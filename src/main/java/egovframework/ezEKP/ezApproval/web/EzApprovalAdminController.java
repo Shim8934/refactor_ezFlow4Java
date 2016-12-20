@@ -1,10 +1,18 @@
 package egovframework.ezEKP.ezApproval.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.makers.ThumbnailMaker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +23,18 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
+import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -45,7 +57,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzApprovalAdminController {
+public class EzApprovalAdminController extends EgovFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -776,8 +788,8 @@ public class EzApprovalAdminController {
 		
 		String aprFlag = request.getParameter("ingFlag");
 		String listType = request.getParameter("listType");
-		String startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(), userInfo.getOffset(), false);
-		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(), userInfo.getOffset(), false);
+		String startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
 		model.addAttribute("aprFlag", aprFlag);
 		model.addAttribute("listType", listType);
@@ -1401,11 +1413,118 @@ public class EzApprovalAdminController {
 		}
 		
 		model.addAttribute("companySel", companySel);
-		model.addAttribute("serverName", userInfo.getServerName());
-		model.addAttribute("primaryStr", userInfo.getPrimary());
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("manageSeal ended");
 		
 		return "admin/ezApproval/apprManageSeal";
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/getSealList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSealList(@CookieValue("loginCookie") String loginCookie, ApprSealInfoVO apprSealInfoVO) throws Exception {
+		logger.debug("getSealList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprSealInfoVO.setTenantID(userInfo.getTenantId());
+		apprSealInfoVO.setLang(userInfo.getLang());
+		apprSealInfoVO.setOffSet(userInfo.getOffset());
+		
+		String result = ezApprovalAdminService.getSealList(apprSealInfoVO);
+		
+		logger.debug("getSealList ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/addSealInfo.do")
+	public String addSealInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
+		logger.debug("addSealInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
+
+		logger.debug("addSealInfo ended");
+		
+		return "admin/ezApproval/apprAddSealInfo";
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/sealImageUpload.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String sealImageUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+		logger.debug("sealImageUpload started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String strXML = "";
+		String realPath = commonUtil.getRealPath(request);
+		MultipartFile multiFile = request.getFile("file1");
+		
+		String companyID = request.getParameter("companyID");
+		String mode = request.getParameter("mode");
+		String fileName = multiFile.getOriginalFilename();
+		
+		String newFileName = companyID + "_" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss") + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
+		
+		if (newFileName.length() > 110) {
+			newFileName = newFileName.substring(0, 105) + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
+		}
+		
+		String tempSealPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG");
+		String thumbSealPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG") + commonUtil.separator + "T" + newFileName.substring(0, newFileName.lastIndexOf("."));
+		
+		File tempSeal = new File(tempSealPath);
+		File thumbSeal = new File(thumbSealPath);
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+		    stream = multiFile.getInputStream();
+	
+		    if (!tempSeal.isDirectory()) {
+				boolean _flag = tempSeal.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+		    }
+	
+		    bos = new FileOutputStream(tempSealPath + commonUtil.separator + newFileName);
+	
+		    int bytesRead = 0;
+		    byte[] buffer = new byte[BUFF_SIZE];
+	
+		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+		    	bos.write(buffer, 0, bytesRead);
+		    }
+		} catch(IOException e) {
+			logger.debug(e.getMessage());
+		} finally {
+			bos.close();
+			stream.close();
+		}
+		
+		thumbSeal.getParentFile().mkdirs();
+		Thumbnails.of(new File(tempSealPath + commonUtil.separator + newFileName)).size(119, 128).outputFormat("png").toFile(thumbSeal);
+		
+		strXML = "<ROOT><NODES>";
+
+        strXML += "<NODE><PUPLOADSN><![CDATA[" + newFileName + "]]></PUPLOADSN>";
+        strXML += "<RESULTUPLOADA><![CDATA[" + "true" + "]]></RESULTUPLOADA>";
+        strXML += "<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>";
+        strXML += "<FILESIZE>" + multiFile.getSize() + "</FILESIZE>";
+        strXML += "<FILELOCATION><![CDATA[" + newFileName + "]]></FILELOCATION>";
+        strXML += "<MODE><![CDATA[" + mode + "]]></MODE>";
+        strXML += "</NODE>";
+
+        strXML += "</NODES></ROOT>";
+		
+		logger.debug("sealImageUpload ended");
+		
+		return strXML;
 	}
 }
