@@ -1643,5 +1643,4 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		return "json";
 	}	
 	
-	
 }
