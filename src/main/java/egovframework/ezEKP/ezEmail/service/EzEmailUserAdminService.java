@@ -137,9 +137,4 @@ public interface EzEmailUserAdminService {
 	 */
 	public int updateGroupMove(String oldGroupEmailAddress, String newGroupEmailAddress, String targetEmail) throws Exception;
 
-	public List<String> getIndividualAlias(String userAccount) throws Exception;
-	
-	public String setIndividualAlias(String userAccount, String primaryMail, List<String> individualAliasList) throws Exception;
-	
-	public String checkIndividualAlias(String individualAlias) throws Exception;
 }

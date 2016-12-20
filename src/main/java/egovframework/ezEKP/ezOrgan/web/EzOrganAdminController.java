@@ -1673,7 +1673,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			mailList.add("smtp:" + userAccount);
 		}
 		
-		List<String> aliasMailList = ezEmailUserAdminService.getIndividualAlias(userAccount);
+		List<String> aliasMailList = ezOrganAdminService.getIndividualAlias(userAccount);
 		for (String mail : aliasMailList) {
 			if (mail.equals(userVO.getMail())) {
 				mailList.add("SMTP:" + mail);
@@ -1734,7 +1734,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			}
 			
 			if (mailList.size() > 0) {
-				returnValue = ezEmailUserAdminService.setIndividualAlias(originalMail, primaryMail, mailList);
+				returnValue = ezOrganAdminService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
 			} else {
 				returnValue = "OK";
 			}
@@ -1767,7 +1767,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-			returnValue = ezEmailUserAdminService.checkIndividualAlias(mail);
+			returnValue = ezOrganAdminService.checkIndividualAlias(mail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
