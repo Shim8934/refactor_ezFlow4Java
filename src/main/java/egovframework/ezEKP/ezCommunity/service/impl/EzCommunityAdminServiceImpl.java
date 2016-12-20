@@ -46,7 +46,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public List<CommunityCComCloseVO> aspCloseGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+			
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_S", s);
