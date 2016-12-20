@@ -1059,7 +1059,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 			
 			//전자설문
-			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId()));
+			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
 			
 			//유저이미지
 			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
