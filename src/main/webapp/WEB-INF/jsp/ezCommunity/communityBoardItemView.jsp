@@ -684,8 +684,9 @@
 						strHTML = "";
 		 	            var temp = 0;
 		 	            
-		 	           $.each(result["oneLineReplyList"], function(idx, item){
-		 	            	temp = temp+1;
+						$.each(result["oneLineReplyList"], function(idx, item){
+							temp = temp+1;
+							
 		 	            	if (gubun != "2" && userinfo_lang == "") {
 		 	            		strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + item.userID + "\")'><font color=blue>" + item.userName + "</font></span>(" + item.writeDate + ")" + " : </font>" + item.content + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + item.replyID + "\")'><br>";
 		 	            	} else if (gubun == "2" && userinfo_lang == "") {

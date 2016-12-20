@@ -105,8 +105,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<QstResponseVO> getResponsePersonForResultTotalSave(int v_pItemNo) {
-		return (List<QstResponseVO>) list("EzQuestionDAO.getResponsePersonForResultTotalSave",v_pItemNo);
+	public List<QstResponseVO> getResponsePersonForResultTotalSave(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.getResponsePersonForResultTotalSave",map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -147,8 +147,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (QstReuseQuestionVO) select("EzQuestionDAO.reUseQuestionData", map);
 	}
 	
-	public String getItemSeq(String brdID) {
-		return (String)select("EzQuestionDAO.getItemSeq", brdID);
+	public String getItemSeq(Map<String, Object> map) {
+		return (String)select("EzQuestionDAO.getItemSeq", map);
 	}
 	
 	public String getReadDateItemForResult(Map<String, Object> map) {
@@ -160,13 +160,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int getQstListCnt(Map<String, Object> map){
-		select("EzQuestionDAO.getQstListCnt", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzQuestionDAO.getQstListCnt", map);
 	}
 	
 	public int getItemNoCnt(Map<String, Object> map) throws Exception {
-		select("EzQuestionDAO.getItemNoCnt", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzQuestionDAO.getItemNoCnt", map);
 	}
 	
 	public int getUserResponseCnt(Map<String, Object> map){
@@ -174,9 +172,9 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int getQuestionNo(Map<String,Object> map) throws Exception {
-		select("EzQuestionDAO.getQuestionNo", map);
-		if(map.get("v_pCount") != null) {
-			return (int)map.get("v_pCount");
+		//return (int)select("EzQuestionDAO.getQuestionNo", map);
+		if(select("EzQuestionDAO.getQuestionNo", map) != null) {
+			return (int)(int)select("EzQuestionDAO.getQuestionNo", map);
 		}else{
 			return 0;
 		}
@@ -187,8 +185,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int wpCountPollCount(Map<String, Object> map){
-		select("EzQuestionDAO.wpCountPollCount", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzQuestionDAO.wpCountPollCount", map);
 	}
 	
 	public int getQstResponse(Map<String, Object> map){
@@ -224,8 +221,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		return (Integer) select("EzQuestionDAO.pollRespCnt2", map);
 	}
 	
-	public String getQuestionNoCnt(String v_pItemNo){
-		return (String) select("EzQuestionDAO.getQuestionNoCnt", v_pItemNo);
+	public String getQuestionNoCnt(Map<String, Object> map){
+		return (String) select("EzQuestionDAO.getQuestionNoCnt", map);
 	}
 	
 	public String analysisCount(Map<String, Object> map) {
@@ -272,8 +269,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		insert("EzQuestionDAO.insertItemRead", map);
 	}
 	
-	public void insertItemSeq(String brdId) {
-		select("EzQuestionDAO.insertItemSeq", brdId);
+	public void insertItemSeq(Map<String,Object> map) {
+		select("EzQuestionDAO.insertItemSeq", map);
 	}
 	
 	public void insertResponse(Map<String,Object> map) {
@@ -332,6 +329,10 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		update("EzQuestionDAO.changePermission", map);
 	}
 	
+	public void changePermission_U(Map<String, Object> map) {
+		update("EzQuestionDAO.changePermission_U", map);
+	}
+	
 	public void updateTblPollItem(Map<String, Object> map) {
 		update("EzQuestionDAO.updateTblPollItem", map);
 	}
@@ -340,11 +341,48 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 		update("EzQuestionDAO.updateTblPollPermission", map);
 	}
 	
+	public void updatePollEndDate_U(Map<String, Object> map) {
+		update("EzQuestionDAO.updatePollEndDate_U", map);
+	}
+	
 	public void deleteItem(Map<String,Object> map) {
 		delete("EzQuestionDAO.deleteItem", map);
 	}
+	
+	public void deleteItem_D1(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D1", map);
+	}
+	
+	public void deleteItem_D2(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D2", map);
+	}
+	
+	public void deleteItem_D3(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D3", map);
+	}
+	
+	public void deleteItem_D4(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D4", map);
+	}
+	
+	public void deleteItem_D5(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D5", map);
+	}
+	
+	public void deleteItem_D6(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D6", map);
+	}
+	
+	public void deleteItem_D7(Map<String,Object> map) {
+		delete("EzQuestionDAO.deleteItem_D7", map);
+	}
+	
 	public void deletePermission(Map<String,Object> map) {
 		delete("EzQuestionDAO.deletePermission", map);
+	}
+	
+	public void deletePermission_D(Map<String,Object> map) {
+		delete("EzQuestionDAO.deletePermission_D", map);
 	}
 	
 	public void deletePollAttach(Map<String,Object> map) {
@@ -359,6 +397,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void questionDelete2(Map<String,Object> map) {
 		delete("EzQuestionDAO.questionDelete2", map);
 	}
+	
+	public void questionDelete2_D(Map<String,Object> map) {
+		delete("EzQuestionDAO.questionDelete2_D", map);
+	}
+	
 	public void questionDelete1(Map<String,Object> map) {
 		delete("EzQuestionDAO.questionDelete1", map);
 	}

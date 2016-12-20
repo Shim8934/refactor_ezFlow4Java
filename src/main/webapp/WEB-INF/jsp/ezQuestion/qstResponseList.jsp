@@ -34,7 +34,7 @@
 			var pResponse_YN = "<c:out value='${responseYN}'/>";
 			var pTotalPage = "<c:out value='${pTotalPage}'/>";
 			var CurPage = "<c:out value='${pCurrPage}'/>";
-			var totalCount = "<c:out value='${pTotalCnt}'/>";
+			var totalCount = "${pTotalCnt}";
 
 			document.onselectstart = function () { return false; };
 			window.onload = function () {

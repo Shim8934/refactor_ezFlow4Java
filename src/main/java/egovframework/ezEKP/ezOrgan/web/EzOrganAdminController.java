@@ -302,17 +302,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-        int tenantID = userInfo.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);       
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		
-		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
-		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
-        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-        	
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "admin/ezOrgan/deptInfo";
 	}
