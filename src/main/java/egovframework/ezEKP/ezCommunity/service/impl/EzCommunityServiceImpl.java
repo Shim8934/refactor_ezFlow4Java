@@ -9,15 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.security.PrivateKey;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -708,8 +705,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String strWriterFakeName = "";
 		
 		if (!pUrl.equals("")) {
-			item.setStartDate(commonUtil.getTodayUTCTime(""));
-			item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
+			item.setStartDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+			item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
 			expireDays = "-1";
 		} else {
 			if (userInfo.getLang().equals("2")) {
@@ -721,9 +718,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			expireDays = boardInfo.getExpireDays();
 			if (pMode.equals("new")) {
 				if (expireDays.equals("-1")) {
-                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
+                    item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                 } else {
-                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
+                    item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                 }
 			} else {
 				item = getItemXML(pBoardID, pItemID, userInfo.getTenantId());
@@ -734,10 +731,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 	item.setTitle(item.getTitle());
                 } else if (pMode.equals("modify")) {
                 	if (item.getEndDate().substring(0, 4).equals("9999")) {
-                        if (expireDays == "-1")	{
-                        	item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
+                        if (expireDays.equals("-1")) {
+                        	item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         } else {
-                            item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
+                            item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         }
                     }
                 	
@@ -1739,22 +1736,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			file.delete();
 			
-			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, fileName);
+			adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, fileName, tenantID);
 		}
 		
 		if (!copType.equals("")) {
-			adminCommType(copType, code);
+			adminCommType(copType, code, tenantID);
 			
 			if (logoFile.isEmpty()) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName, tenantID);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void adminLogoUpload(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData) throws Exception {
+	public void adminLogoUpload(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
 		int iStart = 0;
 		if (fileData != null) {
 			iStart = fileName.lastIndexOf(".");
@@ -1790,7 +1787,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				ImageIO.write(outputImage, "png", newThumbnail);
 				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
 				
-				adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, code);
+				adminLogoOkUpdate1(logoFileNameLogo, logoFileNameThumbnail, code, tenantID);
 	        } catch (Exception e) {
 	        	throw e;
 	        } finally {
@@ -1800,11 +1797,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (!copType.equals("")) {
-			adminCommType(copType, code);
+			adminCommType(copType, code, tenantID);
 			
 			if (fileData != null) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName);
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName, tenantID);
 				}
 			}
 		}
@@ -2735,23 +2732,23 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public String setAsRead(LoginVO userInfo, String boardID, String itemIDList) throws Exception {
+		LOGGER.debug("setAsRead started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pUserID", userInfo.getId());
+		map.put("v_pUserName", userInfo.getDisplayName1());
+		map.put("v_pUserDeptName", userInfo.getDeptName1());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName1());
+		map.put("v_pUserTitle", userInfo.getTitle1());
+		map.put("v_pUserName2", userInfo.getDisplayName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", userInfo.getTenantId());
+		
 		try {
-			LOGGER.debug("setAsRead started.");
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pBoardID", boardID);
-			map.put("v_pUserID", userInfo.getId());
-			map.put("v_pUserName", userInfo.getDisplayName1());
-			map.put("v_pUserDeptName", userInfo.getDeptName1());
-			map.put("v_pUserCompanyName", userInfo.getCompanyName1());
-			map.put("v_pUserTitle", userInfo.getTitle1());
-			map.put("v_pUserName2", userInfo.getDisplayName2());
-			map.put("v_pUserDeptName2", userInfo.getDeptName2());
-			map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
-			map.put("v_pUserTitle2", userInfo.getTitle2());
-			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
-			map.put("tenantID", userInfo.getTenantId());
-			
 			for (String item : itemIDList.split(";")) {
 				map.put("v_pItemID", item);
 				
@@ -2776,7 +2773,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
-			LOGGER.debug("setAsRead error.");
+			LOGGER.debug("setAsRead ERROR.");
 			LOGGER.debug(e.toString());
 			
 			return "ERROR";
@@ -2991,7 +2988,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 		if (pMode.equals("modify")) {
 			LOGGER.debug("modifyItem");
-			ezCommunityDAO.brdUpdateItem(map);
+			ezCommunityDAO.brdUpdateItemUpdate(map);
+			ezCommunityDAO.brdUpdateItemDelete(map);
 		} else {
 			LOGGER.debug("newItem");
 			int temp = ezCommunityDAO.brdNewItemSelect1(userInfo.getTenantId());
@@ -4267,6 +4265,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception {
+		LOGGER.debug("createBoardGroup started.");
+		
+		int boardNo = ezCommunityDAO.createBoardGroupSelect(userInfo.getTenantId());
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_BOARDGROUPID", boardGroupID);
@@ -4274,8 +4276,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_BOARDGROUPNAME2", boardGroupName2);
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		map.put("v_ACCESSNAME", userInfo.getDisplayName1() + "(" + userInfo.getCompanyName1() + ", " + userInfo.getDeptName1() + ")");
+		map.put("v_BOARDNO", boardNo);
+		map.put("tenantID", userInfo.getTenantId());
 		
-		ezCommunityDAO.createBoardGroup(map);
+		ezCommunityDAO.createBoardGroupInsert1(map);
+		ezCommunityDAO.createBoardGroupInsert2(map);
+		ezCommunityDAO.createBoardGroupInsert3(map);
+		
+		LOGGER.debug("createBoardGroup ended.");
 	}
 
 	@Override
@@ -4311,12 +4319,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void deleteBoard() throws Exception {
-		ezCommunityDAO.deleteBoard();
+	public void deleteBoard(int tenantID) throws Exception {
+		ezCommunityDAO.deleteBoard(tenantID);
 	}
 
 	@Override
 	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception {
+		LOGGER.debug("createBoardInsert started.");
+		
+		int boardNo = ezCommunityDAO.createBoardInsertSelect(userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -4330,33 +4341,76 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME", userInfo.getDisplayName1());
 		map.put("v_USERINFO_COMPANYNAME", userInfo.getCompanyName1());
 		map.put("v_USERINFO_DEPTNAME", userInfo.getDeptName1());
+		map.put("v_BOARDNO", boardNo);
+		map.put("tenantID", userInfo.getTenantId());
 		
-		ezCommunityDAO.createBoardInsert(map);
+		LOGGER.debug("code="+code);
+		LOGGER.debug("boardID"+boardID);
+		LOGGER.debug("boardName="+boardName);
+		LOGGER.debug("boardName2="+boardName2);
+		LOGGER.debug("parentBoardID="+parentBoardID);
+		LOGGER.debug("boardGroupID"+boardGroupID);
+		LOGGER.debug("comatt="+comatt);
+		LOGGER.debug("v_USERINFO_USERID="+userInfo.getId());
+		LOGGER.debug("v_USERINFO_DISPLAYNAME="+userInfo.getDisplayName1());
+		LOGGER.debug("v_USERINFO_COMPANYNAME="+userInfo.getCompanyName1());
+		LOGGER.debug("v_USERINFO_DEPTNAME="+userInfo.getDeptName1());
+		LOGGER.debug("v_BOARDNO="+boardNo);
+		
+		ezCommunityDAO.createBoardInsertInsert1(map);
+		ezCommunityDAO.createBoardInsertInsert2(map);
+		ezCommunityDAO.createBoardInsertInsert3(map);
+		
+		LOGGER.debug("createBoardInsert ended.");
 	}
-
+	
 	@Override
-	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception {
+	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID, int tenantID) throws Exception {
+		LOGGER.debug("moveBoard started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOrgBoardID", orgBoardID);
 		map.put("v_pNewParentBoardID", newParentBoardID);
 		map.put("v_pNewBoardGroupID", newBoardGroupID);
+		map.put("tenantID", tenantID);
 		
 		try{
-			ezCommunityDAO.moveBoard(map);
+			ezCommunityDAO.moveBoardUpdate1(map);
+			ezCommunityDAO.moveBoardUpdate2(map);
+			deleteBoard(tenantID);
+			
+			LOGGER.debug("moveBoard ended.");
 			
 			return "OK";
 		} catch (Exception e) {
+			LOGGER.debug("moveBoard ERROR.");
+			
 			return "ERROR" + e.getMessage();
 		}
 	}
-
+	
 	@Override
-	public String brdDeleteBoard(String boardID) throws Exception {
-		try{
-			ezCommunityDAO.brdDeleteBoard(boardID);
+	public String brdDeleteBoard(String boardID, int tenantID) throws Exception {		
+		LOGGER.debug("brdDeleteBoard started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_BOARDID", boardID);
+		map.put("tenantID", tenantID);
+		
+		try{	
+			ezCommunityDAO.brdDeleteBoardDelete1(map);
+			ezCommunityDAO.brdDeleteBoardDelete2(map);
+			ezCommunityDAO.brdDeleteBoardDelete3(map);
+			ezCommunityDAO.brdDeleteBoardInsert(map);
+			deleteBoard(tenantID);
+			
+			LOGGER.debug("brdDeleteBoard ended.");
 			
 			return "OK";
 		} catch (Exception e) {
+			
+			LOGGER.debug("brdDeleteBoard ERROR.");
+			
 			return "ERROR" + e.getMessage();
 		}
 	}
@@ -4474,13 +4528,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception {
+	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception {
+		LOGGER.debug("adminOuterOkNoSet started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_FLAG", flag);
 		map.put("v_USERID", userID);
 		map.put("v_CODE", code);
+		map.put("tenantID", tenantID);
 		
-		ezCommunityDAO.adminOuterOkNoSet(map);
+		if (flag.equals("OK")) {
+			ezCommunityDAO.adminOuterOkNoSetDelete1(map);
+			ezCommunityDAO.adminOuterOkNoSetUpdate(map);
+		}
+		
+		ezCommunityDAO.adminOuterOkNoSetDelete2(map);
+		
+		LOGGER.debug("adminOuterOkNoSet started.");
 	}
 
 	@Override
@@ -4558,29 +4621,38 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String saveBoardProperty(String id, String xmlData) throws Exception {
+	public String saveBoardProperty(LoginVO userInfo, String xmlData) throws Exception {
+		LOGGER.debug("saveBoardProperty started.");
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardName", xmlDom.getElementsByTagName("BOARDNAME").item(0).getTextContent());
+		map.put("v_pBoardName2", xmlDom.getElementsByTagName("BOARDNAME2").item(0).getTextContent());
+		map.put("v_pBoardID", xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
+		map.put("v_pAttachMax", xmlDom.getElementsByTagName("ATTACHMAX").item(0).getTextContent());
+		map.put("v_pDescription", xmlDom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
+		map.put("v_pExpires", xmlDom.getElementsByTagName("EXPIRES").item(0).getTextContent());
+		map.put("v_pURL", xmlDom.getElementsByTagName("URL").item(0).getTextContent());
+		map.put("v_pGubun", xmlDom.getElementsByTagName("GUBUN").item(0).getTextContent());
+		map.put("v_pReplyNotify", xmlDom.getElementsByTagName("REPLYNOTIFY").item(0).getTextContent());
+		map.put("v_pDeleteAfter", xmlDom.getElementsByTagName("DELETEAFTER").item(0).getTextContent());
+		map.put("v_pBoardColor", xmlDom.getElementsByTagName("BOARDCOLOR").item(0).getTextContent());
+		map.put("v_pVersionUse", xmlDom.getElementsByTagName("VERSIONUSE").item(0).getTextContent());
+		map.put("v_pCheckUse", xmlDom.getElementsByTagName("CHECKUSE").item(0).getTextContent());
+		map.put("tenantID", userInfo.getTenantId());
+		
 		try {
-			Document xmlDom = commonUtil.convertStringToDocument(xmlData);
+			ezCommunityDAO.brdSaveBoardPropertyUpdate1(map);
+			ezCommunityDAO.brdSaveBoardPropertyUpdate2(map);
+			deleteBoard(userInfo.getTenantId());
 			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pBoardName", xmlDom.getElementsByTagName("BOARDNAME").item(0).getTextContent());
-			map.put("v_pBoardName2", xmlDom.getElementsByTagName("BOARDNAME2").item(0).getTextContent());
-			map.put("v_pBoardID", xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
-			map.put("v_pAttachMax", xmlDom.getElementsByTagName("ATTACHMAX").item(0).getTextContent());
-			map.put("v_pDescription", xmlDom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
-			map.put("v_pExpires", xmlDom.getElementsByTagName("EXPIRES").item(0).getTextContent());
-			map.put("v_pURL", xmlDom.getElementsByTagName("URL").item(0).getTextContent());
-			map.put("v_pGubun", xmlDom.getElementsByTagName("GUBUN").item(0).getTextContent());
-			map.put("v_pReplyNotify", xmlDom.getElementsByTagName("REPLYNOTIFY").item(0).getTextContent());
-			map.put("v_pDeleteAfter", xmlDom.getElementsByTagName("DELETEAFTER").item(0).getTextContent());
-			map.put("v_pBoardColor", xmlDom.getElementsByTagName("BOARDCOLOR").item(0).getTextContent());
-			map.put("v_pVersionUse", xmlDom.getElementsByTagName("VERSIONUSE").item(0).getTextContent());
-			map.put("v_pCheckUse", xmlDom.getElementsByTagName("CHECKUSE").item(0).getTextContent());
-			
-			ezCommunityDAO.brdSaveBoardProperty(map);
+			LOGGER.debug("saveBoardProperty ended.");
 			
 			return "OK";
 		} catch (Exception e) {
+			LOGGER.debug("saveBoardProperty ERROR.");
+			
 			return "ERROR" + e.getMessage();
 		}
 	}
@@ -6587,30 +6659,46 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		ezCommunityDAO.pollEditOkUpdateQuestion(map);
 	}
 	
-	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName) throws Exception {
+	public void adminLogoOkUpdate1(String logoFileNameLogo, String logoFileNameThumbnail, String fileName, int tenantID) throws Exception {
+		LOGGER.debug("adminLogoOkUpdate1 started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LOGOFILENAME", logoFileNameLogo);
 		map.put("v_LOGOFILENAME_THUMBNAIL", logoFileNameThumbnail);
 		map.put("v_FILENAME",  fileName);
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminLogoOkUpdate1(map);
+		
+		LOGGER.debug("adminLogoOkUpdate1 ended.");
 	}
 	
-	public void adminCommType(String copType, String fileName) throws Exception {
+	public void adminCommType(String copType, String fileName, int tenantID) throws Exception {
+		LOGGER.debug("adminCommType started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COPTYPE", copType);
 		map.put("v_FILENAME", fileName);
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminCommType(map);
+		
+		LOGGER.debug("adminCommType ended.");
 	}
 	
-	public void adminLogoOkUpdate2(String bannerFileName, String fileName) throws Exception {
+	//TODO 미사용
+	/*public void adminLogoOkUpdate2(String bannerFileName, String fileName, int tenantID) throws Exception {
+		LOGGER.debug("adminLogoOkUpdate2 started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BANNERFILENAME", bannerFileName);
 		map.put("v_FILENAME", fileName);
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminLoGoOkUpdate2(map);
-	}
+		
+		LOGGER.debug("adminLogoOkUpdate2 ended.");
+	}*/
 
 	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
         String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";

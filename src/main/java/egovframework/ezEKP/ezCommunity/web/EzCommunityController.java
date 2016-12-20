@@ -692,7 +692,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strAbstract", strAbstract);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("searchConfig", searchConfig);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("strXML", strXML);
@@ -782,7 +782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("pDocID", pDocID);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
@@ -1332,7 +1332,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("gubun", gubun);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("Use_Editor", useEditor);
 		model.addAttribute("Use_IE11Browser", useIE11Browser);
 		
@@ -2493,7 +2493,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LOGGER.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
 		
 		try {
-			ezCommunityService.adminLogoUpload(code, type, imageSrc, logoPath, fileName, fileData);
+			ezCommunityService.adminLogoUpload(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
 			model.addAttribute("result", true);
 			LOGGER.debug("adminLogoUpload ended. ");
 		} catch (Exception e) {
@@ -2622,6 +2622,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/boardProperty.do")
 	public String adminBoardProperty (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("adminBoardProperty started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String style = "";
 		String useMultiData = config.getProperty("config.Use_MultiData");
@@ -2666,6 +2668,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardProp", boardProp);
 		model.addAttribute("_style", style);
 		
+		LOGGER.debug("adminBoardProperty ended.");
+		
 		return "/ezCommunity/communityAdminBoardProperty";
 	}
 	
@@ -2676,9 +2680,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveBoardProperty(@RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String ret = ezCommunityService.saveBoardProperty(userInfo.getId(), xmlData);
-		
-		ezCommunityService.deleteBoard();
+		String ret = ezCommunityService.saveBoardProperty(userInfo, xmlData);
 		
 		return "<RESULT>" + ret + "</RESULT>";
 	}
@@ -2756,6 +2758,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminGetSubBoards.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String adminGetSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("adminGetSubBoards started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pExcludeBoardID = " ";
 		int pMode = 0;
@@ -2768,7 +2772,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
-
+		
+		LOGGER.debug("adminGetSubBoards ended.");
+		
 		return strXML;
 	}
 	
@@ -2782,7 +2788,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String ret = ezCommunityService.saveBoardOrder(xmlData, userInfo.getTenantId());
 		
-		ezCommunityService.deleteBoard();
+		ezCommunityService.deleteBoard(userInfo.getTenantId());
 		
 		ret = "<RESULT>" + ret + "</RESULT>";
 
@@ -2880,14 +2886,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/moveBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String moveBoard(HttpServletRequest request) throws Exception {
+	public String moveBoard(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("moveBoard started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String orgBoardID = request.getParameter("orgBoardID");
 		String newParentBoardID = request.getParameter("newParentBoardID");
 		String newBoardGroupID = request.getParameter("newBoardGroupID");
 		
-		String ret = ezCommunityService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID);
+		String ret = ezCommunityService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID, userInfo.getTenantId());
 		
-		ezCommunityService.deleteBoard();
+		LOGGER.debug("moveBoard ended.");
 		
 		return "<RESULT>" + ret + "</RESULT>";
 	}
@@ -2927,11 +2936,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/deleteBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String delete(HttpServletRequest request) throws Exception {
+	public String delete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 		
-		String ret = ezCommunityService.brdDeleteBoard(boardID);
-		ezCommunityService.deleteBoard();
+		String ret = ezCommunityService.brdDeleteBoard(boardID, userInfo.getTenantId());
 		
 		ret = "<RESULT>" + ret + "</RESULT>";
 		
@@ -3075,7 +3084,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code);
+		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code, userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
@@ -3960,8 +3969,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo);
 		
-		String strNow = commonUtil.getTodayUTCTime("");
-		
 		if (!url.equals("")) {
 			startDateTime = EgovDateUtil.getToday("-");
 			endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd");
@@ -4019,7 +4026,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pUploadPath", pUploadFilePath);
 		model.addAttribute("pMode", mode);
 		model.addAttribute("pUrl", url);
-		model.addAttribute("strNow", strNow);
+		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		model.addAttribute("expireDays", expireDays);
@@ -4071,7 +4078,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         		
         		if (i > 0) {
         			mode = "New";
-        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime(""));
+        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.getTodayTime());
         		}
         		
         		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);

@@ -763,12 +763,33 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.commOutOkInsert", map);
 	}
 
-	public void createBoardGroup(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.createBoardGroup", map);
+	public Integer createBoardGroupSelect(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.createBoardGroupSelect", tenantID);
+	}
+	public void createBoardGroupInsert1(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardGroupInsert1", map);
+	}
+	public void createBoardGroupInsert2(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardGroupInsert2", map);
+	}
+	public void createBoardGroupInsert3(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardGroupInsert3", map);
 	}
 	
-	public void createBoardInsert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.createBoardInsert", map);
+	public Integer createBoardInsertSelect(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.createBoardInsertSelect", tenantID);
+	}
+	
+	public void createBoardInsertInsert1(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardInsertInsert1", map);
+	}
+	
+	public void createBoardInsertInsert2(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardInsertInsert2", map);
+	}
+	
+	public void createBoardInsertInsert3(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.createBoardInsertInsert3", map);
 	}
 	
 	public Integer pollResOkSetSelect(Map<String, Object> map) throws Exception {
@@ -839,17 +860,19 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void setAsReadUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.setAsReadUpdate", map);
 	}
-
-	public void brdUpdateItem(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.brdUpdateItem", map);
+	
+	public void brdUpdateItemUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.brdUpdateItemUpdate", map);
 	}
-
-//	public void guestEditOkUpdate(Map<String, Object> map) throws Exception {
-//		update("EzCommunityDAO.guestEditOkUpdate", map);
-//	}
+	
+	public void brdUpdateItemDelete(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdUpdateItemDelete", map);
+	}
+	
 	public Integer guestEditOkUpdateSelect(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzCommunityDAO.guestEditOkUpdateSelect", map);
 	}
+	
 	public void guestEditOkUpdateUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.guestEditOkUpdateUpdate", map);
 	}
@@ -857,6 +880,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void pollEditOkUpdateManager(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.pollEditOkUpdateManager", map);
 	}
+	
 	public void pollEditOkUpdateQuestion(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.pollEditOkUpdateQuestion", map);
 	}
@@ -869,9 +893,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.adminCommType", map);
 	}
 
-	public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
+	//TODO 미사용
+	/*public void adminLoGoOkUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminLogoOkUpdate2", map);
-	}
+	}*/
 
 	public void adminHomeBoardSet(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminHomeBoardSet", map);
@@ -885,20 +910,33 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.adminBasicOkUpdate", map);
 	}
 	
-	public void moveBoard(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.moveBoard", map);
+	public void moveBoardUpdate1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.moveBoardUpdate1", map);
+	}
+	public void moveBoardUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.moveBoardUpdate2", map);
 	}
 	
-	public void adminOuterOkNoSet(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminOuterOkNoSet", map);	
+	public void adminOuterOkNoSetDelete1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminOuterOkNoSetDelete1", map);	
+	}
+	public void adminOuterOkNoSetDelete2(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminOuterOkNoSetDelete2", map);	
+	}
+	public void adminOuterOkNoSetUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminOuterOkNoSetUpdate", map);	
 	}
 	
 	public void adminMemberListGoSE(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminMemberListGoSE", map);
 	}
 
-	public void brdSaveBoardProperty(Map<String, Object> map) {
-		update("EzCommunityDAO.brdSaveBoardProperty", map);
+	public void brdSaveBoardPropertyUpdate1(Map<String, Object> map) {
+		update("EzCommunityDAO.brdSaveBoardPropertyUpdate1", map);
+	}
+	
+	public void brdSaveBoardPropertyUpdate2(Map<String, Object> map) {
+		update("EzCommunityDAO.brdSaveBoardPropertyUpdate2", map);
 	}
 	
 	public void copyUpdate(String v_pItemID) throws Exception {
@@ -984,12 +1022,24 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.pollDeleteDel4", map);
 	}
 
-	public void deleteBoard() throws Exception {
-		delete("EzCommunityDAO.deleteBoard");
+	public void deleteBoard(int tenantID) throws Exception {
+		delete("EzCommunityDAO.deleteBoard", tenantID);
 	}
 
-	public void brdDeleteBoard(String v_pBoardID) throws Exception {
-		delete("EzCommunityDAO.brdDeleteBoard", v_pBoardID);
+	public void brdDeleteBoardDelete1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdDeleteBoardDelete1", map);
+	}
+	
+	public void brdDeleteBoardDelete2(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdDeleteBoardDelete2", map);
+	}
+	
+	public void brdDeleteBoardDelete3(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdDeleteBoardDelete3", map);
+	}
+	
+	public void brdDeleteBoardInsert(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdDeleteBoardInsert", map);
 	}
 
 

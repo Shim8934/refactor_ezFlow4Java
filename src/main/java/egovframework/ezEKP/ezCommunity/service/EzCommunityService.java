@@ -213,15 +213,15 @@ public interface EzCommunityService {
 	
 	public String saveBoardOrder(String xmlData, int tenantID) throws Exception;
 	
-	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID) throws Exception;
+	public String moveBoard(String orgBoardID, String newParentBoardID, String newBoardGroupID, int tenantID) throws Exception;
 
-	public String brdDeleteBoard(String boardID) throws Exception;
+	public String brdDeleteBoard(String boardID, int tenantID) throws Exception;
 
 	public int adminSearchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 
 	public String adminSearchItemXML(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow) throws Exception;
 	
-	public String saveBoardProperty(String id, String xmlData) throws Exception;
+	public String saveBoardProperty(LoginVO userInfo, String xmlData) throws Exception;
 	
 	public String checkOneLineOwner(String pReplyID, String id, int tenantID) throws Exception;
 	
@@ -319,11 +319,11 @@ public interface EzCommunityService {
 
 	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception;
 
-	public void deleteBoard() throws Exception;
+	public void deleteBoard(int tenantID) throws Exception;
 
 	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception;
 
-	public void adminOuterOkNoSet(String flag, String userID, String code) throws Exception;
+	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception;
 
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception;
 	
@@ -341,5 +341,5 @@ public interface EzCommunityService {
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath, int tenantID) throws Exception;
 
-	public void adminLogoUpload(String code, String type, String imageSrc, String logoPath, String fileName, String fileData) throws Exception;
+	public void adminLogoUpload(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
 }
