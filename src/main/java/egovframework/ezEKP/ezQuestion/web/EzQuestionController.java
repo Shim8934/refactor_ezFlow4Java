@@ -168,7 +168,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		                "&pollEndDate=" + qstListVO.getPollEndDate() +
 		                "&currPage=" + qstListVO.getCurrPage();
 		
-		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO));
+		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, loginVO.getTenantId(), loginVO.getOffset()));
 		
 		if(qstListVO.getTotalPage()==0){
 			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());

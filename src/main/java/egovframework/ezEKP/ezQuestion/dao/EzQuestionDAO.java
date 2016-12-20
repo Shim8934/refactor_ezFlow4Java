@@ -160,8 +160,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int getQstListCnt(Map<String, Object> map){
-		select("EzQuestionDAO.getQstListCnt", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzQuestionDAO.getQstListCnt", map);
 	}
 	
 	public int getItemNoCnt(Map<String, Object> map) throws Exception {
@@ -186,8 +185,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public int wpCountPollCount(Map<String, Object> map){
-		select("EzQuestionDAO.wpCountPollCount", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzQuestionDAO.wpCountPollCount", map);
 	}
 	
 	public int getQstResponse(Map<String, Object> map){
