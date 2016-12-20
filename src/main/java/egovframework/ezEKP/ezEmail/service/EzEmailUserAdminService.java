@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
+import java.util.List;
+
 /**
  * Email Server의 User Account를 관리할 수 있는 기능을 제공한다.
  * 
@@ -134,4 +136,10 @@ public interface EzEmailUserAdminService {
 	 * @return 성공 시 0, 에러 시 음수의 에러 코드를 반환
 	 */
 	public int updateGroupMove(String oldGroupEmailAddress, String newGroupEmailAddress, String targetEmail) throws Exception;
+
+	public List<String> getIndividualAlias(String userAccount) throws Exception;
+	
+	public String setIndividualAlias(String userAccount, String primaryMail, List<String> individualAliasList) throws Exception;
+	
+	public String checkIndividualAlias(String individualAlias) throws Exception;
 }

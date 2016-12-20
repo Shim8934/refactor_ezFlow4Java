@@ -403,8 +403,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String strVisit = ezCommunityService.commHomeGet1(userInfo.getId(), code, userInfo.getTenantId());
 		
-		if (strVisit == null || !strVisit.substring(0, 10).equals(commonUtil.getTodayUTCTime())) {
-			ezCommunityService.updateLastDate(commonUtil.getTodayUTCTime(), code, userInfo.getId(), userInfo.getTenantId());
+		if (strVisit == null || !strVisit.substring(0, 10).equals(commonUtil.getTodayUTCTime(""))) {
+			ezCommunityService.updateLastDate(commonUtil.getTodayUTCTime(""), code, userInfo.getId(), userInfo.getTenantId());
 		}
 		
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
@@ -692,7 +692,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strAbstract", strAbstract);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime());
+		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
 		model.addAttribute("searchConfig", searchConfig);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("strXML", strXML);
@@ -782,7 +782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("pDocID", pDocID);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime());
+		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
 		model.addAttribute("hasAttach", hasAttach);
@@ -1332,7 +1332,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("gubun", gubun);
-		model.addAttribute("strNow", commonUtil.getTodayUTCTime());
+		model.addAttribute("strNow", commonUtil.getTodayUTCTime(""));
 		model.addAttribute("Use_Editor", useEditor);
 		model.addAttribute("Use_IE11Browser", useIE11Browser);
 		
@@ -3295,7 +3295,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                  String sysopID = clubVO.getC_SysopID().trim();
                  String companyName = userInfo.getCompanyName1();
                  
-                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, commonUtil.getTodayUTCTime(), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
+                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, commonUtil.getTodayUTCTime(""), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
                  
                  strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
 			}
@@ -3497,7 +3497,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			bCanJoin = false;
 		}
 		
-		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(), userInfo.getCompanyID(), tenantID);
+		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), tenantID);
 		
 		String cID = ezCommunityService.joinOkGet2(code, id, tenantID);
 		CommunityClubVO clubVO = ezCommunityService.joinOkGet3(code, commonUtil.getMultiData(userInfo.getLang()), tenantID);
@@ -3960,7 +3960,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo);
 		
-		String strNow = commonUtil.getTodayUTCTime();
+		String strNow = commonUtil.getTodayUTCTime("");
 		
 		if (!url.equals("")) {
 			startDateTime = EgovDateUtil.getToday("-");
@@ -4071,7 +4071,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         		
         		if (i > 0) {
         			mode = "New";
-        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime());
+        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime(""));
         		}
         		
         		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
@@ -4131,7 +4131,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return response.encodeRedirectURL("/error.do");
 		}
 		
-		if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime().substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
+		if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
 			pReservedItem = "true";
 		}
 		

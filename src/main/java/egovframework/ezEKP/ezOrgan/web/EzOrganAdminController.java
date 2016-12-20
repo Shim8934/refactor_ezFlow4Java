@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -1643,4 +1644,136 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		return "json";
 	}	
 	
+	/**
+	 * 조직도관리 메일주소 창 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/configEmail.do")
+	public String configEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("configEmail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+        int tenantID = userInfo.getTenantId();        
+        logger.debug("tenantID=" + tenantID);
+		
+		String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));
+		
+		List<String> mailList = new ArrayList<String>();
+		
+		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getLang(), tenantID);
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String userAccount = userId + "@" + domainName;
+		if (userAccount.equals(userVO.getMail())) {
+			mailList.add("SMTP:" + userAccount);
+		} else {
+			mailList.add("smtp:" + userAccount);
+		}
+		
+		List<String> aliasMailList = ezEmailUserAdminService.getIndividualAlias(userAccount);
+		for (String mail : aliasMailList) {
+			if (mail.equals(userVO.getMail())) {
+				mailList.add("SMTP:" + mail);
+			} else {
+				mailList.add("smtp:" + mail);
+			}
+		}
+		
+		for (String mail : mailList) {
+			logger.debug("mail=" + mail);
+		}
+		
+		//TODO: delete
+		//model.addAttribute("noneActiveX", noneActiveX);
+		
+		model.addAttribute("userId", userId);
+		model.addAttribute("mailList", mailList);
+		model.addAttribute("originalMail", userAccount);
+		
+		logger.debug("configEmail ended.");
+		
+		return "admin/ezOrgan/configEmail";
+	}
+	
+	/**
+	 * 조직도관리 메일주소 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveEmail.do")
+	@ResponseBody
+	public String saveEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception{
+		logger.debug("saveEmail started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			//관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+				return returnValue;
+			}
+			
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
+			String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();
+			String primaryMail = xmldom.getElementsByTagName("PRIMARYMAIL").item(0).getTextContent();
+			
+			int tenantID = userInfo.getTenantId();
+			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+			String originalMail = userId + "@" + domainName;
+			
+			List<String> mailList = new ArrayList<String>();
+			NodeList mailNodeList = xmldom.getElementsByTagName("MAIL");
+			for (int i=0; i<mailNodeList.getLength(); i++) {
+				String mail = mailNodeList.item(i).getTextContent();
+				
+				if (!mail.substring(5).equals(originalMail)) {
+					mailList.add(mail.substring(5));
+				}
+			}
+			
+			if (mailList.size() > 0) {
+				returnValue = ezEmailUserAdminService.setIndividualAlias(originalMail, primaryMail, mailList);
+			} else {
+				returnValue = "OK";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("saveEmail ended.");
+		
+		return returnValue;
+	}
+	
+	/**
+	 * 조직도관리 메일주소 도메인체크 및 중복체크 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/checkEmail.do")
+	@ResponseBody
+	public String checkEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception{
+		logger.debug("checkEmail started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			//관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+				return returnValue;
+			}
+			
+			Document xmldom = commonUtil.convertStringToDocument(bodyData);
+			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
+			returnValue = ezEmailUserAdminService.checkIndividualAlias(mail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkEmail ended.");
+		
+		return returnValue;
+	}
 }

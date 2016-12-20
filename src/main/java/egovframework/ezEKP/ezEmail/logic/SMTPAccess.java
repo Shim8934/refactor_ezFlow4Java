@@ -45,6 +45,7 @@ public class SMTPAccess {
 	    props.put("mail.smtp.starttls.enable", "false");
 	    props.put("mail.smtp.host", host);
 	    props.put("mail.smtp.port", port);
+	    props.put("mail.smtp.from", userName);
 	    
 	    props.put("mail.smtp.connectiontimeout", TIMEOUT);
 	    props.put("mail.smtp.writetimeout", TIMEOUT);
