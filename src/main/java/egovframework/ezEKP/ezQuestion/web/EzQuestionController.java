@@ -174,7 +174,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());
 		}
 		
-		List<QstListVO> list = ezQuestionService.getQstList(qstListVO);		
+		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, loginVO.getTenantId(), loginVO.getOffset());		
 		StringBuilder strbuilder;
 		
 		for(QstListVO qst : list){
