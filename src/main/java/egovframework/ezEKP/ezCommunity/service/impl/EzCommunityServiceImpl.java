@@ -626,11 +626,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception {
 		LOGGER.debug("commHomeBoardItemList started.");
-		LOGGER.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime());
+		LOGGER.debug("boardID : " + boardID + ", tenantID : " + tenantID + ", now : " + commonUtil.getTodayUTCTime(""));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		List<CommunityBoardItemVO> boardItemList = ezCommunityDAO.copHomeBoardItemGet(map);
@@ -708,8 +708,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String strWriterFakeName = "";
 		
 		if (!pUrl.equals("")) {
-			item.setStartDate(commonUtil.getTodayUTCTime());
-			item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), 30, "yyyy-MM-dd HH:mm:ss"));
+			item.setStartDate(commonUtil.getTodayUTCTime(""));
+			item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
 			expireDays = "-1";
 		} else {
 			if (userInfo.getLang().equals("2")) {
@@ -721,9 +721,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			expireDays = boardInfo.getExpireDays();
 			if (pMode.equals("new")) {
 				if (expireDays.equals("-1")) {
-                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), 30, "yyyy-MM-dd HH:mm:ss"));
+                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
                 } else {
-                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
+                    item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
                 }
 			} else {
 				item = getItemXML(pBoardID, pItemID, userInfo.getTenantId());
@@ -735,9 +735,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 } else if (pMode.equals("modify")) {
                 	if (item.getEndDate().substring(0, 4).equals("9999")) {
                         if (expireDays == "-1")	{
-                        	item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), 30, "yyyy-MM-dd HH:mm:ss"));
+                        	item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"));
                         } else {
-                            item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
+                            item.setEndDate(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"));
                         }
                     }
                 	
@@ -968,7 +968,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		LOGGER.debug("pollMainGet2 ended. size : " + list.size());
 		
-		String dateStr = commonUtil.getTodayUTCTime();
+		String dateStr = commonUtil.getTodayUTCTime("");
 		LOGGER.debug("userCurrentTime=" + dateStr);
 		
 		for (CommunityCPollManagerVO item : list) {
@@ -1961,7 +1961,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for (String clubNo : clubNoList) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_copNo", clubNo.trim());
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", userInfo.getTenantId());
 			
 			LOGGER.debug("v_copNo : " + clubNo.trim());
@@ -2008,7 +2008,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		} else {
 			LOGGER.debug("mainPageGet6 started.");
 			
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			
 			List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet6(map);
 			
@@ -2664,7 +2664,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         map.put("v_pAbstract", abstracts);
         map.put("v_pStartDate", commonUtil.getDateStringInUTC(searchStart, offset, true));
         map.put("v_pEndDate", commonUtil.getDateStringInUTC(searchEnd, offset, true));
-        map.put("v_pNow", commonUtil.getTodayUTCTime());
+        map.put("v_pNow", commonUtil.getTodayUTCTime(""));
         map.put("tenantID", tenantID);
         
         List<CommunityBoardListVO> list = ezCommunityDAO.searchItemXML(map);
@@ -2723,7 +2723,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pAbstract", abstracts);
 		map.put("v_pStartDate", commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), true));
 		map.put("v_pEndDate", commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), true));
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", userInfo.getTenantId());
 		
 		int result = ezCommunityDAO.searchItemCount(map);
@@ -2749,7 +2749,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("v_pUserDeptName2", userInfo.getDeptName2());
 			map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 			map.put("v_pUserTitle2", userInfo.getTitle2());
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", userInfo.getTenantId());
 			
 			for (String item : itemIDList.split(";")) {
@@ -2858,7 +2858,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     	String offset = userInfo.getOffset();
 		boolean saveMHTResult = false;
 		
-		String dateStr = commonUtil.getTodayUTCTime();
+		String dateStr = commonUtil.getTodayUTCTime("");
 		
 		CommunityBoardItemVO item = new CommunityBoardItemVO();
 
@@ -3068,7 +3068,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pUserID", id);
 		map.put("v_pSortBy", pSortBy);
 		map.put("tenantID", tenantID);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.getReservedItemListXML(map);
 
@@ -3113,7 +3113,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", id);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.getReservedItemListCount(map); 
@@ -3187,7 +3187,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PCONTENT", pContent);
 		map.put("v_PPASSWORD", pPassword);
 		map.put("tenantID", userInfo.getTenantId());
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		
 		ezCommunityDAO.saveOneLineReply(map);
 		
@@ -3318,7 +3318,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				}
 			}
 			
-			String nowDate = commonUtil.getTodayUTCTime();
+			String nowDate = commonUtil.getTodayUTCTime("");
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
@@ -3490,7 +3490,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
             }
 
-        	String nowDate = commonUtil.getTodayUTCTime();
+        	String nowDate = commonUtil.getTodayUTCTime("");
         	
         	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, userInfo.getTenantId());
         	
@@ -3606,7 +3606,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
 	        	sb.append("<WRITEDAY>" + item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
 	        	
-	        	if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime().substring(0, 10), item.getWriteDay().substring(0, 10)) >= 0 ) {
+	        	if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getWriteDay().substring(0, 10)) >= 0 ) {
 	        		sb.append("<NEW>" + "NEW" + "</NEW>");
 	        	}
 	        	
@@ -4073,7 +4073,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map = new HashMap<String, Object>();
 			map.put("v_CODE", code);
 			map.put("v_USERINFO_USERID", userInfo.getId());
-			map.put("v_DATETIME_NOW", commonUtil.getTodayUTCTime());
+			map.put("v_DATETIME_NOW", commonUtil.getTodayUTCTime(""));
 			map.put("v_REASON", reason);
 			map.put("tenantID", userInfo.getTenantId());
 			
@@ -4379,7 +4379,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pAbstract", abstracts);
 		map.put("v_pStartDate", commonUtil.getDateStringInUTC(startDateTime, offset, true));
 		map.put("v_pEndDate", commonUtil.getDateStringInUTC(endDateTime, offset, true));
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		LOGGER.debug("adminSearchItemCount ended.");
@@ -4408,7 +4408,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pStartDate", commonUtil.getDateStringInUTC(searchStart, offset, true));
 		map.put("v_pEndDate", commonUtil.getDateStringInUTC(searchEnd, offset, true));
 		map.put("v_pUserID", id);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.adminSearchItemXML(map);
@@ -5086,7 +5086,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", id);
 		map.put("v_pSortBy", pSortBy);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		if (pEndRow > 0){
@@ -5138,8 +5138,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", id);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
-		map.put("v_pFromNow", EgovDateUtil.addDay(commonUtil.getTodayUTCTime(), -5, "yyyy-MM-dd HH:mm:ss"));
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("v_pFromNow", EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), -5, "yyyy-MM-dd HH:mm:ss"));
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.brdNewItemCount(map);
@@ -5169,7 +5169,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pBoardID);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.getBoardTotalItemCount(map);
@@ -5196,7 +5196,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_PENDROW", pEndRow);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		LOGGER.debug("psortBY");
@@ -5257,7 +5257,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map = new HashMap<String, Object>();
 			map.put("v_PBOARDID", boardID);
 			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
 			list = ezCommunityDAO.getAdjacentItemsGet2Pho(map);
@@ -5274,7 +5274,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map = new HashMap<String, Object>();
 			map.put("v_PBOARDID", boardID);
 			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
 			list = ezCommunityDAO.getAdjacentItemsGet3Pho(map);
@@ -5334,7 +5334,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_DISPLAYNAME2", userInfo.getDisplayName2());
 		map.put("v_USERINFO_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MEMO", memo);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.guestEditOkInsert(map);
@@ -5593,7 +5593,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pParentWriteDate", parentWriteDate);
 		map.put("v_pUpperItemIDTree", upperItemIDTree);
 		map.put("v_pBoardID", pBoardID);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		LOGGER.debug("getAdjacentItemsGet1 started.");
@@ -5621,7 +5621,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map = new HashMap<String, Object>();
 			map.put("v_pParentWriteDate", parentWriteDate);
 			map.put("v_pBoardID", pBoardID);
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
 			LOGGER.debug("getAdjacentItemsGet2 started.");
@@ -5645,7 +5645,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			map.put("v_pItemID", pItemID);
 			map.put("v_pUpperItemIDTree", upperItemIDTree);
 			map.put("v_previousItemID", previousItemID);
-			map.put("v_pNow", commonUtil.getTodayUTCTime());
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
 			LOGGER.debug("getAdjacentItemsGet3 started.");
@@ -5900,7 +5900,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
 		map.put("v_PENDROW", pEndRow);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.boardItemListGet2(map);
@@ -6277,7 +6277,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("v_CLUBNAME", clubName);
 		map.put("v_CLUBNAME2", clubName2);
 		map.put("v_C_CATE_A", cCateA);
@@ -6395,7 +6395,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_USERID", id);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("v_OPENEMAIL", openEmail);
 		map.put("v_OPENHP", openHp);
 		map.put("v_OPENCOMP", openComp);
@@ -6499,7 +6499,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_STARTDATE", startDate);
 		map.put("v_ENDDATE", endDate);
 		map.put("v_USERINFO_USERID", id);
-		map.put("v_pNow", commonUtil.getTodayUTCTime());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.pollAddOkGoInsert1(map);
