@@ -917,16 +917,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 사진이미지 파일 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do")
-	public void getPersonalInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void getPersonalInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String fileName = request.getParameter("fileName");
-		String filePath = config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
+		String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
 		
 		if (fileName != null && !fileName.equals("")) {
 			ezCommonService.responseAttach(filePath, fileName, false, request, response);
 		}
 	}
-	
-	
+		
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수(Ie9)
 	*/
@@ -945,8 +945,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String sPrefix = "";
 		String serverPath = "";
 		String realPath = request.getServletContext().getRealPath("");
-		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator;
-		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + commonUtil.separator;
+		String tempPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator;
+		String thumbPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator;
 		
 				if (request.getParameter("guid") != null) {
 					guid = request.getParameter("guid");
@@ -1042,9 +1042,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String userID = request.getParameter("userID");
 		String guid = UUID.randomUUID().toString();
 		MultipartFile multiFile = request.getFile("file1");
-		String realPath = request.getServletContext().getRealPath("");
-		String tempPath = realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator;
-		String thumbPath = realPath + config.getProperty("upload_personal.PHOTO") + commonUtil.separator;
+		String realPath = request.getServletContext().getRealPath("");				
+		String tempPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator;
+		String thumbPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator;
 		String serverPath = "";
 						
 		if (userID.equals("")) {
