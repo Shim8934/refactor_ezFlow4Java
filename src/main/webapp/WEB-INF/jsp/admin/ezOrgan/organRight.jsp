@@ -621,7 +621,23 @@
 		        });				
 				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
 				//keyword.value = "";
-			}			
+			}
+		    function mail_manage(){
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0){
+					alert("<spring:message code='ezOrgan.t50' />");
+					return;
+				}
+
+			    if (listview.GetSelectedRows().length > 1){
+					alert("<spring:message code='ezOrgan.t51' />");
+					return;
+				}
+
+			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=430px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(430, 315));
+			}
 			function Change_List(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1234,10 +1250,10 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
 						</tr>
-						<!--
 						<tr>
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
+						<!--
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
