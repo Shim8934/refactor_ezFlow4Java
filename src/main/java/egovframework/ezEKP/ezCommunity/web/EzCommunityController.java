@@ -2581,21 +2581,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/saveHomeBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveHomeBoard (@RequestBody String xmlData) throws Exception {
+	public String saveHomeBoard (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 		
 		String code = xmlDom.getElementsByTagName("CODE").item(0).getTextContent();
         String left = xmlDom.getElementsByTagName("LEFT").item(0).getTextContent();
         String right = xmlDom.getElementsByTagName("RIGHT").item(0).getTextContent();
+        int tenantID = userInfo.getTenantId();
         
 		try{
-	        ezCommunityService.adminHomeBoardSet("TRUE", "", 0, code, "");
+	        ezCommunityService.adminHomeBoardSet("TRUE", "", 0, code, "", tenantID);
 	        
 	        if (!left.equals("")) {
 	        	int i = 1;
 	        	
 	        	for (String splitLeft : left.split(";")) {
-	        		ezCommunityService.adminHomeBoardSet("FLASE", "1", i, code, splitLeft);
+	        		ezCommunityService.adminHomeBoardSet("FLASE", "1", i, code, splitLeft, tenantID);
 	        		i++;
 	        	}
 	        }
@@ -2604,7 +2606,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        	int i = 1;
 	        	
 	        	for (String splitRight : right.split(";")) {
-	        		ezCommunityService.adminHomeBoardSet("FLASE", "2", i, code, splitRight);
+	        		ezCommunityService.adminHomeBoardSet("FLASE", "2", i, code, splitRight, tenantID);
 	        		i++;
 	        	}
 	        }

@@ -273,7 +273,7 @@
 	            OR
 	            	CONTENT LIKE '%' ||#v_KEYWORD#|| '%'
 	            AND
-	            	TENANT_ID = #tenantID
+	            	TENANT_ID = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
@@ -286,7 +286,7 @@
 					WHERE
 						TITLE LIKE '%'||#v_KEYWORD#||'%'
 					AND
-	            		TENANT_ID = #tenantID
+	            		TENANT_ID = #tenantID#
 				]]>
 			</isEqual>
 			
@@ -300,7 +300,7 @@
 						WHERE
 							USERNAME$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'
 						AND
-	            			TENANT_ID = #tenantID
+	            			TENANT_ID = #tenantID#
 					]]>
 				</isEqual>
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
@@ -310,7 +310,7 @@
 	                    FROM
 	                    	EZCOMMUNITY.$v_BNAME$
 	                    WHERE
-            				TENANT_ID = #tenantID
+            				TENANT_ID = #tenantID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -5358,13 +5358,46 @@
 		]]>
 	</update>
 	
-	<procedure id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_DATETIME_NOW#, #v_REASON#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_DATETIME_NOW#, #v_REASON#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.C_OUTAPPLICATION
+				(C_CLUBNO,
+				USERID,
+				OUTDATE,
+				OUTREASON,
+				TENANT_ID)
+			VALUES
+				(#v_CODE#,
+				#v_USERINFO_USERID#,
+				#v_DATETIME_NOW#,
+				#v_REASON#,
+				#tenantID#)
+		]]>
+	</insert>
 	
-	<procedure id="EzCommunityDAO.adminBasicOkUpdate"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_OK_UPDATE(#v_C_CLUBNAME#, #v_C_CLUBNAME2#, #v_C_CLUBGUBUN#, #v_C_CLUBTYPE#, #v_ISIN#, #v_C_CLUBDESC#, #v_CODE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminBasicOkUpdate"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_BASIC_OK_UPDATE(#v_C_CLUBNAME#, #v_C_CLUBNAME2#, #v_C_CLUBGUBUN#, #v_C_CLUBTYPE#, #v_ISIN#, #v_C_CLUBDESC#, #v_CODE#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.adminBasicOkUpdate"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_CLUBNAME = #v_C_CLUBNAME#,
+				C_CLUBNAME2 =#v_C_CLUBNAME2#,
+				C_CLUBGUBUN = #v_C_CLUBGUBUN#,
+				C_CLUBCONFIRMTYPE = #v_C_CLUBTYPE#,
+				ISIN = #v_ISIN#,
+				C_CLUBDESC = #v_C_CLUBDESC#
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 	
 	<procedure id="EzCommunityDAO.adminLogoOkUpdate1"			parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_OK_UPDATE1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#)}
@@ -5378,9 +5411,39 @@
 		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_TYPE(#v_COPTYPE#, #v_FILENAME#)}
 	</procedure>
 	
-	<procedure id="EzCommunityDAO.adminHomeBoardSet"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminHomeBoardSet"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.adminHomeBoardSet"				parameterClass="Map">
+		<isEqual property="v_CLEAR" compareValue="TRUE">
+			<![CDATA[
+				UPDATE
+					EZCOMMUNITY.TBL_COMM_BOARDINFO
+				SET
+					SHOWPOSITION = ' ',
+					sn = TO_NUMBER(replace(sn, chr(13), ' '))
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CN#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_CLEAR" compareValue="TRUE">
+			<![CDATA[
+				UPDATE
+					EZCOMMUNITY.TBL_COMM_BOARDINFO
+				SET
+					SHOWPOSITION = #v_POSITION#,
+					SN = #v_SN#
+				WHERE
+					RTRIM(C_CLUBNO) = #v_CN#
+				AND
+					BOARDID = #v_BOARDID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isNotEqual>
+	</update>
 	
 	<procedure id="EzCommunityDAO.createBoardGroup"				parameterClass="Map">
 		{CALL EZCOMMUNITY.EZSP_CREATEBOARDGROUP(#v_CODE#, #v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_USERINFO_USERID#, #v_ACCESSNAME#)}

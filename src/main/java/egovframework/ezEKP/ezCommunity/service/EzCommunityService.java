@@ -315,7 +315,7 @@ public interface EzCommunityService {
 	
 	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception;
 
-	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception;
+	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID, int tenantID) throws Exception;
 
 	public void createBoardGroup(String code, String boardGroupID, String boardGroupName, String boardGroupName2, LoginVO userInfo) throws Exception;
 

@@ -4234,15 +4234,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID) throws Exception {
+	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID, int tenantID) throws Exception {
+		LOGGER.debug("adminHomeBoardSet started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CLEAR", clear);
 		map.put("v_POSITION", position);
 		map.put("v_SN", sn);
 		map.put("v_CN", cn);
 		map.put("v_BOARDID", boardID);
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminHomeBoardSet(map);
+		
+		LOGGER.debug("adminHomeBoardSet ended.");
 	}
 
 	@Override
@@ -4284,7 +4289,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardIDList", pBoardIDList);
 		map.put("v_pBoardListCount", pBoardListCount);
-		map.put("v_err_cd", 0);
 		map.put("tenantID", tenantID);
 		
 		try {
