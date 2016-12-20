@@ -857,8 +857,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	public int getReceiveDocListCount(Map<String, Object> map) throws Exception{
-		select("EzApprovalG.getReceiveDocListCount", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzApprovalG.getReceiveDocListCount", map);
 	}
 	
 	public int compareLineHistory(Map<String, Object> map) throws Exception{
