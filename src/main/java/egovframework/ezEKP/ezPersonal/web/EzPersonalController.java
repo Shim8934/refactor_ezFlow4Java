@@ -145,7 +145,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass);
+		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
 		
 		if (result.equals("OK")) {
 			if (proxyInfo.split(":").length >= 5) {
@@ -811,7 +811,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String deletePicture(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user");
+		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user", userInfo.getTenantId());
 		return result;
 	}
 	

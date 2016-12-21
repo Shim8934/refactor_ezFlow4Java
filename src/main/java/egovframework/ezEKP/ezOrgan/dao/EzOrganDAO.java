@@ -1140,8 +1140,59 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }                       
 	}
 
+    private void updatePropertyForJMocha(Map<String, Object> map) throws Exception{
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String cn = (String)map.get("v_CN");
+        String type = (String)map.get("v_CLASS");
+        String propName = (String)map.get("v_PROPNAME");
+        String propValue = (String)map.get("v_PROPVALUE");
+        
+        logger.debug("updatePropertyForJMocha started. tenantId=" + tenantId + ",cn=" + cn + ",type=" + type
+                + ",propName=" + propName + ",propValue=" + propValue);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "cn=" + URLEncoder.encode(cn, "UTF-8");
+        String param3 = "type=" + URLEncoder.encode(type, "UTF-8");
+        String param4 = "propName=" + URLEncoder.encode(propName, "UTF-8");
+        String param5 = "propValue=" + URLEncoder.encode(propValue, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateEntityPropertyValue";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("updatePropertyForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Updating Property Failed!");
+        }
+    }
+	
+    private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
+        update("EzOrganDAO.updateProperty", map);
+    }
+	
 	public void updateProperty(Map<String, Object> map) throws Exception{
-		update("EzOrganDAO.updateProperty", map);
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            updatePropertyForJMocha(map);
+        } else {
+            updatePropertyForLocal(map);
+        }                       
 	}
 	
 	public void setProxyUserInfo(Map<String, Object> map) throws Exception{
