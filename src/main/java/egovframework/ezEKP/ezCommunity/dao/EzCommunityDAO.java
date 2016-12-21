@@ -256,6 +256,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getClubCHK(Map<String, Object> map) throws Exception {
+		return (List<String>) select("EzCommunityDAO.getClubCHK", map);
+	}
+	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
 		return (CommunityCBoardVO) select("EzCommunityDAO.bbsViewNewGet1", map);
 	}
@@ -388,18 +393,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityMemberInfoVO) select("EzCommunityDAO.joinOkGet4", map);
 	}
 	
-	public String todayCopGet2SelectUserID(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.todayCopGet2SelectUserID", map);
-	}
-	
-	public Integer todayCopGet2SelectTotalCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.todayCopGet2SelectTotalCount", map);
-	}
-	
-	public Integer todayCopGet2SelectTemp(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.todayCopGet2SelectTemp", map);
-	}
-	
 	public CommunityClubVO todayCopGet2List(Map<String, Object> map) throws Exception {
 		return (CommunityClubVO) select("EzCommunityDAO.todayCopGet2List", map);
 	}
@@ -416,16 +409,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityCClubUserVO) select("EzCommunityDAO.getCateDetailViewGet4", map);
 	}
 	
+	public String todayCopGet2SelectUserID(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.todayCopGet2SelectUserID", map);
+	}
+	
 	public String leftCommunityGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet1", map);
 	}
 
 	public String leftCommunityGet2(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.leftCommunityGet2", map);
-	}
-
-	public Integer brdCheckIfBoardGroupAdmin(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.brdCheckIfBoardGroupAdmin", map);
 	}
 	
 	public String getBoardTitleName(Map<String, Object> map) throws Exception {
@@ -444,10 +437,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.bbsEditGet1", map);
 	}
 	
-	public String bbsEditOkGet2(Map<String, Object> map) throws Exception{
-		return (String) select("EzCommunityDAO.bbsEditOkGet2", map);
-	}
-	
 	public String bbsEditOkGet3(Map<String, Object> map) throws Exception{
 		return (String) select("EzCommunityDAO.bbsEditOkGet3", map);
 	}
@@ -456,15 +445,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.commMakeOkGet6", map);
 	}
 	
-	public Integer commMakeOkGet3(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.commMakeOkGet3", tenantID);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<String> getClubCHK(Map<String, Object> map) throws Exception {
-		return (List<String>) select("EzCommunityDAO.getClubCHK", map);
-	}
-
 	public String commHomeGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.commHomeGet1", map);
 	}
@@ -473,58 +453,20 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.commHomeGet4", map);
 	}
 	
-	public Integer getBoardTotalItemCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.getBoardTotalItemCount", map);
-	}
-	
-	public Integer searchItemCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.searchItemCount", map);
-	}
-	
-	public Integer adminSearchItemCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.adminSearchItemCount", map);
-	}
-	
-	public Integer brdNewItemCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.brdNewItemCount", map);
-	}
-	
-	public Integer checkIfHasReply(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.checkIfHasReply", map);
-	}
-	
 	public String getVersionInfo(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.getVersionInfo", map);
 	}
 	
-	public String deleteItemGet(String itemID) throws Exception {
-		return (String) select("EzCommunityDAO.deleteItemGet", itemID);
-	}
-	
-	public Integer getReservedItemListCount(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.getReservedItemListCount", map);
+	public String deleteItemGet(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.deleteItemGet", map);
 	}
 	
 	public String checkReplyPassword(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.checkReplyPassword", map);
 	}
-
-//	public String deleteOneLineReply(Map<String, Object> map) throws Exception {
-//		return (String) select("EzCommunityDAO.deleteOneLineReply", map);
-//	}
-	public Integer deleteOneLineReplySelect(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.deleteOneLineReplySelect", map);
-	}
-	public void deleteOneLineReplyDelete(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.deleteOneLineReplyDelete", map);
-	}
-
+	
 	public String getACL(Map<String, Object> map) throws Exception{
 		return (String) select("EzCommunityDAO.getACL", map);
-	}
-
-	public Integer guestOneGet1(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.guestOneGet1", map);
 	}
 	
 	public String pollMainGet1(Map<String, Object> map) throws Exception {
@@ -533,14 +475,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public String pollMainGet3(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.pollMainGet3", map);
-	}
-
-	public Integer pollMainGet4(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.pollMainGet4", map);
-	}
-
-	public Integer pollAddOkGoGet1(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.pollAddOkGoGet1", map);
 	}
 
 	public String pollAddOkGoGet2(Map<String, Object> map) throws Exception {
@@ -559,20 +493,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.pollDeleteGet3", map);
 	}
 	
-	public Integer pollResGet1(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.pollResGet1", map);
-	}
-	
 	public String pollResGet4(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.pollResGet4", map);
-	}
-	
-	public Integer pollETCViewGet(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.pollETCViewGet", map);
-	}
-	
-	public Integer commViewMemberGet2(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.commViewMemberGet2", map);
 	}
 	
 	public String adminMemberListGet2(Map<String, Object> map) throws Exception {
@@ -583,10 +505,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.ezCommunityBaseGet3", map);
 	}
 	
-	public Integer adminMemPermitGet1(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.adminMemPermitGet1", map);
-	}
-
 	public String adminBasicGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.adminBasicGet1", map);
 	}
@@ -627,6 +545,86 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String) select("EzCommunityDAO.getACLGet2", map);
 	}
 	
+	public String setAsReadSelectBoardID(Map<String, Object> map) throws Exception {
+		return (String)select("EzCommunityDAO.setAsReadSelectBoardID", map);
+	}
+	
+	public Integer todayCopGet2SelectTotalCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.todayCopGet2SelectTotalCount", map);
+	}
+	
+	public Integer todayCopGet2SelectTemp(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.todayCopGet2SelectTemp", map);
+	}
+	
+	public Integer brdCheckIfBoardGroupAdmin(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.brdCheckIfBoardGroupAdmin", map);
+	}
+		
+	public Integer bbsEditOkGet2(Map<String, Object> map) throws Exception{
+		return (Integer) select("EzCommunityDAO.bbsEditOkGet2", map);
+	}
+		
+	public Integer commMakeOkGet3(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.commMakeOkGet3", tenantID);
+	}
+		
+	public Integer getBoardTotalItemCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.getBoardTotalItemCount", map);
+	}
+	
+	public Integer searchItemCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.searchItemCount", map);
+	}
+	
+	public Integer adminSearchItemCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.adminSearchItemCount", map);
+	}
+	
+	public Integer brdNewItemCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.brdNewItemCount", map);
+	}
+	
+	public Integer checkIfHasReply(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.checkIfHasReply", map);
+	}
+	
+	public Integer getReservedItemListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.getReservedItemListCount", map);
+	}
+
+	public Integer deleteOneLineReplySelect(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.deleteOneLineReplySelect", map);
+	}
+	
+	public Integer guestOneGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.guestOneGet1", map);
+	}
+
+	public Integer pollMainGet4(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollMainGet4", map);
+	}
+
+	public Integer pollAddOkGoGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollAddOkGoGet1", map);
+	}
+	
+	public Integer pollResGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollResGet1", map);
+	}
+	
+	public Integer pollETCViewGet(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollETCViewGet", map);
+	}
+	
+	public Integer commViewMemberGet2(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.commViewMemberGet2", map);
+	}
+	
+	public Integer adminMemPermitGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.adminMemPermitGet1", map);
+	}
+	
 	public Integer todayCopGet1(int tenantID) throws Exception {
 		return (Integer) select("EzCommunityDAO.todayCopGet1", tenantID);
 	}
@@ -639,8 +637,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) select("EzCommunityDAO.categoryListItemCntGet", map);
 	}
 	
-	public Integer pollResGetAllCount(int v_QUESTIONID) throws Exception {
-		return (Integer) select("EzCommunityDAO.pollResGetAllCount", v_QUESTIONID);
+	public Integer pollResGetAllCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.pollResGetAllCount", map);
 	}
 
 	public Integer pollResGetCount(Map<String, Object> map) throws Exception {
@@ -686,6 +684,34 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public Integer adminMemberListOkGetE(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzCommunityDAO.adminMemberListOkGetE", map);
 	}
+	
+	public Integer brdNewItemSelect(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.brdNewItemSelect", tenantID);
+	}
+	
+	public Integer createBoardGroupSelect(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.createBoardGroupSelect", tenantID);
+	}
+	
+	public Integer createBoardInsertSelect(int tenantID) throws Exception {
+		return (Integer) select("EzCommunityDAO.createBoardInsertSelect", tenantID);
+	}
+	
+	public Integer pollResOkSetSelect(Map<String, Object> map) throws Exception {
+		return (Integer)select("EzCommunityDAO.pollResOkSetSelect", map);
+	}
+	
+	public Integer commMakeOkSet2Select(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.commMAkeOkSet2Select", map);
+	}
+	
+	public Integer setAsReadSelectTemp(Map<String, Object> map) throws Exception {
+		return (Integer)select("EzCommunityDAO.setAsReadSelectTemp", map);
+	}
+	
+	public Integer guestEditOkUpdateSelect(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.guestEditOkUpdateSelect", map);
+	}
 
 	public void bbsEditOkInsert(Map<String, Object> map) throws Exception{
 		insert("EzCommunityDAO.bbsEditOkInsert", map);
@@ -693,10 +719,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public void commMakeOkInsert1(int tenantID) throws Exception {
 		insert("EzCommunityDAO.commMakeOkInsert1", tenantID);	
-	}
-	
-	public void updateClubID(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.updateClubID", map);
 	}
 	
 	public void insertClub(Map<String, Object> map) throws Exception {
@@ -721,14 +743,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public void deleteItem4(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.deleteItem4", map);
-	}
-	
-	public Integer brdNewItemSelect1(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.brdNewItemSelect1", tenantID);
-	}
-	
-	public Integer brdNewItemSelect2(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.brdNewItemSelect2", tenantID);
 	}
 	
 	public void brdNewItemInsert(Map<String, Object> map) throws Exception {
@@ -763,21 +777,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.commOutOkInsert", map);
 	}
 
-	public Integer createBoardGroupSelect(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.createBoardGroupSelect", tenantID);
-	}
 	public void createBoardGroupInsert1(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.createBoardGroupInsert1", map);
 	}
+	
 	public void createBoardGroupInsert2(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.createBoardGroupInsert2", map);
 	}
+	
 	public void createBoardGroupInsert3(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.createBoardGroupInsert3", map);
-	}
-	
-	public Integer createBoardInsertSelect(int tenantID) throws Exception {
-		return (Integer) select("EzCommunityDAO.createBoardInsertSelect", tenantID);
 	}
 	
 	public void createBoardInsertInsert1(Map<String, Object> map) throws Exception {
@@ -792,8 +801,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.createBoardInsertInsert3", map);
 	}
 	
-	public Integer pollResOkSetSelect(Map<String, Object> map) throws Exception {
-		return (Integer)select("EzCommunityDAO.pollResOkSetSelect", map);
+	public void createBoardInsertDelete(int tenantID) throws Exception {
+		delete("EzCommunityDAO.createBoardInsertDelete", tenantID);
 	}
 	
 	public void pollResOkSetInsert(Map<String, Object> map) throws Exception {
@@ -807,7 +816,27 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void adminCommCloseOkInsert(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.adminCommCloseOkInsert", map);
 	}
-
+	
+	public void commMakeOkSet1Insert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.commMakeOkSet1Insert", map);
+	}
+	
+	public void commMakeOkSet2Insert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.commMAkeOkSet2Insert", map);
+	}
+	
+	public void setAsReadInsert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.setAsReadInsert", map);
+	}
+	
+	public void joinOkSet1Insert(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.joinOkSet1Insert", map);
+	}
+	
+	public void updateClubID(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateClubID", map);
+	}
+	
 	public void updateAttachInfo(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.updateAttachInfo", map);
 	}
@@ -824,37 +853,16 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.commMakeOkSet1Update", map);
 	}
 	
-	public void commMakeOkSet1Insert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.commMakeOkSet1Insert", map);
-	}
-	
 	public void commMakeOkSet2Update(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.commMAkeOkSet2Update", map);
 	}
-	public Integer commMakeOkSet2Select(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.commMAkeOkSet2Select", map);
-	}
+	
 	public void commMakeOkSet2Update1(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.commMAkeOkSet2Update1", map);
-	}
-	public void commMakeOkSet2Insert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.commMAkeOkSet2Insert", map);
 	}
 	
 	public void updateLastDate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.updateLastDate", map);
-	}
-	
-	public String setAsReadSelectBoardID(Map<String, Object> map) throws Exception {
-		return (String)select("EzCommunityDAO.setAsReadSelectBoardID", map);
-	}
-	
-	public Integer setAsReadSelectTemp(Map<String, Object> map) throws Exception {
-		return (Integer)select("EzCommunityDAO.setAsReadSelectTemp", map);
-	}
-	
-	public void setAsReadInsert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.setAsReadInsert", map);
 	}
 	
 	public void setAsReadUpdate(Map<String, Object> map) throws Exception {
@@ -863,14 +871,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public void brdUpdateItemUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.brdUpdateItemUpdate", map);
-	}
-	
-	public void brdUpdateItemDelete(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.brdUpdateItemDelete", map);
-	}
-	
-	public Integer guestEditOkUpdateSelect(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzCommunityDAO.guestEditOkUpdateSelect", map);
 	}
 	
 	public void guestEditOkUpdateUpdate(Map<String, Object> map) throws Exception {
@@ -913,16 +913,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void moveBoardUpdate1(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.moveBoardUpdate1", map);
 	}
+	
 	public void moveBoardUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.moveBoardUpdate2", map);
 	}
 	
-	public void adminOuterOkNoSetDelete1(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.adminOuterOkNoSetDelete1", map);	
-	}
-	public void adminOuterOkNoSetDelete2(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.adminOuterOkNoSetDelete2", map);	
-	}
 	public void adminOuterOkNoSetUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminOuterOkNoSetUpdate", map);	
 	}
@@ -939,26 +934,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.brdSaveBoardPropertyUpdate2", map);
 	}
 	
-	public void copyUpdate(String v_pItemID) throws Exception {
-		update("EzCommunityDAO.copyUpdate", v_pItemID);
+	public void copyUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.copyUpdate", map);
 	}
 	
 	public void bbsViewNewUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.bbsViewNewUpdate", map);
 	}
 
-	public void newItemDel(Map<String, Object> map) throws Exception {
-		delete("EzCommunityDAO.newItemDel", map);
-	}
-
 	public void joinOkSet1Update(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.joinOkSet1Update", map);
 	}
 	
-	public void joinOkSet1Insert(Map<String, Object> map) throws Exception {
-		insert("EzCommunityDAO.joinOkSet1Insert", map);
-	}
-
 	public void joinOkUpdate1(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.joinOkUpdate1", map);
 	}
@@ -971,8 +958,36 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.joinOkUpdate3", map);
 	}
 	
-	public void okNoSet(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.okNoSet", map);
+	public void okNoSetUpdate1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.okNoSetUpdate1", map);
+	}
+	
+	public void okNoSetUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.okNoSetUpdate2", map);
+	}
+	
+	public void deleteOneLineReplyDelete(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteOneLineReplyDelete", map);
+	}
+	
+	public void brdUpdateItemDelete(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.brdUpdateItemDelete", map);
+	}
+	
+	public void newItemDel(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.newItemDel", map);
+	}
+	
+	public void adminOuterOkNoSetDelete1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminOuterOkNoSetDelete1", map);	
+	}
+	
+	public void adminOuterOkNoSetDelete2(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminOuterOkNoSetDelete2", map);	
+	}
+	
+	public void okNoSetDelete(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.okNoSetDelete", map);
 	}
 	
 	public void guestEditOkDelete(Map<String, Object> map) throws Exception {
@@ -982,6 +997,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void deleteBoardTreeChache(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.deleteBoardTreeChache", map);
 	}
+	
 	public void insertBoardTreeChache(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.insertBoardTreeChache", map);
 	}
@@ -990,20 +1006,20 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.bbsDelOkDel", map);
 	}
 
-	public void deleteItem1(String itemID) throws Exception {
-		delete("EzCommunityDAO.deleteItem1", itemID);
+	public void deleteItem1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteItem1", map);
 	}
 	
-	public void deleteItem2(String itemID) throws Exception {
-		delete("EzCommunityDAO.deleteItem2", itemID);
+	public void deleteItem2(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteItem2", map);
 	}
 	
-	public void deleteItem3(String itemID) throws Exception {
-		delete("EzCommunityDAO.deleteItem3", itemID);
+	public void deleteItem3(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteItem3", map);
 	}
 	
-	public void deleteItem5(String itemID) throws Exception {
-		delete("EzCommunityDAO.deleteItem5", itemID);
+	public void deleteItem5(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteItem5", map);
 	}
 	
 	public void pollDeleteDel1(Map<String, Object> map) throws Exception {

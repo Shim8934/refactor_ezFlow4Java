@@ -185,7 +185,7 @@ public interface EzCommunityService {
 
 	public void deleteOneLineReply(String id, String pReplyID, String gubun, int tenantID) throws Exception;
 
-	public String getACL(String id, String pComID) throws Exception;
+	public String getACL(String id, String pComID, int tenantID) throws Exception;
 
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception;
 
@@ -309,7 +309,7 @@ public interface EzCommunityService {
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 
-	public void deleteItem(String itemList) throws Exception;
+	public void deleteItem(String itemList, int tenantID) throws Exception;
 
 	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception;
 	
@@ -337,7 +337,7 @@ public interface EzCommunityService {
 	
 	public void joinOkUpdate3(String companyID, String id, String birthDay, int tenantID) throws Exception;
 	
-	public void okNoSet(String flag, String code, String cID) throws Exception;
+	public void okNoSet(String flag, String code, String cID, int tenantID) throws Exception;
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath, int tenantID) throws Exception;
 

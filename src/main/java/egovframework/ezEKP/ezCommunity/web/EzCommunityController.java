@@ -731,10 +731,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/deleteItem.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void deleteItem(HttpServletRequest request) throws Exception {
+	public void deleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemList = request.getParameter("itemList");
 		
-		ezCommunityService.deleteItem(itemList);
+		ezCommunityService.deleteItem(itemList, userInfo.getTenantId());
 	}
 	
 	/**
@@ -1364,7 +1365,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if(request.getParameter("comID") != null) {
 			String pComID = request.getParameter("comID");
-			String strACLXML = ezCommunityService.getACL(userInfo.getId(), pComID);
+			String strACLXML = ezCommunityService.getACL(userInfo.getId(), pComID, userInfo.getTenantId());
 			
 			model.addAttribute("WRITE", strACLXML);
 		} else if (request.getParameter("boardID") != null) {
@@ -1389,6 +1390,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST)
 	public String copyItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("copyItem started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pOrgItemIDList = request.getParameter("orgItemIDList");
 		String pOrgBoardID = request.getParameter("orgBoardID");
@@ -1403,6 +1406,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
+		
+		LOGGER.debug("copyItem ended.");
 		
 		return "json";
 	}
@@ -1419,9 +1424,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String ret = "";
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		
-		if  (boardInfo.getGubun().equals("2") || boardInfo.getUrl () != null || boardInfo.getGubun().equals("3")){
-			ret = "anonyboard";
+		if (boardInfo.getGubun() != null) {
+			if (boardInfo.getGubun().equals("2") || boardInfo.getUrl() != null || boardInfo.getGubun().equals("3")){
+				ret = "anonyboard";
+			} else {
+				ret = "normalboard";
+			}
 		} else {
 			ret = "normalboard";
 		}
@@ -3097,6 +3105,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminMemberList.do")
 	public String adminMemberList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("adminMemberList started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String flag = "", ser = "";
 		
@@ -3124,6 +3134,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("idSpanValue", idSpanValue);
+		
+		LOGGER.debug("adminMemberList ended.");
 		
 		return "/ezCommunity/communityAdminMemberList";
 	}
@@ -3674,7 +3686,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
 		
 		try {
-			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID);
+			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId());
 			
 			result = "true";
 		} catch (Exception e) {
