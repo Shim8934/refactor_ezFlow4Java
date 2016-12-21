@@ -41,7 +41,7 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
+	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
 	
 	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
 	
@@ -61,7 +61,7 @@ public interface EzResourceService {
 	
 	public int getBrdCnt(int brdID, String companyID, int tenantID) throws Exception;
 
-	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID) throws Exception;
+	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID, String offset) throws Exception;
 
 	public String getLocalTime(String substring) throws Exception;
 	
@@ -77,7 +77,7 @@ public interface EzResourceService {
 
 	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id, int tenantID) throws Exception;
 	
-	public String updateScheduleDateTime(String xmlDom, String companyID, int tenantID) throws Exception;
+	public String updateScheduleDateTime(String xmlDom, String companyID, int tenantID, String offset) throws Exception;
 	
 	public String getRepetition(String xmlStr, int tenantID) throws Exception;
 	
@@ -91,15 +91,15 @@ public interface EzResourceService {
 	
 	public String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) throws Exception;
 	
-	public String addResSch(String xmlStr, int tenantID) throws Exception;
+	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
-	public String modifyResSch(String xmlStr, int tenantID) throws Exception;
+	public String modifyResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public String addMinutes(String sDate, int minute, String dateFormat) throws Exception;
 	
 	public boolean deleteRepetition(String xmlStr, int tenantID) throws Exception;
 	
-	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID) throws Exception;
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception;
 	
 	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception;
 	
@@ -107,21 +107,21 @@ public interface EzResourceService {
 	
 	public boolean addResData(String xmlStr, int tenantID) throws Exception;
 	
-	public boolean delResSch(String xmlStr, int tenantID) throws Exception;
+	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID) throws Exception;
+			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 
-	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID) throws Exception;
+	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 	
 	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-	String reOrd, String endFlag, String reCount, String companyID, int tenantID) throws Exception;
+	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
 	
 	public void insertForm(String resID, String brdNm, String formText, int tenantID) throws Exception;
 	
 	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
 			String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
-			String deptNm, String ownerNm, String approve, String scheduleID, int tenantID) throws Exception;
+			String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception;
 	
 	public void delResData(String brdID, String companyID, int tenantID) throws Exception;
 	
@@ -134,13 +134,13 @@ public interface EzResourceService {
 	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate, int tenantID) throws Exception;
 	
 	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-	String reOrd, String endFlag, String reCount, String companyID, int tenantID) throws Exception;
+	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;
 	
 	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
 	String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
-	String typeVal, String approve, int tenantID) throws Exception;
+	String typeVal, String approve, int tenantID, String offset) throws Exception;
 	
 	public void deleteRepetition(String ownerID, int pNum, int tenantID) throws Exception;
 	
