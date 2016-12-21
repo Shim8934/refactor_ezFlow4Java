@@ -68,11 +68,10 @@
 	        	//offset
 	        	var offset = "${offset}";
 	        	offset *= 1;
-alert(offset);
+
 	        	NowDate.setHours(NowDate.getHours() - offset);
 	        	NowDate2.setHours(NowDate2.getHours() - offset);
-alert("NowDate="+NowDate);
-alert("NowDate2="+NowDate2);
+
 	        	//2016-12-21 -9 , 한국기준으로만 되어있어서 offset으로 변경
 	        	//NowDate.setHours(NowDate.getHours() - 9);
 	        	//NowDate2.setHours(NowDate2.getHours() - 9);
