@@ -995,18 +995,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		fileName = userInfo.getId() + "." + fileName;
-		filePath = config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
-		filePath2 = "/ezCommon/downloadAttach.do?filePath="+config.getProperty("upload_personal.PHOTO") + commonUtil.separator + fileName;
+		filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
+		filePath2 = "/ezCommon/downloadAttach.do?filePath="+commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
 
-		File file = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP")); 
+		File file = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId())); 
 		
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 			
-		writeUploadedFile(req.getFile("file1"), fileName, realPath + config.getProperty("upload_personal.PHOTOTEMP"));
+		writeUploadedFile(req.getFile("file1"), fileName, realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()));
 		
-		File imageFile = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator + fileName); 
+		File imageFile = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName); 
 
 		if (imageFile.exists()) {
 			BufferedImage bi = ImageIO.read(imageFile);	
@@ -1016,7 +1016,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			
 			ImageIO.write(bufferedImage, "png", new File(realPath + filePath));
 			
-			File file1 = new File(realPath + config.getProperty("upload_personal.PHOTOTEMP") + commonUtil.separator + fileName);
+			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
 			if (file1.exists()) {
 				FileUtils.deleteQuietly(file1);
 			}

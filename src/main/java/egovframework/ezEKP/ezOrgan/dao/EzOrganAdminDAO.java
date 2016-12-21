@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1740,6 +1741,55 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         } else {
             return userCountCheckForLocal(cn, tenantID);
         }       
-	}		
+	}
+	
+	private void setUserPrimaryMailForJMocha(String cn, int tenantID, String email) throws Exception {
+        logger.debug("setUserPrimaryMailForJMocha started. cn=" + cn + ",tenantId=" + tenantID
+                + ",email=" + email);
+        
+        String param1 = "tenantId=" + tenantID;
+        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
+        String param3 = "email=" + URLEncoder.encode(email, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setUserMail";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+        
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+                
+        logger.debug("setUserPrimaryMailForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+	}
+	
+	private void setUserPrimaryMailForLocal(String cn, int tenantID, String email) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("TENANT_ID", tenantID);
+		map.put("CN", cn);
+		map.put("MAIL", email);
+		
+		update("EzOrganAdminDAO.setUserMail", map);
+    }
+	
+	public void setUserPrimaryMail(String cn, int tenantID, String email) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        	setUserPrimaryMailForJMocha(cn, tenantID, email);
+        } else {
+        	setUserPrimaryMailForLocal(cn, tenantID, email);
+        }
+    }
 
 }

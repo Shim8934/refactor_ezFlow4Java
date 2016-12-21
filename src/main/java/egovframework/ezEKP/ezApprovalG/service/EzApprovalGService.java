@@ -201,22 +201,22 @@ public interface EzApprovalGService {
 	
 	public String updateSignInfo(Document xmlDom, String companyID, String mode, int tenantID) throws Exception;
 	
-	public String getCallBackYN(String docID, String tempUserID, String companyID) throws Exception;
+	public String getCallBackYN(String docID, String tempUserID, String companyID, int tenantID) throws Exception;
 	
-	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID) throws Exception;
+	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID, int tenantID) throws Exception;
 	
 	public String getTotalDownload(String docID, String mode, String companyID) throws Exception;
 	
 	public String getReceiveDocList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
 			String searchQuery, Document xmlDomSub, int tenantID) throws Exception;
 	
-	public String gongRamDocInfo(String docID, String companyID) throws Exception;
+	public String gongRamDocInfo(String docID, String companyID, int tenantID) throws Exception;
 	
-	public String getOrgDocInfo(String docID, String companyID) throws Exception;
+	public String getOrgDocInfo(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getDocRecvState(String docID, String deptID, String companyID) throws Exception;
+	public String getDocRecvState(String docID, String deptID, String companyID, int tenantID) throws Exception;
 	
 	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
 			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang, int tenantID) throws Exception;
@@ -241,11 +241,11 @@ public interface EzApprovalGService {
 	
 	public String getAprType_AprState(String docID, String userID, String companyID) throws Exception;
 	
-	public String doCallBack(String docID, String userID, String companyID) throws Exception;
+	public String doCallBack(String docID, String userID, String companyID, int tenantID) throws Exception;
 	
 	public String getFormConnFlag(String docID, String companyID, int tenantID) throws Exception;
 	
-	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID) throws Exception;
+	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID, int tenantID) throws Exception;
 	
 	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,

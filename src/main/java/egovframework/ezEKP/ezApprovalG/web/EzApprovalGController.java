@@ -44,7 +44,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2871,9 +2870,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String tempUserID = request.getParameter("userID");
-		String result = ezApprovalGService.getCallBackYN(docID, tempUserID, userInfo.getCompanyID());
+ 		String result = ezApprovalGService.getCallBackYN(docID, tempUserID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		return result;
+ 		return result;
 	}
 	
 	/**
@@ -2886,7 +2885,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String tempUserID = request.getParameter("userID");
-		String result = ezApprovalGService.getCallBackYNForceLine(docID, tempUserID, userInfo.getCompanyID());
+		String result = ezApprovalGService.getCallBackYNForceLine(docID, tempUserID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -3077,11 +3076,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-            	returnQuery += " AND PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+            	returnQuery += " AND PROCESSDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01", userInfo.getOffset(), false) +"','YYYY-MM-DD HH24:MI:SS') ";
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
-            	returnQuery += " AND PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+            	returnQuery += " AND PROCESSDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false) +"','YYYY-MM-DD HH24:MI:SS') "; 
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {
@@ -3125,7 +3124,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID());
+		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}
@@ -3153,7 +3152,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID());
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
 		
@@ -3267,7 +3266,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getDocRecvState(docID, deptID, userInfo.getCompanyID());
+		String result = ezApprovalGService.getDocRecvState(docID, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -3526,7 +3525,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID());
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
 		
@@ -4007,7 +4006,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
-		String result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID());
+		String result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -4051,7 +4050,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
 		String docState = request.getParameter("docState");
-		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID());
+		String childDocInfo = ezApprovalGService.getInnerLineInfo(docID, deptID, docState, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
