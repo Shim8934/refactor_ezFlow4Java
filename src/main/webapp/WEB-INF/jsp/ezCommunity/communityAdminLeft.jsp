@@ -158,15 +158,27 @@
 			    }
 			}
 	
-			function GetSubBoard(pRootBoardID, pSubFlag)
-			{
-				var xmlHttp = createXMLHttpRequest();
-				xmlHttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&classID=" + code, false);
-				xmlHttp.send();
+			function GetSubBoard(pRootBoardID, pSubFlag) {
+				var returnVal = "";
 				
-				return xmlHttp.responseXML;
+				$.ajax({
+					type : "POST",
+					async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : pRootBoardID,
+								subFlag : pSubFlag,
+								selectFlag : 0,
+								classID : code
+							},
+					success: function(result){
+						returnVal = loadXMLString(result.result);
+					}
+				});
+
+				return returnVal;
 			}
-	
+			
 			function Manage_function(data) {
 			    var feature = "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no";
 			    feature = feature + GetShowModalPosition(467, 396);

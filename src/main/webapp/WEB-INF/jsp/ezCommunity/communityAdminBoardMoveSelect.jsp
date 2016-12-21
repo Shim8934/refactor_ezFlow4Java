@@ -115,12 +115,21 @@
 			}
 	
 			function DisplayTopBoard() {
-			    xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=TOP&subFlag=0&classID=" + code, false);
-			    xmlhttp.send();
-	
-			    if (xmlhttp.responseText.indexOf("ERROR") == -1) {
-			        MakeTopBoardView(xmlhttp.responseText);
-			    }
+		    	$.ajax({
+		    		type : "POST",
+		    		async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : 'TOP',
+								subFlag : 0,
+								classID : code
+							},
+					success: function(result){
+						if (result.result.indexOf("ERROR") == -1) {
+					        MakeTopBoardView(loadXMLString(result.result));
+				    	}
+					}
+		    	});
 			}
 	
 			function TopBoard_onclick(obj, ID, items) {
@@ -167,9 +176,25 @@
 			}
 	
 			function GetSubBoard(pRootBoardID, pSubFlag) {
-			    xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID + "&classID=" + code, false);
-			    xmlhttp.send();
-			    return xmlhttp.responseXML;
+				var returnVal = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : pRootBoardID,
+								subFlag : pSubFlag,
+								selectFlag : 0,
+								pExcludeBoardID : BoardID,
+								classID : code
+							},
+					success: function(result){
+						returnVal = loadXMLString(result.result);
+					}
+		    	});
+
+		        return returnVal;
 			}
 	
 			function SetTreeviewUnSelect(TreeviewID, items) {
@@ -182,9 +207,8 @@
 			}
 	
 			function MakeTopBoardView(strXML) {
-			    var xmldom = createXmlDom();
+			    var xmldom = strXML;
 			    var strHTML = "";
-			    xmldom = loadXMLString(strXML);
 			    strHTML = "<table id='TopBoards' width=100% border=0>";
 			    var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
 			    var items = xmldomNodes.length;
