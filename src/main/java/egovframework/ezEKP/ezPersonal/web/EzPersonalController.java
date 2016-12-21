@@ -822,6 +822,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@ResponseBody
 	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		vo.setTenantId(userInfo.getTenantId());
+		
 		ezOrganAdminService.updateDBData_user(vo);
 		return "OK";
 	}
