@@ -309,12 +309,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		return days;
 	}
 	
-	public int checkPassword (String pCN, String pPassword) throws Exception {
+	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception {
     	pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
     	
 		int pResult = 0;
 
-		if (ezPersonalDAO.getPassword(pCN).equals(pPassword)) {
+		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) {
 			pResult = 1;
 		} else {
 			pResult = 0;
