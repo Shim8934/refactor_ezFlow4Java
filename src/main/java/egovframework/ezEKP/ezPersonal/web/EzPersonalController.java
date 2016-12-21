@@ -849,7 +849,7 @@ public class EzPersonalController extends EgovFileMngUtil {
     	String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
     	String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
 
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword));
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID);
 		if (checkResult != 1) {
 			return "CHKERROR";
 		}
