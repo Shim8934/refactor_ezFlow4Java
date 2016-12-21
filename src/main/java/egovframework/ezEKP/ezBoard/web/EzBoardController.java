@@ -5113,7 +5113,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			return " ";
 		} else {
 			multiFile = request.getFiles("file1");
-			dirPath = realPath + config.getProperty("upload_personal.PHOTOTEMP");
+			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
 			serverPath = dirPath + commonUtil.separator;
 		}
 		

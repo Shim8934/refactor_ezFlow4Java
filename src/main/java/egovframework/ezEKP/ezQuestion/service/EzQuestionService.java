@@ -19,7 +19,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzQuestionService {
 
-	public List<QstListVO> getQstList(QstListVO qstListVO) throws Exception;
+	public List<QstListVO> getQstList(QstListVO qstListVO, int tenantID, String offset) throws Exception;
 
 	public List<QstVO> getQuestionForResponse(QstVO questionVO, int tenantID) throws Exception;
 	

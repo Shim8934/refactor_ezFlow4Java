@@ -1175,7 +1175,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		
 		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(8).getTextContent().trim();
-		String gongRamDocID = gongRamDocInfo(docID, companyID);
+		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
 		
 		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
 			gongRamDocID = getNewID(companyID, tenantID);
@@ -1206,7 +1206,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic ");
             strSQL.append("FROM TBAPRDOCINFO WHERE DocID = '" + docID.trim() + "';\n");
 
-			// 수정(2005.09.29) : 보안결재 필드 추가
+			// ?섏젙(2005.09.29) : 蹂댁븞寃곗옱 ?꾨뱶 異붽?
 			strSQL.append("INSERT INTO TBEXPAPRDOCINFO (DocID, SecurityCode, ");
             strSQL.append("StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, ");
 			strSQL.append("UrgentApproval, TempAttribute, Status, SpecialRecordCode, ");
@@ -1328,7 +1328,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		
 		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(8).getTextContent().trim();
-		String gongRamDocID = gongRamDocInfo(docID, companyID);
+		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
 		
 		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
 			gongRamDocID = getNewID(companyID, tenantID);
@@ -3047,10 +3047,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
-		map.put("v_DEPTCODE", deptCode.trim());
-		map.put("v_TITLE", title.trim());
-		map.put("v_TASKCODE", code.trim());
-		map.put("v_LANGTYPE", commonUtil.getMultiData(langType));
+		
+		StringBuffer subQuery = new StringBuffer();
+		
+		if(deptCode.trim() != null) {
+			subQuery.append("(PROCESSDEPTCODE = '"+deptCode.trim()+"' OR TASKCODE LIKE 'ZZ%' OR TASKCODE='99999999')");
+		}
+		if(!title.trim().equals("")) {
+			if(subQuery.length() > 0) {
+				subQuery.append("AND ");
+			} 
+				subQuery.append("TASKNAME"+commonUtil.getMultiData(langType)+" LIKE '%"+title.trim()+"%'");
+		}
+		if(!code.trim().equals("")) {
+			if(subQuery.length() > 0) {
+				subQuery.append("AND ");
+			}
+				subQuery.append("TASKCODE = '"+code.trim()+"'");
+		}
+		if(subQuery.length() > 0 ){
+			map.put("v_subQuery", "WHERE " + subQuery.toString());
+		}
 		
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.findTask(map);
 		
@@ -3594,7 +3611,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS char(4)) ");
 			strSQL.append("Where OwnerDeptID = '" + makeRightField(deptCode) + "' " + " And TBCABINETCLASS.DelayEndYFlag = 'Y' " + 
 					"And TBCABINETCLASS.TerminateFlag = '0' And TBCABINETCLASS.ConfirmFlag = '0'" + ";");
-		} else if (flag.equals("0")) { 		// 선택된 철만 연기일 경우
+		} else if (flag.equals("0")) { 			// 선택된 철만 연기일 경우
 			strSQL.append("Update TBCABINETCLASS Set DelayEndYFlag = 'N', ");
 			strSQL.append("ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS char(4)) ");
 			strSQL.append("Where CabinetClassNo IN (" + cabClassList + ");");
@@ -5634,10 +5651,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (orderBy.equals("")) {
 			orderBy = " Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ";
 		}
-		//다국어 추가 소스 수정
+		//?ㅺ뎅??異붽? ?뚯뒪 ?섏젙
 		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
                 " SELECT TBRECORD.RecordID, TBRECORD.DocID, TBRECORD.RegisterNo, TBSEPERATEATTACH.CreateDate, " +
-                "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
+                "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 ?섏떊臾몄꽌 怨듬엺吏?뺥븷???덈룄濡?DocState 異붽?
                 "TBSEPERATEATTACH.CabinetID, TBSEPERATEATTACH.SeperateAttachNo , " + 
 				"TBENDAPRDOCINFO.Href, TBENDAPRDOCINFO.ContainerID, TBENDAPRDOCINFO.FormID, " + 
 				"TBENDAPRDOCINFO.WriterID, TBCABINET.ConfirmFlag, TBCABINET.CabinetClassNo, " + 
@@ -6989,7 +7006,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 				
 			case "003":
-				LOGGER.debug("여기2" + rtnVal);
 				if (rtnVal) {
 					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
 					
@@ -7467,7 +7483,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCallBackYN(String docID, String tempUserID, String companyID) throws Exception {
+	public String getCallBackYN(String docID, String tempUserID, String companyID, int tenantID) throws Exception {
 		boolean rtnVal = true;
 		String rtnXML = "";
 		
@@ -7475,6 +7491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_USERID", tempUserID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGLineTempletVO> apprGLineTempletVOList = ezApprovalGDAO.getCallBackYNLineList(map);
 		
@@ -7528,11 +7545,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID) throws Exception {
+	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
 		map.put("v_USERID", tempUserID.trim());
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGLineTempletVO> apprGLineTempletVOList = ezApprovalGDAO.getCallBackYNForceLine(map);
 		
@@ -7594,7 +7612,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQuery.trim(), companyID, xmlDomSub);
+		int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQuery.trim(), companyID, xmlDomSub, tenantID);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
         int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 
@@ -7636,7 +7654,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		resultXML.append("</HEADERS>");
 		
-		String docList = getReceiveDocList(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, xmlDomSub, companyID);
+		String docList = getReceiveDocList(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, xmlDomSub, companyID, tenantID);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -7695,10 +7713,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String gongRamDocInfo(String docID, String companyID) throws Exception {
+	public String gongRamDocInfo(String docID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_ORGDOCID", docID.trim());
+		map.put("v_TENANTID", tenantID);
 		
 		String gongRamDocID = makeListField(ezApprovalGDAO.gongRamDocInfo(map));
 		
@@ -7710,10 +7729,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getOrgDocInfo(String docID, String companyID) throws Exception {
+	public String getOrgDocInfo(String docID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_PDOCID", docID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGReceiveDocVO> apprGReceiveDocVOList = ezApprovalGDAO.getOrgDocInfo(map);
 		
@@ -8650,20 +8670,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getReceiveDocList(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder,
-			String basicOrderReverse, String searchQuery, Document xmlDomSub, String companyID) throws Exception{
+			String basicOrderReverse, String searchQuery, Document xmlDomSub, String companyID ,int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
-		map.put("v_MODE", mode);
+		map.put("v_MODE", mode.toLowerCase());
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
 		map.put("v_PAGESIZE", querySize);
 		map.put("v_PAGESIZE2", querySize2);
 		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if(orderOption1.length() > 0) {
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 11).toLowerCase());
+		}
+		
 		map.put("v_ORDEROPTION2", orderOption2);
+		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
+		
+		if(orderOption2.length() > 0) {
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0, 11).toLowerCase());
+		}
+		
 		map.put("v_BASICORDER", basicOrder);
 		map.put("v_BASICORDER2", basicOrderReverse);
 		map.put("v_SPSUBQUERY", searchQuery.trim());
+		map.put("v_SPSUBQUERYLENGTH", searchQuery.trim().length());
+		map.put("v_TENANTID", tenantID);
+
 		
 		if (xmlDomSub.getElementsByTagName("DOCNO").item(0) != null) {
 			map.put("v_SDOCNO", xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent());
@@ -8699,14 +8734,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
-	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, String subQuery, String companyID, Document xmlDomSub) throws Exception{
+	private int getReceiveDocListCount(String mode, String userID, String deptID, String docManageDeptInfo, String subQuery, String companyID, Document xmlDomSub, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
-		map.put("v_MODE", mode);
+		map.put("v_MODE", mode.toLowerCase());
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_DEPTIDS", docManageDeptInfo);
 		map.put("v_SPSUBQUERY", subQuery);
+		map.put("v_SPSUBQUERYLENGTH", subQuery.length());
+		map.put("v_TENANTID", tenantID);
+
+
 		
 		if (xmlDomSub.getElementsByTagName("DOCNO").item(0) != null) {
 			map.put("v_SDOCNO", xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent());
@@ -9230,7 +9269,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
-		//아직 테넌트 안함
+		//?꾩쭅 ?뚮꼳???덊븿
 		strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = SYSDATE");
         strSQL.append(" WHERE DocID = '");
 		strSQL.append(docID + "' AND AprMemberID = '" + userID + "' AND AprState = '" + staASJinHang + "';\n");
@@ -11028,6 +11067,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doApproveEndDocInfo(map);
 		
@@ -13388,8 +13428,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 	}
 
 	@Override
-	public String doCallBack(String docID, String userID, String companyID) throws Exception {
-		String rtnXML = getCallBackYN(docID, userID, companyID);
+	public String doCallBack(String docID, String userID, String companyID, int tenantID) throws Exception {
+		String rtnXML = getCallBackYN(docID, userID, companyID, tenantID);
 		boolean rtnVal = true;
 		
 		if (!rtnXML.equals("<RESULT>CALLBACK</RESULT>") && !rtnXML.equals("<RESULT>CANCEL</RESULT>")) {
@@ -13439,7 +13479,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 	}
 
 	@Override
-	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID) throws Exception {
+	public String getInnerLineInfo(String docID, String deptID, String docState, String companyID, int tenantID) throws Exception {
 		String rtnXML = "";
 		String rtnDocID = "";
 		String rtnDocFlag = "";
@@ -13450,6 +13490,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		map.put("v_DOCID", docID);
 		map.put("v_DOCSTATE", docState);
 		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getInnerLineInfo(map);
 		
@@ -14575,7 +14616,8 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		map.put("v_PMODE", checkMode);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
+		map.put("v_temp3", "");
+		map.put("v_temp4", "");
 		if (checkMode.equals("VIE")){
 			int v_temp  = ezApprovalGDAO.countVieTempDocID(map);
 			map.put("v_temp", v_temp);
@@ -14588,15 +14630,15 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			int v_temp  = ezApprovalGDAO.countRecTempDocID(map);
 			map.put("v_temp", v_temp);
 			
-			if (v_temp == 1) {
+			if(v_temp == 1 ) {
 				int v_temp2  = ezApprovalGDAO.countRecTempDocID2(map);
 				map.put("v_temp2", v_temp2);
 			} else {
-				int v_temp2  = ezApprovalGDAO.countVieTempDocID(map);
-				map.put("v_temp2", v_temp2);
-				if( v_temp2 != 1) {
-					List<ApprGAprLineVO> recTempDocIDList = ezApprovalGDAO.countRecTempDocID3(map);
-					map.put("v_temp3", recTempDocIDList.size());
+				int v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
+				map.put("v_temp3", v_temp3);
+				if( v_temp3 == 0 ) {
+					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
+					map.put("v_temp4", tempList.size());
 				}
 			}
 			
@@ -15829,7 +15871,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 			strSQL.append(subSQL);
 		}
         // 2011.04.04 수기등록시 첨부등록 추가
-                     
+        
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
         if (manualFlag == "1")
         {
@@ -15847,7 +15889,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
             }
         }
         
-     // '## 분리첨부 추가저장
+        // '## 분리첨부 추가저장
 		if (nodeSepAtta != null)
 		{
 //			<SEPATTACHINFO>
@@ -15910,16 +15952,16 @@ System.out.println("copyFile Exception : " + e.getMessage());
 	    String constraint = "";
 		switch(listFlag)
 		{
-			case "0" :	// 기록물철 대장
-				listType = "002";
-				break;
-			case "1" :	// 편철확정대상 기록물철
-				listTypeConst =" And TBCABINETCLASS.TerminateFlag='1' And TBCABINETCLASS.ConfirmFlag='0'";
+		case "0" :	// 기록물철 대장
+			listType = "002";
+			break;
+		case "1" :	// 편철확정대상 기록물철
+			listTypeConst =" And TBCABINETCLASS.TerminateFlag='1' And TBCABINETCLASS.ConfirmFlag='0'";
 
-				listType = "002";
-				break;
+			listType = "002";
+			break;
 
-			case "2" :	// 기록물철 생산현황
+		case "2" :	// 기록물철 생산현황
 				listTypeConst = " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM SYSDATE)";
 				listType = "004";
 				break;
@@ -15934,7 +15976,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 				listType = "006";
 				break;
 
-			case "4" :	// 파일이관 대상
+			case "4" :	// ?뚯씪?닿? ???
 				listTypeConst = " And CatalogTransferFlag='1' " +
 			            "And DocTransferFlag='0' And CatalogTransferYear=(Select Max(CatalogTransferYear) From TBCABINET ) ";
 				listType = "006";
@@ -16525,61 +16567,61 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		
 		strXML.append("<CABINFO>");
 		strXML.append("<BASICINFO>");
-		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");  // '기록물철 아이디
-		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");  // '기록물철 분류번호
-		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>"); // '제목
-		strXML.append("<CABCLASSID>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), // '기록물철 분류기호
+		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");  // '湲곕줉臾쇱쿋 ?꾩씠??
+		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");  // '湲곕줉臾쇱쿋 遺꾨쪟踰덊샇
+		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>"); // '?쒕ぉ
+		strXML.append("<CABCLASSID>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), // '湲곕줉臾쇱쿋 遺꾨쪟湲고샇
 				makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "</CABCLASSID>");
-		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType, tenantID) + "</RECTYPE>");// '기록물형태
-		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</DEPTNAME>"); // '처리과 이름
-		strXML.append("<TASKNAME>" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TASKNAME>"); // '단위업무 이름
-		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>"); // '생산년도
-		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>"); 	// '등록연번
-		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>"); // '권호수
-		strXML.append("<REGDATE>" + formatDateForView(docXML.getElementsByTagName("CREATEDATE").item(0).getTextContent(),0) + "</REGDATE>"); // '등록일자
-		strXML.append("<SCFLAG>" + docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent() + "</SCFLAG>"); // '특수목록 플래그
+		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType, tenantID) + "</RECTYPE>");// '湲곕줉臾쇳삎??
+		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</DEPTNAME>"); // '泥섎━怨??대쫫
+		strXML.append("<TASKNAME>" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TASKNAME>"); // '?⑥쐞?낅Т ?대쫫
+		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>"); // '?앹궛?꾨룄
+		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>"); 	// '?깅줉?곕쾲
+		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>"); // '沅뚰샇??
+		strXML.append("<REGDATE>" + formatDateForView(docXML.getElementsByTagName("CREATEDATE").item(0).getTextContent(),0) + "</REGDATE>"); // '?깅줉?쇱옄
+		strXML.append("<SCFLAG>" + docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent() + "</SCFLAG>"); // '?뱀닔紐⑸줉 ?뚮옒洹?
 		strXML.append("</BASICINFO>");
 		
 		strXML.append("<EXTRAINFO>");
-		strXML.append("<NUMOFREC>" + docXML.getElementsByTagName("NUMOFREC").item(0).getTextContent() + "</NUMOFREC>"); // '기록물등록건수
-		strXML.append("<NUMOFPAGE>" + docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent() + "</NUMOFPAGE>"); // '기록물쪽수
-		strXML.append("<NUMOFFILE>" + docXML.getElementsByTagName("NUMOFFILE").item(0).getTextContent() + "</NUMOFFILE>"); // ''전자파일갯수
-		strXML.append("<MODIFYFLAG>" + docXML.getElementsByTagName("MODIFYFLAG").item(0).getTextContent() + "</MODIFYFLAG>"); // '수정여부
-		strXML.append("<OLDFLAG>" + docXML.getElementsByTagName("OLDCABINETFLAG").item(0).getTextContent() + "</OLDFLAG>"); // '구기록물 여부
-		strXML.append("<OLDCREATEORGAN>" + docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent() + "</OLDCREATEORGAN>");// '구기록물철 생산기관
-		strXML.append("<OLDCLASSNO>" + docXML.getElementsByTagName("CLASSIFICATIONNO").item(0).getTextContent() + "</OLDCLASSNO>"); // '구기록물 여부
+		strXML.append("<NUMOFREC>" + docXML.getElementsByTagName("NUMOFREC").item(0).getTextContent() + "</NUMOFREC>"); // '湲곕줉臾쇰벑濡앷굔??
+		strXML.append("<NUMOFPAGE>" + docXML.getElementsByTagName("NUMOFPAGE").item(0).getTextContent() + "</NUMOFPAGE>"); // '湲곕줉臾쇱そ??
+		strXML.append("<NUMOFFILE>" + docXML.getElementsByTagName("NUMOFFILE").item(0).getTextContent() + "</NUMOFFILE>"); // ''?꾩옄?뚯씪媛?닔
+		strXML.append("<MODIFYFLAG>" + docXML.getElementsByTagName("MODIFYFLAG").item(0).getTextContent() + "</MODIFYFLAG>"); // '?섏젙?щ?
+		strXML.append("<OLDFLAG>" + docXML.getElementsByTagName("OLDCABINETFLAG").item(0).getTextContent() + "</OLDFLAG>"); // '援ш린濡앸Ъ ?щ?
+		strXML.append("<OLDCREATEORGAN>" + docXML.getElementsByTagName("CREATEORGANNAME").item(0).getTextContent() + "</OLDCREATEORGAN>");// '援ш린濡앸Ъ泥??앹궛湲곌?
+		strXML.append("<OLDCLASSNO>" + docXML.getElementsByTagName("CLASSIFICATIONNO").item(0).getTextContent() + "</OLDCLASSNO>"); // '援ш린濡앸Ъ ?щ?
 		strXML.append("</EXTRAINFO>");
 		
 		strXML.append("<CLASSINFO>");
-		strXML.append("<ENDY>" + docXML.getElementsByTagName("EXPIRATIONYEAR").item(0).getTextContent() + "</ENDY>"); // 종료년도
-		strXML.append("<KEEPPERIOD>" + getKeepPeriodString(docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPPERIOD>"); // 보존기간
-		strXML.append("<KEEPMETHOD>" + getKeepMethodString(docXML.getElementsByTagName("KEEPINGMETHOD").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPMETHOD>"); // 보존방법
-		strXML.append("<KEEPPLACE>" + getKeepPlaceString(docXML.getElementsByTagName("KEEPINGPLACE").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPPLACE>"); // 보존장소
-		strXML.append("<DISPENDDATE>" + docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent() + "</DISPENDDATE>"); 	// 비치종결일자
-		strXML.append("<DISPREASON>" + docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent() + "</DISPREASON>"); // 비치사유
-		strXML.append("<CABCHARGER>" + docXML.getElementsByTagName("CABCHARGER").item(0).getTextContent() + "</CABCHARGER>");// 업무담당자
-		strXML.append("<CONFIRMFLAG>" + docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent() + "</CONFIRMFLAG>"); // 편철확정여부
-		strXML.append("<CATATRANSFLAG>" + docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent() + "</CATATRANSFLAG>"); // 목록이관여부
-		strXML.append("<CATATRANSYEAR>" + docXML.getElementsByTagName("CATALOGTRANSFERYEAR").item(0).getTextContent() + "</CATATRANSYEAR>"); // 목록이관연도
-		strXML.append("<DOCTRANSFLAG>" + docXML.getElementsByTagName("DOCTRANSFERFLAG").item(0).getTextContent() + "</DOCTRANSFLAG>"); // 파일이관여부
-		strXML.append("<DOCTRANSYEAR>" + docXML.getElementsByTagName("DOCTRANSFERYEAR").item(0).getTextContent() + "</DOCTRANSYEAR>"); // 파일이관연도
+		strXML.append("<ENDY>" + docXML.getElementsByTagName("EXPIRATIONYEAR").item(0).getTextContent() + "</ENDY>"); // 醫낅즺?꾨룄
+		strXML.append("<KEEPPERIOD>" + getKeepPeriodString(docXML.getElementsByTagName("KEEPINGPERIOD").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPPERIOD>"); // 蹂댁〈湲곌컙
+		strXML.append("<KEEPMETHOD>" + getKeepMethodString(docXML.getElementsByTagName("KEEPINGMETHOD").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPMETHOD>"); // 蹂댁〈諛⑸쾿
+		strXML.append("<KEEPPLACE>" + getKeepPlaceString(docXML.getElementsByTagName("KEEPINGPLACE").item(0).getTextContent(),companyID,langType,tenantID) + "</KEEPPLACE>"); // 蹂댁〈?μ냼
+		strXML.append("<DISPENDDATE>" + docXML.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent() + "</DISPENDDATE>"); 	// 鍮꾩튂醫낃껐?쇱옄
+		strXML.append("<DISPREASON>" + docXML.getElementsByTagName("DISPLAYREASON").item(0).getTextContent() + "</DISPREASON>"); // 鍮꾩튂?ъ쑀
+		strXML.append("<CABCHARGER>" + docXML.getElementsByTagName("CABCHARGER").item(0).getTextContent() + "</CABCHARGER>");// ?낅Т?대떦??
+		strXML.append("<CONFIRMFLAG>" + docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent() + "</CONFIRMFLAG>"); // ?몄쿋?뺤젙?щ?
+		strXML.append("<CATATRANSFLAG>" + docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent() + "</CATATRANSFLAG>"); // 紐⑸줉?닿??щ?
+		strXML.append("<CATATRANSYEAR>" + docXML.getElementsByTagName("CATALOGTRANSFERYEAR").item(0).getTextContent() + "</CATATRANSYEAR>"); // 紐⑸줉?닿??곕룄
+		strXML.append("<DOCTRANSFLAG>" + docXML.getElementsByTagName("DOCTRANSFERFLAG").item(0).getTextContent() + "</DOCTRANSFLAG>"); // ?뚯씪?닿??щ?
+		strXML.append("<DOCTRANSYEAR>" + docXML.getElementsByTagName("DOCTRANSFERYEAR").item(0).getTextContent() + "</DOCTRANSYEAR>"); // ?뚯씪?닿??곕룄
 		strXML.append("</CLASSINFO>");
 		
 		strXML.append("<TRANSINFO>");
-		strXML.append("<CABTRANSFLAG>" + docXML.getElementsByTagName("CABINETTRANSFERFLAG").item(0).getTextContent() + "</CABTRANSFLAG>"); // 인수인계 구분
-		strXML.append("<TCABID>" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "</TCABID>"); // 인수 기록물철 아이디
-		strXML.append("<TCABNAME>" + docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TCABNAME>"); // 인수 기록물철 이름
-		strXML.append("<TDEPTNAME>" + docXML.getElementsByTagName("TDEPTNAME"+ commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TDEPTNAME>"); // 인수 기록물철 처리과명
-		strXML.append("<TDEPTCODE>" + docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() + "</TDEPTCODE>"); // 인수 기록물철 처리과 코드
-		strXML.append("<TTASKNAME>" + docXML.getElementsByTagName("TASKNAME").item(0).getTextContent() + "</TTASKNAME>"); // 인수기록물철 단위업무명
-		strXML.append("<TTASKCODE>" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "</TTASKCODE>");// 인수기록물철 단위업무 코드
-		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");// 인수기록물철 생산연도
-		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()) + "</TREGSN>");// 인수기록물철 등록연번
-		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</TVOLNO>");// 인수기록물철 권호수
-		strXML.append("<TRANSDATE>" + formatDateForView(docXML.getElementsByTagName("TRANSFERDATE").item(0).getTextContent(),1) + "</TRANSDATE>");// 인수/인계일자
+		strXML.append("<CABTRANSFLAG>" + docXML.getElementsByTagName("CABINETTRANSFERFLAG").item(0).getTextContent() + "</CABTRANSFLAG>"); // ?몄닔?멸퀎 援щ텇
+		strXML.append("<TCABID>" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "</TCABID>"); // ?몄닔 湲곕줉臾쇱쿋 ?꾩씠??
+		strXML.append("<TCABNAME>" + docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TCABNAME>"); // ?몄닔 湲곕줉臾쇱쿋 ?대쫫
+		strXML.append("<TDEPTNAME>" + docXML.getElementsByTagName("TDEPTNAME"+ commonUtil.getMultiData(langType)).item(0).getTextContent() + "</TDEPTNAME>"); // ?몄닔 湲곕줉臾쇱쿋 泥섎━怨쇰챸
+		strXML.append("<TDEPTCODE>" + docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() + "</TDEPTCODE>"); // ?몄닔 湲곕줉臾쇱쿋 泥섎━怨?肄붾뱶
+		strXML.append("<TTASKNAME>" + docXML.getElementsByTagName("TASKNAME").item(0).getTextContent() + "</TTASKNAME>"); // ?몄닔湲곕줉臾쇱쿋 ?⑥쐞?낅Т紐?
+		strXML.append("<TTASKCODE>" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "</TTASKCODE>");// ?몄닔湲곕줉臾쇱쿋 ?⑥쐞?낅Т 肄붾뱶
+		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");// ?몄닔湲곕줉臾쇱쿋 ?앹궛?곕룄
+		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()) + "</TREGSN>");// ?몄닔湲곕줉臾쇱쿋 ?깅줉?곕쾲
+		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</TVOLNO>");// ?몄닔湲곕줉臾쇱쿋 沅뚰샇??
+		strXML.append("<TRANSDATE>" + formatDateForView(docXML.getElementsByTagName("TRANSFERDATE").item(0).getTextContent(),1) + "</TRANSDATE>");// ?몄닔/?멸퀎?쇱옄
 		strXML.append("</TRANSINFO>");
 		strXML.append("</CABINFO>");
 		return strXML.toString();
@@ -16735,7 +16777,7 @@ System.out.println("copyFile Exception : " + e.getMessage());
 		strSQL.append("CabinetClassNo = '" + makeRightField(cabClassNo) + "'), CabinetClassNo, ");
         strSQL.append("Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), KeepingPeriod, ");
 		strSQL.append("DisplayEndDate, DisplayReason, N'" + makeRightField(changeReason) + "', '");
-         // 2010.08.02 다국어 
+        // 2010.08.02 다국어 
         strSQL.append(makeRightField(userID) + "', N'" + makeRightField(usreName) + "', N'" + makeRightField(usreName2));
         strSQL.append("', '1', '0' From TBCABINETCLASS  Where TBCABINETCLASS.CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n END; \n ");
 			

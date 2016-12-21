@@ -64,7 +64,13 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<QstListVO> getQstList(QstListVO questionListVO) throws Exception {
+	public List<QstListVO> getQstList(QstListVO questionListVO, int tenantID, String offset) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String dateStr = sdf.format(new Date());
+		
+		String nowDate = commonUtil.getDateStringInUTC(dateStr, offset, false);
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PSTRBRDID", questionListVO.getBrdID());
 		map.put("v_PUSERID", questionListVO.getUserID());
@@ -72,9 +78,14 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PPAGESIZE", questionListVO.getPageSize());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
-		map.put("v_PSDATE", questionListVO.getPostDate());
-		map.put("v_PEDATE", questionListVO.getPollEndDate());
+		map.put("v_PSDATE", commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
+		map.put("v_PEDATE", commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
 		map.put("v_PLANG", questionListVO.getLang());
+		map.put("rangeLength", questionListVO.getResponseRange().length());
+		map.put("eDateLength", questionListVO.getPollEndDate().length());
+		map.put("sDateLength", questionListVO.getPostDate().length());
+		map.put("tenantID", tenantID);
+		map.put("nowDate", nowDate);
 		return ezQuestionDAO.getQstList(map);
 	}
 	

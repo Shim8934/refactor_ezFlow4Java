@@ -135,6 +135,7 @@
 	 		               	if (strSearch != "") {
 	 			            	document.getElementById('keyword').value = strSearch;
 	 							search_click("search"); 
+	 							strSearch = "";
 	 		              	}
 	  					},
 	  					error : function(jqXHR, textStatus, errorThrown) {

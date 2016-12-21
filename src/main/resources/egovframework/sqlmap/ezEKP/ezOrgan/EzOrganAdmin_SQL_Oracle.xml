@@ -342,6 +342,19 @@
       	]]>		
 	</update>
 	
+	<update id="EzOrganAdminDAO.setUserMail" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				ezHrmaster.TBLUSERMASTER
+			SET
+     			mail = #MAIL#
+     		WHERE
+      			cn = #CN#
+      		AND 
+            	tenant_id = #TENANT_ID#
+		]]>
+	</update>
+	
     <delete id="EzOrganAdminDAO.deleteAddJob" parameterClass="Map">
         DELETE 
             ezHrmaster.TBLADDJOBMASTER
