@@ -335,6 +335,7 @@
 	  		<isNotNull property="streetAddress" prepend=","> <![CDATA[streetAddress = #streetAddress#]]></isNotNull>
 	  		<isNotNull property="birthType" prepend=","> <![CDATA[birthType = #birthType#]]></isNotNull>
 	  		<isNotNull property="birth" prepend=","> <![CDATA[birth = #birth#]]></isNotNull>
+	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
