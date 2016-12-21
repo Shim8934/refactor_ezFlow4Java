@@ -262,7 +262,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.TITLE LIKE '%' ||#v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
@@ -276,13 +276,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -335,7 +335,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.TITLE LIKE '%' ||#v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
@@ -349,13 +349,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -1458,7 +1458,7 @@
     								AND
     									A.COMPLETE_FLAG = 'Y'	
       								AND
-      									(	B.RESPONSE_RANGE = '0' AND SYSDATE
+      									(	B.RESPONSE_RANGE = '0' AND TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss')
            								BETWEEN
            									TO_DATE(A.POLL_STARTDATE,'yyyy-MM-DD HH24:MI:ss')
            								AND
@@ -1473,7 +1473,7 @@
       							) ]]>
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.TITLE LIKE '%' || #v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
@@ -1487,13 +1487,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -1534,7 +1534,7 @@
       						AND
       							A.COMPLETE_FLAG = 'Y'
       						AND
-      							TO_DATE(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM >= SYSDATE
+      							TO_DATE(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM >= to_date(#nowDate#, 'YYYY-MM-dd HH24:MI:ss')
       						AND
       							A.TENANT_ID = B.TENANT_ID
       						AND
@@ -1546,7 +1546,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.TITLE LIKE '%' || #v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
@@ -1560,13 +1560,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_STARTDATE <= '$v_PEDATE$ 23:59:59'
+				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND A.POLL_ENDDATE >= '$v_PSDATE$ 00:00:00'
+				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -2335,7 +2335,7 @@
          		PUBLIC_RESULT_FLG = #v_presultflg#,
              	PUBLIC_FLG = #v_pflg#,
              	MULTI_RESPONSE_FLG = #v_pmultiflg#,
-             	END_FLG = v_pendflg,
+             	END_FLG = #v_pendflg#,
              	RESPONSE_RANGE = #v_presponserange#
        		WHERE
        			BRD_ID = #v_pstrBrdID#

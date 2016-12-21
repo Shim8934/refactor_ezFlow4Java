@@ -10,6 +10,8 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,16 @@ import egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO;
 import egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO;
 import egovframework.ezEKP.ezQuestion.vo.QstVO;
+import egovframework.ezEKP.ezQuestion.web.EzQuestionController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzQuestionService")
 public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements EzQuestionService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzQuestionServiceImpl.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -41,6 +47,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Override
 	public Integer getQstListCnt(QstListVO questionListVO, int tenantID, String offset) throws Exception {
+		logger.debug("getQstListCnt Start");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String dateStr = sdf.format(new Date());
@@ -54,17 +61,23 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PRANGE", questionListVO.getResponseRange());
 		map.put("v_PSDATE", commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
 		map.put("v_PEDATE", commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
+		logger.debug("sDate="+commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
+		logger.debug("eDate="+commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
+				
 		map.put("v_PLANG", questionListVO.getLang());
 		map.put("rangeLength", questionListVO.getResponseRange().length());
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
 		map.put("sDateLength", questionListVO.getPostDate().length());
 		map.put("tenantID", tenantID);
 		map.put("nowDate", nowDate);
+		
+		logger.debug("getQstListCnt End");
 		return ezQuestionDAO.getQstListCnt(map);
 	}
 
 	@Override
 	public List<QstListVO> getQstList(QstListVO questionListVO, int tenantID, String offset) throws Exception {
+		logger.debug("getQstList Start");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String dateStr = sdf.format(new Date());
@@ -78,6 +91,10 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PPAGESIZE", questionListVO.getPageSize());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
+		logger.debug("getPostDate="+questionListVO.getPostDate());
+		logger.debug("getPollEndDate="+questionListVO.getPollEndDate());
+		logger.debug("startDate="+commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
+		logger.debug("endDate="+commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
 		map.put("v_PSDATE", commonUtil.getDateStringInUTC(questionListVO.getPostDate(), offset, false));
 		map.put("v_PEDATE", commonUtil.getDateStringInUTC(questionListVO.getPollEndDate(), offset, false));
 		map.put("v_PLANG", questionListVO.getLang());
@@ -85,7 +102,10 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
 		map.put("sDateLength", questionListVO.getPostDate().length());
 		map.put("tenantID", tenantID);
+		logger.debug("nowDate="+nowDate);
 		map.put("nowDate", nowDate);
+		
+		logger.debug("getQstList End");
 		return ezQuestionDAO.getQstList(map);
 	}
 	
@@ -988,7 +1008,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public int getQstResponse(int brdID, int itemNo, int tenantID) throws Exception {
+	public Integer getQstResponse(String brdID, String itemNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
