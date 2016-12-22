@@ -547,6 +547,7 @@ public class CommonUtil {
 		logger.debug("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
 		
 		if (dateStr == null) {
+			logger.error("dateStr is null.");
 			return null;
 		}
 		
@@ -654,4 +655,49 @@ public class CommonUtil {
 		return result;
 	}
 	
+	public String getTwoLetterLangFromLangNum(String langNum) {
+		String returnValue = "";
+		
+		if (langNum == null) {
+			logger.error("langNum is null.");
+			return null;
+		}
+		
+		if (langNum.equals("1")) {
+			returnValue = "ko";
+		} else if (langNum.equals("2")) {
+			returnValue = "en";
+		} else if (langNum.equals("3")) {
+			returnValue = "ja";
+		} else if (langNum.equals("4")) {
+			returnValue = "zh";
+		} else {
+			logger.error("Invalid langNum.");
+		}
+		
+		return returnValue;
+	}
+	
+	public String getLangNumFromTwoLetterLang(String twoLetterLang) {
+		String returnValue = "";
+		
+		if (twoLetterLang == null) {
+			logger.error("twoLetterLang is null.");
+			return null;
+		}
+		
+		if (twoLetterLang.equalsIgnoreCase("ko")) {
+			returnValue = "1";
+		} else if (twoLetterLang.equalsIgnoreCase("en")) {
+			returnValue = "2";
+		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
+			returnValue = "3";
+		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
+			returnValue = "4";
+		} else {
+			logger.error("Invalid twoLetterLang.");
+		}
+		
+		return returnValue;
+	}
 }

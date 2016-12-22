@@ -1055,101 +1055,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Override
 	public List<TenantVO> getTenantList() throws Exception {
-		logger.debug("getTenantList started.");
-        
-		List<TenantVO> list = new ArrayList<TenantVO>();
-
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray resultArray = (JSONArray)responseObj.get("result");
-                    
-                    for (int i=0; i<resultArray.size(); i++) {
-                		JSONObject obj = (JSONObject)resultArray.get(i);
-                		
-                		TenantVO vo = new TenantVO();
-                		
-                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
-                		vo.setTenantName((String)obj.get("tenantName"));
-                		
-        				list.add(vo);
-                	}
-                }
-            }
-        }                       
-        
-        for(TenantVO vo : list) {
-        	logger.debug("tenantId=" + vo.getTenantId() + ",tenantName=" + vo.getTenantName());
-        }
-        
-        logger.debug("getTenantList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return list;
+        return ezCommonDAO.getTenantList();
 	}
 	
 	@Override
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
-		logger.debug("getTenantServerNameList started.");
-        
-		List<TenantServerNameVO> list = new ArrayList<TenantServerNameVO>();
+        return ezCommonDAO.getTenantServerNameList();
+	}
 
-        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantServerList";
-        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
-
-        logger.debug("response=" + response);
-        
-        String resultCode = "Error";
-        int reasonCode = -100; 
-                
-        if (response != null) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-            resultCode = (String)responseObj.get("resultCode");     
-            
-            if (resultCode.equals("OK")) {
-                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-                
-                if (reasonCode == 0) {
-                    JSONArray resultArray = (JSONArray)responseObj.get("result");
-                    
-                    for (int i=0; i<resultArray.size(); i++) {
-                		JSONObject obj = (JSONObject)resultArray.get(i);
-                		
-                		TenantServerNameVO vo = new TenantServerNameVO();
-                		
-                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
-                		vo.setServerName((String)obj.get("serverName"));
-                		
-        				list.add(vo);
-                	}
-                }
-            }
-        }                       
-        
-        for(TenantServerNameVO vo : list) {
-        	logger.debug("tenantId=" + vo.getTenantId() + ",serverName=" + vo.getServerName());
-        }
-        
-        logger.debug("getTenantServerNameList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-        
-        return list;
+	@Override
+	public int getTenantIdByDomainName(String domainName) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("DOMAIN_NAME", domainName);
 		
+		return ezCommonDAO.getTenantIdByDomainName(map);
 	}
 	
 }

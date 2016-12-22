@@ -162,26 +162,30 @@ public class EzEmailScheduler {
 			return;
 		}
 		
-		Locale locale = Locale.getDefault();
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		
 		for (MailReservationVO vo : list) {
 			logger.debug("messageId=" + vo.getMessageId());
-			logger.debug("userEmail=" + vo.getConnUrl());
-			logger.debug("subject=" + vo.getSubject());
-			logger.debug("sendDate=" + vo.getSendDate());
+			logger.debug("userAccount=" + vo.getConnUrl());
 			
 			IMAPAccess ia = null;
 			FileInputStream fis = null;
 			try {
 				
-				String userEmail = vo.getConnUrl();
+				String userAccount = vo.getConnUrl();
 				String password = config.getProperty("config.JMochaSuperPassword");
 	
 				String realPath = config.getProperty("data_root");
-				String serverName = userEmail.split("@")[1];
-				int tenantId = loginService.getTenantId(serverName);
+				
+				String userId = userAccount.split("@")[0];
+				String domainName = userAccount.split("@")[1];
+				
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+				logger.debug("locale=" + locale);
+				
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + commonUtil.separator + pDirPath;
 	
@@ -192,7 +196,7 @@ public class EzEmailScheduler {
 					fis = new FileInputStream(f);
 	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-							userEmail, password);
+							userAccount, password);
 	
 					MimeMessage message = sa.readMimeMessage(fis);
 					
@@ -205,9 +209,10 @@ public class EzEmailScheduler {
 			        
 					//보낸편지함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, password, egovMessageSource, locale);
+							userAccount, password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 					if (folder.exists()) {
+						message.setFlag(Flags.Flag.SEEN, true);
 						folder.open(Folder.READ_WRITE);
 						folder.appendMessages(new Message[]{message});
 						folder.close(true);

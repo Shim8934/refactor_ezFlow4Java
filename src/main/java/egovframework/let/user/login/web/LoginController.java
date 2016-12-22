@@ -182,45 +182,24 @@ public class LoginController {
 				
 				String acceptLanguage = request.getHeader("Accept-Language");
 				String returnValue = "";
-
-				if (lang != null &&lang.equals("1")) {
-					returnValue = "ko";
-				} else if (lang != null && lang.equals("2")) {
-					returnValue = "en";
-				} else if (lang != null && lang.equals("3")) {
-					returnValue = "ja";
-				} else if (lang != null && lang.equals("4")) {
-					returnValue = "zh";
-				} else {
+				
+				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+				
+				if (returnValue == null || returnValue.equals("")) {
 					// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)
 				    if (acceptLanguage != null) {
 				        returnValue = acceptLanguage.substring(0, 2);
 				    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
 				    } else {
 				        String primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-				        
 				        logger.debug("primaryLang=" + primary);
 				        
-				        if (primary.equals("1")) {
-				            returnValue = "ko";
-				        } else if (primary.equals("2")) {
-				            returnValue = "en";
-				        } else if (primary.equals("3")) {
-				            returnValue = "ja";
-				        } else if (primary.equals("4")) {
-				            returnValue = "zh";
-				        }		        
+				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primary);
 				    }
 					
-					if (returnValue.equalsIgnoreCase("ko")) {
-						lang = "1";
-					} else if (returnValue.equalsIgnoreCase("en")) {
-						lang = "2";
-					} else if (returnValue.equalsIgnoreCase("ja")) {
-						lang = "3";
-					} else if (returnValue.equalsIgnoreCase("zh")){
-						lang = "4";
-					} else {
+				    lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+				    
+				    if (lang.equals("")) {
 						//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
 						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 					}

@@ -44,4 +44,5 @@ public interface EzCommonService {
 	
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception;
 
+	public int getTenantIdByDomainName(String domainName) throws Exception;
 }
