@@ -1,10 +1,19 @@
 package egovframework.ezEKP.ezPersonal.dao;
 
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -13,11 +22,20 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
 public class EzPersonalDAO extends EgovAbstractDAO{
 	
+    private static final Logger logger = LoggerFactory.getLogger(EzPersonalDAO.class);
+    
+    @Autowired
+    private Properties config;
+
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
+    
 	@SuppressWarnings("unchecked")
 	public List<PersonalSliderImageVO> getSilderList (Map<String, Object> map) {
 		return (List<PersonalSliderImageVO>) list("EzPersonalDAO.getSliderList", map);
@@ -75,8 +93,57 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
 	}
 	
-	public String getPassword (String cn) {
-		return (String) select("EzPersonalDAO.getPassword", cn);
+    private String getPasswordForJMocha (String cn, int tenantID) throws Exception {
+        logger.debug("getPasswordForJMocha started. tenantId=" + tenantID + ",cn=" + cn);
+        
+        String resultValue = null;
+                
+        String param1 = "tenantId=" + URLEncoder.encode(tenantID + "", "UTF-8");
+        String param2 = "userId=" + URLEncoder.encode(cn, "UTF-8");
+        String inputParams = param1 + "&" + param2;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserPassword";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        resultValue = (String)result.get("password");
+                    }                   
+                }
+            }
+        }                       
+        
+        logger.debug("getPasswordForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return resultValue;
+    }
+	
+    private String getPasswordForLocal (String cn, int tenantID) {
+        return (String) select("EzPersonalDAO.getPassword", cn);
+    }
+	
+	public String getPassword (String cn, int tenantID) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getPasswordForJMocha(cn, tenantID);
+        } else {
+            return getPasswordForLocal(cn, tenantID);
+        }       
 	}
 	
 	public int getPollCount(Map<String, Object> map) {

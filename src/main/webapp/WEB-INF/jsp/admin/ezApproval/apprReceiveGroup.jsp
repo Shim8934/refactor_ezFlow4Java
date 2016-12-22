@@ -384,6 +384,18 @@
 	        }
 	
 	        function Updategroupmaininfo() {
+	        	if (p_groupid == null || p_groupid == "") {
+	        		var pAlertContent = "<spring:message code='ezApproval.hyj3'/>";
+	                OpenAlertUI(pAlertContent);
+	                return;
+	        	}
+	        	
+	        	if (document.getElementById("pGroupName").value == "") {
+	                var pAlertContent = "<spring:message code='ezApproval.hyj4'/>";
+	                OpenAlertUI(pAlertContent);
+	                return;
+	            }
+	        	
 	            var result = "";
 	            
 	            $.ajax({

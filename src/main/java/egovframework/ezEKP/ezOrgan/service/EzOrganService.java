@@ -34,7 +34,7 @@ public interface EzOrganService {
 	
 	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID) throws Exception;
 	
-	public String updateProperty(String userID, String propName, String propValue, String pClass) throws Exception;
+	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception;
 	
 	public String delProxyUserInfo(String userID) throws Exception;
 	

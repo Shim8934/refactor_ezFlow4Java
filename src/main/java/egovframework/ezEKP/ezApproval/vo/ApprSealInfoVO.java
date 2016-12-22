@@ -22,9 +22,9 @@ public class ApprSealInfoVO {
 	/** */
 	private String regUserName2;
 	/** */
-	private float sealWidth;
+	private int sealWidth;
 	/** */
-	private float sealHeight;
+	private int sealHeight;
 	/** */
 	private String regDate;
 	/** */
@@ -56,12 +56,6 @@ public class ApprSealInfoVO {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
-	public int getSealNum() {
-		return sealNum;
-	}
-	public void setSealNum(int sealNum) {
-		this.sealNum = sealNum;
-	}
 	public String getSealName() {
 		return sealName;
 	}
@@ -92,18 +86,6 @@ public class ApprSealInfoVO {
 	public void setRegUserName2(String regUserName2) {
 		this.regUserName2 = regUserName2;
 	}
-	public float getSealWidth() {
-		return sealWidth;
-	}
-	public void setSealWidth(float sealWidth) {
-		this.sealWidth = sealWidth;
-	}
-	public float getSealHeight() {
-		return sealHeight;
-	}
-	public void setSealHeight(float sealHeight) {
-		this.sealHeight = sealHeight;
-	}
 	public String getRegDate() {
 		return regDate;
 	}
@@ -121,6 +103,24 @@ public class ApprSealInfoVO {
 	}
 	public void setOffSet(String offSet) {
 		this.offSet = offSet;
+	}
+	public int getSealNum() {
+		return sealNum;
+	}
+	public void setSealNum(int sealNum) {
+		this.sealNum = sealNum;
+	}
+	public int getSealWidth() {
+		return sealWidth;
+	}
+	public void setSealWidth(int sealWidth) {
+		this.sealWidth = sealWidth;
+	}
+	public int getSealHeight() {
+		return sealHeight;
+	}
+	public void setSealHeight(int sealHeight) {
+		this.sealHeight = sealHeight;
 	}
 	
 }

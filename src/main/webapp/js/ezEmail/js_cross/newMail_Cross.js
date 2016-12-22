@@ -2852,7 +2852,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
         newElem.style.color = inMailColor;
     }
     else {
-    	var InnerDomainList = InnerDomain.toLowerCase().split(',');
+    	var InnerDomainList = InnerDomain.toLowerCase().split(';');
     	
     	for (var i = 0; i < InnerDomainList.length; i++) {
     		InnerDomainList[i] = InnerDomainList[i].trim();

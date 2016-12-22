@@ -13,7 +13,6 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <c:if test="${!isCrossBrowser}">
@@ -159,7 +158,7 @@
 	                var xmlpara = createXmlDom();
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "pSealNum");
-	                createNodeAndInsertText(xmlpara, objNode, "pSealNum", pSealPath.replace("/files/upload_approval/sealImg/", ""));
+	                createNodeAndInsertText(xmlpara, objNode, "pSealNum", pSealPath.replace("/${userInfo.tenantId}/files/upload_approval/sealImg/", ""));
 	
 	                xmlhttp.open("POST", "aspx/SealDelete.aspx", false);
 	                xmlhttp.send(xmlpara);
@@ -168,23 +167,9 @@
 	
 	        function btn_AttachAdd_onclick(obj) {
 	            if (document.form.file1.value != "") {
-// 	                var frm = document.getElementById('form');
-// 	                frm.action = "/admin/ezApproval/sealImageUpload.do?mode=SEND&companyID=" + CompanyID;
-// 	                frm.submit();
-	            	$('#form').submit(function(){
-	            	    $.ajax({
-	            	      url: $('#form').attr('action'),
-	            	      type: "POST",
-	            	      data : {
-	            	    	  mode : "SEND",
-	            	    	  companyID : CompanyID
-	            	      },
-	            	      success: function(){
-	            	        alert(120);
-	            	      }
-	            	    });
-	            	    return false;
-	            	});
+	                var frm = document.getElementById('form');
+	                frm.action = "/admin/ezApproval/sealImageUpload.do?mode=SEND&companyID=" + CompanyID;
+	                frm.submit();
 	            }
 	        }
 	
@@ -196,8 +181,21 @@
 	                document.getElementById("filename").value = fileinfo;
 	                fileName = getNodeText(GetChildNodes(nodes[0])[4]);
 	            }
-	            pSealPath = "/files/upload_approval/sealImg/" + fileName;
+	            pSealPath = "/${userInfo.tenantId}/files/upload_approval/sealImg/" + fileName;
 	        }
+	        
+	        function showKeyCode(event) {
+				event = event || window.event;
+				var keyID = (event.which) ? event.which : event.keyCode;
+				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) )
+				{
+					return;
+				}
+				else
+				{
+					return false;
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -234,9 +232,9 @@
 	        <tr>
 	            <th><spring:message code='ezApproval.t363'/></th>
 	            <td id="SealSize">
-	                <input type="text" name="tbSealWidth" id="tbSealWidth" style="width: 40px">mm&nbsp;*
-	        		<input type="text" name="tbSealHeight" id="tbSealHeight" style="width: 40px">
-	                mm </td>
+	                <input type="text" name="tbSealWidth" id="tbSealWidth" style="width: 40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
+	        		<input type="text" name="tbSealHeight" id="tbSealHeight" style="width: 40px" onkeydown="return showKeyCode(event)" maxlength="3">
+	                mm  &nbsp;&nbsp;&nbsp;(limit 999mm)</td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezApproval.t364'/></th>
@@ -246,12 +244,11 @@
 	            <td id="SIGNVIEW" colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;"></td>
 	        </tr>
 	    </table>  
-	<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	<form style="display: none;" method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezApproval/sealImageUpload.do" target="ifrm">
-	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" accept="image/*">
-	<input type="hidden" name="mode" id="mode" />
-	</form>
-	    
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+		<form style="display: none;" method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezApproval/sealImageUpload.do" target="ifrm">
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" accept="image/*">
+			<input type="hidden" name="mode" id="mode" />
+		</form>
 	</body>
 	<c:if test="${!isCrossBrowser}">
 	    <script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>

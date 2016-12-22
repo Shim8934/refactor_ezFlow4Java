@@ -119,6 +119,11 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
+		
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+            return "redirect:/ezEmail/mailAloneMain.do";
+        }
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		String skinID = "1";

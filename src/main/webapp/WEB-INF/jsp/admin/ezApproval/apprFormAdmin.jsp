@@ -56,7 +56,7 @@
 		
 		    function Tree_setconfig() {
 		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/myoffice/ezApproval/control_Cross/organtree_config2.xml", false);
+		        xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
 		        xmlHTTP.send();
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 		            var treeView = new TreeView();
@@ -121,9 +121,8 @@
 		
 		        FormContMain_dialogarguments[0] = para;
 		        FormContMain_dialogarguments[1] = btnInsFcont_onclick_Complete;
-		
-		        var url = "FormContMain.aspx?TCheck=FContIns&companyID=" + escape(companyID);
-		        GetOpenWindow(url, "FormContMain", 800, 700, false);        
+		        var url = "/admin/ezApproval/formContMain.do?tCheck=FContIns&companyID=" + escape(companyID);
+		        GetOpenWindow(url, "FormContMain", 800, 700, "NO");        
 		    }
 		
 		    function btnInsFcont_onclick_Complete(retVal) {

@@ -55,17 +55,25 @@ function GetFormContInfo(ID, DeptID, eventflag) {
 }
 
 function InitFormCont() {
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApproval/getFormContInfo.do",
+		data : {
+			id         : "ROOT",
+			companyID  : companyID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
     var xmlTree = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", "ROOT");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Get_FormContinfo.aspx", false);
-    xmlhttp.send(xmlpara);
     xmlTree = loadXMLString(FORMLIST.innerHTML.toUpperCase());
+    
     var listview = new ListView();
     listview.SetID("lvtForm");
     listview.SetMulSelectable(false);
@@ -75,8 +83,8 @@ function InitFormCont() {
     listview.DataBind("divlvtForm");
     xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
 
-    if (loadXMLString(xmlhttp.responseText) != null) {
-        var xmlRtn = loadXMLString(xmlhttp.responseText).documentElement;
+    if (loadXMLString(result) != null) {
+        var xmlRtn = loadXMLString(result).documentElement;
         GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
     }
 
@@ -92,7 +100,7 @@ function InitFormCont() {
 
 function OpenAlertUI(pAlertContent) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApproval/ezAPRALERT.aspx";
+    var url = "/admin/ezApproval/ezAprAlert.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
     feature = feature + GetShowModalPosition(330, 205);
     var RtnVal = window.showModalDialog(url, parameter, feature);

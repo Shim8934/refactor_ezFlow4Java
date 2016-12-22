@@ -219,7 +219,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		stateName = UUID.randomUUID().toString();
 		folderDate = EgovDateUtil.getToday("");
 		useEditor = config.getProperty("config.EDITOR");
-		mailInnerDomain = config.getProperty("config.MailInnerDomain");
+		mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		individualMailUser = EgovStringUtil.isEmpty(config.getProperty("config.INDIVIDUALMAILUSER").trim()) ?
 				0 : Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER").trim());
 		
@@ -323,8 +323,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			inMailColor = vo.getInmailColor();
 			outMailColor = vo.getOutmailColor();
 		} else {
-			inMailColor = "black";
-			outMailColor = "black";
+			inMailColor = "#808080";
+			outMailColor = "#0080ff";
 		}
 		
 		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");

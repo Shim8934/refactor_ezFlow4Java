@@ -523,7 +523,7 @@ public class CommonUtil {
 	public String getRealPath(HttpServletRequest request) {
 		String realPath = request.getServletContext().getRealPath("");
 		
-		if (realPath.substring(realPath.length() - 1).equals(separator) || realPath.substring(realPath.length() - 1).equals("\\")) {
+		if (realPath.substring(realPath.length() - 1).equals(separator)) {
 			realPath = realPath.substring(0, realPath.length() - 1);
 		} 
 		
@@ -605,7 +605,9 @@ public class CommonUtil {
 	
 	/**
 	 * 현재시간 UTC로 가져오기
-	 * @return 투데이
+	 * @param format 공백이면 기본 "yyyy-MM-dd HH:mm:ss" 형식
+	 * @return 포맷팅된 UTC 현재시간 가져옴
+	 * @throws Exception
 	 */
 	public String getTodayUTCTime(String format) throws Exception {
 		logger.debug("getTodayUTCTime started");
