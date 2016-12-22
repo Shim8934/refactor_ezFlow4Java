@@ -10,8 +10,11 @@ import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiptInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -331,6 +334,28 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprSealInfoVO> getSealList(ApprSealInfoVO apprSealInfoVO) throws Exception {
 		return (List<ApprSealInfoVO>) list("EzApprovalAdminDAO.getSealList", apprSealInfoVO);
+	}
+
+	public void deleteSealInfo(ApprSealInfoVO apprSealInfoVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteSealInfo", apprSealInfoVO);
+	}
+
+	public void insertSealInfo(ApprSealInfoVO apprSealInfoVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertSealInfo", apprSealInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprLineInfoVO> getUserDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception {
+		return (List<ApprLineInfoVO>) list("EzApprovalAdminDAO.getUserDocCount", apprExcelOutVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprReceiptInfoVO> getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception {
+		return (List<ApprReceiptInfoVO>) list("EzApprovalAdminDAO.getDeptTranSendDocCount", apprExcelOutVO);
+	}
+
+	public void insertFormContainer(ApprFormContVO apprFormContVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertFormContainer", apprFormContVO);
 	}
 	
 }

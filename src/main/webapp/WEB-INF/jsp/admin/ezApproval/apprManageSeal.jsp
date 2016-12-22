@@ -80,50 +80,57 @@
 	        }
 	        
 	        function InsertSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight) {
-	            var xmlhttp = createXMLHttpRequest();
-	            var xmlpara = createXmlDom();
+				var result = "";
+                
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/insertSealInfo.do",
+		    		data : {
+		    			sealName   : pSealName,
+		    			sealPath   : pSealPath,
+		    			sealWidth  : pSealWidth,
+		    			sealHeight : pSealHeight,
+		    			regUserID  : pUserID,
+		    			regUserName : pUserName1,
+		    			regUserName2 : pUserName2,
+		    			companyID  : document.getElementById("ListCompany").value
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
 	
-	            var objNode;
-	
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pSealNum", pSealNum);
-	            createNodeAndInsertText(xmlpara, objNode, "pSealName", pSealName);
-	            createNodeAndInsertText(xmlpara, objNode, "pSealPath", pSealPath);
-	            createNodeAndInsertText(xmlpara, objNode, "pSealWidth", pSealWidth);
-	            createNodeAndInsertText(xmlpara, objNode, "pSealHeight", pSealHeight);
-	            createNodeAndInsertText(xmlpara, objNode, "pRegUserID", pUserID);
-	            createNodeAndInsertText(xmlpara, objNode, "pRegUserName", pUserName1);
-	            createNodeAndInsertText(xmlpara, objNode, "pRegUserName2", pUserName2);
-	            createNodeAndInsertText(xmlpara, objNode, "CompanyID", document.getElementById("ListCompany").value);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApproval/ezSealInfo/aspx/InsertSealInfo.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            return getNodeText(loadXMLString(xmlhttp.responseText).documentElement);
-	
-	
-	
-	        }
-	        function DeleteSealInfo(pSealNum) {
-	            var xmlhttp = createXMLHttpRequest();
-	            var xmlpara = createXmlDom();
-	
-	            var objNode;
-	
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pSealNum", pSealNum);
-	
-	            xmlhttp.open("POST", "/myoffice/ezApproval/ezSealInfo/aspx/DeleteSealInfo.aspx", false);
-	            xmlhttp.send(xmlpara);
-	
-	            return getNodeText(loadXMLString(xmlhttp.responseText).documentElement);
+	            return getNodeText(loadXMLString(result).documentElement);
 	
 	        }
+	        
+	        function DeleteSealInfo() {
+                var result = "";
+                
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/deleteSealInfo.do",
+		    		data : {
+		    			companyID  : document.getElementById("ListCompany").value
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
+	            return getNodeText(loadXMLString(result).documentElement);
+	        }
+	        
 	        function lvtForm_onclick() {
 	        }
 	
 	        function lvtForm_onSel_Changed() {
 	        }
+	        
 	        function lvtForm_onDblclick() {
 	            btnInfo_onclick();
 	        }
@@ -146,9 +153,10 @@
 	                parameter[7] = GetAttribute(oArrRows[0], "DATA3");
 	                parameter[8] = getNodeText(oArrRows[0].cells[5]);
 	
-	                var url = "/myoffice/ezApproval/ezSealInfo/ezSealInfo.aspx";
+	                var url = "/admin/ezApproval/sealInfo.do";
 	                ezSealInfo_dialogArguments[0] = parameter;
-	                var OpenWin = GetOpenWindow(url, "ezSealInfo", 500, 420, "NO");
+	                var OpenWin = window.open(url, "ezSealInfo", GetOpenWindowfeature(500, 420));
+// 	                var OpenWin = GetOpenWindow(url, "ezSealInfo", 500, 420, "NO");
 	            }
 	            else {
 	                var pInformationString = "<spring:message code='ezApproval.t370'/>";
@@ -178,50 +186,39 @@
 	                var ret = window.showModalDialog(url, parameter, feature);
 	
 	                if (ret[0] == "OK") {
-	                    var RtnVal = DeleteSealInfo("");
-	                    if (RtnVal == "TRUE") {
-	                        RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
-	                        if (RtnVal == "TRUE") {
-	                            var pInformationString = "<spring:message code='ezApproval.t371'/>";
-	                            OpenAlertUI(pInformationString);
-	                            getSealList();
-	                        }
-	                        else {
-	                            var pInformationString = "<spring:message code='ezApproval.t372'/>";
-	                            OpenAlertUI(pInformationString);
-	                            return;
-	                        }
-	                    }
-	                    else {
-	                        var pInformationString = "<spring:message code='ezApproval.t372'/>";
-	                        OpenAlertUI(pInformationString);
-	                        return;
-	                    }
+	                    var RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
+	                    
+                        if (RtnVal == "TRUE") {
+                            var pInformationString = "<spring:message code='ezApproval.t371'/>";
+                            OpenAlertUI(pInformationString);
+                            getSealList();
+                        }
+                        else {
+                            var pInformationString = "<spring:message code='ezApproval.t372'/>";
+                            OpenAlertUI(pInformationString);
+                            return;
+                        }
+	                } else {
+	                	var pInformationString = "<spring:message code='ezApproval.t372'/>";
+                        OpenAlertUI(pInformationString);
+                        return;
 	                }
 	            }
 	        }
 	
 	        function btnAdd_onclick_Complete(RtnVal) {
 	            if (RtnVal[0] == "OK") {
-	                var DelRtnVal = DeleteSealInfo("");
-	                if (DelRtnVal == "TRUE") {
-	                    RtnVal = InsertSealInfo(RtnVal[1], RtnVal[2], RtnVal[3], RtnVal[4], RtnVal[5]);
-	                    if (RtnVal == "TRUE") {
-	                        var pInformationString = "<spring:message code='ezApproval.t371'/>";
-	                        OpenAlertUI(pInformationString);
-	                        getSealList();
-	                    }
-	                    else {
-	                        var pInformationString = "<spring:message code='ezApproval.t372'/>";
-	                        OpenAlertUI(pInformationString);
-	                        return;
-	                    }
-	                }
-	                else {
-	                    var pInformationString = "<spring:message code='ezApproval.t372'/>";
-	                    OpenAlertUI(pInformationString);
-	                    return;
-	                }
+                    RtnVal = InsertSealInfo(RtnVal[1], RtnVal[2], RtnVal[3], RtnVal[4], RtnVal[5]);
+                    if (RtnVal == "TRUE") {
+                        var pInformationString = "<spring:message code='ezApproval.t371'/>";
+                        OpenAlertUI(pInformationString);
+                        getSealList();
+                    }
+                    else {
+                        var pInformationString = "<spring:message code='ezApproval.t372'/>";
+                        OpenAlertUI(pInformationString);
+                        return;
+                    }
 	            }
 	        }
 	

@@ -25,8 +25,11 @@ import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprReceiptInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -2419,7 +2422,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + commonUtil.getDateStringInUTC(apprSealInfoVOs.get(k).getDelDate(), apprSealInfoVO.getOffSet(), false) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(commonUtil.getDateStringInUTC(apprSealInfoVOs.get(k).getDelDate(), apprSealInfoVO.getOffSet(), false)) + "</VALUE>");
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
@@ -2434,6 +2437,208 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("getSealList ended");
 		
 		return resultXML.toString();
+	}
+
+	@Override
+	public String insertSealInfo(ApprSealInfoVO apprSealInfoVO) throws Exception {
+		logger.debug("insertSealInfo started");
+
+		String rtnValue = "";
+		
+		try {
+			ezApprovalAdminDAO.deleteSealInfo(apprSealInfoVO);
+			ezApprovalAdminDAO.insertSealInfo(apprSealInfoVO);
+			
+			rtnValue = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<RESULT>FALSE</RESULT>";
+		}
+
+		logger.debug("insertSealInfo ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale) throws Exception {
+		logger.debug("getUserDocCount started");
+
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = getListHeader("104", apprExcelOutVO.getLang(), apprExcelOutVO.getCompanyID(), apprExcelOutVO.getTenantID());
+
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01";
+		int tempMonth = Integer.parseInt(apprExcelOutVO.getEndMonth()) + 1;
+		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01";
+		
+		if (tempMonth > 12) {
+			int tempYear = Integer.parseInt(apprExcelOutVO.getEndYear()) + 1;
+			toDate = String.valueOf(tempYear) + "-01-01";
+		}
+		
+		apprExcelOutVO.setToDate(toDate);
+		apprExcelOutVO.setFromDate(fromDate);
+		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
+		
+		List<ApprLineInfoVO> apprLineInfoVOs = ezApprovalAdminDAO.getUserDocCount(apprExcelOutVO);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprLineInfoVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprLineInfoVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = headerList.get(h).getColName().toUpperCase();
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				if (fieldName.equals("NAME1")) {
+					fieldValue = egovMessageSource.getMessage("ezApproval." + docXML.getElementsByTagName(fieldName).item(k).getTextContent(), locale);
+				}
+				
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(fieldValue)) + "</VALUE>");
+				
+				if (h == 0) {
+					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA2>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getUserDocCount ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception {
+		logger.debug("getDeptTranSendDocCount started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = new ArrayList<ApprCodeVO>();
+		
+		if (apprExcelOutVO.getMode() == null) {
+			headerList = getListHeader("107", apprExcelOutVO.getLang(), apprExcelOutVO.getCompanyID(), apprExcelOutVO.getTenantID());
+		} else if (apprExcelOutVO.getMode().equals("SEND")) {
+			headerList = getListHeader("105", apprExcelOutVO.getLang(), apprExcelOutVO.getCompanyID(), apprExcelOutVO.getTenantID());
+		} else if (apprExcelOutVO.getMode().equals("RECV")) {
+			headerList = getListHeader("106", apprExcelOutVO.getLang(), apprExcelOutVO.getCompanyID(), apprExcelOutVO.getTenantID());
+		} else {
+			headerList = getListHeader("107", apprExcelOutVO.getLang(), apprExcelOutVO.getCompanyID(), apprExcelOutVO.getTenantID());
+		}
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01";
+		int tempMonth = Integer.parseInt(apprExcelOutVO.getEndMonth()) + 1;
+		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01";
+		
+		if (tempMonth > 12) {
+			int tempYear = Integer.parseInt(apprExcelOutVO.getEndYear()) + 1;
+			toDate = String.valueOf(tempYear) + "-01-01";
+		}
+		
+		apprExcelOutVO.setToDate(toDate);
+		apprExcelOutVO.setFromDate(fromDate);
+		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
+		
+		List<ApprReceiptInfoVO> apprReceiptInfoVOs = ezApprovalAdminDAO.getDeptTranSendDocCount(apprExcelOutVO);
+
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprReceiptInfoVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprReceiptInfoVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				fieldName = headerList.get(h).getColName().toUpperCase();
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(fieldValue)) + "</VALUE>");
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getDeptTranSendDocCount ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String insertFormContainer(ApprFormContVO apprFormContVO, String offset) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("insertFormContainer started");
+
+		apprFormContVO.setId(Integer.parseInt(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false).substring(0, 4) + "000001"));
+		
+		ezApprovalAdminDAO.insertFormContainer(apprFormContVO);
+
+		logger.debug("insertFormContainer ended");
+		
+		return null;
 	}
 	
 }

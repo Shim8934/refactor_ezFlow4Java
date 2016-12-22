@@ -7,11 +7,14 @@
 	<typeAlias  alias="ApprDocNumVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocNumVO"/>
 	<typeAlias  alias="ApprDocItemVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocItemVO"/>
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
+	<typeAlias  alias="ApprLineInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO"/>
+	<typeAlias  alias="ApprExcelOutVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO"/>
 	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
 	<typeAlias  alias="ApprSealInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO"/>
 	<typeAlias  alias="ApprFormContVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormContVO"/>
 	<typeAlias  alias="ApprDocGroupVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO"/>
+	<typeAlias  alias="ApprReceiptInfoVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiptInfoVO"/>
 	<typeAlias  alias="ApprReceiveGroupVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO"/>
 	
 	<select id="EzApprovalAdminDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
@@ -1083,6 +1086,10 @@
 			FROM 
 				TBCODELIST  
 			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
 				CODE1 = #code1# 
 			AND 
 				NAME$lang$ LIKE CONCAT('%', #code2#)
@@ -1119,12 +1126,149 @@
             REGUSERNAME$lang$ AS REGUSERNAME 
         FROM 
         	TBSEALINFO  
-		<isNotEqual property="listFlag" compareValue="ADMIN">
-			WHERE 
-				DELDATE IS NULL
+        WHERE
+        	TENANT_ID = #tenantID#
+        AND
+        	COMPANYID = #companyID#
+		<isNotEqual property="listFlag" compareValue="ADMIN" prepend="AND">
+			DELDATE IS NULL
 		</isNotEqual>
         ORDER BY 
         	REGDATE DESC
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getUserDocCount" parameterClass="ApprExcelOutVO" resultClass="ApprLineInfoVO">
+		<![CDATA[
+			SELECT 
+				APRMEMBERDEPTID, 
+				APRMEMBERID, 
+				APRMEMBERNAME$multiLang$ AS APRMEMBERNAME, 
+				APRMEMBERDEPTNAME$multiLang$ AS APRMEMBERDEPTNAME,          
+   				APRMEMBERJOBTITLE$multiLang$ AS APRMEMBERJOBTITLE, 
+   				APRTYPE, 
+   				C.NAME1 AS APRTYPENAME, 
+   				COUNT(APRMEMBERID) AS APRCOUNT 
+   			FROM 
+   				TBENDAPRLINEINFO E      
+   			INNER JOIN 
+   				TBCODEAPRTYPE C  
+   			ON 
+   				E.TENANT_ID = C.TENANT_ID
+   			AND
+   				E.COMPANYID = C.COMPANYID
+   			AND
+   				E.APRTYPE = C.CODE     
+   			WHERE
+   				E.TENANT_ID = #tenantID#
+   			AND
+   				E.COMPANYID = #companyID#
+   			AND 
+   				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   			AND 
+   				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+   			GROUP BY 
+   				APRMEMBERDEPTID, 
+   				APRMEMBERID, 
+   				APRMEMBERNAME$multiLang$, 
+   				APRMEMBERDEPTNAME$multiLang$, 
+   				APRMEMBERJOBTITLE$multiLang$, 
+   				APRTYPE, 
+   				C.NAME1
+		]]>
+		<isEqual property="userFlag" compareValue="0">
+			ORDER BY APRTYPE, APRMEMBERDEPTNAME, APRMEMBERNAME
+		</isEqual>
+		<isEqual property="userFlag" compareValue="1">
+			ORDER BY APRMEMBERDEPTNAME, APRMEMBERNAME, APRTYPE
+		</isEqual>
+		<isEqual property="userFlag" compareValue="2">
+			ORDER BY APRMEMBERNAME, APRMEMBERDEPTNAME, APRTYPE
+		</isEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getDeptTranSendDocCount" parameterClass="ApprExcelOutVO" resultClass="ApprReceiptInfoVO">
+		<isEqual property="mode" compareValue="SEND">
+			<![CDATA[
+				SELECT 
+					SENTDEPTID, 
+					SENTDEPTNAME$multiLang$ AS SENTDEPTNAME, 
+					COUNT(SENTDEPTID) AS APRCOUNT      
+      			FROM 
+      				TBENDRECEIPTPROCESSINFO  
+      			WHERE 
+      				TENANT_ID = #tenantID#
+      			AND
+      				COMPANYID = #companyID#
+      			AND
+      				DOCSTATE = 'A02011'
+      			AND 
+      				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+      			AND 
+      				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+      			GROUP BY 
+      				SENTDEPTID, 
+      				SENTDEPTNAME$multiLang$ 
+      			ORDER BY 
+      				SENTDEPTNAME
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="SEND">
+			<isEqual property="mode" compareValue="RECV">
+				<![CDATA[
+					SELECT 
+						RECEIVEDDEPTID, 
+						RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME,     
+         				COUNT(RECEIVEDDEPTID) AS APRCOUNT 
+         			FROM 
+         				TBENDRECEIPTPROCESSINFO     
+         			WHERE 
+         				TENANT_ID = #tenantID#
+         			AND
+         				COMPANYID = #companyID#
+         			AND
+         				DOCSTATE = 'A02011'
+         			AND 
+         				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+         			AND 
+         				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')      
+         			GROUP BY 
+         				RECEIVEDDEPTID, 
+         				RECEIVEDDEPTNAME$multiLang$ 
+         			ORDER BY 
+         				RECEIVEDDEPTNAME
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="RECV">
+				<![CDATA[
+					SELECT 
+						SENTDEPTID, 
+						SENTDEPTNAME$multiLang$ AS SENTDEPTNAME, 
+						RECEIVEDDEPTID,      
+         				RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME, 
+         				COUNT(SENTDEPTID) AS APRCOUNT 
+         			FROM 
+         				TBENDRECEIPTPROCESSINFO  
+         			WHERE 
+         				TENANT_ID = #tenantID#
+         			AND
+         				COMPANYID = #companyID#
+         			AND
+         				DOCSTATE = 'A02011'     
+         			AND 
+         				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+         			AND 
+         				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+         			GROUP BY 
+         				SENTDEPTID, 
+         				SENTDEPTNAME$multiLang$ , 
+         				ReceivedDeptID, 
+         				ReceivedDeptName$multiLang$  
+         			ORDER BY 
+         				SENTDEPTNAME, 
+         				RECEIVEDDEPTNAME
+				]]>
+			</isNotEqual>
+		</isNotEqual>
 	</select>
 	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
@@ -1328,6 +1472,56 @@
      			#groupID#, #itemCode#, #itemName#, #itemName2#, #itemLimit#, #itemSecurity#, #itemPublic#, #companyID#, #tenantID# 
      		)
 		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertSealInfo" parameterClass="ApprSealInfoVO">
+		<selectKey keyProperty="sealNum" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN MAX(SEALNUM) IS NULL
+						THEN 1
+						ELSE MAX(SEALNUM) + 1
+					END sealNum
+				FROM
+					TBSEALINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBSEALINFO ( 
+				SEALNUM,   SEALNAME,   SEALPATH,   SEALWIDTH,   SEALHEIGHT,   REGDATE,   								   REGUSERID,   REGUSERNAME,   REGUSERNAME2,   COMPANYID,   TENANT_ID 
+			)
+      		VALUES ( 
+      			#sealNum#, #sealName#, #sealPath#, #sealWidth#, #sealHeight#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #regUserID#, #regUserName#, #regUserName2#, #companyID#, #tenantID# 
+      		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormContainer" parameterClass="ApprFormContVO">
+		<selectKey keyProperty="maxID" resultClass="Integer">
+			SELECT
+				CASE
+					WHEN MAX(FORMCONTID) IS NULL
+					THEN #id#
+					ELSE MAX(FORMCONTID) + 1
+				END maxID
+			FROM
+				TBFORMCONTAINER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</selectKey>
+		INSERT INTO TBFORMCONTAINER (
+			FormContID, FormContName,   FormContName2,   FormContOwnDepID, FormContParents,   FormContdescription,   companyID,   tenant_id
+		) 
+		VALUES (
+			#maxID#,    #formContName#, #formContName2#, #formContDept#,   #formContParents#, #formContDescription#, #companyID#, #tenantID# 
+		)
 	</insert>
 	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
@@ -1556,6 +1750,20 @@
 		]]>
 	</update>
 	
+	<update id="EzApprovalAdminDAO.deleteSealInfo" parameterClass="ApprSealInfoVO">
+		<![CDATA[
+			UPDATE TBSEALINFO
+         	SET 
+         		DELDATE = TO_DATE(#delDate#, 'YYYY-MM-DD HH24:MI:SS')
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			DELDATE IS NULL
+		]]>
+	</update>
+	
 	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM TBCONTAINERTODOCSTATE
@@ -1681,4 +1889,6 @@
             	ITEMCODE = #itemCode#
 		]]>
 	</delete>
+	
+
 </sqlMap>

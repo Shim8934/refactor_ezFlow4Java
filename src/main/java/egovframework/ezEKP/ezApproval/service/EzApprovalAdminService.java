@@ -9,6 +9,8 @@ import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -106,5 +108,13 @@ public interface EzApprovalAdminService {
 	public String deleteItemCodeItem(ApprDocItemVO apprDocItemVO) throws Exception;
 
 	public String getSealList(ApprSealInfoVO apprSealInfoVO) throws Exception;
+
+	public String insertSealInfo(ApprSealInfoVO apprSealInfoVO) throws Exception;
+
+	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale) throws Exception;
+
+	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception;
+
+	public String insertFormContainer(ApprFormContVO apprFormContVO, String offset) throws Exception;
 
 }
