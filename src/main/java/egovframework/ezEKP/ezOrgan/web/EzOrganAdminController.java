@@ -1458,6 +1458,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do")	
 	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("permissionsCheck started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -1474,10 +1476,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			topID = "Top";
 		}
 		
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		
+		logger.debug("permissionsCheck ended.");
 		
 		return "admin/ezOrgan/permissionsCheck";
 	}
