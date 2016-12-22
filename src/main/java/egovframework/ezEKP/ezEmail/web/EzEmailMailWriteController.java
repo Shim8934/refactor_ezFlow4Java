@@ -251,8 +251,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				+ ",postType=" + postType);
 		
 		//메일 색상 관련 설정
-		String inMailColor = "808080";
-		String outMailColor = "0080ff";
+		String inMailColor = "#808080";
+		String outMailColor = "#0080ff";
 		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
