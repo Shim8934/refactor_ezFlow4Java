@@ -3266,7 +3266,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getDocRecvState(docID, deptID, userInfo.getCompanyID());
+		String result = ezApprovalGService.getDocRecvState(docID, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}

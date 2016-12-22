@@ -145,7 +145,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass);
+		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
 		
 		if (result.equals("OK")) {
 			if (proxyInfo.split(":").length >= 5) {
@@ -768,7 +768,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
 			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";
 		} else {
-			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=/files/upload_personal/photo/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
 		}
 
 		String publicModulus = egovFileScrty.getPbm();
@@ -811,7 +811,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String deletePicture(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user");
+		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user", userInfo.getTenantId());
 		return result;
 	}
 	
@@ -822,6 +822,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@ResponseBody
 	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		vo.setTenantId(userInfo.getTenantId());
+		
 		ezOrganAdminService.updateDBData_user(vo);
 		return "OK";
 	}
@@ -846,7 +849,7 @@ public class EzPersonalController extends EgovFileMngUtil {
     	String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
     	String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
 
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword));
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID);
 		if (checkResult != 1) {
 			return "CHKERROR";
 		}

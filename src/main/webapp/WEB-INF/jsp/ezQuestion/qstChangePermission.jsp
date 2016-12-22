@@ -64,9 +64,17 @@
 	        	});
 	        	var NowDate = new Date("${uploadSDate}");
 	        	var NowDate2 = new Date("${uploadEDate}");
+				
+	        	//offset
+	        	var offset = "${offset}";
+	        	offset *= 1;
 
-	        	NowDate.setHours(NowDate.getHours() - 9);
-	        	NowDate2.setHours(NowDate2.getHours() - 9);
+	        	NowDate.setHours(NowDate.getHours() - offset);
+	        	NowDate2.setHours(NowDate2.getHours() - offset);
+
+	        	//2016-12-21 -9 , 한국기준으로만 되어있어서 offset으로 변경
+	        	//NowDate.setHours(NowDate.getHours() - 9);
+	        	//NowDate2.setHours(NowDate2.getHours() - 9);
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -480,9 +488,9 @@
             	<input type="hidden" name="brd_id2" id="brd_id2" value="${qstListVO.brdID}" /> 
             	<input type="hidden" name="brd_nm" id="brd_nm" value="${ezQuestionVO.brdNm}" /> 
             	<input type="hidden" name="brd_postterm" id="brd_postterm" value="${ezQuestionVO.brdPostterm}" />        
-            	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${qstUserPollItemVO.pollStartDate}" />
+            	<input type="hidden" name="hidStartDate" id="hidStartDate" value="${pollStartDate}" />
             	<input type="hidden" name="item_no2" id="item_no2" value="${qstUserPollItemVO.itemNo}" />        
-            	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${qstUserPollItemVO.pollEndDate}" />
+            	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${pollEndDate}" />
             	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
             	<input type="hidden" name="select_YN" id="select_YN" />
             	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="<%-- <%= Server.HtmlEncode(_SB.ToString()) %> --%>" />

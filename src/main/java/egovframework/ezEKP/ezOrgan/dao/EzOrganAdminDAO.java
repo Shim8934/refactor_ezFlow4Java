@@ -1279,6 +1279,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             String param = "birthType=" + URLEncoder.encode(vo.getBirthType(), "UTF-8");
             inputParams += "&" + param;
         }
+        if (vo.getInfo() != null) {
+            String param = "info=" + URLEncoder.encode(vo.getInfo(), "UTF-8");
+            inputParams += "&" + param;
+        }
 
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);

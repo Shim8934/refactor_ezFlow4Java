@@ -45,5 +45,5 @@ public interface EzPersonalService {
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult) throws Exception;
 	
-	public int checkPassword (String pCN, String pPassword) throws Exception;
+	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception;
 }

@@ -219,7 +219,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		stateName = UUID.randomUUID().toString();
 		folderDate = EgovDateUtil.getToday("");
 		useEditor = config.getProperty("config.EDITOR");
-		mailInnerDomain = config.getProperty("config.MailInnerDomain");
+		mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		individualMailUser = EgovStringUtil.isEmpty(config.getProperty("config.INDIVIDUALMAILUSER").trim()) ?
 				0 : Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER").trim());
 		

@@ -115,7 +115,8 @@
 	
 			function form_check(){
 		        var cur_date = new Date();
-	            var start_date = "<c:out value='${qstUserPollItemVO.pollStartDate}'/>";
+	            //var start_date = "<c:out value='${qstUserPollItemVO.pollStartDate}'/>";
+	            var start_date = "${pollStartDate}";
 
 	            if(start_date > cur_date){
 	                alert("<spring:message code='ezQuestion.t316' />" + start_date + "<spring:message code='ezQuestion.t317' />");
@@ -309,7 +310,7 @@
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t216" /></th>
-		    <td><c:out value="${qstUserPollItemVO.pollStartDate}"/> ~ <c:out value="${qstUserPollItemVO.pollEndDate}"/> </td>
+		    <td><c:out value="${pollStartDate}"/> ~ <c:out value="${pollEndDate}"/> </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t231" /></th>
@@ -319,7 +320,7 @@
 		    			<spring:message code="ezQuestion.t322" />
 		    		</c:when>
 		    		<c:otherwise>
-		    			<c:out value="${qstUserPollItemVO.pollEndDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
+		    			<c:out value="${pollEndDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
 		    		</c:otherwise>
 		    	</c:choose>
 			</td>

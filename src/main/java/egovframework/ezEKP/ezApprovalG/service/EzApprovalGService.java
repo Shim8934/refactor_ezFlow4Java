@@ -216,7 +216,7 @@ public interface EzApprovalGService {
 	
 	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getDocRecvState(String docID, String deptID, String companyID) throws Exception;
+	public String getDocRecvState(String docID, String deptID, String companyID, int tenantID) throws Exception;
 	
 	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
 			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang, int tenantID) throws Exception;
