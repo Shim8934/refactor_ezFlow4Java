@@ -427,12 +427,12 @@
                 <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
                 <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
                 <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
-                <p id="Permission_sub4"><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
-                <p id="Permission_sub5"><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
-                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
-                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
-                <p id="Permission_sub8"><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
-                <p id="Permission_sub9"><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
+                <p id="Permission_sub4" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
+                <p id="Permission_sub5" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
+                <p id="Permission_sub6" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
+                <p id="Permission_sub7" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
+                <p id="Permission_sub8" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
+                <p id="Permission_sub9" <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
 	        </div>
 	    </div>
 	

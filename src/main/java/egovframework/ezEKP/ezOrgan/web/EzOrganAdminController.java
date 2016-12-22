@@ -1355,6 +1355,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String strLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
+        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1367,11 +1368,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				resultList.add(j, vo);
 			}
 		}
-		
+		        	
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
+        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);		
 		
 		logger.debug("permissionsList ended.");
 		
