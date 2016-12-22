@@ -10,43 +10,80 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
-			<!--
-			  
-			function btn_OpinionOK_onclick() {
-				window.returnValue = true; 
-				window.close();
-			}
-	
-			function btn_OpinionCANCEL_onclick() {
-			  	window.returnValue = false;
-			  	window.close(); 
-			}
-	
+			var ReturnFunction;
+			var ReturnFunctionName;
 			window.onload = function() {
-				pMessageContent.innerHTML = dialogArguments;
-			  
-			  	//IE 이외에 브라우져에서 창크기 다시 조절
-			  	var UserAgentState = navigator.userAgent.toLowerCase();
-			  	
-			  	if (!CrossYN()) {
-			    	if (UserAgentState.indexOf("firefox") != -1) {
-			        	window.resizeTo(349, 279);
-			      	} else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-			        	window.resizeTo(346, 243);
-			      	} else {
-			      		window.resizeTo(346, 269);
-			      	}
-			  	}
-			  	
-			  	if (MACSAFARIYN()) {
-			      window.resizeTo(330, 251);
-			  	}
-			   
-			  	window.returnValue = false; 
+				try {
+                    RetValue = parent.ezapropinion_cross_dialogArguments[0];
+                    ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
+                } catch (e) {
+                    try {
+                        RetValue = opener.ezapropinion_cross_dialogArguments[0];
+                        ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
+                    } catch (e) {
+                        RetValue = window.dialogArguments;
+                    }
+                }
+                
+				try {
+			        document.getElementById("pMessageContent").innerHTML = parent.ezapropinion_cross_dialogArguments[0];
+			        ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
+			        ReturnFunctionName = parent.ezapropinion_cross_dialogArguments[2];
+			    } catch (e) {
+			        try {
+			            document.getElementById("pMessageContent").innerHTML = opener.ezapropinion_cross_dialogArguments[0];
+			            ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
+			            ReturnFunctionName = opener.ezapropinion_cross_dialogArguments[2];
+			        } catch (e) {
+			            pMessageContent.innerHTML = dialogArguments;
+			            window.returnValue = false;
+			        }
+			    }
+			    
+				var UserAgentState = navigator.userAgent.toLowerCase();
+		        
+		        if (CrossYN()) {
+		        	if (UserAgentState.indexOf("chrome") > 0) {
+		        		window.resizeTo(340, 260);
+		        	} else {
+		        		window.resizeTo(346, 243);
+		        	}
+		        } else {
+		        	if (UserAgentState.indexOf("firefox") != -1) {
+		                window.resizeTo(349, 279);
+		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
+		                window.resizeTo(346, 243);
+		            } else {
+		            	window.resizeTo(346, 270);
+		            }
+		        }
+		        
+		        if (MACSAFARIYN()) {
+		            window.resizeTo(330, 251);
+		        }
 			}
-	
-	
-			//-->
+			
+			function btn_OpinionOK_onclick() {
+			    if (ReturnFunction != null) {
+			        window.close();
+			        ReturnFunction(true, ReturnFunctionName);
+			    }
+			    else {
+			        window.returnValue = true;
+			        window.close();
+			    }
+			}
+
+
+			function btn_OpinionCANCEL_onclick() {
+			    if (ReturnFunction != null) {
+			        window.close();
+			        ReturnFunction(false, ReturnFunctionName);
+			    } else {
+			        window.returnValue = false;
+			        window.close();
+			    }
+			}
 		</script>
 	</head>
 	<body style="overflow:hidden;">

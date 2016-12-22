@@ -4,74 +4,672 @@
 <sqlMap namespace="ezCommunityAdmin">
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityClubVO" 					type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
-	
-	
-	<resultMap class="CommunityCComCloseVO" id="CommunityCComClose">
-		<result property="c_ClubNo"						column="C_CLUBNO"					columnIndex="1"/>
-		<result property="closeState"					column="CLOSESTATE"					columnIndex="2"/>
-		<result property="c_ClubName"					column="C_CLUBNAME"					columnIndex="3"/>
-		<result property="userName"						column="userName"					columnIndex="4"/>
-		<result property="c_SysopID"					column="C_SYSOPID"					columnIndex="5"/>
-		<result property="applicationDate"				column="APPLICATIONDATE"			columnIndex="6"/>
-	</resultMap>
 
-	<procedure id="EzCommunityAdminDAO.aspCloseComGet1"					parameterClass="Map"			resultMap="CommunityCComClose">
-		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet1"					parameterClass="Map"			resultClass="CommunityCComCloseVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspCloseGet1Select1"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<isEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					DISTINCT C_CLUBNO,
+					CLOSESTATE,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					APPLICATIONDATE
+				FROM
+					EZCOMMUNITY.C_COMCLOSE A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					APPLICATIONDATE DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					DISTINCT C_CLUBNO,
+					CLOSESTATE,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					APPLICATIONDATE
+				FROM
+					EZCOMMUNITY.C_COMCLOSE A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					$v_SORT1$ $v_SORT2$
+			]]>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommunityAdminDAO.aspCloseGet1Select2"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<isEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					DISTINCT C_CLUBNO,
+					CLOSESTATE,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					APPLICATIONDATE
+				FROM
+					EZCOMMUNITY.C_COMCLOSE A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					APPLICATIONDATE DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					DISTINCT C_CLUBNO,
+					CLOSESTATE,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					APPLICATIONDATE
+				FROM
+					EZCOMMUNITY.C_COMCLOSE A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					$v_SORT1$ $v_SORT2$
+			]]>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet1"				parameterClass="Map"			resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET1(#v_USERINFO_LANG#, #v_IQUERYCOUNT#, #v_STRSELECT#, #v_STRQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(C_CLUBNO), 0)
+			FROM
+				EZCOMMUNITY.C_COMCLOSE
+			WHERE
+				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO">
-		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT(#v_USERINFO_LANG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
+		SELECT
+			NVL(COUNT(C_CLUBNO), 0)
+		FROM
+			EZCOMMUNITY.C_COMCLOSE
+		WHERE
+			TENANT_ID = #tenantID#
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select1"				parameterClass="Map"		resultClass="CommunityClubVO">
+		<isEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					C_CLUBNO,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					C_REGDATE
+				FROM
+					EZCOMMUNITY.C_CLUB A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				AND
+					A.C_ADMINCONFIRM = 'N'
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					A.C_REGDATE DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					C_CLUBNO,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					C_REGDATE
+				FROM
+					EZCOMMUNITY.C_CLUB A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				AND
+					A.C_ADMINCONFIRM = 'N'
+				AND
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					$v_SORT1$ $v_SORT2$
+			]]>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select2"				parameterClass="Map"		resultClass="CommunityClubVO">
+		<isEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					DISTINCT C_CLUBNO,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					C_REGDATE
+				FROM
+					EZCOMMUNITY.C_CLUB A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = B.USERID
+				AND
+					A.C_ADMINCONFIRM = 'N'
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					A.C_REGDATE DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_S" compareValue="">
+			<![CDATA[
+				SELECT
+					C_CLUBNO,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					USERNAME$v_USERINFO_LANG$ USERNAME,
+					C_SYSOPID,
+					C_REGDATE
+				FROM
+					EZCOMMUNITY.C_CLUB A
+				INNER JOIN
+					EZCOMMUNITY.C_MEMBERINFO B
+				ON
+					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				AND
+					A.C_ADMINCONFIRM = 'N'
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					A.TENANT_ID = #tenantID#
+				ORDER BY
+					$v_SORT1$ $v_SORT2$
+			]]>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer">
-		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET2(#v_USERINFO_LANG#, #v_STRSELECT#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+
+	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(C_CLUBNO), 0) 
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+			AND
+				C_ADMINCONFIRM = 'N'
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="String"			resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(C_CLUBNO), 0)
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				C_ADMINCONFIRM = 'N'
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="String"			resultClass="String">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet1"				parameterClass="Map"			resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET1(#v_USERINFO_LANG#, #v_IQUERYCOUNT#, #v_STRSELECT#, #v_STRQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT
+					C_CLUBNO,
+					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+					C_SYSOPID,
+					C_CLUBDESC,
+					C_REGDATE
+				FROM
+					(SELECT
+						*
+					FROM
+						(SELECT
+							C_CLUBNO,
+							C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
+							C_SYSOPID,
+							C_CLUBDESC,
+							C_REGDATE
+						FROM
+							EZCOMMUNITY.C_CLUB
+		]]>
+		
+		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
+			<![CDATA[
+				WHERE
+					C_CLUBNO IN (SELECT
+									C_CLUBNO
+								FROM
+									EZCOMMUNITY.C_CLUB
+								WHERE
+									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
+								AND
+									TENANT_ID = #tenantID#)
+				AND
+					C_ADMINCONFIRM = 'Y'
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
+			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
+				<![CDATA[
+					 WHERE
+					 	C_CLUBNO IN (SELECT
+					 					C_CLUBNO
+									FROM
+										EZCOMMUNITY.C_CLUB
+									WHERE
+										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+									AND
+										TENANT_ID = #tenantID#)
+					AND
+						C_ADMINCONFIRM = 'Y'
+					AND
+						TENANT_ID = #tenantID#
+				]]>
+			</isEqual>
+			
+			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
+				<![CDATA[
+					WHERE
+						C_ADMINCONFIRM = 'Y'
+					AND
+						TENANT_ID = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		
+		<![CDATA[
+						ORDER BY
+							C_REGDATE ASC) A
+					WHERE
+						ROWNUM <= #v_IQUERYCOUNT#)                                 
+				ORDER BY
+					C_REGDATE DESC)
+			WHERE
+				ROWNUM <=10
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommCloseAllUpdate"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_UPDATE(#v_CODE#, #v_PCLOSESTATE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET2(#v_USERINFO_LANG#, #v_STRSELECT#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspSearchKeyGet2"					parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(C_CLUBNO), 0) 
+			FROM
+				EZCOMMUNITY.C_CLUB
+		]]>
+		
+		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
+			<![CDATA[
+				 WHERE
+				 	C_CLUBNO IN (SELECT
+									C_CLUBNO
+								FROM
+									EZCOMMUNITY.C_CLUB
+								WHERE
+									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
+								AND
+									TENANT_ID = #tenantID#)
+				AND
+					C_ADMINCONFIRM = 'Y'
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
+			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
+				<![CDATA[
+					WHERE
+						C_CLUBNO IN (SELECT
+										C_CLUBNO
+									FROM
+										EZCOMMUNITY.C_CLUB
+									WHERE
+										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+									AND
+										TENANT_ID = #tenantID#)
+					AND
+						C_ADMINCONFIRM = 'Y'
+					AND
+						TENANT_ID = #tenantID#
+				]]>
+			</isEqual>
+			
+			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
+				<![CDATA[
+					WHERE
+						C_ADMINCONFIRM = 'Y'
+					AND
+						TENANT_ID = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet1"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT(#v_USERINFO_LANG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.admCommunityInfoEdit"				parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_SYSOPID,
+				C_CLUBGUBUN,
+				ISIN,
+				C_CLUBDESC,
+				C_CLUBCONFIRMTYPE,
+				C_CLUBNAME$v_USERINFO_LANG$ AS C_CLUBNAME,
+				C_CATE_A,
+				C_CATE_B,
+				C_CATE_C
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet2"				parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET2(#v_CODE#, #v_USERINFO_LANG#, #v_USE_EZKMS#, #v_COMNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEditOk"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityAdminDAO.admCommunityInfoEditOk"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_CATE_A = #v_C_CATE_A#,
+				C_CATE_B = #v_C_CATE_B#,
+				C_CATE_C = #v_C_CATE_C#,
+				C_CLUBNAME$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
+				ISIN = 2
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 	
-	<procedure id="EzCommunityAdminDAO.admCommunityInfoEditOk"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="String"			resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				CLOSEREASON
+			FROM
+				EZCOMMUNITY.C_COMCLOSE
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<procedure id="EzCommunityAdminDAO.aspCommCloseAllDel"				parameterClass="String"	>
-		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_DEL(#v_CODE#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="String"			resultClass="String"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				C_CLUBDESC
+			FROM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 	
-	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="String"			resultClass="String">
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommCloseAllUpdate"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_UPDATE(#v_CODE#, #v_PCLOSESTATE#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityAdminDAO.aspCommCloseAllUpdate"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_COMCLOSE
+			SET
+				CLOSESTATE = #v_PCLOSESTATE#
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet1"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet1Update"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_ADMINCONFIRM = 'C'
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet2"				parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET2(#v_CODE#, #v_USERINFO_LANG#, #v_USE_EZKMS#, #v_COMNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet2Update"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_ADMINCONFIRM = 'Y'
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert1"			parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.USER
+				(USERID,
+				USERNM,
+				PASSWD,
+				EMPNO,
+				EMPTYPE,
+				DEPTID,
+				POSITIONID,
+				JOBTITLEID,
+				STATUS,
+				EMAIL,
+				MOBILETEL,
+				OFFICETEL,
+      			FAX,
+      			HOMETEL,
+      			USERINTRO,
+      			JOINDATE,
+      			RETIREDATE,
+      			TOTALMILEAGE,
+      			RECENTMILEAGE,
+      			SEQ,
+      			REGDATE,
+      			PHOTOPATH,
+      			CONLEVEL,
+      			SUBDEPTID,
+      			ROLEINFO,
+      			TENANT_ID)
+      		VALUES
+      			(#v_CODE#,
+      			#v_COMNAME#,
+      			'',
+      			'',
+      			'W',
+      			'TOP',
+      			1,
+      			1,
+      			'W',
+      			NULL,
+      			NULL,
+      			NULL,
+      			NULL,
+      			NULL,
+      			NULL,
+      			SYSDATE,
+      			SYSDATE,
+      			0,
+      			0,
+      			NULL,
+      			SYSDATE,
+      			NULL,
+      			'',
+      			NULL,
+      			'C',
+      			#tenantID#)
+		]]>
+	</insert>
+	
+	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert2"			parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZCOMMUNITY.ROLE
+				(USERID,
+				ROLETYPE,
+				TENANT_ID)
+			VALUES
+				(#v_CODE#,
+				'C',
+				#tenantID#)
+		]]>
+	</insert>
+	
+	<select id="EzCommunityAdminDAO.aspCommAdmitokSet2Select"			parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				B.EMAIL,
+				B.USERNAME$v_USERINFO_LANG$,
+				A.C_CLUBNAME$v_USERINFO_LANG$
+			FROM
+				EZCOMMUNITY.C_CLUB A
+			INNER JOIN
+				EZCOMMUNITY.C_MEMBERINFO B
+			ON
+				RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+			AND
+				A.COMPANYID = B.COMPANYID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				RTRIM(A.C_CLUBNO) = #v_CODE#
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+<!-- 	<procedure id="EzCommunityAdminDAO.aspCommCloseAllDel"				parameterClass="String"	> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_DEL(#v_CODE#)} -->
+<!-- 	</procedure> -->
+	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
 				USERNAME
@@ -79,6 +677,8 @@
 				EZCOMMUNITY.C_MEMBERINFO
 			WHERE
 				RTRIM(USERID) = #v_ID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
 	</select>
 </sqlMap>

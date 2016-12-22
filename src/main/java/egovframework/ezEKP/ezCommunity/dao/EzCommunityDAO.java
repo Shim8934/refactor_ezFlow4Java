@@ -921,9 +921,30 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void adminOuterOkNoSetUpdate(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminOuterOkNoSetUpdate", map);	
 	}
+
+	public void adminMemberListGoSEUpdate1(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminMemberListGoSEUpdate1", map);
+	}
 	
-	public void adminMemberListGoSE(Map<String, Object> map) throws Exception {
-		update("EzCommunityDAO.adminMemberListGoSE", map);
+	@SuppressWarnings("unchecked")
+	public List<String> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
+	}
+	
+	public void adminMemberListGoSEUpdate2(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminMemberListGoSEUpdate2", map);
+	}
+	
+	public void adminMemberListGoSEDelete1(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminMemberListGoSEDelete1", map);
+	}
+	
+	public void adminMemberListGoSEUpdate3(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.adminMemberListGoSEUpdate3", map);
+	}
+	
+	public void adminMemberListGoSEDelete2(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.adminMemberListGoSEDelete2", map);
 	}
 
 	public void brdSaveBoardPropertyUpdate1(Map<String, Object> map) {

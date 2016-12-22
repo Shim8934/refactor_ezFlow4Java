@@ -923,12 +923,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pStartDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATE(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pEndDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+				TO_DATE(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
 		</isNotEqual>
 		
 		<![CDATA[
@@ -3317,12 +3317,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				STARTDATE > #v_pStartDate# || ' 00:00:00'
+				STARTDATE > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				EndDate > #v_pEndDate# || ' 23:59:59'
+				EndDate > #v_pEndDate#
 		</isNotEqual>
 	</select>
 	
@@ -4304,7 +4304,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commHomeGet2"					parameterClass="Map"		resultClass="Integer"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMMHOME_GET2(#v_CODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<procedure id="EzCommunityDAO.commHomeGet2"					parameterClass="Map"		resultClass="Integer">
+	<select id="EzCommunityDAO.commHomeGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(C_CLUBNO), 0)
@@ -4317,7 +4317,7 @@
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.boardPropertyGet"				parameterClass="Map"		resultClass="Integer"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BOARDPROPERTY_GET(#v_BOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -5819,9 +5819,95 @@
 		]]>
 	</update>
 	
-	<procedure id="EzCommunityDAO.adminMemberListGoSE"			parameterClass="Map">
-		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GO_SE(#v_MODE#, #v_CODE#, #v_C_ID#, #v_C_NM#)}
-	</procedure>
+<!-- 	<procedure id="EzCommunityDAO.adminMemberListGoSE"			parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_OK_GO_SE(#v_MODE#, #v_CODE#, #v_C_ID#, #v_C_NM#)} -->
+<!-- 	</procedure> -->
+	<update id="EzCommunityDAO.adminMemberListGoSEUpdate1"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_SYSOPID = #v_C_ID#
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<select id="EzCommunityDAO.adminMemberListGoSESelect"			parameterClass="Map"		resultClass="String">
+		<![CDATA[
+			SELECT
+				B.ROWID row_id
+			FROM
+				EZCOMMUNITY.TBL_COMM_BOARDINFO A
+			JOIN
+				EZCOMMUNITY.TBL_COMM_BOARDMANAGE B
+			ON
+				A.BOARDID = B.BOARDID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				ACCESSID <> 'EVERYONE'
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<update id="EzCommunityDAO.adminMemberListGoSEUpdate2"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.TBL_COMM_BOARDMANAGE
+			SET
+				ACCESSID = #v_C_ID#,
+				ACCESSNAME = #v_C_NM#
+			WHERE
+				ROWID = #v_rowID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<delete id="EzCommunityDAO.adminMemberListGoSEDelete1"			parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				RTRIM(C_ID) = #v_C_ID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+	<update id="EzCommunityDAO.adminMemberListGoSEUpdate3"			parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMUNITY.C_CLUB
+			SET
+				C_MEMBERCNT = C_MEMBERCNT - 1
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<delete id="EzCommunityDAO.adminMemberListGoSEDelete2"			parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZCOMMUNITY.C_OUTAPPLICATION
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			AND
+				RTRIM(USERID) = #v_C_ID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 	
 <!-- 	<procedure id="EzCommunityDAO.adminCommCloseOkInser"		parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_COMM_CLOSE_OK_INSER(#v_CODE#, #v_COMMNAME#, #v_COMMNAME2#, #v_SYSOPID#, #v_COMPANYNAME#, #v_DATETIME_NOW#, #v_REASON#, #v_CLOSESTATE#)} -->
@@ -6308,8 +6394,6 @@
 	       		TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
-
 	
 	<select id="EzCommunityDAO.deleteItemGet"					parameterClass="Map"		resultClass="String">
 		<![CDATA[

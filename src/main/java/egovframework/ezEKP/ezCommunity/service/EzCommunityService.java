@@ -325,7 +325,7 @@ public interface EzCommunityService {
 
 	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception;
 
-	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception;
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception;
 	
 	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState, int tenantID) throws Exception;
 

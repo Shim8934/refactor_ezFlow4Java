@@ -3231,7 +3231,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm);
+		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm, userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
@@ -3620,6 +3620,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/ezAPROPINION.do")
 	public String ezAPROPINION () throws Exception {
+		LOGGER.debug("ezAPROPINION started.");
+		LOGGER.debug("ezAPROPINION ended.");
 		return "/ezCommunity/communityAprOption";
 	}
 	

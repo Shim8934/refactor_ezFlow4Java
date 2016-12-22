@@ -1169,7 +1169,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		LOGGER.debug("startDate : " + startDate);
 		LOGGER.debug("endDate : " + endDate);
-		//TODO 이효진
+		
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -4643,14 +4643,32 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm) throws Exception {
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception {
+		LOGGER.debug("adminMemberListOkGoSe started.");
+		LOGGER.debug("code=" + code + ", id=" + cID + ", Nm=" + cNm);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_MODE", mode);
 		map.put("v_CODE", code);
 		map.put("v_C_ID", cID);
 		map.put("v_C_NM", cNm);
+		map.put("tenantID", tenantID);
 		
-		ezCommunityDAO.adminMemberListGoSE(map);
+		if (mode.equals("MASTER")) {
+			List<String> list = ezCommunityDAO.adminMemberListGoSESelect(map);
+			
+			ezCommunityDAO.adminMemberListGoSEUpdate1(map);
+			
+			for (String rowID : list) {
+				map.put("v_rowID", rowID);
+				
+				ezCommunityDAO.adminMemberListGoSEUpdate2(map);
+			}
+		} else {
+			ezCommunityDAO.adminMemberListGoSEDelete1(map);
+			ezCommunityDAO.adminMemberListGoSEUpdate3(map);
+			ezCommunityDAO.adminMemberListGoSEDelete2(map);			
+		}
+		
+		LOGGER.debug("adminMemberListOkGoSe ended.");
 	}
 
 	@Override

@@ -8,12 +8,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
+			var ezapropinion_cross_dialogArguments = new Array();
+			var xSelA = "";
+			var xSelB = "";
+			var xSelC = "";
+			
+			
 			function btn_CommSave() {
 				if (document.frmCommunityBasicInfo.txt_CommunityName.value == "") {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
@@ -38,10 +44,9 @@
 				selA = parseInt(document.frmCommunityBasicInfo.cCateA[document.frmCommunityBasicInfo.cCateA.selectedIndex].value);
 				selB = parseInt(document.frmCommunityBasicInfo.cCateB[document.frmCommunityBasicInfo.cCateB.selectedIndex].value);
 				selC = parseInt(document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value);
-				
-				var xSelA = document.frmCommunityBasicInfo.cCateA[document.frmCommunityBasicInfo.cCateA.selectedIndex].value;
-				var xSelB = document.frmCommunityBasicInfo.cCateB[document.frmCommunityBasicInfo.cCateB.selectedIndex].value;
-				var xSelC = document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value;
+				xSelA = document.frmCommunityBasicInfo.cCateA[document.frmCommunityBasicInfo.cCateA.selectedIndex].value;
+				xSelB = document.frmCommunityBasicInfo.cCateB[document.frmCommunityBasicInfo.cCateB.selectedIndex].value;
+				xSelC = document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value;
 				
 				if (selA == 0 && selB == 0 && selC == 0) {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
@@ -54,36 +59,67 @@
 				}
 				
 				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b class='point'><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
-				Ans = OpenInformationUI(pInformationContent);
-				
+				Ans = OpenInformationUI(pInformationContent, btn_CommSave_Complate);
+			}
+			
+			function btn_CommSave_Complate(Ans) {
 				if(Ans) {
-					$.ajax({
-						type : "POST",
-						async : false,
-						url : "/admin/ezCommunity/admCommunityInfoEditOk.do",
-						data : {code	:	code,
-								clubName	:	document.frmCommunityBasicInfo.txt_CommunityName.value,
-								cCateA	:	xSelA,
-								cCateB	:	xSelB,
-								cCateC	:	xSelC
-							   },
-						success : function(result) {
-							if (result == "OK") {
-								//document.frmCommunityBasicInfo.submit();
-								//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
-								//OpenAlertUI("<spring:message code = 'ezCommunity.t8' />");
-								alert("<spring:message code = 'ezCommunity.t8' />");
-	 	 					}
-						}
-					});
+					try {
+						$.ajax({
+							type : "POST",
+							async : false,
+							url : "/admin/ezCommunity/admCommunityInfoEditOk.do",
+							data : {code	:	code,
+									clubName	:	document.frmCommunityBasicInfo.txt_CommunityName.value,
+									cCateA	:	xSelA,
+									cCateB	:	xSelB,
+									cCateC	:	xSelC
+								   },
+							success : function(result) {
+								if (result == "OK") {
+									//document.frmCommunityBasicInfo.submit();
+									//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+									//OpenAlertUI("<spring:message code = 'ezCommunity.t8' />");
+									alert("<spring:message code = 'ezCommunity.t8' />");
+		 	 					}
+							}
+						});
+					} catch (e) {
+						console.log(e.message);
+					}
 				}
-				
-				window.close();
 				
 				try {
 					window.opener.location.reload(true);
 				} catch(e) {}
 			}
+			
+		    function OpenInformationUI(pInformationContent, CompleteFunction) {
+		        var parameter = pInformationContent;
+		        var url = "/ezCommunity/ezAPROPINION.do";
+		        
+		        if (CrossYN()) {
+		        	ezapropinion_cross_dialogArguments[0] = parameter;
+		            if (CompleteFunction != undefined) {
+		                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+		            } else {
+		                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+		            }
+		            
+		            var ezSealInfo = window.open(url, "", GetOpenWindowfeature(330, 205));
+	                try { ezSealInfo.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(325, 200);
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
+		        
+		        return RtnVal;
+		    }
+		    
+		    function OpenInformationUI_Complete() {
+		        DivPopUpHidden();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -160,8 +196,6 @@
                 <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="btn_CommSave()"><spring:message code = 'ezCommunity.t20' /></span></a>
                 <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="window.close()"><spring:message code = 'ezCommunity.t21' /></span></a>
 			</div>
-
 		</form>
-
 	</body>
 </html>
