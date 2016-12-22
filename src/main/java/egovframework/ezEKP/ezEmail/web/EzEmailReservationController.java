@@ -323,8 +323,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			inMailColor = vo.getInmailColor();
 			outMailColor = vo.getOutmailColor();
 		} else {
-			inMailColor = "black";
-			outMailColor = "black";
+			inMailColor = "808080";
+			outMailColor = "0080ff";
 		}
 		
 		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
