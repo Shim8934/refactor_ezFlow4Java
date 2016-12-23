@@ -36,7 +36,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -81,7 +80,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMain.do")
-	public String apprGMain() throws Exception{		
+	public String apprGMain() throws Exception {		
 		return "/admin/ezApprovalG/apprGMain";
 	}
 	
@@ -89,7 +88,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGLeft.do")
-	public String apprGLeft() throws Exception{		
+	public String apprGLeft() throws Exception {		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
 	
@@ -97,7 +96,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formAdmin.do")
-	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LOGGER.debug("formAdmin started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -129,7 +128,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 기안양식함목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do")
-	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getFormContInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -153,7 +152,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 기안양식목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormList.do")
-	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getFormList started.");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String id = request.getParameter("id");
@@ -498,7 +497,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
-	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.aprUserInfo(loginCookie);		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -531,13 +530,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprMgetContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String apprMgetContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("apprMgetContInfo started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
 
-		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, primary);
+		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, primary, userInfo.getTenantId());
+		
+		LOGGER.debug("apprMgetContInfo ended.");
 		
 		return result;
 	}
@@ -546,7 +549,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 문서함명관리 팝업 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMContType.do")
-	public String apprMContType(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+	public String apprMContType(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
 		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
@@ -562,7 +565,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMLgetDoctype.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGMLgetDoctype(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+	public String apprGMLgetDoctype(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
@@ -576,7 +579,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 문서함타입 등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGInsertContType.do")	
-	public void apprGInsertContType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void apprGInsertContType(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String docTypeName = request.getParameter("docTypeName");
 		String docTypeName2 = request.getParameter("docTypeName2");
 		String companyID = request.getParameter("comID");
@@ -589,7 +592,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGDeleteContType.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGDeleteContType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprGDeleteContType(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String docTypeID = request.getParameter("docTypeID");
 		String companyID = request.getParameter("comID");
 		
@@ -602,7 +605,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 문서상태등록 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContType.do")
-	public String apprGMinsContType(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+	public String apprGMinsContType(HttpServletRequest request, HttpServletResponse response) throws Exception {		
 		return "admin/ezApprovalG/apprGMinsContType";
 	}
 	
@@ -611,12 +614,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGGetContDocType.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGGetContDocType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprGGetContDocType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("apprGGetContDocType started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
 		
-		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary);
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId());
+		
+		LOGGER.debug("apprGGetContDocType ended.");
 		
 		return result;
 	}
@@ -626,7 +633,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGUpdateContDoctype.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprUpdateContDoctype(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprUpdateContDoctype(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Document doc = commonUtil.convertStringToDocument(data);		
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
@@ -639,7 +646,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서함관리 문서함 추가/수정 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsContMain.do")
-	public String apprMinsContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String apprMinsContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String tCheck = request.getParameter("tCheck");
 		String serverName = config.getProperty("config.ServerName");
@@ -664,13 +671,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMgetContGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGMgetContGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprGMgetContGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("apprGMgetContGroup started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String contID = request.getParameter("contID");
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
 		
-		String result = ezApprovalGAdminService.getContainerUseDeptInfo(contID, companyID, primary);
+		String result = ezApprovalGAdminService.getContainerUseDeptInfo(contID, companyID, primary, userInfo.getTenantId());
+		
+		LOGGER.debug("apprGMgetContGroup ended.");
 		
 		return result;
 	}
@@ -680,7 +691,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMinsCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGMinsCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprGMinsCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Document doc = commonUtil.convertStringToDocument(data);
 		String companyID = doc.getDocumentElement().getChildNodes().item(doc.getDocumentElement().getChildNodes().getLength() - 1).getTextContent();
 		
@@ -694,7 +705,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMupdateCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGMupdateCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String apprGMupdateCont(@RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Document doc = commonUtil.convertStringToDocument(data);
 		String companyID = doc.getDocumentElement().getChildNodes().item(doc.getDocumentElement().getChildNodes().getLength() - 1).getTextContent();
 		
@@ -708,7 +719,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMdelCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGMdelCont(HttpServletRequest request, HttpServletResponse response) throws Exception{		
+	public String apprGMdelCont(HttpServletRequest request, HttpServletResponse response) throws Exception {		
 		String contID = request.getParameter("contID");
 		String companyID = request.getParameter("comID");
 				
@@ -721,7 +732,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
-	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
 		LoginVO user = commonUtil.aprUserInfo(loginCookie);
 		String serverName = config.getProperty("config.ServerName");
 		String topID = "";
@@ -761,7 +772,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getAdminReceivGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO user = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
@@ -783,7 +794,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setGroupSubItemInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String setGroupSubItemInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String setGroupSubItemInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String groupID = request.getParameter("node1");
 		String deptID = request.getParameter("node2");
 		String deptName = request.getParameter("node3");
@@ -801,7 +812,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteGroupSubiteminfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String deleteGroupSubiteminfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String deleteGroupSubiteminfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String groupID = request.getParameter("node1");
 		String companyID = request.getParameter("node2");
 				
@@ -815,7 +826,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/updateGroupMainInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String updateGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String updateGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String groupID = request.getParameter("node1");
 		String groupName = request.getParameter("node2");
 		String companyID = request.getParameter("node3");
@@ -830,7 +841,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setGroupMainInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String setGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String setGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String groupName = request.getParameter("node1");
 		String companyID = request.getParameter("node2");
 		
@@ -844,7 +855,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteGroupMainInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String deleteGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String deleteGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String groupID = request.getParameter("node1");
 		String companyID = request.getParameter("node2");
 		
@@ -901,7 +912,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getTaskInSubCategoryForManage(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(doc, userInfo.getTenantId());
@@ -1040,12 +1050,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
-	public String getTaskInfo(HttpServletRequest request) throws Exception {
+	public String getTaskInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String pTaskCode = request.getParameter("taskCode");
 		String pDeptCode = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskInfo(pTaskCode, pDeptCode, companyID);
+		String result = ezApprovalGAdminService.getTaskInfo(pTaskCode, pDeptCode, companyID, userInfo.getTenantId());
 
 		return result;
 	}
@@ -1116,7 +1127,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String taskCode = request.getParameter("taskCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCodeDeptInfo(taskCode, companyID, userInfo.getLang());
+		String result = ezApprovalGAdminService.getTaskCodeDeptInfo(taskCode, companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1293,7 +1304,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealList(listFlag, companyID, userInfo.getLang());
+		String result = ezApprovalGAdminService.getSealList(listFlag, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -1687,7 +1698,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pMode = request.getParameter("pMode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang());
+		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1715,7 +1726,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 결재건수조회 엑셀저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/ezStatistics/excelExportOut.do")
-	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		StringBuilder resultExcel = new StringBuilder();
 		String excelValue = "";
@@ -1730,7 +1741,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (flag.equals("USER")) {
 			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo);
 		} else {
-			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang());
+			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getTenantId());
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -1780,7 +1791,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 전체문서조회(진행문서) 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
-	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception{
+	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		

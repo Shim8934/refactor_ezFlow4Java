@@ -7,17 +7,17 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGAdminService {
 
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception;
+	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception;
 
 	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
 	
 	public String deleteContainerType(String docTypeID, String companyID) throws Exception;
 	
-	public String getContainerToDocStateInfo(String companyID, String primary) throws Exception;
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception;
 	
 	public String updateContainerToDocStateInfo(Document xmlData, String companyID) throws Exception;
 	
-	public String getContainerUseDeptInfo(String contID, String companyID, String primary) throws Exception;
+	public String getContainerUseDeptInfo(String contID, String companyID, String primary, int tenantID) throws Exception;
 	
 	public String insertContainer(Document xmlData, String companyID) throws Exception;
 	
@@ -51,7 +51,7 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception;
 
-	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception;
+	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID, int tenantID) throws Exception;
 
 	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception;
 
@@ -59,7 +59,7 @@ public interface EzApprovalGAdminService {
 	
 	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception;
 	
-	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang) throws Exception;
+	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang, int tenantID) throws Exception;
 
 	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception;
 	
@@ -69,7 +69,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception;
 	
-	public String getSealList(String listFlag, String companyID, String lang) throws Exception;
+	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
 	public String sealDelete(String realPath, String dirPath, String fileName) throws Exception;
 	
@@ -83,7 +83,7 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception;
 	
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception;
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception;
 

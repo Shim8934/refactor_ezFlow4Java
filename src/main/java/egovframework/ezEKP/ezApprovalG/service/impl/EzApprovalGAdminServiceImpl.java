@@ -69,14 +69,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
 	@Override
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary) throws Exception {
+	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception {
 		try {
+			LOGGER.debug("getContainerInfoManage started.");
+			
 			StringBuilder sb = new StringBuilder();
 
 			if (!companyID.toUpperCase().equals("TOP")) {
 				Map<String, Object> map1 = new HashMap<String, Object>();		
 				map1.put("v_DEPTID", deptID);
 				map1.put("companyID", companyID);
+				map1.put("tenantID", tenantID);
 				
 				List<ApprGLeftVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 				
@@ -84,10 +87,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				if (type.equals("LIST")){
 					Map<String, Object> map = new HashMap<String, Object>();
-					
 					map.put("v_LISTTYPE", "106");
 					map.put("v_LANGTYPE", primary);
 					map.put("companyID", companyID);
+					map.put("v_TENANTID", tenantID);
 					
 					List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 					
@@ -144,11 +147,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					sb.append("<PARAMETER></PARAMETER>");
 				}			
 			}
+			
+			LOGGER.debug("getContainerInfoManage ended.");
+			
 			return sb.toString();
 		} catch (Exception e) {
+			LOGGER.debug("getContainerInfoManage catch.");
+			LOGGER.debug(e.getMessage());
 			if (type.equals("LIST")){
+				LOGGER.debug("getContainerInfoManage catch if.");
+				
 				return "<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>";
 			}else{
+				LOGGER.debug("getContainerInfoManage catch else.");
+				
 				return "<PARAMETER></PARAMETER>";
 			}		
 		}
@@ -218,17 +230,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerToDocStateInfo(String companyID, String primary) throws Exception {
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception {
+		LOGGER.debug("getContainerToDocStateInfo started.");
+		
 		String strMultiData = commonUtil.getMultiData(primary);
 		
 		StringBuilder sb = new StringBuilder();		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_LISTTYPE", "111");
 		map.put("v_LANGTYPE", primary);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		LOGGER.debug("getListHeader started." );
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		LOGGER.debug("getListHeader ended." );
 		
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
@@ -242,7 +260,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</HEADERS><ROWS>");
 		
-		List<ApprGDocStateVO> listBody = ezApprovalGAdminDAO.getContainerToDocStateInfo(map);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_LISTTYPE", "111");
+		map1.put("v_LANGTYPE", primary);
+		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
+		
+		List<ApprGDocStateVO> listBody = ezApprovalGAdminDAO.getContainerToDocStateInfo(map1);
 		
 		for (int i = 0; i < listBody.size(); i++) {
 			ApprGDocStateVO vo = listBody.get(i);
@@ -269,6 +293,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("</ROW>");
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		LOGGER.debug("getContainerToDocStateInfo ended.");
 		
 		return sb.toString();
 	}
@@ -301,16 +327,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerUseDeptInfo(String contID, String companyID, String primary) throws Exception {
+	public String getContainerUseDeptInfo(String contID, String companyID, String primary, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();		
-		
-		map.put("v_CONTID", contID);		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CONTID", contID);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		String strMultiData = commonUtil.getMultiData(primary);
 		
 		try {
+			LOGGER.debug("getContainerUseDeptInfo started.");
+			
 			List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
 			sb.append("<PARAMETER>");
 			
@@ -330,7 +358,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<ID0>FALSE</ID0><NAME0></NAME0>");
 			}
 			sb.append("</PARAMETER>");
+			
+			LOGGER.debug("getContainerUseDeptInfo ended.");
 		} catch(Exception e) {
+			LOGGER.debug("getContainerUseDeptInfo catch.");
+			LOGGER.debug(e.getMessage());
 			sb.append("<PARAMETER><ID0>FALSE</ID0><NAME0></NAME0></PARAMETER>");
 		}
 		
@@ -453,6 +485,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_LISTTYPE", code);
 			map.put("v_LANGTYPE", lang);
 			map.put("companyID", companyID);
+			map.put("v_TENANTID", tenantID);
 			
 			List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 			
@@ -670,6 +703,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	@Override
 	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception {
+		LOGGER.debug("getTaskInSubCategoryForManage started.");
+		
 		StringBuffer sb = new StringBuffer();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String pSCateCode = doc.getElementsByTagName("SCATECODE").item(0).getTextContent();
@@ -678,6 +713,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SUBCATECODE", pSCateCode);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInSubCategoryForManage(map);
         sb.append("<DATA>");
@@ -689,6 +725,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID);
+		
+		LOGGER.debug("getTaskInSubCategoryForManage ended.");
 		
 		return result;
 	}
@@ -804,24 +842,34 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID) throws Exception {
+	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTCODE", pDeptCode);
 		map.put("v_TASKCODE", pTaskCode);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		try {
+			LOGGER.debug("getTaskInfo started.");
+			LOGGER.debug("deptcode=" + pDeptCode);
+			
 			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInfo(map);
 	
 			if (list.get(0) == null) {
+				LOGGER.debug("getTaskInfo ended. null");
+				
 				return "<RESULT>NOITEM</RESULT>";
 			}
 			
 			String result = commonUtil.getQueryResult(list.get(0));
 			
+			LOGGER.debug("getTaskInfo ended. result=" + result);
+			
 			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.debug("getTaskInfo ended. ERROR");
+			LOGGER.debug(e.getMessage());
+			
 			return "<RESULT>FLASE</RESULT>";
 		}
 	}
@@ -830,12 +878,21 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception {
 		try {
+			LOGGER.debug("setTaskCode started.");
+			
+			int tenantID = userInfo.getTenantId();
+			
 			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID).equals("TRUE")) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("v_TASKCODE", vo.getTaskCode());
 				map.put("companyID", companyID);
+				map.put("tenantID", tenantID);
+				
+				LOGGER.debug("getTaskCode started.");
 				
 				ApprGTaskVO item = ezApprovalGAdminDAO.getTaskCode(map);
+				
+				LOGGER.debug("getTaskCode ended.");
 				
 				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
 				Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
@@ -856,7 +913,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 
                 for (int i=0; i<NAMETYPE.length; i++) {
 					if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
-                        String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID);
+                        String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID, tenantID);
                         
                         if (subSQL == "FALSE") {
 							return "FALSE";
@@ -886,7 +943,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 
                 ezApprovalGAdminDAO.updateTaskCode(map1);
 			} else {
-				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID);
+				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID, userInfo.getTenantId());
 				
                 if (subSQL == "FALSE") {
 					return "FALSE";
@@ -915,8 +972,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                
                 ezApprovalGAdminDAO.insertTaskCode(map2);
 			}
+			
+			LOGGER.debug("setTaskCode ended.");
+			
 			return "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("setTaskCode ERROR.");
+			LOGGER.debug(e.getMessage());
+			
 			return "FALSE";
 		}
 	}
@@ -945,7 +1008,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception {
 		try {
 			String tempFlag = getTaskCodeNodeExist(taskCode, "", companyID);
-			
+			int tenantID = userInfo.getTenantId();
 			if (tempFlag.equals("TRUE")) {
 				return "EXIST";
 			} else {
@@ -955,7 +1018,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 				
-				String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj08", userInfo.getLocale()), "Deleted", "", "", "", companyID);
+				String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj08", userInfo.getLocale()), "Deleted", "", "", "", companyID, tenantID);
 				
 				if (temp.equals("FALSE")) {
 					return "FALSE";
@@ -976,13 +1039,16 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang) throws Exception {
+	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang, int tenantID) throws Exception {
+		LOGGER.debug("getTaskCodeDeptInfo started.");
+		
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "102");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1002,6 +1068,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_TASKCODE", taskCode);
 		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
 		
 		List<ApprGTaskDeptInfoVO> listBody = ezApprovalGAdminDAO.getTaskCodeDeptInfo(map1);
 		
@@ -1016,12 +1083,16 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
+		LOGGER.debug("getTaskCodeDeptInfo ended.");
+		
 		return sb.toString();
 	}
 
 	@Override
 	public String addTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception {
 		try {
+			int tenantID = userInfo.getTenantId();
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_TASKCODE", taskCode);
 			map.put("companyID", companyID);
@@ -1032,11 +1103,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			LOGGER.debug("getTaskName ended.");
 			
-			LOGGER.debug("setTaskHistory started.");
-			
-			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj09", userInfo.getLocale()), "Designates the Dept", deptCode, deptName, deptName2, companyID);
-			
-			LOGGER.debug("setTaskHistory ended.");
+			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj09", userInfo.getLocale()), "Designates the Dept", deptCode, deptName, deptName2, companyID, tenantID);
 			
 			if (temp.equals("FALSE")) {
 				return "FALSE";
@@ -1086,13 +1153,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	@Override
 	public String removeTaskCodeDeptInfo(String taskCode, String deptCode, String deptName, String deptName2, String companyID, LoginVO userInfo) throws Exception {
 		try {
+			int tenantID = userInfo.getTenantId();
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_TASKCODE", taskCode);
 			map.put("companyID", companyID);
 			
 			ApprGTaskVO vo = ezApprovalGAdminDAO.getTaskName(map);
 			
-			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj10", userInfo.getLocale()), "Delete the dept", deptCode, deptName, deptName2, companyID);
+			String temp = setTaskHistory(taskCode, vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj10", userInfo.getLocale()), "Delete the dept", deptCode, deptName, deptName2, companyID, tenantID);
 			
 			if (temp.equals("FALSE")) {
 				return "FALSE";
@@ -1113,12 +1182,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Override
 	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID) throws Exception {
+		LOGGER.debug("getTaskHistory started.");
+		
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "093");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1138,6 +1210,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_TASKCODE", taskCode);
 		map1.put("v_LANGTYPE", lang);
 		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
 		
 		List<ApprGTaskCodeHistoryVO> listBody = ezApprovalGAdminDAO.getTaskHistory(map1);
 		
@@ -1164,17 +1237,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
+		LOGGER.debug("getTaskHistory ended.");
+		LOGGER.debug("result=" + sb.toString());
+		
 		return sb.toString();
 	}
 	
 	@Override
 	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID) throws Exception {
 		try {
+			LOGGER.debug("getTaskFullList started.");
+			
 			StringBuilder sb = new StringBuilder();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DEPTCODE", deptCode);
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
 
 			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
 			
@@ -1187,14 +1266,21 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			String result = ezApprovalGService.makeTaskFullListXml(commonUtil.convertStringToDocument(sb.toString()), companyID, pageSize, pageNo, langType, tenantID);
 			
+			LOGGER.debug("getTaskFullList ended.");
+			
 			return result;
 		} catch (Exception e) {
+			LOGGER.debug("getTaskFullList catch.");
+			LOGGER.debug(e.getMessage());
+			
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
 
 	@Override
-	public String getSealList(String listFlag, String companyID, String lang) throws Exception {
+	public String getSealList(String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
+		LOGGER.debug("getSealList started.");
+		
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1214,12 +1300,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), offset, false) + "</VALUE></CELL>");
 			
 			if (vo.getDelDate() == null) {
 				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
 			} else {
-				sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate(), offset, false) + "</VALUE></CELL>");
 			}
 			
 			sb.append("<CELL><VALUE>" + vo.getRegUserName() + "</VALUE></CELL>");
@@ -1227,7 +1313,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		sb.append("</ROWS>");
-
+		
+		LOGGER.debug("getSealList ended.");
+		
 		return sb.toString();
 	}
 
@@ -1362,13 +1450,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang) throws Exception {
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", "108");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1436,6 +1525,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_LISTTYPE", "107");
 		map.put("v_LANGTYPE", userInfo.getLang());
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", userInfo.getTenantId());
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1546,6 +1636,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_LISTTYPE", "081");
 		map.put("v_LANGTYPE", primary);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1856,6 +1947,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_LISTTYPE", "105");
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 		
@@ -1937,7 +2029,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 
-	private String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID) throws Exception {
+	private String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_APPLYDATE", EgovDateUtil.getCurrentDate("-"));
 		map.put("v_TASKCODE", taskCode);
@@ -1949,11 +2041,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_AFTERVALUE", afterValue);
 		map.put("v_AFTERVALUE2", afterValue2);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		try {
+			LOGGER.debug("setTaskHistory started.");
+			
 			ezApprovalGAdminDAO.setTaskHistory(map);
+			
+			LOGGER.debug("setTaskHistory ended.");
+			
 			return "TRUE";
 		} catch(Exception e) {
+			LOGGER.debug("setTaskHistory ERROR.");
+			LOGGER.debug(e.getMessage());
+			
 			return "FALSE";
 		}
 	}
