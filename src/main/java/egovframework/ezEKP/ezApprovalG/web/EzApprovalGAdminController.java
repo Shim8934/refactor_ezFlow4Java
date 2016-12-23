@@ -190,7 +190,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = userInfo.getServerName();
 		String tCheck = request.getParameter("tCheck");
 		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
 		String secondary= config.getProperty("config.lang_Secondary" + userInfo.getLang());
@@ -504,7 +504,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = user.getServerName();
 				
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -649,7 +649,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String apprMinsContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String tCheck = request.getParameter("tCheck");
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = userInfo.getServerName();
 		String title = "";
 		
 		if (tCheck != null) {
@@ -734,7 +734,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
 	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
 		LoginVO user = commonUtil.aprUserInfo(loginCookie);
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = user.getServerName();
 		String topID = "";
 		
 		//관리자 권한 체크
@@ -1109,8 +1109,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 분류,단위업무관리 사용부서 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskDeptInfoManage.do")
-	public String taskDeptInfoManage(Model model) {
-		String serverName = config.getProperty("config.ServerName");
+	public String taskDeptInfoManage(@CookieValue("loginCookie") String loginCookie, Model model) {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String serverName = userInfo.getServerName();
 		
 		model.addAttribute("serverName", serverName);
 		
@@ -1216,7 +1217,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/taskAdminDept.do")
 	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = userInfo.getServerName();
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1435,7 +1436,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/manageDeptSeal.do")
 	public String manageDeptSeal(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String serverName = config.getProperty("config.ServerName");
+		String serverName = userInfo.getServerName();
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -2001,7 +2002,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
         String result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId());
+				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset());
         
 		return result;
 	}
