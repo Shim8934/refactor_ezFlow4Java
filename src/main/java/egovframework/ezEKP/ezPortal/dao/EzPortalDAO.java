@@ -362,8 +362,7 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	public int newMyPortalPageCreate(Map<String, Object> map) {
-		select("EzPortalDAO.newMyPortalPageCreate", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPortalDAO.newMyPortalPageCreate", map);
 	}
 	
 	public int getUserInfo4(Map<String, Object> map) {

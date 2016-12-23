@@ -683,7 +683,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userInfo", userInfo);
 		
-		return "/ezPersonal/persPersonSearch";
+		return "/ezPersonal/persPersonSearchPrint";
 	}
 	
 	

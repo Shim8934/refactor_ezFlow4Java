@@ -648,7 +648,7 @@
             AND
             	B.GubunFlag = #v_pGUBUNFLAG#
             AND
-            	B.TENANT_ID = #tenantID#	
+            	A.TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -1424,7 +1424,9 @@
                                     AND
                                     	DISPLAYNAME = #v_pUSERID#
                                     AND 
-                                    	GUBUNFLAG = #v_pGUBUNFLAG# )
+                                    	GUBUNFLAG = #v_pGUBUNFLAG#
+                                    AND
+                                    	TENANT_ID = #tenantID#	 )
 		]]>
 	</select>
 	

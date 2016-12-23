@@ -214,12 +214,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Override
 	public int getUserInfo4(String companyID, String creatorID, String gubunFlag, String useFlag, int tenantID) throws Exception {
+		logger.debug("getUserInfo4 started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", companyID);
 		map.put("v_pCREATORID", creatorID);
 		map.put("v_pGUBUNFLAG", gubunFlag);
 		map.put("v_pUSEFLAG", useFlag);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("companyID="+companyID);
+		logger.debug("creatorID="+creatorID);
+		logger.debug("gubunFlag="+gubunFlag);
+		logger.debug("useFlag="+useFlag);
+		logger.debug("tenantID="+tenantID);
+		logger.debug("result="+ezPortalDAO.getUserInfo4(map));
+		logger.debug("getUserInfo4 ended");
+		
 		return ezPortalDAO.getUserInfo4(map);
 	}
 	
@@ -537,7 +547,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			temp = "0";
 		}
 		
-		return Integer.parseInt(ezPortalDAO.newMyPortalPageCreate_S(map));
+		//return Integer.parseInt(ezPortalDAO.newMyPortalPageCreate_S(map));
+		return Integer.parseInt(temp);
 	}
 	
 	@Override
@@ -1140,7 +1151,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
-		int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y", userInfo.getTenantId());
+		int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y", tenantID);
 		logger.debug("resultNumber="+resultNumber);
 		logger.debug("pCompanyID="+pCompanyID);
 		logger.debug("pUserID="+pUserID);
