@@ -173,7 +173,7 @@ public class EzCommunityAdminController {
 			query = request.getParameter("query").replace("'",  "''");
 		}
 		
-		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang()), select, query);
+		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang()), select, query, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -183,10 +183,10 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(commonUtil.getMultiData(userInfo.getLang()), iQueryCount, select , query);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(commonUtil.getMultiData(userInfo.getLang()), iQueryCount, select , query, userInfo.getTenantId());
 
 		for(CommunityClubVO club : clubList) {
-			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim()));
+			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -208,8 +208,8 @@ public class EzCommunityAdminController {
 		
 		String code = request.getParameter("code");
 		
-		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang()), code);
-		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim()));
+		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang()), code, userInfo.getTenantId());
+		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
 		
@@ -226,6 +226,8 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEditOk.do")
 	@ResponseBody
 	public String admCommunityInfoEditOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("admCommunityInfoEditOk started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
@@ -234,12 +236,11 @@ public class EzCommunityAdminController {
 		String cCateB = request.getParameter("cCateB");
 		String cCateC = request.getParameter("cCateC");
 		
-		try {
-			ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang()), cCateA, cCateB, cCateC, clubName, code);
-			return "OK";
-		} catch (Exception e) {
-			return e.getMessage();
-		}
+		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang()), cCateA, cCateB, cCateC, clubName, code, userInfo.getTenantId());
+		
+		LOGGER.debug("admCommunityInfoEditOk ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -251,6 +252,7 @@ public class EzCommunityAdminController {
 		String code = "", keyword = "", sRadio = "", s = "", sort1 = "", sort2 = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
+		int tenantID = userInfo.getTenantId();
 		
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");
@@ -271,7 +273,7 @@ public class EzCommunityAdminController {
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
         if (!s.equals("")) {
             String v = s.substring(1, 1);
@@ -318,10 +320,10 @@ public class EzCommunityAdminController {
             }
         }
         
-        int keywordCount = Integer.parseInt(ezCommunityAdminService.aspCloseComGet2(keyword, sRadio));
+        int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, tenantID);
         int totalPage = keywordCount / comNoPerPage;
 		
-        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2);
+        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2, tenantID);
         
         if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
         	totalPage = totalPage + 1;
@@ -360,16 +362,17 @@ public class EzCommunityAdminController {
 		String code = request.getParameter("code");
 		String type = request.getParameter("type");
 		String title = request.getParameter("title");
+		int tenantID = userInfo.getTenantId();
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim(), userInfo.getTenantId());
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim(), tenantID);
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
-		String delReason = ezCommunityAdminService.aspCommInfoGet3(code);
-		String newInfo = ezCommunityAdminService.aspCommInfoGet4(code);
+		String delReason = ezCommunityAdminService.aspCommInfoGet3(code, tenantID);
+		String newInfo = ezCommunityAdminService.aspCommInfoGet4(code, tenantID);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("sysopCheck", sysopCheck);
@@ -398,7 +401,7 @@ public class EzCommunityAdminController {
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityAdminService.commCloseAll(code, userInfo);
+		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
 		
@@ -414,6 +417,7 @@ public class EzCommunityAdminController {
 		String code = "", sRadio = "", keyword = "", s = "", sort1 = "", sort2 = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
+		int tenantID = userInfo.getTenantId();
 		
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");
@@ -434,7 +438,7 @@ public class EzCommunityAdminController {
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		if (!s.equals("")) {
             String v = s.substring(1, 1);
@@ -473,10 +477,10 @@ public class EzCommunityAdminController {
             }
         }
 		
-		int keywordCount = Integer.parseInt(ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio));
+		int keywordCount = ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio, tenantID);
 		int totalPage = keywordCount / comNoPerPage;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2, tenantID);
 		
 		if (totalPage * comNoPerPage != keywordCount && (keywordCount % comNoPerPage) != 0) {
 			totalPage = totalPage + 1;
@@ -522,14 +526,14 @@ public class EzCommunityAdminController {
 		if (pDivi.equals("AdmitCancel")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
-			ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()));
+			ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
 			
 			if (config.getProperty("config.Use_ezKMS").toUpperCase().equals("YES")) {
-				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName);
+				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName, userInfo.getTenantId());
 			} else {
-				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "");
+				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
 			}
 		} else {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", userInfo.getLocale());

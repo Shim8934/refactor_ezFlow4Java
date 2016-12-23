@@ -525,6 +525,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             strSQL = strSQL.replace("title", "a.title");
             
             if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+                strSQL = strSQL.replace("mail", "a.mail");
                 strSQL = strSQL.replace("displayname", "a.displayname");
             }
             
@@ -996,6 +997,7 @@ public class EzOrganServiceImpl implements EzOrganService {
              strSQL = strSQL.replace("title", "a.title");
              
              if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            	 strSQL = strSQL.replace("mail", "a.mail");
                  strSQL = strSQL.replace("displayname", "a.displayname");
              }
              

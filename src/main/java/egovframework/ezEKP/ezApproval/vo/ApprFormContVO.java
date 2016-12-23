@@ -7,11 +7,23 @@ public class ApprFormContVO {
 	/** */
 	private String formContName;
 	/** */
+	private String formContName2;
+	/** */
 	private String formContOwnDepID;
 	/** */
 	private String formContParents;
 	/** */
 	private String formContDescription;
+	/** */
+	private String formContDept;
+	/** */
+	private String companyID;
+	/** */
+	private int tenantID;
+	/** */
+	private int id;
+	/** */
+	private int maxID;
 	
 	public String getFormContID() {
 		return formContID;
@@ -42,6 +54,42 @@ public class ApprFormContVO {
 	}
 	public void setFormContDescription(String formContDescription) {
 		this.formContDescription = formContDescription;
+	}
+	public String getFormContName2() {
+		return formContName2;
+	}
+	public void setFormContName2(String formContName2) {
+		this.formContName2 = formContName2;
+	}
+	public String getFormContDept() {
+		return formContDept;
+	}
+	public void setFormContDept(String formContDept) {
+		this.formContDept = formContDept;
+	}
+	public String getCompanyID() {
+		return companyID;
+	}
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getMaxID() {
+		return maxID;
+	}
+	public void setMaxID(int maxID) {
+		this.maxID = maxID;
 	}
 	
 }

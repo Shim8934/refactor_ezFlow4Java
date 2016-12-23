@@ -5,7 +5,9 @@
 
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
-
+	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
+	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+	
 	<procedure id="EzCommonDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO">
 		{CALL ezCommon.EZSP_GETATTACHFILEINFO(#v_PTYPE#, #v_PID#, #v_PMODE#, #v_PATTACHFILESN#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
@@ -37,6 +39,39 @@
 				EZCOMMON.TBLUSERLOCALINFO
 			WHERE
 				userID = #userID#
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getTenantIdByDomainName" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				tenant_id
+			FROM
+				EZHRMASTER.TBLTENANT_CONFIG
+			WHERE
+				property_name = 'DomainName'
+			AND
+				property_value = #DOMAIN_NAME#
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getTenantServerNameList" resultClass="TenantServerNameVO">
+		<![CDATA[
+			SELECT 
+				tenant_id tenantId,
+				server_name serverName 
+			FROM 
+				EZHRMASTER.TBLTENANT_SERVERNAME
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getTenantList" resultClass="TenantVO">
+		<![CDATA[
+			SELECT 
+				tenant_id tenantId,
+				tenant_name tenantName 
+			FROM 
+				EZHRMASTER.TBLTENANT
 		]]>
 	</select>
 	

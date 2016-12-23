@@ -51,7 +51,7 @@
 						break;
 						
 				    case 10:
-			            url = "/myoffice/ezApproval/ezStatistics/ezStatistics.aspx";
+			            url = "/admin/ezApproval/statistics.do";
 						break;
 						
 				    case 11:

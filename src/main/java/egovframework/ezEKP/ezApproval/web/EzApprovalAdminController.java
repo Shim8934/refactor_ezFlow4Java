@@ -10,9 +10,9 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.makers.ThumbnailMaker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -33,6 +34,8 @@ import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
+import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -1420,6 +1423,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprManageSeal";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 관인대장리스트 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/getSealList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSealList(@CookieValue("loginCookie") String loginCookie, ApprSealInfoVO apprSealInfoVO) throws Exception {
@@ -1438,6 +1444,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 관인대장 관인추가 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/addSealInfo.do")
 	public String addSealInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
 		logger.debug("addSealInfo started");
@@ -1454,9 +1463,11 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprAddSealInfo";
 	}
 	
-	@RequestMapping(value = "/admin/ezApproval/sealImageUpload.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String sealImageUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
+	/**
+	 * 전자결재 일반 관리자 관인대장 관인추가 관인업로드 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/sealImageUpload.do")
+	public String sealImageUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("sealImageUpload started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1522,9 +1533,259 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
         strXML += "</NODE>";
 
         strXML += "</NODES></ROOT>";
+        
+        model.addAttribute("strXML", strXML);
 		
 		logger.debug("sealImageUpload ended");
 		
-		return strXML;
+		return "admin/ezApproval/apprSealImageUpload";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 관인대장 관인추가 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/insertSealInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String insertSealInfo(@CookieValue("loginCookie") String loginCookie, ApprSealInfoVO apprSealInfoVO) throws Exception {
+		logger.debug("insertSealInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprSealInfoVO.setTenantID(userInfo.getTenantId());
+		apprSealInfoVO.setRegDate(commonUtil.getTodayUTCTime(""));
+		apprSealInfoVO.setDelDate(commonUtil.getTodayUTCTime(""));
+		
+		String result = ezApprovalAdminService.insertSealInfo(apprSealInfoVO);
+
+		logger.debug("insertSealInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 관인대장 관인정보 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/sealInfo.do")
+	public String sealInfo() throws Exception {
+		logger.debug("sealInfo started");
+		logger.debug("sealInfo ended");
+		
+		return "admin/ezApproval/apprSealInfo";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 결재건수조회 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/statistics.do")
+	public String statistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("statistics started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		String tempYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("YYYY"), userInfo.getOffset(), false);
+		String tempMonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM"), userInfo.getOffset(), false);
+		
+		int year = Integer.parseInt(tempYear) - 1;
+		int month = Integer.parseInt(tempMonth) - 1;
+		
+		if (month <= 0) {
+			month = 12;
+		} else {
+			year = year + 1;
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("tempYear", tempYear);
+		model.addAttribute("tempMonth", tempMonth);
+		model.addAttribute("month", month);
+		model.addAttribute("year", year);
+
+		logger.debug("statistics ended");
+		
+		return "admin/ezApproval/apprStatistics";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 결재건수조회 csv저장 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/excelExportOut.do")
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, ApprExcelOutVO apprExcelOutVO, HttpServletResponse response) throws Exception {
+		logger.debug("excelExportOut started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String excelValue = "";
+		StringBuilder resultExcel = new StringBuilder();
+		
+		apprExcelOutVO.setTenantID(userInfo.getTenantId());
+		apprExcelOutVO.setLang(userInfo.getLang());
+		
+		if (apprExcelOutVO.getListType() != null && apprExcelOutVO.getListType().equals("ADMINUSERCOUNT")) {
+			excelValue = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale());
+		} else {
+			excelValue = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO);
+		}
+		
+		Document objXML = commonUtil.convertStringToDocument(excelValue);
+		NodeList headers = objXML.getElementsByTagName("HEADERS");
+		
+		for (int k = 0; k < headers.item(0).getChildNodes().getLength(); k++) {
+			String headerName = headers.item(0).getChildNodes().item(k).getChildNodes().item(0).getTextContent();
+			
+			if (k > 0) {
+				headerName = "," + headerName;
+			}
+			
+			resultExcel.append(headerName + "\t");
+		}
+		
+		resultExcel.append("\n");
+		
+		NodeList rows = objXML.getElementsByTagName("ROWS");
+		
+		for (int k = 0; k < rows.item(0).getChildNodes().getLength(); k++) {
+			NodeList cells = rows.item(0).getChildNodes().item(k).getChildNodes();
+			
+			for (int h = 0; h < cells.getLength(); h++) {
+				String cellValue = cells.item(h).getChildNodes().item(0).getTextContent();
+				
+				if (h > 0) {
+					cellValue = "," + cellValue;
+				}
+				
+				resultExcel.append(cellValue + "\t");
+			}
+			resultExcel.append("\n");
+		}
+		
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("MS949");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false) + "excelExport" + ".csv\"");
+		response.getWriter().write(resultExcel.toString());
+		
+		logger.debug("excelExportOut ended");
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 결재건수조회 개인별 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/getUserDocCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUserDocCount(@CookieValue("loginCookie") String loginCookie, ApprExcelOutVO apprExcelOutVO) throws Exception {
+		logger.debug("getUserDocCount started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		apprExcelOutVO.setTenantID(userInfo.getTenantId());
+		apprExcelOutVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale());
+			
+		logger.debug("getUserDocCount ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 결재건수조회 처리과별 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/getDeptTranSendDocCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDeptTranSendDocCount(@CookieValue("loginCookie") String loginCookie, ApprExcelOutVO apprExcelOutVO) throws Exception {
+		logger.debug("getDeptTranSendDocCount started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		apprExcelOutVO.setTenantID(userInfo.getTenantId());
+		apprExcelOutVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO);
+
+		logger.debug("getDeptTranSendDocCount ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 메인화면 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/getFormContInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFormContInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String id = request.getParameter("id");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.getFormContainerInfo(id, "", companyID, userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getFormContInfo ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/formContMain.do")
+	public String formContMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("formContMain started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String topID = "";
+		String title = "";
+		String tCheck = request.getParameter("tCheck");
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
+		if (tCheck != null && tCheck.equals("Ins")) {
+			title = messageSource.getMessage("ezApproval.t754", userInfo.getLocale());
+		} else {
+			title = messageSource.getMessage("ezApproval.t728", userInfo.getLocale());
+		}
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("title", title);
+		model.addAttribute("topID", topID);
+
+		logger.debug("formContMain ended");
+		
+		return "admin/ezApproval/apprFormContMain";
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/setFormContIns.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setFormContIns(@CookieValue("loginCookie") String loginCookie, ApprFormContVO apprFormContVO) throws Exception {
+		logger.debug("setFormContIns started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormContVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.insertFormContainer(apprFormContVO, userInfo.getOffset());
+
+		logger.debug("setFormContIns ended");
+		
+		return result;
 	}
 }
