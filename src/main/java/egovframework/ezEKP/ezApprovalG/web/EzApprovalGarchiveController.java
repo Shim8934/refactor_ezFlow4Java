@@ -153,7 +153,7 @@ public class EzApprovalGarchiveController {
                     "</USERNAME2><USERTITLE2>" + makeXMLString(userInfo.getTitle2()) +
                     "</USERTITLE2><DEPTNAME2>" + makeXMLString(userInfo.getDeptName2()) +
                     "</DEPTNAME2></PARAMETER>";
-			ezApprovalGService.saveRecReadHist(readRecXML);
+			ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
 		}
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -164,6 +164,7 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("formID", formID);
 		model.addAttribute("endDir", endDir);
 		model.addAttribute("docTitle", docTitle);
+		model.addAttribute("pass", pass);
 		model.addAttribute("listSusin", listSusin);
 		model.addAttribute("g_RecID", g_RecID);
 		model.addAttribute("g_SepAttNo",g_SepAttNo);
@@ -220,7 +221,7 @@ public class EzApprovalGarchiveController {
 	public String getRecViewerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.getRecViewer(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.getRecViewer(xmlDom,userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
 	
@@ -229,7 +230,7 @@ public class EzApprovalGarchiveController {
 	public String saveRecUserRole(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model,@RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.saveRecUserRoleInfo(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.saveRecUserRoleInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
 	
@@ -329,7 +330,7 @@ public class EzApprovalGarchiveController {
 	public String getRecordSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-        String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang());
+        String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
 	
@@ -339,7 +340,7 @@ public class EzApprovalGarchiveController {
 	public String changeRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model , @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-        String result = ezApprovalGService.changeRecordInfo(xmlDom,userInfo.getLang());
+        String result = ezApprovalGService.changeRecordInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
 	
