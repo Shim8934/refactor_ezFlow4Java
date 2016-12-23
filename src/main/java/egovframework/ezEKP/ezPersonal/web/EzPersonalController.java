@@ -673,6 +673,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 포탈 직원조회 인쇄 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/personSearchPrint.do")
+	public String personSearchPrint(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useOCS = config.getProperty("config.USE_OCS");
+		
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPersonal/persPersonSearch";
+	}
+	
+	
+	/**
 	 * 포탈 환경설정 left 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezPersonal/leftEnvironment.do")

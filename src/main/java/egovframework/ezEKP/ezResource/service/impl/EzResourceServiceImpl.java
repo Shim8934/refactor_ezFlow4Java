@@ -333,12 +333,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@Override
 	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-			String reOrd, String endFlag, String reCount, String companyID, int tenantID) throws Exception {
+			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
+		logger.debug("insertScheduleRepetition started");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", pNum);
 		map.put("v_pOwnerID", ownerID);
-		map.put("v_pStartDateTime", startDateTime);
-		map.put("v_pEndDateTime", endDateTime);
+		logger.debug("startDateTime="+startDateTime);
+		logger.debug("endDateTime="+endDateTime);
+		logger.debug("pStartDateTime="+commonUtil.getDateStringInUTC(startDateTime, offset, true));
+		logger.debug("pEndDateTime="+commonUtil.getDateStringInUTC(endDateTime, offset, true));
+		map.put("v_pStartDateTime", commonUtil.getDateStringInUTC(startDateTime, offset, true));
+		map.put("v_pEndDateTime", commonUtil.getDateStringInUTC(endDateTime, offset, true));
 		map.put("v_pReWay", reWay);
 		map.put("v_pReDay", reDay);
 		map.put("v_pReNum", reNum);
@@ -357,6 +362,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		map.put("v_Num", num);
 		ezResourceDAO.insertScheduleRepetition(map);
+
+		logger.debug("insertScheduleRepetition ended");
 	}
 	
 	@Override
@@ -372,12 +379,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Override
 	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-			String reOrd, String endFlag, String reCount, String companyID, int tenantID) throws Exception {
+			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", pNum);
 		map.put("v_pOwnerID", ownerID);
-		map.put("v_pStartDateTime", startDateTime);
-		map.put("v_pEndDateTime", endDateTime);
+		map.put("v_pStartDateTime", commonUtil.getDateStringInUTC(startDateTime, offset, true));
+		map.put("v_pEndDateTime", commonUtil.getDateStringInUTC(endDateTime, offset, true));
 		map.put("v_pReWay", reWay);
 		map.put("v_pReDay", reDay);
 		map.put("v_pReNum", reNum);
@@ -536,7 +543,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, String endDate,
 			String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, String typeVal,
-			String approve, int tenantID) throws Exception {
+			String approve, int tenantID, String offset) throws Exception {
 		logger.debug("modifyResSch Start");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ownerID", ownerID);
@@ -547,8 +554,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_title", title);
 		map.put("v_P_location", location);
 		map.put("v_P_timeDisplay", timeDisplay);
-		map.put("v_P_startDate", startDate);
-		map.put("v_P_endDate", endDate);
+		map.put("v_P_startDate", commonUtil.getDateStringInUTC(startDate, offset, true));
+		map.put("v_P_endDate", commonUtil.getDateStringInUTC(endDate, offset, true));
 		map.put("v_P_allDay", allDay);
 		map.put("v_P_alertTime", alertTime);
 		map.put("v_P_content", content);
@@ -562,6 +569,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Approve", approve);
 		map.put("maxNum", "");
 		map.put("tenantID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		logger.debug("typeVal="+typeVal);
 		if (reFlag.equals("1") && typeVal.equals("MASTER")) {
 			String ownerNm = ezResourceDAO.modifyResSch_S1(map);
@@ -602,6 +614,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_eDate", eDate);
 		map.put("v_P_insType", insType);
 		map.put("tenantID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		//ezResourceDAO.delResSch(map);
 		logger.debug("insType="+insType);
 		if (insType == 3) {
@@ -629,7 +646,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
-			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID) throws Exception {
+			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ownerID", ownerID);
 		map.put("v_P_pnum", pNum);
@@ -638,8 +655,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_title", title);
 		map.put("v_P_location", location);
 		map.put("v_P_timeDisplay", timeDisplay);
-		map.put("v_P_startDate", startDate);
-		map.put("v_P_endDate", endDate);
+		map.put("v_P_startDate", commonUtil.getDateStringInUTC(startDate, offset, true));
+		map.put("v_P_endDate", commonUtil.getDateStringInUTC(endDate, offset, true));
 		map.put("v_P_allDay", allDay);
 		map.put("v_P_alertTime", alertTime);
 		map.put("v_P_content", content);
@@ -654,9 +671,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Approve", approve);
 		map.put("v_P_ScheduleID", scheduleID);
 		map.put("v_Num", "");
-		
 		map.put("v_WriteDay", "");
 		map.put("tenantID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		
 		String approveFlag = ezResourceDAO.addRessch_S1(map);
 		
@@ -684,7 +705,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@Override
 	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
-			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception {
+			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		logger.debug("getRepResource Start");
 		logger.debug("ownerID="+ownerID);
@@ -694,8 +715,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_rec_frequency", frequency);
 		map.put("v_rec_selType", selType);
 		map.put("v_rec_endRecurType", endRecurType);
-		map.put("v_rec_startDateTime", startDateTime);
-		map.put("v_rec_endDateTime", endDateTime);
+		map.put("v_rec_startDateTime", commonUtil.getDateStringInUTC(startDateTime, offset, false));
+		map.put("v_rec_endDateTime", commonUtil.getDateStringInUTC(endDateTime, offset, false));
 		map.put("v_rec_interval", interval);
 		map.put("v_rec_daysOfWeek", daysOfWeek);
 		map.put("v_rec_instances", instances);
@@ -719,7 +740,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@SuppressWarnings("deprecation")
-	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept, int tenantID) throws Exception {
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
 		logger.debug("getScheduleXML Start");
 		StringBuilder returnStr = new StringBuilder();
 		
@@ -730,7 +751,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept, tenantID);
+		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, commonUtil.getDateStringInUTC(sDate, offset, false), commonUtil.getDateStringInUTC(eDate, offset, false), pType, pWriterName, pWriterDept, tenantID, offset);
 		logger.debug("getScheduleList="+scheRs);
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 
@@ -743,12 +764,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String writerIDStr = scheRSDom.getElementsByTagName("writerID").item(i).getTextContent();
 			String title = scheRSDom.getElementsByTagName("title").item(i).getTextContent();
 			String loc = scheRSDom.getElementsByTagName("location").item(i).getTextContent();
-			String startDateTime = scheRSDom.getElementsByTagName("startDate").item(i).getTextContent();
-			String endDateTime = scheRSDom.getElementsByTagName("endDate").item(i).getTextContent();
+			String startDateTime = commonUtil.getDateStringInUTC(scheRSDom.getElementsByTagName("startDate").item(i).getTextContent(), offset, false);
+			String endDateTime = commonUtil.getDateStringInUTC(scheRSDom.getElementsByTagName("endDate").item(i).getTextContent(), offset, false);
 			String reFlag = scheRSDom.getElementsByTagName("reFlag").item(i).getTextContent();
 			String gresFlag = scheRSDom.getElementsByTagName("gresFlag").item(i).getTextContent();
 			String allDay = scheRSDom.getElementsByTagName("allDay").item(i).getTextContent();
-			String writeDay = scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent();
+			String writeDay = commonUtil.getDateStringInUTC(scheRSDom.getElementsByTagName("writeDay").item(i).getTextContent(), offset, false);
 			String jobTitle = "";
 			String jobTitle2 = "";
 				
@@ -845,12 +866,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnStr.append("</root>");
-		
+		logger.debug("returnStr="+returnStr);
 		logger.debug("getScheduleXML End");
 		return returnStr.toString();
 	}
 	
-	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID) throws Exception {
+	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
 		logger.debug("getScheduleList Start");
 		StringBuilder returnStr = new StringBuilder();
 		String reCompanyID = "";
@@ -985,7 +1006,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				 reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 				 reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 				
-				String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate, tenantID);
+				String returnRepDateTimes = getRepDeteTimes(reCompanyID, reNum, reOwnerID, sDate, eDate, tenantID, offset);
 				logger.debug("getRepDeteTimes="+returnRepDateTimes);
 					
 				if (returnRepDateTimes != null && !returnRepDateTimes.trim().equals("")) {
@@ -1078,7 +1099,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}
 	
-	public String getRepDeteTimes(String companyID, String num, String ownerID, String sDate, String eDate, int tenantID) throws Exception {
+	public String getRepDeteTimes(String companyID, String num, String ownerID, String sDate, String eDate, int tenantID, String offset) throws Exception {
+		logger.debug("getRepDeteTimes started");
 
 		String returnStr = "";
 		
@@ -1090,7 +1112,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (getRepDateTimes != null) {
 			String startDateTime = getRepDateTimes.getStartDateTime();
 			String endDateTime = getRepDateTimes.getEndDateTime();
-
+			
 			startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 			endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 			String reWay = getRepDateTimes.getReWay();
@@ -1147,6 +1169,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 	
 		logger.debug("getRepDeteTimes="+returnStr.toString());
+		logger.debug("getRepDeteTimes ended");
 		return returnStr.toString();
 	}
 	
@@ -2638,18 +2661,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return true;
 	}
 
-	public String updateScheduleDateTime(String xmlStr, String companyID, int tenantID) throws Exception {
+	public String updateScheduleDateTime(String xmlStr, String companyID, int tenantID, String offset) throws Exception {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String ownerID = xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent();
 		String sDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String eDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 
-		updateScheduleDateTime(Integer.parseInt(num), ownerID, companyID, sDate, eDate, tenantID);
+		updateScheduleDateTime(Integer.parseInt(num), ownerID, companyID, commonUtil.getDateStringInUTC(sDate, offset, true), commonUtil.getDateStringInUTC(eDate, offset, true), tenantID);
 		return xmlStr;
 	}
 	
-	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID) throws Exception {
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception {
 		String interval = "";
 		String daysOfWeek = "";
 		String daysOfMonth = "";
@@ -2755,7 +2778,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		if (cmd.equals("add")) {
 			if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
-				insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+				insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 				
 				entry = orgEntryList.split(">");
 				entryNum = entry.length;
@@ -2769,11 +2792,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					List<ResGetScheduleVO> resGetScheduleInfo = getScheduleInfo(Integer.parseInt(num), entryID, ownerID, companyID, tenantID);
 					
 					for (ResGetScheduleVO list : resGetScheduleInfo) {
-						insertScheduleRepetition((list.getNum()), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+						insertScheduleRepetition((list.getNum()), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 					}
 				}
 			} else {
-				insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+				insertScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 			}
 		} else if (cmd.equals("mod")) {
 			if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
@@ -2792,15 +2815,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						 
 						 if (getScheduleRepetition != null) {
 							 for (ResGetScheduleRepetitionVO list1 : getScheduleRepetition) {
-								 updateScheduleRepetition(list1.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+								 updateScheduleRepetition(list1.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 							 }
 						 } else {
-							 insertScheduleRepetition(list.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+							 insertScheduleRepetition(list.getNum(), entryID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 						 }
 					}
 				}
 			}
-			updateScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID);
+			updateScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 		}
 			
 		
@@ -2983,7 +3006,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 	}
 	
-	public boolean delResSch(String xmlStr, int tenantID) throws Exception {
+	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		
 		String ownerID = xmlRes.getElementsByTagName("OWNERID").item(0).getTextContent();
@@ -2991,15 +3014,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String pNum = xmlRes.getElementsByTagName("PNUM").item(0).getTextContent();
 		String companyID = xmlRes.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String writerID = xmlRes.getElementsByTagName("WRITERID").item(0).getTextContent();
-		String sDate = xmlRes.getElementsByTagName("STARTDATE").item(0).getTextContent();
-		String eDate = xmlRes.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String sDate = commonUtil.getDateStringInUTC(xmlRes.getElementsByTagName("STARTDATE").item(0).getTextContent(), offset, true);
+		String eDate = commonUtil.getDateStringInUTC(xmlRes.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true);
 		String insType = xmlRes.getElementsByTagName("INSTYPE").item(0).getTextContent();
 			
 		delResSch(ownerID, num, pNum, companyID, writerID, sDate, eDate, Integer.parseInt(insType), tenantID);
 		return true;
 	}
 	
-	public String modifyResSch(String xmlStr, int tenantID) throws Exception {
+	public String modifyResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		String attachFlag = "";
 		
@@ -3032,7 +3055,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 			
 		modifyResSch(ownerID, num, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance,
-							reFlag, gresFlag, entryList, characterID, attachFlag, typeVal, strApprove, tenantID);
+							reFlag, gresFlag, entryList, characterID, attachFlag, typeVal, strApprove, tenantID, offset);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";
         returnStr += "<NUM>" + num + "</NUM>";
@@ -3042,7 +3065,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         return returnStr;
 	}
 	
-	public String addResSch(String xmlStr, int tenantID) throws Exception {
+	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		logger.debug("addResSch Start");
 		logger.debug("xmlStr="+xmlStr);
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
@@ -3085,7 +3108,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		//timedisplay = 1
 		timeDisplay = "1";
 		addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
-				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID);
+				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";
         returnStr += "<NUM>" + num + "</NUM>";
@@ -3107,7 +3130,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	//반복예약일때
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID) throws Exception {
+		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		logger.debug("getRepResource Start");
 		ResRecParamVO recParam = resStruct(strFrequency, strSelType, strEndRecurType, strStartDateTime, strEndDateTime, strInterval, strDaysOfWeek, strInstances, strByPosition, strDaysOfMonth);
 			
@@ -3127,7 +3150,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? "" : strPcmd;
 			
-		List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID);
+		List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
 		
 		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 			
@@ -3152,7 +3175,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
 		 for (ResGetRepResourceRepeatVO dr : retobjTable1) {
-			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration);
+			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
 			 if (dt2 == null || dt2.size() == 0) {
 				 continue;
 			 }
@@ -3164,7 +3187,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return isDup;
 		}
 	//일반예약일때
-	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID) throws Exception {
+	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		
 		String startDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
 		String endDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
@@ -3178,7 +3201,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
 
-		List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID);
+		List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
 			
 		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 			
@@ -3204,7 +3227,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
 		 for (ResGetRepResourceRepeatVO dr : retobjTable1) {
-			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration);
+			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
 			 if (dt2 == null || dt2.size() == 0) {
 				 continue;
 			 }
@@ -3448,17 +3471,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return dtRec;
 	}
 	
-	public List<ResMakeDupResultVO> makeRepResource2(ResGetRepResourceRepeatVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration) throws Exception {
+	public List<ResMakeDupResultVO> makeRepResource2(ResGetRepResourceRepeatVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration, String offset) throws Exception {
 		List<ResMakeDupResultVO> dtDest = new ArrayList<ResMakeDupResultVO>();
 		
 		
 		//ResRecParamVO destParam = resStruct();
 		ResRecParamVO destParam = new ResRecParamVO();
 		if (!destDr.getStartDateTime().equals("")) {
-			destParam.setRecStartDateTime(destDr.getStartDateTime());
+			destParam.setRecStartDateTime(commonUtil.getDateStringInUTC(destDr.getStartDateTime(), offset, false));
 		}
 		if (!destDr.getEndDateTime().equals("")) {
-			destParam.setRecEndDateTime(destDr.getEndDateTime());
+			destParam.setRecEndDateTime(commonUtil.getDateStringInUTC(destDr.getEndDateTime(), offset, false));
 		}
 		if (!destDr.getReWay().equals("")) {
 			destParam.setRecReWay(Integer.parseInt(destDr.getReWay()));

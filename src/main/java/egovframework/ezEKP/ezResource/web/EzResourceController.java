@@ -332,7 +332,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
 				}
 			}
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
 				
 			Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
@@ -487,7 +487,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 				
 		} else if (cmd.equals("update")) {
-			reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID(), userInfo.getTenantId());
+			reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		}
 			
 		if (!reVal.equals("")) {
@@ -1216,8 +1216,8 @@ public class EzResourceController extends EgovFileMngUtil {
                 loc = title.replace("\"", "&quot;");
 			}
 			timeDisplay = getSchedule.getTimeDisplay();
-			startDateTime = getSchedule.getStartDate();
-			endDateTime = getSchedule.getEndDate();
+			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
+			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
 			reFlag = getSchedule.getReFlag();
 			gresFlag = getSchedule.getGresFlag();
 			content = getSchedule.getContent();
@@ -1706,6 +1706,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleRepetitionProc.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8") 
 	@ResponseBody
 	public String scheduleRepetitionProc(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,@RequestBody String xmlStr) throws Exception {
+		logger.debug("scheduleRepetitionProc started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyID = "";
 		String cmd = "";
@@ -1720,8 +1722,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (cmd.equals("get")) {
 			String ret = ezResourceService.getRepetition(xmlStr, userInfo.getTenantId());
 			Document xmlRet = commonUtil.convertStringToDocument(ret);
-			String startDate = xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent();
-			String endDate = xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent();
+			logger.debug("startDateTime="+xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent());
+			logger.debug("endDateTime="+xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent());
+			String startDate = commonUtil.getDateStringInUTC(xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent(), userInfo.getOffset(), false);
+			String endDate = commonUtil.getDateStringInUTC(xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent(), userInfo.getOffset(), false);
 
 			xmlRet.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(startDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "")));
 			xmlRet.getElementsByTagName("endDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(endDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "")));
@@ -1740,7 +1744,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			String num = req.getParameter("num") != null ? req.getParameter("num").trim() : "";
 			String ownerID = req.getParameter("ownerID") != null ? req.getParameter("ownerID").trim() : "";
 		
-			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, commonUtil.convertDocumentToString(xmlDom), cmd, userInfo.getTenantId());
+			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, commonUtil.convertDocumentToString(xmlDom), cmd, userInfo.getTenantId(), userInfo.getOffset());
 				
 			if (ret == true) {
 				return "OK";
@@ -1757,7 +1761,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 
+		logger.debug("scheduleRepetitionProc ended");
 		return "";
+
 	}
 	
 	/**
@@ -1969,7 +1975,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			objNode.setTextContent(companyID);
 			rootNode.appendChild(objNode);
 				
-			boolean reVal = ezResourceService.delResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId());
+			boolean reVal = ezResourceService.delResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("reVal="+reVal);	
 			if (reVal == true) {
 				return "OK";
@@ -1989,7 +1995,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
 			dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 
-			String ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId());
+			String ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("ret="+ret);
 			return ret;
 		} else if (cmd.equals("mod")) {
@@ -2010,7 +2016,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			objNode.setTextContent(typeVal);
 			rootNode.appendChild(objNode);
 
-			String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId());
+			String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("ret="+ret);
 			return ret;
 		}
@@ -2165,7 +2171,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (cmd.equals("add")) {
 				num = null;
 			}
-			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult, userInfo.getTenantId());
+			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 		}
 			
 		//반복예약 데이터가 없을 때
@@ -2175,9 +2181,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 					
 			if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
-				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId());
+				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			} else {
-				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId());
+				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			}
 		}
 			
