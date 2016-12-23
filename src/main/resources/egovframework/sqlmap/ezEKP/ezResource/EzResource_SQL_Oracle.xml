@@ -16,7 +16,7 @@
 	<typeAlias  alias="ResSelectFormIDVO" 							type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
 	<typeAlias  alias="ResGetScheduleListRepetitionVO" 			type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO"/>
 	<typeAlias  alias="ResGetRepResourceVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
-	<typeAlias  alias="ResGetRepResourceRepeatVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
+	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -993,9 +993,9 @@
              	OWNERPOSITION ,
              	OWNERPOSITION2 ,
              	OWNERCALL ,
-             	NVL(ResLocation, ' ') RESLOCATION  ,
+             	NVL(RESLOCATION, ' ') RESLOCATION  ,
              	SUBSTR(MAKEDATE, 0, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, -2, 2) MAKEDATE  ,
-             	NVL(ApproveFlag, '0') APPROVEFLAG  ,
+             	NVL(APPROVEFLAG, '0') APPROVEFLAG  ,
              	BRD_ACCESS 
         	FROM
         		EZRESOURCE.TBLBRD 
@@ -1060,7 +1060,7 @@
 	<delete id="EzResourceDAO.delResData1" parameterClass="Map">
 		<![CDATA[
 			DELETE 
-				EZRESOURCE.TB_Schedule
+				EZRESOURCE.TB_SCHEDULE
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -1073,7 +1073,7 @@
 	<delete id="EzResourceDAO.delResData2" parameterClass="Map">
 		<![CDATA[
 			 DELETE
-			 	EZRESOURCE.TB_ScheduleFile
+			 	EZRESOURCE.TB_SCHEDULEFILE
    			WHERE
    				OWNERID = #v_P_Brd_ID#
    			AND
@@ -1086,7 +1086,7 @@
 	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TB_ScheduleRepetition
+				EZRESOURCE.TB_SCHEDULEREPETITION
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -1107,24 +1107,24 @@
 			UPDATE
 				EZRESOURCE.TBLBRD
       		SET 
-      			OwnDeptID = RTRIM(#v_P_ODeptID#),
-          		OwnDeptNm = RTRIM(#v_P_ODeptNm#),
-          		OwnerID = RTRIM(#v_P_OwnerID#),
-          		OwnerNm = RTRIM(#v_P_OwnerNm#),
-          		OwnerPosition = RTRIM(#v_P_OwnerPos#),
-          		OwnerCall = RTRIM(#v_P_OwnerCall#),
-          		Brd_NM = RTRIM(#v_P_Brd_NM#),
-          		ResLocation = RTRIM(#v_P_ResLocation#),
-          		Brd_Explain = RTRIM(#v_P_Brd_Explain#),
-          		ApproveFlag = RTRIM(#v_P_Approve#),
-          		Brd_NM2 = RTRIM(#v_P_Brd_NM2#),
-          		OwnDeptNm2 = RTRIM(#v_P_ODeptNm2#),
-          		OwnerNm2 = RTRIM(#v_P_OwnerNm2#),
-          		OwnerPosition2 = RTRIM(#v_P_OwnerPos2#)
+      			OWNDEPTID = RTRIM(#v_P_ODeptID#),
+          		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
+          		OWNERID = RTRIM(#v_P_OwnerID#),
+          		OWNERNM = RTRIM(#v_P_OwnerNm#),
+          		OWNERPOSITION = RTRIM(#v_P_OwnerPos#),
+          		OWNERCALL = RTRIM(#v_P_OwnerCall#),
+          		BRD_NM = RTRIM(#v_P_Brd_NM#),
+          		RESLOCATION = RTRIM(#v_P_ResLocation#),
+          		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
+          		APPROVEFLAG = RTRIM(#v_P_Approve#),
+          		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
+          		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
+          		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
+          		OWNERPOSITION2 = RTRIM(#v_P_OwnerPos2#)
     		WHERE
-    			Brd_ID = #v_P_Brd_ID#
+    			BRD_ID = #v_P_Brd_ID#
     		AND
-    			Brd_Company = #v_P_CompanyID#
+    			BRD_COMPANY = #v_P_CompanyID#
     		AND
     			TENANT_ID = #tenantID#	
 		]]>
@@ -1595,7 +1595,7 @@
 	                    GRESFLAG ,
 	                    ENTRYLIST ,
 	                    ALLDAY ,
-	                    SYSDATE ,
+	                    #nowDate# ,
 	                    #v_P_companyID# ,
 	                    CHARACTERID ,
 	                    ATTACHFLAG 
@@ -1731,7 +1731,7 @@
             ( num, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID
             , ownerNM, deptNM, ApproveFlag, TENANT_ID )
             VALUES
-            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, SYSDATE, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
+            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
             #v_tmpOwnerNm#, #v_tmpDeptNm#, #v_P_Approve#, #tenantID# )
 		]]>
 	</insert>
@@ -1752,7 +1752,7 @@
                 REFLAG = #v_P_reFlag#,
                 GRESFLAG = #v_P_gresFlag#,
                 ALLDAY = #v_P_allDay#,
-                WRITEDAY = SYSDATE,
+                WRITEDAY = #nowDate#,
                 ENTRYLIST = #v_P_entryList#,
                 ATTACHFLAG = #v_P_attachFlag#,
                 CHARACTERID = #v_P_characterID#
@@ -1783,7 +1783,7 @@
 				EZRESOURCE.TB_SCHEDULE
 				( num, pnum, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID, TENANT_ID )
 			VALUES
-				( #maxNum#, #v_P_pnum#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#, #v_P_endDate#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, 3, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, SYSDATE, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, #tenantID# )
+				( #maxNum#, #v_P_pnum#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#, #v_P_endDate#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, 3, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -1820,7 +1820,7 @@
                 REFLAG = RTRIM(#v_P_reFlag#),
                 GRESFLAG = RTRIM(#v_P_gresFlag#),
                 ALLDAY = RTRIM(#v_P_allDay#),
-                WRITEDAY = SYSDATE,
+                WRITEDAY = #nowDate#,
                 ENTRYLIST = RTRIM(#v_P_entryList#),
                 ATTACHFLAG = RTRIM(#v_P_attachFlag#),
                 CHARACTERID = RTRIM(#v_P_characterID#),
@@ -1877,7 +1877,7 @@
      		VALUES
      			( RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
      			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
-     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), SYSDATE
+     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
      			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID# )
 		]]>
 	</insert>

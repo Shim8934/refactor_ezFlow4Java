@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezCommon.dao;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -16,6 +18,9 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.user.login.vo.TenantVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommonDAO")
@@ -252,8 +257,174 @@ public class EzCommonDAO extends EgovAbstractDAO{
         }               
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, String>> getTenantAllConfig(int tenantID) throws Exception{
-		return (List<HashMap<String, String>>) list("EzCommonDAO.getTenantAllConfig", tenantID);
+	private int getTenantIdByDomainNameForJMocha(Map<String, Object> map) throws Exception{
+		String domainName = (String)map.get("DOMAIN_NAME");
+		
+        logger.debug("getTenantIdByDomainNameForJMocha started. domainName=" + domainName);
+        
+        int returnValue = -1;
+        
+        String inputParams = "domainName=" + URLEncoder.encode(domainName, "UTF-8");
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantIdByDomainName";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    returnValue = ((Long)responseObj.get("result")).intValue();
+                }
+            }
+        }                       
+        
+        logger.debug("getTenantIdByDomainNameForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;
+    }
+	
+    private int getTenantIdByDomainNameForLocal(Map<String, Object> map) throws Exception{
+    	return (Integer) select("EzCommonDAO.getTenantIdByDomainName", map);
+    }
+	
+	public int getTenantIdByDomainName(Map<String, Object> map) throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getTenantIdByDomainNameForJMocha(map);
+        } else {
+            return getTenantIdByDomainNameForLocal(map);
+        }               
 	}
+	
+	private List<TenantServerNameVO> getTenantServerNameListForJMocha() throws Exception{
+		logger.debug("getTenantServerNameListForJMocha started.");
+        
+		List<TenantServerNameVO> list = new ArrayList<TenantServerNameVO>();
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantServerList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray resultArray = (JSONArray)responseObj.get("result");
+                    
+                    for (int i=0; i<resultArray.size(); i++) {
+                		JSONObject obj = (JSONObject)resultArray.get(i);
+                		
+                		TenantServerNameVO vo = new TenantServerNameVO();
+                		
+                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
+                		vo.setServerName((String)obj.get("serverName"));
+                		
+        				list.add(vo);
+                	}
+                }
+            }
+        }                       
+        
+        for(TenantServerNameVO vo : list) {
+        	logger.debug("tenantId=" + vo.getTenantId() + ",serverName=" + vo.getServerName());
+        }
+        
+        logger.debug("getTenantServerNameListForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return list;
+    }
+	
+	@SuppressWarnings("unchecked")
+	private List<TenantServerNameVO> getTenantServerNameListForLocal() throws Exception{
+		return (List<TenantServerNameVO>) list("EzCommonDAO.getTenantServerNameList");
+    }
+	
+	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getTenantServerNameListForJMocha();
+        } else {
+            return getTenantServerNameListForLocal();
+        }               
+	}
+	
+	private List<TenantVO> getTenantListForJMocha() throws Exception{
+		logger.debug("getTenantList started.");
+        
+		List<TenantVO> list = new ArrayList<TenantVO>();
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantList";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, null);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONArray resultArray = (JSONArray)responseObj.get("result");
+                    
+                    for (int i=0; i<resultArray.size(); i++) {
+                		JSONObject obj = (JSONObject)resultArray.get(i);
+                		
+                		TenantVO vo = new TenantVO();
+                		
+                		vo.setTenantId(((Long)obj.get("tenantId")).intValue());
+                		vo.setTenantName((String)obj.get("tenantName"));
+                		
+        				list.add(vo);
+                	}
+                }
+            }
+        }                       
+        
+        for(TenantVO vo : list) {
+        	logger.debug("tenantId=" + vo.getTenantId() + ",tenantName=" + vo.getTenantName());
+        }
+        
+        logger.debug("getTenantList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return list;
+    }
+	
+	@SuppressWarnings("unchecked")
+	private List<TenantVO> getTenantListForLocal() throws Exception{
+		return (List<TenantVO>) list("EzCommonDAO.getTenantList");
+    }
+	
+	public List<TenantVO> getTenantList() throws Exception {
+        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            return getTenantListForJMocha();
+        } else {
+            return getTenantListForLocal();
+        }               
+	}
+	
 }

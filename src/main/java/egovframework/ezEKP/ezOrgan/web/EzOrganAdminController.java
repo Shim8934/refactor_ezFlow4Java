@@ -1355,6 +1355,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String strLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String use_editor = config.getProperty("config.EDITOR");
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
+        String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1367,11 +1368,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				resultList.add(j, vo);
 			}
 		}
-		
+		        	
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
+        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);		
 		
 		logger.debug("permissionsList ended.");
 		
@@ -1456,6 +1458,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do")	
 	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("permissionsCheck started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -1472,10 +1476,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			topID = "Top";
 		}
 		
+		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
+		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		
+		logger.debug("permissionsCheck ended.");
 		
 		return "admin/ezOrgan/permissionsCheck";
 	}
