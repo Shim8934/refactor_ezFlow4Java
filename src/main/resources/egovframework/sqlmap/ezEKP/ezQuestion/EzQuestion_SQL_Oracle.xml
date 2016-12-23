@@ -1757,7 +1757,7 @@
 			SELECT
 				MAX(ITEM_NO)  MAXNO  
         	FROM
-        		EZQUESTION.TBLITEMSEQ 
+        		EZQUESTION.TBL_QS_ITEMSEQ 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
        		AND
@@ -1774,7 +1774,7 @@
 	<update id="EzQuestionDAO.callUpdateItemSeq" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLITEMSEQ
+				EZQUESTION.TBL_QS_ITEMSEQ
          	SET
          		ITEM_NO = #v_pItemNo#
        		WHERE
@@ -1793,7 +1793,7 @@
 	<insert id="EzQuestionDAO.callInsertItemSeq" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLITEMSEQ
+				EZQUESTION.TBL_QS_ITEMSEQ
         	VALUES
         		( #v_pstrBrdID#, '1', #tenantID# )
 		]]>
@@ -2559,7 +2559,7 @@
 			SELECT 
 				NVL(MAX(ITEM_NO),-1) as maxno
 			FROM 
-				EZQUESTION.TBLITEMSEQ 
+				EZQUESTION.TBL_QS_ITEMSEQ 
 			WHERE  
 				BRD_ID = #brdID#
 			AND
@@ -2606,7 +2606,7 @@
 			SELECT
 				USER_ID 
 			FROM
-				EZQUESTION.TBLBRDMNG 
+				EZQUESTION.TBL_QS_BRDMNG 
 			WHERE
 				BRD_ID	=	#brdID#
 			AND 
@@ -2782,7 +2782,7 @@
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZQUESTION.TBLITEMSEQ (
+			INSERT INTO EZQUESTION.TBL_QS_ITEMSEQ (
 			) 
 			VALUES(
 				#v_pstrBrdID#, '1', #tenantID#
@@ -2815,7 +2815,7 @@
 	 <update id="EzQuestionDAO.updateItemSeq" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZQUESTION.TBLITEMSEQ
+				EZQUESTION.TBL_QS_ITEMSEQ
 			SET 
 				ITEM_NO = #v_pItemNo#
 			WHERE
