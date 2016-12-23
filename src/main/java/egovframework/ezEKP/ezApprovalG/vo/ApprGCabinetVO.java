@@ -101,10 +101,16 @@ public class ApprGCabinetVO{
 	private String modifierName;
 	private String modifyDate;
 	private String modifierName2;
-	
+	private String prodReportFlag;
 	private String recordID;
 	private String serialNO;
 	
+	public String getProdReportFlag() {
+		return prodReportFlag;
+	}
+	public void setProdReportFlag(String prodReportFlag) {
+		this.prodReportFlag = prodReportFlag;
+	}
 	public String getSerialNO() {
 		return serialNO;
 	}
