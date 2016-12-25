@@ -591,6 +591,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.countRecTempDocID3", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> selectExistUnit(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.selectExistUnit", map);
+	}
+	
 	public ApprGLineTempletVO gongRamActivateLineInfo(Map<String, Object> map) throws Exception{
 		return (ApprGLineTempletVO) list("EzApprovalG.gongRamActivateLineInfo", map);
 	}
@@ -771,6 +776,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.selectHrefDocInfo", map);
 	}
 	
+	public String selectTbSpecialCatalogInfo(Map<String, Object> map) {
+		return (String) select("EzApprovalG.selectTbSpecialCatalogInfo", map);
+	}
+	
 	public int getUserRecRight(Map<String, Object> map) throws Exception{
 		select("EzApprovalG.getUserRecRight", map);
 		return (int) map.get("v_RtnVal");
@@ -894,13 +903,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	public int getUncabinetedDocCount(Map<String, Object> map) throws Exception{
-		select("EzApprovalG.getUncabinetedDocCount", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzApprovalG.getUncabinetedDocCount", map);
 	}
 	
 	public int chkIfNotArrangedCabExist(Map<String, Object> map) throws Exception{
-		select("EzApprovalG.chkIfNotArrangedCabExist", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzApprovalG.chkIfNotArrangedCabExist", map);
 	}
 	
 	public int getSendOutDocListCount(Map<String, Object> map) throws Exception{
@@ -990,6 +997,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.newRecordVersion", map);
 	}
 	
+	public int transferCabinet(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.transferCabinet", map);
+	}
+	
+	public int transferCabinetSn(Map<String, Object> map) {
+		return (int) select("EzApprovalG.transferCabinetSn", map);
+	}
+	
+	public int transferCabinetType2(Map<String, Object> map) {
+		return (int) select("EzApprovalG.transferCabinetType2", map);
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -1006,12 +1025,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.addNewVolume", map);
 	}
 	
-	public void transferCabinet(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.transferCabinet", map);
-	}
-	
+
 	public void confirmClassify(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.confirmClassify", map);
+		update("EzApprovalG.confirmClassify", map);
 	}
 	
 	public void doSendOfferApprove1(Map<String, Object> map) throws Exception{
@@ -1078,6 +1094,42 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRecordHistory2", map);
 	}
 	
+	public void insertTbSerialNumGen(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbSerialNumGen", map);
+	}
+	
+	public void insertTbCabinetClass(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertTbCabinetClass", map);
+	}
+	
+	public void insertTbSpecialCatalogInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbSpecialCatalogInfo", map);
+	}
+	
+	public void insertTbSpecialCatalogInfo2(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbSpecialCatalogInfo2", map);
+	}
+	
+	public void insertTbOldCabinetExtraInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbOldCabinetExtraInfo", map);
+	}
+	
+	public void insertTbCabinetInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbCabinetInfo", map);
+	}
+	
+	public void trigerTbCabinet(Map<String, Object> map) {
+		insert("EzApprovalG.trigerTbCabinet", map);
+	}
+	
+	public void trigerTbCabRoleInfo(Map<String, Object> map) {
+		
+	}
+	
+	public void insertTbCabinetHistory(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbCabinetHistory", map);
+	}
+	
 	public void setMyTaskCode(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setMytaskCode", map);
 	}
@@ -1123,6 +1175,30 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public void changeRecordInfo2(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.changeRecordInfo2", map);
+	}
+	
+	public void updateTbSerialNumGen(Map<String, Object> map) {
+		update("EzApprovalG.updateTbSerialNumGen", map);
+	}
+
+	public void updateExistUnit(Map<String, Object> map) {
+		update("EzApprovalG.updateExistUnit", map);
+	}
+	
+	public void updateTbCabinetInfo2(Map<String, Object> map) {
+		update("EzApprovalG.updateTbCabinetInfo2", map);
+	}
+	
+	public void updateTbCabinetInfo3(Map<String, Object> map) {
+		update("EzApprovalG.updateTbCabinetInfo3", map);
+	}
+	
+	public void updateTbCabinetClass(Map<String, Object> map) {
+		update("EzApprovalG.updateTbCabinetClass", map);
+	}
+	
+	public void updateTbSeperateAttach(Map<String, Object> map) {
+		update("EzApprovalG.updateTbSeperateAttach", map);
 	}
 	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
@@ -1180,7 +1256,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public void doResendEndDoc2(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.doResendEndDoc2", map);
 	}
-
+	public void updateTbCabinetInfo(Map<String, Object> map) {
+		update("EzApprovalG.updateTbCabinetInfo", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc3(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc3", map);
@@ -1190,6 +1269,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGRecordVO> doSendDoc_ReceiptGroupSub(Map<String, Object> map) throws Exception{
 		return (List<ApprGRecordVO>) list("EzApprovalG.doSendDoc_ReceiptGroupSub", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> selectCabinetTransfer(Map<String, Object> map) {
+		return (List<ApprGCabinetVO>) list("EzApprovalG.selectCabinetTransfer", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) {
+		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
+	}
+
+
+
+
 
 
 

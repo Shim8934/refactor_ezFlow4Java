@@ -1780,6 +1780,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/startPageUser.do")
 	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
+		logger.debug("startPageUser started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		String pUserThemeUID = "";
@@ -1793,6 +1794,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
+		logger.debug("userPortalPage="+userPortalPage);
 		
 		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
 			pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
@@ -1862,6 +1864,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("useStartPage", useStartPage);
 		model.addAttribute("list", list);
+		
+		logger.debug("startPageUser ended");
+		
 		return "/ezPortal/portalStartPageUser";
 	}
 	

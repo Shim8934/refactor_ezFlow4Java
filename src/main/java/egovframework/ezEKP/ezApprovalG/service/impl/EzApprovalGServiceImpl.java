@@ -3490,10 +3490,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID) throws Exception {
+	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CABINETID", cabinetID);
+		map.put("v_TENANTID", tenantID);
+
 		
 		int resultApr = ezApprovalGDAO.getUncompleteDocCount(map);
 		
@@ -3501,7 +3503,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String transferCabinet(Document xmlDom) throws Exception {
+	public String transferCabinet(Document xmlDom, int tenantID) throws Exception {
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String deptCode = xmlDom.getElementsByTagName("DDEPTCODE").item(0).getTextContent();
 		String deptName = xmlDom.getElementsByTagName("DDEPTNAME").item(0).getTextContent();
@@ -3535,14 +3537,110 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DeptMID", deptMID);
 		map.put("v_DeptMName", deptMName);
 		map.put("v_DeptMName2", deptMName2);
-		
+		map.put("v_TENANTID", tenantID);
+
 		String rtnVal = "";
 		
 		try {
-			ezApprovalGDAO.transferCabinet(map);
+			int numRows = ezApprovalGDAO.transferCabinet(map);
+			map.put("v_numRows", numRows);
 			
+			int type2Sn = ezApprovalGDAO.transferCabinetType2(map);
+			if ( type2Sn == 0) {
+				map.put("v_DDeptCode", 0);
+			}
+			int curSN = ezApprovalGDAO.transferCabinetSn(map);
+			if(curSN == 0){
+				map.put("v_RtnSN", 1);
+				ezApprovalGDAO.insertTbSerialNumGen(map);
+			}
+				map.put("v_RtnSN", curSN);
+				ezApprovalGDAO.updateTbSerialNumGen(map);
+				
+//				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
+				ezApprovalGDAO.insertTbCabinetClass(map);
+				ezApprovalGDAO.trigerTbCabinet(map);
+				ezApprovalGDAO.trigerTbCabRoleInfo(map);
+				List<ApprGCabinetVO> apprExistUnitList = ezApprovalGDAO.selectExistUnit(map);
+				StringBuffer rowID = new StringBuffer();
+				if(apprExistUnitList.size() > 0) {
+					for(int i =0; i< apprExistUnitList.size(); i++){
+						rowID.append(apprExistUnitList.get(i).getCabinetClassNo().trim());
+						map.put("v_rowID", rowID.toString());
+						map.put("KeepingPeriod", apprExistUnitList.get(i).getKeepingPeriod());
+						map.put("KeepingMethod", apprExistUnitList.get(i).getKeepingPlace());
+						map.put("KeepingPlace", apprExistUnitList.get(i).getKeepingMethod());
+						map.put("DisplayRecFlag", apprExistUnitList.get(i).getDiplayRecFlag());
+						map.put("SpecialCatalogFlag", apprExistUnitList.get(i).getSpecialCatalogFlag());
+						ezApprovalGDAO.updateExistUnit(map);
+					}
+				}
+				//특수목록 입력
+				String spFlag = ezApprovalGDAO.selectTbSpecialCatalogInfo(map);
+				if(spFlag == null) {
+					map.put("v_NewSCFlag", 0);
+				} else if (!spFlag.equals("0")){
+					map.put("v_NewSCFlag", spFlag);
+
+					ezApprovalGDAO.insertTbSpecialCatalogInfo(map);
+					//특수목록 플래그가 같고 특수목록 이름이 같으면 데이터를 복사한다.
+					ezApprovalGDAO.insertTbSpecialCatalogInfo2(map);
+				}
+				//구기록물철 정보 저장
+				ezApprovalGDAO.insertTbOldCabinetExtraInfo(map);
+				//인수 기록물철 테이블(TBCABINET)에 생성한다.
+			    //권호수가 1권이 아닐경우-> 기록물철을 생성
+				ezApprovalGDAO.insertTbCabinetInfo(map);
+
+				List<ApprGCabinetVO> apprCabinetTransferList = ezApprovalGDAO.selectCabinetTransfer(map);
+				StringBuffer rowID2 = new StringBuffer();
+				if(apprCabinetTransferList.size() > 0) {
+					for(int j =0; j< apprCabinetTransferList.size(); j++){
+						rowID2.append(apprCabinetTransferList.get(j).getCabinetID().trim());
+						map.put("v_rowID2", rowID2.toString());
+						map.put("ProcessDeptCode", apprCabinetTransferList.get(j).getPublicityCode());
+						map.put("TaskCode", apprCabinetTransferList.get(j).getTaskCode());
+						map.put("ProductionYear", apprCabinetTransferList.get(j).getProductionYear());
+						map.put("RegSerialNo", apprCabinetTransferList.get(j).getRegSerialNo());
+						map.put("VolumeNo", apprCabinetTransferList.get(j).getVolumeNo());
+						map.put("CabinetID", apprCabinetTransferList.get(j).getCabinetID());
+						map.put("Title", apprCabinetTransferList.get(j).getTitle());
+						map.put("Title2", apprCabinetTransferList.get(j).getTitle2());
+						map.put("ProcessDeptName", apprCabinetTransferList.get(j).getProcessDeptName());
+						map.put("ProcessDeptName2", apprCabinetTransferList.get(j).getProcessDeptName2());
+						map.put("TaskName", apprCabinetTransferList.get(j).getTaskName());;
+						map.put("TaskName2", apprCabinetTransferList.get(j).getTaskName2());
+						map.put("CatalogTransferFlag", apprCabinetTransferList.get(j).getCatalogTransferFlag());
+						map.put("CatalogTransferYear", apprCabinetTransferList.get(j).getCatalogTransferYear());
+						map.put("DocTransferFlag", apprCabinetTransferList.get(j).getDocTransferFlag());
+						map.put("DocTransferYear", apprCabinetTransferList.get(j).getDocTransferYear());
+						map.put("ProdReportFlag", apprCabinetTransferList.get(j).getProdReportFlag());
+						
+						ezApprovalGDAO.updateTbCabinetInfo(map);
+					}
+				}
+				ezApprovalGDAO.updateTbCabinetInfo2(map);
+				ezApprovalGDAO.updateTbCabinetInfo3(map);
+				ezApprovalGDAO.updateTbCabinetClass(map);
+				
+				List<ApprGCabinetVO> apprTbSeperateAttachList = ezApprovalGDAO.selectTbSeperateAttach(map);
+				StringBuffer rowID3 = new StringBuffer();
+
+				if(apprTbSeperateAttachList.size() > 0) {
+					for(int k =0; k< apprTbSeperateAttachList.size(); k++){
+						rowID.append(apprTbSeperateAttachList.get(k).getRecordID().trim());
+						map.put("v_rowID3", rowID3.toString());
+						map.put("v_CABINETID", apprTbSeperateAttachList.get(k).getCabinetID());
+
+						ezApprovalGDAO.updateTbSeperateAttach(map);
+					}
+				}
+				ezApprovalGDAO.insertTbCabinetHistory(map);
+
+				
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -3658,34 +3756,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DEPTINFO", deptInfo);
 		map.put("v_UNTILYEAR", confirmYN);
-		
+		map.put("v_TENANTID", tenantID);
+
 		int result = ezApprovalGDAO.getUncabinetedDocCount(map);
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}
 
 	@Override
-	public String chkIfNotArrangedCabExist(String deptID, String companyID) throws Exception {
+	public String chkIfNotArrangedCabExist(String deptID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DEPTCODE", deptID);
-		
+		map.put("v_TENANTID", tenantID);
+
 		int result = ezApprovalGDAO.chkIfNotArrangedCabExist(map);
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}
 
 	@Override
-	public String confirmClassify(String deptID, String companyID) throws Exception {
+	public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DEPTCODE", deptID);
+		map.put("v_TENANTID", tenantID);
 		
 		try {
 			ezApprovalGDAO.confirmClassify(map);
 			
 			return "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}

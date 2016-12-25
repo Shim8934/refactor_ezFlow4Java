@@ -265,9 +265,9 @@ public interface EzApprovalGService {
 			String apprToMONTH, String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY,
 			String draftDeptName, String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, LoginVO userInfo) throws Exception;
 	
-	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID) throws Exception;
+	public String getUncompleteDocCount(String deptID, String companyID, String cabinetID, int tenantID) throws Exception;
 	
-	public String transferCabinet(Document xmlDom) throws Exception;
+	public String transferCabinet(Document xmlDom, int tenantID) throws Exception;
 	
 	public String gongRamUpdate(String docID, String userID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -275,9 +275,9 @@ public interface EzApprovalGService {
 	
 	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID, int tenantID) throws Exception;
 	
-	public String chkIfNotArrangedCabExist(String deptID, String companyID) throws Exception;
+	public String chkIfNotArrangedCabExist(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String confirmClassify(String deptID, String companyID) throws Exception;
+	public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 	
 	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID) throws Exception;
 	

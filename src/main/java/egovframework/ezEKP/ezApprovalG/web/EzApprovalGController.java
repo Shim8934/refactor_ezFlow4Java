@@ -4555,7 +4555,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String cabinetID = request.getParameter("cabinetID");
-		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID);
+		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -4565,10 +4565,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/transferCab.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String transferCab(@RequestBody String xmlPara) throws Exception{
+	public String transferCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
-		String result = ezApprovalGService.transferCabinet(xmlDom);
+		String result = ezApprovalGService.transferCabinet(xmlDom, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -4685,10 +4687,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/chkIfNotArrangedCabExist.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String chkIfNotArrangedCabExist(HttpServletRequest request) throws Exception{
+	public String chkIfNotArrangedCabExist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	    userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String deptID = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.chkIfNotArrangedCabExist(deptID, companyID);
+		String result = ezApprovalGService.chkIfNotArrangedCabExist(deptID, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -4698,10 +4702,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/confirmClassfy.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String confirmClassfy(HttpServletRequest request) throws Exception{
+	public String confirmClassfy(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String deptID = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.confirmClassify(deptID, companyID);
+		String result = ezApprovalGService.confirmClassify(deptID, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
