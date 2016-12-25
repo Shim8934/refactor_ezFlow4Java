@@ -209,12 +209,24 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertDeptInfo", map);
 	}
 	
-	public void insertSealInfo(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.insertSealInfo", map);
+	public Integer insertSealInfoSelect(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.insertSealInfoSelect", map);
+	}
+	public void insertSealInfoInsert(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertSealInfoInsert", map);
+	}
+	public void insertSealInfoUpdate(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.insertSealInfoUpdate", map);
 	}
 	
-	public void insertDeptSealInfo(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.insertDeptSealInfo", map);
+	public Integer insertDeptSealInfoSelect(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.insertDeptSealInfoSelect", map);
+	}
+	public void insertDeptSealInfoInsert(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.insertDeptSealInfoInsert", map);
+	}
+	public void insertDeptSealInfoUpdate(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.insertDeptSealInfoUpdate", map);
 	}
 	
 	public void insertFormContainer(Map<String, Object> map) throws Exception {

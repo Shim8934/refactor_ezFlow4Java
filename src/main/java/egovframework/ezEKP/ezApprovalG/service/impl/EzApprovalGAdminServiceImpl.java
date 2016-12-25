@@ -1287,6 +1287,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_LISTFLAG", listFlag);
 		map.put("v_PMULTIDATA", lang);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		List<ApprGSealInfoVO> list = ezApprovalGAdminDAO.getSealList(map);
 		
@@ -1331,23 +1332,31 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String deleteSealInfo(String pSealNum, String companyID) throws Exception {
+	public String deleteSealInfo(String pSealNum, String companyID, int tenantID) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_SEALNUM", pSealNum);
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
 			
 			ezApprovalGAdminDAO.deleteSealInfo(map);
 			
+			LOGGER.debug("deleteSealInfo ended.");
+			
 			return "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("deleteSealInfo catch.");
+			
 			return "FALSE";
 		}
 	}
 	
 	@Override
-	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID) throws Exception {
+	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID, int tenantID) throws Exception {
 		try{
+			LOGGER.debug("insertSealInfo started.");
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_SEALNAME", pSealName);
@@ -1357,24 +1366,42 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_REGUSERID", pRegUserID);
 			map.put("v_REGUSERNAME", pRegUserName);
 			map.put("v_REGUSERNAME2", pRegUserName2);
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
 			
-			ezApprovalGAdminDAO.insertSealInfo(map);
+			int result = ezApprovalGAdminDAO.insertSealInfoSelect(map);
+			
+			LOGGER.debug("result=" + result);
+			
+			if (result == 0) {
+				ezApprovalGAdminDAO.insertSealInfoInsert(map);
+			} else {
+				ezApprovalGAdminDAO.insertSealInfoUpdate(map);
+			}
+			
+			LOGGER.debug("insertSealInfo ended.");
 			
 			return "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("insertSealInfo catch.");
+			LOGGER.debug(e.getMessage());
+			
 			return "FALSE";
 		}
 	}
 
 	@Override
-	public String getSealDeptlList(String listFlag, String deptID, String companyID, String primary) throws Exception {
+	public String getSealDeptList(String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception {
+		LOGGER.debug("getSealDeptList started.");
+		
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTFLAG", listFlag);
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		List<ApprGSealInfoVO> list = ezApprovalGAdminDAO.getSealDeptList(map);
 		
@@ -1388,12 +1415,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealWidth() + "</VALUE></CELL>");
 			sb.append("<CELL><VALUE>" + vo.getSealHeight() + "</VALUE></CELL>");
-			sb.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), offset, false) + "</VALUE></CELL>");
 			
 			if (vo.getDelDate() == null) {
 				sb.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
 			} else {
-				sb.append("<CELL><VALUE>" + vo.getDelDate() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getDelDate(), offset, false) + "</VALUE></CELL>");
 			}
 
 			if (primary.equals("1")) {
@@ -1406,13 +1433,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		sb.append("</ROWS>");
-
+		
+		LOGGER.debug("getSealDeptList ended.");
+		
 		return sb.toString();
 	}
 	
 	@Override
-	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception {
+	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID, int tenantID) throws Exception {
 		try{
+			LOGGER.debug("insertDeptSealInfo started.");
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_SEALNAME", pSealName);
@@ -1424,27 +1455,47 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_REGUSERNAME2", pRegUserName2);
 			map.put("v_DEPTID", deptID);
 			map.put("companyID", companyID);
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+			map.put("tenantID", tenantID);
 			
-			ezApprovalGAdminDAO.insertDeptSealInfo(map);
+			int temp = ezApprovalGAdminDAO.insertDeptSealInfoSelect(map);
+			
+			if (temp == 0) {
+				ezApprovalGAdminDAO.insertDeptSealInfoInsert(map);
+			} else {
+				ezApprovalGAdminDAO.insertDeptSealInfoUpdate(map);
+			}
+			
+			LOGGER.debug("insertDeptSealInfo ended.");
 			
 			return "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("insertDeptSealInfo catch.");
+			
 			return "FALSE";
 		}	
 	}
 	
 	@Override
-	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception {
+	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID, int tenantID) throws Exception {
 		try {
+			LOGGER.debug("deleteDeptSealInfo started.");
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_SEALNUM", pSealNum);
 			map.put("v_DEPTID", deptID);
 			map.put("companyID", companyID);
+			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+			map.put("tenantID", tenantID);
 			
 			ezApprovalGAdminDAO.deleteSealDeptInfo(map);
 			
+			LOGGER.debug("deleteDeptSealInfo ended.");
+			
 			return "TRUE";
 		} catch (Exception e) {
+			LOGGER.debug("deleteDeptSealInfo catch.");
+			
 			return "FALSE";
 		}
 	}
@@ -1925,12 +1976,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String delForm(String formID, String companyID, String realPath) throws Exception {
+	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception {
 		String result = deleteForm(formID, companyID);
 		
 		try {
 			if (result.equals("TRUE")) {
-				deleteFile(realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
+				deleteFile(realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			}
 			
 			return "TRUE";
@@ -2075,7 +2126,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo) throws Exception {
 		String strBeforMHT = "";
-		String path = config.getProperty("upload_approvalG.ROOT");
+		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();

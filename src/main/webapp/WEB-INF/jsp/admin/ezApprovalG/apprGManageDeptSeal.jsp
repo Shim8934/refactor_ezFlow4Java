@@ -250,6 +250,8 @@
 		        if (selRow) {
 		            if (confirm("관인을 삭제하시겠습니까?")) {
 		            	DeleteSealInfo(selRow[0].getAttribute("DATA1"));
+		            	
+		            	getSealList();
 		            } else {
 		            	return;
 		            }

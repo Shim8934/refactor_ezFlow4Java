@@ -449,12 +449,63 @@
 		</isNotEqual>
 	</select>
 
-	<procedure id="EzApprovalGAdmin.getSealDeptList"
+<!-- 	<procedure id="EzApprovalGAdmin.getSealDeptList" -->
+<!-- 		parameterClass="Map" resultClass="ApprGSealInfoVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getSealDeptList"
 		parameterClass="Map" resultClass="ApprGSealInfoVO">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
+		<isEqual property="v_LISTFLAG" compareValue="">
+			<![CDATA[
+				SELECT
+					SEALNUM,
+					SEALNAME,
+					SEALPATH,
+					SEALWIDTH,
+					SEALHEIGHT,
+					TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					REGUSERID,
+					REGUSERNAME,
+					REGUSERNAME2
+				FROM
+					EZAPPROVALG_$companyID$.TBSEALDEPTINFO 
+				WHERE
+					DEPTID = #v_DEPTID#
+				AND
+					TENANT_ID = #tenantID#
+				ORDER BY
+					REGDATE DESC
+			]]>
+		</isEqual>
+		<isNotEqual property="v_LISTFLAG" compareValue="">
+			<![CDATA[
+				SELECT
+					SEALNUM,
+					SEALNAME,
+					SEALPATH,
+					SEALWIDTH,
+					SEALHEIGHT,
+					TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					REGUSERID,
+					REGUSERNAME,
+					REGUSERNAME2
+				FROM
+					EZAPPROVALG_$companyID$.TBSEALDEPTINFO 
+				WHERE
+					DELDATE IS NULL
+				AND
+					DEPTID = #v_DEPTID#
+				AND
+					TENANT_ID = #tenantID#
+				ORDER BY
+					REGDATE DESC
+			]]>
+		</isNotEqual>
+	</select>
 
 	<procedure id="EzApprovalGAdmin.searchManageAprDocList"
 		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
@@ -735,33 +786,225 @@
 		]]>
 	</procedure>
 
-	<procedure id="EzApprovalGAdmin.deleteSealInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.deleteSealInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETESEALINFO(#v_SEALNUM#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalGAdmin.deleteSealInfo"
 		parameterClass="Map">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETESEALINFO(#v_SEALNUM#)}
-		]]>
-	</procedure>
+		<isEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBSEALINFO
+				SET
+					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					DELDATE IS NULL
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBSEALINFO
+				SET
+					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					SEALNUM = #v_SEALNUM#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isNotEqual>
+		
+	</update>
 
-	<procedure id="EzApprovalGAdmin.deleteSealDeptInfo"
-		parameterClass="Map">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, #v_DEPTID#)}
-		]]>
-	</procedure>
+<!-- 	<procedure id="EzApprovalGAdmin.deleteSealDeptInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, #v_DEPTID#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalGAdmin.deleteSealDeptInfo" parameterClass="Map">
+		<isEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+				SET
+					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					DELDATE IS NULL
+				AND
+					DEPTID = #v_DEPTID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_SEALNUM" compareValue="">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+				SET
+					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+				WHERE
+					SEALNUM = #v_SEALNUM#
+				AND
+					DEPTID = #v_DEPTID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isNotEqual>
+	</update>
 
-	<procedure id="EzApprovalGAdmin.insertSealInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.insertSealInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.insertSealInfoSelect" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(COUNT(SEALNUM), 0)
+			FROM
+				EZAPPROVALG_$companyID$.TBSEALINFO 
+			WHERE
+				SEALNUM = #v_SEALNUM#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	<insert id="EzApprovalGAdmin.insertSealInfoInsert"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)}
+			INSERT INTO EZAPPROVALG_$companyID$.TBSEALINFO
+			(SEALNUM,
+			SEALNAME,
+			SEALPATH,
+			SEALWIDTH,
+			SEALHEIGHT,
+			REGDATE,
+			DELDATE,
+			REGUSERID,
+			REGUSERNAME,
+			REGUSERNAME2,
+			TENANT_ID)
+        VALUES
+			((SELECT
+				NVL(MAX(SEALNUM), 0) + 1
+			FROM
+				EZAPPROVALG_$companyID$.TBSEALINFO),
+			#v_SEALNAME#,
+			#v_SEALPATH#,
+			#v_SEALWIDTH#,
+			#v_SEALHEIGHT#,
+			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+			NULL,
+			#v_REGUSERID#,
+			#v_REGUSERNAME#,
+			#v_REGUSERNAME2#,
+			#tenantID#)
 		]]>
-	</procedure>
+	</insert>
+	<update id="EzApprovalGAdmin.insertSealInfoUpdate"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBSEALINFO
+			SET
+				SEALNAME = #v_SEALNAME#,
+				SEALPATH = #v_SEALPATH#,
+				SEALWIDTH = #v_SEALWIDTH#,
+				SEALHEIGHT = #v_SEALHEIGHT#,
+				REGUSERID = #v_REGUSERID#,
+				REGUSERNAME = #v_REGUSERNAME#,
+				REGUSERNAME2 = #v_REGUSERNAME2#
+			WHERE
+				SEALNUM = v_SEALNUM
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 
-	<procedure id="EzApprovalGAdmin.insertDeptSealInfo"
-		parameterClass="Map">
+<!-- 	<procedure id="EzApprovalGAdmin.insertDeptSealInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, #v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.insertDeptSealInfoSelect" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, #v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)}
+			SELECT
+				NVL(COUNT(SEALNUM), 0)
+			FROM
+				EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+			WHERE
+				SEALNUM = #v_SEALNUM#
+			AND
+				DEPTID = #v_DEPTID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
+	<insert id="EzApprovalGAdmin.insertDeptSealInfoInsert" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+				(SEALNUM,
+				DEPTID,
+				SEALNAME,
+				SEALPATH,
+				SEALWIDTH,
+				SEALHEIGHT,
+				REGDATE,
+				DELDATE,
+				REGUSERID,
+				REGUSERNAME,
+				REGUSERNAME2,
+				TENANT_ID)
+			VALUES
+				((SELECT
+					NVL(MAX(SEALNUM) , 0) + 1
+				FROM
+					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+				WHERE
+					DEPTID = #v_DEPTID#
+				AND
+					TENANT_ID = #tenantID#),
+				#v_DEPTID#,
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#tenantID#)
+		]]>
+	</insert>
+	<update id="EzApprovalGAdmin.insertDeptSealInfoUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZAPPROVALG_$companyID$.TBSEALDEPTINFO
+			SET
+				SEALNAME = #v_SEALNAME#,
+				SEALPATH = #v_SEALPATH#,
+				SEALWIDTH = #v_SEALWIDTH#,
+				SEALHEIGHT = #v_SEALHEIGHT#,
+				REGUSERID = #v_REGUSERID#,
+				REGUSERNAME = #v_REGUSERNAME#,
+				REGUSERNAME2 = #v_REGUSERNAME2#
+			WHERE
+				SEALNUM = #v_SEALNUM#
+			AND
+				DEPTID = #v_DEPTID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 
 	<procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map">
 		<![CDATA[

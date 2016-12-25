@@ -362,10 +362,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 연동정보 추가 화면호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
-	public String formConnInfo (HttpServletRequest request, Model model) throws Exception {
+	public String formConnInfo (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String path = config.getProperty("upload_approvalG.ROOT");
+		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		
 		File file = new File(realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
 		
@@ -426,12 +427,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
 	@ResponseBody
-	public String delForm(HttpServletRequest request) throws Exception {
+	public String delForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
 		
-		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath);
+		String result = ezApprovalGAdminService.delForm(formID, companyID, realPath, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1344,11 +1346,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 관인대장 관인등록 파일등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/sealUpload.do")
-	public String sealUpload(MultipartHttpServletRequest request, Model model) throws Exception {
+	public String sealUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		MultipartFile multiFile = request.getFile("file1");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.SEALIMG", userInfo.getTenantId());
 		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
@@ -1385,7 +1388,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/insertSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String insertSealInfo(HttpServletRequest request) throws Exception {
+	public String insertSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String pSealNum = request.getParameter("pSealNum");
 		String pSealName = request.getParameter("pSealName");
 		String pSealPath = request.getParameter("pSealPath");
@@ -1396,7 +1400,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pRegUserName2 = request.getParameter("pRegUserName2");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.insertSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, companyID);
+		String result = ezApprovalGAdminService.insertSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1421,11 +1425,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String deleteSealInfo(HttpServletRequest request) throws Exception {
+	public String deleteSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String pSealNum = request.getParameter("pSealNum");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.deleteSealInfo(pSealNum, companyID);
+		String result = ezApprovalGAdminService.deleteSealInfo(pSealNum, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1473,7 +1478,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		//'pListFlag : "LIST" - 리스트 가져오기, "ADMIN" - 대장 가져오기(관리자)
-		String result = ezApprovalGAdminService.getSealDeptlList(listFlag, deptID, companyID, userInfo.getPrimary());
+		String result = ezApprovalGAdminService.getSealDeptList(listFlag, deptID, companyID, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1496,13 +1501,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 부서별관인대장 직인등록 파일등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deptSealUpload.do")
-	public String deptSealUpload (MultipartHttpServletRequest request, Model model) throws Exception {
+	public String deptSealUpload (@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		MultipartFile multiFile = request.getFile("file1");
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String dirPath = config.getProperty("upload_approvalG.SEALIMG");
-		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.SEALIMG", userInfo.getTenantId());
+		String currentDate = commonUtil.getTodayUTCTime("").replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
 		File dir = new File(realPath + dirPath);
@@ -1537,7 +1543,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/insertDeptSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String insertDeptSealInfo(HttpServletRequest request) throws Exception {
+	public String insertDeptSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String pSealNum = request.getParameter("pSealNum");
 		String pSealName = request.getParameter("pSealName");
 		String pSealPath = request.getParameter("pSealPath");
@@ -1549,7 +1556,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.insertDeptSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, deptID, companyID);
+		String result = ezApprovalGAdminService.insertDeptSealInfo(pSealNum, pSealName, pSealPath, pSealWidth, pSealHeight, pRegUserID, pRegUserName, pRegUserName2, deptID, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1574,12 +1581,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteDeptSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String deleteDeptSealInfo(HttpServletRequest request) throws Exception {
+	public String deleteDeptSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String pSealNum = request.getParameter("pSealNum");
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.deleteDeptSealInfo(pSealNum, deptID, companyID);
+		String result = ezApprovalGAdminService.deleteDeptSealInfo(pSealNum, deptID, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1618,13 +1626,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/saveOptionInfo.do")
 	@ResponseBody
-	public String saveOptionInfo(HttpServletRequest request) throws Exception {
+	public String saveOptionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String optionValue1 = request.getParameter("option1");
 		String optionValue2 = request.getParameter("option2");
 		String optionValue3 = request.getParameter("option3");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String dirPath = config.getProperty("upload_approvalG.ROOT");
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		
 		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";
 		 

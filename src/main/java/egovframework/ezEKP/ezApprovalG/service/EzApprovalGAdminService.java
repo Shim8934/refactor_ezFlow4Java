@@ -73,15 +73,15 @@ public interface EzApprovalGAdminService {
 
 	public String sealDelete(String realPath, String dirPath, String fileName) throws Exception;
 	
-	public String deleteSealInfo(String pSealNum, String companyID) throws Exception;
+	public String deleteSealInfo(String pSealNum, String companyID, int tenantID) throws Exception;
 	
-	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID) throws Exception;
+	public String insertSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String companyID, int tenantID) throws Exception;
 
-	public String getSealDeptlList(String listFlag, String deptID, String companyID, String primary) throws Exception;
+	public String getSealDeptList(String listFlag, String deptID, String companyID, String primary, String offset, int tenantID) throws Exception;
 	
-	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID) throws Exception;
+	public String insertDeptSealInfo(String pSealNum, String pSealName, String pSealPath, String pSealWidth, String pSealHeight, String pRegUserID, String pRegUserName, String pRegUserName2, String deptID, String companyID, int tenantID) throws Exception;
 
-	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID) throws Exception;
+	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID, int tenantID) throws Exception;
 	
 	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -109,7 +109,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getFormContent(String formID, String lang, String companyID) throws Exception;
 	
-	public String delForm(String formID, String companyID, String realPath) throws Exception;
+	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
 	
 	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID) throws Exception;
 
