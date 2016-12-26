@@ -100,7 +100,7 @@
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
-		    		url : "/admin/ezApproval/MgetFormContinfo.do",
+		    		url : "/admin/ezApproval/getFormContInfo.do",
 		    		data : {
 		    			id : "ROOT",
 		    			companyID  : pCompanyID
@@ -174,7 +174,7 @@
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
-		    		url : "/admin/ezApproval/MgetFormContinfo.do",
+		    		url : "/admin/ezApproval/getFormContInfo.do",
 		    		data : {
 		    			id : ID,
 		    			companyID  : pCompanyID
@@ -207,8 +207,8 @@
 		    		async : false,
 		    		url : "/admin/ezApproval/MgetForm.do",
 		    		data : {
-		    			id : ID,
-		    			kind : KIND,
+		    			formContID : ID,
+		    			formKind   : KIND,
 		    			companyID  : pCompanyID
 		    		},
 		    		success: function(text){
@@ -287,7 +287,7 @@
 	        var ezapralert_cross_dialogArgument = new Array();
 	        function OpenAlertUI(pAlertContent) {
 	            var parameter = pAlertContent;
-	            var url = "/admin/ezApproval/ezAPRALERT.do";
+	            var url = "/admin/ezApproval/ezAprAlert.do";
 	            ezapralert_cross_dialogArgument[0] = parameter;
 	            var result = GetOpenWindow(url, "ezAPRALERT_Cross", 330, 205, "NO");
 	        }

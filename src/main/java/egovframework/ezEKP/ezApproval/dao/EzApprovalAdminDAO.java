@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
@@ -354,8 +355,39 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		return (List<ApprReceiptInfoVO>) list("EzApprovalAdminDAO.getDeptTranSendDocCount", apprExcelOutVO);
 	}
 
-	public void insertFormContainer(ApprFormContVO apprFormContVO) throws Exception {
-		insert("EzApprovalAdminDAO.insertFormContainer", apprFormContVO);
+	public int insertFormContainer(ApprFormContVO apprFormContVO) throws Exception {
+		return (int) insert("EzApprovalAdminDAO.insertFormContainer", apprFormContVO);
+	}
+
+	public void insertFormContainerUserGroup(String insString) throws Exception {
+		insert("EzApprovalAdminDAO.insertFormContainerUserGroup", insString);
+	}
+
+	public void deleteFormContainer(Map<String, Object> map) throws Exception{
+		delete("EzApprovalAdminDAO.deleteFormContainer", map);
+	}
+
+	public void deleteFormContUserGroup(Map<String, Object> map) {
+		delete("EzApprovalAdminDAO.deleteFormContUserGroup", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprCodeVO> getAprType(LoginVO userInfo) throws Exception {
+		return (List<ApprCodeVO>) list("EzApprovalAdminDAO.getAprType", userInfo);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprAutoRuleVO> getFormAprRule(Map<String, Object> map) throws Exception {
+		return (List<ApprAutoRuleVO>) list("EzApprovalAdminDAO.getFormAprRule", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception {
+		return (List<ApprAutoRuleVO>) list("EzApprovalAdminDAO.getFormAprRuleLine", map);
+	}
+
+	public String getFormContentReform(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalAdminDAO.getFormContentReform", map);
 	}
 	
 }

@@ -163,8 +163,8 @@
 		            FormContMain_dialogarguments[0] = para;
 		            FormContMain_dialogarguments[1] = btnUpFcont_onclick_Complete;
 		
-		            var url = "FormContMain.aspx?TCheck=FContmod&companyID=" + escape(companyID);
-		            GetOpenWindow(url, "FormContMain", 800, 700, false);           
+		            var url = "/admin/ezApproval/formContMain.do?tCheck=FContmod&companyID=" + escape(companyID);
+		            GetOpenWindow(url, "FormContMain", 800, 700, "NO");           
 		        }
 		    }
 		
@@ -196,13 +196,9 @@
 		    }
 		
 		    function DelFCont() {
-		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
-		
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
 		
 		        var nodeIdx = treeView.GetSelectNode();
 		        if (nodeIdx != null) {
@@ -214,11 +210,23 @@
 		
 		                var Rows = listview.GetDataRows();
 		                if (Rows[0].id.indexOf('TR_noItems') > 0) {
-		                    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-		                    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-		                    xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Del_FormCont.aspx", false);
-		                    xmlhttp.send(xmlpara);
-		                    xmlRtn = loadXMLString(xmlhttp.responseText);
+		                	var result = "";
+		    		    	
+		    		    	$.ajax({
+		    		    		type : "POST",
+		    		    		dataType : "text",
+		    		    		async : false,
+		    		    		url : "/admin/ezApproval/delFormCont.do",
+		    		    		data : {
+		    		    			id         : ID,
+		    		    			companyID  : companyID
+		    		    		},
+		    		    		success: function(text){
+		    		    			result = text;
+		    		    		}
+		    		    	});
+		    		    	
+		                    xmlRtn = loadXMLString(result);
 		
 		                    var objNode = xmlRtn.documentElement.childNodes;
 		
@@ -238,15 +246,24 @@
 		    }
 		
 		    function CheckSubFormCont(ID, pNodeIdx) {
-		        var xmlpara = createXmlDom();
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/getFormContInfo.do",
+		    		data : {
+		    			id         : ID,
+		    			companyID  : companyID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
 		        var xmlRtn = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-		        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-		        xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Get_FormContinfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-		        xmlRtn = loadXMLString(xmlhttp.responseText);
+		        xmlRtn = loadXMLString(result);
 		
 		        if (SelectNodes(xmlRtn, "NODES/NODE").length > 0) {
 		            return true;
@@ -264,7 +281,7 @@
 		            if (nodeIdx.GetNodeData("DATA1") != "ROOT") {
 		                var url = "";
 		                var HWP = "&type=HWP";
-		                var parameter = "?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
+		                var parameter = "?tCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
 		                if (type == "HWP") {
 		                    if (!CrossYN())
 		                        url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
@@ -274,7 +291,7 @@
 		                }
 		                else {
 		                    if (type == 'REFORM')
-		                        url = "/myoffice/ezApproval/manage/reFormMaker/FormMain_reform.aspx";
+		                        url = "/admin/ezApproval/formMainReform.do";
 		                    else {                        
 		                        if(pEDITOR == "DEXT")
 		                            url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
@@ -282,7 +299,7 @@
 		                            url = "/myoffice/ezApproval/manage/FormMaker/FormMain.aspx";
 		                    }
 		                }
-		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, false);
+		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "NO");
 		                Tree_setconfig();
 		                InitFormCont();
 		            }
@@ -320,7 +337,7 @@
 		                else
 		                    url = "/myoffice/ezApproval/manage/FormMaker/FormMain.aspx";
 		            }
-		            var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, true);
+		            var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "YES");
 		            Tree_setconfig();
 		            InitFormCont();
 		        }
@@ -439,7 +456,7 @@
 		        var url = "Form_Preview.aspx?href=" + escape(GetAttribute(tr, "DATA4"));
 		        if ("${useReform}" == "YES" && GetAttribute(tr, "DATA7") == "Y")
 		            url = url + "&reformtype=" + escape(GetAttribute(tr, "DATA7")) + "&FormID=" + escape(GetAttribute(tr, "DATA1"));
-		        var retVal = GetOpenWindow(url, "Form_Preview", 1050, 1000, true);
+		        var retVal = GetOpenWindow(url, "Form_Preview", 1050, 1000, "YES");
 		    }
 		
 		    function searchform() {
@@ -541,7 +558,7 @@
 		                url = "/myoffice/ezApproval/manage/reFormMaker/FormMain_reform.aspx?TCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID) + "&formURL=" + escape(GetAttribute(selRow[0], "DATA4"));
 		
 		            var retVal;
-		            var retVal = GetOpenWindow(url, "FormMain", 1050, 950, true);
+		            var retVal = GetOpenWindow(url, "FormMain", 1050, 950, "YES");
 		            Tree_setconfig();
 		            InitFormCont();
 		        }
@@ -589,7 +606,7 @@
 	            <c:choose>
 	            	<c:when test="${useReform == 'YES'}">
 			            <li id="btnInsForm3"><span onclick="return btnInsForm_onclick('REFORM')"><spring:message code='ezApproval.t760'/></span></li>
-			            <li id="btnUpForm2""><span onclick="return UpdateForm_Reform()"><spring:message code='ezApproval.t761'/></span></li>
+			            <li id="btnUpForm2"><span onclick="return UpdateForm_Reform()"><spring:message code='ezApproval.t761'/></span></li>
 	            	</c:when>
 	            	<c:otherwise>
 			            <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code='ezApproval.t760'/></span></li>

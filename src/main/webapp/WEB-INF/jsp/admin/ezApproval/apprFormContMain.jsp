@@ -10,9 +10,9 @@
 	    <script type="text/javascript" src="<spring:message code='ezApproval.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>    
 	    <script type="text/javascript" src="/js/ezApproval/control_Cross/TreeView.js" ></script>
 		<script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>    
 	    <script type="text/javascript">
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -138,7 +138,7 @@
 		    		data : {
 		    			formContName     : document.getElementById("tbFormContName").value,
 		    			formContName2    : formContName2,
-		    			formContDescript : document.getElementById("tbDescript").value,
+		    			formContDescription : document.getElementById("tbDescript").value,
 		    			formContParents  : gParant,
 		    			formContDept     : "ALL",
 		    			companyID  		 : companyID
@@ -164,33 +164,47 @@
 	                RtnState = false;
 	                return;
 	            }
-	
-	            var xmlpara = createXmlDom();
-	            var xmlRtn = createXmlDom();
-	            var ParaName, ParaValue
-	            var objNode;
-	            var objRoot = createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            objRoot.setAttribute("COMPANYID", companyID);
-	            createNodeAndInsertText(xmlpara, objNode, "FContName", document.getElementById("tbFormContName").value);
-	            createNodeAndInsertText(xmlpara, objNode, "FContDescript", document.getElementById("tbDescript").value);
-	            createNodeAndInsertText(xmlpara, objNode, "FContparant", gParant);
-	            createNodeAndInsertText(xmlpara, objNode, "FContDept", gManageID);
+	            
+				var result = "";
+                var formContName2 = "";
 	            if (document.getElementById("tbFormContName2").value == "")
-	                createNodeAndInsertText(xmlpara, objNode, "FContName2", document.getElementById("tbFormContName").value);
+	            	formContName2 = document.getElementById("tbFormContName").value;
 	            else
-	                createNodeAndInsertText(xmlpara, objNode, "FContName2", document.getElementById("tbFormContName2").value);
-	
+	            	formContName2 = document.getElementById("tbFormContName2").value;	            
+	            
 	            var Count = document.getElementById("selDept").length;
+	            var depts = "";
 	            for (i = 0; i < Count; i++) {
-	                ParaName = "Dept" + i;
-	                ParaValue = document.getElementById("selDept").item(i);
-	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	            	if (i == 0) {
+	            		depts = document.getElementById("selDept").item(i).value;
+	            	} else {
+	            		depts += ";" + document.getElementById("selDept").item(i).value;
+	            	}
 	            }
+	            
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/setFormContIns.do",
+		    		data : {
+		    			formContName     : document.getElementById("tbFormContName").value,
+		    			formContName2    : formContName2,
+		    			formContDescription : document.getElementById("tbDescript").value,
+		    			formContParents  : gParant,
+		    			formContDept     : "ALL",
+		    			formContDepts    : depts,
+		    			companyID  		 : companyID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
 	
-	            xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Set_FormCont_Ins.aspx", false);
-	            xmlhttp.send(xmlpara);
-	            xmlRtn = loadXMLString(xmlhttp.responseText);
-	            if (xmlhttp.responseText.indexOf("FALSE") > -1) {
+	            var xmlRtn = createXmlDom();
+	            
+	            xmlRtn = loadXMLString(result);
+	            if (result.indexOf("FALSE") > -1) {
 	                RtnState = false;
 	            }
 	            else {

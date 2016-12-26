@@ -187,12 +187,10 @@
 	        function showKeyCode(event) {
 				event = event || window.event;
 				var keyID = (event.which) ? event.which : event.keyCode;
-				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) )
-				{
+				//숫자패드 모두, 방향키, 백슬러쉬, 딜리트만 포함
+				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8) {
 					return;
-				}
-				else
-				{
+				} else {
 					return false;
 				}
 			}
@@ -234,7 +232,7 @@
 	            <td id="SealSize">
 	                <input type="text" name="tbSealWidth" id="tbSealWidth" style="width: 40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
 	        		<input type="text" name="tbSealHeight" id="tbSealHeight" style="width: 40px" onkeydown="return showKeyCode(event)" maxlength="3">
-	                mm  &nbsp;&nbsp;&nbsp;(limit 999mm)</td>
+	                mm  &nbsp;&nbsp;&nbsp;&nbsp;(0 ~ 999)&nbsp;mm</td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezApproval.t364'/></th>

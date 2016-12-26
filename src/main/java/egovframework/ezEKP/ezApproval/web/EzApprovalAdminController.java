@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -160,7 +162,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		logger.debug("formAdmin ended");
 		
-		return "/admin/ezApproval/apprFormAdmin";
+		return "admin/ezApproval/apprFormAdmin";
 	}
 	
 	/**
@@ -525,38 +527,19 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가 양식함리스트 표출
-	 */
-	@RequestMapping(value = "/admin/ezApproval/MgetFormContinfo.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String MgetFormContinfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("MgetFormContinfo started");
-		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String id = request.getParameter("id");
-		String companyID = request.getParameter("companyID");
-		String result = ezApprovalAdminService.getFormContainerInfo(id, "", companyID, userInfo.getLang(), userInfo.getTenantId());
-		
-		logger.debug("MgetFormContinfo ended");
-		
-		return result;
-	}
-	
-	/**
 	 * 전자결재 일반 관리자 문서함관리 특수문서함 추가 양식함리스트 양식리스트 표출
 	 */
 	@RequestMapping(value = "/admin/ezApproval/MgetForm.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String MgetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String MgetForm(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
 		logger.debug("MgetForm started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String id = request.getParameter("id");
-		String kind = request.getParameter("kind");
-		String companyID = request.getParameter("companyID");
-		String result = ezApprovalAdminService.getFormInfo(id, kind, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		apprFormInfoVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getFormInfo(apprFormInfoVO);
 		
 		logger.debug("MgetForm ended");
 		
@@ -1738,6 +1721,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식함 추가 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("formContMain started");
@@ -1750,7 +1736,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
-		if (tCheck != null && tCheck.equals("Ins")) {
+		if (tCheck != null && tCheck.equals("FContIns")) {
 			title = messageSource.getMessage("ezApproval.t754", userInfo.getLocale());
 		} else {
 			title = messageSource.getMessage("ezApproval.t728", userInfo.getLocale());
@@ -1773,6 +1759,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprFormContMain";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식함 추가 저장 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/setFormContIns.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setFormContIns(@CookieValue("loginCookie") String loginCookie, ApprFormContVO apprFormContVO) throws Exception {
@@ -1787,5 +1776,144 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		logger.debug("setFormContIns ended");
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식함 리스트 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/getFormList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		apprFormInfoVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getFormInfo(apprFormInfoVO);
+
+		logger.debug("getFormList ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식함 삭제 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/delFormCont.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("delFormCont started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formContID = request.getParameter("id");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalAdminService.deleteFormContainer(formContID, companyID, userInfo.getTenantId());
+
+		logger.debug("delFormCont ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/formMainReform.do")
+	public String formMainReform(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("formMainReform started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		String realPath = commonUtil.getRealPath(request);
+		String topID = "";
+		String title = "";
+		String tCheck = request.getParameter("tCheck");
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId());
+		String useReform = ezCommonService.getTenantConfig("Usereform", userInfo.getTenantId());
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("contID");
+		String formID = request.getParameter("formID");
+		String formURL = request.getParameter("formURL");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		userInfo.setCompanyID(companyID);
+		
+		String docType = ezApprovalAdminService.getDocType("", userInfo);
+		String securityNode = ezApprovalAdminService.getSecurityType("", userInfo);
+		String periodNode = ezApprovalAdminService.getKeepType("", userInfo);
+		String[]  docs;
+		
+		if (docType.split("t").length != 0) {
+			docs = docType.split("t");
+			
+			for (int k = 1; k < docs.length; k++) {
+				docs[k] = "t" + docs[k].split("<")[0];
+				docType = docType.replace(docs[k], messageSource.getMessage("ezApproval." + docs[k], userInfo.getLocale()));
+			}
+		}
+		
+		if (tCheck != null && tCheck.equals("FIns")) {
+			title = messageSource.getMessage("ezApproval.t760", userInfo.getLocale());
+		} else {
+			title = messageSource.getMessage("ezApproval.t761", userInfo.getLocale());
+		}
+		
+		String listHeader = ezApprovalAdminService.getListHeader("110", userInfo);
+		String aprTypeXML = ezApprovalAdminService.getAprType(userInfo);
+		String aprRule = "";
+		String aprRuleLine = "";
+		
+		if (formID != null && !formID.equals("")) {
+			aprRule = ezApprovalAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+			aprRuleLine = ezApprovalAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
+		}
+		
+		String docTypeOption = "<OPTION VALUE='A02001' >" + messageSource.getMessage("ezApproval.t437", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02011' >" + messageSource.getMessage("ezApproval.t990013", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02012' >" + messageSource.getMessage("ezApproval.t990014", userInfo.getLocale()) + "</OPTION>";
+		String reFormJSURL = ezApprovalAdminService.getFormContentReform(formID, userInfo.getLang(), companyID, userInfo.getTenantId());
+		String strJSInfo = "";
+
+		if (reFormJSURL != null) {
+			String tempPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator + reFormJSURL;
+			File file = new File(tempPath);
+			
+			if (file.exists()) {
+				strJSInfo = FileUtils.readFileToString(file);
+			}
+		}
+		
+		model.addAttribute("docTypeOption", docTypeOption);
+		model.addAttribute("strJSInfo", strJSInfo);
+		model.addAttribute("aprRule", aprRule);
+		model.addAttribute("aprRuleLine", aprRuleLine);
+		model.addAttribute("listHeader", listHeader);
+		model.addAttribute("aprTypeXML", aprTypeXML);
+		model.addAttribute("docType", docType);
+		model.addAttribute("securityNode", securityNode);
+		model.addAttribute("periodNode", periodNode);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("title", title);
+		model.addAttribute("topID", topID);
+		model.addAttribute("contID", contID);
+		model.addAttribute("tCheck", tCheck);
+		model.addAttribute("formURL", formURL);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("formProcSpelling", formProcSpelling);
+		model.addAttribute("useReform", useReform);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("formMainReform ended");
+		
+		return "admin/ezApproval/apprFormMainReform";
 	}
 }
