@@ -119,7 +119,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (ApprGTaskVO) select("EzApprovalGAdmin.getTaskName", map);
 	}
 	
-	public ApprGFormVO getFormContent(Map<Object, String> map) throws Exception {
+	public ApprGFormVO getFormContent(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalGAdmin.getFormContent", map);
 	}
 
@@ -131,8 +131,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalGAdmin.insertContainerContID", companyID);
 	}
 	
-	public String insertFormContainerConti(String companyID) throws Exception {
-		return (String) select("EzApprovalGAdmin.insertFormContainerConti", companyID);
+	public Integer insertFormContainerConti(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.insertFormContainerConti", map);
 	}
 	
 	public String setFormData(Map<String, Object> map) throws Exception {
@@ -165,8 +165,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	public Integer searchManageAprDocListCount(Map<String, Object> map) throws Exception {
-		select("EzApprovalGAdmin.searchManageAprDocListCount", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzApprovalGAdmin.searchManageAprDocListCount", map);
 	}
 	
 	public void insertContainerType(Map<String, Object> map) throws Exception {
@@ -306,28 +305,20 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteFormContUserGroup", map);
 	}
 
-	public void deleteFormContainer(Map<String, Object> map) throws Exception {
-		delete("EzApprovalGAdmin.deleteFormContainer", map);
+	public void deleteFormContainer1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteFormContainer1", map);
+	}
+	public void deleteFormContainer2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteFormContainer2", map);
 	}
 	
-	public void deleteForm(Map<Object, String> map) throws Exception {
-		delete("EzApprovalGAdmin.deleteForm", map);
+	public void deleteForm1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteForm1", map);
 	}
-
+	public void deleteForm2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteForm2", map);
+	}
 	
-
-	
-
-	
-
-
-
-
-
-	
-
-
-
 	public String setContainerIDForDoc1(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdmin.setContainerIDForDoc1", map);
 	}
