@@ -1156,6 +1156,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("pCompanyID="+pCompanyID);
 		logger.debug("pUserID="+pUserID);
 		logger.debug("pGubunFlag="+pGubunFlag);
+		
+		logger.debug("parentUID="+parentUID);
 		List<PortalTBLPortalPageGeneralVO> resultXML = getUserInfo5(resultNumber, "Y", pCompanyID, parentUID, pUserID, pGubunFlag, userInfo.getTenantId());
 		
 		String result = "";
@@ -2637,11 +2639,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID, int tenantID) throws Exception {
+		logger.debug("useTopMenuID started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("v_pUSEFLAG", pUseFlag);
 		map.put("v_pUSERTHEMEUID", pUserThemeUID);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("pUserThemeUID="+pUserThemeUID);
 		List<PortalUseTopMenuID2VO> list = ezPortalDAO.useTopMenuID(map);
 		
 		String useTopMenuIDXml = "";
@@ -2650,7 +2655,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			useTopMenuIDXml += commonUtil.getQueryResult(result);
 		}
 		useTopMenuIDXml += "</DATA>";
+		logger.debug("useTopMenuID ended");
+		
 		return useTopMenuIDXml;
+	
 	}
 	
 	

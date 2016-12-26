@@ -93,7 +93,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public void setThemeInfo(String uID, String disNm1, String disNm2, String disNm3, String disNm4, String imageURL, String topURL,
-			String mainURL, String companyID, String creatorID, String creatorNm, int topHeight) throws Exception {
+			String mainURL, String companyID, String creatorID, String creatorNm, int topHeight, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", uID);
 		map.put("v_PDISNM1", disNm1);
@@ -107,7 +107,17 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PCREATORID", creatorID);
 		map.put("v_PCREATORNM", creatorNm);
 		map.put("v_TOPHEIGHT", topHeight);
-		ezPortalAdminDAO.setThemeInfo(map);
+		map.put("tenantID", tenantID);
+		
+		String temp = ezPortalAdminDAO.setThemeInfo_S(map);
+		
+		if (temp != null && temp.equals("1")) {
+			ezPortalAdminDAO.setThemeInfo(map);
+		} else {
+			ezPortalAdminDAO.setThemeInfo_I(map);
+		}
+		
+		
 	}
 	
 	@Override

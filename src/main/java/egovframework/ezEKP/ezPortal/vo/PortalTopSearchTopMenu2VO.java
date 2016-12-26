@@ -51,6 +51,8 @@ public class PortalTopSearchTopMenu2VO {
 	private String themeNm3;
 	/** 테마 이름4*/
 	private String themeNm4;
+	/** 테넌트 아이디*/
+	private int tenantID;
 	
 	public String getuID() {
 		return uID;
@@ -202,4 +204,11 @@ public class PortalTopSearchTopMenu2VO {
 	public void setThemeNm4(String themeNm4) {
 		this.themeNm4 = themeNm4;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
 }
