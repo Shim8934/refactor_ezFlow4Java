@@ -418,7 +418,8 @@ public class EzEmailScheduler {
 			if (file.exists()) {
 				File[] files = file.listFiles(new FilenameFilter() {
 					String today = EgovDateUtil.getToday("");
-					int signImageSizeLimit = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
+					String bigSizeMailAttachDelDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
+					int signImageSizeLimit = Integer.parseInt(bigSizeMailAttachDelDay);
 					
 					@Override
 					public boolean accept(File dir, String name) {
