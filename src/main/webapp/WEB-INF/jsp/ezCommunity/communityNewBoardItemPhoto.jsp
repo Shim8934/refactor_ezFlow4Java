@@ -34,7 +34,7 @@
 		<c:if test="${isCrossBrowser != true}">
 			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
 			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
+			<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		</c:if>
 		
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>

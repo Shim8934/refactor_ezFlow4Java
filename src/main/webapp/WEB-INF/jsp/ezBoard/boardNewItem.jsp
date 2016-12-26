@@ -29,7 +29,7 @@
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js?ver_0.52"></script>
 		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js?ver_0.52"></script>
-		    <script type="text/javascript" src="/js/ezBoard/kaoni_ActiveX.js"></script>
+		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
 		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
@@ -2108,7 +2108,7 @@
 				              <tr>
 				                <th><spring:message code='ezBoard.t292' /></th>
 				                <td class="pos1" style="height:100px">                
-				                    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans");</SCRIPT>
+				                    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "100%", "100%");</SCRIPT>
 				                    <div id="lstAttachLink" style="display:none">&nbsp;</div>                
 				                </td>
 				                <td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezBoard.t440' /></span></a><br><a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezBoard.t441' /></span></a></td>
