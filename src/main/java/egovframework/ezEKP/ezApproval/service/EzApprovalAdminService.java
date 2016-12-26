@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
+import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -59,7 +60,7 @@ public interface EzApprovalAdminService {
 
 	public String getFormContainerInfo(String id, String deptID, String companyID, String lang, int tenantID) throws Exception;
 
-	public String getFormInfo(String formContID, String formKind, String searchType, String searchName, String companyID, String lang, int tenantID) throws Exception;
+	public String getFormInfo(ApprFormInfoVO apprFormInfoVO) throws Exception;
 
 	public String addSpecialCont(ApprContInfoVO apprContInfoVO, int tenantID) throws Exception;
 
@@ -97,7 +98,7 @@ public interface EzApprovalAdminService {
 
 	public String getItemCodeItem(ApprDocGroupVO apprDocGroupVO) throws Exception;
 
-	public String getSecurityType(String string, LoginVO userInfo) throws Exception;
+	public String getSecurityType(String selected, LoginVO userInfo) throws Exception;
 
 	public int getMaxItemCode(LoginVO userInfo) throws Exception;
 
@@ -116,5 +117,21 @@ public interface EzApprovalAdminService {
 	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception;
 
 	public String insertFormContainer(ApprFormContVO apprFormContVO, String offset) throws Exception;
+
+	public String deleteFormContainer(String formContID, String companyID, int tenantID) throws Exception;
+
+	public String getListHeader(String code, LoginVO userInfo) throws Exception;
+
+	public String getAprType(LoginVO userInfo) throws Exception;
+
+	public String getFormAprRule(String formID, String companyID, int tenantID) throws Exception;
+
+	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception;
+
+	public String getFormContentReform(String formID, String lang, String companyID, int tenantID) throws Exception;
+
+	public String getFormRecvAdmin(ApprFormInfoVO apprFormInfoVO) throws Exception;
+
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
 
 }

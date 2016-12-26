@@ -1,17 +1,28 @@
 ﻿function GetFormInfo(ID, KIND, searchtype, searchname) {
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApproval/getFormList.do",
+		data : {
+			formContID : ID,
+			formKind   : KIND,
+			searchType : searchtype,
+			searchName : searchname,
+			companyID  : companyID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
     var xmlRtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-    createNodeAndInsertText(xmlpara, objNode, "KIND", KIND);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-    createNodeAndInsertText(xmlpara, objNode, "SEARCHTYPE", searchtype);
-    createNodeAndInsertText(xmlpara, objNode, "SEARCHNAME", searchname);
-    xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Get_FormList.aspx", false);
-    xmlhttp.send(xmlpara);
-    xmlRtn = loadXMLString(xmlhttp.responseText);
+
+    xmlRtn = loadXMLString(result);
     document.getElementById('divlvtForm').innerHTML = "";
+    
     var listview = new ListView();
     listview.SetID("lvtForm");
     listview.SetMulSelectable(false);
@@ -20,6 +31,7 @@
     listview.SetRowOnDblClick("lvtForm_Row_Dbclick");
     listview.DataSource(xmlRtn);
     listview.DataBind("divlvtForm");
+    
     var oArrRows = listview.GetSelectedRows();
     var tr = oArrRows[0];
     if (tr) {
@@ -29,20 +41,27 @@
 }
 
 function GetFormContInfo(ID, DeptID, eventflag) {
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApproval/getFormContInfo.do",
+		data : {
+			id         : ID,
+			companyID  : companyID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
+	
     var xmlRtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", ID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Get_FormContinfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    xmlRtn = loadXMLString(xmlhttp.responseText);
+    xmlRtn = loadXMLString(result);
 
     if (SelectNodes(xmlRtn, "NODES/NODE/SELECT").length > 0) {
-        if (CrossYN() || pNoneActiveX == "YES") {
+        if (CrossYN()) {
             xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].removeChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("SELECT")[0]);
         }
         else {

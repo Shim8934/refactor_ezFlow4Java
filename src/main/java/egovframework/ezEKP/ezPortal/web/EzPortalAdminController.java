@@ -251,7 +251,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		String pImageURL = xmlDom.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
 		
-		ezPortalAdminService.setThemeInfo(pThemeID, xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent(),xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME3").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME4").item(0).getTextContent(), pImageURL,xmlDom.getElementsByTagName("TOPURL").item(0).getTextContent(),xmlDom.getElementsByTagName("MAINURL").item(0).getTextContent(), userInfo.getCompanyID(), userInfo.getId(), userInfo.getDisplayName(), Integer.parseInt(xmlDom.getElementsByTagName("TOPHEIGHT").item(0).getTextContent()));
+		ezPortalAdminService.setThemeInfo(pThemeID, xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent(),xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME3").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME4").item(0).getTextContent(), pImageURL,xmlDom.getElementsByTagName("TOPURL").item(0).getTextContent(),xmlDom.getElementsByTagName("MAINURL").item(0).getTextContent(), userInfo.getCompanyID(), userInfo.getId(), userInfo.getDisplayName(), Integer.parseInt(xmlDom.getElementsByTagName("TOPHEIGHT").item(0).getTextContent()), userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -386,10 +386,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/topList.do")
 	public String topList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("topList started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
-	
+		
 		if (commonUtil.checkAdmin(loginCookie)) {
 			String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
+			logger.debug("strXML="+strXML);
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			logger.debug("ezAclCheck="+result);
 			String returnXML = "";
@@ -428,10 +431,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			    
 			model.addAttribute("result", result);
 			model.addAttribute("returnXML", returnXML);
+			logger.debug("topList ended");
 			return "/admin/ezPortal/portalTopList";
 		} else {
 			return "";
 		}
+
+		
 	}
 	
 	/**

@@ -271,11 +271,17 @@ public class EzPortalController extends EgovFileMngUtil {
 			if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
 				topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
 			}
+			
+			if  (xmlDomACL.getElementsByTagName("TOPURL").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent().equals("")) {
+				topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
+				topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+			}
+			
 		}
 		
 		//masterAdmin nullPoint처리
-		topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
-		topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+		//topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
+		//topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 		
 		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID, userInfo.getTenantId());
 

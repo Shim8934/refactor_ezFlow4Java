@@ -9,6 +9,7 @@
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
 	<typeAlias  alias="ApprLineInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO"/>
 	<typeAlias  alias="ApprExcelOutVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO"/>
+	<typeAlias  alias="ApprAutoRuleVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO"/>
 	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
 	<typeAlias  alias="ApprSealInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO"/>
@@ -574,7 +575,8 @@
 			<![CDATA[
 				SELECT 
 					FORMCONTID ,
-                	FORMCONTNAME$lang$ as FORMCONTNAME ,
+                	FORMCONTNAME,
+                	FORMCONTNAME2,
                 	FORMCONTOWNDEPID ,
                 	FORMCONTPARENTS ,
                 	FORMCONTDESCRIPTION 
@@ -592,7 +594,8 @@
 			<![CDATA[
 				SELECT 
 					DISTINCT fc.FormContID ,
-                   	fc.FormContName$lang$ as FormContName ,
+                   	fc.FormContName,
+                   	fc.FormContName2,
                     fc.FormContOwnDepID ,
                     fc.FormContParents ,
                     fc.FormContdescription 
@@ -632,7 +635,7 @@
           		AND
           			COMPANYID = #companyID#
           		AND
-          			FORMCONTPARENTS = #id#
+          			FORMCONTPARENTS = #formContID#
 			]]>
 		</isEmpty>
 		<isNotEmpty property="deptID">
@@ -654,7 +657,7 @@
           		AND
           			fc.companyid = #companyID#
           		AND  
-          			fc.FormContParents = #id#
+          			fc.FormContParents = #formContID#
                 AND 
                 	( fc.FormContOwnDepID = 'ALL'
                 	OR fc.FormContOwnDepID = #deptID#
@@ -1271,6 +1274,149 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getAprType" parameterClass="UserInfo" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT
+				code,
+				NAME1 as NAME
+			FROM
+				TBCODEAPRTYPE
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+			AND
+				isuse = '1'
+			ORDER BY
+				code
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormAprRule" parameterClass="Map" resultClass="ApprAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				formid,
+             	autorulesn,
+             	autoruleguid,
+             	checkfieldtype,
+             	checkfield,
+             	opertatortype,
+             	operator,
+             	condtype,
+             	condvalue,
+             	condvaluedeptid,
+             	doctype 
+        	FROM 
+        		TBFORM_AUTORULE 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		AUTORULESN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormAprRuleLine" parameterClass="Map" resultClass="ApprAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				FORMID,
+             	AUTORULEGUID,
+             	APRMEMBERSN,
+             	APRTYPE,
+             	APRSTATE,
+             	APRMEMBERID,
+             	APRMEMBERISDEPTYN,
+             	APRMEMBERNAME,
+             	APRMEMBERNAME2,
+             	APRMEMBERJOBTITLE,
+	            APRMEMBERJOBTITLE2,
+             	APRMEMBERDEPTID,
+    	        APRMEMBERDEPTNAME,
+        	    APRMEMBERDEPTNAME2,
+            	APRMEMBERLDAPPATH,
+             	RECEIVEDDATE,
+             	PROCESSDATE,
+             	REASONDONOTAPPROV,
+             	ISPROPOSERYN,
+             	ISBRIEFUSERYN
+            FROM 
+            	TBFORM_AUTORULELINE 
+	        WHERE  
+	        	TENANT_ID = #tenantID#
+	        AND
+	        	COMPANYID = #companyID#
+	        AND
+	        	FORMID = #formID#
+        	ORDER BY 
+        		AUTORULEGUID,
+                APRMEMBERSN DESC
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContentReform" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				REFORMFUCTIONFILELOCATION 
+			FROM 
+				TBFormInfo A 
+			INNER JOIN 
+				TBAUTODOCNUM_ITEM B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.companyid = B.companyid
+			AND
+				A.FormID = B.FormID
+			WHERE 
+				A.tenant_id = #tenantID#
+			AND
+				A.companyid = #companyID#
+			AND
+				A.FormID = #formID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormRecvAdmin" parameterClass="ApprFormInfoVO" resultClass="ApprReceiveGroupVO">
+		<![CDATA[
+			SELECT 
+				DEPTID,
+             	UserID 
+        	FROM 
+        		TBFormRecv 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		DEPTSN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormProperty" parameterClass="Map" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CODE, 
+				ID, 
+				NAME 
+			FROM 
+				TBFORMPROPERTY
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				UPPERCODE = #upperCode#
+			ORDER BY 
+				NAME
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
@@ -1502,13 +1648,13 @@
 	</insert>
 	
 	<insert id="EzApprovalAdminDAO.insertFormContainer" parameterClass="ApprFormContVO">
-		<selectKey keyProperty="maxID" resultClass="Integer">
+		<selectKey keyProperty="id" resultClass="Integer">
 			SELECT
 				CASE
 					WHEN MAX(FORMCONTID) IS NULL
 					THEN #id#
 					ELSE MAX(FORMCONTID) + 1
-				END maxID
+				END id
 			FROM
 				TBFORMCONTAINER
 			WHERE
@@ -1520,8 +1666,16 @@
 			FormContID, FormContName,   FormContName2,   FormContOwnDepID, FormContParents,   FormContdescription,   companyID,   tenant_id
 		) 
 		VALUES (
-			#maxID#,    #formContName#, #formContName2#, #formContDept#,   #formContParents#, #formContDescription#, #companyID#, #tenantID# 
+			#id#,       #formContName#, #formContName2#, #formContDept#,   #formContParents#, #formContDescription#, #companyID#, #tenantID# 
 		)
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormContainerUserGroup" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL	
+		]]>
 	</insert>
 	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
@@ -1890,5 +2044,28 @@
 		]]>
 	</delete>
 	
+	<delete id="EzApprovalAdminDAO.deleteFormContUserGroup" parameterClass="Map">
+		<![CDATA[
+			DELETE TBFormContUserGroup
+		    WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	FORMCONTID = #formContID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteFormContainer" parameterClass="Map">
+		<![CDATA[
+			DELETE TBFormContainer
+	        WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	FORMCONTID = #formContID#
+		]]>
+	</delete>
 
 </sqlMap>

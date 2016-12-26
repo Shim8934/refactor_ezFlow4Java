@@ -186,6 +186,7 @@
 		<result property="themeNm2"				column="THEMENM2"				columnIndex="24"/>
 		<result property="themeNm3"				column="THEMENM3"				columnIndex="25"/>
 		<result property="themeNm4"				column="THEMENM4"				columnIndex="26"/>
+		<result property="tenantID"					column="TENANT_ID"				columnIndex="27"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopLoadGetParametersVO" id="portalTopLoadGetParametersVO">
@@ -614,9 +615,9 @@
 	<insert id="EzPortalDAO.getUserInfo3_I2" parameterClass="Map">
 		INSERT INTO
 			EZPORTAL.TBL_PORTAL_ACL
-        	( UID_, ACCESSID, ACCESSNAME, VIEW_RIGHT, EDIT_RIGHT )
+        	( UID_, ACCESSID, ACCESSNAME, VIEW_RIGHT, EDIT_RIGHT, TENANT_ID )
         VALUES
-        	( #v_pNEWPAGEID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT# )
+        	( #v_pNEWPAGEID#, #v_pACCESSID#, #v_pACCESSNAME#, #v_pVIEW_RIGHT#, #v_pEDIT_RIGHT#, #tenantID# )
 	</insert>
 	
 	<!-- <procedure id="EzPortalDAO.getUserInfo4" parameterClass="Map" resultClass="Integer">
@@ -877,6 +878,8 @@
 				EZPORTAL.TBL_THEME_GENERAL B 
 			ON
 				A.THEMEUID = B.UID_ 
+			AND
+				A.TENANT_ID = B.TENANT_ID	
    			WHERE
    				(NOT EXISTS(
    					SELECT

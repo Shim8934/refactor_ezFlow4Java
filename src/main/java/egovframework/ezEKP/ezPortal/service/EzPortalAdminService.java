@@ -94,7 +94,7 @@ public interface EzPortalAdminService {
 	
 	public void deleteTheme (String uID, int tenantID) throws Exception;
 	
-	public void setThemeInfo (String uID, String disNm1, String disNm2, String disNm3, String disNm4, String imageURL, String topURL, String mainURL, String companyID, String creatorID, String creatorNm, int topHeight) throws Exception;
+	public void setThemeInfo (String uID, String disNm1, String disNm2, String disNm3, String disNm4, String imageURL, String topURL, String mainURL, String companyID, String creatorID, String creatorNm, int topHeight, int tenantID) throws Exception;
 	
 	public void topSetUsePage2 (String uID, String companyID, int tenantID) throws Exception;
 	

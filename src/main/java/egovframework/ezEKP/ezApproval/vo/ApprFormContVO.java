@@ -22,8 +22,8 @@ public class ApprFormContVO {
 	private int tenantID;
 	/** */
 	private int id;
-	/** */
-	private int maxID;
+	/** 그룹별로 권한 줄때 사용*/
+	private String formContDepts;
 	
 	public String getFormContID() {
 		return formContID;
@@ -85,11 +85,11 @@ public class ApprFormContVO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getMaxID() {
-		return maxID;
+	public String getFormContDepts() {
+		return formContDepts;
 	}
-	public void setMaxID(int maxID) {
-		this.maxID = maxID;
+	public void setFormContDepts(String formContDepts) {
+		this.formContDepts = formContDepts;
 	}
 	
 }

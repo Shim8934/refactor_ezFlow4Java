@@ -45,11 +45,56 @@
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
 	</resultMap>
 	
-	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
+	<!-- <procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SET_THEMEINFO(#v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, #v_TOPHEIGHT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.setThemeInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			EXISTS ( SELECT UID_ 
+                      		FROM EZPORTAL.TBL_THEME_GENERAL 
+                       		WHERE  UID_ = #v_PUID# )
+		]]>
+	</select>
+	
+	<update id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZPORTAL.TBL_THEME_GENERAL
+         	SET
+         		DISPLAYNAME = #v_PDISNM1#,
+             	DISPLAYNAME2 = #v_PDISNM2#,
+             	DISPLAYNAME3 = #v_PDISNM3#,
+             	DISPLAYNAME4 = #v_PDISNM4#,
+             	IMAGEURL = #v_PIMAGEURL#,
+             	TOPURL = #v_PTOPURL#,
+             	MAINURL = #v_PMAINURL#,
+             	MODIFYDATE = SYSDATE,
+             	TOPHEIGHT = #v_TOPHEIGHT#
+       		WHERE
+       			UID_ = #v_PUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>		
+	</update>
+	
+	<insert id="EzPortalAdminDAO.setThemeInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_THEME_GENERAL
+        		( UID_, DISPLAYNAME, DISPLAYNAME2, DISPLAYNAME3, DISPLAYNAME4, IMAGEURL, TOPURL, MAINURL, COMPANAYID, CREATORID, CREATORNM, CREATEDATE, MODIFYDATE, TOPHEIGHT, TENANT_ID )
+        	VALUES
+        		( #v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, SYSDATE, SYSDATE, #v_TOPHEIGHT#, #tenantID# )
+		]]>
+	</insert>
+	
 	
 	<!-- <procedure id="EzPortalAdminDAO.topSetUsePage2" parameterClass="Map" >
 		<![CDATA[
