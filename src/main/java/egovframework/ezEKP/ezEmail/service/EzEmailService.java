@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -30,7 +31,7 @@ public interface EzEmailService {
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception;
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pCreateDate, String pLocalServerName, List<String> pInnerAddresses) throws Exception;
+	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pLocalServerName, List<String> pInnerAddresses) throws Exception;
 	public String getMailReceiveMessageId(String pNum) throws Exception;
 	public void updateMailReceiveDetailInfo(String pNum, List<String[]> receiveDetailList) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
@@ -38,5 +39,9 @@ public interface EzEmailService {
 	public void savePop3(int tenantId, String pUserId, String pRet) throws Exception;
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
-	
+	public List<String> getIndividualAlias(String userAccount) throws Exception;
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public String checkIndividualAlias(String individualAlias) throws Exception;
+	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception;
+
 }

@@ -2,11 +2,10 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -139,68 +138,84 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 //              	OuterReadCheck = GetExtendedPropertyName(message, "X-READCHECK");
 //          	}
 				
-				//get readList
+				//get readList(수신확인)
 				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
 				
-				//get cancelList
+				//get cancelList(회수)
 				List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(messageId);
+				
+				//get all recipients from email message(메일)
+				Address[] addresses = message.getAllRecipients();
+				
+				//get individualAliasList from recipients
+				List<String> addressList = new ArrayList<String>();
+				for (Address address : addresses) {
+					if (((InternetAddress)address).getAddress() != null) {
+						addressList.add(((InternetAddress)address).getAddress());
+					}
+				}
+				Map<String, String> individualAliasList = ezEmailService.getIndividualAliasMap(addressList, loginInfo.getTenantId());
 				
 				List<String> tempMailList = new ArrayList<String>();
 				
-				//수신table에서 가져옴
-				for (MailReadVO vo : readList) {
-					sb.append("<ROW>");
-					sb.append("<READEREMAIL><![CDATA[" + vo.getReaderEmail() + "]]></READEREMAIL>");
-					sb.append("<READERNAME><![CDATA[" + vo.getReaderName() + "]]></READERNAME>");
-					
-					vo.setReadDate(commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false));
-					sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
-					
-					String status = "";
-					for (MailCancelVO cvo : cancelList) {
-						if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
-							if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
-								status = cvo.getStatus();
-							} else {
-								status = "0";
-							}
-							break;
-						}
-					}
-					sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
-					
-					sb.append("</ROW>");
-					tempMailList.add(vo.getReaderEmail());
-				}
-				
-				//email message에서 가져옴
-				Address[] addresses = message.getAllRecipients();
+				//recipients from email message
 				for (Address address : addresses) {
 					String email = ((InternetAddress)address).getAddress();
 					String name = ((InternetAddress)address).getPersonal() == null ? 
 							((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
-							
 					if (email != null) {
-						boolean flag = false;
-						for (MailReadVO vo : readList) {
-							if (email.equals(vo.getReaderEmail())) {
-								flag = true;
-								break;
-							}
-						}
-						
-						if (flag) {
-							continue;
-						}
-						
 						sb.append("<ROW>");
 						sb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
 						sb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
-						sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+						
+						if (individualAliasList.containsKey(email)) { //individualAlias인 경우
+							email = individualAliasList.get(email);
+						}
+						
+						String readDate = "UNREAD";
+						for (MailReadVO vo : readList) {
+							if (vo.getReaderEmail().equals(email)) {
+								readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false);
+								break;
+							}
+						}
+						sb.append("<READDATE><![CDATA[" + readDate + "]]></READDATE>");
+						
+						String status = "";
+						for (MailCancelVO vo : cancelList) {
+							if (vo.getReaderEmail().equals(email)) {
+								if (vo.getStatus() != null && !vo.getStatus().equals("")) {
+									status = vo.getStatus();
+								} else {
+									status = "0";
+								}
+								break;
+							}
+						}
+						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						
+						sb.append("</ROW>");
+						
+						tempMailList.add(email);
+					}
+				}
+				
+				//readList
+				for (MailReadVO vo : readList) {
+					if (!tempMailList.contains(vo.getReaderEmail())) {
+						String readerEmail = vo.getReaderEmail();
+						String readerName = vo.getReaderName();
+					
+						sb.append("<ROW>");
+						sb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
+						sb.append("<READERNAME><![CDATA[" + readerName + "]]></READERNAME>");
+						
+						vo.setReadDate(commonUtil.getDateStringInUTC(vo.getReadDate(), loginInfo.getOffset(), false));
+						sb.append("<READDATE><![CDATA[" + vo.getReadDate() + "]]></READDATE>");
 						
 						String status = "";
 						for (MailCancelVO cvo : cancelList) {
-							if (cvo.getReaderEmail() != null && cvo.getReaderEmail().equals(email)) {
+							if (cvo.getReaderEmail().equals(vo.getReaderEmail())) {
 								if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
 									status = cvo.getStatus();
 								} else {
@@ -210,28 +225,32 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 							}
 						}
 						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						
 						sb.append("</ROW>");
 						
-						tempMailList.add(email);
+						tempMailList.add(readerEmail);
 					}
 				}
 				
-				//회수table에서 가져옴
-				for (MailCancelVO cvo : cancelList) {
-					
-					if (!tempMailList.contains(cvo.getReaderEmail())) {
+				//cancelList
+				for (MailCancelVO vo : cancelList) {
+					if (!tempMailList.contains(vo.getReaderEmail())) {
+						String readerEmail = vo.getReaderEmail();
+						//TODO: 회수 저장할 때 이름도 저장, 가져올 때 이름도 가져오도록
+						
 						sb.append("<ROW>");
-						sb.append("<READEREMAIL><![CDATA[" + cvo.getReaderEmail() + "]]></READEREMAIL>");
-						sb.append("<READERNAME><![CDATA[" + cvo.getReaderEmail() + "]]></READERNAME>");
+						sb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
+						sb.append("<READERNAME><![CDATA[" + readerEmail + "]]></READERNAME>");
 						sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
 						
 						String status = "";
-						if (cvo.getStatus() != null && !cvo.getStatus().equals("")) {
-							status = cvo.getStatus();
+						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
+							status = vo.getStatus();
 						} else {
 							status = "0";
 						}
 						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						
 						sb.append("</ROW>");
 					}
 				}
@@ -276,8 +295,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String userAccount = loginInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userAccount);
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
@@ -302,7 +321,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userAccount, password, egovMessageSource, locale);
 			
 			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			folder.open(Folder.READ_ONLY);
@@ -314,13 +333,28 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.t99000109", locale);
 			}
 			
+			//메시지의 from이 user의 계정인지(또는 user의 alias mail)인지 검사
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
-			if (!from.equals(userEmail)) {
+			logger.debug("from=" + from);
+			
+			List<String> userMailAliasList = ezEmailService.getIndividualAlias(userAccount);
+			userMailAliasList.add(userAccount);
+			
+			boolean isUserFrom = false;
+			for (String userMail : userMailAliasList) {
+				if (userMail.equals(from)) {
+					isUserFrom = true;
+					break;
+				}
+			}
+			
+			if (!isUserFrom) {
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000110", locale));
 				logger.debug("mailCancelSend ended.");
 				return egovMessageSource.getMessage("ezEmail.t99000110", locale);
 			}
 			
+			//수신자 수가 max를 넘는 메일은 회수가 불가능
 			int maxRecAllCount = 500;
 			Address[] addresses = message.getAllRecipients();
 			if (addresses.length > maxRecAllCount) {
@@ -332,9 +366,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String internetMessageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			String createDate = sdFormat.format(message.getSentDate());
-			
 			//get arrAddress
 			String[] arrAddress = null;
 			if (pEachCancel.equals("NO")) {
@@ -345,6 +376,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			} else {
 				arrAddress = pEachCancel.split("\\|!\\|");
 			}
+			
+			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
 			arrAddress = getMember(arrAddress);
 			
 			//get innerAddresses(내부사용자)
@@ -355,6 +388,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				if (index > -1) {
 					domain = address.substring(index + 1);
 				}
+				
 				if (domain.equals(domainName)) {
 					innerAddresses.add(address);
 				}
@@ -367,7 +401,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, createDate, localServerName, innerAddresses);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, localServerName, innerAddresses);
 			
 			folder.close(true);
 			

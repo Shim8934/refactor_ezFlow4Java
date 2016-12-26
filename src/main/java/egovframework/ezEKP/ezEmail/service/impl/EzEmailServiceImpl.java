@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -50,6 +53,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzOrganAdminDAO ezOrganAdminDao;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -573,14 +579,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pCreateDate, String pLocalServerName, List<String> pInnerAddresses) throws Exception {
+	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pLocalServerName, List<String> pInnerAddresses) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
 		String senderEmailParam = "senderEmail=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
 		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
-		//TODO: recallDate가 아닌거같다...?
-		String recallDateParam = "recallDate=" + URLEncoder.encode(pCreateDate, "UTF-8");
 		String serverNameParam = "serverName=" + URLEncoder.encode(pLocalServerName, "UTF-8");
 		
 		StringBuilder receiverEmailParam = new StringBuilder();
@@ -588,7 +592,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			receiverEmailParam.append("&re=" + URLEncoder.encode(innerAddress, "UTF-8"));
 		}
 		
-		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + recallDateParam + "&" + serverNameParam;
+		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + serverNameParam;
 		inputParams += receiverEmailParam.toString();
 		logger.debug("inputParams=" + inputParams);
 		
@@ -855,6 +859,164 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		return list;
+	}
+	
+	@Override
+	public List<String> getIndividualAlias(String userAccount) throws Exception {
+		logger.debug("getIndividualAlias started. userAccount=" + userAccount);
+
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<String> individualAlias = new ArrayList<String>();	
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						individualAlias.add((String)resultArray.get(i));
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getIndividualAlias ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return individualAlias;		
+	}
+	
+	@Override
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception {
+		logger.debug("setIndividualAlias started.");
+		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail);
+		
+		String returnValue = "ERROR";
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domain, "UTF-8");
+		
+		for (String individualAlias : individualAliasList) {
+			inputParams += "&individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		}
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
+				
+				returnValue = "OK";
+			}
+		}						
+		
+		logger.debug("setIndividualAlias ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
+
+	@Override
+	public String checkIndividualAlias(String individualAlias) throws Exception {
+		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
+		
+		String returnValue = "ERROR";
+		
+		String inputParams = "individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK")) {
+				int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				if (reasonCode == 0) {
+					returnValue = "OK";
+				} else if (reasonCode == -1) {
+					returnValue = "OTHERDOMAIN";
+				} else if (reasonCode == -2) {
+					returnValue = "OTHERUSER";
+				}
+			}
+		}						
+		
+		logger.debug("checkIndividualAlias ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+	
+	@Override
+	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception {
+		logger.debug("getIndividualAliasMap started. tenantId=" + tenantId);
+		
+		Map<String, String> resultMap = new HashMap<String, String>();
+		
+		List<String> innerDomain = ezEmailUtil.getInnerDomain(tenantId);
+		
+		String inputParams = "";
+		for (int i=0; i<addressList.size(); i++) {
+			if (innerDomain.contains(addressList.get(i).split("@")[1])) {
+				if (i == 0) {
+					inputParams += "address=" + URLEncoder.encode(addressList.get(i), "UTF-8");
+				} else {
+					inputParams += "&address=" + URLEncoder.encode(addressList.get(i), "UTF-8");
+				}
+			}
+		}
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getIndividualAliasMap";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					if ((JSONObject)responseObj.get("result") != null) {
+						resultMap =(JSONObject)responseObj.get("result");
+					}
+				}
+			}
+		}
+		
+		logger.debug("getIndividualAliasMap ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return resultMap;
 	}
 	
 }

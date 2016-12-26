@@ -59,9 +59,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private EzCommonService ezCommonService;	
 	
-    @Autowired
-	private EzEmailUtil ezEmailUtil;
-    
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -518,114 +515,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int userCountCheck(String cn, int tenantID) throws Exception {
 		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
-	}
-	
-	@Override
-	public List<String> getIndividualAlias(String userAccount) throws Exception {
-		logger.debug("getIndividualAlias started. userAccount=" + userAccount);
-
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
-		logger.debug("inputParams=" + inputParams);
-
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getIndividualAlias";
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-		logger.debug("response=" + response);
-
-		String resultCode = "Error";
-		int reasonCode = -100; 
-		List<String> individualAlias = new ArrayList<String>();	
-				
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-			resultCode = (String)responseObj.get("resultCode");		
-			
-			if (resultCode.equals("OK")) {
-				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-				
-				if (reasonCode == 0) {
-					JSONArray resultArray = (JSONArray)responseObj.get("result");
-					
-					for (int i=0; i<resultArray.size(); i++) {
-						individualAlias.add((String)resultArray.get(i));
-					}
-				}
-			}
-		}						
-		
-		logger.debug("getIndividualAlias ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-		
-		return individualAlias;		
-	}
-	
-	@Override
-	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception {
-		logger.debug("setIndividualAlias started.");
-		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail);
-		
-		String returnValue = "ERROR";
-		
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domain, "UTF-8");
-		
-		for (String individualAlias : individualAliasList) {
-			inputParams += "&individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
-		}
-		logger.debug("inputParams=" + inputParams);
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAlias";
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-		logger.debug("response=" + response);
-
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-			
-			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
-				
-				returnValue = "OK";
-			}
-		}						
-		
-		logger.debug("setIndividualAlias ended. returnValue=" + returnValue);
-		
-		return returnValue;
-	}
-
-	@Override
-	public String checkIndividualAlias(String individualAlias) throws Exception {
-		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
-		
-		String returnValue = "ERROR";
-		
-		String inputParams = "individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
-		logger.debug("inputParams=" + inputParams);
-		
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAlias";
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-		logger.debug("response=" + response);
-
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-			
-			if (((String)responseObj.get("resultCode")).equals("OK")) {
-				int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-				if (reasonCode == 0) {
-					returnValue = "OK";
-				} else if (reasonCode == -1) {
-					returnValue = "OTHERDOMAIN";
-				} else if (reasonCode == -2) {
-					returnValue = "OTHERUSER";
-				}
-			}
-		}						
-		
-		logger.debug("checkIndividualAlias ended. returnValue=" + returnValue);
-		return returnValue;
 	}
 	
 }

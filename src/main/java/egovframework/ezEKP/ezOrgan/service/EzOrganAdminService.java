@@ -64,10 +64,4 @@ public interface EzOrganAdminService {
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception;
 
 	public int userCountCheck(String cn, int tenantID)throws Exception;
-	
-	public List<String> getIndividualAlias(String userAccount) throws Exception;
-	
-	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
-	
-	public String checkIndividualAlias(String individualAlias) throws Exception;
 }
