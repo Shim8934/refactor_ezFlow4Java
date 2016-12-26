@@ -123,8 +123,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (ApprGFormVO) select("EzApprovalGAdmin.getFormContent", map);
 	}
 
-	public String deleteContainerType(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalGAdmin.deleteContainerType", map);
+	public Integer deleteContainerTypeSelect(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzApprovalGAdmin.deleteContainerTypeSelect", map);
+	}
+	
+	public void deleteContainerTypeDelete1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteContainerTypeDelete1", map);
+	}
+	public void deleteContainerTypeDelete2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteContainerTypeDelete2", map);
 	}
 
 	public String insertContainerContID(String companyID) throws Exception {

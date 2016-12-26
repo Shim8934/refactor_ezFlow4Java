@@ -209,13 +209,30 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String deleteContainerType(String docTypeID, String companyID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public String deleteContainerType(String docTypeID, String companyID, int tenantID) throws Exception {
+		LOGGER.debug("deleteContainerType started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CONTTYPEID", docTypeID);		
 		map.put("companyID", companyID);
-				
-		return ezApprovalGAdminDAO.deleteContainerType(map);
+		map.put("tenantID", tenantID);
+		
+		int count = ezApprovalGAdminDAO.deleteContainerTypeSelect(map);
+		String result = "";
+		if (count == 0) {
+			map.put("v_cnt", count);
+			
+			ezApprovalGAdminDAO.deleteContainerTypeDelete1(map);
+			ezApprovalGAdminDAO.deleteContainerTypeDelete2(map);
+			
+			result = "TRUE";
+		} else {
+			result ="USE";
+		}
+		
+		LOGGER.debug("deleteContainerType ended.");
+		
+		return result; 
 	}
 
 	@Override
@@ -1501,7 +1518,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, int tenantID) throws Exception {
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1536,8 +1553,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</HEADERS><ROWS>");
 		
-		String szFrom = sYear + "-" + sMonth;
-		String szTo = eYear + "-" + eMonth;
+		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "01 00:00:00", offset, true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "01 00:00:00", offset, true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_MODE", pMode);
@@ -1546,7 +1563,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_LANGTYPE", lang);
 		map1.put("companyID", companyID);
 		
+		LOGGER.debug("getDeptTranSendDocCount started.");
+		
 		List<ApprGReceiveDocVO> list = ezApprovalGAdminDAO.getDeptTranSendDocCount(map1);
+		
+		LOGGER.debug("getDeptTranSendDocCount ended.");
 		
 		for(ApprGReceiveDocVO vo : list) {
 			if (vo != null) {

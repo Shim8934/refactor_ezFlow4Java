@@ -613,11 +613,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGDeleteContType.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String apprGDeleteContType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String apprGDeleteContType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("apprGDeleteContType started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docTypeID = request.getParameter("docTypeID");
 		String companyID = request.getParameter("comID");
 		
-		String result = ezApprovalGAdminService.deleteContainerType(docTypeID, companyID);
+		String result = ezApprovalGAdminService.deleteContainerType(docTypeID, companyID, userInfo.getTenantId());
+		
+		LOGGER.debug("apprGDeleteContType ended.");
 		
 		return result;
 	}
@@ -1700,15 +1705,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 
-		String eDate = EgovDateUtil.getCurrentDate("-");
-		String sDate = EgovDateUtil.addMonth(eDate, -1, "yyyy-MM-dd");
+		String tempYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("YYYY"), userInfo.getOffset(), false);
+		String tempMonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM"), userInfo.getOffset(), false);
 		
+		int tempPYear = Integer.parseInt(tempYear);
+		int tempPMonth = Integer.parseInt(tempMonth) - 1;
+		
+		if (tempPMonth <= 0) {
+			tempPYear = tempPYear - 1;
+			tempPMonth = 12;
+		}
+				
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
-		model.addAttribute("tempPYear", sDate.substring(0, 4));
-		model.addAttribute("tempPMonth", sDate.substring(5, 7));
-		model.addAttribute("tempYear", eDate.substring(0, 4));
-		model.addAttribute("tempMonth", eDate.substring(5, 7));
+		model.addAttribute("tempPYear", tempPYear);
+		model.addAttribute("tempPMonth", tempPMonth);
+		model.addAttribute("tempYear", tempYear);
+		model.addAttribute("tempMonth", tempMonth);
 		
 		return "admin/ezApprovalG/apprGEzStatistics";
 	}
@@ -1727,7 +1740,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pMode = request.getParameter("pMode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		return result;
 	}
@@ -1770,7 +1783,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (flag.equals("USER")) {
 			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo);
 		} else {
-			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getTenantId());
+			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);

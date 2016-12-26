@@ -11,7 +11,7 @@ public interface EzApprovalGAdminService {
 
 	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
 	
-	public String deleteContainerType(String docTypeID, String companyID) throws Exception;
+	public String deleteContainerType(String docTypeID, String companyID, int tenantID) throws Exception;
 	
 	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception;
 	
@@ -83,7 +83,7 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, int tenantID) throws Exception;
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID) throws Exception;
 	
 	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception;
 

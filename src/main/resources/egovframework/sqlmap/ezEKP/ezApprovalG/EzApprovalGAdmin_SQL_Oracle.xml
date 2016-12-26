@@ -945,9 +945,9 @@
 					WHERE
 						DOCSTATE = '011'
 					AND
-						PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID #tenantID#
 					GROUP BY
@@ -968,9 +968,9 @@
 					WHERE
 						DOCSTATE = '011'
 					AND
-						PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
@@ -993,9 +993,9 @@
 						WHERE
 							DOCSTATE = '011'
 						AND
-							PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+							PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
-							PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+							PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
 							TENANT_ID = #tenantID#
 						GROUP BY
@@ -1024,9 +1024,9 @@
 					AND
 						RECEIVESN = '2'
 					AND
-						PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
@@ -1047,9 +1047,9 @@
 					WHERE
 						DOCSTATE = '011'
 					AND
-						PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
@@ -1073,9 +1073,9 @@
 						WHERE
 							DOCSTATE = '011'
 						AND
-							PROCESSDATE >= TO_DATE(v_FROM, 'yyyy-MM')
+							PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
-							PROCESSDATE < TO_DATE(v_TO, 'yyyy-MM')
+							PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
 							TENANT_ID = #tenantID#
 						GROUP BY
@@ -1099,12 +1099,54 @@
 		]]>
 	</procedure>
 
-	<procedure id="EzApprovalGAdmin.deleteContainerType"
-		parameterClass="Map" resultClass="String">
+<!-- 	<procedure id="EzApprovalGAdmin.deleteContainerType" -->
+<!-- 		parameterClass="Map" resultClass="String"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETECONTAINERTYPE(#v_CONTTYPEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.deleteContainerTypeSelect"
+		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETECONTAINERTYPE(#v_CONTTYPEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			SELECT
+				NVL(COUNT(TBCONTAINER.ContainerID), 0)
+			FROM
+				EZAPPROVALG_$companyID$.TBCONTAINER
+			JOIN
+				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
+			ON
+				TBCONTAINER.ContainerTypeID = TBCONTAINERTYPE.ContainerTypeID
+			AND
+				TBCONTAINER.TENANT_ID = TBCONTAINERTYPE.TENANT_ID
+			WHERE
+				TBCONTAINER.ContainerTypeID = #v_CONTTYPEID#
+			AND
+				TBCONTAINER.TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
+	
+	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete1"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZAPPROVALG_$companyID$.TBCONTAINERTODOCSTATE
+        	WHERE
+        		CONTAINERTYPEID = #v_CONTTYPEID#
+        	AND
+        		TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete2"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
+        	WHERE
+        		CONTAINERTYPEID = #v_CONTTYPEID#
+        	AND
+        		TENANT_ID = #tenantID#
+		]]>
+	</delete>
 
 	<procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map"
 		resultClass="String">
