@@ -921,12 +921,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskCategoryTree(HttpServletRequest request) throws Exception {
+	public String getTaskCategoryTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("categoryType");
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID);
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId());
 
 		return result;
 	}
@@ -1011,12 +1012,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskCategoryNodeExist(HttpServletRequest request) throws Exception {
+	public String getTaskCategoryNodeExist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryNodeExist(categoryType, categoryCode, companyID);
+		String result = ezApprovalGAdminService.getTaskCategoryNodeExist(categoryType, categoryCode, companyID, userInfo.getTenantId());
 
 		return result;
 	}
@@ -1026,12 +1028,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String removeTaskCategory(HttpServletRequest request) throws Exception {
+	public String removeTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("cateCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID);
+		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID, userInfo.getTenantId());
 		
 		return result;
 	}

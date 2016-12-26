@@ -658,7 +658,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID) throws Exception {
 		try {
 			StringBuilder sb = new StringBuilder();
 			String isLeaf = "FALSE";
@@ -667,20 +667,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_CATETYPE", categoryType);
 			map.put("v_PARENTID", parentID);
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			
+			LOGGER.debug("getTaskCategoryTree started.");
 			
 			List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskCategotyTree(map);
+			
+			LOGGER.debug("getTaskCategoryTree ended.");
+			
 			sb.append("<NODES>");
 			
 			for (ApprGTaskVO vo : list) {
 				switch (vo.getCategoryType()) {
 					case "1":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID);
 						break;
 					case "2":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID);
 						break;
 					case "3":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID);
 						break;
 				}
 				isLeaf = isLeaf.equals("TRUE") ? "FALSE" : "TRUE";
@@ -797,15 +803,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID) throws Exception {
+	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		
 		try {
-			Integer result = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map);
+			LOGGER.debug("getTaskCategoryNodeExist started.");
 			
+			int result = ezApprovalGAdminDAO.getTaskCategoryNodeExist(map);
+			
+			LOGGER.debug("getTaskCategoryNodeExist ended. result=" + result);
 			if (result > 0) {
 				return "TRUE";
 			} else {
@@ -817,9 +827,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String removeTaskCategory(String categoryType, String categoryCode, String companyID) throws Exception {
+	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception {
 		try{
-			String duplicate = getTaskCategoryNodeExist(categoryType, categoryCode, companyID);
+			String duplicate = getTaskCategoryNodeExist(categoryType, categoryCode, companyID, tenantID);
 			
 			if (duplicate.equals("TRUE")) {
 				return "EXIST";
@@ -2123,8 +2133,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_FORMID", formID);
 		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
+		
+		LOGGER.debug("getFormRecvAdmin started.");
 		
 		List<ApprGFormVO> listBody = ezApprovalGAdminDAO.getFormRecvAdmin(map1);
+		
+		LOGGER.debug("getFormRecvAdmin ended.");
 		
 		for (int i = 0; i < listBody.size(); i++) {
 			ApprGFormVO bodyVo = listBody.get(i);

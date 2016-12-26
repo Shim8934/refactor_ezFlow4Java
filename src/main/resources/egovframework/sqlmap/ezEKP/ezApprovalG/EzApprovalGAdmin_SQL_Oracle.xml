@@ -787,7 +787,7 @@
 <!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMCONTENT(#v_PFORMID#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 		]]> -->
 <!-- 	</procedure> -->
-	<procedure id="EzApprovalGAdmin.getFormContent"
+	<select id="EzApprovalGAdmin.getFormContent"
 		parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
@@ -806,21 +806,94 @@
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
 
-	<procedure id="EzApprovalGAdmin.getFormRecvAdmin"
+<!-- 	<procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->
+<!-- 		parameterClass="Map" resultClass="ApprGFormVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMRECVADMIN(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getFormRecvAdmin"
 		parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETFORMRECVADMIN(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			SELECT
+				DEPTID
+			FROM
+				EZAPPROVALG_$companyID$.TBFORMRECV
+			WHERE
+				FORMID = #v_FORMID#
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY
+				DEPTSN
 		]]>
-	</procedure>
+	</select>
 
-	<procedure id="EzApprovalGAdmin.getTaskCategotyTree"
+<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
+<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategotyTree"
 		remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				SELECT
+					CATEGORYCODE,
+					NAME,
+					NVL(NAME2, NAME) NAME2,
+					DESCRIPTION,
+					'1' CATEGORYTYPE,
+					'ROOT'
+					FROM
+						EZAPPROVALG_$companyID$.TBTASKCATEGORY
+					WHERE
+						OLDFLAG IS NULL
+					AND
+						TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				SELECT
+					MCATEGORYCODE,
+					NAME,
+					NVL(NAME2, NAME) NAME2,
+					DESCRIPTION,
+					'2' CATEGORYTYPE,
+					CATEGORYCODE 
+				FROM
+					EZAPPROVALG_$companyID$.TBTASKMIDDLECATEGORY
+				WHERE
+					CATEGORYCODE = #v_PARENTID#
+				AND
+					OLDFLAG IS NULL
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				SELECT
+					SUBCATEGORYCODE,
+					NAME,
+					NVL(NAME2, NAME) NAME2,
+					DESCRIPTION,
+					'3' CATEGORYTYPE,
+					MCATEGORYCODE
+				FROM
+					EZAPPROVALG_$companyID$.TBTASKSUBCATEGORY
+				WHERE
+					MCATEGORYCODE = #v_PARENTID#
+				AND
+					OLDFLAG IS NULL
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+	</select>
 
 	<procedure id="EzApprovalGAdmin.getReceiveGroupInfo"
 		remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
@@ -1185,12 +1258,57 @@
 		]]>
 	</procedure>
 
-	<procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist"
+<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" -->
+<!-- 		parameterClass="Map" resultClass="Integer"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategoryNodeExist"
 		parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure>
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(MCATEGORYCODE), 0)
+				FROM
+					EZAPPROVALG_$companyID$.TBTASKMIDDLECATEGORY
+				WHERE
+					CATEGORYCODE = #v_CATECODE#
+				AND
+					OLDFLAG IS NULL
+				AND
+					TENANT_ID = #tenantID#   
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(SUBCATEGORYCODE), 0)
+				FROM
+					EZAPPROVALG_$companyID$.TBTASKSUBCATEGORY
+				WHERE
+					MCATEGORYCODE = #v_CATECODE#
+				AND
+					OLDFLAG IS NULL
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(TASKCODE), 0)
+				FROM
+					EZAPPROVALG_$companyID$.TBTASKCODE
+				WHERE
+					SUBCATEGORYCODE = #v_CATECODE#
+				AND
+					DELFLAG = '0'
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+	</select>
 
 	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate"
 		parameterClass="Map" resultClass="Integer">
