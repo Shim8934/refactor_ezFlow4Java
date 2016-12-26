@@ -130,4 +130,8 @@ public interface EzApprovalAdminService {
 
 	public String getFormContentReform(String formID, String lang, String companyID, int tenantID) throws Exception;
 
+	public String getFormRecvAdmin(ApprFormInfoVO apprFormInfoVO) throws Exception;
+
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
+
 }

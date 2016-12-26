@@ -33,6 +33,14 @@ public class ApprFormInfoVO {
 	private String companyID;
 	/** */
 	private int tenantID;
+	/** */
+	private int sn;
+	/** */
+	private String code;
+	/** */
+	private String id;
+	/** */
+	private String name;
 	
 	public String getFormContID() {
 		return formContID;
@@ -129,6 +137,30 @@ public class ApprFormInfoVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public int getSn() {
+		return sn;
+	}
+	public void setSn(int sn) {
+		this.sn = sn;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -2820,5 +2820,107 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		return reformJSURL;
 	}
+
+	@Override
+	public String getFormRecvAdmin(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormRecvAdmin started");
+
+		StringBuilder resultXML = new StringBuilder();
+		List<ApprCodeVO> headerList = getListHeader("103", apprFormInfoVO.getLang(), apprFormInfoVO.getCompanyID(), apprFormInfoVO.getTenantID());
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < headerList.size(); k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + headerList.get(k).getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + headerList.get(k).getWidth() + "</WIDTH>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		List<ApprReceiveGroupVO> apprReceiveGroupVOs = ezApprovalAdminDAO.getFormRecvAdmin(apprFormInfoVO);
+
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprReceiveGroupVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprReceiveGroupVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int h = 0; h < headerList.size(); h++) {
+				resultXML.append("<CELL>");
+				
+				if (h == 0) {
+					resultXML.append("<DATA1>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</DATA1>");
+					resultXML.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA2>");
+				} else {
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("USERID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</VALUE>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getFormRecvAdmin ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception {
+		logger.debug("getFormProperty started");
+		
+		StringBuilder resultXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("upperCode", "ROOT");
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		List<ApprFormInfoVO> apprFormInfoVOs = ezApprovalAdminDAO.getFormProperty(map);
+		
+		resultXML.append("<GROUP>");
+		
+		for (int k = 0; k < apprFormInfoVOs.size(); k++) {
+			resultXML.append("<PROPERTY>");
+			resultXML.append("<ID>" + apprFormInfoVOs.get(k).getId() + "</ID>");
+			resultXML.append("<NAME>" + egovMessageSource.getMessage(apprFormInfoVOs.get(k).getName(), locale) + "</NAME>");
+			
+			map.put("upperCode", apprFormInfoVOs.get(k).getCode());
+			
+			List<ApprFormInfoVO> apprFormInfoVOs2 = ezApprovalAdminDAO.getFormProperty(map);
+			
+			for (int h = 0; h < apprFormInfoVOs2.size(); h++) {
+				resultXML.append("<ROW>");
+				resultXML.append("<ID>" + apprFormInfoVOs2.get(k).getId() + "</ID>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage(apprFormInfoVOs2.get(k).getName(), locale) + "</NAME>");
+				resultXML.append("</ROW>");
+			}
+			
+			resultXML.append("</PROPERTY>");
+		}
+		
+		resultXML.append("</GROUP>");
+
+		logger.debug("getFormProperty ended");
+		
+		return resultXML.toString();
+	}
 	
 }

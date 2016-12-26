@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		    <script type="text/javascript" src="/js/ezApproval/kaoni_ActiveX.js"></script>
 	    </c:if>
 	    <script type="text/javascript">
 	        var pSealName = "";

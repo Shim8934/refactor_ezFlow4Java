@@ -389,5 +389,15 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 	public String getFormContentReform(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalAdminDAO.getFormContentReform", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprReceiveGroupVO> getFormRecvAdmin(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		return (List<ApprReceiveGroupVO>) list("EzApprovalAdminDAO.getFormRecvAdmin", apprFormInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprFormInfoVO> getFormProperty(Map<String, Object> map) throws Exception {
+		return (List<ApprFormInfoVO>) list("EzApprovalAdminDAO.getFormProperty", map);
+	}
 	
 }

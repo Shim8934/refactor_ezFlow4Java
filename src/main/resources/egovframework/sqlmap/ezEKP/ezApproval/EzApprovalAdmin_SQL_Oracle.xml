@@ -1379,6 +1379,44 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getFormRecvAdmin" parameterClass="ApprFormInfoVO" resultClass="ApprReceiveGroupVO">
+		<![CDATA[
+			SELECT 
+				DEPTID,
+             	UserID 
+        	FROM 
+        		TBFormRecv 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		DEPTSN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormProperty" parameterClass="Map" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CODE, 
+				ID, 
+				NAME 
+			FROM 
+				TBFORMPROPERTY
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				UPPERCODE = #upperCode#
+			ORDER BY 
+				NAME
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[

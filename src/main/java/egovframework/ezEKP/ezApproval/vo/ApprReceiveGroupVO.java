@@ -23,6 +23,8 @@ public class ApprReceiveGroupVO {
 	private String addCompanyID;
 	/** */
 	private int tenantID;
+	/** */
+	private String userID;
 	
 	public String getMainID() {
 		return mainID;
@@ -89,6 +91,12 @@ public class ApprReceiveGroupVO {
 	}
 	public void setMainName(String mainName) {
 		this.mainName = mainName;
+	}
+	public String getUserID() {
+		return userID;
+	}
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 }

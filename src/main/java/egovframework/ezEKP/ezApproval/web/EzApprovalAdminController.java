@@ -1916,4 +1916,51 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApproval/apprFormMainReform";
 	}
+	
+	@RequestMapping(value = "/admin/ezApproval/getFormInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalAdminService.getFormContentReform(apprFormInfoVO.getFormID(), apprFormInfoVO.getLang(), apprFormInfoVO.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("getFormInfo ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/getFormRecvAdmin.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormRecvAdmin(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormRecvAdmin started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		apprFormInfoVO.setLang(userInfo.getLang());
+		
+		String result = ezApprovalAdminService.getFormRecvAdmin(apprFormInfoVO);
+
+		logger.debug("getFormRecvAdmin ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/getFormPropList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormPropList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFormPropList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalAdminService.getFormProperty(userInfo.getLocale(), companyID, userInfo.getTenantId());
+
+		logger.debug("getFormPropList ended");
+		
+		return result;
+	}
 }
