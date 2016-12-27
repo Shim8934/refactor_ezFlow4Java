@@ -2,10 +2,12 @@ package egovframework.let.user.login.web;
 
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -158,6 +160,11 @@ public class LoginController {
 			} else {			    
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
+				
+				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				date.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String nowDate = date.format(new Date());
+				loginVO.setLastLogin(nowDate);
 				
 				//IP Address,  마지막 login시간 저장
 				loginService.updateUser(loginVO);

@@ -123,6 +123,8 @@ public class LoginVO implements Serializable{
 	private String skinNum;
 	/** 유저 tableViewOption*/
 	private String tableViewOption;
+	/** 마지막 접속시간*/
+	private String lastLogin;
 	
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
@@ -431,5 +433,15 @@ public class LoginVO implements Serializable{
     public void setServerName(String serverName) {
         this.serverName = serverName;
     }
+    
+	public String getLastLogin() {
+		return lastLogin;
+	}
+	
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+    
+    
 	
 }
