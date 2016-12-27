@@ -675,36 +675,55 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID) throws Exception {
+	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID, int tenantID) throws Exception {
+		String result = "FALSE";
+		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_MAINID", groupID);
 			map.put("v_MAINNAME", groupName);
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			
+			LOGGER.debug("updateReceiveGroupInfo started.");
 			
 			ezApprovalGAdminDAO.updateReceiveGroupInfo(map);
 			
-			return "TRUE";
+			result = "TRUE";
 		} catch (Exception e) {
-			return "FALSE";			
+			LOGGER.debug("updateReceiveGroupInfo catch.");
+			
+			result = "FALSE";			
 		}
+		
+		LOGGER.debug("updateReceiveGroupInfo ended.");
+		
+		return result;
 	}
 
 	@Override
-	public String insertReceiveGroupInfo(String groupName, String companyID) throws Exception{
+	public String insertReceiveGroupInfo(String groupName, String companyID, int tenantID) throws Exception{
+		String result = "FALSE";
+		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			
 			map.put("v_MAINNAME", groupName);
 			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			
+			LOGGER.debug("insertReceiveGroupInfo started.");
 			
 			ezApprovalGAdminDAO.insertReceiveGroupInfo(map);
 			
-			return "TRUE";
+			result = "TRUE";
 		} catch (Exception e) {
-			return "FALSE";			
+			LOGGER.debug("insertReceiveGroupInfo catch.");
+			result = "FALSE";			
 		}
+		
+		LOGGER.debug("insertReceiveGroupInfo ended.");
+		
+		return result;
 	}
 
 	@Override

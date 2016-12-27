@@ -31,9 +31,9 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteReceiveGroupItemInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
-	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID) throws Exception;
+	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID, int tenantID) throws Exception;
 	
-	public String insertReceiveGroupInfo(String groupName, String companyID) throws Exception;
+	public String insertReceiveGroupInfo(String groupName, String companyID, int tenantID) throws Exception;
 	
 	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception;
 	

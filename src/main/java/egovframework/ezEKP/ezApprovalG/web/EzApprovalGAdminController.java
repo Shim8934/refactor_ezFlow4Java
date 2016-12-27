@@ -885,12 +885,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/updateGroupMainInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String updateGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String updateGroupMainInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("updateGroupMainInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String groupID = request.getParameter("node1");
 		String groupName = request.getParameter("node2");
 		String companyID = request.getParameter("node3");
 		
-		String result = ezApprovalGAdminService.updateReceiveGroupInfo(groupID, groupName, companyID);
+		String result = ezApprovalGAdminService.updateReceiveGroupInfo(groupID, groupName, companyID, userInfo.getTenantId());
+		
+		LOGGER.debug("updateGroupMainInfo ended.");
 		
 		return result;
 	}
@@ -900,11 +905,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setGroupMainInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String setGroupMainInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String setGroupMainInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("setGroupMainInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String groupName = request.getParameter("node1");
 		String companyID = request.getParameter("node2");
 		
-		String result = ezApprovalGAdminService.insertReceiveGroupInfo(groupName, companyID);
+		String result = ezApprovalGAdminService.insertReceiveGroupInfo(groupName, companyID, userInfo.getTenantId());
+		
+		LOGGER.debug("setGroupMainInfo ended.");
 		
 		return result;
 	}

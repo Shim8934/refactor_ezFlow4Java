@@ -1595,17 +1595,41 @@
 		]]>
 	</delete>
 
-	<procedure id="EzApprovalGAdmin.updateReceiveGroupInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.updateReceiveGroupInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, #v_MAINNAME#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalGAdmin.updateReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, #v_MAINNAME#)}
+			UPDATE
+				EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_MAIN
+			SET
+				mainname = #v_MAINNAME#
+			WHERE
+				mainid = #v_MAINID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</update>
 
+<!-- 	<procedure id="EzApprovalGAdmin.insertReceiveGroupInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
 	<procedure id="EzApprovalGAdmin.insertReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)}
+			INSERT INTO EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_MAIN
+				(mainname,
+				TENANT_ID)
+			VALUES
+				(#v_MAINNAME#,
+				#tenantID#)
 		]]>
 	</procedure>
 
