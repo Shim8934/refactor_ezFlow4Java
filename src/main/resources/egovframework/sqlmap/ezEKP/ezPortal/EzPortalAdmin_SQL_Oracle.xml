@@ -1695,15 +1695,15 @@
                	  WHERE  
                	  	 THEMEUID = #v_PUID#
                	  AND
-               	  	TENANT_ID = #tenantID#  ) TOPUSERCOUNT  ,
+               	  	TENANT_ID = #tenantID#  ) topUserCount  ,
              	( SELECT
              		 COUNT(UID_)  
                	  FROM
                	  	EZPORTAL.TBL_PORTALPAGE_GENERAL 
                   WHERE
-                  	THEMEUID = v_PUID 
+                  	THEMEUID = #v_PUID# 
                   AND
-                  	TENANT_ID = #tenantID#	) PORTALPAGE  
+                  	TENANT_ID = #tenantID#	) portalPage  
         	FROM
         		DUAL
 		]]>
