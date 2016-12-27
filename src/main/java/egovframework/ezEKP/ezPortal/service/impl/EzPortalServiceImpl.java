@@ -308,12 +308,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Override
 	public List<PortalTopSearchTopMenu2VO> topSearchTopMenu2(int endRow, String displayName, String useFlag, String companyID, int tenantID) throws Exception {
+		logger.debug("topSearchTopMenu2 started");
+		
+		logger.debug("endRow="+endRow);
+		logger.debug("displayName="+displayName);
+		logger.debug("useFlag="+useFlag);
+		logger.debug("companyID="+companyID);
+		logger.debug("tenantID="+tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pENDROW", endRow);
 		map.put("v_pDISPLAYNAME", displayName);
 		map.put("v_pUSEFLAG", useFlag);
 		map.put("v_pCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("result="+ezPortalDAO.topSearchTopMenu2(map));
+		logger.debug("topSearchTopMenu2 ended");
 		return ezPortalDAO.topSearchTopMenu2(map);
 	}
 	
@@ -1151,7 +1161,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
-		int resultNumber = getUserInfo4(pCompanyID, pUserID, pGubunFlag, "Y", tenantID);
+		int resultNumber = getUserInfo4(pCompanyID.trim(), pUserID.trim(), pGubunFlag.trim(), "Y", tenantID);
 		logger.debug("resultNumber="+resultNumber);
 		logger.debug("pCompanyID="+pCompanyID);
 		logger.debug("pUserID="+pUserID);
@@ -2671,8 +2681,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pIMAGEUID", pImageUID);
 		map.put("v_pLINKURL", pLinkURL);
 		map.put("tenantID", tenantID);
-		map.put("v_temp", "");
-		ezPortalDAO.searchStartPage(map);
+		
+		String temp1 = ezPortalDAO.searchStartPage_S(map);
+		
+		if (temp1 != null && temp1.equals("1")) {
+			ezPortalDAO.searchStartPage(map);
+		}
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_pPARENTUID", pParentUID);
@@ -2698,6 +2712,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
 		
+		ezPortalDAO.setUseMyStartPage2_D(map);
 		ezPortalDAO.setUseMyStartPage2(map);
 		return "OK";
 	}

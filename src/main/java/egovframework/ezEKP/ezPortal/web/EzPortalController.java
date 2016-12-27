@@ -1826,7 +1826,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
-		
 		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {
