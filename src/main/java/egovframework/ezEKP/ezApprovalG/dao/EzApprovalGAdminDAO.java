@@ -27,8 +27,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContTypeInfo(String companyID) throws Exception {
-		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContTypeInfo", companyID);
+	public List<ApprGLeftVO> getContTypeInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContTypeInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -135,8 +135,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteContainerTypeDelete2", map);
 	}
 
-	public String insertContainerContID(String companyID) throws Exception {
-		return (String) select("EzApprovalGAdmin.insertContainerContID", companyID);
+	public String insertContainerContID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdmin.insertContainerContID", map);
 	}
 	
 	public Integer insertFormContainerConti(Map<String, Object> map) throws Exception {
@@ -157,8 +157,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 
 	public Integer getTaskCodeDuplicate(Map<String, Object> map) throws Exception {
-		select("EzApprovalGAdmin.getTaskCodeDuplicate", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzApprovalGAdmin.getTaskCodeDuplicate", map);
 	}
 	
 	public Integer getTaskCodeNodeExist(Map<String, Object> map) throws Exception {
@@ -291,8 +290,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalGAdmin.deleteContainerUseDep", map);
 	}
 
-	public void deleteContainer(Map<String, Object> map) throws Exception {
-		delete("EzApprovalGAdmin.deleteContainer", map);
+	public void deleteContainer1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteContainer1", map);
+	}
+	public void deleteContainer2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteContainer2", map);
 	}
 
 	public void deleteReceiveGroupItemInfo(Map<String, Object> map) throws Exception {
@@ -304,7 +306,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 
 	public void removeTaskCategory(Map<String, Object> map) throws Exception {
-		delete("EzApprovalGAdmin.removeTaskCategory", map);
+		update("EzApprovalGAdmin.removeTaskCategory", map);
 	}
 
 	public void deleteFormContUserGroup(Map<String, Object> map) throws Exception {

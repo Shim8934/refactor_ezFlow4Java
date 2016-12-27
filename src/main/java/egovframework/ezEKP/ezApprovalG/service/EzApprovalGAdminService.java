@@ -19,17 +19,17 @@ public interface EzApprovalGAdminService {
 	
 	public String getContainerUseDeptInfo(String contID, String companyID, String primary, int tenantID) throws Exception;
 	
-	public String insertContainer(Document xmlData, String companyID) throws Exception;
+	public String insertContainer(Document xmlData, String companyID, int tenantID) throws Exception;
 	
-	public String updateContainer(Document doc, String companyID) throws Exception;
+	public String updateContainer(Document doc, String companyID, int tenantID) throws Exception;
 	
-	public String deleteContainer(String contID, String companyID) throws Exception;
+	public String deleteContainer(String contID, String companyID, int tenantID) throws Exception;
 	
 	public String getReceiveGroupInfo(String pid, String mode,	String companyID, String lang, int tenantID) throws Exception;
 	
-	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID) throws Exception;
+	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception;
 	
-	public String deleteReceiveGroupItemInfo(String groupID, String companyID) throws Exception;
+	public String deleteReceiveGroupItemInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
 	public String updateReceiveGroupInfo(String groupID, String groupName, String companyID) throws Exception;
 	
@@ -49,7 +49,7 @@ public interface EzApprovalGAdminService {
 
 	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
-	public String getTaskCodeDuplicate(String taskCode, String companyID) throws Exception;
+	public String getTaskCodeDuplicate(String taskCode, String companyID, int tenantID) throws Exception;
 
 	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID, int tenantID) throws Exception;
 

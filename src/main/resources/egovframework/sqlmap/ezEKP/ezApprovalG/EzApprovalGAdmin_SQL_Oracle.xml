@@ -40,21 +40,21 @@
 		parameterClass="Map" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT
-				tbContainer.ContainerID,
-				tbContainer.ContainerTypeID,
-				tbContainer.ContainerOwnDepID,
-				tbContainerType.ContainerTypeName,
-				tbContainerType.ContainerTypeName2
+				tbContainer.containerid,
+				tbContainer.containertypeid,
+				tbContainer.containerowndepid,
+				tbContainerType.containertypename,
+				tbContainerType.containertypename2
 			FROM
 				EZAPPROVALG_$companyID$.TBCONTAINER
 			JOIN
 				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
 			ON
-				TBCONTAINER.ContainerTypeID = TBCONTAINERTYPE.ContainerTypeID
+				TBCONTAINER.containertypeid = TBCONTAINERTYPE.containertypeid
 			AND
 				TBCONTAINER.TENANT_ID = TBCONTAINERTYPE.TENANT_ID
 			WHERE
-				CONTAINEROWNDEPID = #v_DEPTID#
+				containerowndepid = #v_DEPTID#
 			AND
 				TBCONTAINER.TENANT_ID = #tenantID#
 		]]>
@@ -70,34 +70,34 @@
 		parameterClass="Map" resultClass="ApprGDocStateVO">
 		<![CDATA[
 			SELECT
-				TBCONTAINERTODOCSTATE.ContainerTypeID,
-				TBCODELIST.CODE2 DocumentState,
-				TBCONTAINERTYPE.ContainerTypeName,
-				TBCONTAINERTYPE.ContainerTypeName2,
-				TBCODELIST.NAME DOCUMENTSTATENAME,
-				TBCODELIST.NAME2 DOCUMENTSTATENAME2,
-				TBCODELIST.NAME3 DOCUMENTSTATENAME3,
-				TBCODELIST.NAME4 DOCUMENTSTATENAME4  
+				TBCONTAINERTODOCSTATE.containertypeid,
+				TBCODELIST.code2 DocumentState,
+				TBCONTAINERTYPE.containertypename,
+				TBCONTAINERTYPE.containertypename2,
+				TBCODELIST.name DOCUMENTSTATENAME,
+				TBCODELIST.name2 DOCUMENTSTATENAME2,
+				TBCODELIST.name3 DOCUMENTSTATENAME3,
+				TBCODELIST.name4 DOCUMENTSTATENAME4  
 			FROM
 				EZAPPROVALG_$companyID$.TBCODELIST
 			LEFT JOIN
 				EZAPPROVALG_$companyID$.TBCONTAINERTODOCSTATE
 			ON
-				TBCONTAINERTODOCSTATE.DocumentState = TBCODELIST.CODE2
+				TBCONTAINERTODOCSTATE.documentstate = TBCODELIST.code2
 			AND
 				TBCONTAINERTODOCSTATE.TENANT_ID = TBCODELIST.TENANT_ID
 			LEFT JOIN
 				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
 			ON
-				TBCONTAINERTODOCSTATE.ContainerTypeID = TBCONTAINERTYPE.ContainerTypeID
+				TBCONTAINERTODOCSTATE.containertypeid = TBCONTAINERTYPE.containertypeid
 			AND
 				TBCONTAINERTODOCSTATE.TENANT_ID = TBCONTAINERTYPE.TENANT_ID
 			WHERE
-				(TBCODELIST.CODE1 = 'A02' AND TBCODELIST.ISUSE = '1')
+				(TBCODELIST.code1 = 'A02' AND TBCODELIST.isuse = '1')
 			AND
 				TBCODELIST.TENANT_ID = #tenantID#
 			ORDER BY
-				TBCONTAINERTODOCSTATE.DocumentState
+				TBCONTAINERTODOCSTATE.documentstate
 		]]>
 	</select>
 
@@ -112,14 +112,14 @@
 		parameterClass="Map" resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 
-				CONTAINERID,
-				USEDEPID,
-				(SELECT DISPLAYNAME FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE CN = A.USEDEPID) as containerTypeName,
-				(SELECT DISPLAYNAME2 FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE CN = A.USEDEPID) as containerTypeName2
+				containerid,
+				usedepid,
+				(SELECT displayname FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE cn = A.usedepid) as containerTypeName2
 			FROM
 				EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP A
 			WHERE
-				CONTAINERID = #v_CONTID#
+				containerid = #v_CONTID#
 			AND
 				A.TENANT_ID = #tenantID#
 		]]>
@@ -136,29 +136,29 @@
 		parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
-				TASKCODE,
-				KEEPINGPERIOD,
-				TEMPFLAG,
-				DISPLAYRECFLAG,
-				SPECIALCATALOGFLAG,
-				SC1,
-				SC2,
-				SC3,
-				KEEPINGMETHOD,
-				KEEPINGPLACE,
-				TASKNAME,
-				TASKNAME2,
-				SUBCATEGORYCODE
+				taskcode,
+				keepingperiod,
+				tempflag,
+				displayrecflag,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				keepingmethod,
+				keepingplace,
+				taskname,
+				taskname2,
+				subcategorycode
 			FROM
 				EZAPPROVALG_$companyID$.TBTASKCODE
 			WHERE
-				SUBCATEGORYCODE = #v_SUBCATECODE#
+				subcategorycode = #v_SUBCATECODE#
 			AND
-				DELFLAG = '0'
+				delflag = '0'
 			AND
 				TENANT_ID = #tenantID#
 			ORDER BY
-				TASKCODE
+				taskcode
 		]]>
 	</select>
 
@@ -172,36 +172,36 @@
 		resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
-				TBTASKCODE.TASKCODE,
-				TBTASKCODE.TASKNAME,
-				NVL(TBTASKCODE.TASKNAME2, TBTASKCODE.TASKNAME) AS TASKNAME2,
-				TBTASKCODE.KEEPINGPERIOD,
-				TBTASKCODE.CREATIONDATE CREATEDATE,
-				TBTASKCODE.KPREASON,
-				TBTASKCODE.KEEPINGMETHOD,
-				TBTASKCODE.KEEPINGPLACE,
-				TBTASKCODE.DISPLAYRECFLAG,
-				TBTASKCODE.DISPLAYRECTRASTIME,
-				TBTASKCODE.EXDISPLAYFREQUENCY,
-				TBTASKCODE.SPECIALCATALOGFLAG,
-				TBTASKCODE.SC1,
-				TBTASKCODE.SC2,
-				TBTASKCODE.SC3,
-				TBTASKCODE.DISPLAYUSAGE,
-				TBTASKCODE.DESCRIPTION,
-				TBTASKCODE.TEMPFLAG,
-				TBTASK_DEPTINFO.PROCESSDATE,
-				TBTASK_DEPTINFO.APPLYDATE
+				TBTASKCODE.taskcode,
+				TBTASKCODE.taskname,
+				NVL(TBTASKCODE.taskname2, TBTASKCODE.TASKNAME) AS TASKNAME2,
+				TBTASKCODE.keepingperiod,
+				TBTASKCODE.creationdate CREATEDATE,
+				TBTASKCODE.kpreason,
+				TBTASKCODE.keepingmethod,
+				TBTASKCODE.keepingplace,
+				TBTASKCODE.displayrecflag,
+				TBTASKCODE.displayrectrastime,
+				TBTASKCODE.exdisplayfrequency,
+				TBTASKCODE.specialcatalogflag,
+				TBTASKCODE.sc1,
+				TBTASKCODE.sc2,
+				TBTASKCODE.sc3,
+				TBTASKCODE.displayusage,
+				TBTASKCODE.description,
+				TBTASKCODE.tempflag,
+				TBTASK_DEPTINFO.processdate,
+				TBTASK_DEPTINFO.applydate
 			FROM
 				EZAPPROVALG_$companyID$.TBTASKCODE
 			LEFT OUTER JOIN
 				EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
 			ON
-				TBTASKCODE.TASKCODE = TBTASK_DEPTINFO.TASKCODE
+				TBTASKCODE.taskcode = TBTASK_DEPTINFO.TASKCODE
 			AND
 				TBTASKCODE.TENANT_ID = TBTASK_DEPTINFO.TENANT_ID
 			WHERE
-				TBTASKCODE.TASKCODE = #v_TASKCODE#
+				TBTASKCODE.taskcode = #v_TASKCODE#
 			AND
 				TBTASKCODE.TENANT_ID = #tenantID#
 		]]>
@@ -209,7 +209,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					TBTASK_DEPTINFO.PROCESSDEPTCODE = #v_DEPTCODE#
+					TBTASK_DEPTINFO.processdeptcode = #v_DEPTCODE#
 			]]>
 		</isNotEqual>
 	</select>
@@ -223,27 +223,27 @@
 		resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
-				TASKCODE,
-				TASKNAME,
-				TASKNAME2,
-				KEEPINGPERIOD,
-				KPREASON,
-				KEEPINGMETHOD,
-				KEEPINGPLACE,
-				DISPLAYRECFLAG,
-				DISPLAYRECTRASTIME,
-				EXDISPLAYFREQUENCY,
-				SPECIALCATALOGFLAG,
-				SC1,
-				SC2,
-				SC3,
-				DISPLAYUSAGE,
-				DESCRIPTION,
-				SUBCATEGORYCODE
+				taskcode,
+				taskname,
+				taskname2,
+				keepingperiod,
+				kpreason,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				exdisplayfrequency,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				displayusage,
+				description,
+				subcategorycode
 			FROM
 				EZAPPROVALG_$companyID$.TBTASKCODE
 			WHERE
-				TASKCODE = #v_TASKCODE#
+				taskcode = #v_TASKCODE#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -258,12 +258,12 @@
 	<select id="EzApprovalGAdmin.getTaskName" parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
-				TASKNAME,
-				TASKNAME2
+				taskname,
+				taskname2
 			FROM
 				EZAPPROVALG_$companyID$.TBTASKCODE
 			WHERE
-				TASKCODE = #v_TASKCODE#
+				taskcode = #v_TASKCODE#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -279,31 +279,31 @@
 		parameterClass="Map" resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
-				PROCESSDEPTCODE,
-				PROCESSDEPTNAME,
-				NVL(PROCESSDEPTNAME2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
-				CATEGORYCODE,
-				CNAME,
-				NVL(CNAME2,CNAME) AS CNAME2,
-				MCATEGORYCODE,
-				MCNAME,
-				NVL(MCNAME2, MCNAME) AS MCNAME2,
-				SUBCATEGORYCODE,
-				SCNAME,
-				NVL(SCNAME2, SCNAME) AS SCNAME2,
-				TASKCODE,
-				TASKNAME,
-				NVL(TASKNAME2, TASKNAME) AS TASKNAME2,
-				KEEPINGPERIOD,
-				KEEPINGMETHOD,
-				KEEPINGPLACE,
-				DISPLAYRECFLAG,
-				DISPLAYRECTRASTIME,
-				SPECIALCATALOGFLAG,
-				SC1,
-				SC2,
-				SC3,
-				TEMPFLAG
+				processdeptcode,
+				processdeptname,
+				NVL(processdeptname2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
+				categorycode,
+				cname,
+				NVL(cname2,CNAME) AS CNAME2,
+				mcategorycode,
+				mcname,
+				NVL(mcname2, MCNAME) AS MCNAME2,
+				subcategorycode,
+				scname,
+				NVL(scname2, SCNAME) AS SCNAME2,
+				taskcode,
+				taskname,
+				NVL(taskname2, TASKNAME) AS TASKNAME2,
+				keepingperiod,
+				keepingmethod,
+				keepingplace,
+				displayrecflag,
+				displayrectrastime,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				tempflag
 			FROM
 				EZAPPROVALG_$companyID$.VTASKCLASS
 			WHERE
@@ -313,17 +313,17 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	PROCESSDEPTCODE = #v_DEPTCODE#
+					(	processdeptcode = #v_DEPTCODE#
 					OR
-						TASKCODE LIKE 'ZZ%'
+						taskcode LIKE 'ZZ%'
 					OR
-						TASKCODE = '99999999')
+						taskcode = '99999999')
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
 			ORDER BY
-				TASKCODE ASC
+				taskcode ASC
 		]]>
 	</select>
 
@@ -337,19 +337,19 @@
 		parameterClass="Map" resultClass="ApprGTaskDeptInfoVO">
 		<![CDATA[
 			SELECT
-				PROCESSDEPTCODE,
-				PROCESSDEPTNAME,
-				PROCESSDEPTNAME2
+				processdeptcode,
+				processdeptname,
+				processdeptname2
 			FROM
 				EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
 			WHERE
-				TASKCODE = v_TASKCODE
+				taskcode = v_TASKCODE
 			AND
-				DELFLAG = '0'
+				delflag = '0'
 			AND
 				TENANT_ID = #tenantID#	
 			ORDER BY
-				PROCESSDEPTCODE
+				processdeptcode
 		]]>
 	</select>
 
@@ -365,44 +365,44 @@
 			<isEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
-						SEALNUM,
-						SEALNAME,
-						SEALPATH,
-						SEALWIDTH,
-						SEALHEIGHT,
-						TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-						REGUSERID,
-						REGUSERNAME
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						regusername
 					FROM
 						EZAPPROVALG_$companyID$.TBSEALINFO
 					WHERE
 						TENANT_ID = #tenantID#
 					ORDER BY
-						REGDATE DESC
+						regdate DESC
 				]]>
 			</isEqual>
 			
 			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
-						SEALNUM,
-						SEALNAME,
-						SEALPATH,
-						SEALWIDTH,
-						SEALHEIGHT,
-						TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-						REGUSERID,
-						REGUSERNAME
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						regusername
 					FROM
 						EZAPPROVALG_$companyID$.TBSEALINFO
 					WHERE
-						DELDATE IS NULL
+						deldate IS NULL
 					AND
 						TENANT_ID = #tenantID#
 					ORDER BY
-						REGDATE DESC      
+						regdate DESC      
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -411,42 +411,42 @@
 			<isEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
-						SEALNUM,
-						SEALNAME,
-						SEALPATH,
-						SEALWIDTH,
-						SEALHEIGHT,
-						TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-						REGUSERID,
-						NVL(REGUSERNAME2, REGUSERNAME) REGUSERNAME
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						NVL(regusername2, REGUSERNAME) REGUSERNAME
 					FROM
 						EZAPPROVALG_$companyID$.TBSEALINFO
 					ORDER BY
-						REGDATE DESC
+						regdate DESC
 				]]>
 			</isEqual>
 			
 			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
-						SEALNUM,
-						SEALNAME,
-						SEALPATH,
-						SEALWIDTH,
-						SEALHEIGHT,
-						TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-						REGUSERID,
-						NVL(REGUSERNAME2, REGUSERNAME) REGUSERNAME
+						sealnum,
+						sealname,
+						sealpath,
+						sealwidth,
+						sealheight,
+						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						reguserid,
+						NVL(regusername2, REGUSERNAME) REGUSERNAME
 					FROM
 						EZAPPROVALG_$companyID$.TBSEALINFO
 					WHERE
-						DELDATE IS NULL
+						deldate IS NULL
 					AND
 						TENANT_ID = #tenantID#
 					ORDER BY
-						REGDATE DESC
+						regdate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -463,46 +463,46 @@
 		<isEqual property="v_LISTFLAG" compareValue="">
 			<![CDATA[
 				SELECT
-					SEALNUM,
-					SEALNAME,
-					SEALPATH,
-					SEALWIDTH,
-					SEALHEIGHT,
-					TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-					TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-					REGUSERID,
-					REGUSERNAME,
-					REGUSERNAME2
+					sealnum,
+					sealname,
+					sealpath,
+					sealwidth,
+					sealheight,
+					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					reguserid,
+					regusername,
+					regusername2
 				FROM
 					EZAPPROVALG_$companyID$.TBSEALDEPTINFO 
 				WHERE
-					DEPTID = #v_DEPTID#
+					deptid = #v_DEPTID#
 				AND
 					TENANT_ID = #tenantID#
 				ORDER BY
-					REGDATE DESC
+					regdate DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_LISTFLAG" compareValue="">
 			<![CDATA[
 				SELECT
-					SEALNUM,
-					SEALNAME,
-					SEALPATH,
-					SEALWIDTH,
-					SEALHEIGHT,
-					TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-					TO_CHAR(DELDATE, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
-					REGUSERID,
-					REGUSERNAME,
-					REGUSERNAME2
+					sealnum,
+					sealname,
+					sealpath,
+					sealwidth,
+					sealheight,
+					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
+					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					reguserid,
+					regusername,
+					regusername2
 				FROM
 					EZAPPROVALG_$companyID$.TBSEALDEPTINFO 
 				WHERE
-					DELDATE IS NULL
+					deldate IS NULL
 				AND
-					DEPTID = #v_DEPTID#
+					deptid = #v_DEPTID#
 				AND
 					TENANT_ID = #tenantID#
 				ORDER BY
@@ -538,56 +538,56 @@
 					aa.*
 				FROM
 					(SELECT
-						TBAPRDOCINFO.DOCID,
-						FORMID,
-						ORGDOCID,
-						DOCTYPE,
-						DOCSTATE,
-						FUNCTIONTYPE,
-						HREF,
-						DOCTITLE,
-						DOCNO,
-						HASATTACHYN,
-						HASOPINIONYN,
-						TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
-						TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
-						WRITERID,
-						WRITERNAME,
-						NVL(WRITERNAME2, WRITERNAME) AS WRITERNAME2,
-						WRITERJOBTITLE,
-						NVL(WRITERJOBTITLE2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
-						WRITERDEPTID,
-						WRITERDEPTNAME,
-						NVL(WRITERDEPTNAME2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
-						ISPUBLIC,
-						SECURITYCODE,
-						STORAGEPERIOD,
-						KEYWORD,
-						FORMNAME,
-						NVL(FORMNAME2,FORMNAME) AS FORMNAME2,
-						TBAPRDOCINFO.COMPANYID,
-						ITEMCODE,
-						ITEMNAME,
-						NVL(ITEMNAME2, ITEMNAME) AS ITEMNAME2,
-						URGENTAPPROVAL,
-						TEMPATTRIBUTE,
-						STATUS,
-						SPECIALRECORDCODE,
-						PUBLICITYCODE,
-						LIMITRANGE,
-						PAGENUM,
-						CABINETID,
-						TASKCODE,
-						DOCNUMCODE,
-						ORGDOCNUMCODE,
-						SEPERATEATTACHXML,
-						SUMMARY,
+						TBAPRDOCINFO.docid,
+						formid,
+						orgdocid,
+						doctype,
+						docstate,
+						functiontype,
+						href,
+						doctitle,
+						docno,
+						hasattachyn,
+						hasopinionyn,
+						TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
+						TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
+						writerid,
+						writername,
+						NVL(writername2, WRITERNAME) AS WRITERNAME2,
+						writerjobtitle,
+						NVL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
+						writerdeptid,
+						writerdeptname,
+						NVL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
+						ispublic,
+						securitycode,
+						storageperiod,
+						keyword,
+						formname,
+						NVL(formname2,FORMNAME) AS FORMNAME2,
+						TBAPRDOCINFO.companyid,
+						itemcode,
+						itemname,
+						NVL(itemname2, ITEMNAME) AS ITEMNAME2,
+						urgentapproval,
+						tempattribute,
+						status,
+						specialrecordcode,
+						publicitycode,
+						limitrange,
+						pagenum,
+						cabinetid,
+						taskcode,
+						docnumcode,
+						orgdocnumcode,
+						seperateattachxml,
+						summary,
 						TBAPRDOCINFO.TENANT_ID
 					FROM
 						EZAPPROVALG_$companyID$.TBAPRDOCINFO
 					RIGHT OUTER JOIN
 						(SELECT
-							DISTINCT DOCID,
+							DISTINCT docid,
 							TENANT_ID
 						FROM
 							EZAPPROVALG_$companyID$.TBAPRLINEINFO
@@ -598,95 +598,95 @@
 		<isNotEqual property="v_APPROVUSER" compareValue="">
 			<![CDATA[
 				AND
-					TBAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
+					TBAPRLINEINFO.aprmembername = #v_APPROVUSER#
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
 				) aaa
 			ON
-				EZAPPROVALG_$companyID$.TBAPRDOCINFO.DOCID = aaa.DOCID
+				EZAPPROVALG_$companyID$.TBAPRDOCINFO.docid = aaa.docid
 			AND
 				TBAPRDOCINFO.TENANT_ID = aaa.TENANT_ID
 			INNER JOIN
 				EZAPPROVALG_$companyID$.TBEXPAPRDOCINFO
 			ON
-				TBAPRDOCINFO.DOCID = TBEXPAPRDOCINFO.DOCID
+				TBAPRDOCINFO.docid = TBEXPAPRDOCINFO.docid
 			AND
 				TBAPRDOCINFO.TENANT_ID = TBEXPAPRDOCINFO.TENANT_ID
 			WHERE
-				(FUNCTIONTYPE IS NOT NULL)
+				(functiontype IS NOT NULL)
 			AND
-				(STARTDATE IS NOT NULL)
+				(startdate IS NOT NULL)
 		]]>
 		
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					DOCNO LIKE '%' || #v_DOCNUMBER# || '%'
+					docno LIKE '%' || #v_DOCNUMBER# || '%'
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					DOCTITLE LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					WRITERNAME$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					WRITERDEPTNAME$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_FORMID" compareValue="">
 			<![CDATA[
 				AND
-					FORMID = #v_FORMID#
+					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
-					DOCSTATE = #v_DOCSTATE#
+					docstate = #v_DOCSTATE#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_STARTDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_STARTDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_ENDDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_ENDDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#
 			]]>
 		</isNotEqual>
 		
@@ -709,7 +709,7 @@
 				<![CDATA[
 					ORDER BY
 						#v_ORDEROPTION#,
-						STARTDATE DESC
+						startdate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -717,7 +717,7 @@
 		<isEqual property="v_ORDEROPTION" compareValue="">
 			<![CDATA[
 				ORDER BY
-					STARTDATE DESC
+					startdate DESC
 			]]>
 		</isEqual>
 		
@@ -740,7 +740,7 @@
 				<![CDATA[
 					ORDER BY
 						#v_ORDEROPTION2#,
-						STARTDATE
+						startdate
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -748,7 +748,7 @@
 		<isEqual property="v_ORDEROPTION2" compareValue="">
 			<![CDATA[
 				ORDER BY
-					STARTDATE
+					startdate
 			]]>
 		</isEqual>
 		
@@ -757,7 +757,7 @@
 			WHERE
 				rownum <= #v_PAGESIZE2#
 			ORDER BY
-				STARTDATE DESC
+				startdate DESC
 		]]>
 	</select>
 
@@ -775,7 +775,7 @@
 			FROM
 				EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
 			WHERE
-				FORMCONTID = #v_FORMCONTID#
+				formcontid = #v_FORMCONTID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -791,18 +791,18 @@
 		parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
-				FormContID,
-				FormID,
-				FormName,
-				FormName2,
-				FormDocType,
-				Formdescription,
-				FormFilelocation,
-				FormConnFlag 
+				formcontid,
+				formid,
+				formname,
+				formname2,
+				formdoctype,
+				formdescription,
+				formfilelocation,
+				formconnflag 
 			FROM
 				EZAPPROVALG_$companyID$.TBFORMINFO
 			WHERE
-				FormID = #v_PFORMID#
+				formid = #v_PFORMID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -818,15 +818,15 @@
 		parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
-				DEPTID
+				deptid
 			FROM
 				EZAPPROVALG_$companyID$.TBFORMRECV
 			WHERE
-				FORMID = #v_FORMID#
+				formid = #v_FORMID#
 			AND
 				TENANT_ID = #tenantID#
 			ORDER BY
-				DEPTSN
+				deptsn
 		]]>
 	</select>
 
@@ -841,16 +841,16 @@
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				SELECT
-					CATEGORYCODE,
-					NAME,
-					NVL(NAME2, NAME) NAME2,
-					DESCRIPTION,
+					categorycode,
+					name,
+					NVL(name2, NAME) NAME2,
+					description,
 					'1' CATEGORYTYPE,
 					'ROOT'
 					FROM
 						EZAPPROVALG_$companyID$.TBTASKCATEGORY
 					WHERE
-						OLDFLAG IS NULL
+						oldflag IS NULL
 					AND
 						TENANT_ID = #tenantID#
 			]]>
@@ -858,18 +858,18 @@
 		<isEqual property="v_CATETYPE" compareValue="2">
 			<![CDATA[
 				SELECT
-					MCATEGORYCODE,
-					NAME,
-					NVL(NAME2, NAME) NAME2,
-					DESCRIPTION,
+					mcategorycode,
+					name,
+					NVL(name2, NAME) NAME2,
+					description,
 					'2' CATEGORYTYPE,
-					CATEGORYCODE 
+					categorycode 
 				FROM
 					EZAPPROVALG_$companyID$.TBTASKMIDDLECATEGORY
 				WHERE
-					CATEGORYCODE = #v_PARENTID#
+					categorycode = #v_PARENTID#
 				AND
-					OLDFLAG IS NULL
+					oldflag IS NULL
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -877,30 +877,81 @@
 		<isEqual property="v_CATETYPE" compareValue="3">
 			<![CDATA[
 				SELECT
-					SUBCATEGORYCODE,
-					NAME,
-					NVL(NAME2, NAME) NAME2,
-					DESCRIPTION,
+					subcategorycode,
+					name,
+					NVL(name2, NAME) NAME2,
+					description,
 					'3' CATEGORYTYPE,
-					MCATEGORYCODE
+					mcategorycode
 				FROM
 					EZAPPROVALG_$companyID$.TBTASKSUBCATEGORY
 				WHERE
-					MCATEGORYCODE = #v_PARENTID#
+					mcategorycode = #v_PARENTID#
 				AND
-					OLDFLAG IS NULL
+					oldflag IS NULL
 				AND
 					TENANT_ID = #tenantID#
 			]]>
 		</isEqual>
 	</select>
 
-	<procedure id="EzApprovalGAdmin.getReceiveGroupInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.getReceiveGroupInfo" -->
+<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo"
 		remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure>
+		<isEqual property="v_MODE" compareValue="ITEM">
+			<![CDATA[
+				SELECT
+					*
+				FROM
+					EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_SUB 
+				WHERE
+					mainid = #v_MAINID#
+				AND
+					TENANT_ID = #tenantID#
+				ORDER BY
+					subid
+			]]>
+		</isEqual>
+		<isEqual property="v_MODE" compareValue="JOIN">
+			<![CDATA[
+				SELECT
+					DISTINCT TBADMINRECEIPTGROUP_MAIN.mainid,
+					TBADMINRECEIPTGROUP_MAIN.mainname
+				FROM
+					EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_MAIN
+				JOIN
+					EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_SUB
+				ON
+					TBADMINRECEIPTGROUP_MAIN.mainid = TBADMINRECEIPTGROUP_SUB.mainid
+				AND
+					TBADMINRECEIPTGROUP_MAIN.TENANT_ID = TBADMINRECEIPTGROUP_SUB.TENANT_ID
+				WHERE
+					TBADMINRECEIPTGROUP_MAIN.TENANT_ID = #tenantID#
+				ORDER BY
+					TBADMINRECEIPTGROUP_MAIN.mainid
+			]]>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ITEM">
+			<isNotEqual property="v_MODE" compareValue="JOIN">
+				<![CDATA[
+					SELECT
+						*
+					FROM
+						EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_MAIN
+					WHERE
+						TENANT_ID = #tenantID#
+					ORDER BY
+						mainid
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+		
+	</select>
 
 <!-- 	<procedure id="EzApprovalGAdmin.getTaskHistory" remapResults="true" -->
 <!-- 		parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO"> -->
@@ -913,20 +964,20 @@
 			<isNotEqual property="v_TASKCODE" compareValue="">
 				<![CDATA[
 					SELECT
-						APPLYDATE,
-						TASKCODE,
-						TASKNAME,
-						CHANGEFACTOR,
-						BEFOREVALUE,
-						AFTERVALUE
+						applydate,
+						taskcode,
+						taskname,
+						changefactor,
+						beforevalue,
+						aftervalue
 					FROM
 						EZAPPROVALG_$companyID$.TBTASKCODEHISTORY
 					WHERE
-						TASKCODE = #v_TASKCODE#
+						taskcode = #v_TASKCODE#
 					AND
 						TENANT_ID = #tenantID#
 					ORDER BY
-						SN DESC
+						sn DESC
 				]]>
 			</isNotEqual>
 			<isEqual property="v_TASKCODE" compareValue="">
@@ -935,19 +986,19 @@
 						*
 					FROM
 						(SELECT
-							APPLYDATE,
-							TASKCODE,
-							TASKNAME,
-							TASKNAME2,
-							CHANGEFACTOR,
-							BEFOREVALUE,
-							AFTERVALUE
+							applydate,
+							taskcode,
+							taskname,
+							taskname2,
+							changefactor,
+							beforevalue,
+							aftervalue
 						FROM
 							EZAPPROVALG_$companyID$.TBTASKCODEHISTORY
 						WHERE
 							TENANT_ID = #tenantID#
 						ORDER BY
-							SN DESC)
+							sn DESC)
 					WHERE
 						ROWNUM <= 100
 				]]>
@@ -957,20 +1008,20 @@
 			<isNotEqual property="v_TASKCODE" compareValue="">
 				<![CDATA[
 					SELECT
-						APPLYDATE,
-						TASKCODE,
-						NVL(TASKNAME2, TASKNAME) TASKNAME,
-						NVL(CHANGEFACTOR2, CHANGEFACTOR) CHANGEFACTOR,
-						BEFOREVALUE,
-						AFTERVALUE2 AFTERVALUE
+						applydate,
+						taskcode,
+						NVL(taskname2, TASKNAME) TASKNAME,
+						NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+						beforevalue,
+						aftervalue2 AFTERVALUE
 					FROM
 						EZAPPROVALG_$companyID$.TBTASKCODEHISTORY
 					WHERE
-						TASKCODE = #v_TASKCODE#
+						taskcode = #v_TASKCODE#
 					AND
 						TENANT_ID = #tenantID#
 					ORDER BY
-						SN DESC
+						sn DESC
 				]]>
 			</isNotEqual>
 			<isEqual property="v_TASKCODE" compareValue="">
@@ -979,18 +1030,18 @@
 						*
 					FROM
 						(SELECT
-							APPLYDATE,
-							TASKCODE,
-							NVL(TASKNAME2, TASKNAME) TASKNAME,
-							NVL(CHANGEFACTOR2, CHANGEFACTOR) CHANGEFACTOR,
-							BEFOREVALUE,
-							AFTERVALUE2 AFTERVALUE
+							applydate,
+							taskcode,
+							NVL(taskname2, TASKNAME) TASKNAME,
+							NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+							beforevalue,
+							aftervalue2 AFTERVALUE
 						FROM
 							EZAPPROVALG_$companyID$.TBTASKCODEHISTORY
 						WHERE
 							TENANT_ID = #tenantID#
 						ORDER BY
-							SN DESC)
+							sn DESC)
 					WHERE
 						ROWNUM <= 100
 				]]>
@@ -1010,75 +1061,76 @@
 			<isEqual property="v_MODE" compareValue="SEND">
 				<![CDATA[
 					SELECT
-						SENTDEPTID,
-						SENTDEPTNAME,
-						NVL(COUNT(SENTDEPTID), 0) APRCOUNT
+						sentdeptid,
+						sentdeptname,
+						NVL(COUNT(sentdeptid), 0) APRCOUNT
 					FROM
 						EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 					WHERE
-						DOCSTATE = '011'
+						docstate = '011'
 					AND
-						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID #tenantID#
 					GROUP BY
-						SENTDEPTID,
-						SENTDEPTNAME
+						sentdeptid,
+						sentdeptname
 					ORDER BY
-						SENTDEPTNAME
+						sentdeptname
 				]]>
 			</isEqual>
 			<isEqual property="v_MODE" compareValue="RECV">
 				<![CDATA[
 					SELECT
-						RECEIVEDDEPTID ,
-						RECEIVEDDEPTNAME ,
-						NVL(COUNT(RECEIVEDDEPTID), 0) APRCOUNT
+						receiveddeptid ,
+						receiveddeptname ,
+						NVL(COUNT(receiveddeptid), 0) APRCOUNT
 					FROM
 						EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 					WHERE
-						DOCSTATE = '011'
+						docstate = '011'
 					AND
-						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
-						RECEIVEDDEPTID,RECEIVEDDEPTNAME
+						receiveddeptid,
+						receiveddeptname
 					ORDER BY
-						RECEIVEDDEPTNAME
+						receiveddeptname
 				]]>
 			</isEqual>
 			<isNotEqual property="v_MODE" compareValue="SEND">
 				<isNotEqual property="v_MODE" compareValue="RECV">
 					<![CDATA[
 						SELECT
-							SENTDEPTID ,
-							SENTDEPTNAME,
-							RECEIVEDDEPTID,
-							RECEIVEDDEPTNAME,
-							NVL(COUNT(SENTDEPTID), 0) APRCOUNT
+							sentdeptid ,
+							sentdeptname,
+							receiveddeptid,
+							receiveddeptname,
+							NVL(COUNT(sentdeptid), 0) APRCOUNT
 						FROM
 							EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 						WHERE
-							DOCSTATE = '011'
+							docstate = '011'
 						AND
-							PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
-							PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
 							TENANT_ID = #tenantID#
 						GROUP BY
-							SENTDEPTID,
-							SENTDEPTNAME,
-							RECEIVEDDEPTID,
-							RECEIVEDDEPTNAME
+							sentdeptid,
+							sentdeptname,
+							receiveddeptid,
+							receiveddeptname
 						ORDER BY
-							SENTDEPTNAME,
-							RECEIVEDDEPTNAME
+							sentdeptname,
+							receiveddeptname
                    ]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -1087,78 +1139,78 @@
 			<isEqual property="v_MODE" compareValue="SEND">
 				<![CDATA[
 					SELECT
-						SENTDEPTID,
-						SENTDEPTNAME2 SENTDEPTNAME,
-						NVL(COUNT(SENTDEPTID), 0) APRCOUNT
+						sentdeptid,
+						sentdeptname2 SENTDEPTNAME,
+						NVL(COUNT(sentdeptid), 0) APRCOUNT
 					FROM
 						EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 					WHERE
-						DOCSTATE = '011'
+						docstate = '011'
 					AND
-						RECEIVESN = '2'
+						receivesn = '2'
 					AND
-						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
-						SENTDEPTID,
-						SENTDEPTNAME2
+						sentdeptid,
+						sentdeptname2
 					ORDER BY
-						SENTDEPTNAME2
+						sentdeptname2
 				]]>
 			</isEqual>
 			<isEqual property="v_MODE" compareValue="RECV">
 				<![CDATA[
 					SELECT
-						RECEIVEDDEPTID,
-						RECEIVEDDEPTNAME2 RECEIVEDDEPTNAME,
-						COUNT(RECEIVEDDEPTID) APRCOUNT
+						receiveddeptid,
+						receiveddeptname2 RECEIVEDDEPTNAME,
+						COUNT(receiveddeptid) APRCOUNT
 					FROM
 						EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 					WHERE
-						DOCSTATE = '011'
+						docstate = '011'
 					AND
-						PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
-						PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 					AND
 						TENANT_ID = #tenantID#
 					GROUP BY
-						RECEIVEDDEPTID,
-						RECEIVEDDEPTNAME2
+						receiveddeptid,
+						receiveddeptname2
 					ORDER BY
-						RECEIVEDDEPTNAME2 
+						receiveddeptname2 
 				]]>
 			</isEqual>
 			<isNotEqual property="v_MODE" compareValue="SEND">
 				<isNotEqual property="v_MODE" compareValue="RECV">
 					<![CDATA[
 						SELECT
-							SENTDEPTID,
-							SENTDEPTNAME2 SENTDEPTNAME,
-							RECEIVEDDEPTID,
-							RECEIVEDDEPTNAME2 RECEIVEDDEPTNAME,
-							NVL(COUNT(SENTDEPTID), 0) APRCOUNT
+							sentdeptid,
+							sentdeptname2 SENTDEPTNAME,
+							receiveddeptid,
+							receiveddeptname2 RECEIVEDDEPTNAME,
+							NVL(COUNT(sentdeptid), 0) APRCOUNT
 						FROM
 							EZAPPROVALG_$companyID$.TBENDRECEIPTPROCESSINFO
 						WHERE
-							DOCSTATE = '011'
+							docstate = '011'
 						AND
-							PROCESSDATE >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
-							PROCESSDATE < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
 						AND
 							TENANT_ID = #tenantID#
 						GROUP BY
-							SENTDEPTID,
-							SENTDEPTNAME2,
-							RECEIVEDDEPTID,
-							RECEIVEDDEPTNAME2
+							sentdeptid,
+							sentdeptname2,
+							receiveddeptid,
+							receiveddeptname2
 						ORDER BY
-							SENTDEPTNAME2,
-							RECEIVEDDEPTNAME2
+							sentdeptname2,
+							receiveddeptname2
 					]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -1182,17 +1234,17 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(TBCONTAINER.ContainerID), 0)
+				NVL(COUNT(TBCONTAINER.containerid), 0)
 			FROM
 				EZAPPROVALG_$companyID$.TBCONTAINER
 			JOIN
 				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
 			ON
-				TBCONTAINER.ContainerTypeID = TBCONTAINERTYPE.ContainerTypeID
+				TBCONTAINER.containertypeid = TBCONTAINERTYPE.containertypeid
 			AND
 				TBCONTAINER.TENANT_ID = TBCONTAINERTYPE.TENANT_ID
 			WHERE
-				TBCONTAINER.ContainerTypeID = #v_CONTTYPEID#
+				TBCONTAINER.containertypeid = #v_CONTTYPEID#
 			AND
 				TBCONTAINER.TENANT_ID = #tenantID#
 		]]>
@@ -1204,7 +1256,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBCONTAINERTODOCSTATE
         	WHERE
-        		CONTAINERTYPEID = #v_CONTTYPEID#
+        		containertypeid = #v_CONTTYPEID#
         	AND
         		TENANT_ID = #tenantID#
 		]]>
@@ -1215,7 +1267,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBCONTAINERTYPE
         	WHERE
-        		CONTAINERTYPEID = #v_CONTTYPEID#
+        		containertypeid = #v_CONTTYPEID#
         	AND
         		TENANT_ID = #tenantID#
 		]]>
@@ -1243,9 +1295,9 @@
 			FROM
 				EZAPPROVALG_$companyID$.TBCONTAINER
 			WHERE
-				CONTAINERTYPEID = #v_CONTTYPEID#
+				containertypeid = #v_CONTTYPEID#
 			AND
-				CONTAINEROWNDEPID = (SELECT CONTAINEROWNDEPID FROM EZAPPROVALG_$companyID$.TBCONTAINER WHERE containerID = #v_DEPTID# AND TENANT_ID = #tenantID#)
+				containerowndepid = (SELECT containerowndepid FROM EZAPPROVALG_$companyID$.TBCONTAINER WHERE containerID = #v_DEPTID# AND TENANT_ID = #tenantID#)
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1269,13 +1321,13 @@
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(MCATEGORYCODE), 0)
+					NVL(COUNT(mcategorycode), 0)
 				FROM
 					EZAPPROVALG_$companyID$.TBTASKMIDDLECATEGORY
 				WHERE
-					CATEGORYCODE = #v_CATECODE#
+					categorycode = #v_CATECODE#
 				AND
-					OLDFLAG IS NULL
+					oldflag IS NULL
 				AND
 					TENANT_ID = #tenantID#   
 			]]>
@@ -1283,13 +1335,13 @@
 		<isEqual property="v_CATETYPE" compareValue="2">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(SUBCATEGORYCODE), 0)
+					NVL(COUNT(subcategorycode), 0)
 				FROM
 					EZAPPROVALG_$companyID$.TBTASKSUBCATEGORY
 				WHERE
-					MCATEGORYCODE = #v_CATECODE#
+					mcategorycode = #v_CATECODE#
 				AND
-					OLDFLAG IS NULL
+					oldflag IS NULL
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -1301,21 +1353,34 @@
 				FROM
 					EZAPPROVALG_$companyID$.TBTASKCODE
 				WHERE
-					SUBCATEGORYCODE = #v_CATECODE#
+					subcategorycode = #v_CATECODE#
 				AND
-					DELFLAG = '0'
+					delflag = '0'
 				AND
 					TENANT_ID = #tenantID#
 			]]>
 		</isEqual>
 	</select>
 
-	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate"
+<!-- 	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" -->
+<!-- 		parameterClass="Map" resultClass="Integer"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeDuplicate"
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			SELECT
+				NVL(COUNT(taskcode), 0)
+			FROM
+				EZAPPROVALG_$companyID$.TBTASKCODE
+			WHERE
+				taskcode = #v_TASKCODE#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</select>
 
 	<procedure id="EzApprovalGAdmin.getTaskCodeNodeExist"
 		parameterClass="Map" resultClass="Integer">
@@ -1341,12 +1406,12 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(DISTINCT TBAPRDOCINFO.DOCID), 0)
+				NVL(COUNT(DISTINCT TBAPRDOCINFO.docid), 0)
 			FROM
 				EZAPPROVALG_$companyID$.TBAPRDOCINFO
 			RIGHT OUTER JOIN
 				(SELECT
-					DISTINCT DOCID,
+					DISTINCT docid,
 					TENANT_ID
 				FROM
 					EZAPPROVALG_$companyID$.TBAPRLINEINFO
@@ -1357,26 +1422,26 @@
 		<isNotEqual property="v_APPROVUSER" compareValue="">
 			<![CDATA[
 				AND
-					TBAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
+					TBAPRLINEINFO.aprmembername = #v_APPROVUSER#
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
 				) aaa
 			ON
-				TBAPRDOCINFO.DOCID = aaa.DOCID
+				TBAPRDOCINFO.docid = aaa.docid
 			AND
 				TBAPRDOCINFO.TENANT_ID = aaa.TENANT_ID
 			INNER JOIN
 				EZAPPROVALG_$companyID$.TBEXPAPRDOCINFO 
 			ON
-				TBAPRDOCINFO.DOCID = TBEXPAPRDOCINFO.DOCID
+				TBAPRDOCINFO.docid = TBEXPAPRDOCINFO.docid
 			AND
 				TBAPRDOCINFO.TENANT_ID = TBEXPAPRDOCINFO.TENANT_ID
 			WHERE
-				(FUNCTIONTYPE IS NOT NULL)
+				(functiontype IS NOT NULL)
 			AND
-				(STARTDATE IS NOT NULL)
+				(startdate IS NOT NULL)
 			AND
 				TBAPRDOCINFO.TENANT_ID = #tenantID#
 		]]>
@@ -1384,61 +1449,61 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					DOCNO LIKE '%' || #v_DOCNUMBER# || '%'   
+					docno LIKE '%' || #v_DOCNUMBER# || '%'   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					DOCTITLE LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					WRITERNAME$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					WRITERDEPTNAME$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_FORMID" compareValue="">
 			<![CDATA[
 				AND
-					FORMID = #v_FORMID#
+					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
-					DOCSTATE = #v_DOCSTATE#
+					docstate = #v_DOCSTATE#
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_STARTDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_STARTDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#   
+					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_ENDDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_ENDDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#   
+					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_SUBQUERY" compareValue="">
@@ -1456,26 +1521,79 @@
 		]]>
 	</procedure>
 
-	<procedure id="EzApprovalGAdmin.deleteContainer"
+<!-- 	<procedure id="EzApprovalGAdmin.deleteContainer" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETECONTAINER(#v_CONTID#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<delete id="EzApprovalGAdmin.deleteContainer1"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETECONTAINER(#v_CONTID#)}
+			DELETE
+				EZAPPROVALG_$companyID$.tbContainerUseDep
+			WHERE
+				containerid = #v_CONTID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</delete>
+	
+	<delete id="EzApprovalGAdmin.deleteContainer2"
+		parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZAPPROVALG_$companyID$.tbContainer
+			WHERE
+				containerid = #v_CONTID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
 
-	<procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalGAdmin.insertReceiveGroupItemInfo"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)}
+			INSERT INTO EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_SUB
+				(mainid,
+				deptid,
+				deptname,
+				deptname2,
+				companyid,
+				TENANT_ID)
+			VALUES 
+				(#v_MAINID#,
+				#v_DEPTID#,
+				#v_DEPTNAME#,
+				#v_DEPTNAME2#,
+				#v_COMPANYID#,
+				#tenantID#)
 		]]>
-	</procedure>
+	</insert>
 
-	<procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo"
+<!-- 	<procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<delete id="EzApprovalGAdmin.deleteReceiveGroupItemInfo"
 		parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)}
+			DELETE
+				EZAPPROVALG_$companyID$.TBADMINRECEIPTGROUP_SUB
+			WHERE
+				subid = #v_SUBID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</delete>
 
 	<procedure id="EzApprovalGAdmin.updateReceiveGroupInfo"
 		parameterClass="Map">
@@ -1505,12 +1623,51 @@
 		]]>
 	</procedure>
 
-	<procedure id="EzApprovalGAdmin.removeTaskCategory"
+<!-- 	<procedure id="EzApprovalGAdmin.removeTaskCategory" -->
+<!-- 		parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_REMOVETASKCATEGORY(#v_CATETYPE#, #v_CATECODE#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalGAdmin.removeTaskCategory"
 		parameterClass="Map">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_REMOVETASKCATEGORY(#v_CATETYPE#, #v_CATECODE#)}
-		]]>
-	</procedure>
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBTASKCATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					categorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBTASKMIDDLECATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					mcategorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				UPDATE
+					EZAPPROVALG_$companyID$.TBTASKSUBCATEGORY
+				SET
+					oldflag = 'Y'
+				WHERE
+					subcategorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+	</update>
 
 <!-- 	<procedure id="EzApprovalGAdmin.deleteSealInfo" -->
 <!-- 		parameterClass="Map"> -->
@@ -1525,9 +1682,9 @@
 				UPDATE
 					EZAPPROVALG_$companyID$.TBSEALINFO
 				SET
-					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
 				WHERE
-					DELDATE IS NULL
+					deldate IS NULL
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -1537,14 +1694,13 @@
 				UPDATE
 					EZAPPROVALG_$companyID$.TBSEALINFO
 				SET
-					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
 				WHERE
-					SEALNUM = #v_SEALNUM#
+					sealnum = #v_SEALNUM#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
 		</isNotEqual>
-		
 	</update>
 
 <!-- 	<procedure id="EzApprovalGAdmin.deleteSealDeptInfo" -->
@@ -1559,11 +1715,11 @@
 				UPDATE
 					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
 				SET
-					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
 				WHERE
-					DELDATE IS NULL
+					deldate IS NULL
 				AND
-					DEPTID = #v_DEPTID#
+					deptid = #v_DEPTID#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -1573,11 +1729,11 @@
 				UPDATE
 					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
 				SET
-					DELDATE = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
 				WHERE
-					SEALNUM = #v_SEALNUM#
+					sealnum = #v_SEALNUM#
 				AND
-					DEPTID = #v_DEPTID#
+					deptid = #v_DEPTID#
 				AND
 					TENANT_ID = #tenantID#
 			]]>
@@ -1593,11 +1749,11 @@
 	<select id="EzApprovalGAdmin.insertSealInfoSelect" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(SEALNUM), 0)
+				NVL(COUNT(sealnum), 0)
 			FROM
 				EZAPPROVALG_$companyID$.TBSEALINFO 
 			WHERE
-				SEALNUM = #v_SEALNUM#
+				sealnum = #v_SEALNUM#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1607,20 +1763,20 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBSEALINFO
-			(SEALNUM,
-			SEALNAME,
-			SEALPATH,
-			SEALWIDTH,
-			SEALHEIGHT,
-			REGDATE,
-			DELDATE,
-			REGUSERID,
-			REGUSERNAME,
-			REGUSERNAME2,
+			(sealnum,
+			sealname,
+			sealpath,
+			sealwidth,
+			sealheight,
+			regdate,
+			deldate,
+			reguserid,
+			regusername,
+			regusername2,
 			TENANT_ID)
         VALUES
 			((SELECT
-				NVL(MAX(SEALNUM), 0) + 1
+				NVL(MAX(sealnum), 0) + 1
 			FROM
 				EZAPPROVALG_$companyID$.TBSEALINFO),
 			#v_SEALNAME#,
@@ -1640,17 +1796,17 @@
 		parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBSEALINFO
+				EZAPPROVALG_$companyID$.TBSEALINFO
 			SET
-				SEALNAME = #v_SEALNAME#,
-				SEALPATH = #v_SEALPATH#,
-				SEALWIDTH = #v_SEALWIDTH#,
-				SEALHEIGHT = #v_SEALHEIGHT#,
-				REGUSERID = #v_REGUSERID#,
-				REGUSERNAME = #v_REGUSERNAME#,
-				REGUSERNAME2 = #v_REGUSERNAME2#
+				sealname = #v_SEALNAME#,
+				sealpath = #v_SEALPATH#,
+				sealwidth = #v_SEALWIDTH#,
+				sealheight = #v_SEALHEIGHT#,
+				reguserid = #v_REGUSERID#,
+				regusername = #v_REGUSERNAME#,
+				regusername2 = #v_REGUSERNAME2#
 			WHERE
-				SEALNUM = v_SEALNUM
+				sealnum = #v_SEALNUM#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1665,13 +1821,13 @@
 	<select id="EzApprovalGAdmin.insertDeptSealInfoSelect" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(SEALNUM), 0)
+				NVL(COUNT(sealnum), 0)
 			FROM
 				EZAPPROVALG_$companyID$.TBSEALDEPTINFO
 			WHERE
-				SEALNUM = #v_SEALNUM#
+				sealnum = #v_SEALNUM#
 			AND
-				DEPTID = #v_DEPTID#
+				deptid = #v_DEPTID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1680,25 +1836,25 @@
 	<insert id="EzApprovalGAdmin.insertDeptSealInfoInsert" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBSEALDEPTINFO
-				(SEALNUM,
-				DEPTID,
-				SEALNAME,
-				SEALPATH,
-				SEALWIDTH,
-				SEALHEIGHT,
-				REGDATE,
-				DELDATE,
-				REGUSERID,
-				REGUSERNAME,
-				REGUSERNAME2,
+				(sealnum,
+				deptid,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
 				TENANT_ID)
 			VALUES
 				((SELECT
-					NVL(MAX(SEALNUM) , 0) + 1
+					NVL(MAX(sealnum) , 0) + 1
 				FROM
 					EZAPPROVALG_$companyID$.TBSEALDEPTINFO
 				WHERE
-					DEPTID = #v_DEPTID#
+					deptid = #v_DEPTID#
 				AND
 					TENANT_ID = #tenantID#),
 				#v_DEPTID#,
@@ -1720,17 +1876,17 @@
 			UPDATE
 				EZAPPROVALG_$companyID$.TBSEALDEPTINFO
 			SET
-				SEALNAME = #v_SEALNAME#,
-				SEALPATH = #v_SEALPATH#,
-				SEALWIDTH = #v_SEALWIDTH#,
-				SEALHEIGHT = #v_SEALHEIGHT#,
-				REGUSERID = #v_REGUSERID#,
-				REGUSERNAME = #v_REGUSERNAME#,
-				REGUSERNAME2 = #v_REGUSERNAME2#
+				sealname = #v_SEALNAME#,
+				sealpath = #v_SEALPATH#,
+				sealwidth = #v_SEALWIDTH#,
+				sealheight = #v_SEALHEIGHT#,
+				reguserid = #v_REGUSERID#,
+				regusername = #v_REGUSERNAME#,
+				regusername2 = #v_REGUSERNAME2#
 			WHERE
-				SEALNUM = #v_SEALNUM#
+				sealnum = #v_SEALNUM#
 			AND
-				DEPTID = #v_DEPTID#
+				deptid = #v_DEPTID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1754,7 +1910,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
 			WHERE
-				FORMCONTID = #v_FORMCONTID#
+				formcontid = #v_FORMCONTID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1765,7 +1921,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBFORMCONTAINER
 			WHERE
-				FORMCONTID = #v_FORMCONTID#
+				formcontid = #v_FORMCONTID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1781,7 +1937,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBFORMINFO
 			WHERE
-				FORMID = #v_FORMID#
+				formid = #v_FORMID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1791,7 +1947,7 @@
 			DELETE
 				EZAPPROVALG_$companyID$.TBFORMUSERINFO
 			WHERE
-				FORMID = #v_FORMID#
+				formid = #v_FORMID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1809,9 +1965,9 @@
 			UPDATE
 				EZAPPROVALG_$companyID$.TBENDAPRDOCINFO
 			SET
-				CONTAINERID = #v_CONTID#
+				containerid = #v_CONTID#
 			WHERE
-				DOCID = #v_DOCID#
+				docid = #v_DOCID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -1827,7 +1983,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(FORMCONTID),0)  
+				NVL(MAX(formcontid),0)  
 			FROM
 				EZAPPROVALG_$companyID$.TBFORMCONTAINER
 			WHERE
@@ -1835,57 +1991,71 @@
 		]]>
 	</select>
 
-	<select id="EzApprovalGAdmin.getContTypeInfo" parameterClass="String"
+	<select id="EzApprovalGAdmin.getContTypeInfo" parameterClass="Map"
 		resultClass="ApprGLeftVO">
 		<![CDATA[
 			SELECT 
 				containertypeid,
 				containertypename,
-				containertypename2 
+				containertypename2
         	FROM 
         		EZAPPROVALG_$companyID$.TBCONTAINERTYPE
+        	WHERE
+        		TENANT_ID = #tenantID#
+        		
 	    ]]>
 	</select>
 
 	<select id="EzApprovalGAdmin.insertContainerContID"
-		parameterClass="String" resultClass="String">
+		parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				NVL(MAX(containerid), '0000000000') as contid
-        	FROM 
+        	FROM
         		EZAPPROVALG_$companyID$.TBCONTAINER
+        	WHERE
+        		TENANT_ID = #tenantID#
 	    ]]>
 	</select>
 
 	<insert id="EzApprovalGAdmin.insertContainerDocState"
 		parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINERTODOCSTATE(
-				containertypeid, 	documentstate
-			)VALUES(
-				#data1#,			#data2#
-			)			
+			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINERTODOCSTATE
+				(containertypeid,
+				documentstate)
+			VALUES
+				(#data1#,
+				#data2#)
 	    ]]>
 	</insert>
 
 	<insert id="EzApprovalGAdmin.insertContainer" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINER(
-				containerid, 	containertypeid,	containerowndepid
-			)VALUES(
-				#contID#,		#contType#,			#deptID#
-			)			
+			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINER
+				(containerid,
+				containertypeid,
+				containerowndepid,
+				TENANT_ID)
+			VALUES
+				(#contID#,
+				#contType#,
+				#deptID#,
+				#tenantID#)
 	    ]]>
 	</insert>
 
 	<insert id="EzApprovalGAdmin.insertContainerUseDep"
 		parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP(
-				containerid, 	usedepid
-			)VALUES(
-				#contID#,		#deptID#
-			)
+			INSERT INTO EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP
+				(containerid,
+				usedepid,
+				TENANT_ID)
+			VALUES
+				(#contID#,
+				#deptID#,
+				#tenantID#)
 	    ]]>
 	</insert>
 
@@ -2003,12 +2173,12 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBFORMCONTAINER
-				(FormContID,
-				FormContName,
-				FormContName2,
-				FormContOwnDepID,
-				FormContParents,
-				FormContdescription,
+				(formcontid,
+				formcontname,
+				formcontname2,
+				formcontowndepid,
+				formcontparents,
+				formcontdescription,
 				TENANT_ID)
 			VALUES
 				(#contID#,
@@ -2025,9 +2195,9 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
-				(FormContID,
-				FormContUserDepID,
-				TENANT_ID)
+				(formcontid,
+				formcontuserdepid,
+				tenant_id)
 			VALUES
 				(#contID#,
 				#deptID#,
@@ -2037,12 +2207,15 @@
 
 	<update id="EzApprovalGAdmin.updateContainer" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZAPPROVALG_$companyID$.TBCONTAINER
+			UPDATE
+				EZAPPROVALG_$companyID$.TBCONTAINER
 			SET
 				containertypeid = #contType#,
 				containerowndepid = #deptID#
 			WHERE
-				containerid = #contID#					
+				containerid = #contID#
+			AND
+				TENANT_ID = #tenantID#
 	    ]]>
 	</update>
 
@@ -2063,9 +2236,9 @@
 				sc1 = #v_SC1#,
 				sc2 = #v_SC2#,
 				sc3 = #v_SC3#,
-				DisplayUsage = #v_DISPLAYUSAGE#,
-				Description = #v_DESCRIPTION#,
-				SubCategoryCode = #v_SUBCATEGORYCODE#
+				displayusage = #v_DISPLAYUSAGE#,
+				description = #v_DESCRIPTION#,
+				subcategorycode = #v_SUBCATEGORYCODE#
 			WHERE
 				taskcode = #v_TASKCODE#					
 	    ]]>
@@ -2100,11 +2273,11 @@
 				processDeptName = #deptName#,
 				processDeptName2 = #deptName2#,
 				delFlag = '0',
-				deleteDate = NULL
+				deletedate = NULL
 			WHERE
-				taskCode = #taskCode#
+				taskcode = #taskCode#
 			AND
-				TRIM(processDeptCode) = #deptCode#
+				TRIM(processdeptcode) = #deptCode#
 	    ]]>
 	</update>
 
@@ -2112,11 +2285,11 @@
 		<![CDATA[
 			UPDATE EZAPPROVALG_$companyID$.TBTASK_DEPTINFO
 			SET
-				processDate = TO_CHAR(sysdate, 'yyyyMMDDHH24MI'),
-				delFlag = '1',
-				deleteDate = TO_CHAR(sysdate, 'yyyy-MM-DD')
+				processdate = TO_CHAR(sysdate, 'yyyyMMDDHH24MI'),
+				delflag = '1',
+				deletedate = TO_CHAR(sysdate, 'yyyy-MM-DD')
 			WHERE
-				taskCode = #taskCode#
+				taskcode = #taskCode#
 			AND
 				TRIM(processDeptCode) = #deptCode#
 	    ]]>
@@ -2125,15 +2298,16 @@
 	<update id="EzApprovalGAdmin.updateFormContainer"
 		parameterClass="Map">
 		<![CDATA[
-			UPDATE EZAPPROVALG_$companyID$.TBFORMCONTAINER
+			UPDATE
+				EZAPPROVALG_$companyID$.TBFORMCONTAINER
 			SET
-				FormContName = #contName#,
-				FormContName2 = #contName2#,
-				FormContOwnDepID = #contDept#,
-				FormContParents = #contParent#,
-				FormContDescription = #contDescript#
+				formcontname = #contName#,
+				formcontname2 = #contName2#,
+				formcontowndepid = #contDept#,
+				formcontparents = #contParent#,
+				formcontdescription = #contDescript#
 			WHERE
-				FormContID = #contID#
+				formcontid = #contID#
 			AND
 				TENANT_ID = #tenantID#
 	    ]]>
@@ -2145,7 +2319,9 @@
 			DELETE FROM
         		EZAPPROVALG_$companyID$.TBCONTAINERUSEDEP
         	WHERE
-        		containerID = #contID#	
+        		containerID = #contID#
+        	AND
+        		TENANT_ID = #tenantID#
 	    ]]>
 	</delete>
 
@@ -2155,7 +2331,7 @@
 			DELETE FROM
         		EZAPPROVALG_$companyID$.TBFORMCONTUSERGROUP
         	WHERE
-        		FormContID = #contID#
+        		formcontid = #contID#
         	AND
         		TENANT_ID = #tenantID#
 	    ]]>
