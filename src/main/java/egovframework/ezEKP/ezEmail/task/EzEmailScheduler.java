@@ -415,22 +415,11 @@ public class EzEmailScheduler {
 			File file = new File(realPath + pUploadPath);
 			logger.debug("path=" + realPath + pUploadPath);
 			
+			String bigSizeMailAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
+			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
+			
 			if (file.exists()) {
-				File[] files = file.listFiles(new FilenameFilter() {
-					String today = EgovDateUtil.getToday("");
-					String bigSizeMailAttachDelDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
-					int signImageSizeLimit = Integer.parseInt(bigSizeMailAttachDelDay);
-					
-					@Override
-					public boolean accept(File dir, String name) {
-						if (name != null && dir.isDirectory()) {
-							if (NumberUtils.isNumber(name)) {
-								return EgovDateUtil.getDaysDiff(name, today) > signImageSizeLimit;
-							}
-						}
-						return false;
-					}
-				});
+				File[] files = file.listFiles(new deleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
 					logger.debug("expired directory name=" + expiredFile.getName());
@@ -517,5 +506,27 @@ public class EzEmailScheduler {
 		logger.debug("betSchedulerServer ended.");
 		
 		return isSchedulerServer;
+	}
+	
+	class deleteExpireAttachFilter implements FilenameFilter {
+		private int bigSizeMailAttachDelDay;
+		private String today;
+		
+		public deleteExpireAttachFilter(int bigSizeMailAttachDelDay) {
+			super();
+			
+			this.bigSizeMailAttachDelDay = bigSizeMailAttachDelDay;
+			this.today = EgovDateUtil.getToday("");
+		}
+		
+		@Override
+		public boolean accept(File dir, String name) {
+			if (name != null && dir.isDirectory()) {
+				if (NumberUtils.isNumber(name)) {
+					return EgovDateUtil.getDaysDiff(name, today) > bigSizeMailAttachDelDay;
+				}
+			}
+			return false;
+		}
 	}
 }
