@@ -15,7 +15,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception;
 	
-	public String updateContainerToDocStateInfo(Document xmlData, String companyID) throws Exception;
+	public String updateContainerToDocStateInfo(Document xmlData, String companyID, int tenantID) throws Exception;
 	
 	public String getContainerUseDeptInfo(String contID, String companyID, String primary, int tenantID) throws Exception;
 	
@@ -35,7 +35,7 @@ public interface EzApprovalGAdminService {
 	
 	public String insertReceiveGroupInfo(String groupName, String companyID, int tenantID) throws Exception;
 	
-	public String deleteReceiveGroupInfo(String groupID, String companyID) throws Exception;
+	public String deleteReceiveGroupInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID) throws Exception;
 	
@@ -43,7 +43,7 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception;
 
-	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID) throws Exception;
+	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID) throws Exception;
 
 	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
@@ -55,7 +55,7 @@ public interface EzApprovalGAdminService {
 
 	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception;
 
-	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID) throws Exception;
+	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID, int tenantID) throws Exception;
 	
 	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception;
 	
@@ -119,7 +119,7 @@ public interface EzApprovalGAdminService {
 	
 	public String setContainerIDForDoc2(String docID, String containerID, String companyID, int tenantID) throws Exception;
 	
-	public void insertContainerType(String docTypeName, String docTypeName2, String companyID) throws Exception;
+	public void insertContainerType(String docTypeName, String docTypeName2, String companyID, int tenantID) throws Exception;
 
 
 	
