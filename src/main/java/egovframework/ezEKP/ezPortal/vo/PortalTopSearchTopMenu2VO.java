@@ -43,6 +43,8 @@ public class PortalTopSearchTopMenu2VO {
 	private String baseType;
 	/** 테마 아이디*/
 	private String themeUID;
+	/** 테넌트 아이디*/
+	private int tenantID;
 	/** 테마 이름*/
 	private String themeNm;
 	/** 테마 이름2*/
@@ -51,8 +53,6 @@ public class PortalTopSearchTopMenu2VO {
 	private String themeNm3;
 	/** 테마 이름4*/
 	private String themeNm4;
-	/** 테넌트 아이디*/
-	private int tenantID;
 	
 	public String getuID() {
 		return uID;

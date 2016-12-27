@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
@@ -55,6 +56,7 @@ import org.springframework.stereotype.Component;
 
 import com.sun.mail.imap.IMAPFolder;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -75,6 +77,9 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 public class EzEmailUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailUtil.class);
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
@@ -1188,6 +1193,19 @@ public class EzEmailUtil {
 		Flags mdnSentFlag = new Flags("$MDNSent");
 		
 		message.setFlags(mdnSentFlag, isSet);
+	}
+	
+	public List<String> getInnerDomain(int tenantId) throws Exception {
+		List<String> innerDomainList = new ArrayList<String>();
+		
+		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", tenantId);
+		String[] innerDomainArr = mailInnerDomain.split(";");
+		
+		for (int i=0; i<innerDomainArr.length; i++) {
+			innerDomainList.add(innerDomainArr[i]);
+		}
+		
+		return innerDomainList;
 	}
 	
 	/**

@@ -243,13 +243,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		logger.debug("sendFrom=" + sendFrom);
 		
-		String useMultiLangMail = "1";
-		String pSecurity = "1";
-		String charsetCheck = "1";
-		String postType = "0";
-		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
-				+ ",postType=" + postType);
-		
 		//메일 색상 관련 설정
 		String inMailColor = "#808080";
 		String outMailColor = "#0080ff";
@@ -291,7 +284,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		}
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
  		
-        
+        //TODO: setting
+  		String useMultiLangMail = "1";
+  		String pSecurity = "1";
+  		String charsetCheck = "1";
+  		String postType = "0";
+  		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
+  				+ ",postType=" + postType);
+  		
         //TODO: 개별발신
 		int individualMailUser = 0;
 		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {

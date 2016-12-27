@@ -220,19 +220,22 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/deleteThemeInfo.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deleteThemeInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("deleteThemeInfo started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String pResult = "";
 		String pThemeID = xmlDom.getElementsByTagName("THEMEID").item(0).getTextContent();
-		
+		logger.debug("pThemeID="+pThemeID);
 		pResult = ezPortalAdminService.useThemeInfo(pThemeID, userInfo.getTenantId());
-		
+		logger.debug("pResult="+pResult);
 		if (pResult != null && pResult.equals("NO")) {
 			ezPortalAdminService.deleteTheme(pThemeID, userInfo.getTenantId()); 
 		}
-		
+
+		logger.debug("deleteThemeInfo ended");
 		return "OK";
 	}
 	

@@ -176,17 +176,17 @@
 		<result property="columnLength"			column="COLUMNLENGTH"		columnIndex="13" 	nullValue="0"/>
 		<result property="rowSplit"					column="ROWSPLIT"				columnIndex="14"/>
 		<result property="columnSplit"				column="COLUMNSPLIT"			columnIndex="15"/>
-		<result property="useFlag"					column="USEFLAG"					columnIndex="17"/>
-		<result property="companyID"				column="COMPANYID"			columnIndex="18"/>
-		<result property="lang"							column="LANG"						columnIndex="19"/>
-		<result property="topMnID"					column="TOPMNID"				columnIndex="20"/>
-		<result property="baseType"					column="BASETYPE"				columnIndex="21"/>
-		<result property="themeUID"					column="THEMEUID"				columnIndex="22"/>
+		<result property="useFlag"					column="USEFLAG"					columnIndex="16"/>
+		<result property="companyID"				column="COMPANYID"			columnIndex="17"/>
+		<result property="lang"							column="LANG"						columnIndex="18"/>
+		<result property="topMnID"					column="TOPMNID"				columnIndex="19"/>
+		<result property="baseType"					column="BASETYPE"				columnIndex="20"/>
+		<result property="themeUID"					column="THEMEUID"				columnIndex="21"/>
+		<result property="tenantID"					column="TENANT_ID"				columnIndex="22"/>
 		<result property="themeNm"					column="THEMENM"				columnIndex="23"/>
 		<result property="themeNm2"				column="THEMENM2"				columnIndex="24"/>
 		<result property="themeNm3"				column="THEMENM3"				columnIndex="25"/>
 		<result property="themeNm4"				column="THEMENM4"				columnIndex="26"/>
-		<result property="tenantID"					column="TENANT_ID"				columnIndex="27"/>
 	</resultMap>
 	
 	<resultMap class="PortalTopLoadGetParametersVO" id="portalTopLoadGetParametersVO">
@@ -641,15 +641,15 @@
             AND
             	A.UID_ = B.ParentUID
             AND
-            	A.UseFlag = #v_pUSEFLAG#
+            	A.UseFlag = '$v_pUSEFLAG$'
             AND
-            	B.CompanyID = #v_pCOMPANYID#
+            	B.CompanyID = '$v_pCOMPANYID$'
             AND
-            	B.CreatorID = #v_pCREATORID#
+            	B.CreatorID = '$v_pCREATORID$'
             AND
-            	B.GubunFlag = #v_pGUBUNFLAG#
+            	B.GubunFlag = '$v_pGUBUNFLAG$'
             AND
-            	A.TENANT_ID = #tenantID#	
+            	A.TENANT_ID = $tenantID$	
 		]]>
 	</select>
 	
@@ -676,34 +676,34 @@
                     AND
                     	A.UID_ = B.ParentUID
                     AND
-                    	A.UseFlag = #v_pUSEFLAG#
+                    	A.UseFlag = '$v_pUSEFLAG$'
                     AND
-                    	A.TENANT_ID = #tenantID#
+                    	A.TENANT_ID = $tenantID$
 		]]>
 		
 		<isGreaterThan property="v_pCOUNT" compareValue="0">
 			<![CDATA[
 				AND
-					B.CompanyID = #v_pCOMPANYID#
+					B.CompanyID = '$v_pCOMPANYID$'
 				AND
-					B.UseFlag = #v_pUSEFLAG#
+					B.UseFlag = '$v_pUSEFLAG$'
 				AND
-					B.CreatorID = #v_pUSERID#
+					B.CreatorID = '$v_pUSERID$'
 				AND
-					B.GubunFlag = #v_pGUBUNFLAG#
+					B.GubunFlag = '$v_pGUBUNFLAG$'
 			]]>	
 		</isGreaterThan>
 		
 		<isLessEqual property="v_pCOUNT" compareValue="0">
 			<![CDATA[
 				AND
-					B.CompanyID = #v_pCOMPANYID#
+					B.CompanyID = '$v_pCOMPANYID$'
 				AND
-					B.ParentUID = #v_pPARENTUID#
+					B.ParentUID = '$v_pPARENTUID$'
 				AND
-					B.CreatorID = #v_pUSERID# 
+					B.CreatorID = '$v_pUSERID$' 
 				AND
-					B.GubunFlag = #v_pGUBUNFLAG#
+					B.GubunFlag = '$v_pGUBUNFLAG$'
 			]]>	
 		</isLessEqual>
 	</select>
@@ -827,33 +827,33 @@
 			AND
 				ROWNUM <= #v_pENDROW#
 		]]>
-		<isNotNull property="v_pDISPLAYNAME">
+		<isNotEmpty property="v_pDISPLAYNAME">
 			<![CDATA[
 				AND
 					DISPLAYNAME like '%' || #v_pDISPLAYNAME# || '%'
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
-		<isNotNull property="v_pUSEFLAG">
+		<isNotEmpty property="v_pUSEFLAG">
 			<![CDATA[
 				AND
 					USEFLAG = #v_pUSEFLAG#
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
-		<isNotNull property="v_pCOMPANYID">
+		<isNotEmpty property="v_pCOMPANYID">
 			<![CDATA[
 				AND
 					COMPANYID = #v_pCOMPANYID#
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
-		<isNotNull property="v_pLANG">
+		<isNotEmpty property="v_pLANG">
 			<![CDATA[
 				AND
 					LANG = #v_pLANG#
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
 		<![CDATA[
 			ORDER BY
@@ -866,12 +866,16 @@
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_TOP_SEARCHTOPMENU2(#v_pENDROW#, #v_pDISPLAYNAME#, #v_pUSEFLAG#, #v_pCOMPANYID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure> -->
+	</procedure> --> 
 	
 	<select id="EzPortalDAO.topSearchTopMenu2" parameterClass="Map" resultMap="portalTopSearchTopMenu2VO">
 		<![CDATA[
 			SELECT
-				A.* ,B.DISPLAYNAME AS THEMENM, B.DISPLAYNAME2 AS THEMENM2, B.DISPLAYNAME3 AS THEMENM3,B.DISPLAYNAME4 AS THEMENM4  
+				A.* ,
+				B.DISPLAYNAME AS THEMENM, 
+				B.DISPLAYNAME2 AS THEMENM2, 
+				B.DISPLAYNAME3 AS THEMENM3,
+				B.DISPLAYNAME4 AS THEMENM4  
 			FROM
 				EZPORTAL.TBL_TOPMENU_GENERAL A 
 			LEFT JOIN
@@ -893,28 +897,30 @@
    				) 
    			AND
    				ROWNUM <= #v_pENDROW# 
+   			AND
+   				A.TENANT_ID = #tenantID#	
 		]]>
 		
-		<isNotNull property="v_pDISPLAYNAME">
+		<isNotEmpty property="v_pDISPLAYNAME">
 			<![CDATA[
 				AND
 					A.DISPLAYNAME like '%' || #v_pDISPLAYNAME# || '%'
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
-		<isNotNull property="v_pUSEFLAG">
+		<isNotEmpty property="v_pUSEFLAG">
 			<![CDATA[
 				AND
 					USEFLAG = #v_pUSEFLAG#
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
-		<isNotNull property="v_pCOMPANYID">
+		<isNotEmpty property="v_pCOMPANYID" >
 			<![CDATA[
 				AND
 					A.COMPANYID = #v_pCOMPANYID# 
 			]]>
-		</isNotNull>
+		</isNotEmpty>
 		
 		<![CDATA[
 			ORDER BY
@@ -1939,17 +1945,17 @@
                       		FROM
                       			EZPORTAL.TBL_USERSTARTPAGE_ITEM 
                        		WHERE
-                       			PARENTUID = #v_pPARENTUID#
+                       			PARENTUID = '$v_pPARENTUID$'
 							AND
-								ACCESSID = #v_pUSERID#
+								ACCESSID = '$v_pUSERID$'
 							AND
-								COMPANYID = #v_pCOMPANYID#
+								COMPANYID = '$v_pCOMPANYID$'
 							AND
-								TENANT_ID = #tenantID#	 )
+								TENANT_ID = $tenantID$	 )
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.searchStartPage2" parameterClass="Map" resultClass="String">
+	<select id="EzPortalDAO.searchStartPage2" parameterClass="Map" resultClass="String" >
 		<![CDATA[
 			SELECT
 				UID_ 
@@ -1972,8 +1978,8 @@
 		]]>
 	</procedure> -->
 	
-	<insert id="EzPortalDAO.searchStartPage" parameterClass="Map">
-		<selectKey keyProperty="v_temp" resultClass="Integer">
+	<select id="EzPortalDAO.searchStartPage_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
 			SELECT
 				1
         	FROM
@@ -1981,20 +1987,21 @@
        		WHERE
        			NOT EXISTS (  SELECT UID_ 
                           			FROM EZPORTAL.TBL_USERSTARTPAGE_ITEM 
-                           			WHERE  PARENTUID = #v_pPARENTUID#
-                                    AND ACCESSID = #v_pUSERID#
-                                    AND COMPANYID = #v_pCOMPANYID#
-                                    AND TENANT_ID = #tenantID# )
-		</selectKey>
-		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				INSERT INTO
-					EZPORTAL.TBL_USERSTARTPAGE_ITEM
-        			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, TENANT_ID )
-        		VALUES
-        			( #v_pHOMEUID#, #v_pPARENTUID#, #v_pIMAGEUID#, #v_pUSERID#, #v_pCOMPANYID#, #v_pLINKURL#, #tenantID# )
-			]]>
-		</isEqual>
+                           			WHERE  PARENTUID = '$v_pPARENTUID$'
+                                    AND ACCESSID = '$v_pUSERID$'
+                                    AND COMPANYID = '$v_pCOMPANYID$'
+                                    AND TENANT_ID = $tenantID$ )
+		]]>
+	</select>
+	
+	<insert id="EzPortalDAO.searchStartPage" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_USERSTARTPAGE_ITEM
+       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, TENANT_ID )
+       		VALUES
+       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', $tenantID$ )
+		]]>
 	</insert>
 	
 	<!-- <procedure id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO">
@@ -2058,7 +2065,7 @@
 	<delete id="EzPortalDAO.setUseMyStartPage2_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				TBL_USERSTARTPAGE_ITEM
+				EZPORTAL.TBL_USERSTARTPAGE_ITEM
 		    WHERE
 		    	UID_ = #v_pOLDUID#
 			AND
@@ -2076,12 +2083,13 @@
 				EZPORTAL.TBL_USERSTARTPAGE_ITEM
         		( SELECT
         			a.UID_ ,
-                 	a.OwnerPageID ,
-                 	a.ImageUID ,
+                 	a.OWNERPAGEID ,
+                 	a.IMAGEUID ,
                  	#v_pUSERID# ,
                  	#v_pCOMPANYID# ,
                  	a.LinkURL ,
-                 	#v_pLANGSTR# 
+                 	#v_pLANGSTR#,
+                 	#tenantID# 
           		 FROM
           		 	EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS a,
                		( SELECT
