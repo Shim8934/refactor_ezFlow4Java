@@ -150,8 +150,20 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			model.addAttribute("result", result);
-			model.addAttribute("list", list);
+			
 			model.addAttribute("userInfo", userInfo);
+			
+			String modifyDate = "";
+			
+			//list에 있는 modifyDate UTC작업 
+			for (int i=0; i<list.size(); i++) {
+				modifyDate = commonUtil.getDateStringInUTC(list.get(i).getModifyDate(), userInfo.getOffset(), false);
+				list.get(i).setModifyDate(modifyDate);
+			}
+			
+			model.addAttribute("list", list);
+			model.addAttribute("modifyDate", modifyDate);
+			
 			return "/admin/ezPortal/portalThemeList";
 		} else {
 			return "";
