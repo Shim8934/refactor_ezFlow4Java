@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -108,6 +111,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PCREATORNM", creatorNm);
 		map.put("v_TOPHEIGHT", topHeight);
 		map.put("tenantID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		
 		String temp = ezPortalAdminDAO.setThemeInfo_S(map);
 		
@@ -954,6 +962,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("themeUID", pThemeUID);
 			map.put("tableViewOption", pTableViewOption);
 			map.put("tenantID", tenantID);
+			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+			
 			ezPortalAdminDAO.insertTblPortalPageGeneral(map);
 			
 			XPath xpath = XPathFactory.newInstance().newXPath();

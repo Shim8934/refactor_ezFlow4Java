@@ -100,7 +100,7 @@
 			UPDATE ezHrMaster.TBLUSERMASTER
 			SET
 				ipaddress = #ip#,
-				lastlogin = sysdate,
+				lastlogin = to_date(#lastLogin#, 'YYYY-MM-DD HH24:MI:SS'),
 				logincnt = logincnt + 1
 			WHERE
 				cn = #id#									
