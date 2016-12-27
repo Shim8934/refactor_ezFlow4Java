@@ -593,7 +593,7 @@
                  	#v_pUSERNAME# ,
                  	#v_pUSERID# ,
                  	#v_pUSERNAME# ,
-                 	SYSDATE ,
+                 	#nowDate# ,
                  	Width ,
                  	Height ,
                  	RowLength ,
@@ -1064,11 +1064,11 @@
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_LOGOS A, EZPORTAL.TBL_PORTAL_ACL B
        		WHERE 
-       			A.OwnerPageID = #v_pOWNERPAGEID#
+       			A.OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				A.UID_ = B.UID_
 			AND
-				( B.AccessID = #v_pACCESSID# AND B.View_Right = 2 )
+				( B.ACCESSID = #v_pACCESSID# AND B.VIEW_RIGHT = 2 )
 			AND
 				A.TENANT_ID = #tenantID#	
 		]]>
@@ -1105,10 +1105,10 @@
 	<select id="EzPortalDAO.topLoadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
 		<![CDATA[
 			SELECT
-				A.ParamName ParamName  ,
-             	A.ParamValue ParamValue  ,
-             	A.ParamType ParamType  ,
-             	B.ParamInfo ParamInfo  
+				A.PARAMNAME ParamName  ,
+             	A.PARAMVALUE ParamValue  ,
+             	A.PARAMTYPE ParamType  ,
+             	B.PARAMINFO ParamInfo  
         	FROM
         		EZPORTAL.TBL_MENUITEM_PARAMETERS A
 			JOIN
@@ -1129,10 +1129,10 @@
 	<select id="EzPortalDAO.loadGetParameters" parameterClass="Map" resultMap="portalTopLoadGetParametersVO">
 		<![CDATA[
 			SELECT
-				A.ParamName ParamName  ,
-             	A.ParamValue ParamValue  ,
-             	A.ParamType ParamType  ,
-             	B.ParamInfo ParamInfo  
+				A.PARAMNAME ParamName  ,
+             	A.PARAMVALUE ParamValue  ,
+             	A.PARAMTYPE ParamType  ,
+             	B.PARAMINFO ParamInfo  
         	FROM
         		EZPORTAL.TBL_PORTLET_PARAMETERS A
 			JOIN
@@ -1161,7 +1161,8 @@
 				OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				TENANT_ID = #tenantID#	
-        	ORDER BY COLUMNPOS ASC
+        	ORDER BY
+        		COLUMNPOS ASC
 		]]>
 	</select>
 	
@@ -1186,7 +1187,8 @@
 				A.OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				A.TENANT_ID = #tenantID#	
-        	ORDER BY A.COLUMNPOS ASC
+        	ORDER BY
+        		A.COLUMNPOS ASC
 		]]>
 	</select>
 	
@@ -1451,7 +1453,7 @@
                     #v_pUSERID# ,
                     #v_pUSERID# ,
                     #v_pUSERID# ,
-                    SYSDATE ,
+                    #nowDate# ,
                     WIDTH ,
                     HEIGHT ,
                     ROWLENGTH ,
@@ -1497,7 +1499,7 @@
                     #v_pUSERID# ,
                     #v_pUSERID# ,
                     #v_pUSERID# ,
-                    SYSDATE ,
+                    #nowDate# ,
                     Width ,
                     Height ,
                     RowLength ,
@@ -1786,21 +1788,21 @@
             	A.GubunFlag = REPLACE(#v_pGUBUNFLAG#, 'c', ' ')
             AND
             	A.UID_ = companyACL.UID_
-            AND ( ( companyACL.AccessID = #v_pIDUSER#
-            		AND companyACL.View_Right = '2' )
-            		OR ( ( companyACL.AccessID = #v_pIDDEPT#
-            			 AND companyACL.View_Right = '2' )
+            AND ( ( companyACL.ACCESSID = #v_pIDUSER#
+            		AND companyACL.VIEW_RIGHT = '2' )
+            		OR ( ( companyACL.ACCESSID = #v_pIDDEPT#
+            			 AND companyACL.VIEW_RIGHT = '2' )
             		AND A.UID_ NOT IN ( SELECT UID_ 
                               					   FROM EZPORTAL.TBL_PORTAL_ACL 
                                 				   WHERE  ACCESSID = #v_pIDUSER#
-                                				   AND View_Right = '1' )
+                                				   AND VIEW_RIGHT = '1' )
                			 )
-                	OR ( ( companyACL.AccessID = #v_pCOMPANYID#
-                		  AND companyACL.View_Right = '2' )
+                	OR ( ( companyACL.ACCESSID = #v_pCOMPANYID#
+                		  AND companyACL.VIEW_RIGHT = '2' )
                 		  AND A.UID_ NOT IN ( SELECT UID_ 
                                   					     FROM EZPORTAL.TBL_PORTAL_ACL 
 	                                    				 WHERE  ACCESSID IN ( #v_pIDUSER#,#v_pIDDEPT# )
-				 	                                     AND View_Right = '1' )
+				 	                                     AND VIEW_RIGHT = '1' )
                		) )
              AND
              	A.TENANT_ID = #tenantID#  		
@@ -1833,7 +1835,7 @@
            		WHERE
            			DISPLAYNAME= #v_pDISPLAYNAME#
            		AND
-           			GubunFlag= #v_pGUBUNFLAG#
+           			GUBUNFLAG= #v_pGUBUNFLAG#
            		AND
            			TENANT_ID = #tenantID#	
 		]]>
@@ -1864,25 +1866,25 @@
 		<![CDATA[
 			SELECT
 				a.UID_ UID_  ,
-             	a.ImageUID ImageUID  ,
-             	a.OwnerPageID ParentUID  ,
-             	a.DisplayName DisplayName  ,
-             	a.LinkURL LinkURL  
+             	a.IMAGEUID ImageUID  ,
+             	a.OWNERPAGEID ParentUID  ,
+             	a.DISPLAYNAME DisplayName  ,
+             	a.LINKURL LinkURL  
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS a,
              	( SELECT UID_ 
                	  FROM EZPORTAL.TBL_TOPMENU_GENERAL 
                   WHERE  COMPANYID = #v_pCOMPANYID#
                   AND USEFLAG = #v_pUSEFLAG#
-				  AND lang = #v_pLANG#
-                  AND ThemeUID = #v_pUSERTHEMEUID# 
+				  AND LANG = #v_pLANG#
+                  AND THEMEUID = #v_pUSERTHEMEUID# 
                   AND TENANT_ID = #tenantID#) b
        		WHERE
-       			a.ParentUID = '203'
+       			a.PARENTUID = '203'
 			AND
-				a.OwnerPageID = b.uid_
+				a.OWNERPAGEID = b.uid_
 			AND
-				( a.DisplayName = '홈' OR a.DisplayName = 'home' OR a.LinkURL = '/ezPortal/myPortal.do' )
+				( a.DISPLAYNAME = '홈' OR a.DISPLAYNAME = 'home' OR a.LINKURL = '/ezPortal/myPortal.do' )
 			AND
 				a.TENANT_ID = #tenantID#	
 		]]>
@@ -1898,10 +1900,10 @@
 		<![CDATA[
 			SELECT 
 				a.UID_ UID_  ,
-             	a.ImageUID ImageUID  ,
-             	a.OwnerPageID ParentUID  ,
-             	a.DisplayName DisplayName  ,
-             	a.LinkURL LinkURL  
+             	a.IMAGEUID ImageUID  ,
+             	a.OWNERPAGEID ParentUID  ,
+             	a.DISPLAYNAME DisplayName  ,
+             	a.LINKURL LinkURL  
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS a,
              	( SELECT
@@ -1917,11 +1919,11 @@
                	  AND
                	  	TENANT_ID = #tenantID#	 ) b
 			WHERE
-				a.ParentUID = '203'
+				a.PARENTUID = '203'
 			AND
-				a.OwnerPageID = b.uid_
+				a.OWNERPAGEID = b.uid_
 			AND
-				a.DisplayName = '홈'
+				a.DISPLAYNAME = '홈'
 			AND
 				a.TENANT_ID = #tenantID#	
 		]]>
@@ -2025,16 +2027,16 @@
         	FROM
         		( SELECT
         			A.UID_ ,
-                    A.ImageUID ,
-                    A.OwnerPageID ,
-                    A.DisplayName ,
-                    A.LinkURL ,
-                    A.ColumnPos ,
-                    B.AccessID ,
-                    B.View_Right ,
+                    A.IMAGEUID ,
+                    A.OWNERPAGEID ,
+                    A.DISPLAYNAME ,
+                    A.LINKURL ,
+                    A.COLUMNPOS ,
+                    B.ACCESSID ,
+                    B.VIEW_RIGHT ,
                     INSTR(',' || #v_DEPTPATH# || ',', ',' || B.AccessID || ',') ORDERNUM  ,
                       CASE 
-                           WHEN B.AccessID = 'everyone' THEN '1'
+                           WHEN B.ACCESSID = 'everyone' THEN '1'
                            WHEN INSTR(',' || #v_DEPTPATH# || ',', ',' || B.AccessID || ',') > 0 THEN '1'
                       ELSE '0'
                          END FLAG  
@@ -2043,9 +2045,9 @@
                   LEFT JOIN
                   	EZPORTAL.TBL_PORTAL_ACL B   ON A.UID_ = B.UID_
                 WHERE  
-                	A.ParentUID = '203'
+                	A.PARENTUID = '203'
                 AND
-                	A.OwnerPageID = #v_PUSETOPMENUID#
+                	A.OWNERPAGEID = #v_PUSETOPMENUID#
                 AND
                 	A.TENANT_ID = #tenantID#	 ) AA
        		WHERE
@@ -2583,9 +2585,9 @@
       			A.UID_ NOT IN (SELECT 
       									UID_ 
       								FROM 
-      									ezPortal.TBL_PortalPage_Items_Change
+      									EZPORTAL.TBL_PORTALPAGE_ITEMS_CHANGE
       								WHERE 
-      									UID_ = A.UID_ AND PageUID = A.PageUID AND OwnerPageUID = A.OwnerPageUID AND CreatorID = '$pUserID$' AND OwnerPageUID = '$pTopParentPageID$' AND ChangeFlag = '2'
+      									UID_ = A.UID_ AND PAGEUID = A.PAGEUID AND OWNERPAGEUID = A.OWNERPAGEUID AND CREATORID = '$pUserID$' AND OWNERPAGEUID = '$pTopParentPageID$' AND CHANGEFLAG = '2'
       								)	
       		ORDER BY
       			A.RowPos
