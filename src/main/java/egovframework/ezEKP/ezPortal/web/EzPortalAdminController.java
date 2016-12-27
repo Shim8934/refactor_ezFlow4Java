@@ -686,7 +686,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 				mainHtml += "</td>";
 				
-				mainHtml += "<td width='170'>"+xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent()+"</td>";
+				mainHtml += "<td width='170'>"+commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent(), userInfo.getOffset(), false)+"</td>";
 				
 				mainHtml += "</tr>";
 			}
