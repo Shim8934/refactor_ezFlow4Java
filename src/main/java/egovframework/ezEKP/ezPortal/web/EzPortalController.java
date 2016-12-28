@@ -1026,7 +1026,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("wpTotalSection started");
+
+userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
 		String useEditor = config.getProperty("config.EDITOR");
@@ -1041,69 +1043,72 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		
-		try {
-			noneActiveX = "YES";
-			
-			//String userOffset = userInfo.getOs().split("\\|")[1];
-			String userOffset = "+09:00";
-			
-			if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
-				useIE11Browser = "CK";
-			}
-			
-			mailAddress = userInfo.getEmail();
-			if (userInfo.getLang().equals("1")) {
-				displayName = userInfo.getDisplayName1();
-				department = userInfo.getDeptName1();
-				title = userInfo.getTitle1();
-				companyNm = userInfo.getCompanyName1();
-			} else {
-				displayName = userInfo.getDisplayName2();
-				department = userInfo.getDeptName2();
-				title = userInfo.getTitle2();
-				companyNm = userInfo.getCompanyName2();
-			}
-			
-			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-			
-			lastLogin = ezOrganService.getLastLogin(userInfo.getId());
-			//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-			lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
-			
-			//전자설문
-			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
-			
-			//유저이미지
-			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
-			
-			if (result != null && !result.equals("")) {
-				userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
-			} else {
-				userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
-			}
-			
-			model.addAttribute("displayName", displayName);
-			model.addAttribute("department", department);
-			model.addAttribute("title", title);
-			model.addAttribute("companyNm", companyNm);
-			model.addAttribute("userApprovalG", userApprovalG);
-			model.addAttribute("lastLogin", lastLogin);
-			model.addAttribute("noneActiveX", noneActiveX);
-			model.addAttribute("useIE11Browser", useIE11Browser);
-			model.addAttribute("mailAddress", mailAddress);
-			model.addAttribute("userInfo", userInfo);
-			model.addAttribute("userLang", userInfo.getLang());
-			model.addAttribute("pollNum", pollNum);
-			model.addAttribute("userPhoto", userPhoto);
-			model.addAttribute("userOffset", userOffset);
-			model.addAttribute("useEditor", useEditor);
-			
-			return "/ezPortal/portalWpTotalSection";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		noneActiveX = "YES";
+		
+		//String userOffset = userInfo.getOs().split("\\|")[1];
+		String userOffset = "+09:00";
+		
+		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+			useIE11Browser = "CK";
 		}
+		
+		mailAddress = userInfo.getEmail();
+		if (userInfo.getLang().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+			department = userInfo.getDeptName1();
+			title = userInfo.getTitle1();
+			companyNm = userInfo.getCompanyName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+			department = userInfo.getDeptName2();
+			title = userInfo.getTitle2();
+			companyNm = userInfo.getCompanyName2();
+		}
+		
+		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
+		
+		lastLogin = ezOrganService.getLastLogin(userInfo.getId());
+		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		//전자설문
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		
+		//유저이미지
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
+		
+		if (result != null && !result.equals("")) {
+			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
+			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			
+			
+		} else {
+			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
+		}
+		logger.debug("userPhoto="+userPhoto);
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("department", department);
+		model.addAttribute("title", title);
+		model.addAttribute("companyNm", companyNm);
+		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("lastLogin", lastLogin);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("mailAddress", mailAddress);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("pollNum", pollNum);
+		model.addAttribute("userPhoto", userPhoto);
+		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("wpTotalSection ended");
+		return "/ezPortal/portalWpTotalSection";
+		
+
+		
 	}
 	
 	/**

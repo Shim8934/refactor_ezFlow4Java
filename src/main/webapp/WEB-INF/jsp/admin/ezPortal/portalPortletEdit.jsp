@@ -296,8 +296,8 @@
 			}
 			// 이미지 포틀릿
 			else if (portlet_type == "3") {
-			    var normalImgPath = txtImage.src.substr(txtImage.src.indexOf("/files/upload_portal"));
-				if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			    var normalImgPath = txtImage.src.substr(txtImage.src.indexOf("${uploadPortalPath}"));
+				if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
 				
 				// 이미지 타입
 				image_type = "1";
@@ -779,8 +779,8 @@
 		
 		// 이미지 미리보기
 		function UserImage_Preview() {
-			var ImgPath = txtImage.src.substr(txtImage.src.indexOf("/files/upload_portal"));
-			if (ImgPath.indexOf("/files/upload_portal") == -1) ImgPath = "";
+			var ImgPath = txtImage.src.substr(txtImage.src.indexOf("${uploadPortalPath}"));
+			if (ImgPath.indexOf("${uploadPortalPath}") == -1) ImgPath = "";
 			
 			if (ImgPath == "") return;
 			
@@ -852,9 +852,9 @@
 		            if (document.getElementById('mode').value == "PHOTO")
 		            {
 		                if (navigator.userAgent.indexOf("Firefox") != -1)
-		                    txtImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    txtImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                else
-		                    txtImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    txtImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                txtImage.style.display = "";
 		            }
 		        }
