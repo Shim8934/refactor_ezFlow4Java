@@ -43,6 +43,7 @@
 		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
 		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
+		<result property="tenantID"			column="TENANT_ID"		columnIndex="11"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
@@ -1545,7 +1546,7 @@
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S 
        		WHERE
-       			PARENTMENUID = #v_PPARENTMENUID#
+       			PARENTMENUID = '$v_PPARENTMENUID$'
 			AND
 				OWNERPAGEID = #v_POWNERPAGEID#
 			AND
