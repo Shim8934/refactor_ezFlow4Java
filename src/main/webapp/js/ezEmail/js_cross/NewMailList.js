@@ -189,6 +189,11 @@ function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
     	try {
             var XmlList = GetList_HTTP.responseXML;
+            
+            if (XmlList == null) {
+                return;
+            }
+            
             var XmlRows = SelectNodes(XmlList, "maillist/response");
             var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);            
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
@@ -640,16 +645,22 @@ function GetListIevent_ongetxmlcomplete() {
     if (GetList_HTTP != null && GetList_HTTP.readyState == 4) {
         if (GetList_HTTP.status >= 200 && GetList_HTTP.status < 300) {
             MakeListInfoHTML(GetListInfo_HeaderObject, GetListInfo_ContentObject);
-            if (SelectNodes(GetList_HTTP.responseXML, "maillist/response").length == 0) {
-                if (parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) > 1) {
-                    goToPageByNum(parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) - 1);
-                    return;
+            
+            if (GetList_HTTP.responseXML != null) {
+                if (SelectNodes(GetList_HTTP.responseXML, "maillist/response").length == 0) {
+                    if (parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) > 1) {
+                        goToPageByNum(parseInt(GetAttribute(document.getElementById("MailList"), "curPage")) - 1);
+                        return;
+                    }
                 }
+                try {
+                    if (document.getElementById("HeaderAllCheckBox") != null)
+                        document.getElementById("HeaderAllCheckBox").checked = false;
+                } catch (e) { }
+            } else {
+                location.reload(true);
             }
-            try {
-                if (document.getElementById("HeaderAllCheckBox") != null)
-                    document.getElementById("HeaderAllCheckBox").checked = false;
-            } catch (e) { }
+            
             HiddenMailProgress();
             GetList_HTTP = null;
         }
