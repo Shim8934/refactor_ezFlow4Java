@@ -284,21 +284,32 @@
 			location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3";
 		}
 		
-		function SelectID()
-		{
+		var selecttarget_dialogArguments = new Array();
+		function SelectID() {
 		    var config = "status:false;dialogWidth:690px;dialogHeight:630px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(690, 630);
+		    
+		    if (CrossYN()) {
+		    	selecttarget_dialogArguments[1] = SelectID_Complete;
+		    	var OpenWin = window.open("/admin/ezPortal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(690, 630));
+		        try { OpenWin.focus(); } catch (e) { }
+		    } else {
 		        var ret = window.showModalDialog("/admin/ezPortal/selectTarget.do", "", config);
-			
-			if (typeof(ret) != "undefined")
-			{
-				newAccessID.value = ret.split(";")[0];
-				newAccessName.value = ret.split(";")[1];
-			}
-		
+				
+				if (typeof(ret) != "undefined") {
+					newAccessID.value = ret.split(";")[0];
+					newAccessName.value = ret.split(";")[1];
+				}
+		    }
 		}
 		
-		function DeleteRight(pAccessID)
-		{
+		function SelectID_Complete(ret) {
+		    if (typeof (ret) != "undefined") {
+		        newAccessID.value = ret.split(";")[0];
+		        newAccessName.value = ret.split(";")[1];
+		    }
+		}
+		
+		function DeleteRight(pAccessID) {
 			if(!confirm("<spring:message code='ezPortal.t54'/>")) return;
 			
 			var strXML = "<DATA>";

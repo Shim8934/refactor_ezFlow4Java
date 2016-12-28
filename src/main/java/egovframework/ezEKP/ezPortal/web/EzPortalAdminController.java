@@ -2282,7 +2282,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			map1.put("v_pPUID", "204");
 			map1.put("v_pPAGEID", pageID);
-			map.put("tenantID", userInfo.getTenantId());
+			map1.put("tenantID", userInfo.getTenantId());
 			List<PortalTBLTopMenuItemsVO> result1 = ezPortalAdminService.loadPositionSettings(map1);
 			String xmlStr1 = "<DATA>";
 			for (int i=0; i<result1.size(); i++) {

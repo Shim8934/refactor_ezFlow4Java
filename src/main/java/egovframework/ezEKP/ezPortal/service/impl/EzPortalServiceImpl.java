@@ -1560,7 +1560,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					} else {
 						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
-                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+                        //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+						sb.append(", \"" + menuitemWindowOption + "\")'>" + menuitemDisplayName + "</span></li>\n");
 					}
                       
 				} else {

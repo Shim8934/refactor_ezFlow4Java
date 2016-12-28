@@ -2005,6 +2005,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PNEWID", UUID.randomUUID().toString());
 		map.put("v_IMAGETYPE", "2");
 		map.put("v_EMPTYPUID", "");
+		map.put("tenantID", tenantID);
 		
 		ezPortalAdminDAO.saveSubMenuItemConfig_U1(map);
 		
