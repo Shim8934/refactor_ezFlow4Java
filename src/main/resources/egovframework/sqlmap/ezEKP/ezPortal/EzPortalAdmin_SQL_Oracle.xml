@@ -1237,7 +1237,7 @@
        			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
        			LINKURL = #v_PLINKURL#,
        			LINKLOCATION = #v_PLINKLOCATION#,
-       			WINDOWOPTION =  #v_PWINDOWOPTION#
+       			WINDOWOPTION =  #v_PWINDOWOPTION#,
        			TENANT_ID = #tenantID#
        		WHERE
        			UID_ = #v_P_SUB_UID#
@@ -1249,7 +1249,7 @@
 				EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S
        		SET
        			DISPLAYNAME = #v_PDISPLAYNAME#,
-       			DISPLAYNAME2 = #v_PDISPLAYNAME2#
+       			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
        			TENANT_ID = #tenantID#
        		WHERE
        			UID_ = #v_P_SUB_UID#
