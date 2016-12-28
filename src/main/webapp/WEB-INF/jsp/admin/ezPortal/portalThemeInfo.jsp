@@ -209,17 +209,21 @@
                     //if (document.getElementById('mode').value == "PHOTO") {
                         if (ImageState == "Normal") {
                             if (navigator.userAgent.indexOf("Firefox") != -1) {
-                            	txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                            	//txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                            	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
                             } else {
-                                txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                                //txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                            	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
                             }
                             txtNormalImage.style.display = "";
                         }
                         else {
                             if (navigator.userAgent.indexOf("Firefox") != -1) {
-                                txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                                //txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                            	txtOverImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
                             }else {
-                                txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                                //txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+                            	txtOverImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
                             }
                             txtOverImage.style.display = "";
                         }

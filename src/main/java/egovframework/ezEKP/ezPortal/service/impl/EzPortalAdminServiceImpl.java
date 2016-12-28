@@ -1268,6 +1268,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				map9.put("themeUID", pThemeUID);
 				map9.put("tableViewOption", pTableViewOption);
 				map9.put("tenantID", tenantID);
+				
+				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				date.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String nowDate = date.format(new Date());
+				map9.put("nowDate", nowDate);
+				
 				ezPortalAdminDAO.insertTblPortalPageGeneral(map9);
 				
 				XPath xpath = XPathFactory.newInstance().newXPath();

@@ -150,8 +150,20 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
 			String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 			model.addAttribute("result", result);
-			model.addAttribute("list", list);
+			
 			model.addAttribute("userInfo", userInfo);
+			
+			String modifyDate = "";
+			
+			//list에 있는 modifyDate UTC작업 
+			for (int i=0; i<list.size(); i++) {
+				modifyDate = commonUtil.getDateStringInUTC(list.get(i).getModifyDate(), userInfo.getOffset(), false);
+				list.get(i).setModifyDate(modifyDate);
+			}
+			
+			model.addAttribute("list", list);
+			model.addAttribute("modifyDate", modifyDate);
+			
 			return "/admin/ezPortal/portalThemeList";
 		} else {
 			return "";
@@ -197,6 +209,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			themeMainURL = result.getMainURL();
 			themeTopHeight = result.getTopHeight();
 		}
+		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pKeyCode", pKeyCode);
 		model.addAttribute("themeNm1", themeNm1);
@@ -210,6 +225,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("strUserLang", strUserLang);
 		model.addAttribute("result", result);
 		model.addAttribute("mode", mode);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "/admin/ezPortal/portalThemeInfo";
 	}
@@ -304,7 +320,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pFileName[i] = pFileName[i].replace(";", "%3b");
 		}
 		
-		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		//String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
+		
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + pBoardID;
 		logger.debug("pServerPath="+pServerPath);
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -674,7 +692,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 				mainHtml += "</td>";
 				
-				mainHtml += "<td width='170'>"+xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent()+"</td>";
+				mainHtml += "<td width='170'>"+commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent(), userInfo.getOffset(), false)+"</td>";
 				
 				mainHtml += "</tr>";
 			}
@@ -841,12 +859,16 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("defaultwin", "To");
 		model.addAttribute("strXML", "");
 		model.addAttribute("topID", topID);
 		model.addAttribute("useOCS", "");
 		model.addAttribute("pSearchString", "");
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
+		
 		return "/admin/ezPortal/portalSelectTarget";
 		
 	}
@@ -1081,6 +1103,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("uID", uID);
 		model.addAttribute("pBoardID", pBoardID);
 		model.addAttribute("pBoardName", pBoardName);
@@ -1108,6 +1132,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("mode", mode);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "/admin/ezPortal/portalPortletEdit";
 		
@@ -1181,8 +1206,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			displayName = xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
 			pContent = xmlDom.getElementsByTagName("CONTENT").item(0).getTextContent();
 			//mhtFilePath = "/files/upload_portal/mht/" + uID + ".mht";
-			mhtFilePath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "mht" + commonUtil.separator + uID + ".mht";
-			bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator, realPath);
+			//mhtFilePath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "mht" + commonUtil.separator + uID + ".mht";
+			mhtFilePath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "mht" + commonUtil.separator + uID + ".mht";
+			//bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator, realPath);
+			bResult = saveMHT(pContent, uID, commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator, realPath);
 
 			if (bResult == true) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -1525,6 +1552,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("uID", uID);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentUID", parentUID);
@@ -1542,6 +1571,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("windowOption", windowOption);
 		model.addAttribute("imageWidth", imageWidth);
 		model.addAttribute("imageHeight", imageHeight);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "/admin/ezPortal/portalLogoEdit";
 		
@@ -1567,7 +1597,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
-		String pServerPath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "Logo";
+		//String pServerPath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "Logo";
+		String pServerPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId())+ commonUtil.separator + "Logo";
 		
 		//로고저장
 		if (mode.equals("SAVE")) {
@@ -1922,6 +1953,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("uID", uID);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentUID", parentUID);
@@ -1951,6 +1984,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("imageDataLinkURL", imageDataLinkURL);
 		model.addAttribute("imageDataLinkLocation", imageDataLinkLocation);
 		model.addAttribute("imageDataWindowOption", imageDataWindowOption);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "/admin/ezPortal/portalMenuItemEdit";
 		
@@ -2460,6 +2494,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("uID", uID);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentUID", parentUID);
@@ -2490,6 +2526,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("imageDataLinkURL", imageDataLinkURL);
 		model.addAttribute("imageDataLinkLocation", imageDataLinkLocation);
 		model.addAttribute("imageDataWindowOption", imageDataWindowOption);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "/admin/ezPortal/portalSubMenuItemEdit";
 	}
@@ -2534,8 +2571,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		//해당 이미지가 존재하는지 체크
 		String realPath = req.getServletContext().getRealPath("");
-		File file = new File(realPath + config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
-        
+		//File file = new File(realPath + config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
+		File file = new File(realPath + commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
+		
 		if (!file.exists()) {
 			imageName = "";
 		}
@@ -2562,7 +2600,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 	
 		String realPath = req.getServletContext().getRealPath("");
-		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		//String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
+		
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode;
 		
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
@@ -2594,10 +2634,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (file1.exists()) {
 				FileUtils.deleteQuietly(file1);
 			}
-			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+			//return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
 		} else {
-			logger.debug("path="+config.getProperty("upload_portal.ROOT") + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
-			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+			logger.debug("path="+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
+			//return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
 		}
 		
 		

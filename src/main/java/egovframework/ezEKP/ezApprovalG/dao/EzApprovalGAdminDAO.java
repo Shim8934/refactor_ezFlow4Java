@@ -165,8 +165,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	public Integer getTaskCodeDeptCnt(Map<String, Object> map) throws Exception {
-		select("EzApprovalGAdmin.getTaskCodeDeptCnt", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzApprovalGAdmin.getTaskCodeDeptCnt", map);
 	}
 	
 	public Integer searchManageAprDocListCount(Map<String, Object> map) throws Exception {
@@ -197,8 +196,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		insert("EzApprovalGAdmin.insertReceiveGroupInfo", map);
 	}
 	
-	public void setTaskCategory(Map<String, Object> map) throws Exception {
-		insert("EzApprovalGAdmin.setTaskCategory", map);
+	public void setTaskCategoryInsert(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setTaskCategoryInsert", map);
+	}
+	
+	public void setTaskCategoryUpdate(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.setTaskCategoryUpdate", map);
 	}
 	
 	public void setTaskHistory(Map<String, Object> map) throws Exception {
@@ -257,8 +260,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.updateDeptInfo", map);
 	}
 	
-	public void removeTaskCode(Map<String, Object> map) throws Exception {
+	public void removeTaskCode1(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.removeTaskCode1", map);
+	}
+	
+	public void removeTaskCode2(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.removeTaskCode2", map);
 	}
 	
@@ -282,8 +288,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.updateFormContainer", map);
 	}
 	
-	public void deleteContainerDocState(String companyID) throws Exception {
-		delete("EzApprovalGAdmin.deleteContainerDocState", companyID);
+	public void deleteContainerDocState(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.deleteContainerDocState", map);
 	}
 
 	public void deleteContainerUseDep(Map<String, Object> map) throws Exception {
