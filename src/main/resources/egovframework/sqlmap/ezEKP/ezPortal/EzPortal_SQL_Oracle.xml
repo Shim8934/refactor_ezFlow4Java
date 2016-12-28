@@ -2246,7 +2246,7 @@
 		<isNotEmpty property="v_pPAGEGUBUNFLAG">
 			<![CDATA[
 				AND
-					GUBUNFLAG IN ('0', '|| #v_pPAGEGUBUNFLAG# ||')
+					GUBUNFLAG IN ('0', '|| $v_pPAGEGUBUNFLAG$ ||')
 			]]>	
 		</isNotEmpty>
 		
