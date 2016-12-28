@@ -127,12 +127,14 @@
 		        } else if (document.getElementById("txtDisplayName2").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
 		            return;
-		        } else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
+		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
+		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        }
 		        
-		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/files/upload_portal"));
+		        //var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/files/upload_portal"));
+		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		        
 		        var item;
 		        var mode;
