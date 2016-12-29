@@ -29,14 +29,14 @@
 	            document.getElementById("SMonth").value = "<c:out value = '${tempPMonth}' />";
 	            document.getElementById("EYear").value = "<c:out value = '${tempYear}' />";
 	            document.getElementById("EMonth").value = "<c:out value = '${tempMonth}' />";
-	            document.all("condition")[0].checked = false;
-	            document.all("condition")[1].checked = false;
-	            document.all("Dept")[0].checked = false;
-	            document.all("Dept")[1].checked = false;
-	            document.all("UserFlag")[0].checked = false;
-	            document.all("UserFlag")[1].checked = false;
-	            document.all("UserFlag")[2].checked = false;
-	            document.all("UserFlag")[3].checked = false;
+	            document.getElementsByName("condition")[0].checked = false;
+	            document.getElementsByName("condition")[1].checked = false;
+	            document.getElementsByName("Dept")[0].checked = false;
+	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("UserFlag")[0].checked = false;
+	            document.getElementsByName("UserFlag")[1].checked = false;
+	            document.getElementsByName("UserFlag")[2].checked = false;
+	            document.getElementsByName("UserFlag")[3].checked = false;
 
 	            Initlvtlist();
 	        });
@@ -77,15 +77,15 @@
 	                    return;
 	                }
 
-	                if (document.all("condition")[0].checked) {
-	                    if (document.all("UserFlag")[0].checked || document.all("UserFlag")[1].checked || document.all("UserFlag")[2].checked || document.all("UserFlag")[3].checked) {
-	                        if (document.all("UserFlag")[0].checked) {
+	                if (document.getElementsByName("condition")[0].checked) {
+	                    if (document.getElementsByName("UserFlag")[0].checked || document.getElementsByName("UserFlag")[1].checked || document.getElementsByName("UserFlag")[2].checked || document.getElementsByName("UserFlag")[3].checked) {
+	                        if (document.getElementsByName("UserFlag")[0].checked) {
 	                            pUserFlag = 1;
-	                        } else if (document.all("UserFlag")[1].checked) {
+	                        } else if (document.getElementsByName("UserFlag")[1].checked) {
 	                            pUserFlag = 2;
-	                        } else if (document.all("UserFlag")[2].checked) {
+	                        } else if (document.getElementsByName("UserFlag")[2].checked) {
 	                            pUserFlag = 3;
-	                        } else if (document.all("UserFlag")[3].checked) {
+	                        } else if (document.getElementsByName("UserFlag")[3].checked) {
 	                            pUserFlag = 4;
 	                        }
 	                        
@@ -93,12 +93,12 @@
 	                    } else {
 	                        alert(" <spring:message code = 'ezApprovalG.t1291' />");
 	                    }
-	                } else if (document.all("condition")[1].checked) {
-	                    if (document.all("Dept")[0].checked) {
+	                } else if (document.getElementsByName("condition")[1].checked) {
+	                    if (document.getElementsByName("Dept")[0].checked) {
 	                        DeptDocCount("SEND");
-	                    } else if (document.all("Dept")[1].checked) {
+	                    } else if (document.getElementsByName("Dept")[1].checked) {
 	                        DeptDocCount("RECV");
-	                    } else if (document.all("Dept")[2].checked) {
+	                    } else if (document.getElementsByName("Dept")[2].checked) {
 	                        DeptDocCount("BOTH");
 	                    } else {
 	                        alert("<spring:message code = 'ezApprovalG.t1292' />");
@@ -114,27 +114,27 @@
 	            document.getElementById("SMonth").value = "";
 	            document.getElementById("EYear").value = "";
 	            document.getElementById("EMonth").value = "";
-	            document.all("condition")[0].checked = false;
-	            document.all("condition")[1].checked = false;
-	            document.all("Dept")[0].checked = false;
-	            document.all("Dept")[1].checked = false;
-	            document.all("UserFlag")[0].checked = false;
-	            document.all("UserFlag")[1].checked = false;
-	            document.all("UserFlag")[2].checked = false;
-	            document.all("UserFlag")[3].checked = false;
+	            document.getElementsByName("condition")[0].checked = false;
+	            document.getElementsByName("condition")[1].checked = false;
+	            document.getElementsByName("Dept")[0].checked = false;
+	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("UserFlag")[0].checked = false;
+	            document.getElementsByName("UserFlag")[1].checked = false;
+	            document.getElementsByName("UserFlag")[2].checked = false;
+	            document.getElementsByName("UserFlag")[3].checked = false;
 	        }
 	        
 	        function UserFlag_Init() {
-	            document.all("UserFlag")[0].checked = false;
-	            document.all("UserFlag")[1].checked = false;
-	            document.all("UserFlag")[2].checked = false;
-	            document.all("UserFlag")[3].checked = false;
+	            document.getElementsByName("UserFlag")[0].checked = false;
+	            document.getElementsByName("UserFlag")[1].checked = false;
+	            document.getElementsByName("UserFlag")[2].checked = false;
+	            document.getElementsByName("UserFlag")[3].checked = false;
 	        }
 	        
 	        function DeptRadio_Init() {
-	            document.all("Dept")[0].checked = false;
-	            document.all("Dept")[1].checked = false;
-	            document.all("Dept")[2].checked = false;
+	            document.getElementsByName("Dept")[0].checked = false;
+	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("Dept")[2].checked = false;
 	        }
 	        
 	        function lvtlist_onSel_Changed() {
@@ -150,27 +150,21 @@
 	        
 	        function condition_Init(mode) {
 	            if (mode == "1") {
-	                document.all("Dept")[0].disabled = false;
-	                document.all("Dept")[1].disabled = false;
-	                document.all("Dept")[2].disabled = false;
-	                document.all("Dept")[0].checked = false;
-	                document.all("Dept")[1].checked = false;
-	                document.all("Dept")[2].checked = false;
-	                document.all("UserFlag")[0].disabled = false;
-	                document.all("UserFlag")[1].disabled = false;
-	                document.all("UserFlag")[2].disabled = false;
-	                document.all("UserFlag")[3].disabled = false;
-	            } else {
-	                document.all("Dept")[0].disabled = false;
-	                document.all("Dept")[1].disabled = false;
-	                document.all("Dept")[2].disabled = false;
-	                document.all("Dept")[0].checked = false;
-	                document.all("Dept")[1].checked = false;
-	                document.all("Dept")[2].checked = false;
-	                document.all("UserFlag")[0].disabled = true;
-	                document.all("UserFlag")[1].disabled = true;
-	                document.all("UserFlag")[2].disabled = true;
-	                document.all("UserFlag")[3].disabled = true;
+	            	document.getElementsByName("Dept")[0].disabled = true;
+	                document.getElementsByName("Dept")[1].disabled = true;
+	                document.getElementsByName("Dept")[2].disabled = true;
+	                document.getElementsByName("UserFlag")[0].disabled = false;
+	                document.getElementsByName("UserFlag")[1].disabled = false;
+	                document.getElementsByName("UserFlag")[2].disabled = false;
+	                document.getElementsByName("UserFlag")[3].disabled = false;
+	            } else if (mode == "2") {
+	                document.getElementsByName("Dept")[0].disabled = false;
+	                document.getElementsByName("Dept")[1].disabled = false;
+	                document.getElementsByName("Dept")[2].disabled = false;
+	                document.getElementsByName("UserFlag")[0].disabled = true;
+	                document.getElementsByName("UserFlag")[1].disabled = true;
+	                document.getElementsByName("UserFlag")[2].disabled = true;
+	                document.getElementsByName("UserFlag")[3].disabled = true;
 	            }
 	        }
 	        
@@ -236,17 +230,15 @@
 	</head>
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezApprovalG.t1297' /></h1>
-	    <div id="mainmenu">
-	        <ul>
-	        	<b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-		        </SELECT><br /><br />
-	            <li><span onclick="return btnSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></li>
-	        </ul>
+	    <div style="margin-bottom: 5px">
+	        <b><spring:message code = 'ezApprovalG.t1276' /></b>
+   			<select id="SCompID" name="SCompID" onChange="selectCompanyID()">
+				<c:forEach var="item" items="${list}">
+	            	<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select><br /><br />
 	    </div>
+	    
 	    <table class="content" style="margin-bottom: 10px; width: 770px;">
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t1298' /></th>
@@ -294,10 +286,14 @@
 	        <tr id="PageNum"></tr>
 	    </table>
 	
-	    <div class="listview" style="width: 770px; overflow-y: auto; overflow-x: hidden">
-	        <div id="lvSDoc" style="border: 0; width: 770px; height: 320px;"></div>
+		<div class="listview" style="width: 770px; overflow-y: auto; overflow-x: hidden">
+			<div id="lvSDoc" style="border: 0; width: 770px; height: 320px;"></div>
+		</div>
+	    
+	    <div class="btnposition" style="width: 800px;">
+	        <a class="imgbtn" onclick="btnSave_onclick()"><span>CSV <spring:message code='ezApprovalG.t1767'/></span></a>
 	    </div>
-	
+	    
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
