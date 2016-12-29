@@ -144,7 +144,7 @@
 			    			RtnState = true;
 			    			gFContID = SelectSingleNodeValueNew(loadXMLString(result), "PARAMETER/FContID");//objChildNode[0].childNodes[0].nodeValue;
 			    		}
-			    	}			    	
+			    	}
 			    });
 			}
 			
@@ -258,18 +258,18 @@
 			    document.getElementById("rdTotal").checked = false;
 			    gManageID = "";
 			    
-			    $("#btnManage").css("pointer-events", "auto");
-			    $("#btnUseDept").css("pointer-events", "auto");
-			    $("#btnDelDept").css("pointer-events", "auto");
+			    document.getElementById("btnManage").style.display = "";
+	            document.getElementById("btnUseDept").style.display = "";
+	            document.getElementById("btnDelDept").style.display = "";
 			}
 			
 			function rdTotal_onclick() {
 			    document.getElementById("rdGroup").checked = false;
 			    gManageID = "ALL";
 			
-			    $("#btnManage").css("pointer-events", "none");
-			    $("#btnUseDept").css("pointer-events", "none");
-			    $("#btnDelDept").css("pointer-events", "none");
+			    document.getElementById("btnManage").style.display = "none";
+	            document.getElementById("btnUseDept").style.display = "none";
+	            document.getElementById("btnDelDept").style.display = "none";
 			}
 			
 			function btnManage_onclick() {
@@ -463,12 +463,12 @@
 	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 100%; HEIGHT: 288px; BACKGROUND-COLOR: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td align="center" style="width:10%">
-	               <a class="imgbtn"><span id="btnManage" onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
-	               <a class="imgbtn"><span id="btnUseDept" onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
-	               <a class="imgbtn"><span id="btnDelDept" onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
+	               <a class="imgbtn" id="btnManage" style="display:none"><span onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
+	               <a class="imgbtn" id="btnUseDept" style="display:none"><span onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
+	               <a class="imgbtn" id="btnDelDept" style="display:none"><span onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
 	            </td>
 	            <td valign="top" style="width:45%">
-	                <input type="text" id="tbManage" name="tbManage" style="Width: 295px" readonly>
+	                <input type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
 	                <select id="selDept" name="selDept" size="2" style="BORDER: #b6b6b6 1px solid; HEIGHT: 270px; WIDTH: 100%; Z-INDEX: 100">
 	                </select>
 	            </td>
