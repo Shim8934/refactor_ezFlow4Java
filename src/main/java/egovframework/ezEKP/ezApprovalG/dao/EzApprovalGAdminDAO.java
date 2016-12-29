@@ -143,13 +143,24 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (Integer) select("EzApprovalGAdmin.insertFormContainerConti", map);
 	}
 	
-	public String setFormData(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalGAdmin.setFormData", map);
+	public String setFormDataSelect(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdmin.setFormDataSelect", map);
+	}
+	public void setFormDataInsert1(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setFormDataInsert1", map);
+	}
+	public void setFormDataUpdate(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.setFormDataUpdate", map);
+	}
+	public void setFormDataInsert2(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdmin.setFormDataInsert2", map);
+	}
+	public void setFormDataDelete(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdmin.setFormDataDelete", map);
 	}
 	
 	public Integer getTaskCategoryDuplicate(Map<String, Object> map) throws Exception {
-		select("EzApprovalGAdmin.getTaskCategoryDuplicate", map);
-		return (Integer) map.get("v_pCount");
+		return (Integer) select("EzApprovalGAdmin.getTaskCategoryDuplicate", map);
 	}
 
 	public Integer getTaskCategoryNodeExist(Map<String, Object> map) throws Exception {
