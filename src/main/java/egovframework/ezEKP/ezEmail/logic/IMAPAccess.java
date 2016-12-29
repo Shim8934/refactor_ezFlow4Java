@@ -63,6 +63,7 @@ public class IMAPAccess {
 		this.userName = userName;
 		this.password = password;
 		this.egovMessageSource = egovMessageSource;
+		this.locale = locale;
 		this.timeout = timeout;
 		this.connectionTimeout = connectionTimeout;
 	}
