@@ -641,6 +641,7 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     GetListInfo_ContentObject = ContentObject;
     ShowMailProgress();
 }
+
 function GetListIevent_ongetxmlcomplete() {
     if (GetList_HTTP != null && GetList_HTTP.readyState == 4) {
         if (GetList_HTTP.status >= 200 && GetList_HTTP.status < 300) {
@@ -658,7 +659,13 @@ function GetListIevent_ongetxmlcomplete() {
                         document.getElementById("HeaderAllCheckBox").checked = false;
                 } catch (e) { }
             } else {
-                location.reload(true);
+            	parent.frames["left"].reloadRetryCount--;
+            	
+            	if (parent.frames["left"].reloadRetryCount >= 0) {
+            		location.reload(true);
+            	} else {
+            		parent.frames["left"].reloadRetryCount = 1;
+            	}
             }
             
             HiddenMailProgress();

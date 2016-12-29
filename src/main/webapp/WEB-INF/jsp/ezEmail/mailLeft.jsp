@@ -25,6 +25,8 @@
 	        var g_firstOpen = true;
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";
+	        var reloadRetryCount = 1;
+	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
 	            if (document.documentElement.clientHeight > 900) {

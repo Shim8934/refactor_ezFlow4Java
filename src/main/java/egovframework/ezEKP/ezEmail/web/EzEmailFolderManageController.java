@@ -164,7 +164,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            		}
 	            	}
 	                break;
-	            case "DEL": //지운편지함 하위에 있는 폴더 영구삭제
+	            case "DEL": //지운편지함 하위에 있는 폴더 영구삭제 - 하위폴더도 삭제됨(메일도 삭제됨)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 	            			userEmail, password, egovMessageSource, locale);
 	            	if (!url.equals("")) {
@@ -255,6 +255,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	        }
 		} catch (MessagingException e) {
+			//TODO: exception별로 client단 처리 해줘야함.
 			returnValue = "ERROR : " + e.getMessage();
 			e.printStackTrace();
 		} finally {
