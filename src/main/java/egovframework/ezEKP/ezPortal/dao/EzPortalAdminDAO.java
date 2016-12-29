@@ -180,8 +180,7 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int savePortalPage3 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage3", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage3", map);
 	}
 	
 	public int savePortalPage4 (Map<String, Object> map) {
@@ -197,8 +196,7 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public int savePortalPage8 (Map<String, Object> map) {
-		select("EzPortalAdminDAO.savePortalPage8", map);
-		return (int)map.get("v_pCount");
+		return (int)select("EzPortalAdminDAO.savePortalPage8", map);
 	}
 	
 	public int savePortalPage2 (Map<String, Object> map) {
