@@ -57,7 +57,7 @@ public class EzCommunityAdminController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzCommunityController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminController.class);
 	
 	/**
 	 * 메인화면 호출함수
@@ -226,7 +226,7 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEditOk.do")
 	@ResponseBody
 	public String admCommunityInfoEditOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("admCommunityInfoEditOk started.");
+		logger.debug("admCommunityInfoEditOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -238,7 +238,7 @@ public class EzCommunityAdminController {
 		
 		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang()), cCateA, cCateB, cCateC, clubName, code, userInfo.getTenantId());
 		
-		LOGGER.debug("admCommunityInfoEditOk ended.");
+		logger.debug("admCommunityInfoEditOk ended.");
 		
 		return result;
 	}
@@ -356,7 +356,7 @@ public class EzCommunityAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/commInfo.do")
 	public String commInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("commInfo started.");
+		logger.debug("commInfo started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -385,7 +385,7 @@ public class EzCommunityAdminController {
 		model.addAttribute("delReason", delReason);
 		model.addAttribute("newInfo", newInfo);
 		
-		LOGGER.debug("commInfo ended.");
+		logger.debug("commInfo ended.");
 		
 		return "/admin/ezCommunity/communityCommInfo";
 	}
