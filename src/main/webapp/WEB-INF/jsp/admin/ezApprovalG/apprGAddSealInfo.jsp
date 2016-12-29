@@ -184,6 +184,17 @@
 		            document.form.file1.value = "";
 		        }
 		    }
+		    
+		    function showKeyCode(event) {
+				event = event || window.event;
+				var keyID = (event.which) ? event.which : event.keyCode;
+				//숫자패드 모두, 방향키, 백슬러쉬, 딜리트만 포함
+				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8) {
+					return;
+				} else {
+					return false;
+				}
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -219,8 +230,8 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1263' /></th>
 	    		<td id="SealSize"> 
-	      			<input type="text" name="tbSealWidth" style="width:40px">mm&nbsp;*
-	      			<input type="text" name="tbSealHeight" style="width:40px">mm 
+	      			<input type="text" name="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
+	      			<input type="text" name="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
 	      		</td>
 	  		</tr>
 	  		<tr> 

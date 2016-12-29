@@ -78,9 +78,9 @@
 		    function pzFormProc_DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
-	
+		            
 		            if (formURL != "") {
-		                pzFormProc.LoadURL(formURL);
+		            	pzFormProc.LoadURL(formURL);
 		            }
 		        }
 		    }
@@ -115,11 +115,11 @@
 			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
 			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
 			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
-			                formURL = "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
-
+			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
+			                
 			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
-			                }                
+			                }
 			            }
 		        	}
 		        });
@@ -226,8 +226,8 @@
 		        	async : false,
 		        	data : {node1 : formID},
 		        	success : function(result) {
-		        			xmlpara = loadXMLString(result);
-		        	}
+						xmlpara = loadXMLString(result);
+	        		}
 		        });
 	
 		        listview = new ListView();
@@ -236,7 +236,7 @@
 		        listview.SetRowOnClick("lvtDeptSelect_SelChange");
 		        listview.SetRowOnDblClick("lvtDeptSelect_rowdblclick");
 		        listview.DataSource(xmlpara);
-		        listview.DataBind("divlvtForm");        
+		        listview.DataBind("divlvtForm");
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -562,27 +562,21 @@
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="DocumentComplete">
 	        pzFormProc_DocumentComplete()
-	
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="BlurTDElement">
-	        pzFormProc_BlurTDElement()
-	
+	        pzFormProc_BlurTDElement();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="FPError">
-	        pzFormProc_FPError()
-	
+	        pzFormProc_FPError();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="InvalidDocument">
-	        pzFormProc_InvalidDocument()
-	
+	        pzFormProc_InvalidDocument();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="ElementKeyEvent(nKey)">
-	        pzFormProc_ElementKeyEvent(nKey)
-	
+	        pzFormProc_ElementKeyEvent(nKey);
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="ElementChange">
-	        pzFormProc_ElementChange()
-	
+	        pzFormProc_ElementChange();
 	    </script>
 	</head>
 	<body class="popup">
