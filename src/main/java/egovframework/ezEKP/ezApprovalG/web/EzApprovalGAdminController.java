@@ -102,6 +102,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		String multiData = commonUtil.getMultiData(userInfo.getLang());
+		String editor = ""; //config에는 CK등록되어있고 ""일때 폼프로세서적용 
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -118,6 +119,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("docType", docType);
 		model.addAttribute("multiData", multiData);
 		model.addAttribute("list", resultList);
+		model.addAttribute("editor", editor);
 		
 		logger.debug("formAdmin ended.");
 		
@@ -158,7 +160,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String id = request.getParameter("id");
 		String kind = request.getParameter("kind");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, "", "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String searchType = request.getParameter("searchType");
+		String searchName = request.getParameter("searchName");
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, "", companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
 		

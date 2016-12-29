@@ -1,4 +1,4 @@
-function GetFormInfo(ID,KIND) {
+function GetFormInfo(ID, KIND, searchType, searchName) {
 	var xmlRtn = createXmlDom();
 	
 	$.ajax({
@@ -6,7 +6,11 @@ function GetFormInfo(ID,KIND) {
 		url : "/admin/ezApprovalG/getFormList.do",
 		async : false,
 		dataType : "json",
-		data : {id : ID, kind : KIND, companyID : companyID},
+		data : {id : ID,
+				kind : KIND,
+				companyID : companyID,
+				searchType : searchType,
+				searchName : searchName},
 		success : function(result) {
 			xmlRtn = loadXMLString(result.resultXML);
 		}
@@ -26,7 +30,7 @@ function GetFormInfo(ID,KIND) {
     
 	if (tr) {	
 		listview.SetSelectFlag(true);
-		document.getElementById('descrip').innerHTML = tr.getAttribute("DATA2");
+		document.getElementById('descrip').innerHTML = GetAttribute(tr,"DATA2");
 	}
 }
 
