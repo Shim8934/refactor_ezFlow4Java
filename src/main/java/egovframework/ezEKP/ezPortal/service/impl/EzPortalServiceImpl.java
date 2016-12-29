@@ -1523,6 +1523,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
+		logger.debug("getUtilMenuHTML started");
+
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
 		sb.append("<article class='utmenu'>\n");
@@ -1546,6 +1548,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 			logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
 			String menuitemWindowOption = result.get(i).getWindowOption();
+			logger.debug("menuitemWindowOption="+menuitemWindowOption);
+			
+			if (menuitemWindowOption == null) {
+				menuitemWindowOption = "";
+			}
 			
 			if (i == result.size() - 1) {
 				lastLogout = "class='btn_logout'";
@@ -1570,6 +1577,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		sb.append("</ul></article>\n");
+		logger.debug("sb="+sb.toString());
+		logger.debug("getUtilMenuHTML ended");
+		
 		return sb.toString();
 	}
 	
@@ -1683,59 +1693,55 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getUtilImageHTML (String menuItemDisplayName, String pCallingMenuID, String pUID, String logoutclass, String pContentsUID, LoginVO userInfo) {
-		try {
-			String pSkinNum = "";
-			String strHTML = "";
-			if (pContentsUID.equals("203")) {
-				pSkinNum = userInfo.getSkinNum();
-			} else {
-				pSkinNum = "1";
-			}
-			
-			StringBuilder sb = new StringBuilder();
-			
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
-
-			if (result != null) {
-                String imageNormalImagePath = result.getNormalImagePath();
-                String imageOverImagePath = result.getOverImagePath();
-                int imageImageWidth = result.getImageWidth();
-                int imageImageHeight = result.getImageHeight();
-                String imageLinkURL = result.getLinkURL();
-                String imageLinkLocation = result.getLinkLocation();
-                String imageWindowOption = result.getWindowOption();
-                
-                if (imageNormalImagePath != null) {
-                	sb.append("<li><img src='" + imageNormalImagePath + "'");
-                    if (imageOverImagePath != "") {
-                    	sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"");
-                    }
-                    if (!imageLinkURL.equals("")) {
-                        sb.append(" style='cursor:pointer'");
-                        sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
-                        sb.append(", \"" + imageLinkLocation + "\"");
-                        sb.append(", \"" + imageWindowOption + "\")'");
-                    }
-                    if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) {
-                    	sb.append(" width='" + imageImageWidth + "'");
-                    }
-                    if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) {
-                    	sb.append(" height='" + imageImageHeight + "'");
-                    }
-                    sb.append("></li>\n");
-                    strHTML = sb.toString();
-
-                    sb.delete(0, sb.length());
-                    sb.append(strHTML);
-                }
-			}
-			
-			return sb.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+	public String getUtilImageHTML (String menuItemDisplayName, String pCallingMenuID, String pUID, String logoutclass, String pContentsUID, LoginVO userInfo) throws Exception {
+		String pSkinNum = "";
+		String strHTML = "";
+		if (pContentsUID.equals("203")) {
+			pSkinNum = userInfo.getSkinNum();
+		} else {
+			pSkinNum = "1";
 		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
+
+		if (result != null) {
+            String imageNormalImagePath = result.getNormalImagePath();
+            String imageOverImagePath = result.getOverImagePath();
+            int imageImageWidth = result.getImageWidth();
+            int imageImageHeight = result.getImageHeight();
+            String imageLinkURL = result.getLinkURL();
+            String imageLinkLocation = result.getLinkLocation();
+            String imageWindowOption = result.getWindowOption();
+            
+            if (imageNormalImagePath != null && !imageNormalImagePath.equals("")) {
+            	sb.append("<li><img src='" + imageNormalImagePath + "'");
+                if (imageOverImagePath != null && !imageOverImagePath.equals("")) {
+                	sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"");
+                }
+                if (!imageLinkURL.equals("")) {
+                    sb.append(" style='cursor:pointer'");
+                    sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
+                    sb.append(", \"" + imageLinkLocation + "\"");
+                    sb.append(", \"" + imageWindowOption + "\")'");
+                }
+                if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) {
+                	sb.append(" width='" + imageImageWidth + "'");
+                }
+                if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) {
+                	sb.append(" height='" + imageImageHeight + "'");
+                }
+                sb.append("></li>\n");
+                strHTML = sb.toString();
+
+                sb.delete(0, sb.length());
+                sb.append(strHTML);
+            }
+		}
+		
+		return sb.toString();
+		
 	}
 	
 	public String getDefaultPortalPage() {
