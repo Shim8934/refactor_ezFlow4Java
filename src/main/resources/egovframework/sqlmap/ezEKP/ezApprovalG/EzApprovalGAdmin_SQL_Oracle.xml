@@ -1181,7 +1181,7 @@
 						receiveddeptid,
 						receiveddeptname2
 					ORDER BY
-						receiveddeptname2 
+						receiveddeptname2
 				]]>
 			</isEqual>
 			<isNotEqual property="v_MODE" compareValue="SEND">

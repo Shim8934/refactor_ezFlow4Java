@@ -154,6 +154,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} catch (Exception e) {
 			logger.debug("getContainerInfoManage catch.");
 			logger.debug(e.getMessage());
+			
 			if (type.equals("LIST")){
 				logger.debug("getContainerInfoManage catch if.");
 				
@@ -2658,7 +2659,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		return ezApprovalGAdminDAO.setContainerIDForDoc1(map);
+		logger.debug("setContainerIDForDoc1 started.");
+		String result = ezApprovalGAdminDAO.setContainerIDForDoc1(map);
+		logger.debug("setContainerIDForDoc1 ended.");
+		
+		return result;
 	}
 
 	@Override
@@ -2676,10 +2681,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "OK";
 		} catch (Exception e) {
-			logger.debug("setContainerIDForDoc2 ERROR.");
+			logger.debug("setContainerIDForDoc2 catch.");
 			logger.debug(e.getMessage());
 			
-			return "ERROR" + e.getMessage();
+			return "ERROR";
 		}
 	}
 

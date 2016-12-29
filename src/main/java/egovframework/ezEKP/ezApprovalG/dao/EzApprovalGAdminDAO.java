@@ -340,6 +340,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteForm1(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteForm1", map);
 	}
+	
 	public void deleteForm2(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.deleteForm2", map);
 	}

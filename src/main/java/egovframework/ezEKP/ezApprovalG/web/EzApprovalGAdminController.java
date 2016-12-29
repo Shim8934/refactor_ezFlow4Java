@@ -1864,7 +1864,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		resultExcel.append("</tr></table>");
 		
 		resultExcel.append("<table>");
-
+		
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
 		for (int k = 0; k < objRow.getLength(); k++) {
@@ -2132,6 +2132,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/setContainerIDForDoc.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String setContainerIDForDoc (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setContainerIDForDoc started.");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
@@ -2150,6 +2151,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		} else {
 			result = "NOCONTAINERID";
 		}
+		
+		logger.debug("setContainerIDForDoc ended.");
 		
 		return result;
 	}

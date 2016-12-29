@@ -177,30 +177,50 @@
 	        function btnSave_onclick() {
 	            var url = "/admin/ezApprovalG/ezStatistics/excelExportOut.do";
 
-	            if (document.all("condition")[0].checked) {
+	            if (document.getElementsByName("condition")[0].checked) {
 	                url += "?flag=USER";
-	            } else {
+	                
+	                if (!document.getElementsByName("UserFlag")[0].checked && !document.getElementsByName("UserFlag")[1].checked && !document.getElementsByName("UserFlag")[2].checked && !document.getElementsByName("UserFlag")[3].checked) {
+	                	alert("<spring:message code = 'ezApprovalG.t1294' />");
+		            	return ;
+	                } else {
+	                	if (document.getElementsByName("UserFlag")[0].checked) {
+	                		pMode = 1;
+                        } else if (document.getElementsByName("UserFlag")[1].checked) {
+                        	pMode = 2;
+                        } else if (document.getElementsByName("UserFlag")[2].checked) {
+                        	pMode = 3;
+                        } else if (document.getElementsByName("UserFlag")[3].checked) {
+                        	pMode = 4;
+                        }
+	                	
+	                	url += "&p4=" + encodeURI(pMode);
+	                }
+	            } else if (document.getElementsByName("condition")[1].checked){
 	                url += "?flag=DEPT";
+	                
+	                if(!document.getElementsByName("Dept")[0].checked && !document.getElementsByName("Dept")[1].checked && !document.getElementsByName("Dept")[2].checked) {
+	                	alert("<spring:message code = 'ezApprovalG.t1294' />");
+	                	return ;
+	                } else {
+	                	if (document.getElementsByName("Dept")[0].checked) {
+		                    pMode = "SEND";
+		                } else if (document.getElementsByName("Dept")[1].checked) {
+		                    pMode = "RECV";
+		                } else if (document.getElementsByName("Dept")[2].checked) {
+		                    pMode = "BOTH";
+		                }
+	                	url += "&p4=" + encodeURI(pMode);
+	                }
+	            } else {
+	            	alert("<spring:message code = 'ezApprovalG.t1294' />");
+	            	return ;
 	            }
 	            
 	            url += "&p0=" + encodeURI(document.getElementById("SYear").value);
 	            url += "&p1=" + encodeURI(document.getElementById("SMonth").value);
 	            url += "&p2=" + encodeURI(document.getElementById("EYear").value);
 	            url += "&p3=" + encodeURI(document.getElementById("EMonth").value);
-
-	            if (document.all("condition")[0].checked) {
-	                url += "&p4=" + encodeURI(pUserFlag);
-	            } else {
-	                if (document.all("Dept")[0].checked) {
-	                    pMode = "SEND";
-	                } else if (document.all("Dept")[1].checked) {
-	                    pMode = "RECV";
-	                } else if (document.all("Dept")[2].checked) {
-	                    pMode = "BOTH";
-	                }
-	                
-	                url += "&p4=" + encodeURI(pMode);
-	            }
 	            
 	            url += "&p5=" + encodeURI(pCompanyID);
 
