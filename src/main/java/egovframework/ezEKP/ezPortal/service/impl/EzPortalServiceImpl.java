@@ -1551,10 +1551,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				lastLogout = "class='btn_logout'";
 			}
 			
-			if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
+			if (menuitemImageUID != null && !menuitemImageUID.equals("")) {
 				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
 			} else {
-				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				if (menuitemLinkURL != null && !menuitemLinkURL.equals("")) {
 					if (i == result.size() - 1) {
 						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");
 					} else {
