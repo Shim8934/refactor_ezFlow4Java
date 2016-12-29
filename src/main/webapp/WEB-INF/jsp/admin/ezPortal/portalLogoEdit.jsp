@@ -107,8 +107,11 @@
 		
 		function Save() {
 			var strXML = "<DATA>";
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
-			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+			//if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
+			
 			
 			strXML += "<OLDFILENAME></OLDFILENAME>";
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(document.getElementById("txtDisplayName").value) + "</DISPLAYNAME>";
@@ -275,9 +278,11 @@
 		            //2016-10-21 mode PHOTO -> Logo로 변경
 		            if (document.getElementById('mode').value == "Logo") {
 		                if (navigator.userAgent.indexOf("Firefox") != -1)
-		                    txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    //txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                else
-		                    txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    //txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                txtNormalImage.style.display = "";
 		            }
 		        }

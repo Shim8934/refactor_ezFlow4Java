@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,6 +90,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private Properties config;
 	
 	@Override
 	public String getTopMenuConfigItem(String itemName, String uID, int tenantID) throws Exception{
@@ -1556,7 +1560,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					} else {
 						sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 						sb.append(", \"" + menuitemLinkLocation + "\"");
-                        sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+                        //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
+						sb.append(", \"" + menuitemWindowOption + "\")'>" + menuitemDisplayName + "</span></li>\n");
 					}
                       
 				} else {
@@ -2402,7 +2407,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String addBestTable (LoginVO userInfo) throws Exception {
-		StringBuilder strData = new StringBuilder();
+		logger.debug("addBestTable started");
+
+StringBuilder strData = new StringBuilder();
 		
 		boolean firstFlag = true;
 		int val = 0;
@@ -2441,9 +2448,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
 						bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
 					} else {
-						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + "/files/upload_community/logo/"+list.get(i).getC_Logo_Thumbnail();
+						//bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + "/files/upload_community/logo/"+list.get(i).getC_Logo_Thumbnail();
+						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
 					}
-					
+					logger.debug("bannerSrc="+bannerSrc);
 					
 					strData.append("<img src='" + bannerSrc + "' width='86' height='61' alt=''>");
 					strData.append("<span class='iconbest'></span>");
@@ -2509,7 +2517,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		} else {
 			ret = "0";
 		}
-		
+
+		logger.debug("addBestTable ended");
 		return ret;
 	}
 	

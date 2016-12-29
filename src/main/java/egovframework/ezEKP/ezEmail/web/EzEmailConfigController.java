@@ -1670,15 +1670,24 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 									}
 									out.flush();
 								}
-		
-								innerFolder.appendMessages(new Message[]{messages[i]});
 								
-								if (deleteYN.equals("Y")) {
-									messages[i].setFlag(Flags.Flag.DELETED, true);
-								}
-								
+								//TODO: 편지함 존재여부, 용량초과 Exception은 for문 그만돌고 error message를 찍어줘야함.
+								// 그 외의 Exception은 계속 for문을 돌면서 메일을 가져와야함.
 								String messageId = ((POP3Folder)folder).getUID(messages[i]);
-								pop3MessageId.add(messageId);
+								try {
+									innerFolder.appendMessages(new Message[]{messages[i]});
+									if (deleteYN.equals("Y")) {
+										messages[i].setFlag(Flags.Flag.DELETED, true);
+									}
+									
+									pop3MessageId.add(messageId);
+								} catch (MessagingException e) {
+									out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + "messageId=" + messageId);
+									out.flush();
+									logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
+										+ "messageId=" + messageId + ",subject=" + messages[i].getSubject());
+									e.printStackTrace();
+								}
 								
 							}
 							

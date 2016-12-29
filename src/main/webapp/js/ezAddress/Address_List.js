@@ -14,12 +14,13 @@ function View_Change() {
     }
     if (ListXML != null)
         MakeAddressList();
+    /* 2016-12-28 이효민 : 주소록 검색화면에서 검색하기 전 명함/리스트보기 전환하면 에러나는 문제로 주석처리함.
     else {
         if (searchFlag)
             Get_SearchAddressList();
         else
             Get_AddressList();
-    }
+    }*/
 }
 function Get_AddressList() {
     searchFlag = false;
