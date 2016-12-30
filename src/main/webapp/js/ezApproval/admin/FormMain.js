@@ -150,7 +150,7 @@ function Tab1_NewTabIni(pTabNodeID) {
 
 function OpenInformationUI(pInformationContent) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApproval/ezAPROPINION.aspx";
+    var url = "/admin/ezApproval/ezAprOpinion.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
     var RtnVal = window.showModalDialog(url, parameter, feature);
     return RtnVal;
@@ -158,27 +158,18 @@ function OpenInformationUI(pInformationContent) {
 
 function OpenAlertUI(pAlertContent) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApproval/ezAPRALERT.aspx";
+    var url = "/admin/ezApproval/ezAprAlert.do";
     var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
     var RtnVal = window.showModalDialog(url, parameter, feature);
 }
 
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {    
-
-    var xmlpara = createXmlDom();
     var xmlRtn = createXmlDom();
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMCONTID", contID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMID", formID);
-
-    
     var arrFormInfo = MakeFormInfoXML();
     if (arrFormInfo[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMINFO", arrFormInfo[1]);
+        formInfo = arrFormInfo[1];
     }
     else {
         OpenAlertUI(arrFormInfo[2]);
@@ -189,7 +180,7 @@ function SaveFormInfo() {
     
     var arrFormMHT = MakeFormMHTXML();
     if (arrFormMHT[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMMHT", arrFormMHT[1]);
+        formMHT = arrFormMHT[1];
     }
     else {
         OpenAlertUI(arrFormMHT[2]);
@@ -202,7 +193,7 @@ function SaveFormInfo() {
     {
         var arrReFormMHT = MakeReFormMHTXML();
         if (arrReFormMHT[0] == "TRUE") {
-            createNodeAndInsertText(xmlpara, objNode, "REFORMMHT", arrReFormMHT[1]);
+            reformMHT = arrReFormMHT[1];
         }
         else {
             OpenAlertUI(arrReFormMHT[2]);
@@ -216,7 +207,7 @@ function SaveFormInfo() {
     arrFormConn = MakeFormConnXML();
     if (arrFormConn[0] == "TRUE") {
         if (arrFormConn[1] != "") { 
-            createNodeAndInsertText(xmlpara, objNode, "FORMCONN", arrFormConn[1]);
+            formConn = arrFormConn[1];
         }
     }
     else {
@@ -227,22 +218,18 @@ function SaveFormInfo() {
        
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULE", arrFormAutoRule[1]);           
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULELINE", arrFormAutoRule[2]);
-      
-        }
+        formAutoRule = arrFormAutoRule[1];           
+        formAutoRuleLine = arrFormAutoRule[2];
+    }
     else {
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULE", "");
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULELINE", "");
-          
-          
-          
-        }
+        formAutoRule = "";
+        formAutoRuleLine = "";
+    }
    
     
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMRECEVGROUP", arrFormRecevGroup[1]);
+        formRecevGroup = arrFormRecevGroup[1];
     }
     else {
         OpenAlertUI(arrFormRecevGroup[2]);
@@ -252,17 +239,38 @@ function SaveFormInfo() {
 
     //2015.1.20 FormBuilder
     if (setFormBuilder.checked) {
-        createNodeAndInsertText(xmlpara, objNode, "FORMBUILDER", "Y");
-        createNodeAndInsertText(xmlpara, objNode, "FORMBUILDERFUNCTION", txt_reformFunction.innerText);
+        formBuilder = "Y";
+        formBuilderFunction = txt_reformFunction.innerText;
     }
     else {
-        createNodeAndInsertText(xmlpara, objNode, "FORMBUILDER", "N");
-        createNodeAndInsertText(xmlpara, objNode, "FORMBUILDERFUNCTION", "");
+        formBuilder = "N";
+        formBuilderFunction = "";
     }
     
-    xmlhttp.open("POST", "aspx/FormSave.aspx", true);
-    xmlhttp.onreadystatechange = SaveFormInfo_after;
-    xmlhttp.send(xmlpara);
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/admin/ezApproval/formSaveReform.do",
+		data : {
+			companyID  : companyID,
+			formContID : contID,
+			formID     : formID,
+			formInfo   : formInfo,
+			formMHT    : formMHT,
+			reformMHT  : reformMHT,
+			formConn   : formConn,
+			formAutoRule     : formAutoRule,
+			formAutoRuleLine : formAutoRuleLine,
+			formRecevGroup   : formRecevGroup,
+			formBuilder      : formBuilder,
+			formBuilderFunction : formBuilderFunction
+		},
+		success: function(text){
+			SaveFormInfo_after(text);
+		}
+	});
 }
 
 function MakeFormInfoXML() {

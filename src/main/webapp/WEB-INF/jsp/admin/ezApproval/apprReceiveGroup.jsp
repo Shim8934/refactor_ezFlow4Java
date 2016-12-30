@@ -17,7 +17,7 @@
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 	        if (browserIE) {
-	            document.write('<script type="text/javascript" src="/js/ezApproval/kaoni_ActiveX.js" \></script\>');
+	            document.write('<script type="text/javascript" src="/js/Kaoni_ActiveX.js" \></script\>');
 	
 	        }
 	    </script>

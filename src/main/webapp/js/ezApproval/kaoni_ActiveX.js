@@ -6,7 +6,7 @@
 
 function FormProc_ActiveX(idName,stratMode)
 {
-	document.writeln('<OBJECT classid=CLSID:999C3A80-04F3-44B7-8815-36ADF2319B98 id='+ idName + ' style="HEIGHT: 100%;" width="100%" VIEWASTEXT>');
+	document.writeln('<OBJECT classid=CLSID:999C3A80-04F3-44B7-8815-36ADF2319B98 id='+ idName + ' style="HEIGHT: 100%; width=100%" VIEWASTEXT>');
 	document.writeln('<PARAM NAME="StartMode" VALUE="' + stratMode + '">');
 	document.writeln('<PARAM NAME="SpellVal" VALUE="' + FormProcSpelling + '"></OBJECT>');
 }

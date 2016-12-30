@@ -1468,8 +1468,8 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 			newFileName = newFileName.substring(0, 105) + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
 		}
 		
-		String tempSealPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG");
-		String thumbSealPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG") + commonUtil.separator + "T" + newFileName.substring(0, newFileName.lastIndexOf("."));
+		String tempSealPath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG");
+		String thumbSealPath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.SEALIMG") + commonUtil.separator + "T" + newFileName.substring(0, newFileName.lastIndexOf("."));
 		
 		File tempSeal = new File(tempSealPath);
 		File thumbSeal = new File(thumbSealPath);
@@ -1617,9 +1617,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		apprExcelOutVO.setLang(userInfo.getLang());
 		
 		if (apprExcelOutVO.getListType() != null && apprExcelOutVO.getListType().equals("ADMINUSERCOUNT")) {
-			excelValue = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale());
+			excelValue = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale(), userInfo.getOffset());
 		} else {
-			excelValue = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO);
+			excelValue = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO, userInfo.getOffset());
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -1675,7 +1675,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		apprExcelOutVO.setTenantID(userInfo.getTenantId());
 		apprExcelOutVO.setLang(userInfo.getLang());
 		
-		String result = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale());
+		String result = ezApprovalAdminService.getUserDocCount(apprExcelOutVO, userInfo.getLocale(), userInfo.getOffset());
 			
 		logger.debug("getUserDocCount ended");
 		
@@ -1695,7 +1695,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		apprExcelOutVO.setTenantID(userInfo.getTenantId());
 		apprExcelOutVO.setLang(userInfo.getLang());
 		
-		String result = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO);
+		String result = ezApprovalAdminService.getDeptTranSendDocCount(apprExcelOutVO, userInfo.getOffset());
 
 		logger.debug("getDeptTranSendDocCount ended");
 		
@@ -1883,7 +1883,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		String strJSInfo = "";
 
 		if (reFormJSURL != null) {
-			String tempPath = realPath + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator + reFormJSURL;
+			String tempPath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator + reFormJSURL;
 			File file = new File(tempPath);
 			
 			if (file.exists()) {
@@ -1962,5 +1962,134 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		logger.debug("getFormPropList ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/reformDesignProcessorSub.do")
+	public String reformDesignProcessorSub(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("reformDesignProcessorSub started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		String companyID = request.getParameter("companyID");
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId());
+		String useReform = ezCommonService.getTenantConfig("useReform", userInfo.getTenantId());
+		
+		if (!formProcSpelling.equals("1")) {
+			formProcSpelling = "0";
+		}
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("formProcSpelling", formProcSpelling);
+		model.addAttribute("useReform", useReform);
+		
+		logger.debug("reformDesignProcessorSub ended");
+		
+		return "admin/ezApproval/apprReformDesignProcessorSub";
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/formSaveReform.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSaveReform(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
+		logger.debug("formSaveReform started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		//TODO: 일반버젼 하고 리폼 하기
+		String rtnValue = ezApprovalAdminService.saveFormInfo(apprFormInfoVO, realPath, userInfo.getLocale());
+
+		logger.debug("formSaveReform ended");
+		
+		return "";
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/formMain.do")
+	public String formMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("formMain started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		String topID = "";
+		String title = "";
+		String tCheck = request.getParameter("tCheck");
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId());
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("contID");
+		String formID = request.getParameter("formID");
+		String editorType = request.getParameter("type");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
+		} else {
+			topID = "Top";
+		}
+		
+		userInfo.setCompanyID(companyID);
+		
+		String docType = ezApprovalAdminService.getDocType("", userInfo);
+		String securityNode = ezApprovalAdminService.getSecurityType("", userInfo);
+		String periodNode = ezApprovalAdminService.getKeepType("", userInfo);
+		String[]  docs;
+		
+		if (docType.split("t").length != 0) {
+			docs = docType.split("t");
+			
+			for (int k = 1; k < docs.length; k++) {
+				docs[k] = "t" + docs[k].split("<")[0];
+				docType = docType.replace(docs[k], messageSource.getMessage("ezApproval." + docs[k], userInfo.getLocale()));
+			}
+		}
+		
+		if (tCheck != null && tCheck.equals("FIns")) {
+			title = messageSource.getMessage("ezApproval.t760", userInfo.getLocale());
+		} else {
+			title = messageSource.getMessage("ezApproval.t761", userInfo.getLocale());
+		}
+		
+		String listHeader = ezApprovalAdminService.getListHeader("110", userInfo);
+		String aprTypeXML = ezApprovalAdminService.getAprType(userInfo);
+		String aprRule = "";
+		String aprRuleLine = "";
+		
+		if (formID != null && !formID.equals("")) {
+			aprRule = ezApprovalAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+			aprRuleLine = ezApprovalAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
+		}
+		
+		String docTypeOption = "<OPTION VALUE='A02001' >" + messageSource.getMessage("ezApproval.t437", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02011' >" + messageSource.getMessage("ezApproval.t990013", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02012' >" + messageSource.getMessage("ezApproval.t990014", userInfo.getLocale()) + "</OPTION>";
+		
+		model.addAttribute("docTypeOption", docTypeOption);
+		model.addAttribute("aprRule", aprRule);
+		model.addAttribute("aprRuleLine", aprRuleLine);
+		model.addAttribute("listHeader", listHeader);
+		model.addAttribute("aprTypeXML", aprTypeXML);
+		model.addAttribute("docType", docType);
+		model.addAttribute("securityNode", securityNode);
+		model.addAttribute("periodNode", periodNode);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("title", title);
+		model.addAttribute("topID", topID);
+		model.addAttribute("contID", contID);
+		model.addAttribute("tCheck", tCheck);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("formProcSpelling", formProcSpelling);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("editorType", editorType);
+
+		logger.debug("formMain ended");
+		
+		return "admin/ezApproval/apprFormMain";
 	}
 }

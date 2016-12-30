@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApproval.service.impl;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiptInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -51,6 +55,9 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
@@ -2455,7 +2462,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 	}
 
 	@Override
-	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale) throws Exception {
+	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale, String offset) throws Exception {
 		logger.debug("getUserDocCount started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -2472,17 +2479,17 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		}
 		resultXML.append("</HEADERS>");
 		
-		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01";
+		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01 00:00";
 		int tempMonth = Integer.parseInt(apprExcelOutVO.getEndMonth()) + 1;
-		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01";
+		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01 00:00";
 		
 		if (tempMonth > 12) {
 			int tempYear = Integer.parseInt(apprExcelOutVO.getEndYear()) + 1;
-			toDate = String.valueOf(tempYear) + "-01-01";
+			toDate = String.valueOf(tempYear) + "-01-01 00:00";
 		}
 		
-		apprExcelOutVO.setToDate(toDate);
-		apprExcelOutVO.setFromDate(fromDate);
+		apprExcelOutVO.setToDate(commonUtil.getDateStringInUTC(toDate, offset, true));
+		apprExcelOutVO.setFromDate(commonUtil.getDateStringInUTC(fromDate, offset, true));
 		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
 		
 		List<ApprLineInfoVO> apprLineInfoVOs = ezApprovalAdminDAO.getUserDocCount(apprExcelOutVO);
@@ -2538,7 +2545,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 	}
 
 	@Override
-	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception {
+	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO, String offset) throws Exception {
 		logger.debug("getDeptTranSendDocCount started");
 		
 		StringBuilder resultXML = new StringBuilder();
@@ -2565,17 +2572,17 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		}
 		resultXML.append("</HEADERS>");
 		
-		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01";
+		String fromDate = apprExcelOutVO.getStartYear() + "-" + apprExcelOutVO.getStartMonth() + "-01 00:00";
 		int tempMonth = Integer.parseInt(apprExcelOutVO.getEndMonth()) + 1;
-		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01";
+		String toDate = apprExcelOutVO.getEndYear() + "-" + String.valueOf(tempMonth) + "-01 00:00";
 		
 		if (tempMonth > 12) {
 			int tempYear = Integer.parseInt(apprExcelOutVO.getEndYear()) + 1;
-			toDate = String.valueOf(tempYear) + "-01-01";
+			toDate = String.valueOf(tempYear) + "-01-01 00:00";
 		}
 		
-		apprExcelOutVO.setToDate(toDate);
-		apprExcelOutVO.setFromDate(fromDate);
+		apprExcelOutVO.setToDate(commonUtil.getDateStringInUTC(toDate, offset, true));
+		apprExcelOutVO.setFromDate(commonUtil.getDateStringInUTC(fromDate, offset, true));
 		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
 		
 		List<ApprReceiptInfoVO> apprReceiptInfoVOs = ezApprovalAdminDAO.getDeptTranSendDocCount(apprExcelOutVO);
@@ -2921,6 +2928,123 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("getFormProperty ended");
 		
 		return resultXML.toString();
+	}
+
+	@Override
+	public String saveFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("saveFormInfo started");
+
+		String path = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval");
+		Document xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormInfo());
+
+		apprFormInfoVO.setFormName(xmlDom.getElementsByTagName("FormName").item(0).getTextContent());
+		apprFormInfoVO.setFormName2(xmlDom.getElementsByTagName("FormName2").item(0).getTextContent());
+		apprFormInfoVO.setFormDescription(xmlDom.getElementsByTagName("FormDescript").item(0).getTextContent());
+		apprFormInfoVO.setFormKind(xmlDom.getElementsByTagName("FormKind").item(0).getTextContent());
+		apprFormInfoVO.setUseFlag(xmlDom.getElementsByTagName("USEFLAG").item(0).getTextContent());
+		apprFormInfoVO.setKeepPeriod(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent());
+		apprFormInfoVO.setSecurityLevel(xmlDom.getElementsByTagName("SECURITYLEVEL").item(0).getTextContent());
+		apprFormInfoVO.setIsPublic(xmlDom.getElementsByTagName("ISPUBLIC").item(0).getTextContent());
+		apprFormInfoVO.setTbItemCode(xmlDom.getElementsByTagName("TBITEMCODE").item(0).getTextContent());
+		apprFormInfoVO.setTbItemName(xmlDom.getElementsByTagName("TBITEMNAME").item(0).getTextContent());
+		apprFormInfoVO.setTbItemName2(xmlDom.getElementsByTagName("TBITEMNAME2").item(0).getTextContent());
+		apprFormInfoVO.setKeepPeriodCode(xmlDom.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent());
+		
+		if (apprFormInfoVO.getFormConn() != null && !apprFormInfoVO.getFormConn().equals("")) {
+			xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormConn());
+			
+			apprFormInfoVO.setFormConnXML(xmlDom.getElementsByTagName("CONNXML").item(0).getTextContent());
+		}
+		
+		if (apprFormInfoVO.getFormWorkFlow() != null && !apprFormInfoVO.getFormWorkFlow().equals("")) {
+			xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormWorkFlow());
+			
+			apprFormInfoVO.setValidations(xmlDom.getElementsByTagName("VALIDATIONS").item(0).getTextContent());
+			apprFormInfoVO.setStatus(xmlDom.getElementsByTagName("STATUS").item(0).getTextContent());
+		}
+		
+		boolean isUpdate = false;
+		String isUpdateFormVersion = "N";
+		String strBeforeMHT = "";
+		String saveFileName = "";
+		
+		if (!apprFormInfoVO.getFormID().equals("") && !apprFormInfoVO.getFormMHT().equals("")) {
+			isUpdate = true;
+			
+			saveFileName = path + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".mht";
+			
+			try {
+				File file = new File(saveFileName);
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				}
+				
+				FileWriter fw = new FileWriter(file);
+				fw.append(apprFormInfoVO.getFormMHT());
+				fw.close();
+				
+				isUpdateFormVersion = "Y";
+			} catch (Exception e) {
+				isUpdateFormVersion = "N";
+				
+				return egovMessageSource.getMessage("ezApproval.hyj13", locale) + e.getMessage();
+			}
+		} else {
+			isUpdateFormVersion = "N";
+		}
+		
+		String strBeforeReMHT ="";
+		String isUpdateReformVersion = "N";
+		boolean isUpdateReform = false;
+		String saveReFileName = "";
+		
+		if (!apprFormInfoVO.getFormID().equals("") && !apprFormInfoVO.getReformMHT().equals("")) {
+			if (apprFormInfoVO.getFormBuilder().equals("Y")) {
+				isUpdateReform = true;
+				
+				saveReFileName = path + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + "._FORMBuilder.mht";
+				
+				try {
+					File file = new File(saveReFileName);
+					
+					if (file.exists()) {
+						strBeforeReMHT = FileUtils.readFileToString(file);
+					}
+					
+					FileWriter fw = new FileWriter(file);
+					fw.append(apprFormInfoVO.getReformMHT());
+					fw.close();
+					
+					isUpdateReformVersion = "Y";
+					
+					mhtToHtmlReform(saveReFileName, apprFormInfoVO.getFormID(), apprFormInfoVO.getCompanyID(), realPath, apprFormInfoVO.getTenantID(), locale);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		
+		logger.debug("saveFormInfo ended");
+		
+		return null;
+	}
+
+	private void mhtToHtmlReform(String saveReFileName, String formID, String companyID, String realPath, int tenantID, Locale locale) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("mhtToHtmlReform started");
+
+		String mhtImagePath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + config.getProperty("upload_common.MHTIMAGE");
+		File mhtFile = new File(mhtImagePath);
+		
+		if (!mhtFile.exists()) {
+			mhtFile.mkdirs();
+		}
+		
+		String strHTML = ezCommonService.startMHT2HTML(mhtImagePath, ezCommonService.loadMHTFile(saveReFileName), mhtImagePath, realPath, locale);
+
+		logger.debug("mhtToHtmlReform ended");
 	}
 	
 }
