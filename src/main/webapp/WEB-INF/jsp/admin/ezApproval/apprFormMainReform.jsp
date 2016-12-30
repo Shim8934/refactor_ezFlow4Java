@@ -12,16 +12,16 @@
 		<script type="text/javascript" src="<spring:message code='ezApproval.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/ezForm.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/kaoni_ActiveX.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/ezForm.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>    
 		<script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApproval/control_Cross/TreeView.js" ></script>
 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/FormMain.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/FormMain.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/AutoLineRuleMaker_AprLine.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var companyID = "${companyID}";
 		    var contID = "${contID}";
@@ -1145,7 +1145,7 @@
         </div>
         <div id="ApvForm_content7" style="width:1000px;height:100%;/*display:none;*/ padding-top:10px;">
             <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;"><span style="min-width: 45px;" id="Span4"><spring:message code='ezApproval.hyj11'/></span></h2>
-            <iframe id="iframe_ApvReForm" style="width:1000px;height:830px;"  frameborder="0" scrolling="no" src="/myoffice/ezApproval/manage/reFormMaker/reformDesignProcessor_sub.aspx?CompanyID=${companyID}"></iframe>
+            <iframe id="iframe_ApvReForm" style="width:1000px;height:830px;"  frameborder="0" scrolling="no" src="/admin/ezApproval/reformDesignProcessorSub.do?companyID=${companyID}"></iframe>
         </div>
         <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">   
             <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;"><span style="min-width: 45px;" id="Span8"><spring:message code='ezApproval.hyj12'/></span></h2>         

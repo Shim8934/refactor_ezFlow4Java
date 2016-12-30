@@ -1,0 +1,99 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+html { height:100%;}
+body { margin:0px; padding:0px; height:100%;}
+#reform a:link { text-decoration:none;}
+
+#reform { position:relative ;margin:0px; padding:0px 0px 0px 4px; background:url(/images/reform/left_bar.gif) repeat-y left #e9eaeb;height:100%; font-family:Gulim, Arial, Helvetica, sans-serif; vertical-align:top;}
+input, select, textarea {font-family:Gulim, Arial, Helvetica, sans-serif; font-size:12px; border:1px solid #999; color:#333;}
+
+.section {margin:0px; padding:15px 15px;}
+.section {border-top:1px solid #d6d6d6;border-bottom:1px solid #ffffff;}
+.section2 {margin:0px; padding:15px 15px 25px 15px;}
+.section2 {border-top:1px solid #d6d6d6;border-bottom:1px solid #ffffff;}
+.border_nob { border-bottom:0px none;}
+.border_not { border-top:0px none;}
+.section .h2 { margin:0px 0px 5px 0px ; padding:0px; clear:both; overflow:hidden;}
+.section .h2 .title {float:left; font-size:12px; color:#000000; font-weight:bold; margin:0px; padding:0px; height:22px; line-height:22px;}
+.section .btn_type2 { float:right;}
+.section2 .btn_type2 { float:right;}
+.section .sel_type1 { border:1px solid #999999; height:21px; line-height:21px; width:100%; font-size:12px; color:#333333; clear:both; }
+.section p { margin:0px; padding:0px;}
+
+
+.html_control {margin:0px; padding:0px; list-style:none; overflow:hidden;}
+.html_control li { width:43%; display:inline-block; float:left; font-size:12px; color:#333333; line-height:19px; margin:4px 7px 3px 0px; padding:1px 0px 0px 0px; cursor:pointer; max-width:160px; border:1px solid #e9eaeb; }
+.html_control li:hover { background:#d7d7d7; border:1px solid #908f8f;}
+
+
+.box_deco {border:1px solid #ffffff; background:#e1e1e1; clear:both; margin:0px; padding:2px;}
+
+
+/* table */
+.tbl_type1,.tbl_type1 th,.tbl_type1 td{border:0; background:#FFF; }
+.tbl_type1 {width:100%;border:1px solid #c8c8c8;font-size:12px;border-collapse:collapse;table-layout:fixed;}
+.tbl_type1 caption{display:none}
+.tbl_type1 th{padding:4px 0px 2px 5px;border-right:1px solid #dcdcdc;border-bottom:1px solid #dcdcdc;color:#333;font-size:12px; text-align:left; font-weight:normal; }
+.tbl_type1 td{padding:4px 5px 2px;color:#333;border-bottom:1px solid #dcdcdc;text-align:left; height:19px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.tbl_type1 .last {border-bottom:0px none;}
+.tbl_type1 select { height:17px;border:1px solid #999999;width:100%; font-size:12px; color:#333333;}
+.tbl_type1 input {height:17px; line-height:17px; border:1px solid #ffffff;width:97%; font-size:12px; color:#333333; padding:0px; background:#FFF; }
+
+
+/* table */
+.tbl_type2,.tbl_type2 th,.tbl_type2 td{border:0}
+.tbl_type2{width:100%;border-bottom:1px solid #999999;border-top:1px solid #999999;font-family:'돋움',dotum;font-size:12px;table-layout:fixed;}
+.tbl_type2 caption{display:none}
+.tbl_type2 th{padding:8px 0 7px 10px;border-top:1px solid #dddee2;background:#f1f1f3;color:#666;font-weight:bold;text-align:left;vertical-align:top}
+.tbl_type2 td{padding:8px 5px 7px 10px;border-top:1px solid #dddee2;line-height:16px;vertical-align:top; }
+.tbl_type2 input { width:98%; height:19px; line-height:19px;border:1px solid #999; }
+.tbl_type2 textarea { width:98%; min-height:50px;border:1px solid #999; }
+.textarea { width:99%; min-height:60px;border:1px solid #999; }
+
+/* btn */
+.btn_type1 {display:block;margin:0px auto; padding:0px 0px 0px 10px;  font-size:12px; border-bottom:1px solid #d4d5d6; background:url(/images/reform/btntype1.gif) left  top no-repeat; max-width:400px; cursor:pointer;}
+.btn_type1 span { display:block; background:url(/images/reform/btntype1.gif) right no-repeat; padding-right:10px; height:35px; line-height:35px; text-align:center; font-size:14px; font-weight:bold; color:#333333; }
+.btn_type1:hover { background:url(/images/reform/btntype1_o.gif) left no-repeat; }
+.btn_type1:hover span {background:url(/images/reform/btntype1_o.gif) right no-repeat;}
+
+.btn_type2 {margin:0px; padding:0px; font-size:12px; list-style:none; font-weight:normal;}
+.btn_type2 li { float:left; height:22px;background:url(/images/reform/btntype2.gif) left  top no-repeat; padding:0px 0px 0px 10px; margin:0px 3px 0px 0px; cursor:pointer;}
+.btn_type2 li:last-child { margin:0px;}
+.btn_type2 span { display:block; background:url(/images/reform/btntype2.gif) right no-repeat; padding:0px 10px 0px 0px; height:22px; line-height:22px; text-align:center;  color:#333333; min-width:25px;}
+.btn_type2 li:hover { background:url(/images/reform/btntype2_o.gif) left no-repeat; }
+.btn_type2 li:hover span {background:url(/images/reform/btntype2_o.gif) right no-repeat;}
+
+.btn_type3 { display:inline-block; height:25px; border-bottom:1px solid #e8e8e8; background:url(/images/reform/btntype3.gif) left no-repeat; padding:0px 0px 0px 10px; margin:0px 2px;cursor:pointer;}
+.btn_type3 span {background:url(/images/reform/btntype3.gif) right no-repeat; font-size:12px; color:#333; line-height:25px; text-decoration:none;padding:0px 10px 0px 0px;display:inline-block;min-width:25px;}
+.btn_type3:hover {background:url(/images/reform/btntype3_o.gif) left no-repeat; }
+.btn_type3:hover span {background:url(/images/reform/btntype3_o.gif) right no-repeat; color:#ooo }
+
+.mt5 { margin-top:7px !important;}
+
+
+/* icon */
+.icon_box { width:16px; height:16px; margin:0px 5px 0px 2px; background:url(/images/reform/icon_b.png) no-repeat; display:inline-block; vertical-align:middle;}
+
+.icon1 { background-position:0px 0px;}
+.icon2 { background-position:-30px 0px;}
+.icon3 { background-position:-60px 0px;}
+.icon4 { background-position:-90px 0px;}
+.icon5 { background-position:-120px 0px;}
+.icon6 { background-position:-150px 0px;}
+.icon7 { background-position:-180px 0px;}
+.icon8 { background-position:-210px 0px;}
+.icon9 { background-position:-240px 0px;}
+
+
+/* popup */
+.popup_wrap {position:absolute; z-index:10; font-family:Gulim, Arial, Helvetica, sans-serif; }
+.popup_reform {position:relative; z-index:20; background:#FFF; border:1px solid #575656;}
+.popup_reform h1 { position:relative ;height:35px; line-height:35px; background:#8b9199; color:#fff; font-size:12px; padding:0px 0px 0px 10px; margin:0px;}
+.popup_reform .contents { padding:10px 10px 15px}
+.popup_reform .btn_close { position:absolute ; top:0px; right:1px; width:35px; height:35px; background:url(/images/reform/icon_close.png); cursor:pointer;}
+.popup_reform .btn_area { text-align:center; margin:15px 0px 0px; padding:0px;}
+.popup_reform input, .popup_reform select { border:1px solid #999; background:#FFF;}
+.popup_shadow {position:absolute;left:1px; top:1px;z-index:10; width:100%; height:100%; background:url(/images/reform/shadow.png)}
+#directive_message {font-size:12px; margin:0px 0px 3px 0px;}
+

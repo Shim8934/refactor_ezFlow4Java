@@ -19,9 +19,10 @@
 	});
 	
     var xmlRtn = createXmlDom();
+
     xmlRtn = loadXMLString(result);
-    
     document.getElementById('divlvtForm').innerHTML = "";
+    
     var listview = new ListView();
     listview.SetID("lvtForm");
     listview.SetMulSelectable(false);
@@ -30,6 +31,7 @@
     listview.SetRowOnDblClick("lvtForm_Row_Dbclick");
     listview.DataSource(xmlRtn);
     listview.DataBind("divlvtForm");
+    
     var oArrRows = listview.GetSelectedRows();
     var tr = oArrRows[0];
     if (tr) {
@@ -59,7 +61,7 @@ function GetFormContInfo(ID, DeptID, eventflag) {
     xmlRtn = loadXMLString(result);
 
     if (SelectNodes(xmlRtn, "NODES/NODE/SELECT").length > 0) {
-        if (CrossYN() || pNoneActiveX == "YES") {
+        if (CrossYN()) {
             xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].removeChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("SELECT")[0]);
         }
         else {
@@ -88,15 +90,9 @@ function InitFormCont() {
 		}
 	});
 	
-	var xmlTree = createXmlDom();
-//	xmlTree = loadXMLString(FORMLIST.innerHTML.toUpperCase());
-	xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
-	
-	if (loadXMLString(result) != null) {
-		var xmlRtn = loadXMLString(result).documentElement;
-		GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
-	}
-
+    var xmlTree = createXmlDom();
+    xmlTree = loadXMLString(FORMLIST.innerHTML.toUpperCase());
+    
     var listview = new ListView();
     listview.SetID("lvtForm");
     listview.SetMulSelectable(false);
@@ -104,6 +100,12 @@ function InitFormCont() {
     listview.SetRowOnDblClick("lvtForm_Row_Dbclick");
     listview.DataSource(xmlRtn);
     listview.DataBind("divlvtForm");
+    xmlTree = loadXMLString(FORMCONTAINER.innerHTML.toUpperCase());
+
+    if (loadXMLString(result) != null) {
+        var xmlRtn = loadXMLString(result).documentElement;
+        GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
+    }
 
     document.getElementById('divFromTreeView').innerHTML = "";
     var treeView = new TreeView();

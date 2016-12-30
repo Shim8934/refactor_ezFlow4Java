@@ -1,18 +1,20 @@
 ﻿
 
 function ChangeTab(obj) {
-    var pSelectTab = GetAttribute(obj, "divname");
+    var pSelectTab = obj.getAttribute("divname");
     switch (pSelectTab) {
         case "ApvForm_div1":    
             if (document.getElementById("ApvForm_content1").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
-                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
             }
             break;
         case "ApvForm_div2":    
@@ -20,11 +22,13 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "";
                 document.getElementById("ApvForm_content3").style.display = "none";
-                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
-                document.getElementById("TForm").style.height = "750px";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "none";
+                document.getElementById("TForm").style.height = "800px";
                 document.getElementById("TForm").style.display = "";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
             }
             break;
         case "ApvForm_div3":    
@@ -32,35 +36,29 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "";
-                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
             }
             break;
-        case "ApvForm_div4":
-            if (document.getElementById("ApvForm_content4").style.display == "none") {
-                document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
-                document.getElementById("ApvForm_content3").style.display = "none";
-                document.getElementById("ApvForm_content4").style.display = "";
-                document.getElementById("ApvForm_content5").style.display = "none";
-                document.getElementById("ApvForm_content6").style.display = "none";
-                document.getElementById("TForm").style.height = "0px";
-                document.getElementById("TForm").style.display = "none";
-            }
+        case "ApvForm_div4":    
             break;
         case "ApvForm_div5":    
             if (document.getElementById("ApvForm_content5").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
-                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
             }
             break;
 
@@ -69,11 +67,41 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
-                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("ApvForm_content6").style.display = "";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
+            }
+            break;
+        case "ApvForm_div7":
+            if (document.getElementById("ApvForm_content7").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content7").style.display = "";
+                document.getElementById("ApvForm_content8").style.display = "none";
+                document.getElementById("TForm").style.height = "0px";
+                document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "";
+            }
+            break;
+        case "ApvForm_div8":
+            if (document.getElementById("ApvForm_content8").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("ApvForm_content6").style.display = "none";
+                document.getElementById("ApvForm_content7").style.display = "none";
+                document.getElementById("ApvForm_content8").style.display = "";
+                document.getElementById("TForm").style.height = "0px";
+                document.getElementById("TForm").style.display = "none";
+                document.getElementById("iframe_ApvReForm").style.display = "none";
             }
             break;
     }
@@ -119,6 +147,7 @@ function Tab1_NewTabIni(pTabNodeID) {
     }
 }
 
+
 function OpenInformationUI(pInformationContent) {
     var parameter = pInformationContent;
     var url = "/admin/ezApproval/ezAprOpinion.do";
@@ -137,7 +166,7 @@ function OpenAlertUI(pAlertContent) {
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {    
     var xmlRtn = createXmlDom();
-    
+
     var arrFormInfo = MakeFormInfoXML();
     if (arrFormInfo[0] == "TRUE") {
         formInfo = arrFormInfo[1];
@@ -147,6 +176,7 @@ function SaveFormInfo() {
         document.getElementById("1tab1").click();
         return;
     }
+
     
     var arrFormMHT = MakeFormMHTXML();
     if (arrFormMHT[0] == "TRUE") {
@@ -157,6 +187,21 @@ function SaveFormInfo() {
         document.getElementById("1tab2").click();
         return;
     }
+
+    //2015.1.20 FormBuilder
+    if (useReform && document.getElementById("setFormBuilder").checked)
+    {
+        var arrReFormMHT = MakeReFormMHTXML();
+        if (arrReFormMHT[0] == "TRUE") {
+            reformMHT = arrReFormMHT[1];
+        }
+        else {
+            OpenAlertUI(arrReFormMHT[2]);
+            document.getElementById("1tab7").click();
+            return;
+        }
+    }
+
     
     var arrFormConn = "";
     arrFormConn = MakeFormConnXML();
@@ -170,30 +215,18 @@ function SaveFormInfo() {
         document.getElementById("1tab3").click();
         return;
     }
-
-    var arrFormWorkFlow = "";
-    arrFormWorkFlow = MakeFormWorkFlow();
-    if (arrFormWorkFlow[0] == "TRUE") {
-        if (arrFormWorkFlow[1] != "") {
-            formWorkFlow = arrFormWorkFlow[1];
-        }
-    }
-    else {
-        OpenAlertUI(arrFormWorkFlow[2]);
-        document.getElementById("1tab4").click();
-        return;
-    }
-
+       
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
         formAutoRule = arrFormAutoRule[1];           
         formAutoRuleLine = arrFormAutoRule[2];
-      
-        }
+    }
     else {
         formAutoRule = "";
         formAutoRuleLine = "";
-        }
+    }
+   
+    
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
         formRecevGroup = arrFormRecevGroup[1];
@@ -203,28 +236,41 @@ function SaveFormInfo() {
         document.getElementById("1tab5").click();
         return;
     }
+
+    //2015.1.20 FormBuilder
+    if (setFormBuilder.checked) {
+        formBuilder = "Y";
+        formBuilderFunction = txt_reformFunction.innerText;
+    }
+    else {
+        formBuilder = "N";
+        formBuilderFunction = "";
+    }
+    
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
-		url : "/admin/ezApproval/formSave.do",
+		url : "/admin/ezApproval/formSaveReform.do",
 		data : {
 			companyID  : companyID,
 			formContID : contID,
 			formID     : formID,
 			formInfo   : formInfo,
 			formMHT    : formMHT,
+			reformMHT  : reformMHT,
 			formConn   : formConn,
 			formAutoRule     : formAutoRule,
 			formAutoRuleLine : formAutoRuleLine,
-			formRecevGroup   : formRecevGroup
+			formRecevGroup   : formRecevGroup,
+			formBuilder      : formBuilder,
+			formBuilderFunction : formBuilderFunction
 		},
 		success: function(text){
 			SaveFormInfo_after(text);
 		}
 	});
-
 }
 
 function MakeFormInfoXML() {
@@ -274,14 +320,16 @@ function MakeFormInfoXML_Detail() {
     else
         createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "N"); 
 
+    //createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", keepperiod.options(keepperiod.selectedIndex).innerText); 
+    //createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", keepperiod.value);
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", GetSelectText("keepperiod"));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", GetSelectVal("keepperiod"));
-    createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);
-    createNodeAndInsertText(xmlpara, objNode, "ISPUBLIC", document.getElementById("isPublic").value);
-    createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
-    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
-    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
-    return getXmlString(xmlpara.childNodes[0]);
+    createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", securitylevel.value); 
+    createNodeAndInsertText(xmlpara, objNode, "ISPUBLIC", isPublic.value); 
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", tbItemCode.value); 
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", tbItemName.value); 
+    createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", tbItemName2.value); 
+    return xmlpara.xml;
 }
 
 function MakeFormMHTXML() {
@@ -316,11 +364,11 @@ function MakeFormMHTXML() {
         }
     }
     else {
-        if (GetAttribute(pzFormProc.editor.DOM.body, "doctitlefield") == null) {
+        if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == null) {
             pDataCheck = false;
             pErrorMsg = strLang612;
         }
-        else if (GetAttribute(pzFormProc.editor.DOM.body, "doctitlefield") == "") {
+        else if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == "") {
             pDataCheck = false;
             pErrorMsg = strLang612;
         }
@@ -341,7 +389,11 @@ function MakeFormMHTXML() {
 
 function MakeFormMHTXML_Detail() {
     if (beforeHTML != pzFormProc.editor.DOM.body.outerHTML) {
-        return pzFormProc.DocumentHTML;
+        var xmlpara = createXmlDom();
+        var objNode;
+        createNodeInsert(xmlpara, objNode, "FORMMHT");
+        createNodeAndInsertText(xmlpara, objNode, "FormData", pzFormProc.DocumentHTML); 
+        return xmlpara.xml;
     }
     else {
         return "";
@@ -353,10 +405,10 @@ function MakeFormConnXML() {
     var pErrorMsg = "";
     var retValue = new Array();
 
-    if (getNodeText(txt_OpinionContent).replace(/\r\n/g, "").replace(/ /g, "") != "") {
+    if (txt_OpinionContent.innerText.replace(/\r\n/g, "").replace(/ /g, "") != "") {
         try {
             var xmldom = createXmlDom();
-            xmldom = loadXMLString("<CONNINFO>\n" + getNodeText(txt_OpinionContent) + "\n</CONNINFO>");
+            xmldom = loadXMLString("<CONNINFO>\n" + txt_OpinionContent.innerText + "\n</CONNINFO>");
 
             if (xmldom.getElementsByTagName("conn").length == 0) {
                 
@@ -368,16 +420,16 @@ function MakeFormConnXML() {
                 var pCheck = true;
                 for (var i = 0; i < xmldom.getElementsByTagName("conn").length; i++) {
                     pCheck = true;
-                    if (GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") == null) { pCheck = false; }
-                    if (GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime") == null) { pCheck = false; }
-                    if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "connstring"), "flag") == null) { pCheck = false; }
-                    if (getNodeText(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "connstring")) == null) { pCheck = false; }
-                    if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query"), "qtype") == null) { pCheck = false; }
-                    if (getNodeText(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query")) == null) { pCheck = false; }
-                    if (SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "keys") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].getAttribute("processtime") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("connstring").getAttribute("flag") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("connstring").text == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("query").getAttribute("qtype") == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("query").text == null) { pCheck = false; }
+                    if (xmldom.getElementsByTagName("conn")[i].selectSingleNode("keys") == null) { pCheck = false; }
 
                     if (pCheck) {
-                        pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
+                        pConnArray[i] = xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") + xmldom.getElementsByTagName("conn")[i].getAttribute("processtime");
                     }
                     else {
                         
@@ -434,34 +486,10 @@ function MakeFormConnXML_Detail() {
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "CONNXML");    
-    createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.value)); 
-    return getXmlString(xmlpara.childNodes[0]);
+    createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.innerText)); 
+    return xmlpara.xml;
 }
 
-function MakeFormWorkFlow() {
-    var retValue = new Array();
-
-    try {
-        retValue[0] = "TRUE";
-        retValue[1] = MakeFormWorkFlow_Detail();
-    } catch (e) {
-        retValue[0] = "FALSE";
-        retValue[1] = "";
-        retValue[2] = e.message;
-    }
-    return retValue;
-}
-
-function MakeFormWorkFlow_Detail() {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "WORKFLOW");
-
-    var workflow = "<WORKFLOW>\n<VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n<STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>";
-
-    createNodeAndInsertCDataText(xmlpara, objNode, "WORKFLOWINFO", MakeXMLString(workflow));
-    return getXmlString(xmlpara.childNodes[0]);
-}
 
 function MakeFormRecevGroupXML() {
     var pDataCheck = false;
@@ -472,7 +500,9 @@ function MakeFormRecevGroupXML() {
     lvtFormView.LoadFromID("lvtForm");
 
     var selRow = lvtFormView.GetDataRows();
-    pDataCheck = true;
+
+    
+        pDataCheck = true;
 
     if (pDataCheck) {
         retValue[0] = "TRUE";
@@ -499,8 +529,8 @@ function MakeFormRecevGroupXML_Detail() {
 
     var selRow = lvtFormView.GetDataRows();
     if (selRow.length > 0) {
-        if (selRow.length == 1 && (GetAttribute(selRow[0], "id")!=null? GetAttribute(selRow[0], "id").indexOf("_TR_noItems") : -1) > -1)
-            return "";
+        if (selRow.length == 1 && GetAttribute(selRow[0], "id").indexOf("_TR_noItems") > -1)
+            return;
 
         for (i = 0; i < selRow.length; i++) {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
@@ -509,7 +539,7 @@ function MakeFormRecevGroupXML_Detail() {
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "USERID", GetAttribute(selRow[i], "data2"));
         }
     }
-    return getXmlString(xmlpara.childNodes[0]);
+    return xmlpara.xml;
 }
 
 function btnClose_onclick() {
@@ -531,4 +561,84 @@ function btnClose_onclick() {
 
 function btnSave_onclick() {
     SaveFormInfo();
+}
+
+//2015.1.20 FormBuilder
+function MakeReFormMHTXML() {
+    var pDataCheck = true;
+    var pErrorMsg = "";
+    var retValue = new Array();
+    //if (iframe_ApvReForm.pzFormProc_reform.editor.DOM.body.innerText.replace(/ /gi, "") == "") {
+    //    pDataCheck = false;
+    //    pErrorMsg = strLang621;
+    //}
+
+    //if (iframe_ApvReForm.pzFormProc_reform.editor.DOM.all("body") != null) {
+    //    if (typeof (pzFormProc.editor.DOM.all("body").length) != "undefined") {
+    //        if (pzFormProc.editor.DOM.all("body").length > 1) {
+    //            pDataCheck = false;
+    //            pErrorMsg = strLang609;
+    //        }
+    //    }
+    //}
+    //else {
+    //    pDataCheck = false;
+    //    pErrorMsg = strLang610;
+    //}
+
+    //if (pzFormProc.editor.DOM.all("doctitle") != null) {
+    //    if (typeof (pzFormProc.editor.DOM.all("doctitle").length) != "undefined") {
+    //        if (pzFormProc.editor.DOM.all("doctitle").length > 1) {
+    //            pDataCheck = false;
+    //            pErrorMsg = strLang611;
+    //        }
+    //    }
+    //}
+    //else {
+    //    if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == null) {
+    //        pDataCheck = false;
+    //        pErrorMsg = strLang612;
+    //    }
+    //    else if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == "") {
+    //        pDataCheck = false;
+    //        pErrorMsg = strLang612;
+    //    }
+    //}
+
+    if (pDataCheck) {
+        retValue[0] = "TRUE";
+        retValue[1] = MakeReFormMHTXML_Detail();
+        retValue[2] = "";
+    }
+    else {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = pErrorMsg;
+    }
+    return retValue;
+}
+
+function MakeReFormMHTXML_Detail() {
+    if (beforeHTML != iframe_ApvReForm.pzFormProc_reform.editor.DOM.body.outerHTML) {
+        iframe_ApvReForm.processForSaving();
+
+        var xmlpara = createXmlDom();
+        var objNode;
+        createNodeInsert(xmlpara, objNode, "REFORMMHT");
+        createNodeAndInsertText(xmlpara, objNode, "FormData", iframe_ApvReForm.pzFormProc_reform.DocumentHTML);
+        return xmlpara.xml;
+    }
+    else {
+        return "";
+    }
+}
+
+function btn_reformSave_onclick() {
+    var rtnVal = new Array();
+    var pInformationContent = "변경한 함수을 반영하시겠습니까?";
+    var Ans = OpenInformationUI(pInformationContent);
+    if (Ans) {
+        rtnVal[0] = "TRUE";
+        rtnVal[1] = "<FORMBUILDERINFO>\n" + txt_reformFunction.innerText + "\n</FORMBUILDERINFO>";
+    }
 }

@@ -41,6 +41,46 @@ public class ApprFormInfoVO {
 	private String id;
 	/** */
 	private String name;
+	/** */
+	private String formMHT;
+	/** */
+	private String reformMHT;
+	/** */
+	private String formConn;
+	/** */
+	private String formAutoRule;
+	/** */
+	private String formAutoRuleLine;
+	/** */
+	private String formRecevGroup;
+	/** */
+	private String formBuilder;
+	/** */
+	private String formBuilderFunction;
+	/** */
+	private String formInfo;
+	/** */
+	private String useFlag;
+	/** */
+	private String keepPeriod;
+	/** */
+	private String securityLevel;
+	/** */
+	private String isPublic;
+	/** */
+	private String tbItemCode;
+	/** */
+	private String tbItemName;
+	/** */
+	private String tbItemName2;
+	/** */
+	private String keepPeriodCode;
+	/** */
+	private String formWorkFlow;
+	/** */
+	private String validations;
+	/** */
+	private String status;
 	
 	public String getFormContID() {
 		return formContID;
@@ -162,5 +202,125 @@ public class ApprFormInfoVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public String getFormMHT() {
+		return formMHT;
+	}
+	public void setFormMHT(String formMHT) {
+		this.formMHT = formMHT;
+	}
+	public String getReformMHT() {
+		return reformMHT;
+	}
+	public void setReformMHT(String reformMHT) {
+		this.reformMHT = reformMHT;
+	}
+	public String getFormConn() {
+		return formConn;
+	}
+	public void setFormConn(String formConn) {
+		this.formConn = formConn;
+	}
+	public String getFormAutoRule() {
+		return formAutoRule;
+	}
+	public void setFormAutoRule(String formAutoRule) {
+		this.formAutoRule = formAutoRule;
+	}
+	public String getFormAutoRuleLine() {
+		return formAutoRuleLine;
+	}
+	public void setFormAutoRuleLine(String formAutoRuleLine) {
+		this.formAutoRuleLine = formAutoRuleLine;
+	}
+	public String getFormRecevGroup() {
+		return formRecevGroup;
+	}
+	public void setFormRecevGroup(String formRecevGroup) {
+		this.formRecevGroup = formRecevGroup;
+	}
+	public String getFormBuilder() {
+		return formBuilder;
+	}
+	public void setFormBuilder(String formBuilder) {
+		this.formBuilder = formBuilder;
+	}
+	public String getFormBuilderFunction() {
+		return formBuilderFunction;
+	}
+	public void setFormBuilderFunction(String formBuilderFunction) {
+		this.formBuilderFunction = formBuilderFunction;
+	}
+	public String getFormInfo() {
+		return formInfo;
+	}
+	public void setFormInfo(String formInfo) {
+		this.formInfo = formInfo;
+	}
+	public String getUseFlag() {
+		return useFlag;
+	}
+	public void setUseFlag(String useFlag) {
+		this.useFlag = useFlag;
+	}
+	public String getKeepPeriod() {
+		return keepPeriod;
+	}
+	public void setKeepPeriod(String keepPeriod) {
+		this.keepPeriod = keepPeriod;
+	}
+	public String getSecurityLevel() {
+		return securityLevel;
+	}
+	public void setSecurityLevel(String securityLevel) {
+		this.securityLevel = securityLevel;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
+	}
+	public String getTbItemCode() {
+		return tbItemCode;
+	}
+	public void setTbItemCode(String tbItemCode) {
+		this.tbItemCode = tbItemCode;
+	}
+	public String getTbItemName() {
+		return tbItemName;
+	}
+	public void setTbItemName(String tbItemName) {
+		this.tbItemName = tbItemName;
+	}
+	public String getTbItemName2() {
+		return tbItemName2;
+	}
+	public void setTbItemName2(String tbItemName2) {
+		this.tbItemName2 = tbItemName2;
+	}
+	public String getKeepPeriodCode() {
+		return keepPeriodCode;
+	}
+	public void setKeepPeriodCode(String keepPeriodCode) {
+		this.keepPeriodCode = keepPeriodCode;
+	}
+	public String getFormWorkFlow() {
+		return formWorkFlow;
+	}
+	public void setFormWorkFlow(String formWorkFlow) {
+		this.formWorkFlow = formWorkFlow;
+	}
+	public String getValidations() {
+		return validations;
+	}
+	public void setValidations(String validations) {
+		this.validations = validations;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }
