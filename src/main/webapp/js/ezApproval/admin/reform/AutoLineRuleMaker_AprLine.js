@@ -38,7 +38,7 @@ function Tree_setconfig() {
 
     if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
         var treeView = new TreeView();
-        treeView.SetConfig(loadXMLString(xmlHTTP.responseText));
+        treeView.SetConfig(xmlHTTP.responseXML);
     }
 }
 
@@ -63,18 +63,18 @@ function LineAprTyepSet() {
     pAPRLINE.LoadFromID("lvAPRAUTORULELINE");
     var pSelectedRow = pAPRLINE.GetSelectedRows();
     
-    var p_isDept = GetAttribute(pSelectedRow[0], "DATA7");
+    var p_isDept = pSelectedRow[0].getAttribute("DATA7");
     var AprTyepID = "";
     if (p_isDept == "Y") {
         
-        var AprTypeObj = ChangeAprlineType("group", GetAttribute(pSelectedRow[0], "DATA4"));
-        AprTyepID = GetAttribute(pSelectedRow[0], "id") + "select";
+        var AprTypeObj = ChangeAprlineType("group", pSelectedRow[0].getAttribute("DATA4"));
+        AprTyepID = pSelectedRow[0].getAttribute("id") + "select";
         AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\" >" + AprTypeObj + "</select>";
         pSelectedRow[0].childNodes[4].innerHTML = AprTypeObj;
     } else {
         
-        var AprTypeObj = ChangeAprlineType("user", GetAttribute(pSelectedRow[0], "DATA4"));
-        AprTyepID = GetAttribute(pSelectedRow[0], "id") + "select";
+        var AprTypeObj = ChangeAprlineType("user", pSelectedRow[0].getAttribute("DATA4"));
+        AprTyepID = pSelectedRow[0].getAttribute("id") + "select";
         AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\" >" + AprTypeObj + "</select>";
         pSelectedRow[0].childNodes[4].innerHTML = AprTypeObj;
     }
@@ -165,7 +165,7 @@ function OnSelChange_onclick() {
     
 
     if (pSelectedRow.length > 0) {
-        if (GetAttribute(pSelectedRow[0], "DATA19") == "Y")
+        if (pSelectedRow[0].getAttribute("DATA19") == "Y")
             FixYN.checked = true;
         else
             FixYN.checked = false;
@@ -320,28 +320,28 @@ function MakeAprLineListXML( pAutoRuleGuid) {
             if (AprRuleLineRow[0].id != (pAPRRULELINE.GetID() + "_TR_noItems")) {
                 for (i = 0; i < CurListLen; i++) {
                     newNode = createNode(AprRuleLineXML, "ROW");
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "FORMID", GetAttribute(AprRuleLineRow[i], "DATA1"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "DOCTYPE", GetAttribute(AprRuleLineRow[i],"DATA2"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "FORMID", AprRuleLineRow[i].getAttribute("DATA1"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "DOCTYPE", AprRuleLineRow[i].getAttribute("DATA2"));
                     
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERSN", getNodeText(AprRuleLineRow[i].cells[0]).replace("★", "").replace("⊙", ""));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRTYPE", GetAttribute(AprRuleLineRow[i],"DATA4"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRSTATE", GetAttribute(AprRuleLineRow[i],"DATA5"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERID", GetAttribute(AprRuleLineRow[i],"DATA6"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERISDEPTYN", GetAttribute(AprRuleLineRow[i],"DATA7"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME", GetAttribute(AprRuleLineRow[i],"DATA8"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME2", GetAttribute(AprRuleLineRow[i],"DATA9"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE", GetAttribute(AprRuleLineRow[i],"DATA10"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE2",GetAttribute( AprRuleLineRow[i],"DATA11"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTID",GetAttribute( AprRuleLineRow[i],"DATA12"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME", GetAttribute(AprRuleLineRow[i],"DATA13"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME2",GetAttribute( AprRuleLineRow[i],"DATA14"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERLDAPPATH", GetAttribute(AprRuleLineRow[i],"DATA15"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "RECEIVEDDATE", GetAttribute(AprRuleLineRow[i],"DATA16"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "PROCESSDATE",GetAttribute( AprRuleLineRow[i],"DATA17"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "REASONDONOTAPPROV", GetAttribute(AprRuleLineRow[i],"DATA18"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISPROPOSERYN", GetAttribute(AprRuleLineRow[i],"DATA19"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISBRIEFUSERYN", GetAttribute(AprRuleLineRow[i],"DATA20"));
-                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "AUTORULEGUID",GetAttribute( AprRuleLineRow[i],"DATA21"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERSN", AprRuleLineRow[i].cells[0].innerText.replace("★", "").replace("⊙", ""));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRTYPE", AprRuleLineRow[i].getAttribute("DATA4"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRSTATE", AprRuleLineRow[i].getAttribute("DATA5"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERID", AprRuleLineRow[i].getAttribute("DATA6"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERISDEPTYN", AprRuleLineRow[i].getAttribute("DATA7"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME", AprRuleLineRow[i].getAttribute("DATA8"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME2", AprRuleLineRow[i].getAttribute("DATA9"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE", AprRuleLineRow[i].getAttribute("DATA10"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE2", AprRuleLineRow[i].getAttribute("DATA11"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTID", AprRuleLineRow[i].getAttribute("DATA12"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME", AprRuleLineRow[i].getAttribute("DATA13"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME2", AprRuleLineRow[i].getAttribute("DATA14"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERLDAPPATH", AprRuleLineRow[i].getAttribute("DATA15"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "RECEIVEDDATE", AprRuleLineRow[i].getAttribute("DATA16"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "PROCESSDATE", AprRuleLineRow[i].getAttribute("DATA17"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "REASONDONOTAPPROV", AprRuleLineRow[i].getAttribute("DATA18"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISPROPOSERYN", AprRuleLineRow[i].getAttribute("DATA19"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISBRIEFUSERYN", AprRuleLineRow[i].getAttribute("DATA20"));
+                    createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "AUTORULEGUID", AprRuleLineRow[i].getAttribute("DATA21"));
 
                     x = AprRuleLineXML.getElementsByTagName("DATA")[0];
                     x.appendChild(newNode);
@@ -494,23 +494,23 @@ function LineAprTyepSetAll() {
     if (pTotalRows[0].id != (pAPRLINE.GetID() + "_TR_noItems")) {
         for (var i = 0; i < pTotalRows.length; i++) {
             var Mark = ""
-            if (GetAttribute(pTotalRows[i], "DATA19").toUpperCase() == "Y")
+            if (pTotalRows[i].getAttribute("DATA19").toUpperCase() == "Y")
                 Mark = "★";
 
-            if (GetAttribute(pTotalRows[i], "DATA20").toUpperCase() == "Y")
+            if (pTotalRows[i].getAttribute("DATA20").toUpperCase() == "Y")
                 Mark = Mark + "⊙";
 
             pTotalRows[i].cells[0].innerHTML = Mark + pTotalRows[i].cells[0].innerHTML;
 
-            var p_isDept = GetAttribute(pTotalRows[i], "DATA7");
+            var p_isDept = pTotalRows[i].getAttribute("DATA7");
             if (p_isDept == "Y") {
-                var AprTypeObj = ChangeAprlineType("group", GetAttribute(pTotalRows[i], "DATA4"));
-                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+                var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA4"));
+                AprTyepID = pTotalRows[i].getAttribute("id") + "select";
                 AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\">" + AprTypeObj + "</select>";
                 pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
             } else {
-                var AprTypeObj = ChangeAprlineType("user", GetAttribute(pTotalRows[i], "DATA4"));
-                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+                var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA4"));
+                AprTyepID = pTotalRows[i].getAttribute("id") + "select";
                 AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\">" + AprTypeObj + "</select>";
                 pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
             }
@@ -532,10 +532,8 @@ function isgetUser(DeptID) {
     xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
     xmlhttp.send(xmlpara);
 
-    var XmlNode = loadXMLString(xmlhttp.responseText);
-
-    if (XmlNode.xml == "") rtnVal = false;
-    var nodes = SelectNodes(XmlNode, "LISTVIEWDATA/ROWS/ROW");
+    if (xmlhttp.responseXML.xml == "") rtnVal = false;
+    var nodes = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
 
     if (rtnVal) {
         nodeCnt = nodes.length;
@@ -910,7 +908,10 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
             var p_Aprlinelen = p_AprlineValue.length;
             for (i = 0; i < p_Aprlinelen; i++) {
                 var p_Option = document.createElement("OPTION");
-                setNodeText(p_Option,p_AprlineValue[i]);
+                if (CrossYN())
+                    p_Option.textContent = p_AprlineValue[i];
+                else
+                    p_Option.innerText = p_AprlineValue[i];
                 p_Option.setAttribute("value", p_AprlineCode[i]);
                 p_Option.setAttribute("value2", p_AprlineValue[i]);
 
@@ -995,7 +996,10 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
             var p_Aprlinelen = p_AprlineValue.length;
             for (i = 0; i < p_Aprlinelen; i++) {
                 var p_Option = document.createElement("OPTION");
-                setNodeText(p_Option,p_AprlineValue[i]);
+                if (CrossYN())
+                    p_Option.textContent = p_AprlineValue[i];
+                else
+                    p_Option.innerText = p_AprlineValue[i];
                 p_Option.setAttribute("value", p_AprlineCode[i]);
                 p_Option.setAttribute("value2", p_AprlineValue[i]);
 
@@ -1023,14 +1027,17 @@ function initJunGyul() {
     var pTotalRowsLen = pTotalRows.length;
 
     for (var i = pTotalRowsLen - 1; i > 0; i--) {
-        if (GetAttribute(pTotalRows[i], "DATA7") == "N") {
+        if (pTotalRows[i].getAttribute("DATA7") == "N") {
             for (var z = 0; z < pTotalRows[i].cells[4].childNodes[0].length; z++) {
-                if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && getNodeText(pTotalRows[i].cells[4].childNodes[0].options[z]) == strLangAprType4) {
+                if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && pTotalRows[i].cells[4].childNodes[0].options[z].innerText == strLangAprType4) {
                     for (var y = 0; y < i; y++) {
-                        var SelectObjectId = GetAttribute(pTotalRows[y], "id") + "select";
+                        var SelectObjectId = pTotalRows[y].getAttribute("id") + "select";
 
                         var p_Option = document.createElement("OPTION");
-                        setNodeText(p_Option,strLangAprType3);
+                        if (CrossYN())
+                            p_Option.textContent = strLangAprType3;
+                        else
+                            p_Option.innerText = strLangAprType3;
                         p_Option.setAttribute("value", "A03003");
                         p_Option.setAttribute("value2", strLangAprType3);
 
@@ -1062,7 +1069,7 @@ function AddDeptmentSelected() {
 function AprlineType_onchange(obj) {
     try {
         var pCheckTypevalue = obj.value;
-        var TypeName = getNodeText(obj.childNodes[obj.selectedIndex]);
+        var TypeName = TypeName = obj.childNodes[obj.selectedIndex].innerText;
         APRLINETYPECHANGEFunction(pCheckTypevalue, TypeName);
     } catch (e) {
         alert("AprlineType_onchange :: " + e.description);
@@ -1086,7 +1093,10 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
         p_AprlineTypeValCode = GetAttribute(CurSelRow[0], "DATA4");
         if (RtnVal) {
             if (p_AprLineValueCode == "A03004") {
-                var pCurSelIndex = getNodeText(CurSelRow[0].cells[0]);
+                if (CrossYN())
+                    var pCurSelIndex = CurSelRow[0].cells[0].textContent;
+                else
+                    var pCurSelIndex = CurSelRow[0].cells[0].innerText;
                 var pTmpAprLineTypeCode, pTmpAprLineTypeName;
                 pTmpAprLineTypeCode = strAprType3;
                 pTmpAprLineTypeName = strLangAprType3;
@@ -1102,9 +1112,14 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
                 var pAprLineRowLen = pAprLineRow.length;
 
                 for (i = 0; i < pAprLineRowLen; i++) {
-                    var templinevalue = parseInt(getNodeText(pAprLineRow[i].cells[0]));
-                    var temprowvalue = parseInt(getNodeText(CurSelRow[0].cells[0]));
-                    
+                    if (CrossYN()) {
+                        var templinevalue = parseInt(pAprLineRow[i].cells[0].textContent);
+                        var temprowvalue = parseInt(CurSelRow[0].cells[0].textContent);
+                    }
+                    else {
+                        var templinevalue = parseInt(pAprLineRow[i].cells[0].innerText);
+                        var temprowvalue = parseInt(CurSelRow[0].cells[0].innerText);
+                    }
 
                     if (templinevalue > temprowvalue) {
                         if (GetAttribute(pAprLineRow[i], "DATA4") == strAprType3) {
@@ -1113,7 +1128,7 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
                             if (pAprLineRow[i].cells[4].childNodes[0].value == strAprType3) {
                                 if (pAprLineRow[i].cells[4].childNodes[0].disabled) {
                                     var AprTypeObj = ChangeAprlineType("user", strAprType1);
-                                    AprTyepID = GetAttribute(pAprLineRow[i], "id") + "select";
+                                    AprTyepID = pAprLineRow[i].getAttribute("id") + "select";
                                     AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\" >" + AprTypeObj + "</select>";
                                     pAprLineRow[i].cells[4].innerHTML = AprTypeObj;
                                     SetAttribute(pAprLineRow[i], "DATA11", strAprType1);
@@ -1159,7 +1174,7 @@ function APRLINESNDownFunction() {
         
         
 
-        var pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA5");
+        var pSelAprLineState = pSelectedRow[0].getAttribute("DATA5");
         if (pSelectedRow.length != 0) {
             var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
             if (p_NextSelRow == undefined)
@@ -1170,13 +1185,13 @@ function APRLINESNDownFunction() {
             
             
 
-            if (GetAttribute(pSelectedRow[0], "DATA7") == "N") {
+            if (pSelectedRow[0].getAttribute("DATA7") == "N") {
                 if (pSelectedRow[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRow[0].cells[4].childNodes[0].value == strAprType4) {
                     OpenAlertUI(strLang577);
                     return;
                 }
 
-                if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
+                if (p_NextSelRow.getAttribute("DATA7") == "N") {
                     if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLang576);
                         return;
@@ -1185,7 +1200,7 @@ function APRLINESNDownFunction() {
 
             }
             else {
-                if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
+                if (p_NextSelRow.getAttribute("DATA7") == "N") {
                     if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLang576);
                         return;
@@ -1218,7 +1233,10 @@ function APRLINESNDownFunction() {
                     }
                 }
                 else {
-                    var temproevalue = getNodeText(pSelectedRow[0].cells[0]);
+                    if (CrossYN())
+                        var temproevalue = pSelectedRow[0].cells[0].textContent;
+                    else
+                        var temproevalue = pSelectedRow[0].cells[0].innerText;
 
                     if (pReDraftAprLineFlag) {
                         if (((p_NextAprStat == "A04002" || p_NextAprStat == "A04005") && GetAttribute(p_NextSelRow, "DATA6") == pUserID || p_NextAprStat == "A04003")) {
@@ -1273,43 +1291,46 @@ function DoAprLineDown(pSelectedRow) {
         var Mark = "";
         NIndex = pSelectedIndex + 1;
         if (NIndex < pTotalRowsLen) {
-            RowDownCheck = getNodeText(pTotalRows[NIndex].cells[0]);
+            if (CrossYN())
+                RowDownCheck = pTotalRows[NIndex].cells[0].textContent;
+            else
+                RowDownCheck = pTotalRows[NIndex].cells[0].innerText;
 
             if (CrossYN()) {
-                setNodeText(pTotalRows[NIndex].childNodes[0] , getNodeText(pTotalRows[CIndex].cells[0]).replace("★", "").replace("⊙", ""));
-                setNodeText(pTotalRows[CIndex].childNodes[0] , RowDownCheck.replace("★", "").replace("⊙", ""));
+                pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].textContent.replace("★", "").replace("⊙", "");
+                pTotalRows[CIndex].childNodes[0].textContent = RowDownCheck.replace("★", "").replace("⊙", "");
 
-                if ((GetAttribute(pTotalRows[NIndex], "DATA19") != null ? GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() : "")== "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[NIndex], "DATA20") != null ? GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[NIndex].childNodes[0] , Mark + getNodeText(pTotalRows[NIndex].cells[0]));
+                pTotalRows[NIndex].childNodes[0].textContent = Mark + pTotalRows[NIndex].cells[0].textContent;
                 Mark = "";
-                if ((GetAttribute(pTotalRows[CIndex], "DATA19") != null ? GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[CIndex], "DATA20") != null ? GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[CIndex].childNodes[0] , Mark + getNodeText(pTotalRows[CIndex].cells[0]));
+                pTotalRows[CIndex].childNodes[0].textContent = Mark + pTotalRows[CIndex].cells[0].textContent;
             }
             else {
-                setNodeText(pTotalRows[NIndex].cells[0],getNodeText(pTotalRows[CIndex].cells[0]).replace("★", "").replace("⊙", ""));
-                setNodeText(pTotalRows[CIndex].cells[0],RowDownCheck.replace("★", "").replace("⊙", ""));
+                pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText.replace("★", "").replace("⊙", "");
+                pTotalRows[CIndex].cells[0].innerText = RowDownCheck.replace("★", "").replace("⊙", "");
 
-                if ((GetAttribute(pTotalRows[NIndex], "DATA19") != null ? GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[NIndex], "DATA20") != null ? GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() : "").toUpperCase() == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[NIndex].childNodes[0],Mark + getNodeText(pTotalRows[NIndex].cells[0]));
+                pTotalRows[NIndex].childNodes[0].innerText = Mark + pTotalRows[NIndex].cells[0].innerText;
                 Mark = "";
 
-                if ((GetAttribute(pTotalRows[CIndex], "DATA19") != null ? GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[CIndex], "DATA20") != null ? GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
-                setNodeText(pTotalRows[CIndex].childNodes[0],Mark + getNodeText(pTotalRows[CIndex].cells[0]));
+                pTotalRows[CIndex].childNodes[0].innerText = Mark + pTotalRows[CIndex].cells[0].innerText;
             }
             Rtnval = "Y";
         }
@@ -1336,7 +1357,7 @@ function APRLINESNUPPERFunction() {
             return;
         }
 
-        var pSelAprLineState = GetAttribute(pSelectedRows[0], "DATA5");
+        var pSelAprLineState = pSelectedRows[0].getAttribute("DATA5");
         
         
         
@@ -1347,7 +1368,7 @@ function APRLINESNUPPERFunction() {
             if (p_NextSelRow == undefined)
                 return;
 
-            if (GetAttribute(pSelectedRows[0], "DATA7") == "N") {
+            if (pSelectedRows[0].getAttribute("DATA7") == "N") {
                 if (pSelectedRows[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRows[0].cells[4].childNodes[0].value == strAprType4) {
                     OpenAlertUI(strLang577);
                     return;
@@ -1357,7 +1378,7 @@ function APRLINESNUPPERFunction() {
                     return;
                 }
                 if (pAPRLINE.GetDataRows().length != parseInt(pSelectedRows[0].childNodes[0].innerHTML)) {
-                    if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
+                    if (p_NextSelRow.getAttribute("DATA7") == "N") {
                         if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                             OpenAlertUI(strLang576);
                             return;
@@ -1366,7 +1387,7 @@ function APRLINESNUPPERFunction() {
                 }
             }
             else {
-                if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
+                if (p_NextSelRow.getAttribute("DATA7") == "N") {
                     if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLang576);
                         return;
@@ -1395,7 +1416,10 @@ function APRLINESNUPPERFunction() {
             else {
                 if (pReDraftAprLineFlag) {
                     var TmpAprLineState = GetAttribute(pSelectedRows[0], "DATA5");
-                    var tempcellvalue = getNodeText(pSelectedRows[0].cells[0]);
+                    if (CrossYN())
+                        var tempcellvalue = pSelectedRows[0].cells[0].textContent;
+                    else
+                        var tempcellvalue = pSelectedRows[0].cells[0].innerText;
                     if (((TmpAprLineState == "A04002" || TmpAprLineState == "A04005") && GetAttribute(pSelectedRows[0], "DATA6") == pUserID || tempcellvalue == "1")) {
                         var pAlertContent = strLang245;
                         OpenAlertUI(pAlertContent);
@@ -1436,46 +1460,49 @@ function UpperAprLineSN(pSelectedRow) {
         var Rtnval = "N";
         var Mark = "";
         if (NIndex >= 0) {
-            RowUpCheck = getNodeText(pTotalRows[NIndex].cells[0]);
+            if (CrossYN())
+                RowUpCheck = pTotalRows[NIndex].cells[0].textContent;
+            else
+                RowUpCheck = pTotalRows[NIndex].cells[0].innerText;
 
             if (CrossYN()) {
-                setNodeText(pTotalRows[NIndex].childNodes[0] , getNodeText(pTotalRows[CIndex].cells[0]).replace("★", "").replace("⊙", ""));
-                setNodeText(pTotalRows[CIndex].childNodes[0] , RowUpCheck.replace("★", "").replace("⊙", ""));
+                pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].textContent.replace("★", "").replace("⊙", "");
+                pTotalRows[CIndex].childNodes[0].textContent = RowUpCheck.replace("★", "").replace("⊙", "");
 
-                if ((GetAttribute(pTotalRows[NIndex], "DATA19") != null ? GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[NIndex], "DATA20") != null ? GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[NIndex].childNodes[0] , Mark + getNodeText(pTotalRows[NIndex].cells[0]));
+                pTotalRows[NIndex].childNodes[0].textContent = Mark + pTotalRows[NIndex].cells[0].textContent;
 
                 Mark = "";
 
-                if ((GetAttribute(pTotalRows[CIndex], "DATA19") != null ? GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[CIndex], "DATA20") != null ? GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[CIndex].childNodes[0] , Mark + getNodeText(pTotalRows[CIndex].cells[0]));
+                pTotalRows[CIndex].childNodes[0].textContent = Mark + pTotalRows[CIndex].cells[0].textContent;
             }
             else {
-                setNodeText(pTotalRows[NIndex].cells[0],getNodeText(pTotalRows[CIndex].cells[0]).replace("★", "").replace("⊙", ""));
-                setNodeText(pTotalRows[CIndex].cells[0],RowUpCheck.replace("★", "").replace("⊙", ""));
+                pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText.replace("★", "").replace("⊙", "");
+                pTotalRows[CIndex].cells[0].innerText = RowUpCheck.replace("★", "").replace("⊙", "");
 
-                if ((GetAttribute(pTotalRows[NIndex], "DATA19") != null ? GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[NIndex], "DATA20") != null ? GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[NIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[NIndex].childNodes[0],Mark + getNodeText(pTotalRows[NIndex].cells[0]));
+                pTotalRows[NIndex].childNodes[0].innerText = Mark + pTotalRows[NIndex].cells[0].innerText;
                 Mark = "";
 
-                if ((GetAttribute(pTotalRows[CIndex], "DATA19") != null ? GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[CIndex], "DATA20") != null ? GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[CIndex], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[CIndex].childNodes[0],Mark + getNodeText(pTotalRows[CIndex].cells[0]));
+                pTotalRows[CIndex].childNodes[0].innerText = Mark + pTotalRows[CIndex].cells[0].innerText;
             }
             Rtnval = "Y";
         }
@@ -1493,7 +1520,7 @@ function AprAutoRuleLineDel_onclick() {
     var Event_ID = "";
     if (!CrossYN()) {
         
-        Event_ID = GetAttribute(window.event.srcElement, "id")
+        Event_ID = window.event.srcElement.getAttribute("id")
         if (Event_ID == null) {
             Event_ID = "";
         }
@@ -1521,7 +1548,7 @@ function APRLINEATTENDERDELFunction() {
         pAPRLINE.LoadFromID("lvAPRAUTORULELINE");
         var pSelectedRow = pAPRLINE.GetSelectedRows();
 
-        pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA5");
+        pSelAprLineState = pSelectedRow[0].getAttribute("DATA5");
 
         if (pSelectedRow.length != 0 && pSelectedRow != null && pAPRLINE.GetSelectedIndexes().split(',')[0] != -1) {
             if (pSelAprLineState == "A04003" && pReDraftFlag != "REDRAFT") {
@@ -1530,7 +1557,10 @@ function APRLINEATTENDERDELFunction() {
                 return;
             }
             else if (pReDraftFlag == "REDRAFT") {
-                var pDraftSN = getNodeText(pSelectedRow[0].cells[0]);
+                if (CrossYN())
+                    var pDraftSN = pSelectedRow[0].cells[0].textContent;
+                else
+                    var pDraftSN = pSelectedRow[0].cells[0].innerText;;
                 if (pSelAprLineState == "A04002" || pSelAprLineState == "A04003" || pSelAprLineState == "A04004" || pDraftSN == "1") {
                     Ans = true;
                     if (Ans) {
@@ -1544,7 +1574,10 @@ function APRLINEATTENDERDELFunction() {
             } else {
                 if (pReDraftAprLineFlag) {
                     var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA5");
-                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
+                    if (CrossYN())
+                        var tempcellvalue = pSelectedRow[0].cells[0].textContent;
+                    else
+                        var tempcellvalue = pSelectedRow[0].cells[0].innerText;
                     if ((TmpAprLineState == "A04002" || TmpAprLineState == "A04005") && GetAttribute(pSelectedRow[0], "DATA6") == pUserID || tempcellvalue == "1") {
                         var pAlertContent = strLang249;
                         OpenAlertUI(pAlertContent);
@@ -1579,31 +1612,31 @@ function DoDelete(pSelectedRow) {
         for (i = 0; i <= NIndex; i++) {
             var Mark = ""
             if (CrossYN()) {
-                RowDelCheck = getNodeText(pTotalRows[i].cells[0]).replace("★", "").replace("⊙", "");
-                setNodeText(pTotalRows[i].childNodes[0] , RowDelCheck - 1);
-                if ((GetAttribute(pTotalRows[i], "DATA19") != null ? GetAttribute(pTotalRows[i], "DATA19").toUpperCase() : "") == "Y")
+                RowDelCheck = pTotalRows[i].cells[0].textContent.replace("★", "").replace("⊙", "");
+                pTotalRows[i].childNodes[0].textContent = RowDelCheck - 1;
+                if (GetAttribute(pTotalRows[i], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[i], "DATA20") != null ? GetAttribute(pTotalRows[i], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[i], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[i].childNodes[0] , Mark + Number(RowDelCheck - 1));
+                pTotalRows[i].childNodes[0].textContent = Mark + Number(RowDelCheck - 1);
             }
             else {
-                RowDelCheck = getNodeText(pTotalRows[i].cells[0]).replace("★", "").replace("⊙", "");
-                setNodeText(pTotalRows[i].cells[0],RowDelCheck - 1);
-                if ((GetAttribute(pTotalRows[i], "DATA19") != null ? GetAttribute(pTotalRows[i], "DATA19").toUpperCase() : "") == "Y")
+                RowDelCheck = pTotalRows[i].cells[0].innerText.replace("★", "").replace("⊙", "");
+                pTotalRows[i].cells[0].innerText = RowDelCheck - 1;
+                if (GetAttribute(pTotalRows[i], "DATA19").toUpperCase() == "Y")
                     Mark = "★";
-                if ((GetAttribute(pTotalRows[i], "DATA20") != null ? GetAttribute(pTotalRows[i], "DATA20").toUpperCase() : "") == "Y")
+                if (GetAttribute(pTotalRows[i], "DATA20").toUpperCase() == "Y")
                     Mark = Mark + "⊙";
 
-                setNodeText(pTotalRows[i].cells[0],Mark + Number(RowDelCheck - 1));
+                pTotalRows[i].cells[0].innerText = Mark + Number(RowDelCheck - 1);
             }
 
             Rtnval = "Y";
         }
 
         if (Rtnval == "Y") {
-            var selIdx = GetAttribute(pAPRLINE.GetSelectedRows()[0], "id");
+            var selIdx = pAPRLINE.GetSelectedRows()[0].getAttribute("id");
             pAPRLINE.DeleteRow(selIdx);
         }
     } catch (e) {

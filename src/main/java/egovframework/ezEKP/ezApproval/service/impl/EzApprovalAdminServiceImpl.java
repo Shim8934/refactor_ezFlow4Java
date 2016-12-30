@@ -2905,9 +2905,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		resultXML.append("<GROUP>");
 		
 		for (int k = 0; k < apprFormInfoVOs.size(); k++) {
-			resultXML.append("<PROPERTY>");
-			resultXML.append("<ID>" + apprFormInfoVOs.get(k).getId() + "</ID>");
-			resultXML.append("<NAME>" + egovMessageSource.getMessage(apprFormInfoVOs.get(k).getName(), locale) + "</NAME>");
+			resultXML.append("<PROPERTY ID = \"" + apprFormInfoVOs.get(k).getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApproval." + apprFormInfoVOs.get(k).getName(), locale) + "\">");
 			
 			map.put("upperCode", apprFormInfoVOs.get(k).getCode());
 			
@@ -2915,8 +2913,8 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			
 			for (int h = 0; h < apprFormInfoVOs2.size(); h++) {
 				resultXML.append("<ROW>");
-				resultXML.append("<ID>" + apprFormInfoVOs2.get(k).getId() + "</ID>");
-				resultXML.append("<NAME>" + egovMessageSource.getMessage(apprFormInfoVOs2.get(k).getName(), locale) + "</NAME>");
+				resultXML.append("<ID>" + makeListField(apprFormInfoVOs2.get(h).getId()) + "</ID>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApproval." + apprFormInfoVOs2.get(h).getName(), locale) + "</NAME>");
 				resultXML.append("</ROW>");
 			}
 			

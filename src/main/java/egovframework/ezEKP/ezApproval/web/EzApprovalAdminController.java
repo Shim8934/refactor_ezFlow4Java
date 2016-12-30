@@ -2092,4 +2092,25 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApproval/apprFormMain";
 	}
+	
+	@RequestMapping(value = "/admin/ezApproval/formSave.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSave(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
+		logger.debug("formSave started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String rtnValue = "";
+		
+		if (apprFormInfoVO.getFormInfo() != null && !apprFormInfoVO.getFormInfo().equals("")) {
+			//TODO: if문 없이하고 문제 발생하면 널벨류 비교 
+			String strHTML = apprFormInfoVO.getFormMHT();
+			logger.debug(strHTML);
+		}
+
+		logger.debug("formSave ended");
+		
+		return "";
+	}
+	
 }

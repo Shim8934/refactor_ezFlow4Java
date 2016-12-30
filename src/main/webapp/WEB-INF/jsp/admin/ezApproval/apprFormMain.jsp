@@ -68,7 +68,6 @@
 		        
 		        if (formID != "") {
 		            get_FormInfo(); 
-		            
 		        }
 		       
 		        getDeptFullTree("${topID}");
@@ -78,7 +77,7 @@
 		        MakeListXML(pDocType);
 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${userInfo.serverName}");
 		
-		        add_doc_maker();
+		        add_doc_maker(companyID);
 		    }
 		    var flag = false;
 		    function pzFormProc_DocumentComplete() {
@@ -286,14 +285,14 @@
 		    		}
 		    	});
 		    	var xmlRtn = createXmlDom();
-		        xmlRtn = loadXMLString(text);
+		        xmlRtn = loadXMLString(result);
 		
 		        listview = new ListView();
 		        listview.SetID("lvtForm");
 		        listview.SetMulSelectable(true);
 		        listview.SetRowOnClick("lvtDeptSelect_SelChange");
 		        listview.SetRowOnDblClick("lvtDeptSelect_rowdblclick");
-		        listview.DataSource(xmlpara);
+		        listview.DataSource(xmlRtn);
 		        listview.DataBind("divlvtForm");        
 		    }
 		
@@ -467,7 +466,7 @@
 		    }
 		
 		    function idPropertyBtn_onclick() {
-		        add_doc_maker();
+		        add_doc_maker(companyID);
 		    }
 		
 		    function idSetField_onclick() {
@@ -546,7 +545,7 @@
 		    }
 		
 		    function btnItemCode_onclick() {
-		        var url = "/myoffice/ezApproval/DocNum/docnumui_Cross.aspx";
+		        var url = "/admin/ezApproval/docNumUI.do";
 		        var retVal = window.showModalDialog(url, "", "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken");
 		
 		        if (retVal[0] != "cancel") {
@@ -716,7 +715,7 @@
 		
 		        pzFormProc.editor.DOM.all.WORKFLOW.innerHTML = "\n   <WORKFLOW>\n    <VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n  <STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
 		        pzFormProc.refresh();
-		        alert("XML <spring:message code='ezApproval.t522'/>");      
+		        alert("XML <spring:message code='ezApproval.t522'/>");
 		    }
 		
 		</script>
@@ -892,9 +891,8 @@
         </div>
         
         <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">         
-            
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
-            <span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>
+         	  <span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>
             </h2>
 
             <table style="width:100%; height:665px;">         
@@ -936,13 +934,15 @@
             <span style="min-width: 45px;" id="Span3"><spring:message code='ezApproval.t990012'/></span>
             </h2>
             <table class="content">
-	<tr>
-		<th><spring:message code='ezApproval.t603'/></th>
-		<td><select name="selDocType" onChange="return OnChange_DocType()">				
-				${docTypeOption}
-			</select></td>
-	</tr>
-</table>
+				<tr>
+					<th><spring:message code='ezApproval.t603'/></th>
+					<td>
+						<select name="selDocType" onChange="return OnChange_DocType()">				
+							${docTypeOption}
+						</select>
+					</td>
+				</tr>
+			</table>
             <table style="width:100%;">              
             <tr> 
                 <td style="vertical-align:top;height: 10px;">                    
@@ -1063,8 +1063,8 @@
                       <table style="margin-left:1px;height:450px;">
                         <tr>
                             <td valign="top">
-                                <h2 style ="vertical-align:top;" >                            
-                                    <div style="text-align:right;vertical-align: top; height: 20px;"> 
+                                <h2 style ="vertical-align:top;" >
+                                    <div style="text-align:right;vertical-align: top; height: 20px;">
                                         <a class="imgbtn" onclick="return AddDeptmentSelected();" ><span><spring:message code='ezApproval.t990036'/></span></a>
                                         <a class="imgbtn" onclick="AprlineNullAdd_onclick('user')"><span><spring:message code='ezApproval.t990037'/></span></a>
                                         <a class="imgbtn" onclick="AprlineNullAdd_onclick('dept')"><span><spring:message code='ezApproval.t1101'/></span></a>
