@@ -41,7 +41,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception;
 
-	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID) throws Exception;
+	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
 	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID) throws Exception;
 
@@ -97,7 +97,7 @@ public interface EzApprovalGAdminService {
 			String pageSize, String docState, String subQuery,
 			String orderCell, String orderOption, String companyID, String primary, String approvUser, String offset, int tenantID) throws Exception;
 
-	public String setFormOrder(String formContID, String boardIDList, String companyID) throws Exception;
+	public String setFormOrder(String formContID, String boardIDList, String companyID, int tenantID) throws Exception;
 	
 	public String insertFormContainer(String contName, String contName2, String contDescript, String contParent, String contDept, String deptList, String companyID, int tenantID) throws Exception;
 	

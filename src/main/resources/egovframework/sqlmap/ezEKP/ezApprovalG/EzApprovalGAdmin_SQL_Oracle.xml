@@ -1181,7 +1181,7 @@
 						receiveddeptid,
 						receiveddeptname2
 					ORDER BY
-						receiveddeptname2 
+						receiveddeptname2
 				]]>
 			</isEqual>
 			<isNotEqual property="v_MODE" compareValue="SEND">
@@ -1292,6 +1292,7 @@
         		TENANT_ID = #tenantID#
 		]]>
 	</delete>
+	
 	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete2"
 		parameterClass="Map">
 		<![CDATA[
@@ -1304,14 +1305,94 @@
 		]]>
 	</delete>
 
-	<procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map"
+<!-- 	<procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map" -->
+<!-- 		resultClass="String"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, #v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, #v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.setFormDataSelect" parameterClass="Map"
 		resultClass="String">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, #v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, #v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			SELECT
+				MAX(formid)
+			FROM
+				EZAPPROVALG_$companyID$.TBFORMINFO
+			WHERE
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
-
-
+	</select>
+	
+	<insert id="EzApprovalGAdmin.setFormDataInsert1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBFORMINFO
+				(formcontid,
+				formid,
+				formname,
+				formname2,
+				formdoctype,
+				formdescription,
+				formfilelocation,
+				formconnflag,
+				TENANT_ID)
+			VALUES
+				(#v_PFORMCONTAINERID#,
+				#v_PID#,
+				#v_PFORMNAME#,
+				#v_PFORMNAME2#,
+				#v_PFORMKIND#,
+				#v_PFORMDESCRIPT#,
+				#v_PURL#,
+				#v_PFORMCONNFLAG#,
+				#tenantID#)
+		]]>
+	</insert>
+	
+	<update id="EzApprovalGAdmin.setFormDataUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZAPPROVALG_$companyID$.TBFORMINFO
+			SET
+				formcontid = #v_PFORMCONTAINERID#,
+				formname = #v_PFORMNAME#,
+				formname2 = #v_PFORMNAME2#,
+				formdoctype = #v_PFORMKIND#,
+				formdescription = #v_PFORMDESCRIPT#,
+				formfilelocation = #v_PURL#,
+				formconnflag = #v_PFORMCONNFLAG#
+			WHERE
+				formid = #v_PFORMID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<delete id="EzApprovalGAdmin.setFormDataDelete" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZAPPROVALG_$companyID$.TBFORMRECV
+			WHERE
+				formid = #v_PFORMID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</delete>
+	
+	<insert id="EzApprovalGAdmin.setFormDataInsert2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO EZAPPROVALG_$companyID$.TBFORMRECV
+				(formid,
+				deptid,
+				deptsn,
+				TENANT_ID)
+			VALUES
+				(#v_PFORMID#,
+				#deptID#,
+				#deptSN#,
+				#tenantID#)
+		]]>
+	</insert>
+	
 <!-- 	<procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
 <!-- 		parameterClass="Map" resultClass="String"> -->
 <!-- 		<![CDATA[ -->
@@ -1334,12 +1415,52 @@
 		]]>
 	</select>
 
-	<procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate"
-		parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure>
+<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" -->
+<!-- 		parameterClass="Map" resultClass="Integer"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategoryDuplicate"
+		remapResults="true" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_CATETYPE" compareValue="1">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(categorycode), 0)
+				FROM
+					TBTASKCATEGORY
+				WHERE
+					categorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="2">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(mcategorycode), 0)
+				FROM
+					TBTASKMIDDLECATEGORY
+				WHERE
+					mcategorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+					
+			]]>
+		</isEqual>
+		<isEqual property="v_CATETYPE" compareValue="3">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(subcategorycode), 0)
+				FROM
+					TBTASKSUBCATEGORY
+				WHERE
+					subcategorycode = #v_CATECODE#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
+	</select>
 
 <!-- 	<procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" -->
 <!-- 		parameterClass="Map" resultClass="Integer"> -->
@@ -2131,11 +2252,25 @@
 		]]>
 	</update>
 
-	<procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map">
+<!-- 	<procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #cv_1#)} -->
+<!-- 		]]> -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalGAdmin.setFormOrder" parameterClass="Map">
 		<![CDATA[
-			{CALL EZAPPROVALG_$companyID$.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #cv_1#)}
+			UPDATE
+ 				EZAPPROVALG_$companyID$.TBFormInfo
+			SET
+				formorder = #order#
+			WHERE
+				formid = #v_pFormID#
+			AND
+				formcontid = #v_pFormContID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
-	</procedure>
+	</update>
 
 <!-- 	<procedure id="EzApprovalGAdmin.deleteFormContainer" -->
 <!-- 		parameterClass="Map"> -->

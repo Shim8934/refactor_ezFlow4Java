@@ -48,6 +48,8 @@ public class PortalSearchPortalPage2VO {
 	/** */
 	private String gubunName;
 	/** */
+	private int tenantID;
+	/** */
 	private String themeNm;
 	/** */
 	private String themeNm2;
@@ -218,4 +220,11 @@ public class PortalSearchPortalPage2VO {
 	public void setThemeNm4(String themeNm4) {
 		this.themeNm4 = themeNm4;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
 }

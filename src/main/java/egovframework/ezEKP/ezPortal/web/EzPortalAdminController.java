@@ -607,6 +607,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portalPageList.do")
 	public String portalPageList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalPageList started");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pSearchString = "";
 		String portalGubun = "";
@@ -652,6 +654,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pEndRow = intPage * listPageSize;
 			
 			String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
+			logger.debug("searchPortalPage="+strXML);
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 
 			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -704,6 +707,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("pSearchString", pSearchString);
 			model.addAttribute("defaultPageUID", defaultPageUID);
 			model.addAttribute("mainHtml", mainHtml);
+			logger.debug("portalPageList ended");
 			return "/admin/ezPortal/portalPageList";
 		} else {
 			return "";

@@ -794,7 +794,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
    					+" FROM EZPORTAL.TBL_PORTALPAGE_CATEGORY "
    					+"WHERE CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
    					+"FROM EZPORTAL.TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ "
+   					+"LEFT JOIN EZPORTAL.TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ "
    					+"WHERE (NOT EXISTS(SELECT UID_ FROM EZPORTAL.TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
@@ -816,7 +816,6 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		strSQL += " ORDER BY A.DISPLAYNAME ASC";
 		
 		map.put("strSQL", strSQL);
-		logger.debug("strSQL="+strSQL);
 		List<PortalSearchPortalPage2VO> list = ezPortalAdminDAO.searchPortalPage2(map);
 		
 		StringBuilder sb = new StringBuilder();
@@ -841,6 +840,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		sb.append("</DATA>");
+		logger.debug("sb="+sb.toString());
 		logger.debug("searchPortalPage End");
 		return sb.toString();
 	}
@@ -1110,7 +1110,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 							if (portletType.equals("1")) {
 								Map<String, Object> map1 = new HashMap<String, Object>();
-								map1.put("pPortletUID", portletUID);
+								map1.put("v_pPORTLET_UID", portletUID);
 								map1.put("tenantID", tenantID);
 								depth = ezPortalAdminDAO.savePortalPage3(map1);
 							} else {

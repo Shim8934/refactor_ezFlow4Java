@@ -86,13 +86,12 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="height: 20px;">               
-	            </td>
+	            <td style="height: 20px;"></td>
 	        </tr>
 	    </table>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>    
+	    </script>
 	</body>
 </html>

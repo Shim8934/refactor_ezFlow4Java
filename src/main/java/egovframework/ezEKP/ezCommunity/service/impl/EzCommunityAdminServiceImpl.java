@@ -36,11 +36,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
 	@Override
 	public int aspCloseComGet2(String keyword, String sRadio, int tenantID) throws Exception {
-		LOGGER.debug("aspCloseComGet2 started.");
+		logger.debug("aspCloseComGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD",  keyword);
@@ -55,15 +55,15 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			result = ezCommunityAdminDAO.aspCloseComGet2Select2(map);
 		}
 		
-		LOGGER.debug("aspCloseComGet2 ended.");
+		logger.debug("aspCloseComGet2 ended.");
 		
 		return result;
 	}
 
 	@Override
 	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, int tenantID) throws Exception {
-		LOGGER.debug("aspCloseGet1 started.");
-		LOGGER.debug("keyword=" + keyword + ", sRadio=" + sRadio);
+		logger.debug("aspCloseGet1 started.");
+		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
@@ -82,7 +82,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			list = ezCommunityAdminDAO.aspCloseComGet1Select2(map);
 		}
 		
-		LOGGER.debug("aspCloseGet1 ended.");
+		logger.debug("aspCloseGet1 ended.");
 		
 		return list;
 	}
@@ -138,7 +138,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public String aspCommInfoGet3(String code, int tenantID) throws Exception {
-		LOGGER.debug("aspCommInfoGet3 started.");
+		logger.debug("aspCommInfoGet3 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -146,14 +146,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		String result = ezCommunityAdminDAO.aspCommInfoGet3(map);
 		
-		LOGGER.debug("aspCommInfoGet3 ended.");
+		logger.debug("aspCommInfoGet3 ended.");
 		
 		return result;
 	}
 
 	@Override
 	public String aspCommInfoGet4(String code, int tenantID) throws Exception {
-		LOGGER.debug("aspCommInfoGet4 started.");
+		logger.debug("aspCommInfoGet4 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -161,24 +161,24 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		String result = ezCommunityAdminDAO.aspCommInfoGet4(map);
 		
-		LOGGER.debug("aspCommInfoGet3 ended.");
+		logger.debug("aspCommInfoGet3 ended.");
 		
 		return result;
 	}
 
 	@Override
 	public void commCloseAll(String code, Locale locale, int tenantID) throws Exception {
-		LOGGER.debug("commCloseAll started.");
+		logger.debug("commCloseAll started.");
 		
 		aspCommCloseAllDel(code, tenantID);
 		aspCommCloseAllUpdate(code, locale, tenantID);
 		
-		LOGGER.debug("commCloseAll ended.");
+		logger.debug("commCloseAll ended.");
 	}
 
 	@Override
 	public int aspAdmitComGet2(String keyword, String sRadio, int tenantID) throws Exception {
-		LOGGER.debug("aspAdmitComGet2 started.");
+		logger.debug("aspAdmitComGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
@@ -193,14 +193,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			result = ezCommunityAdminDAO.aspAdmitComGet2Select2(map);
 		}
 		
-		LOGGER.debug("aspAdmitComGet2 ended.");
+		logger.debug("aspAdmitComGet2 ended.");
 		
 		return result;
 	}
 
 	@Override
 	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, int tenantID) throws Exception {
-		LOGGER.debug("aspAdmitComGet1 started.");
+		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
@@ -219,7 +219,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			list = ezCommunityAdminDAO.aspAdmitComGet1Select2(map);
 		}
 		
-		LOGGER.debug("aspAdmitComGet1 ended.");
+		logger.debug("aspAdmitComGet1 ended.");
 		
 		return list;
 	}
@@ -254,7 +254,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public void aspCommAdmitOkSet1(String code, String lang, int tenantID) throws Exception {
-		LOGGER.debug("aspCommAdmitOkSet1 started.");
+		logger.debug("aspCommAdmitOkSet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -264,13 +264,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		ezCommunityAdminDAO.aspCommAdmitOkSet1Update(map);
 		ezCommunityAdminDAO.aspCommAdmitOkSet1Delete(map);
 		
-		LOGGER.debug("aspCommAdmitOkSet1 ended.");
+		logger.debug("aspCommAdmitOkSet1 ended.");
 	}
 
 	@Override
 	public void aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception {
-		LOGGER.debug("aspCommAdmitOkSet2 started.");
-		LOGGER.debug("useEzKMS=" + useEzKMS);
+		logger.debug("aspCommAdmitOkSet2 started.");
+		logger.debug("useEzKMS=" + useEzKMS);
 		
 		String result = null;
 		
@@ -289,14 +289,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			map.put("v_USERINFO_LANG", lang);
 			
 			result = ezCommunityAdminDAO.aspCommAdmitokSet2Select(map);
-			LOGGER.debug(result);
+			logger.debug(result);
 		}
 		
-		LOGGER.debug("aspCommAdmitOkSet2 ended.");
+		logger.debug("aspCommAdmitOkSet2 ended.");
 	}
 
 	private void aspCommCloseAllDel(String code, int tenantID) throws Exception {
-		LOGGER.debug("aspCommCloseAllDel started.");
+		logger.debug("aspCommCloseAllDel started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -304,11 +304,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		ezCommunityAdminDAO.aspCommCloseAllDel(map);
 		
-		LOGGER.debug("aspCommCloseAllDel ended.");
+		logger.debug("aspCommCloseAllDel ended.");
 	}
 	
 	private void aspCommCloseAllUpdate(String code, Locale locale, int tenantID) throws Exception {
-		LOGGER.debug("aspCommCloseAllUpdate started.");
+		logger.debug("aspCommCloseAllUpdate started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -317,12 +317,12 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		ezCommunityAdminDAO.aspCommCloseAllUpdate(map);
 		
-		LOGGER.debug("aspCommCloseAllUpdate ended.");
+		logger.debug("aspCommCloseAllUpdate ended.");
 	}
 
 	@Override
 	public int aspSearchKeyGet2(String lang, String select, String query, int tenantID) throws Exception {
-		LOGGER.debug("aspSearchKeyGet2 started.");
+		logger.debug("aspSearchKeyGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -332,14 +332,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		int result = ezCommunityAdminDAO.aspSearchKeyGet2(map);
 		
-		LOGGER.debug("aspSearchKeyGet2 ended.");
+		logger.debug("aspSearchKeyGet2 ended.");
 		
 		return result;
 	}
 
 	@Override
 	public List<CommunityClubVO> aspSearchKeyGet1(String lang, int iQueryCount, String select, String query, int tenantID) throws Exception {
-		LOGGER.debug("aspSearchKeyGet1 started.");
+		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -350,14 +350,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		List<CommunityClubVO> list = ezCommunityAdminDAO.aspSearchKeyGet1(map);
 		
-		LOGGER.debug("aspSearchKeyGet1 ended.");
+		logger.debug("aspSearchKeyGet1 ended.");
 		
 		return list;
 	}
 
 	@Override
 	public String getUserName(String id, int tenantID) throws Exception {
-		LOGGER.debug("getUserName started.");
+		logger.debug("getUserName started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ID", id);
@@ -365,14 +365,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		String result = ezCommunityAdminDAO.getUserName(map);
 		
-		LOGGER.debug("getUserName ended.");
+		logger.debug("getUserName ended.");
 		
 		return result;
 	}
 
 	@Override
 	public CommunityClubVO admCommunityInfoEdit(String lang, String code, int tenantID) throws Exception {
-		LOGGER.debug("admCommunityInfoEdit started.");
+		logger.debug("admCommunityInfoEdit started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -381,14 +381,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		CommunityClubVO vo = ezCommunityAdminDAO.admCommunityInfoEdit(map);
 		
-		LOGGER.debug("admCommunityInfoEdit ended.");
-		LOGGER.debug("sysID="+vo.getC_SysopID());
+		logger.debug("admCommunityInfoEdit ended.");
+		logger.debug("sysID="+vo.getC_SysopID());
 		return vo;
 	}
 
 	@Override
 	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception {
-		LOGGER.debug("admCommunityInfoEditOk started.");
+		logger.debug("admCommunityInfoEditOk started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -402,12 +402,12 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		try {
 			ezCommunityAdminDAO.admCommunityInfoEditOk(map);
 			
-			LOGGER.debug("admCommunityInfoEditOk ended.");
+			logger.debug("admCommunityInfoEditOk ended.");
 			
 			return "OK";
 		} catch (Exception e) {
-			LOGGER.debug("admCommunityInfoEditOk ERROR.");
-			LOGGER.debug(e.getMessage());
+			logger.debug("admCommunityInfoEditOk ERROR.");
+			logger.debug(e.getMessage());
 			
 			return e.getMessage();
 		}
