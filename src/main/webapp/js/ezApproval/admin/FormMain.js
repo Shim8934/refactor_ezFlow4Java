@@ -136,6 +136,7 @@ function OpenAlertUI(pAlertContent) {
 
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {    
+	alert(100);
     var xmlRtn = createXmlDom();
     
     var arrFormInfo = MakeFormInfoXML();
@@ -183,7 +184,7 @@ function SaveFormInfo() {
         document.getElementById("1tab4").click();
         return;
     }
-
+alert(200);
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
         formAutoRule = arrFormAutoRule[1];           
