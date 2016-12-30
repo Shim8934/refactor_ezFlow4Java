@@ -2232,8 +2232,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
 
 
     var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:12px;font-family:Gulim'>" + tempDiv.innerHTML + "</div>";
+    
+    try {
+        // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
+        BodyHTMLContent = ReplaceText(BodyHTMLContent, "<!\\[CDATA\\[", "");
+        BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
+    } catch (e) { }
+    
     bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
 
+    // 사용되지 않는 부분으로 판단되어 제거함.
+    /*
     try {
         tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<BR>", "<P>");
         tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "</DIV>", "</DIV><P>");
@@ -2241,6 +2250,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     } catch (e) { }
 
     bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
+    */
 }
 
 function ConvertEmbedPath_https(xmlDoc, rootNode) {
