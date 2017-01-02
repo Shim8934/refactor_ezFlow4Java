@@ -384,6 +384,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재G관리 양식등록(MHT) 양식작성기 속성조회함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getFormPropList.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormPropList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFormPropList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getFormProperty(userInfo.getLocale(), companyID, userInfo.getTenantId());
+		
+		logger.debug("getFormPropList ended");
+		
+		return result;
+	}
+	
+	/**
 	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 연동정보 추가 화면호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
@@ -473,6 +492,43 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("docHref", docHref);
 		
 		return "admin/ezApprovalG/apprGFormPreview";
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 양식이동화면 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
+	public String formSelect(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		boolean auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (!auth) {
+			return "cmm/error/adminDenied";
+		}
+		
+		return "admin/ezApprovalG/apprGFormSelect";
+	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 양식이동 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formMove.do")
+	public String formMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formMove started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("contID");
+		String selContID = request.getParameter("selContID");
+		String formID = request.getParameter("formID");
+		
+		String result = ezApprovalGAdminService.formMove(companyID, contID, selContID, formID, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("formMove ended.");
+		
+		return "json";
 	}
 	
 	/**

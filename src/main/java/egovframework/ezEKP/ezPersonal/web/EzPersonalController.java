@@ -358,19 +358,19 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String alert = "0";
-        String complite = "0";
+        String complete = "0";
         String bansong = "0";
         String hesong = "0";
         String callBack = "0";
         String saveMailFlag = "0";
         
-        String result = ezPersonalService.getApprovNotiConfig(userInfo.getId());
+        String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getTenantId());
         
         Document xmlDom = commonUtil.convertStringToDocument(result);
         
         if (xmlDom.getElementsByTagName("ALERT").getLength() > 0) {
         	alert = xmlDom.getElementsByTagName("ALERT").item(0).getTextContent();
-            complite = xmlDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
+        	complete = xmlDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
             bansong = xmlDom.getElementsByTagName("BANSONG").item(0).getTextContent();
             hesong = xmlDom.getElementsByTagName("HESONG").item(0).getTextContent();
             callBack = xmlDom.getElementsByTagName("CALLBACK").item(0).getTextContent();
@@ -378,7 +378,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         }
         
         model.addAttribute("alert", alert);
-        model.addAttribute("complite", complite);
+        model.addAttribute("complete", complete);
         model.addAttribute("bansong", bansong);
         model.addAttribute("hesong", hesong);
         model.addAttribute("callBack", callBack);

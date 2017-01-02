@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
+import java.util.Locale;
+
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -120,6 +122,10 @@ public interface EzApprovalGAdminService {
 	public String setContainerIDForDoc2(String docID, String containerID, String companyID, int tenantID) throws Exception;
 	
 	public void insertContainerType(String docTypeName, String docTypeName2, String companyID, int tenantID) throws Exception;
+
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
+
+	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception;
 
 
 	

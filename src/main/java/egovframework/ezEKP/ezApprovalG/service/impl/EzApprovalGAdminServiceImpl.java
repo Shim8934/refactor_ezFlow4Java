@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -2688,5 +2689,64 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 
-	
+	@Override
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception {
+		StringBuilder resultXML = new StringBuilder();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("upperCode", "ROOT");
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		List<ApprGFormVO> propList = ezApprovalGAdminDAO.getFormProperty(map);
+		
+		resultXML.append("<GROUP>");
+		
+		for (ApprGFormVO vo1 : propList) {
+			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApproval." + vo1.getName(), locale) + "\">");
+			
+			map.put("upperCode", vo1.getCode());
+			
+			List<ApprGFormVO> propList2 = ezApprovalGAdminDAO.getFormProperty(map);
+			
+			for (ApprGFormVO vo2 : propList2) {
+				resultXML.append("<ROW>");
+				resultXML.append("<ID>" + vo2.getId() + "</ID>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApproval." + vo2.getName(), locale) + "</NAME>");
+				resultXML.append("</ROW>");
+			}
+			
+			resultXML.append("</PROPERTY>");
+		}
+		
+		resultXML.append("</GROUP>");
+		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception {
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("contID", contID);
+		map.put("selContID", selContID);
+		map.put("formID", formID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("contID="+contID);
+		logger.debug("selContID="+selContID);
+		logger.debug("formID="+formID);
+		
+		try {
+			ezApprovalGAdminDAO.formMove(map);
+			
+			result = "OK";
+		} catch (Exception e) {
+			logger.debug("formMove catch.");
+			logger.debug(e.getMessage());
+		}
+		
+		return result;
+	}
 }

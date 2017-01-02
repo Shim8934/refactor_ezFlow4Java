@@ -363,6 +363,43 @@
 		        CurPage = 1;
 		        Permissions_List(type);
 		    }
+		    
+		    function email_onclick() {
+
+		        var listview = new ListView();
+		        listview.LoadFromID("lvPermissionList");
+
+		        if (listview.GetSelectedRows().length == 0) {
+		            alert(strLang13);
+		            return;
+		        }
+
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+
+
+		        var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0],"DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0],"DATA4") + ">";
+
+		        /* 2017-01-02 이효민사원
+		        if (CrossYN() || pNoneActiveX == "YES") {
+		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
+		                           "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        }
+		        else {
+		            if (pUse_Editor == "")
+		                window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
+		                                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            else {
+		                window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
+		                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		            }
+		        } */
+		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
+                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">

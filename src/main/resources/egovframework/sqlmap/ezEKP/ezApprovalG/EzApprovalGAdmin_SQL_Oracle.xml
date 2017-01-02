@@ -2741,4 +2741,45 @@
         		
 	    ]]>
 	</delete>
+	
+	<select id="EzApprovalGAdmin.getFormProperty"
+		parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				sn,
+				code,
+				id,
+				name
+			FROM
+				EZAPPROVALG_$companyID$.TBFORMPROPERTY
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				uppercode = #upperCode#
+		]]>
+	</select>
+	
+	<update id="EzApprovalGAdmin.formMove"
+		parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZAPPROVALG_$companyID$.TBFORMINFO
+			SET
+				formcontid = #selContID#,
+				formorder = (SELECT
+								NVL(MAX(formorder), 0) + 1
+							FROM
+								EZAPPROVALG_$companyID$.TBFORMINFO
+							WHERE
+								formcontid = #selContID#
+							AND
+								TENANT_ID = #tenantID#)
+			WHERE
+				formcontid = #contID#
+			AND
+				formid = #formID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
 </sqlMap>
