@@ -27,6 +27,8 @@ public class PortalMenuItemItemsMenuItemsVO {
 	private String leftMargin;
 	/** */
 	private String windowOption;
+	/** */
+	private int tenantID;
 	
 	public String getuID() {
 		return uID;
@@ -105,5 +107,11 @@ public class PortalMenuItemItemsMenuItemsVO {
 	}
 	public void setWindowOption(String windowOption) {
 		this.windowOption = windowOption;
+	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 }
