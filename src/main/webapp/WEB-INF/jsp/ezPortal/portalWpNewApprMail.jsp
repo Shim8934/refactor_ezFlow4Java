@@ -817,7 +817,7 @@
 
 	        xmlhttp_getMailGraph_NewApprMail = null;
 	        xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
-	        xmlhttp_getMailGraph_NewApprMail.open("POST", "/myoffice/ezEmail/WebPartFolder/getportletmaillist.aspx", true);
+	        xmlhttp_getMailGraph_NewApprMail.open("POST", "/ezEmail/getPortletMailList.do", true);
 	        xmlhttp_getMailGraph_NewApprMail.onreadystatechange = getMailList_after;
 	        xmlhttp_getMailGraph_NewApprMail.send(xmlpara);
 	    }
@@ -904,7 +904,7 @@
 
 	    function Mailmore_btnClick()
 	    {
-	        window.open("/ezEMail/mailMain.do", "main");
+	        window.open("/ezEmail/mailMain.do", "main");
 	    }
 	    function refresh_onclick() {
 	        change_article('mail');
