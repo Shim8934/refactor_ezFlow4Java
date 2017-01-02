@@ -35,6 +35,18 @@ public class ApprGFormVO {
 	private String deptID;
 	/** 양식별 고정수신처 순번*/
 	private String deptSn;
+	
+	/** 속성값 조회를 위한 */
+	private String code;
+	
+	private String id;
+	
+	private String name;
+	
+	private String description;
+	
+	private String upperCode;
+	
 	public String getFormContID() {
 		return formContID;
 	}
@@ -137,4 +149,35 @@ public class ApprGFormVO {
 	public void setDeptSn(String deptSn) {
 		this.deptSn = deptSn;
 	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getUpperCode() {
+		return upperCode;
+	}
+	public void setUpperCode(String upperCode) {
+		this.upperCode = upperCode;
+	}
+	
 }

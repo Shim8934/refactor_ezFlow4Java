@@ -352,4 +352,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void setContainerIDForDoc2(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.setContainerIDForDoc2", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormProperty(Map<String, Object> map) throws Exception {
+		return (List<ApprGFormVO>) list("EzApprovalGAdmin.getFormProperty", map);
+	}
+
+	public void formMove(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdmin.formMove", map);
+	}
 }

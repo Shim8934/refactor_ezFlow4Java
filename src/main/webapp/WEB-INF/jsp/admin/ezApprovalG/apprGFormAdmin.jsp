@@ -268,9 +268,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApproval/getFormContInfo.do",
 		        	async : false,
+		        	dataType : "json",
 		        	data : {id : ID, companyID : companyID},
 		        	success : function(result) {
-		        		xmlRtn = result;
+		        		xmlRtn = loadXMLString(result["resultXML"]);
 		        	}
 		        });
 		        
@@ -533,7 +534,7 @@
 		            para[1] = GetAttribute(selRow[0], "DATA1");
 		            para[2] = companyID;
 
-		            var url = "FormSelect.aspx";
+		            var url = "/admin/ezApprovalG/formSelect.do";
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
 
 		            if (retVal[0] == "OK") {
