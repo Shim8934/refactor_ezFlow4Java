@@ -15,17 +15,139 @@
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
 	
-	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO" >
+	<!-- <procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
+		<isEqual property="v_MODE" compareValue="ADMIN">
+			<isEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			EZPERSONAL.TBL_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+             		AND
+             			TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isEmpty>
+			<isNotEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			EZPERSONAL.TBL_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+                    AND
+                    	SLIDERID = #v_SLIDERID#
+                    AND
+                    	TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					SLIDERID ,
+                	SLIDERNAME ,
+                	SLIDERNAME2 ,
+                	IMAGEPATH ,
+                	REGUSERID ,
+                	REGDATE ,
+                	SN ,
+                	ISUSE 
+           		FROM
+           			EZPERSONAL.TBL_SLIDERIMAGE 
+          		WHERE
+          			COMPANYID = #v_COMPANYID#
+                AND
+                	ISUSE = 1
+                AND
+                	TENANT_ID = #tenantID#	
+           		ORDER BY
+           			SN
+			]]>
+		</isNotEqual>
+	</select>
 		
-	<procedure id="EzPersonalDAO.getApprovNotiConfig" parameterClass="Map"  resultClass="PersonalApprovMailVO" >
+	<!-- <procedure id="EzPersonalDAO.getApprovNotiConfig" parameterClass="Map"  resultClass="PersonalApprovMailVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETAPPROVNOTIINFO(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+ 	<select id="EzPersonalDAO.getApprovNotiConfig_S1" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       			 		COUNT(*)  
+               		FROM
+               			EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID# ) > 0
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S2" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				ALERT ,
+                COMPLETE ,
+                BANSONG ,
+                CALLBACK ,
+                HESONG ,
+                SAVEMAILFLAG 
+           	FROM
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+          	WHERE
+          		UserID = #v_PUSERID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S3" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				'1' ALERT  ,
+                '1' COMPLETE  ,
+                '1' BANSONG  ,
+                '1' CALLBACK  ,
+                '1' HESONG  ,
+                'Y' SAVEMAILFLAG  
+           FROM
+           		DUAL
+		]]>
+	</select> 
 	
 	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
 		<![CDATA[

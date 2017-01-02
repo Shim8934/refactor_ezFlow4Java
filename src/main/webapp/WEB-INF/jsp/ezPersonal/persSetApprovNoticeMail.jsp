@@ -97,6 +97,7 @@
 		</tr>
 		<tr>
 			<c:choose>
+
 				<c:when test="${complete == '1'}">
 					<th style="white-space:nowrap"><input type="checkbox" id="completeMail" checked="checked"/></th>
 				</c:when>

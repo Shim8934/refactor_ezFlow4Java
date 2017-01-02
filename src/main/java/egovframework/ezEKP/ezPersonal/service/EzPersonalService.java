@@ -35,7 +35,7 @@ public interface EzPersonalService {
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
 
-	public String getApprovNotiConfig(String userID) throws Exception;
+	public String getApprovNotiConfig(String userID, int tenantID) throws Exception;
 
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag) throws Exception;
 	
