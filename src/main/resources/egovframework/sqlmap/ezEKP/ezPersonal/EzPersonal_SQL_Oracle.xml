@@ -149,23 +149,142 @@
 		]]>
 	</select> 
 	
-	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
+	<!-- <procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZCOMMON.EZSP_INSERTAPPROVPWD(#v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#)}
 		]]>
-	</procedure>	
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.setApprovalPwd_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			EZCOMMON.TBPWDINFO 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) <> 0
+		]]>
+	</select>
+	
+	<update id="EzPersonalDAO.setApprovalPwd_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMON.TBPWDINFO
+          	SET
+          		FLAG = #v_PFLAG#,
+              	PWD = #v_PPWD#,
+              	PWDTYPE = #v_PPWDTYPE#
+        	WHERE
+        		USERID = #v_PUSERID#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>	
+	
+	<insert id="EzPersonalDAO.setApprovalPwd_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZCOMMON.TBPWDINFO
+          		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID )
+          	VALUES
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID# )
+		]]>
+	</insert>
 		
-	<procedure id="EzPersonalDAO.setApprovNotiMail" parameterClass="Map" >
+	<!-- <procedure id="EzPersonalDAO.setApprovNotiMail" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_SAVEAPPROVNOTIMAIL(#v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.insertResult" parameterClass="Map" >
+	<select id="EzPersonalDAO.setApprovNotiMail_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) = 0
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.setApprovNotiMail_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF
+        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID )
+        	VALUES
+        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalDAO.setApprovNotiMail_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF
+         	SET
+         		ALERT = #v_PALERT#,
+             	COMPLETE = #v_PCOMPLETE#,
+             	BANSONG = #v_PBANSONG#,
+             	CALLBACK = #v_PCALLBACK#,
+             	HESONG = #v_PHESONG#,
+             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#
+       		WHERE
+       			USERID = #v_PUSERID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPersonalDAO.insertResult" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_INSERTRESULT(#v_pItemSeq#, #v_pUserID#, #v_pResult#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.insertResult_S" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+					1
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS ( 	SELECT
+       										ITEMSEQ 
+                          				FROM
+                          					EZPERSONAL.TBLLIGHTPOLLRESULT 
+                           				WHERE
+                           					USERID = #v_pUserID#
+                                    	AND
+                                    		ITEMSEQ = #v_pItemSeq#
+                                    	AND
+                                    		TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.insertResult" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPERSONAL.TBLLIGHTPOLLRESULT
+       			( ITEMSEQ, USERID, RESULT, TENANT_ID )
+       		VALUES
+       			( #v_pItemSeq#, #v_pUserID#, #v_pResult#, #tenantID# )
+		]]>
+	</insert>
 	
 	<procedure id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
