@@ -47,23 +47,33 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S2(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S3(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PersonalLightPollVO> getPollListUser(Map<String, Object> map) throws Exception{
 		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollListUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollResultOrderResult (int pItemSeq) {
-		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResultOrderResult", pItemSeq);
+	public List<PersonalLightPollVO> getPollResultOrderResult (Map<String, Object> map) {
+		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResultOrderResult", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollResult (int pItemSeq) {
-		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResult", pItemSeq);
+	public List<PersonalLightPollVO> getPollResult (Map<String, Object> map) {
+		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollResult", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) {
-		return (List<PersonalGetPopUpListUserVO>) list("EzPersonalDAO.getPopUpListUser", pComapnyID);
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (Map<String, Object> map) {
+		return (List<PersonalGetPopUpListUserVO>) list("EzPersonalDAO.getPopUpListUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -72,25 +82,30 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetWebPartVO> getUserWebPart (Map<String, Object> map) {
-		return (List<PersonalGetWebPartVO>) list("EzPersonalDAO.getUserWebPart", map);
+	public List<PersonalGetWebPartVO> getUserWebPart_S2 (Map<String, Object> map) {
+		return (List<PersonalGetWebPartVO>) list("EzPersonalDAO.getUserWebPart_S2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID) {
-		return (List<PersonalGetQuickLinkMenuVO>) list("EzPersonalDAO.getQuickLinkMenu", accessID);
+	public List<PersonalGetWebPartVO> getUserWebPart_S3 (Map<String, Object> map) {
+		return (List<PersonalGetWebPartVO>) list("EzPersonalDAO.getUserWebPart_S3", map);
 	}
 	
-	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) {
-		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", pTerm);
+	@SuppressWarnings("unchecked")
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (Map<String, Object> map) {
+		return (List<PersonalGetQuickLinkMenuVO>) list("EzPersonalDAO.getQuickLinkMenu", map);
+	}
+	
+	public PersonalGetEmpOfMonthVO getEmpOfMonth (Map<String, Object> map) {
+		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", map);
 	}
 	
 	public PersonalLightPollVO getCurrentPoll (Map<String, Object> map) {
 		return (PersonalLightPollVO) select("EzPersonalDAO.getCurrentPoll", map);
 	}
 	
-	public PersonalLightPollVO getPollInfo (int pItemSeq) {
-		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", pItemSeq);
+	public PersonalLightPollVO getPollInfo (Map<String, Object> map) {
+		return (PersonalLightPollVO) select("EzPersonalDAO.getPollInfo", map);
 	}
 	
     private String getPasswordForJMocha (String cn, int tenantID) throws Exception {
@@ -137,7 +152,27 @@ public class EzPersonalDAO extends EgovAbstractDAO{
     private String getPasswordForLocal (String cn, int tenantID) {
         return (String) select("EzPersonalDAO.getPassword", cn);
     }
-	
+    
+    public String getApprovNotiConfig_S1 (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.getApprovNotiConfig_S1", map);
+    }
+    
+    public String setApprovalPwd_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.setApprovalPwd_S", map);
+    }
+    
+    public String setApprovNotiMail_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.setApprovNotiMail_S", map);
+    }
+    
+    public String insertResult_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.insertResult_S", map);
+    }
+    
+    public String getUserWebPart_S1 (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.getUserWebPart_S1", map);
+    }
+    
 	public String getPassword (String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getPasswordForJMocha(cn, tenantID);
@@ -147,8 +182,7 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	}
 	
 	public int getPollCount(Map<String, Object> map) {
-		select("EzPersonalDAO.getPollCount", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPersonalDAO.getPollCount", map);
 	}
 
 	public void setApprovalPwd(Map<String, Object> map) throws Exception{
@@ -161,6 +195,22 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	
 	public void insertResult(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.insertResult", map);
+	}
+	
+	public void setApprovalPwd_I(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.setApprovalPwd_I", map);
+	}
+	
+	public void setApprovNotiMail_I(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.setApprovNotiMail_I", map);
+	}
+	
+	public void setApprovalPwd_U(Map<String, Object> map) throws Exception{
+		update("EzPersonalDAO.setApprovalPwd_U", map);
+	}
+	
+	public void setApprovNotiMail_U(Map<String, Object> map) throws Exception{
+		update("EzPersonalDAO.setApprovNotiMail_U", map);
 	}
 	
 }

@@ -175,6 +175,7 @@
 		            }
 		
 		            try{
+		            	window.close();
 		                window.opener.refreshFormList();
 		            }
 		            catch (ee) {

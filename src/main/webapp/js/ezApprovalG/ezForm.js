@@ -177,16 +177,24 @@ function fnValueClick() {
 }
   
 var xmlpara = createXmlDom();
-function add_doc_maker() {
-    var xmlRtn = createXmlDom();
+function add_doc_maker(companyID) {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApprovalG/getFormPropList.do",
+		data : {
+			companyID  : companyID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    xmlhttp.open("POST", "aspx/Get_FormPropList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.responseText != "") {
-        xmlpara = loadXMLString(xmlhttp.responseText);
+    if (result != "") {
+    	xmlpara = loadXMLString(result);
         PROPERTY_TABLEINIT();
     }
 }

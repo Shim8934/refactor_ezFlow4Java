@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
 		<script type="text/javascript" src="/js/ezApproval/admin/FormCont.js"></script>
 		<script type="text/javascript">
+			//Git Test
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc  = createXmlDom();		    
 		    var pDeptID;
@@ -299,10 +300,10 @@
 		                            url = "/admin/ezApproval/formMain.do";
 		                    }
 		                }
-		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "NO");
+		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 970, "NO");
 		                Tree_setconfig();
 		                InitFormCont();
-		            }
+		            } 
 		            else {
 		                alert("<spring:message code='ezApproval.t722'/>");
 		            }

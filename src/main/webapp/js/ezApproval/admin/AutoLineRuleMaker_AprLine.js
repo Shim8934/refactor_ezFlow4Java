@@ -33,7 +33,7 @@ var USE_APRLINEVIEWER = "";
 
 function Tree_setconfig() {
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/myoffice/ezApproval/control_cross/organtree_config.xml", false);
+    xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
     xmlHTTP.send();
 
     if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -53,7 +53,7 @@ function displayUserList(DeptID) {
     createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
 
     g_xmlHTTP = createXMLHttpRequest();
-    g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", true);
+    g_xmlHTTP.open("POST", "/ezOrgan/getDeptMemberList.do", true);
     g_xmlHTTP.onreadystatechange = event_displayUserList;
     g_xmlHTTP.send(xmlpara);
 }
@@ -140,23 +140,23 @@ function hideProgress() {
             g_progresswin.close();
     } catch (e) { }
 }
-
-function OpenInformationUI(pInformationContent) {
-    var parameter = pInformationContent;
-    var url = "/myoffice/ezApproval/ezAPROPINION_Cross.aspx";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:230px;help:no;scroll:no;edge:sunken";
-    feature = feature + GetShowModalPosition(330, 205);
-    var RtnVal = window.showModalDialog(url, parameter, feature);
-    return RtnVal;
-}
-
-function OpenAlertUI(pAlertContent) {
-    var parameter = pAlertContent;
-    var url = "/myoffice/ezApproval/ezAPRALERT_Cross.aspx";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:180px;help:no;scroll:no;edge:sunken";
-    feature = feature + GetShowModalPosition(330, 205);
-    var RtnVal = window.showModalDialog(url, parameter, feature);
-}
+// 중복된 소스
+//function OpenInformationUI(pInformationContent) {
+//    var parameter = pInformationContent;
+//    var url = "/admin/ezApproval/ezAprOpinion.do";
+//    var feature = "status:no;dialogWidth:330px;dialogHeight:230px;help:no;scroll:no;edge:sunken";
+//    feature = feature + GetShowModalPosition(330, 205);
+//    var RtnVal = window.showModalDialog(url, parameter, feature);
+//    return RtnVal;
+//}
+//
+//function OpenAlertUI(pAlertContent) {
+//    var parameter = pAlertContent;
+//    var url = "/admin/ezApproval/ezAprAlert.do";
+//    var feature = "status:no;dialogWidth:330px;dialogHeight:180px;help:no;scroll:no;edge:sunken";
+//    feature = feature + GetShowModalPosition(330, 205);
+//    var RtnVal = window.showModalDialog(url, parameter, feature);
+//}
 
 function OnSelChange_onclick() {
     var pAPRLINE = new ListView();
@@ -529,7 +529,7 @@ function isgetUser(DeptID) {
     createNodeAndInsertText(xmlpara, objNode, "PROP", "");
     createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
 
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
+    xmlhttp.open("POST", "/ezOrgan/getDeptMemberList.do", false);
     xmlhttp.send(xmlpara);
 
     var XmlNode = loadXMLString(xmlhttp.responseText);

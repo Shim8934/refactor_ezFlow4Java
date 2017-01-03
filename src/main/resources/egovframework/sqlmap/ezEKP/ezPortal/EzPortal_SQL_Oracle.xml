@@ -210,6 +210,7 @@
 		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
 		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
+		<result property="tenantID"					column="TENANT_ID"		columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap class="PortalGetMainMenuHtmlVO" id="portalGetMainMenuHtmlVO">

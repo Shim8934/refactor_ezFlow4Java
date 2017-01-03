@@ -136,4 +136,6 @@ public interface EzApprovalAdminService {
 
 	public String saveFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
 
+	public String saveFormInfoReform(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
+
 }

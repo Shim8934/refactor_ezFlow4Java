@@ -90,14 +90,26 @@ public class LoginController {
     
     @RequestMapping(value="/user/login/login.do")
 	public String loginView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
+    	
+    	Cookie[] cookies = request.getCookies();
+    	
+    	if (cookies != null) {
+    		for (Cookie cookie : cookies) {
+    			if(cookie.getName().equals("loginCookie")){
+    				return "redirect:/ezPortal/portalMain.do"; 
+    			}
+    	    }
+    	}
+        	
     	String pbm = egovFileScrty.getPbm();
- 	
+    	
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
     
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		
-    	return "user/login/login";
+    	return "/user/login/login";
+    
 	}
     
     

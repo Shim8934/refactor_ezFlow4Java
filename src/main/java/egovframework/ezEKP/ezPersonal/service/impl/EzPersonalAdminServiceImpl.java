@@ -75,8 +75,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public PersonalNoticeVO getNoticeInfo(String itemSeq) throws Exception {
-		return ezPersonalAdminDAO.getNoticeInfo(itemSeq);
+	public PersonalNoticeVO getNoticeInfo(String itemSeq, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemSeq", itemSeq);
+		map.put("tenantID", tenantID);
+		return ezPersonalAdminDAO.getNoticeInfo(map);
 	}
 
 	@Override
@@ -363,6 +366,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", "ADMIN");
 		map.put("v_SLIDERID", sliderID);
+		map.put("tenantID", userInfo.getTenantId());
 		
 		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map);
 		

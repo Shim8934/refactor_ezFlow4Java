@@ -399,5 +399,45 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 	public List<ApprFormInfoVO> getFormProperty(Map<String, Object> map) throws Exception {
 		return (List<ApprFormInfoVO>) list("EzApprovalAdminDAO.getFormProperty", map);
 	}
+
+	public String insertFormData(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		return (String) insert("EzApprovalAdminDAO.insertFormData", apprFormInfoVO);
+	}
+
+	public void setAutoDocNum(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		insert("EzApprovalAdminDAO.setAutoDocNum", apprFormInfoVO);
+	}
+
+	public void deleteAutoRuleLine(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteAutoRuleLine", apprAutoRuleVO);
+	}
+
+	public void insertAutoRuleLine(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertAutoRuleLine", apprAutoRuleVO);
+	}
+
+	public void deleteAutoRule(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteAutoRule", apprAutoRuleVO);
+	}
+
+	public void insertAutoRule(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertAutoRule", apprAutoRuleVO);
+	}
+
+	public void deleteFormRecv(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		delete("EzApprovalAdminDAO.deleteFormRecv", apprReceiveGroupVO);
+	}
+
+	public void insertFormRecv(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
+		insert("EzApprovalAdminDAO.insertFormRecv", apprReceiveGroupVO);
+	}
+
+	public void updateFormVersion(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		update("EzApprovalAdminDAO.updateFormVersion", apprFormInfoVO);
+	}
+
+	public void updateFormData(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		update("EzApprovalAdminDAO.updateFormData", apprFormInfoVO);
+	}
 	
 }

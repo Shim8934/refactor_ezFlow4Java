@@ -78,7 +78,7 @@
 				var selectedItemCount;
 				var selRow;
 			
-				selectedItemCount = listview.GetSelectedIndexes().length;
+				selectedItemCount = listview.GetSelectedRows().length;
 				
 				if (selectedItemCount == 0){
 					alert("<spring:message code='ezOrgan.t106' />");

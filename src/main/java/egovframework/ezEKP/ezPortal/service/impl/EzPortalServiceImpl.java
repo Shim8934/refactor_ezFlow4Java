@@ -1531,7 +1531,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		sb.append("<ul>\n");
 		
 		String lastLogout = "";
-
+		logger.debug("resultSize="+result.size());
 		for (int i=0; i<result.size(); i++) {
 			logger.debug("uID="+result.get(i).getuID());
 			logger.debug("accessID="+getAccessList(userInfo));
@@ -1545,13 +1545,18 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String menuitemLinkLocation = result.get(i).getLinkLocation();
 			if (menuitemLinkLocation == null) {
 				menuitemLinkLocation = "";
+			} else {
+				menuitemLinkLocation = result.get(i).getLinkLocation().trim();
 			}
+				
 			logger.debug("menuitemLinkLocation="+menuitemLinkLocation);
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			logger.debug("menuitemWindowOption="+menuitemWindowOption);
 			
 			if (menuitemWindowOption == null) {
 				menuitemWindowOption = "";
+			} else {
+				menuitemWindowOption = result.get(i).getWindowOption().trim();
 			}
 			
 			if (i == result.size() - 1) {

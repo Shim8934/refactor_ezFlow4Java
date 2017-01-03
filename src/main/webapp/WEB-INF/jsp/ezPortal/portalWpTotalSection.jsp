@@ -36,7 +36,7 @@
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal01.gif" alt="<spring:message code="main.t00017" />" /></li>
 							<li class="count">
 								<div>
-									<span id="mailnum" runat="server">0</span>
+									<span id="mailnum">0</span>
 								</div>
 							</li>
                     		<%if(userLang != "3"){ %>
@@ -233,6 +233,7 @@
 		        try { top.onresize() } catch (e) { }
 		        
 		        //
+		        getnewmailcount();
 		        getnewapprovalcount();
 		        //
 		        
@@ -369,31 +370,39 @@
 
 			var xmlHttp_getnewmailcount_total = null;
 			function getnewmailcount() {
+				var xmlpara = createXmlDom();
+                var objNode;
+                createNodeInsert(xmlpara, objNode, "DATA");
+                createNodeAndInsertText(xmlpara, objNode, "URL", "INBOX");
+				
 			    xmlHttp_getnewmailcount_total = createXMLHttpRequest();
-			    xmlHttp_getnewmailcount_total.open("POST", "/myoffice/ezEmail/remote/mail_get_unreadcount.aspx", true);
+			    xmlHttp_getnewmailcount_total.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
 			    xmlHttp_getnewmailcount_total.onreadystatechange = event_newmailcount;
-			    xmlHttp_getnewmailcount_total.send();
+			    xmlHttp_getnewmailcount_total.send(xmlpara);
 			}
 
 			function event_newmailcount() {
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-		                if(CrossYN())
-		                    document.getElementById("mailnum").textContent = xmlHttp_getnewmailcount_total.responseText;
-		                else
-		                    document.getElementById("mailnum").innerText = xmlHttp_getnewmailcount_total.responseText;
+			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	
+		                if(CrossYN()) {
+		                    document.getElementById("mailnum").textContent = unreadcount;
+		                }
+		                else {
+		                    document.getElementById("mailnum").innerText = unreadcount;
+		                }
 			        }
 			        xmlHttp_getnewmailcount_total = null;
 			    }
 			}
 
 
-			function event_newmailcount_end()
-			{
-				if(xmlHttp != null && xmlHttp.readyState == 4)
-				{
-					if(xmlHttp.status > 199 && xmlHttp.status < 300)
-						document.getElementById("mailnum").innerText = xmlHttp.responseXML.getElementsByTagName("d:unreadcount").item(0).text
+			function event_newmailcount_end() {
+				if (xmlHttp != null && xmlHttp.readyState == 4) {
+					if (xmlHttp.status > 199 && xmlHttp.status < 300) {
+						document.getElementById("mailnum").innerText = xmlHttp.responseXML.getElementsByTagName("d:unreadcount").item(0).text;
+					}
 					xmlHttp = null;
 				}
 			}

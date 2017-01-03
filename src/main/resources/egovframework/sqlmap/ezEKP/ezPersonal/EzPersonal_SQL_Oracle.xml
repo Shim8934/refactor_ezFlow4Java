@@ -15,101 +15,715 @@
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
 	
-	<procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO" >
+	<!-- <procedure id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
+		<isEqual property="v_MODE" compareValue="ADMIN">
+			<isEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			EZPERSONAL.TBL_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+             		AND
+             			TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isEmpty>
+			<isNotEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			EZPERSONAL.TBL_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+                    AND
+                    	SLIDERID = #v_SLIDERID#
+                    AND
+                    	TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					SLIDERID ,
+                	SLIDERNAME ,
+                	SLIDERNAME2 ,
+                	IMAGEPATH ,
+                	REGUSERID ,
+                	REGDATE ,
+                	SN ,
+                	ISUSE 
+           		FROM
+           			EZPERSONAL.TBL_SLIDERIMAGE 
+          		WHERE
+          			COMPANYID = #v_COMPANYID#
+                AND
+                	ISUSE = 1
+                AND
+                	TENANT_ID = #tenantID#	
+           		ORDER BY
+           			SN
+			]]>
+		</isNotEqual>
+	</select>
 		
-	<procedure id="EzPersonalDAO.getApprovNotiConfig" parameterClass="Map"  resultClass="PersonalApprovMailVO" >
+	<!-- <procedure id="EzPersonalDAO.getApprovNotiConfig" parameterClass="Map"  resultClass="PersonalApprovMailVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETAPPROVNOTIINFO(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
+ 	<select id="EzPersonalDAO.getApprovNotiConfig_S1" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       			 		COUNT(*)  
+               		FROM
+               			EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID# ) > 0
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S2" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				ALERT ,
+                COMPLETE ,
+                BANSONG ,
+                CALLBACK ,
+                HESONG ,
+                SAVEMAILFLAG 
+           	FROM
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+          	WHERE
+          		UserID = #v_PUSERID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S3" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				'1' ALERT  ,
+                '1' COMPLETE  ,
+                '1' BANSONG  ,
+                '1' CALLBACK  ,
+                '1' HESONG  ,
+                'Y' SAVEMAILFLAG  
+           FROM
+           		DUAL
+		]]>
+	</select> 
+	
+	<!-- <procedure id="EzPersonalDAO.setApprovalPwd" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZCOMMON.EZSP_INSERTAPPROVPWD(#v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#)}
 		]]>
-	</procedure>	
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.setApprovalPwd_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			EZCOMMON.TBPWDINFO 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) <> 0
+		]]>
+	</select>
+	
+	<update id="EzPersonalDAO.setApprovalPwd_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZCOMMON.TBPWDINFO
+          	SET
+          		FLAG = #v_PFLAG#,
+              	PWD = #v_PPWD#,
+              	PWDTYPE = #v_PPWDTYPE#
+        	WHERE
+        		USERID = #v_PUSERID#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>	
+	
+	<insert id="EzPersonalDAO.setApprovalPwd_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZCOMMON.TBPWDINFO
+          		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID )
+          	VALUES
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID# )
+		]]>
+	</insert>
 		
-	<procedure id="EzPersonalDAO.setApprovNotiMail" parameterClass="Map" >
+	<!-- <procedure id="EzPersonalDAO.setApprovNotiMail" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_SAVEAPPROVNOTIMAIL(#v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.insertResult" parameterClass="Map" >
+	<select id="EzPersonalDAO.setApprovNotiMail_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			EZPERSONAL.TBLAPPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) = 0
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.setApprovNotiMail_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF
+        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID )
+        	VALUES
+        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalDAO.setApprovNotiMail_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZPERSONAL.TBLAPPROVNOTIMAILCONF
+         	SET
+         		ALERT = #v_PALERT#,
+             	COMPLETE = #v_PCOMPLETE#,
+             	BANSONG = #v_PBANSONG#,
+             	CALLBACK = #v_PCALLBACK#,
+             	HESONG = #v_PHESONG#,
+             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#
+       		WHERE
+       			USERID = #v_PUSERID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPersonalDAO.insertResult" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_INSERTRESULT(#v_pItemSeq#, #v_pUserID#, #v_pResult#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
+	<select id="EzPersonalDAO.insertResult_S" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+					1
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS ( 	SELECT
+       										ITEMSEQ 
+                          				FROM
+                          					EZPERSONAL.TBLLIGHTPOLLRESULT 
+                           				WHERE
+                           					USERID = #v_pUserID#
+                                    	AND
+                                    		ITEMSEQ = #v_pItemSeq#
+                                    	AND
+                                    		TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.insertResult" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPERSONAL.TBLLIGHTPOLLRESULT
+       			( ITEMSEQ, USERID, RESULT, TENANT_ID )
+       		VALUES
+       			( #v_pItemSeq#, #v_pUserID#, #v_pResult#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLCOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>	
+	</procedure>	 -->
 	
-	<procedure id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalLightPollVO"  remapResults="true">
+	<select id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			EZPERSONAL.TBLLIGHTPOLL 
+          		WHERE
+          			COMPANYID = #v_pCompanyID#
+          		AND
+          			TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			EZPERSONAL.TBLLIGHTPOLL 
+          		WHERE
+          			( COMPANYID = #v_pCompanyID#
+                OR
+                	COMPANYID = 'Top' )
+                AND
+                	TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalLightPollVO"  remapResults="true">
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLLISTUSER(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO" >
+	<select id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+           		FROM
+           			( 	SELECT
+           				ITEMSEQ ,
+                        POLLTITLE ,
+                        POLLTITLE2 ,
+                        STARTDATE ,
+                        NVL(EndDate, '1900-01-01') EndDate  
+           			FROM
+           				EZPERSONAL.TBLLIGHTPOLL 
+          			WHERE
+          				( COMPANYID = #v_pCompanyID#
+                   	OR
+                   		COMPANYID = 'Top' )
+                   	AND
+                   		TENANT_ID = #tenantID#
+           			ORDER BY
+           				ITEMSEQ DESC )
+           		WHERE
+           			ROWNUM <= #v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					* 
+           		FROM
+           			( SELECT
+           				ITEMSEQ ,
+                        POLLTITLE ,
+                        POLLTITLE2 ,
+                        STARTDATE ,
+                        ENDDATE 
+           			FROM
+           				( 	SELECT
+           						* 
+                    		FROM
+                    			( SELECT
+                    				ITEMSEQ ,
+                                  	POLLTITLE ,
+                                  	POLLTITLE2 ,
+                                  	STARTDATE ,
+                                  	NVL(ENDDATE, '1900-01-01') EndDate  
+                  				FROM
+                  					EZPERSONAL.TBLLIGHTPOLL 
+                   				WHERE
+                   					( (	COMPANYID = #v_pCompanyID#
+                            		OR
+                            			COMPANYID = 'Top' )
+                            		AND
+                            			TENANT_ID = #tenantID#	
+                    			ORDER BY
+                    				ITEMSEQ ASC )
+                    		WHERE
+                    			ROWNUM <= #v_pTotal# - #v_pStart# ) EZPERSONAL.TEMPTBLLIGHTPOLL
+           					ORDER BY
+           						ITEMSEQ DESC )
+           		WHERE
+           			ROWNUM <= #v_pCount#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETCURRENTPOLL(#v_pUserID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getWebPartGroup" parameterClass="Map"  resultClass="PersonalGetWebPartGroupVO" >
+	<select id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		( SELECT
+        			 A.ITEMSEQ ,
+                     STARTDATE ,
+                     POLLSELECTIONCOUNT ,
+                     POLLTITLE ,
+                     POLLTITLE2 ,
+                     ANSWER1 ,
+                     ANSWER2 ,
+                     ANSWER3 ,
+                     ANSWER4 ,
+                     ANSWER5 ,
+                     ANSWER6 ,
+                     ANSWER7 ,
+                     ANSWER8 ,
+                     ANSWER9 ,
+                     ANSWER10 ,
+                     NVL(B.RESULT, 0) Result  
+        		FROM
+        			EZPERSONAL.TBLLIGHTPOLL A
+               	LEFT JOIN
+               		EZPERSONAL.TBLLIGHTPOLLRESULT B
+               	ON
+               		A.ITEMSEQ = B.ITEMSEQ
+               	AND
+               		USERID = #v_pUserID#
+       			WHERE
+       				( 	COMPANYID = #v_pCompanyID#
+                	OR
+                		COMPANYID = 'Top' )
+                	AND
+                		STARTDATE < to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                	AND
+                		ENDDATE IS NULL
+                	AND
+                		A.TENANT_ID = #tenantID#	
+        			ORDER BY
+        				A.ITEMSEQ DESC )
+        		WHERE
+        			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getWebPartGroup" parameterClass="Map"  resultClass="PersonalGetWebPartGroupVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETWEBPARTGROUP(#v_pCompanyID#, #v_pMode#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getUserWebPart" parameterClass="Map"  resultClass="PersonalGetWebPartVO" >
+	<select id="EzPersonalDAO.getWebPartGroup" parameterClass="Map"  resultClass="PersonalGetWebPartGroupVO">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					ID ,
+             		NAME 
+        		FROM
+        			EZPERSONAL.TBLWEBPARTGROUP 
+       			WHERE
+       				COMPANYID = #v_pCompanyID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					ID ,
+                	NAME 
+           		FROM
+           			EZPERSONAL.TBLWEBPARTGROUP 
+          		WHERE
+          			COMPANYID = #v_pCompanyID#
+                OR
+                	COMPANYID = 'Top'
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getUserWebPart" parameterClass="Map"  resultClass="PersonalGetWebPartVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETUSERWEBPART(#v_pUserID#, #v_pCompanyID#, #v_pACL#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getEmpOfMonth" parameterClass="String"  resultClass="PersonalGetEmpOfMonthVO" >
+	<select id="EzPersonalDAO.getUserWebPart_S1" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+			FROM
+				DUAL
+    		WHERE
+    			NOT EXISTS (	SELECT
+    									ITEMSEQ
+    							 	FROM
+    							 		EZPERSONAL.TBLUSERWEBPART
+    							 	WHERE
+    							 		USERID = #v_PUserID#
+    							 	AND
+    							 		TENANT_ID = #tenantID#	)
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getUserWebPart_S2" parameterClass="Map"  resultClass="PersonalGetWebPartVO">
+		<![CDATA[
+			SELECT
+				NAME, URL, DEFAULTPOSITION AS POSITION, DEFAULTPRIORITY, ID
+			FROM
+				EZPERSONAL.TBLWEBPARTITEM
+			JOIN
+				EZPERSONAL.TBLWEBPARTITEMACL
+			ON
+				ID=ItemID
+			WHERE
+				(COMPANYID='S907000'  OR COMPANYID='Top')
+			AND
+				DEFAULTUSE=1 
+			AND
+				ACCESSID IN ('gisa1','top','Top','S907000','RAB1')
+			ORDER BY
+				DEFAULTPOSITION, DEFAULTPRIORITY
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getUserWebPart_S3" parameterClass="Map"  resultClass="PersonalGetWebPartVO">
+		<![CDATA[
+			SELECT
+				B.NAME, B.URL, A.ITEMPOSITION AS POSITION, A.ITEMSEQ,  B.ID 
+			FROM
+				EZPERSONAL.TBLUSERWEBPART A 
+			JOIN
+				EZPERSONAL.TBLWEBPARTITEM B
+			ON
+				A.ITEMID=B.ID
+			JOIN
+				EZPERSONAL.TBLWEBPARTITEMACL C
+			ON
+				C.ITEMID=B.ID
+			WHERE
+				A.USERID='gisa1'
+			AND
+				C.ACCESSID IN ('gisa1','top','Top','S907000','RAB1')
+			ORDER BY
+				A.ITEMPOSITION, A.ITEMSEQ
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getEmpOfMonth" parameterClass="String"  resultClass="PersonalGetEmpOfMonthVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETEMPOFMONTH(#v_PTERM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>	
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getPopUpListUser" parameterClass="String"  resultClass="PersonalGetPopUpListUserVO" >
+	<select id="EzPersonalDAO.getEmpOfMonth" parameterClass="Map"  resultClass="PersonalGetEmpOfMonthVO">
+		<![CDATA[
+			SELECT
+				A.DISPLAYNAME ,
+             	A.DISPLAYNAME2 ,
+             	A.TITLE ,
+             	A.TITLE2 ,
+             	A.DESCRIPTION ,
+             	A.DESCRIPTION2 ,
+             	B.EXTENSIONATTRIBUTE2 FilePath  ,
+             	A.CN 
+        	FROM
+        		EZPERSONAL.TBLEMPMONTH A
+            JOIN
+            	EZHRMASTER.TBLUSERMASTER B
+            ON
+            	A.CN = B.CN
+       		WHERE
+       			TERM = #v_PTERM#
+       		AND
+       			A.TENANT_ID = #tenantID#	
+        	ORDER BY
+        		TERM DESC
+		]]>
+	</select>	
+	
+	<!-- <procedure id="EzPersonalDAO.getPopUpListUser" parameterClass="String"  resultClass="PersonalGetPopUpListUserVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOPUPLISTUSER(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getQuickLinkMenu" parameterClass="String"  resultClass="PersonalGetQuickLinkMenuVO" >
+	<select id="EzPersonalDAO.getPopUpListUser" parameterClass="Map"  resultClass="PersonalGetPopUpListUserVO">
+		<![CDATA[
+			SELECT
+				ITEMSEQ ,
+             	WIDTH ,
+             	HEIGHT ,
+             	POSITION 
+        	FROM
+        		EZPERSONAL.TBLPOPUP 
+       		WHERE
+       			( 	COMPANYID = 'Top'
+                OR
+                	COMPANYID = #v_pCompanyID# )
+            AND
+            	STARTDATE <= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND
+            	ENDDATE >= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getQuickLinkMenu" parameterClass="String"  resultClass="PersonalGetQuickLinkMenuVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETQUICKLINKMENU(#v_ACCESSID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
+	<select id="EzPersonalDAO.getQuickLinkMenu" parameterClass="Map"  resultClass="PersonalGetQuickLinkMenuVO">
+		<![CDATA[
+			SELECT
+				A.QUICKLINKID QuickLinkID  ,
+             	QUICKLINKNAME ,
+             	QUICKLINKNAME2 ,
+             	QUICKLINKNAME3 ,
+             	QUICKLINKNAME4 ,
+             	LINKTYPE ,
+             	LINKTYPEURL ,
+             	URL ,
+             	REGUSERID ,
+             	VIEW_FLAG ,
+             	SIZE_ 
+        	FROM
+        		EZPERSONAL.TBLQUICKLINK A
+            JOIN
+            	EZPERSONAL.TBLQUICKLINK_ACL B
+            ON
+            	A.QUICKLINKID = B.QUICKLINKID
+       		WHERE
+       			( ACCESSID = #v_ACCESSID# )
+       		AND
+       			A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLRESULTORDERRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getPollInfo" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
+	<select id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				RESULT ,
+             	COUNT(RESULT)  COUNT  
+        	FROM
+        		EZPERSONAL.TBLLIGHTPOLLRESULT 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+        	GROUP BY
+        		RESULT
+        	ORDER BY
+        		COUNT DESC,
+                RESULT ASC
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPersonalDAO.getPollInfo" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>		
+	</procedure> -->
 	
-	<procedure id="EzPersonalDAO.getPollResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
+	<select id="EzPersonalDAO.getPollInfo" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				ITEMSEQ ,
+             	STARTDATE ,
+             	NVL(ENDDATE, '1900-01-01') EndDate  ,
+             	POLLSELECTIONCOUNT ,
+             	POLLTITLE ,
+	            POLLTITLE2 ,
+	            ANSWER1 ,
+	            ANSWER2 ,
+	            ANSWER3 ,
+	            ANSWER4 ,
+	            ANSWER5 ,
+	            ANSWER6 ,
+	            ANSWER7 ,
+	            ANSWER8 ,
+	            ANSWER9 ,
+	            ANSWER10 
+        	FROM
+        		EZPERSONAL.TBLLIGHTPOLL 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>		
+	
+	<!-- <procedure id="EzPersonalDAO.getPollResult" parameterClass="Integer"  resultClass="PersonalLightPollVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETPOLLRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPersonalDAO.getPollResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				RESULT ,
+             	COUNT(RESULT)  COUNT  
+        	FROM
+        		EZPERSONAL.TBLLIGHTPOLLRESULT 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+        	GROUP BY
+        		RESULT
+        	ORDER BY
+        		RESULT
+		]]>
+	</select>
 	
 	<select id="EzPersonalDAO.getPassword" parameterClass="String" resultClass="String">
 		<![CDATA[

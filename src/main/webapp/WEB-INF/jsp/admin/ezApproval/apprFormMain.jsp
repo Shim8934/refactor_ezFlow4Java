@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<!DOCTYPE html>
 <html>
 	<head>
 		<title>${title}</title>
@@ -158,11 +157,9 @@
 		    }
 		
 		
-		    function SaveFormInfo_after() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) return;
-		
+		    function SaveFormInfo_after(text) {
 		        try {
-		            if (xmlhttp.responseText == "<DATA>OK</DATA>") {
+		            if (text == "<DATA>OK</DATA>") {
 		                alert("<spring:message code='ezApproval.t755'/>");
 		            }
 		            else {
@@ -170,9 +167,11 @@
 		            }
 		
 		            try{
+		            	window.close();
 		                window.opener.refreshFormList();
 		            }
 		            catch (ee) {
+		            	alert("SaveFormInfo_after error :: " + ee);
 		            }
 		        }
 		        catch (e) {
@@ -543,34 +542,67 @@
 		            DeleteItemCode();
 		        }
 		    }
+		//그냥 버젼 소스 꼬임
+// 		    function btnItemCode_onclick() {
+// 		        var url = "/admin/ezApproval/docNumUI.do";
+// 		        var retVal = window.showModalDialog(url, "", "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken");
 		
+// 		        if (retVal[0] != "cancel") {
+// 		            tbItemCode.value = retVal[0];
+// 		            tbItemName.value = retVal[1];
+// 		            SetSelectVal("keepperiod", retVal[2]);            
+// 		            securitylevel.value = retVal[3];
+// 		            isPublic.value = retVal[4];
+// 		            tbItemName2.value = retVal[6];
+// 		            setAutoItemCode.checked = true;
+// 		        }
+// 		        else {
+// 		            if (tbItemCode.value == "")
+// 		                setAutoItemCode.checked = false;
+// 		        }
+// 		    }
+		    var itemcode_dialogArgument = new Array();
 		    function btnItemCode_onclick() {
+		        itemcode_dialogArgument[0] = "";
+		        itemcode_dialogArgument[1] = btnItemCode_Complete;
 		        var url = "/admin/ezApproval/docNumUI.do";
-		        var retVal = window.showModalDialog(url, "", "dialogWidth:745px;dialogHeight:370px;status:no;help:no;scroll:no;edge:sunken");
-		
-		        if (retVal[0] != "cancel") {
-		            tbItemCode.value = retVal[0];
-		            tbItemName.value = retVal[1];
-		            SetSelectVal("keepperiod", retVal[2]);            
-		            securitylevel.value = retVal[3];
-		            isPublic.value = retVal[4];
-		            tbItemName2.value = retVal[6];
-		            setAutoItemCode.checked = true;
-		        }
-		        else {
-		            if (tbItemCode.value == "")
-		                setAutoItemCode.checked = false;
-		        }
+		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
 		    }
 		
+		    function btnItemCode_Complete(retVal) {
+		        if (retVal[0] != "cancel") {
+		            document.getElementById("tbItemCode").value = retVal[0];
+		            document.getElementById("tbItemName").value = retVal[1];
+		            document.getElementById("keepperiod").value = retVal[2];
+		            document.getElementById("securitylevel").value = retVal[3];
+		            document.getElementById("isPublic").value = retVal[4];
+		            document.getElementById("tbItemName2").value = retVal[6];
+		            document.getElementById("setAutoItemCode").checked = true;
+		        }
+		        else {
+		            if (document.getElementById("tbItemCode").value == "")
+		                document.getElementById("setAutoItemCode").checked = false;
+		        }
+		    }
+		//그냥 버젼
+// 		    function DeleteItemCode() {
+// 		        tbItemCode.value = "";
+// 		        tbItemName.value = "";
+// 		        tbItemName2.value = "";
+// 		        securitylevel.selectedIndex = 0;
+// 		        keepperiod.selectedIndex = 0;
+// 		        isPublic.selectedIndex = 0;
+// 		        setAutoItemCode.checked = false;
+// 		    }
+		
 		    function DeleteItemCode() {
-		        tbItemCode.value = "";
-		        tbItemName.value = "";
-		        tbItemName2.value = "";
-		        securitylevel.selectedIndex = 0;
-		        keepperiod.selectedIndex = 0;
-		        isPublic.selectedIndex = 0;
-		        setAutoItemCode.checked = false;
+		    	document.getElementById("tbItemCode").value = "";
+		        document.getElementById("tbItemName").value = "";
+		        document.getElementById("tbItemName2").value = "";
+		        document.getElementById("securitylevel").selectedIndex = 0;
+		        document.getElementById("keepperiod").selectedIndex = 0;
+		        document.getElementById("isPublic").selectedIndex = 0;
+		        document.getElementById("setAutoItemCode").checked = false;
 		    }
 		
 		    var xmlhttpUserlist;
@@ -937,9 +969,9 @@
 				<tr>
 					<th><spring:message code='ezApproval.t603'/></th>
 					<td>
-						<select name="selDocType" onChange="return OnChange_DocType()">				
+						<select name="selDocType" onChange="return OnChange_DocType()">
 							${docTypeOption}
-						</select>
+                        </select>
 					</td>
 				</tr>
 			</table>

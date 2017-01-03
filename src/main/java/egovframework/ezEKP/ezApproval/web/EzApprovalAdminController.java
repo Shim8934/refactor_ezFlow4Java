@@ -1261,7 +1261,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재 일반 관리자 분류코드관리 리스트갯수 표출
 	 */
-	@RequestMapping(value = "/admin/ezApproval/mGetDocNumItem.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApproval/getDocNumItem.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String mGetDocNumItem(@CookieValue("loginCookie") String loginCookie, ApprDocGroupVO apprDocGroupVO) throws Exception {
 		logger.debug("mGetDocNumItem started");
@@ -2001,7 +2001,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		apprFormInfoVO.setTenantID(userInfo.getTenantId());
 		//TODO: 일반버젼 하고 리폼 하기
-		String rtnValue = ezApprovalAdminService.saveFormInfo(apprFormInfoVO, realPath, userInfo.getLocale());
+		String rtnValue = ezApprovalAdminService.saveFormInfoReform(apprFormInfoVO, realPath, userInfo.getLocale());
 
 		logger.debug("formSaveReform ended");
 		
@@ -2100,17 +2100,18 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
-		String rtnValue = "";
+		String resultXML = "";
+		String rtnValue = ezApprovalAdminService.saveFormInfo(apprFormInfoVO, realPath, userInfo.getLocale());
 		
-		if (apprFormInfoVO.getFormInfo() != null && !apprFormInfoVO.getFormInfo().equals("")) {
-			//TODO: if문 없이하고 문제 발생하면 널벨류 비교 
-			String strHTML = apprFormInfoVO.getFormMHT();
-			logger.debug(strHTML);
+		if (rtnValue.indexOf("ERROR") > 0) {
+			resultXML = "<DATA>" + rtnValue + "</DATA>";
+		} else {
+			resultXML = "<DATA>OK</DATA>";
 		}
 
 		logger.debug("formSave ended");
 		
-		return "";
+		return resultXML;
 	}
 	
 }
