@@ -13,7 +13,7 @@
 	    <script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApproval/control_Cross/TreeView.js" ></script>
 	    <script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/docnumui_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApproval/docnumui_Cross.js"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var Rtnval = new Array();
 	        var companyID = "";
@@ -27,7 +27,7 @@
 	        window.onload = function () {
 	            var xmlDom = createXmlDom();
 	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
-	            companyID = parent.document.getElementById("ListCompany").value;
+	            companyID = opener.companyID;
 	            var treeView = new TreeView();
 	            treeView.SetID("FormTreeView");
 	            treeView.SetConfig(xmlDom);

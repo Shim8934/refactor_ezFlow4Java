@@ -13,25 +13,25 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 public interface EzPersonalService {
 	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID) throws Exception;
 	
-	public List<PersonalLightPollVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart) throws Exception;
+	public List<PersonalLightPollVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart, int tenantID) throws Exception;
 	
-	public List<PersonalLightPollVO> getPollResultOrderResult (int pItemSeq) throws Exception;
+	public List<PersonalLightPollVO> getPollResultOrderResult (int pItemSeq, int tenantID) throws Exception;
 	
-	public List<PersonalLightPollVO> getPollResult (int pItemSeq) throws Exception;
+	public List<PersonalLightPollVO> getPollResult (int pItemSeq, int tenantID) throws Exception;
 	
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID) throws Exception;
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID) throws Exception;
 	
 	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode) throws Exception;
 	
 	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL) throws Exception;
 	
-	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID) throws Exception;
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID, int tenantID) throws Exception;
 	
-	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm) throws Exception;
+	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, int tenantID) throws Exception;
 	
-	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID) throws Exception;
+	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID) throws Exception;
 	
-	public PersonalLightPollVO getPollInfo (int pItemSeq) throws Exception;
+	public PersonalLightPollVO getPollInfo (int pItemSeq, int tenantID) throws Exception;
 	
 	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID) throws Exception;
 
@@ -41,7 +41,7 @@ public interface EzPersonalService {
 	
 	public String getBirthUserList(String companyID, String curMon) throws Exception;
 	
-	public int getPollCount (String pComapnyID) throws Exception;
+	public int getPollCount (String pComapnyID, int tenantID) throws Exception;
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception;
 	

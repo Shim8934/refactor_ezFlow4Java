@@ -17,14 +17,14 @@
     		}
     	});
     	
-        var xmlRtn = loadXMLString(text);
+        var xmlRtn = loadXMLString(result);
 
         if (pFirst) {
             var xmlDom2 = createXmlDom();
             xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML.toUpperCase());
 
             if (SelectNodes(xmlRtn, "NODES/NODE/VALUE")) {
-                var xmlRtn = loadXMLString(text).documentElement;
+                var xmlRtn = loadXMLString(result).documentElement;
                 GetChildNodes(xmlDom2.documentElement)[0].appendChild(xmlRtn);
                 
             }
@@ -39,7 +39,7 @@
 
         }
         else {
-            var XmlNode = loadXMLString(text);
+            var XmlNode = loadXMLString(result);
             if (XmlNode.xml == "") return;
             var treeView = new TreeView();
             treeView.LoadFromID("FormTreeView");
@@ -60,7 +60,6 @@ function getGroupItem(pGroupID) {
 		async : false,
 		url : "/admin/ezApproval/getDocNumItem.do",
 		data : {
-			g_level      : pLevel,
 			groupID      : pGroupID,
 			companyID    : companyID
 		},
@@ -69,7 +68,7 @@ function getGroupItem(pGroupID) {
 		}
 	});
 
-    var xmlDoc = loadXMLString(text);
+    var xmlDoc = loadXMLString(result);
 
     if (document.getElementById("lvtForm").innerHTML != "") document.getElementById("lvtForm").innerHTML = "";
     var FormList = new ListView();

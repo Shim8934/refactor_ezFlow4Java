@@ -480,7 +480,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			//사용자 영역에서만 팝업 공지사항을 오픈한다.
 			if (mode.equals("view") && !viewMode.equals("preview")) {
 				// 팝업 공지사항
-				List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID());
+				List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				String popUp = "";
 				int popUpWidth = 0;
@@ -1137,7 +1137,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term);
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
@@ -1261,7 +1261,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 			String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 			
 			
-			PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term);
+			PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
 			
 			if (result != null) {
 				if (result.getFilePath() != null && !result.getFilePath().equals("")) {
@@ -1375,7 +1375,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		String pPollResultContent = "";
 		logger.debug("userID="+userInfo.getId());
 		logger.debug("userCompanyID="+userInfo.getCompanyID());
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
@@ -1394,7 +1394,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 					int maxAns = Integer.parseInt(result.getPollSelectionCount());
 					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
 					
-					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq);
+					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
 					
 					int pTotalCnt = 0;
 					for (int i=0; i<list.size(); i++) {
@@ -1599,7 +1599,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		String pAccessID = userInfo.getId() + "," + reversePath + "everyone";
 		
 		for (int j=0; j<pAccessID.split("\\,").length; j++) {
-			List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim());
+			List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim(), userInfo.getTenantId());
 			for (int k=0; k<getQuickLinkMenu.size(); k++) {
 				boolean TF = true;
 				if (getQuickLinkMenu.get(k) != null && getQuickLinkMenu.get(k).getView_Flag().equals("N")) {

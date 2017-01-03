@@ -22,7 +22,7 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception;
 	
-	PersonalNoticeVO getNoticeInfo(String itemSeq) throws Exception;
+	PersonalNoticeVO getNoticeInfo(String itemSeq, int tenantID) throws Exception;
 	
 	PersonalPopupVO getPopupInfo(String itemSeq) throws Exception;
 	
