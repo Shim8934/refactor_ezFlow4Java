@@ -448,7 +448,7 @@ function getNumberOnly(obj) {
 function SelectDept() {
     var Flag;
     var retVal = new Array();
-    var url = "/myoffice/ezApproval/manage/Organ.aspx"
+    var url = "/admin/ezApproval/organ.do"
     retVal = window.showModalDialog(url, companyID, "dialogWidth:290px;dialogHeight:525px;status:no;help:no;edge:sunken;scroll:no");
 
     if (typeof (retVal) != "undefined") {
