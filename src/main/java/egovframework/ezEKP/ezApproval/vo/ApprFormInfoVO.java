@@ -81,6 +81,14 @@ public class ApprFormInfoVO {
 	private String validations;
 	/** */
 	private String status;
+	/** */
+	private String isUpdateFormVersion;
+	/** */
+	private String formFormat;
+	/** */
+	private String year;
+	/** */
+	private String url;
 	
 	public String getFormContID() {
 		return formContID;
@@ -321,6 +329,30 @@ public class ApprFormInfoVO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getIsUpdateFormVersion() {
+		return isUpdateFormVersion;
+	}
+	public void setIsUpdateFormVersion(String isUpdateFormVersion) {
+		this.isUpdateFormVersion = isUpdateFormVersion;
+	}
+	public String getFormFormat() {
+		return formFormat;
+	}
+	public void setFormFormat(String formFormat) {
+		this.formFormat = formFormat;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 }

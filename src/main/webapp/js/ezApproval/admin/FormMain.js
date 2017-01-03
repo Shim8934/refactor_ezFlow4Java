@@ -184,7 +184,6 @@ function SaveFormInfo() {
         document.getElementById("1tab4").click();
         return;
     }
-alert(200);
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
         formAutoRule = arrFormAutoRule[1];           

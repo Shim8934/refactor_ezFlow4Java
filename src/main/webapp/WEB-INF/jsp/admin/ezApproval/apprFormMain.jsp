@@ -158,11 +158,9 @@
 		    }
 		
 		
-		    function SaveFormInfo_after() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) return;
-		
+		    function SaveFormInfo_after(text) {
 		        try {
-		            if (xmlhttp.responseText == "<DATA>OK</DATA>") {
+		            if (text == "<DATA>OK</DATA>") {
 		                alert("<spring:message code='ezApproval.t755'/>");
 		            }
 		            else {
@@ -170,9 +168,11 @@
 		            }
 		
 		            try{
+		            	window.close();
 		                window.opener.refreshFormList();
 		            }
 		            catch (ee) {
+		            	alert("SaveFormInfo_after error :: " + ee);
 		            }
 		        }
 		        catch (e) {
@@ -937,9 +937,9 @@
 				<tr>
 					<th><spring:message code='ezApproval.t603'/></th>
 					<td>
-						<select name="selDocType" onChange="return OnChange_DocType()">				
+						<select name="selDocType" onChange="return OnChange_DocType()">
 							${docTypeOption}
-						</select>
+                        </select>
 					</td>
 				</tr>
 			</table>

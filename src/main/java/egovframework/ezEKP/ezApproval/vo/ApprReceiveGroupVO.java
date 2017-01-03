@@ -25,6 +25,10 @@ public class ApprReceiveGroupVO {
 	private int tenantID;
 	/** */
 	private String userID;
+	/** */
+	private String deptSN;
+	/** */
+	private String formID;
 	
 	public String getMainID() {
 		return mainID;
@@ -97,6 +101,18 @@ public class ApprReceiveGroupVO {
 	}
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+	public String getDeptSN() {
+		return deptSN;
+	}
+	public void setDeptSN(String deptSN) {
+		this.deptSN = deptSN;
+	}
+	public String getFormID() {
+		return formID;
+	}
+	public void setFormID(String formID) {
+		this.formID = formID;
 	}
 
 }
