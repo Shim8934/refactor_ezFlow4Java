@@ -204,7 +204,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			
-			vo = ezPersonalAdminService.getNoticeInfo(itemSeq);
+			vo = ezPersonalAdminService.getNoticeInfo(itemSeq, userInfo.getTenantId());
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
 		}
 		
@@ -254,7 +254,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
-		PersonalNoticeVO vo = ezPersonalAdminService.getNoticeInfo(itemSeq);
+		PersonalNoticeVO vo = ezPersonalAdminService.getNoticeInfo(itemSeq, userInfo.getTenantId());
 
 		if (vo.getTitle2() == null) {
 			vo.setTitle2(vo.getTitle());

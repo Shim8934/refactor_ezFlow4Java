@@ -28,11 +28,28 @@
 		<result property="position"						column="POSITION"				columnIndex="8"/>		
 	</resultMap>
 	
-	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
+<!-- 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
 		<![CDATA[
 			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPersonalAdmin.EZSP_GETNOTICEINFO" parameterClass="Map"		resultMap="personalNoticeVO">
+		<![CDATA[
+			SELECT
+				TITLE ,
+             	TITLE2 ,
+             	POSTDATE ,
+             	CONTENT,
+             	ITEMSEQ
+        	FROM
+        		EZPERSONAL.TBLNOTICE 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
 	
 	<procedure id="EzPersonalAdmin.EZSP_GETPOPUPINFO" 			parameterClass="String"		resultMap="personalPopupVO" >
 		<![CDATA[

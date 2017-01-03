@@ -443,9 +443,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			currentPage = 1;
 		}
 		
-		int totalCount = ezPersonalService.getPollCount(userInfo.getCompanyID());
+		int totalCount = ezPersonalService.getPollCount(userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		List<PersonalLightPollVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize);
+		List<PersonalLightPollVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
 		
 		int pageCount = ((totalCount + pageSize - 1) / pageSize);
 		
@@ -453,18 +453,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 			isPollEmpty = true;
 		} else {
 			for (int i=0; i<list.size(); i++) {
-				if (list.get(i).getEndDate().indexOf("1900-01-01") > -1) {
+				if (commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
 					list.get(i).setEndDate(egovMessageSource.getMessage("ezPersonal.t244",locale));
 				} else {
-					list.get(i).setEndDate(list.get(i).getEndDate().substring(0, 10));
+					list.get(i).setEndDate(commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).substring(0, 10));
 				}
-				list.get(i).setStartDate(list.get(i).getStartDate().substring(0, 10));
+				list.get(i).setStartDate(commonUtil.getDateStringInUTC(list.get(i).getStartDate(), userInfo.getOffset(), false).substring(0, 10));
 				
 				if (userInfo.getLang().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());
 				}
 				
-				PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+				PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 				
 				if (result != null) {
 					if (result.getResult() == 0) {
@@ -496,7 +496,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String answer = "";
 		String literalAnswer = "";
 		String pollSeq = "";
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		
@@ -552,9 +552,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")), userInfo.getTenantId());
 		}
 		
-		PersonalLightPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq)); 
+		PersonalLightPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq), userInfo.getTenantId()); 
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(pollInfo)+"</DATA>");
-		List<PersonalLightPollVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq));
+		List<PersonalLightPollVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq), userInfo.getTenantId());
 		
 		if (userInfo.getLang().equals("2") && pollInfo.getPollTitle2() != null && !pollInfo.getPollTitle2().equals("")) {
 			subject = pollInfo.getPollTitle2();
@@ -562,10 +562,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			subject = pollInfo.getPollTitle();
 		}
 		
-		if (pollInfo.getEndDate().indexOf("1900-01-01") > -1) {
-			title = pollInfo.getStartDate() + " - " + egovMessageSource.getMessage("ezPersonal.t244", locale);
+		if (commonUtil.getDateStringInUTC(pollInfo.getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
+			title = commonUtil.getDateStringInUTC(pollInfo.getStartDate(), userInfo.getOffset(), false) + " - " + egovMessageSource.getMessage("ezPersonal.t244", locale);
 		} else {
-			title = pollInfo.getStartDate() + " - " + pollInfo.getEndDate();
+			title = commonUtil.getDateStringInUTC(pollInfo.getStartDate(), userInfo.getOffset(), false) + " - " + commonUtil.getDateStringInUTC(pollInfo.getEndDate(), userInfo.getOffset(), false);
 		}
 		
 		int count = Integer.parseInt(pollInfo.getPollSelectionCount());

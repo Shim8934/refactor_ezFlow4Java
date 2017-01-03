@@ -55,8 +55,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", v_pItemSeq);
 	}
 	
-	public PersonalNoticeVO getNoticeInfo(String v_pItemSeq) throws Exception {
-		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", v_pItemSeq);
+	public PersonalNoticeVO getNoticeInfo(Map<String, Object> map) throws Exception {
+		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", map);
 	}
 	
 	public PersonalQuickLinkVO getQuickLink(String v_QUICKLINKID) throws Exception {
