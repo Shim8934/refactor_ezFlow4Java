@@ -357,6 +357,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.ezCkAdminACL2_S2", map);
 	}
 	
+	public String searchStartPage_S (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.searchStartPage_S", map);
+	}
+	
 	public int getMenuItemHtml(Map<String, Object> map) {
 		return (int) select("EzPortalDAO.getMenuItemHtml", map);
 	}
@@ -399,6 +403,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public void ezCkAdminACL2_D1(Map<String, Object> map) {
 		delete("EzPortalDAO.ezCkAdminACL2_D1", map);
+	}
+	
+	public void setUseMyStartPage2_D(Map<String, Object> map) {
+		delete("EzPortalDAO.setUseMyStartPage2_D", map);
 	}
 	
 	public void getUserInfo3(Map<String, Object> map) {

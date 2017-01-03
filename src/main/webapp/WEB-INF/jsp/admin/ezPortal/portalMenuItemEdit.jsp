@@ -58,17 +58,22 @@
 		    var strXML = "<DATA>";
 
 		    if (pmode == "new") {
-		        if (txtNormalImage.src.indexOf("/files/upload_portal") == -1 && txtOverImage.src.indexOf("/files/upload_portal") > -1) {
+		        //if (txtNormalImage.src.indexOf("/files/upload_portal") == -1 && txtOverImage.src.indexOf("/files/upload_portal") > -1) {
+		        if (txtNormalImage.src.indexOf("${uploadPortalPath}") == -1 && txtOverImage.src.indexOf("uploadPortalPath") > -1) {	
 		            alert("<spring:message code='ezPortal.t10000'/>");
 		            return;
 		        }
 		    }
 
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
-			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
+			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+			//var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
+			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("${uploadPortalPath}"));
 
-			if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
-			if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
+			//if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
+			if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
+			//if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
+			if (overImgPath.indexOf("${uploadPortalPath}") == -1) overImgPath = "";
 			
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(txtDisplayName.value) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(txtDisplayName2.value) + "</DISPLAYNAME2>";
@@ -446,16 +451,18 @@
 		            if (document.getElementById('mode').value == "Menu") {
 		                if (ImageState == "Normal") {
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
-		                        txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        //txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    else
-		                        txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        //txtNormalImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                    	txtNormalImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    txtNormalImage.style.display = "";
 		                }
 		                else {
 		                    if (navigator.userAgent.indexOf("Firefox") != -1)
-		                        txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtOverImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    else
-		                        txtOverImage.src = "/files/upload_portal/" + getNodeText(GetChildNodes(nodes[i])[4]);
+		                        txtOverImage.src = "${uploadPortalPath}" + getNodeText(GetChildNodes(nodes[i])[4]);
 		                    txtOverImage.style.display = "";
 		                }
 		            }

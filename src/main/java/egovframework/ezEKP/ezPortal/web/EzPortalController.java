@@ -271,11 +271,17 @@ public class EzPortalController extends EgovFileMngUtil {
 			if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
 				topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
 			}
+			
+			if  (xmlDomACL.getElementsByTagName("TOPURL").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent().equals("")) {
+				topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
+				topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+			}
+			
 		}
 		
 		//masterAdmin nullPoint처리
-		topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
-		topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
+		//topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
+		//topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
 		
 		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID, userInfo.getTenantId());
 
@@ -1020,7 +1026,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("wpTotalSection started");
+
+userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
 		String useEditor = config.getProperty("config.EDITOR");
@@ -1035,67 +1043,72 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		
-		try {
-			noneActiveX = "YES";
-			
-			//String userOffset = userInfo.getOs().split("\\|")[1];
-			String userOffset = "+09:00";
-			
-			if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
-				useIE11Browser = "CK";
-			}
-			
-			mailAddress = userInfo.getEmail();
-			if (userInfo.getLang().equals("1")) {
-				displayName = userInfo.getDisplayName1();
-				department = userInfo.getDeptName1();
-				title = userInfo.getTitle1();
-				companyNm = userInfo.getCompanyName1();
-			} else {
-				displayName = userInfo.getDisplayName2();
-				department = userInfo.getDeptName2();
-				title = userInfo.getTitle2();
-				companyNm = userInfo.getCompanyName2();
-			}
-			
-			userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-			
-			lastLogin = ezOrganService.getLastLogin(userInfo.getId());
-			lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-			
-			//전자설문
-			pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
-			
-			//유저이미지
-			String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
-			
-			if (result != null && !result.equals("")) {
-				userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
-			} else {
-				userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
-			}
-			
-			model.addAttribute("displayName", displayName);
-			model.addAttribute("department", department);
-			model.addAttribute("title", title);
-			model.addAttribute("companyNm", companyNm);
-			model.addAttribute("userApprovalG", userApprovalG);
-			model.addAttribute("lastLogin", lastLogin);
-			model.addAttribute("noneActiveX", noneActiveX);
-			model.addAttribute("useIE11Browser", useIE11Browser);
-			model.addAttribute("mailAddress", mailAddress);
-			model.addAttribute("userInfo", userInfo);
-			model.addAttribute("userLang", userInfo.getLang());
-			model.addAttribute("pollNum", pollNum);
-			model.addAttribute("userPhoto", userPhoto);
-			model.addAttribute("userOffset", userOffset);
-			model.addAttribute("useEditor", useEditor);
-			
-			return "/ezPortal/portalWpTotalSection";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		noneActiveX = "YES";
+		
+		//String userOffset = userInfo.getOs().split("\\|")[1];
+		String userOffset = "+09:00";
+		
+		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+			useIE11Browser = "CK";
 		}
+		
+		mailAddress = userInfo.getEmail();
+		if (userInfo.getLang().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+			department = userInfo.getDeptName1();
+			title = userInfo.getTitle1();
+			companyNm = userInfo.getCompanyName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+			department = userInfo.getDeptName2();
+			title = userInfo.getTitle2();
+			companyNm = userInfo.getCompanyName2();
+		}
+		
+		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
+		
+		lastLogin = ezOrganService.getLastLogin(userInfo.getId());
+		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		//전자설문
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		
+		//유저이미지
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
+		
+		if (result != null && !result.equals("")) {
+			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
+			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			
+			
+		} else {
+			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
+		}
+		logger.debug("userPhoto="+userPhoto);
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("department", department);
+		model.addAttribute("title", title);
+		model.addAttribute("companyNm", companyNm);
+		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("lastLogin", lastLogin);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("mailAddress", mailAddress);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("pollNum", pollNum);
+		model.addAttribute("userPhoto", userPhoto);
+		model.addAttribute("userOffset", userOffset);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("wpTotalSection ended");
+		return "/ezPortal/portalWpTotalSection";
+		
+
+		
 	}
 	
 	/**
@@ -1254,7 +1267,8 @@ public class EzPortalController extends EgovFileMngUtil {
 				if (result.getFilePath() != null && !result.getFilePath().equals("")) {
 					//<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>
 					//filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
-					filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
+					//filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
+					filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + result.getFilePath();
 				} else {
 					filePath = "/images/default_pic.jpg";
 				}
@@ -1469,7 +1483,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
 		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH)-1, cal.get(Calendar.YEAR)) + " 23:59:59";
 	
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String dMax = "1";
 		if (list.size() > 0) {
@@ -1820,7 +1834,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
-		
 		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {

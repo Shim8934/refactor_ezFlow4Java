@@ -471,7 +471,7 @@
 		            	data : {taskCode : selRow[0].getAttribute("DATA1"), companyID : companyID},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
-		            			 var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
+								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
 		  	                    OpenAlertUI(pAlertContent);
 
 		 	                    TreeView_onNodeSelect();

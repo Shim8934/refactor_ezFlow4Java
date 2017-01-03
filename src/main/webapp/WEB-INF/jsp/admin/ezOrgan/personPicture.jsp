@@ -16,7 +16,7 @@
 	    <c:if test="${!isCrossBrowser}">
 	      	<script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
 		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
-		    <script type="text/javascript" src="/js/ezOrgan/kaoni_ActiveX.js"></script>
+		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
 		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>

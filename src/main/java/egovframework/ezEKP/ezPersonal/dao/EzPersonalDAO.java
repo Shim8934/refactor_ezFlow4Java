@@ -47,6 +47,16 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S2(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalApprovMailVO> getApprovNotiConfig_S3(Map<String, Object> map) throws Exception{
+		return (List<PersonalApprovMailVO>) list("EzPersonalDAO.getApprovNotiConfig_S3", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PersonalLightPollVO> getPollListUser(Map<String, Object> map) throws Exception{
 		return (List<PersonalLightPollVO>) list("EzPersonalDAO.getPollListUser", map);
 	}
@@ -137,7 +147,23 @@ public class EzPersonalDAO extends EgovAbstractDAO{
     private String getPasswordForLocal (String cn, int tenantID) {
         return (String) select("EzPersonalDAO.getPassword", cn);
     }
-	
+    
+    public String getApprovNotiConfig_S1 (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.getApprovNotiConfig_S1", map);
+    }
+    
+    public String setApprovalPwd_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.setApprovalPwd_S", map);
+    }
+    
+    public String setApprovNotiMail_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.setApprovNotiMail_S", map);
+    }
+    
+    public String insertResult_S (Map<String, Object> map) {
+        return (String) select("EzPersonalDAO.insertResult_S", map);
+    }
+    
 	public String getPassword (String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getPasswordForJMocha(cn, tenantID);
@@ -161,6 +187,22 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	
 	public void insertResult(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.insertResult", map);
+	}
+	
+	public void setApprovalPwd_I(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.setApprovalPwd_I", map);
+	}
+	
+	public void setApprovNotiMail_I(Map<String, Object> map) throws Exception{
+		insert("EzPersonalDAO.setApprovNotiMail_I", map);
+	}
+	
+	public void setApprovalPwd_U(Map<String, Object> map) throws Exception{
+		update("EzPersonalDAO.setApprovalPwd_U", map);
+	}
+	
+	public void setApprovNotiMail_U(Map<String, Object> map) throws Exception{
+		update("EzPersonalDAO.setApprovNotiMail_U", map);
 	}
 	
 }

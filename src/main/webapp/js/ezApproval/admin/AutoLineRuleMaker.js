@@ -1,8 +1,6 @@
-﻿
-function S4() {
+﻿function S4() {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
-
 
 function createGUID() {
     var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
@@ -37,25 +35,18 @@ function ChangeStandVal() {
     }
 }
 
-
 function OnChange_DocType() {
-
-    try{
+    try {
         if (bodyForm.hidAprRule.value == "")
             return;
-        
+
         var AprRuleXML = loadXMLString(bodyForm.hidAprRule.value);
-
-  
-
-        
         for (var i = GetElementsByTagName(AprRuleXML, "ROW").length - 1; i > -1 ; i--) {
-               if (getNodeText(GetElementsByTagName(AprRuleXML, "DOCTYPE")[i]) == pDocType) {
-            AprRuleXML.documentElement.removeChild(GetElementsByTagName(AprRuleXML, "ROW")[i]);
-              }
+            if (getNodeText(GetElementsByTagName(AprRuleXML, "DOCTYPE")[i]) == pDocType) {
+                AprRuleXML.documentElement.removeChild(GetElementsByTagName(AprRuleXML, "ROW")[i]);
+            }
         }
 
-        
         var pAPRRULE = new ListView();
         pAPRRULE.LoadFromID("lvtAutoRule");
         var AprRuleRow = pAPRRULE.GetDataRows();
@@ -71,7 +62,7 @@ function OnChange_DocType() {
                     newNode = createNode(AprRuleXML, "ROW");
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "FORMID", formID);
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "DOCTYPE", GetAttribute(AprRuleRow[i], "DATA2"));
-                    createNodeAndAppandNodeText(AprRuleXML, newNode, "", "AUTORULESN", AprRuleRow[i].cells[0].innerText.replace("★", "").replace("⊙", ""));
+                    createNodeAndAppandNodeText(AprRuleXML, newNode, "", "AUTORULESN", getNodeText(AprRuleRow[i].cells[0]).replace("★", "").replace("⊙", ""));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "AUTORULEGUID", GetAttribute(AprRuleRow[i], "DATA4"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CHECKFIELDTYPE", GetAttribute(AprRuleRow[i], "DATA5"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CHECKFIELD", GetAttribute(AprRuleRow[i], "DATA6"));
@@ -86,15 +77,9 @@ function OnChange_DocType() {
                 }
             }
         }
-
         bodyForm.hidAprRule.value = getXmlString(AprRuleXML);
-        
 
-        
-        
         var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
-
-        
         if (thisSelGUID != "") {
             for (var i = GetElementsByTagName(AprRuleLineXML, "ROW").length - 1; i > -1 ; i--) {
                 if (getNodeText(GetElementsByTagName(AprRuleLineXML, "AUTORULEGUID")[i]) == thisSelGUID) {
@@ -117,47 +102,40 @@ function OnChange_DocType() {
                     for (i = 0; i < CurListLen; i++) {
                         newNode = createNode(AprRuleLineXML, "ROW");
                         createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "FORMID", formID);
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "DOCTYPE", AprRuleLineRow[i].getAttribute("DATA2"));
-                        
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERSN", AprRuleLineRow[i].cells[0].innerText.replace("★", "").replace("⊙", ""));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRTYPE", AprRuleLineRow[i].getAttribute("DATA4"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRSTATE", AprRuleLineRow[i].getAttribute("DATA5"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERID", AprRuleLineRow[i].getAttribute("DATA6"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERISDEPTYN", AprRuleLineRow[i].getAttribute("DATA7"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME", AprRuleLineRow[i].getAttribute("DATA8"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME2", AprRuleLineRow[i].getAttribute("DATA9"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE", AprRuleLineRow[i].getAttribute("DATA10"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE2", AprRuleLineRow[i].getAttribute("DATA11"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTID", AprRuleLineRow[i].getAttribute("DATA12"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME", AprRuleLineRow[i].getAttribute("DATA13"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME2", AprRuleLineRow[i].getAttribute("DATA14"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERLDAPPATH", AprRuleLineRow[i].getAttribute("DATA15"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "RECEIVEDDATE", AprRuleLineRow[i].getAttribute("DATA16"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "PROCESSDATE", AprRuleLineRow[i].getAttribute("DATA17"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "REASONDONOTAPPROV", AprRuleLineRow[i].getAttribute("DATA18"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISPROPOSERYN", AprRuleLineRow[i].getAttribute("DATA19"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISBRIEFUSERYN", AprRuleLineRow[i].getAttribute("DATA20"));
-                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "AUTORULEGUID", AprRuleLineRow[i].getAttribute("DATA21"));
-
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "DOCTYPE", GetAttribute(AprRuleLineRow[i], "DATA2"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERSN", getNodeText(AprRuleLineRow[i].cells[0]).replace("★", "").replace("⊙", ""));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRTYPE", GetAttribute(AprRuleLineRow[i], "DATA4"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRSTATE", GetAttribute(AprRuleLineRow[i], "DATA5"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERID", GetAttribute(AprRuleLineRow[i],"DATA6"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERISDEPTYN", GetAttribute(AprRuleLineRow[i],"DATA7"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME", GetAttribute(AprRuleLineRow[i],"DATA8"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERNAME2", GetAttribute(AprRuleLineRow[i],"DATA9"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE", GetAttribute(AprRuleLineRow[i],"DATA10"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERJOBTITLE2", GetAttribute(AprRuleLineRow[i],"DATA11"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTID", GetAttribute(AprRuleLineRow[i],"DATA12"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME", GetAttribute(AprRuleLineRow[i],"DATA13"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERDEPTNAME2", GetAttribute(AprRuleLineRow[i],"DATA14"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERLDAPPATH", GetAttribute(AprRuleLineRow[i],"DATA15"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "RECEIVEDDATE", GetAttribute(AprRuleLineRow[i],"DATA16"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "PROCESSDATE",GetAttribute( AprRuleLineRow[i],"DATA17"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "REASONDONOTAPPROV",GetAttribute( AprRuleLineRow[i],"DATA18"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISPROPOSERYN", GetAttribute(AprRuleLineRow[i],"DATA19"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "ISBRIEFUSERYN", GetAttribute(AprRuleLineRow[i],"DATA20"));
+                        createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "AUTORULEGUID", GetAttribute(AprRuleLineRow[i],"DATA21"));
                         x = AprRuleLineXML.getElementsByTagName("DATA")[0];
                         x.appendChild(newNode);
                     }
                 }
             }
-
             bodyForm.hidAprRuleLine.value = getXmlString(AprRuleLineXML);
         }
-        
-
-        pDocType = document.getElementById("selDocType").options[document.getElementById("selDocType").selectedIndex].value;
+        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
         MakeListXML(pDocType);
-
         document.getElementById("DIVAPRLINE").style.display = "NONE";
     }
     catch (e) {
     }
 }
-
 
 function ChangeAprlineType(CheckGPerson, CurrentAprType) {
     var ReturnValue = "";
@@ -165,13 +143,10 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
         var pAPRLINE = new ListView();
         pAPRLINE.LoadFromID("lvtAutoRule");
         if (CheckGPerson == "group") {
-
             var p_AprlineValue = new Array();
             var p_AprlineCode = new Array();
-
             var i = 0;
             var j = 0;
-
             for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
                 if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
                     p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
@@ -188,8 +163,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
             var p_Aprlinelen = p_AprlineValue.length;
             for (i = 0; i < p_Aprlinelen; i++) {
                 var p_Option = document.createElement("OPTION");
-
-                p_Option.innerText = p_AprlineValue[i];
+                setNodeText(p_Option,p_AprlineValue[i]);
                 p_Option.setAttribute("value", p_AprlineCode[i]);
 
                 if (CurrentAprType == p_AprlineCode[i])
@@ -273,7 +247,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
             var p_Aprlinelen = p_AprlineValue.length;
             for (i = 0; i < p_Aprlinelen; i++) {
                 var p_Option = document.createElement("OPTION");
-                p_Option.innerText = p_AprlineValue[i];
+                setNodeText(p_Option,p_AprlineValue[i]);
                 p_Option.setAttribute("value", p_AprlineCode[i]);
 
                 if (CurrentAprType == p_AprlineCode[i])
@@ -290,20 +264,15 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
 
 var xmlhttp_FormCheck = createXMLHttpRequest();
 function CheckForm(pFormHref) {
-   
     var pFormMHT = "";
-
     pAprLineCnt = 0;
     pHapLineCnt = 0;
-
     var xmlpara = createXmlDom();
-
     var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER"); 
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "FORMHREF", pFormHref);
     createNodeAndInsertText(xmlpara, objNode, "FORMMHT", pFormMHT);
-
-    xmlhttp_FormCheck.open("POST", "aspx/FormAnalysis.aspx", true);
+    xmlhttp_FormCheck.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/FormAnalysis.aspx", true);
     xmlhttp_FormCheck.onreadystatechange = FormCheck_After;
     xmlhttp_FormCheck.send(xmlpara);
 }
@@ -313,26 +282,23 @@ function FormCheck_After() {
 
     try {
         if (xmlhttp_FormCheck.responseText == "") return;
-
-        var listNode = SelectSingleNodeNew(xmlhttp_FormCheck.responseXML, "DATA/FIELDDATA");
+        var listNode = SelectSingleNodeNew(loadXMLString(xmlhttp_FormCheck.responseText), "DATA/FIELDDATA");
         var node = GetElementsByTagName(listNode, "FIELD");
         var pObj = document.getElementById("DDL_FIELDIDLIST")
 
         pObj.innerHTML = "";
-
         var optn = document.createElement("OPTION");
-        optn.text = "직접입력";
+        setNodeText(optn , "직접입력");
         optn.value = "";
         pObj.options.add(optn);
         optn = null;
 
         for (var i = 0; i < node.length; i++) {
             var optn = document.createElement("OPTION");
-            optn.text = getNodeText(node[i]);
+            setNodeText(optn ,getNodeText(node[i]));
             optn.value = getNodeText(node[i]);
             pObj.options.add(optn);
         }
-
         FieldIdList_onChange();
     }
     catch (e) {
@@ -347,6 +313,7 @@ function DDL_CHECKTYPE_onChange() {
             document.getElementById("DDL_DATATYPE").disabled = true;
 
             document.getElementById("DDL_NUMBER_EQUAL").style.display = "NONE";
+
             document.getElementById("DDL_TEXT_EQUAL").style.display = "";
             document.getElementById("DDL_TEXT_EQUAL").disabled = true;
             document.getElementById("DDL_TEXT_EQUAL").value = "TXT_EQ";
@@ -386,13 +353,10 @@ function DDL_CHECKTYPE_onChange() {
             document.getElementById("DDL_STANDVAL").disabled = true;
             document.getElementById("DDL_STANDVAL").value = "Direct";
 
-            
-
             document.getElementById("DDL_FIELDIDLIST").disabled = false;
             document.getElementById("txtCondVal").disabled = false;
             break;
     }
-
     ChangeStandVal();
 }
 
@@ -435,20 +399,19 @@ function CheckField() {
         case "DRAFTER_DEPT":   
             break;
     }
-
     
     switch (document.getElementById("DDL_STANDVAL").value) {
-        case "DeptId":   
+        case "DeptId":
             if (document.getElementById("txtStandVal").aprId == "") {
                 pMessage = strLang1111;
             }
             break;
-        case "TitleCd":   
+        case "TitleCd":
             if (document.getElementById("DDL_TITLE").value == "") {
                 pMessage = strLang1112;
             }
             break;
-        case "Direct":   
+        case "Direct":
             if (document.getElementById("txtStandVal").value == "") {
                 pMessage = strLang1113;
             }
@@ -461,17 +424,8 @@ function CheckField() {
                     }
                 }
             }
-            break;
+            break
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
 
     if (pMessage != "") {
         alert(pMessage);
@@ -491,13 +445,10 @@ function getNumberOnly(obj) {
     return val;
 }
 
-
-
 function SelectDept() {
-
     var Flag;
     var retVal = new Array();
-    var url = "/myoffice/ezApproval/manage/Organ.aspx"
+    var url = "/admin/ezApproval/organ.do"
     retVal = window.showModalDialog(url, companyID, "dialogWidth:290px;dialogHeight:525px;status:no;help:no;edge:sunken;scroll:no");
 
     if (typeof (retVal) != "undefined") {
@@ -505,16 +456,13 @@ function SelectDept() {
         document.getElementById("txtStandVal").value = retVal[1];
         document.getElementById("txtStandVal").gubun = "D";
     }
-
 }
 
 
 function MakeListXML(pDocType) {
     var ListHeaderXML = loadXMLString(bodyForm.hidListHeader.value);
-
     var pListXml = "<LISTVIEWDATA>";
     pListXml = pListXml + "<HEADERS>";
-
 
     for (var i = 0; i < GetElementsByTagName(ListHeaderXML, "ROW").length; i++) {
         pListXml = pListXml + "<HEADER>";
@@ -526,7 +474,6 @@ function MakeListXML(pDocType) {
 
     pListXml = pListXml + "</HEADERS>";
     pListXml = pListXml + "<ROWS>";
-
     AprRuleXML = loadXMLString(bodyForm.hidAprRule.value);
     for (var i = 0; i < GetElementsByTagName(AprRuleXML, "ROW").length; i++) {
         if (getNodeText(GetElementsByTagName(AprRuleXML, "DOCTYPE")[i]) == pDocType) {
@@ -606,7 +553,7 @@ function MakeListXML(pDocType) {
     AutoRule_Listview.SetRowOnClick("lvtAutoRule_OnSelChange_onclick");
     AutoRule_Listview.SetRowOnDblClick("Del_onclick");
     AutoRule_Listview.SetSelectFlag(false);
-    AutoRule_Listview.SetHeightFree(true);    
+    AutoRule_Listview.SetHeightFree(true);
     AutoRule_Listview.DataSource(AprRuleViewXML);
     AutoRule_Listview.DataBind("div_List_AutoRule");
 }
@@ -614,7 +561,7 @@ function MakeListXML(pDocType) {
 
 function btn_Add() {
     var pGuid = createGUID();
-    var pAUTOLINE = new ListView();      
+    var pAUTOLINE = new ListView();
     pAUTOLINE.LoadFromID("lvtAutoRule");
 
     if (!CheckField()) {
@@ -636,7 +583,6 @@ function btn_Add() {
     pparsingXML = pparsingXML + "</HEADERS>";
 
     var FixYN = "N", ResearchYN = "N";
-
     var AprLineRow = pAUTOLINE.GetDataRows();
     var AprLineAddIndex = AprLineRow.length;
     if (AprLineAddIndex == 1) {
@@ -645,16 +591,15 @@ function btn_Add() {
     }
 
     AprLineAddIndex = AprLineAddIndex + 1;
-
     pparsingXML = pparsingXML + "<ROWS><ROW><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";                           
-    pparsingXML = pparsingXML + "<DATA1>" + formID + "</DATA1>";                                    
-    pparsingXML = pparsingXML + "<DATA2>" + pDocType + "</DATA2>";                                  
-    pparsingXML = pparsingXML + "<DATA3>" + AprLineAddIndex + "</DATA3>";                           
-    pparsingXML = pparsingXML + "<DATA4>" + pGuid + "</DATA4>";                                     
-    pparsingXML = pparsingXML + "<DATA5>" + document.getElementById("DDL_CHECKTYPE").value + "</DATA5>";    
+    pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
+    pparsingXML = pparsingXML + "<DATA1>" + formID + "</DATA1>";
+    pparsingXML = pparsingXML + "<DATA2>" + pDocType + "</DATA2>";
+    pparsingXML = pparsingXML + "<DATA3>" + AprLineAddIndex + "</DATA3>";
+    pparsingXML = pparsingXML + "<DATA4>" + pGuid + "</DATA4>";
+    pparsingXML = pparsingXML + "<DATA5>" + document.getElementById("DDL_CHECKTYPE").value + "</DATA5>";
 
-    switch (document.getElementById("DDL_CHECKTYPE").value) {                                               
+    switch (document.getElementById("DDL_CHECKTYPE").value) {
         case "FIELD":
             if (document.getElementById("DDL_FIELDIDLIST").value == "") {
                 pparsingXML = pparsingXML + "<DATA6>" + document.getElementById("txtCondVal").value + "</DATA6>";
@@ -664,16 +609,15 @@ function btn_Add() {
             }
             break;
         case "DRAFTER_POSITION":
-            pparsingXML = pparsingXML + "<DATA6>" + document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex].text + "</DATA6>";
+            pparsingXML = pparsingXML + "<DATA6>" + getNodeText(document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex]) + "</DATA6>";
             break;
         case "DRAFTER_DEPT":
-            pparsingXML = pparsingXML + "<DATA6>" + document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex].text + "</DATA6>";
+            pparsingXML = pparsingXML + "<DATA6>" + getNodeText(document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex]) + "</DATA6>";
             break;
     }
 
     pparsingXML = pparsingXML + "<DATA7>" + document.getElementById("DDL_DATATYPE").value + "</DATA7>";
-
-    switch (document.getElementById("DDL_DATATYPE").value) {                                        
+    switch (document.getElementById("DDL_DATATYPE").value) {
         case "TXT":
             pparsingXML = pparsingXML + "<DATA8>" + document.getElementById("DDL_TEXT_EQUAL").value + "</DATA8>";
             break;
@@ -682,15 +626,15 @@ function btn_Add() {
             break;
     }
 
-    pparsingXML = pparsingXML + "<DATA9>" + document.getElementById("DDL_STANDVAL").value + "</DATA9>";    
-    switch (document.getElementById("DDL_STANDVAL").value) {                                                
+    pparsingXML = pparsingXML + "<DATA9>" + document.getElementById("DDL_STANDVAL").value + "</DATA9>";
+    switch (document.getElementById("DDL_STANDVAL").value) {
         case "DeptId":
             pparsingXML = pparsingXML + "<DATA10>" + document.getElementById("txtStandVal").value + "</DATA10>";
             pparsingXML = pparsingXML + "<DATA11>" + document.getElementById("txtStandVal").aprId + "</DATA11>";
             break;
         case "TitleCd":
             pparsingXML = pparsingXML + "<DATA10>" + document.getElementById("DDL_TITLE").value + "</DATA10>";
-            pparsingXML = pparsingXML + "<DATA11>" + document.getElementById("DDL_TITLE").textContent + "</DATA11>";
+            pparsingXML = pparsingXML + "<DATA11>" + getNodeText(document.getElementById("DDL_TITLE")) + "</DATA11>";
             break;
         case "Direct":
             pparsingXML = pparsingXML + "<DATA10>" + document.getElementById("txtStandVal").value + "</DATA10>";
@@ -711,10 +655,10 @@ function btn_Add() {
             }
             break;
         case "DRAFTER_POSITION":
-            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex].text + "]]></VALUE>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex]) + "]]></VALUE>";
             break;
         case "DRAFTER_DEPT":
-            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex].text + "]]></VALUE>";
+            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_CHECKTYPE")[document.getElementById("DDL_CHECKTYPE").selectedIndex]) + "]]></VALUE>";
             break;
     }
 
@@ -722,21 +666,21 @@ function btn_Add() {
 
     switch (document.getElementById("DDL_DATATYPE").value) {
         case "TXT":
-            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + document.getElementById("DDL_DATATYPE")[document.getElementById("DDL_DATATYPE").selectedIndex].text + "]]></VALUE></CELL>";
-            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + document.getElementById("DDL_TEXT_EQUAL")[document.getElementById("DDL_TEXT_EQUAL").selectedIndex].text + "]]></VALUE></CELL>";
+            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_DATATYPE")[document.getElementById("DDL_DATATYPE").selectedIndex]) + "]]></VALUE></CELL>";
+            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_TEXT_EQUAL")[document.getElementById("DDL_TEXT_EQUAL").selectedIndex]) + "]]></VALUE></CELL>";
             break;
         case "NUM":
-            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + document.getElementById("DDL_DATATYPE")[document.getElementById("DDL_DATATYPE").selectedIndex].text + "]]></VALUE></CELL>";
-            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + document.getElementById("DDL_NUMBER_EQUAL")[document.getElementById("DDL_NUMBER_EQUAL").selectedIndex].text + "]]></VALUE></CELL>";
+            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_DATATYPE")[document.getElementById("DDL_DATATYPE").selectedIndex]) + "]]></VALUE></CELL>";
+            pparsingXML = pparsingXML + "<CELL><VALUE><![CDATA[" + getNodeText(document.getElementById("DDL_NUMBER_EQUAL")[document.getElementById("DDL_NUMBER_EQUAL").selectedIndex]) + "]]></VALUE></CELL>";
             break;
     }
 
-    switch (document.getElementById("DDL_STANDVAL").value) {                                                
+    switch (document.getElementById("DDL_STANDVAL").value) {
         case "DeptId":
             pparsingXML = pparsingXML + "<CELL><VALUE>" + document.getElementById("txtStandVal").value + "</VALUE></CELL>";
             break;
         case "TitleCd":
-            pparsingXML = pparsingXML + "<CELL><VALUE>" + document.getElementById("DDL_TITLE").options[document.getElementById("DDL_TITLE").selectedIndex].innerText + "</VALUE></CELL>";
+            pparsingXML = pparsingXML + "<CELL><VALUE>" + getNodeText(document.getElementById("DDL_TITLE").options[document.getElementById("DDL_TITLE").selectedIndex]) + "</VALUE></CELL>";
             break;
         case "Direct":
             pparsingXML = pparsingXML + "<CELL><VALUE>" + document.getElementById("txtStandVal").value + "</VALUE></CELL>";
@@ -746,11 +690,8 @@ function btn_Add() {
     pparsingXML = pparsingXML + "</ROW></ROWS></LISTVIEWDATA>";
 
     var Resultxml = loadXMLString(pparsingXML);
-
     var InitTr = pAUTOLINE.GetDataRows();
     var MaxID = 0;
-
-
     for (var j = 0  ; j < InitTr.length  ; j++) {
         var curnum = Number(pAUTOLINE.GetSelectedRowID(j).substring(pAUTOLINE.GetSelectedRowID(j).lastIndexOf('_') + 1), pAUTOLINE.GetSelectedRowID(j).length);
         if (MaxID < curnum)
@@ -761,13 +702,13 @@ function btn_Add() {
         if (document.getElementById("div_List_AutoRule").innerHTML != "")
             document.getElementById("div_List_AutoRule").innerHTML = "";
 
-        pAUTOLINE.SetMulSelectable(false);   
-        pAUTOLINE.SetRowOnClick("lvtAutoRule_OnSelChange_onclick");           
-        pAUTOLINE.SetRowOnDblClick("Del_onclick");      
+        pAUTOLINE.SetMulSelectable(false);
+        pAUTOLINE.SetRowOnClick("lvtAutoRule_OnSelChange_onclick");
+        pAUTOLINE.SetRowOnDblClick("Del_onclick");
         pAUTOLINE.SetSelectFlag(false);
         pAUTOLINE.SetHeightFree(true);
-        pAUTOLINE.DataSource(Resultxml);   
-        pAUTOLINE.DataBind("div_List_AutoRule");      
+        pAUTOLINE.DataSource(Resultxml);
+        pAUTOLINE.DataBind("div_List_AutoRule");
         pAUTOLINE.SetSelectedIndex(0);
     }
     else {
@@ -776,9 +717,8 @@ function btn_Add() {
         pAUTOLINE.AddDataRow(objTr, Resultxml);
         pAUTOLINE.SetSelectedIndex(eval(MaxID + 1));
     }
-
     AprLineAddIndex = AprLineAddIndex + 1;
-    
+
 
     var AprLineRow = pAUTOLINE.GetDataRows();
     var AprLineAddIndex = AprLineRow.length;
@@ -788,11 +728,10 @@ function btn_Add() {
     }
     else {
         for (var i = 0; i < AprLineAddIndex; i++) {
-            AprLineRow[i].childNodes[0].innerText = (i + 1);
+            setNodeText(AprLineRow[i].childNodes[0],(i + 1));
             AprLineRow[i].setAttribute("DATA3", (i + 1).toString());
         }
     }
-
     document.getElementById("DDL_CHECKTYPE").value = "FIELD";
     document.getElementById("DDL_FIELDIDLIST").value = "";
     document.getElementById("txtCondVal").value = "";
@@ -814,12 +753,9 @@ function lvtAutoRule_OnSelChange_onclick() {
 
     if (pSelectedRow.length > 0) {
         document.getElementById("DIVAPRLINE").style.display = "";
-        MakeAprLineListXML(pSelectedRow[0].getAttribute("DATA4"));
+        MakeAprLineListXML(GetAttribute(pSelectedRow[0], "DATA4"));
     }
-  
 }
-
-
 
 function MoveUp_List_AutoRule_onclick() {
     var AutoRule_Listview = new ListView();
@@ -838,21 +774,18 @@ function MoveUp_List_AutoRule_onclick() {
     var Rtnval = "N";
 
     if (NIndex >= 0) {
-        if (CrossYN())
-            RowUpCheck = pTotalRows[NIndex].cells[0].textContent;
-        else
-            RowUpCheck = pTotalRows[NIndex].cells[0].innerText;
+        RowUpCheck = getNodeText(pTotalRows[NIndex].cells[0]);
 
         if (CrossYN()) {
-            pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].textContent;
-            pTotalRows[NIndex].setAttribute("DATA3", pTotalRows[CIndex].cells[0].textContent);
-            pTotalRows[CIndex].childNodes[0].textContent = RowUpCheck;
+            setNodeText(pTotalRows[NIndex].childNodes[0] , getNodeText(pTotalRows[CIndex].cells[0]));
+            pTotalRows[NIndex].setAttribute("DATA3", getNodeText(pTotalRows[CIndex].cells[0]));
+            setNodeText(pTotalRows[CIndex].childNodes[0] , RowUpCheck);
             pTotalRows[CIndex].setAttribute("DATA3", RowUpCheck);
         }
         else {
-            pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText;
-            pTotalRows[NIndex].setAttribute("DATA3", pTotalRows[CIndex].cells[0].innerText);
-            pTotalRows[CIndex].cells[0].innerText = RowUpCheck;
+            setNodeText(pTotalRows[NIndex].cells[0],getNodeText(pTotalRows[CIndex].cells[0]));
+            pTotalRows[NIndex].setAttribute("DATA3", getNodeText(pTotalRows[CIndex].cells[0]));
+            setNodeText(pTotalRows[CIndex].cells[0],RowUpCheck);
             pTotalRows[CIndex].setAttribute("DATA3", RowUpCheck);
         }
         Rtnval = "Y";
@@ -872,9 +805,7 @@ function MoveDown_List_AutoRule_onclick() {
     }
     var pTotalRows = AutoRule_Listview.GetDataRows();
     var pTotalRowsLen = pTotalRows.length;
-
     var pSelectedIndex = Number(AutoRule_Listview.GetSelectedIndexes().split(',')[0]);
-
     var CIndex = pSelectedIndex;
     var NIndex;
     var Rtnval = "N";
@@ -882,23 +813,13 @@ function MoveDown_List_AutoRule_onclick() {
 
     NIndex = pSelectedIndex + 1;
     if (NIndex < pTotalRowsLen) {
-        if (CrossYN())
-            RowDownCheck = pTotalRows[NIndex].cells[0].textContent;
-        else
-            RowDownCheck = pTotalRows[NIndex].cells[0].innerText;
+        RowDownCheck = getNodeText(pTotalRows[NIndex].cells[0]);
 
-        if (CrossYN()) {
-            pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].textContent;
-            pTotalRows[NIndex].setAttribute("DATA3", pTotalRows[CIndex].cells[0].textContent);
-            pTotalRows[CIndex].childNodes[0].textContent = RowDownCheck;
-            pTotalRows[CIndex].setAttribute("DATA3", RowDownCheck);
-        }
-        else {
-            pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText;
-            pTotalRows[NIndex].setAttribute("DATA3", pTotalRows[CIndex].cells[0].innerText);
-            pTotalRows[CIndex].cells[0].innerText = RowDownCheck;
-            pTotalRows[CIndex].setAttribute("DATA3", RowDownCheck);
-        }
+        setNodeText(pTotalRows[NIndex].childNodes[0],getNodeText(pTotalRows[CIndex].cells[0]));
+        pTotalRows[NIndex].setAttribute("DATA3", getNodeText(pTotalRows[CIndex].cells[0]));
+        setNodeText(pTotalRows[CIndex].childNodes[0],RowDownCheck);
+        pTotalRows[CIndex].setAttribute("DATA3", RowDownCheck);
+        
         Rtnval = "Y";
     }
     if (Rtnval == "Y")
@@ -926,18 +847,18 @@ function Del_onclick() {
         TIndex = pTotalRows.length;
         NIndex = pSelectedIndex;
 
-        var pDelRowAutoRuleGuid = pTotalRows[NIndex].getAttribute("DATA4");
+        var pDelRowAutoRuleGuid = GetAttribute(pTotalRows[NIndex], "DATA4");
 
         for (i = NIndex; i < TIndex; i++) {
             var Marke = "";
             if (CrossYN()) {
-                RowDelCheck = pTotalRows[i].cells[0].textContent;
-                pTotalRows[i].childNodes[0].textContent = Marke + Number(RowDelCheck - 1);
+                RowDelCheck = getNodeText(pTotalRows[i].cells[0]);
+                setNodeText(pTotalRows[i].childNodes[0] , Marke + Number(RowDelCheck - 1));
                 pTotalRows[i].setAttribute("DATA3", Number(RowDelCheck - 1).toString());
             }
             else {
-                RowDelCheck = pTotalRows[i].cells[0].innerText;
-                pTotalRows[i].childNodes[0].innerText = Marke + Number(RowDelCheck - 1);
+                RowDelCheck = getNodeText(pTotalRows[i].cells[0]);
+                setNodeText(pTotalRows[i].childNodes[0],Marke + Number(RowDelCheck - 1));
                 pTotalRows[i].setAttribute("DATA3", Number(RowDelCheck - 1).toString());
             }
 
@@ -945,13 +866,13 @@ function Del_onclick() {
         }
 
         if (Rtnval == "Y") {
-            var selIdx = pAPRLINE.GetSelectedRows()[0].getAttribute("id");
+            var selIdx = GetAttribute(pAPRLINE.GetSelectedRows()[0], "id");
             pAPRLINE.DeleteRow(selIdx);
 
-            
+
             var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
 
-            
+
             if (pDelRowAutoRuleGuid != "") {
                 for (var i = GetElementsByTagName(AprRuleLineXML, "ROW").length - 1; i > -1 ; i--) {
                     if (getNodeText(GetElementsByTagName(AprRuleLineXML, "AUTORULEGUID")[i]) == pDelRowAutoRuleGuid) {
@@ -982,27 +903,25 @@ function Del_onclick() {
     try {
         var pAPRLINE = new ListView();
         pAPRLINE.LoadFromID("lvtAutoRule");
-
         var pTotalRows = pAPRLINE.GetDataRows();
         var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
-
         var RowDelCheck;
         var Rtnval = "N";
         TIndex = pTotalRows.length;
         NIndex = pSelectedIndex;
 
-        var pDelRowAutoRuleGuid = pTotalRows[NIndex].getAttribute("DATA4");
+        var pDelRowAutoRuleGuid = GetAttribute(pTotalRows[NIndex], "DATA4");
 
         for (i = NIndex; i < TIndex; i++) {
             var Marke = "";
             if (CrossYN()) {
-                RowDelCheck = pTotalRows[i].cells[0].textContent;
-                pTotalRows[i].childNodes[0].textContent = Marke + Number(RowDelCheck - 1);
+                RowDelCheck = getNodeText(pTotalRows[i].cells[0]);
+                setNodeText(pTotalRows[i].childNodes[0] , Marke + Number(RowDelCheck - 1));
                 pTotalRows[i].setAttribute("DATA3", Number(RowDelCheck - 1).toString());
             }
             else {
-                RowDelCheck = pTotalRows[i].cells[0].innerText;
-                pTotalRows[i].childNodes[0].innerText = Marke + Number(RowDelCheck - 1);
+                RowDelCheck = getNodeText(pTotalRows[i].cells[0]);
+                setNodeText(pTotalRows[i].childNodes[0],Marke + Number(RowDelCheck - 1));
                 pTotalRows[i].setAttribute("DATA3", Number(RowDelCheck - 1).toString());
             }
 
@@ -1010,13 +929,13 @@ function Del_onclick() {
         }
 
         if (Rtnval == "Y") {
-            var selIdx = pAPRLINE.GetSelectedRows()[0].getAttribute("id");
+            var selIdx = GetAttribute(pAPRLINE.GetSelectedRows()[0], "id");
             pAPRLINE.DeleteRow(selIdx);
 
-            
+
             var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
 
-            
+
             if (pDelRowAutoRuleGuid != "") {
                 for (var i = GetElementsByTagName(AprRuleLineXML, "ROW").length - 1; i > -1 ; i--) {
                     if (getNodeText(GetElementsByTagName(AprRuleLineXML, "AUTORULEGUID")[i]) == pDelRowAutoRuleGuid) {

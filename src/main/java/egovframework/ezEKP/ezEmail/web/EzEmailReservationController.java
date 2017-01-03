@@ -157,76 +157,44 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	 * 예약발송메일 수정 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailEdit.do")
-	public String mailEdit(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailEdit(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, Model model, 
+			HttpServletRequest request) throws Exception{
+		
 		logger.debug("mailEdit started.");
 		
 		String cmd = "";
-		String senderInfo = "";
-		String importance = "1";
-		String postType = "";
 		String url = "";
-		String unread = "0";
-		String sendFrom = "";
-		String useMultiLangMail = "";
-		String displayNamePrintable = "";
-		String charsetCheck = "1";
-		String userInfoApprovalG = "";
-		String reSendFlag = "N";
-		String bigSizeMailAttachLimit = "20";
-		String totBigSizeMailAttachLimit = "20";
-		String mailAttachLimit = "20";
-		String bigSizeMailAttachDelDay = "";
-		String userLang = "";
-		String userTimeset = "";
-		String userPrimary = "";
 		String cmdOwn = "";
 		String urlOwn = "";
-		String fileUploadType = "";
-		int individualMailUser = 0;
-		String pSecurity = "1";
-		String mailInnerDomain = "";
-		String inMailColor = "";
-		String outMailColor = "";
-		String docHref = "";
+		
+		String importance = "1";
 		String pReservedSaveTime = "";
 		String pCDOMessageID = "";
-		String useEditor = "";
-		String stateName = "";
-		String folderDate = "";
-		String pBigAttachDownloadDay = "";
-		String pBigAttachDownloadPeriod = "";
-		String mailSignSel = "0";
-		String strSelectHtml = "";
+		String mailSignSel = "0"; //예약발송 수정에서는 mailsign 수정불가
+		String unread = "0"; //안쓰임
+		
 		String subject = "";
 		String body = "";
 		String to = "";
 		String cc = "";
 		String bcc = "";
-		String from = "";
-		String pAttachWarning = "";
 		String attachCK = "";
-		String showDisplay = "";
 		long uid = 0;
+		String showDisplay = "";
+		
+		String docHref = "";
+		String reSendFlag = "N"; //?
+		String fileUploadType = ""; //?
+		String strSelectHtml = ""; //?
 		
 		// get user credentials
-		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userIdnPw.get(1);
-		
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 		
-		String serverName = loginInfo.getServerName();
-		
-		stateName = UUID.randomUUID().toString();
-		folderDate = EgovDateUtil.getToday("");
-		useEditor = config.getProperty("config.EDITOR");
-		mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-		individualMailUser = EgovStringUtil.isEmpty(config.getProperty("config.INDIVIDUALMAILUSER").trim()) ?
-				0 : Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER").trim());
-		
-		//TODO: docHref값에 따른 jsp페이지의 placeholder 바꾸기
-		docHref = request.getParameter("dochref") == null ? "" : request.getParameter("dochref").trim();
 		MimeMessage message = null;
-		
 		if (request.getParameter("messageid") != null && !request.getParameter("messageid").trim().equals("")) { 
 			pCDOMessageID = request.getParameter("messageid").trim();
 			
@@ -302,7 +270,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 					}
 				}
 				
-			} else {
+			} else { //eml파일이 저장소에 없는 경우
 				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
 				logger.debug("mailEdit ended.");
@@ -310,50 +278,78 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			}
 			
 
-		} else {
+		} else { //messageId parameter가 비어있는 경우
 			model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
 			logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
 			logger.debug("mailEdit ended.");
 			return "ezEmail/mailMessage";
 		}
-
-		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		
+        // set attributes
+        String userPrimary = loginInfo.getPrimary();
+		String userLang = loginInfo.getLang();
+		String userTimeset = loginInfo.getOffset();
+		logger.debug("userPrimary=" + userPrimary + ",userLang=" + userLang + ",userTimeset=" + userTimeset);
+		
+        String displayNamePrintable = userInfo.getDisplayName();
+		String serverName = loginInfo.getServerName();
+		String from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
+		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName + ",from=" + from);
+		
+		String folderDate = EgovDateUtil.getToday("");
+		String stateName = UUID.randomUUID().toString();
+		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
+		
+		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
+		String useEditor = config.getProperty("config.EDITOR");
+		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",userInfoApprovalG=" + userInfoApprovalG);
+		
+		String sendFrom = "";
+		if (request.getParameter("sendfrom") != null) { 
+			sendFrom = request.getParameter("sendfrom");
+		}
+		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
+		logger.debug("sendFrom=" + sendFrom + ",senderInfo=" + senderInfo);
+		
+		//메일 색상 관련 설정
+		String inMailColor = "808080";
+		String outMailColor = "0080ff";
+		MailColorVO vo = ezEmailService.getMailColor(loginInfo.getTenantId());
 		if (vo != null) {
 			inMailColor = vo.getInmailColor();
 			outMailColor = vo.getOutmailColor();
-		} else {
-			inMailColor = "#808080";
-			outMailColor = "#0080ff";
 		}
+		logger.debug("inMailColor=" + inMailColor + ",outMailColor=" + outMailColor);
 		
-		userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		//파일첨부 제한 관련 변수 설정 
+		String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", loginInfo.getTenantId());
+		String bigSizeMailAttachLimit = ezCommonService.getTenantConfig("BigSizeMailAttachLimit", loginInfo.getTenantId());
+		String totBigSizeMailAttachLimit = ezCommonService.getTenantConfig("totBigSizeMailAttachLimit", loginInfo.getTenantId());
+		String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", loginInfo.getTenantId());
+		logger.debug("mailAttachLimit=" + mailAttachLimit + ",bigSizeMailAttachLimit=" + bigSizeMailAttachLimit
+				+ ",totBigSizeMailAttachLimit=" + totBigSizeMailAttachLimit + ",pBigAttachDownloadDay=" + pBigAttachDownloadDay);
 		
-		//대용량 메일 관련 변수
-		//set mailAttachLimit, bigSizeMailAttachLimit, totBigSizeMailAttachLimit, bigSizeMailAttachDelDay
-		mailAttachLimit = config.getProperty("config.MailAttachLimit");
-		bigSizeMailAttachLimit = config.getProperty("config.BigSizeMailAttachLimit");
-		totBigSizeMailAttachLimit = config.getProperty("config.totBigSizeMailAttachLimit");
-		int day = 20;
-		if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
-			day = Integer.parseInt(config.getProperty("config.BigSizeMailAttachDelDay"));
+		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
+        String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
+        String pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
+        logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
+        		+ ",pAttachWarning=" + pAttachWarning);
+        
+        //TODO: setting
+  		String useMultiLangMail = "1";
+  		String pSecurity = "1";
+  		String charsetCheck = "1";
+  		String postType = "0";
+  		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
+  				+ ",postType=" + postType);
+  		
+		//TODO: 개별발신
+		int individualMailUser = 0;
+		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
+			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
 		}
-		bigSizeMailAttachDelDay = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), day, "yyyy-MM-dd");
-		
-		userPrimary = loginInfo.getPrimary();
-		userLang = loginInfo.getLang();
-		userTimeset = loginInfo.getOffset();
-		
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), userPrimary, loginInfo.getTenantId());
-		displayNamePrintable = userInfo.getDisplayName();
-		
-		//set sendFrom
-		if (request.getParameter("sendfrom") != null) {
-			sendFrom = request.getParameter("sendfrom");
-		}
-		
-		//set useMultiLangMail
-		useMultiLangMail = "1";
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {
@@ -364,9 +360,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		if (request.getParameter("cmd") != null) {
 			cmd = request.getParameter("cmd");
 		}
-		
-		//set from
-		from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
 		
 		// retrieve the Drafts folder name
     	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
@@ -437,19 +430,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			}
 		}
 		
-		int pBigAttachDownloadDaynum = 0;
-        if (config.getProperty("config.BigSizeMailAttachDelDay") != null && !config.getProperty("config.BigSizeMailAttachDelDay").trim().equals("")) {
-        	pBigAttachDownloadDay = config.getProperty("config.BigSizeMailAttachDelDay");
-        	pBigAttachDownloadDaynum = Integer.parseInt(pBigAttachDownloadDay);
-        }
-        
-        pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), pBigAttachDownloadDaynum, "yyyy/MM/dd");
-        
-        senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
-        
-        pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
-    		+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
-        
         String browser = ClientUtil.getClientInfo(request, "browser");
         boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
@@ -471,11 +451,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("inMailColor", inMailColor);
 		model.addAttribute("outMailColor", outMailColor);
 		model.addAttribute("userPrimary", userPrimary);
+		model.addAttribute("postType", postType);
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("mailAttachLimit", mailAttachLimit);
 		model.addAttribute("bigSizeMailAttachLimit", bigSizeMailAttachLimit);
 		model.addAttribute("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);
-		model.addAttribute("bigSizeMailAttachDelDay", bigSizeMailAttachDelDay);
+		model.addAttribute("bigSizeMailAttachDelDate", bigSizeMailAttachDelDate);
+		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
+		model.addAttribute("pAttachWarning", pAttachWarning);
+		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
 		model.addAttribute("sendFrom", sendFrom);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
@@ -483,9 +467,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("cmdOwn", cmdOwn);
 		model.addAttribute("url", url);
 		model.addAttribute("urlOwn", urlOwn);
-		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
-		model.addAttribute("pAttachWarning", pAttachWarning);
-		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("mailSignSel", mailSignSel);
 		model.addAttribute("importance", importance);
 		model.addAttribute("senderInfo", senderInfo);

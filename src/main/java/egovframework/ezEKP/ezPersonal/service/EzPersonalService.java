@@ -33,17 +33,17 @@ public interface EzPersonalService {
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq) throws Exception;
 	
-	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType) throws Exception;
+	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID) throws Exception;
 
-	public String getApprovNotiConfig(String userID) throws Exception;
+	public String getApprovNotiConfig(String userID, int tenantID) throws Exception;
 
-	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag) throws Exception;
+	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
 	
 	public String getBirthUserList(String companyID, String curMon) throws Exception;
 	
 	public int getPollCount (String pComapnyID) throws Exception;
 	
-	public void insertResult (int pItemSeq, String pUserID, int pResult) throws Exception;
+	public void insertResult (int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception;
 	
 	public int checkPassword (String pCN, String pPassword, int tenantID) throws Exception;
 }

@@ -99,7 +99,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzCommunityController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
 	/**
 	 * 커뮤니티 메인화면 호출함수
@@ -114,7 +114,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do")
 	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("communityLeftCommunity started.");
+		logger.debug("communityLeftCommunity started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = "", userLevel = "";
@@ -162,7 +162,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("lang",userInfo.getLang());
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		LOGGER.debug("communityLeftCommunity ended.");
+		logger.debug("communityLeftCommunity ended.");
 		
 		return "/ezCommunity/communityLeftCommunity";
 	}
@@ -265,7 +265,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commMakeUpload.do")
 	public String commMakeUpload(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) {
-		LOGGER.debug("commMakeUpload started.");
+		logger.debug("commMakeUpload started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
@@ -282,7 +282,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			result = false;
 		}
 		
-		LOGGER.debug("commMakeUpload ended.");
+		logger.debug("commMakeUpload ended.");
 		
 		model.addAttribute("result", result);
 		
@@ -294,7 +294,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/getSubBoards.do")
 	public String getSubBoards(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getSubBoards started.");
+		logger.debug("getSubBoards started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pClubID = "", pRootBoardID = "", pSubFlag = "0", pExcludeBoardID = " ";
@@ -326,8 +326,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("result", result);
 		
-		LOGGER.debug(result);
-		LOGGER.debug("getSubBoards ended.");
+		logger.debug(result);
+		logger.debug("getSubBoards ended.");
 		
 		return "json";
 	}
@@ -358,7 +358,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/checkCommHome.do")
 	public String checkCommHome(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("checkCommHome started.");
+		logger.debug("checkCommHome started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("communityCD");
@@ -377,7 +377,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		
-		LOGGER.debug("checkCommHome ended.");
+		logger.debug("checkCommHome ended.");
 		
 		return "/ezCommunity/communityCheckCommHome";
 	}
@@ -387,7 +387,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/popupCommHome.do")
 	public String popupCommHome(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		LOGGER.debug("popupCommHome started.");
+		logger.debug("popupCommHome started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean joinFlag = false, checkSysop = false;
@@ -425,7 +425,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			mode = 1;
 		}
 		
-		LOGGER.debug("mode : " + mode);
+		logger.debug("mode : " + mode);
 		
 		String retXML = ezCommunityService.getBoardTree("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
@@ -464,7 +464,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("retXML", retXML);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		LOGGER.debug("popupCommHome ended.");
+		logger.debug("popupCommHome ended.");
 		
 		return "/ezCommunity/communityPopupCommHome";
 	}
@@ -490,13 +490,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
 		
-		LOGGER.debug("commHomeBoardInfo started. code : " + code);
+		logger.debug("commHomeBoardInfo started. code : " + code);
 		
 		List<CommunityBoardInfoVO> list = ezCommunityService.commHomeBoardInfo(code, userInfo.getTenantId());
 		
 		model.addAttribute("boardInfoList", list);
 		
-		LOGGER.debug("commHomeBoardInfo ended.");
+		logger.debug("commHomeBoardInfo ended.");
 		
 		return "json";
 	}
@@ -526,8 +526,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardName = request.getParameter("boardName");
 		String userLevel = "";
 		
-		LOGGER.debug("boarditemList started.");
-		LOGGER.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
+		logger.debug("boarditemList started.");
+		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
 		
 		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
@@ -551,7 +551,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
 		
-		LOGGER.debug("boarditemList ended.");
+		logger.debug("boarditemList ended.");
 		
 		return "/ezCommunity/communityBoardItemList";
 	}
@@ -649,7 +649,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/searchBoardItemPrint.do")
 	public String searchBoardItemPrint(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("searchBoardItemPrint started");
+		logger.debug("searchBoardItemPrint started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
@@ -660,7 +660,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String searchEnd = request.getParameter("searchEnd");
 		String searchConfig = "";
 		
-		LOGGER.debug("title : " + title + ", writerName : " + writerName + ", strAbstract : " + strAbstract + ", searchStart : " + searchStart + ", searchEnd : " + searchEnd);
+		logger.debug("title : " + title + ", writerName : " + writerName + ", strAbstract : " + strAbstract + ", searchStart : " + searchStart + ", searchEnd : " + searchEnd);
 		
 		if (!title.equals("")) {
 			searchConfig += egovMessageSource.getMessage("ezCommunity.t1467", userInfo.getLocale()) + "'" + title + "' " + egovMessageSource.getMessage("ezCommunity.t1468", userInfo.getLocale());
@@ -697,7 +697,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("strXML", strXML);
 		
-		LOGGER.debug("searchBoardItemPrint ended");
+		logger.debug("searchBoardItemPrint ended");
 		
 		return "/ezCommunity/communitySearchBoardItemPrint";
 	}
@@ -1030,7 +1030,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/boardItemView.do")
 	public String boardItemView(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("boardItemView started.");
+		logger.debug("boardItemView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pReservedItem = "";
@@ -1077,7 +1077,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		
-		LOGGER.debug("boardItemView ended.");
+		logger.debug("boardItemView ended.");
 		
 		return "/ezCommunity/communityBoardItemView";
 	}
@@ -1087,7 +1087,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/checkPassword.do")
 	public String checkPassword(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("checkPassword started.");
+		logger.debug("checkPassword started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String prm = egovFileScrty.getPrm();
@@ -1104,7 +1104,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("password", password);
 		
-		LOGGER.debug("checkPassword ended.");
+		logger.debug("checkPassword ended.");
 		
 		return "/ezCommunity/communityCheckPassword";
 	}
@@ -1284,18 +1284,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do")
 	public void getCommunityAttachInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("getCommunityAttachInfo started.");
+		logger.debug("getCommunityAttachInfo started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pFileName = request.getParameter("fileName");
 		String pFilePath = request.getParameter("filePath");
 		pFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + pFilePath;
-		LOGGER.debug("fileName : " + pFileName);
-		LOGGER.debug("filePath : " + pFilePath);
+		logger.debug("fileName : " + pFileName);
+		logger.debug("filePath : " + pFilePath);
 		
 		ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
 		
-		LOGGER.debug("getCommunityAttachInfo ended.");
+		logger.debug("getCommunityAttachInfo ended.");
 	}
 	
 	/**
@@ -1390,7 +1390,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/copyItem.do", method = RequestMethod.POST)
 	public String copyItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("copyItem started.");
+		logger.debug("copyItem started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pOrgItemIDList = request.getParameter("orgItemIDList");
@@ -1407,7 +1407,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
 		
-		LOGGER.debug("copyItem ended.");
+		logger.debug("copyItem ended.");
 		
 		return "json";
 	}
@@ -1417,7 +1417,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/checkIfAnonyBoard.do", method = RequestMethod.POST)
 	public String checkIfAnonyBoard(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("checkIfAnonyBoard started.");
+		logger.debug("checkIfAnonyBoard started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
@@ -1436,7 +1436,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("result", ret);
 		
-		LOGGER.debug("checkIfAnonyBoard ended. result : " + ret);
+		logger.debug("checkIfAnonyBoard ended. result : " + ret);
 		
 		return "json";
 	}
@@ -1446,7 +1446,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
 	public String bbsList(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("bbsList started.");
+		logger.debug("bbsList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String bName = "c_Board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
@@ -1506,7 +1506,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
 		
-		LOGGER.debug("bbsList ended.");
+		logger.debug("bbsList ended.");
 		
 		return "/ezCommunity/communityBbsList";
 	}
@@ -1516,7 +1516,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsViewNew.do")
 	public String bbsNewViewNew(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		LOGGER.debug("bbsViewNew started.");
+		logger.debug("bbsViewNew started.");
 		
 		String keyword = "", sRadio = "", pagec = "1";
 		String strTitle = "", strWriteName = "", strWriterID = "";
@@ -1615,7 +1615,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("previousItemID", previousItemID);
 		model.addAttribute("userInfo", userInfo);
 		
-		LOGGER.debug("bbsViewNew ended.");
+		logger.debug("bbsViewNew ended.");
 		
 		return "/ezCommunity/communityBbsViewNew";
 	}
@@ -1625,7 +1625,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do")
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
-		LOGGER.debug("bbsEditNew started.");
+		logger.debug("bbsEditNew started.");
 		
 		String code = "", sRadio = "", keyword = "", cID = "", no = "", fileName = "", title = "", grsUserName = "", writeFakerName = "";
 		int pagec = 0, block = 0;
@@ -1718,7 +1718,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("level", level);
 		model.addAttribute("gref", ref);
 		
-		LOGGER.debug("bbsEditNew ended.");
+		logger.debug("bbsEditNew ended.");
 		
 		return "/ezCommunity/communityBbsEditNew";
 	}
@@ -1758,7 +1758,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String bbsDelOk(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception{
-		LOGGER.debug("bbsDelOk started.");
+		logger.debug("bbsDelOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = "";
@@ -1772,11 +1772,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
 		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
-			LOGGER.debug("bbsDelOk ended.");
+			logger.debug("bbsDelOk ended.");
 			
 			return ezCommunityService.bbsDelOk(userInfo, request, board, itemNo, goToPage, bName, adminCheck, userInfo.getTenantId());
 		} else {
-			LOGGER.debug("bbsDelOk error.");
+			logger.debug("bbsDelOk error.");
 			
 			return "ERROR";
 		}
@@ -1787,7 +1787,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/guestOne.do")
 	public String guestOne(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("guestOne started.");
+		logger.debug("guestOne started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1833,14 +1833,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("nowBlock", nowBlock);
 		model.addAttribute("totalPage", totalPage);
 		
-		LOGGER.debug("totalPage="+totalPage);
+		logger.debug("totalPage="+totalPage);
 		
 		model.addAttribute("keywordCount", keywordCount);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
 		model.addAttribute("strXML" , strXML);
 		model.addAttribute("disable" , false);
 		
-		LOGGER.debug("guestOne ended.");
+		logger.debug("guestOne ended.");
 		
 		return "/ezCommunity/communityGuestOne";
 	}
@@ -1884,7 +1884,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/guestEditOk.do")
 	public String guestEditOk(@CookieValue("loginCookie") String loginCookie, Model model, CommunityCClubGuestVO item, HttpServletRequest request) throws Exception {
-		LOGGER.debug("guestEditOk started. ");
+		logger.debug("guestEditOk started. ");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean bIsMyContent = false;
@@ -1894,7 +1894,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String memo = request.getParameter("memo");
 		
-		LOGGER.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
+		logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		
 		bIsMyContent = ezCommunityService.guestEditOk(userInfo, item, code, mode, memo, cNo, bIsMyContent);
 		
@@ -1902,7 +1902,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("bIsMyContent", bIsMyContent);
 		
-		LOGGER.debug("guestEditOk ended. ");
+		logger.debug("guestEditOk ended. ");
 		
 		return "/ezCommunity/communityGuestEditOk";
 	}
@@ -2115,7 +2115,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/pollEdit.do")
 	public String pollEdit(@CookieValue("loginCookie") String loginCookie, Model model,HttpServletRequest request) throws Exception {
-		LOGGER.debug("pollEdit started.");
+		logger.debug("pollEdit started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pClubNo = request.getParameter("pClubNo");
@@ -2137,7 +2137,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pEndDate", pEndDate);
 		model.addAttribute("questionVO", questionVO);
 		
-		LOGGER.debug("pollEdit ended.");
+		logger.debug("pollEdit ended.");
 		
 		return "/ezCommunity/communityPollEdit";
 	}
@@ -2164,7 +2164,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/pollETCView.do")
 	public String pollETCView(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("pollETCView started.");
+		logger.debug("pollETCView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String questionID = request.getParameter("questionID");
@@ -2176,7 +2176,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("etc", etc);
 		model.addAttribute("ETCTotal", etcTotal);
 		
-		LOGGER.debug("pollETCView ended.");
+		logger.debug("pollETCView ended.");
 		
 		return "/ezCommunity/communityPollETCView";
 	}
@@ -2186,7 +2186,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/pollETCTable.do")
 	public String pollETCTable(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("pollETCTableGet started.");
+		logger.debug("pollETCTableGet started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String questionID = request.getParameter("questionID");
@@ -2198,7 +2198,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("etc", etc);
 		model.addAttribute("responseList", responseList);
 		
-		LOGGER.debug("pollETCTableGet ended.");
+		logger.debug("pollETCTableGet ended.");
 		
 		return "/ezCommunity/communityPollETCTable";
 	}
@@ -2307,7 +2307,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/admin/index.do")
 	public String adminIndex(HttpServletRequest request, Model model) {
-		LOGGER.debug("adminIndex started.");
+		logger.debug("adminIndex started.");
 		
 		String flag = "", num = "";
 		String code = request.getParameter("code");
@@ -2323,7 +2323,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("flag", flag);
 		model.addAttribute("num", num);
 		
-		LOGGER.debug("adminIndex ended.");
+		logger.debug("adminIndex ended.");
 		
 		return "/ezCommunity/communityAdminIndex";
 	}
@@ -2333,7 +2333,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminLeft.do")
 	public String adminLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminLeft started.");
+		logger.debug("adminLeft started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2382,7 +2382,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("club", club);
 		model.addAttribute("xmlret", retXML);
 		
-		LOGGER.debug("adminLeft ended.");
+		logger.debug("adminLeft ended.");
 		
 		return "/ezCommunity/communityAdminLeft";
 	}
@@ -2392,7 +2392,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminBasic.do")
 	public String adminBasic(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminBasic started.");
+		logger.debug("adminBasic started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String name1 = "";
@@ -2429,7 +2429,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
-		LOGGER.debug("adminBasic ended.");
+		logger.debug("adminBasic ended.");
 		
 		return "/ezCommunity/communityAdminBasic";
 	}
@@ -2488,7 +2488,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminLogoUpload.do")
 	public String adminLogoUpload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("adminLogoUpload started. IE9 ");
+		logger.debug("adminLogoUpload started. IE9 ");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
@@ -2498,12 +2498,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String imageSrc = request.getParameter("imageSrc");
 		
-		LOGGER.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
+		logger.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
 		
 		try {
 			ezCommunityService.adminLogoUpload(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
 			model.addAttribute("result", true);
-			LOGGER.debug("adminLogoUpload ended. ");
+			logger.debug("adminLogoUpload ended. ");
 		} catch (Exception e) {
 			model.addAttribute("result", false);
 			throw e;
@@ -2630,7 +2630,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/boardProperty.do")
 	public String adminBoardProperty (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminBoardProperty started.");
+		logger.debug("adminBoardProperty started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String style = "";
@@ -2676,7 +2676,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardProp", boardProp);
 		model.addAttribute("_style", style);
 		
-		LOGGER.debug("adminBoardProperty ended.");
+		logger.debug("adminBoardProperty ended.");
 		
 		return "/ezCommunity/communityAdminBoardProperty";
 	}
@@ -2766,7 +2766,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminGetSubBoards.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String adminGetSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminGetSubBoards started.");
+		logger.debug("adminGetSubBoards started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pExcludeBoardID = " ";
@@ -2781,7 +2781,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
-		LOGGER.debug("adminGetSubBoards ended.");
+		logger.debug("adminGetSubBoards ended.");
 		
 		return strXML;
 	}
@@ -2895,7 +2895,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/moveBoard.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String moveBoard(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("moveBoard started.");
+		logger.debug("moveBoard started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String orgBoardID = request.getParameter("orgBoardID");
@@ -2904,7 +2904,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String ret = ezCommunityService.moveBoard(orgBoardID, newParentBoardID, newBoardGroupID, userInfo.getTenantId());
 		
-		LOGGER.debug("moveBoard ended.");
+		logger.debug("moveBoard ended.");
 		
 		return "<RESULT>" + ret + "</RESULT>";
 	}
@@ -3105,7 +3105,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminMemberList.do")
 	public String adminMemberList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminMemberList started.");
+		logger.debug("adminMemberList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String flag = "", ser = "";
@@ -3135,7 +3135,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("idSpanValue", idSpanValue);
 		
-		LOGGER.debug("adminMemberList ended.");
+		logger.debug("adminMemberList ended.");
 		
 		return "/ezCommunity/communityAdminMemberList";
 	}
@@ -3171,11 +3171,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
 		
-		LOGGER.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
 		if (memberInfoVO != null) {
-			LOGGER.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
+			logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
 			
 			if (clubUser != null) {
@@ -3246,7 +3246,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminCommClose.do")
 	public String adminCommClose(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminCommClose started.");
+		logger.debug("adminCommClose started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -3275,7 +3275,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strCategoryPrint", strCategoryPrint);
 		
-		LOGGER.debug("adminCommClose ended.");
+		logger.debug("adminCommClose ended.");
 		
 		return "/ezCommunity/communityAdminCommClose";
 	}
@@ -3286,7 +3286,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminCommCloseOk.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String adminCommCloseOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminCommCloseOk started.");
+		logger.debug("adminCommCloseOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		String strXML = "";
@@ -3322,7 +3322,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		LOGGER.debug("adminCommCloseOk ended.");
+		logger.debug("adminCommCloseOk ended.");
 		
 		return strXML;
 	}
@@ -3332,7 +3332,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/mainPage.do")
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("mainPage started.");
+		logger.debug("mainPage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useIE11Browser = config.getProperty("config.IE11EDITOR");
@@ -3343,7 +3343,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		
-		LOGGER.debug("mainPage ended.");
+		logger.debug("mainPage ended.");
 		
 		return "/ezCommunity/communityMainPage";
 	}
@@ -3354,19 +3354,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/myCopNewBoardItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String myCopNewBoardItem (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("myCopNewBoardItem started.");
+		logger.debug("myCopNewBoardItem started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int page = Integer.parseInt(request.getParameter("page"));
 		int startRow = (3 * (page - 1)) + 1;
 		int endRow = 3 * page;
 		
-		LOGGER.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
+		logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
 		
 		String result = ezCommunityService.myCopNewBoardItem(userInfo, startRow, endRow);
 		
-		LOGGER.debug("result : " + result);
-		LOGGER.debug("myCopNewBoardItem ended.");
+		logger.debug("result : " + result);
+		logger.debug("myCopNewBoardItem ended.");
 		
 		return result;
 	}
@@ -3377,12 +3377,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/getBestNewCommunity.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getBestNewCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getBestNewCommunity started.");
+		logger.debug("getBestNewCommunity started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
 		
-		LOGGER.debug("getBestNewCommunity ended.");
+		logger.debug("getBestNewCommunity ended.");
 		
 		return ezCommunityService.getBestNewCommunity(userInfo, mode);
 	}
@@ -3392,7 +3392,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/join1.do")
 	public String join1(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("join1 started.");
+		logger.debug("join1 started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String no = request.getParameter("no");
@@ -3402,7 +3402,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("clubName", clubName);
 		model.addAttribute("no", no);
 		
-		LOGGER.debug("join1 ended.");
+		logger.debug("join1 ended.");
 		
 		return "/ezCommunity/communityJoin1";
 	}
@@ -3412,7 +3412,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/join2.do")
 	public String join2(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("join2 started.");
+		logger.debug("join2 started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String no = request.getParameter("no");
@@ -3422,7 +3422,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("clubName", clubName);
 		model.addAttribute("no", no);
 		
-		LOGGER.debug("join2 ended.");
+		logger.debug("join2 ended.");
 		
 		return "/ezCommunity/communityJoin2";
 	}
@@ -3432,7 +3432,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/agreeOk.do")
 	public String agreeOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("agreeOk started.");
+		logger.debug("agreeOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		boolean bCanJoin = true;
@@ -3450,7 +3450,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLevel", userLevel);
 		
-		LOGGER.debug("agreeOk ended.");
+		logger.debug("agreeOk ended.");
 		
 		return "/ezCommunity/communityAgreeOk";
 	}
@@ -3460,7 +3460,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/join.do")
 	public String join(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("join started.");
+		logger.debug("join started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -3477,7 +3477,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("clubVO", clubVO);
 		model.addAttribute("sysUserName", sysUserName);
 
-		LOGGER.debug("join ended.");
+		logger.debug("join ended.");
 		
 		return "/ezCommunity/communityJoin";
 	}
@@ -3487,7 +3487,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/joinOk.do")
 	public String joinOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("joinOk started.");
+		logger.debug("joinOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String id = userInfo.getId();
@@ -3570,7 +3570,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("cID", cID);
 		model.addAttribute("clubVO", clubVO);
 		
-		LOGGER.debug("joinOk ended.");
+		logger.debug("joinOk ended.");
 		
 		return "/ezCommunity/communityJoinOk";
 	}
@@ -3581,7 +3581,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/remote/getACL.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String remoteGetACL (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("remoteGetACL started.");
+		logger.debug("remoteGetACL started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String cID = request.getParameter("cID");
@@ -3592,17 +3592,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (cPermit == null || cPermit.equals("0")) {
 			if (gClubG.trim().equals("3")) {
-				LOGGER.debug("remoteGetACL ended. if if");
+				logger.debug("remoteGetACL ended. if if");
 				return "ERR";
 			} else if (gClubG.trim().equals("2")) {
-				LOGGER.debug("remoteGetACL ended. if elseif");
+				logger.debug("remoteGetACL ended. if elseif");
 				return "OK";
 			} else {
-				LOGGER.debug("remoteGetACL ended. if else");
+				logger.debug("remoteGetACL ended. if else");
 				return "";
 			}
 		} else {
-			LOGGER.debug("remoteGetACL ended. else ");
+			logger.debug("remoteGetACL ended. else ");
 			return "OK";
 		}
 	}
@@ -3620,8 +3620,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/ezAPROPINION.do")
 	public String ezAPROPINION () throws Exception {
-		LOGGER.debug("ezAPROPINION started.");
-		LOGGER.debug("ezAPROPINION ended.");
+		logger.debug("ezAPROPINION started.");
+		logger.debug("ezAPROPINION ended.");
 		return "/ezCommunity/communityAprOption";
 	}
 	
@@ -3631,7 +3631,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/getIsJoin.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getIsJoin (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getIsJoin started.");
+		logger.debug("getIsJoin started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3640,11 +3640,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String cPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
 		
 		if (cPermit != null) {
-			LOGGER.debug("getIsJoin ended. true");
+			logger.debug("getIsJoin ended. true");
 			
 			return "TRUE";
 		} else {
-			LOGGER.debug("getIsJoin ended. false");
+			logger.debug("getIsJoin ended. false");
 			
 			return "FALSE";
 		}
@@ -3674,7 +3674,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/adminOkNo.do")
 	public String adminOkNo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("adminOkNo started.");
+		logger.debug("adminOkNo started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -3682,7 +3682,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String cID = request.getParameter("cID");
 		String result = "";
 		
-		LOGGER.debug("code : " + code + ", flag : " + flag + ", cID : " + cID);
+		logger.debug("code : " + code + ", flag : " + flag + ", cID : " + cID);
 		
 		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
@@ -3692,7 +3692,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			result = "true";
 		} catch (Exception e) {
-			LOGGER.debug(e.getMessage());
+			logger.debug(e.getMessage());
 			
 			result = "false";
 		}
@@ -3702,7 +3702,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("result", result);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
-		LOGGER.debug("adminOkNo ended.");
+		logger.debug("adminOkNo ended.");
 		
 		return "json";
 	}
@@ -3712,7 +3712,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/todayCop.do", method = RequestMethod.POST)
 	public String todayCop(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("todayCop started.");
+		logger.debug("todayCop started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3747,7 +3747,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("cCateBName", cCatecBName);
 		model.addAttribute("itemCnt", itemCnt);
 		
-		LOGGER.debug("todayCop ended.");
+		logger.debug("todayCop ended.");
 		
 		return "json";
 	}
@@ -3758,7 +3758,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String myCategoryCop (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("mainPageCategory started.");
+		logger.debug("mainPageCategory started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder sb = new StringBuilder();
@@ -3782,7 +3782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		sb.append("</ITEM>");
 		
-		LOGGER.debug("mainPageCategory ended.");
+		logger.debug("mainPageCategory ended.");
 		
 		return sb.toString();
 	}
@@ -3822,7 +3822,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/searchCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
 	@ResponseBody
 	public String searchCop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("searchCop started.");
+		logger.debug("searchCop started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String search = "";
@@ -3863,7 +3863,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("</COPCNT>");
 		sb.append("</DATA>");
 		
-		LOGGER.debug("searchCop ended.");
+		logger.debug("searchCop ended.");
 		
 		return sb.toString();
 	}
@@ -4057,8 +4057,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do")
 	@ResponseBody
 	public String saveItemPhoto (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("saveItemPhoto started.");
-		LOGGER.debug(xmlData);
+		logger.debug("saveItemPhoto started.");
+		logger.debug(xmlData);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
 		String mode = request.getParameter("mode");
@@ -4071,7 +4071,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 		String itemID = xmlDom.getElementsByTagName("ITEMID").item(0).getTextContent();
 		
-		LOGGER.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
+		logger.debug("attachList : " + attachList + ", smallName : " + smallName + ", fileName : " + fileName + ", title : " + title + ", itemID : " + itemID);
 		
 		String[] attachArray = attachList.split(";");
         String[] smallArray = smallName.split(";");
@@ -4099,7 +4099,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         	}
         }
         
-        LOGGER.debug("saveItemPhoto ended.");
+        logger.debug("saveItemPhoto ended.");
         
 		return ret;
 	}

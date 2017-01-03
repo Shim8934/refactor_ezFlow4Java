@@ -200,10 +200,14 @@
             }
 
             childXML = null;
+            
+            while (childel.hasChildNodes()) {
+            	childel.removeChild(childel.firstChild);       
+            }
             childel.appendChild(make_childHtml(nodeIdx));
         }
     }
-
+    
     this.deletenode = ex_deletenode;
     function ex_deletenode(nodeIdx) {        
             if (nodeIdx > g_nodeCount || nodeIdx < 1)

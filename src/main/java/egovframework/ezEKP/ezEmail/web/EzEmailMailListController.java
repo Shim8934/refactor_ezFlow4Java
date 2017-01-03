@@ -200,7 +200,7 @@ public class EzEmailMailListController {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -977,6 +977,158 @@ public class EzEmailMailListController {
 		
 		logger.debug("returnData=" + returnData);
 		logger.debug("mailRequestDenial ended.");
+		
+		return returnData;
+	}
+	
+	/**
+	 * mail list 및 mail quota 정보 추출 함수 (portal 연동)
+	 */
+	@RequestMapping(value="/ezEmail/getPortletMailList.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String getPortletMailList(@CookieValue("loginCookie") String loginCookie,
+			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+		logger.debug("getPortletMailList started.");
+		
+		String returnData = "";
+		String folderPath = "INBOX";
+		IMAPAccess ia = null;
+		
+		try {
+			// get user credentials
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password = userIdAndPassword.get(1);		
+			
+	        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+	        String userAccount = userInfo.getId() + "@" + domainName;
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, 40*1000, 20*1000);
+			
+			// get quota info
+			int mailPercent = 0;
+			String mailboxDetail = "";
+			String mailboxQuotaStr = "";
+			
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+			
+			if (mailboxUsage < mailboxQuota) {
+				mailPercent = (int)((mailboxUsage/mailboxQuota) * 100);
+			}
+			else {
+				mailPercent = 100;
+			}
+			
+			if (mailboxUsage >= 1024) {
+				mailboxDetail = (int)(mailboxUsage/1024) + "MB";
+			}
+			else {
+				mailboxDetail = (int)mailboxUsage + "KB";
+			}
+	
+			if (mailboxQuota >= 1024*1024) {
+				mailboxQuotaStr = String.format("%.2fG", mailboxQuota/(1024*1024));
+			}
+			else if (mailboxQuota >= 1024) {
+				mailboxQuotaStr = (int)(mailboxQuota/1024) + "MB";
+			}
+			else {
+				mailboxQuotaStr = (int)mailboxQuota + "KB";
+			}
+			// get quota info - end
+			
+			
+			Folder folder = ia.getFolder(folderPath);		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true);
+	        
+	        // sort the messages
+ 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+	        
+ 			// set mailCount
+ 			int mailCount = 7;
+ 			int unreadCount = ia.getUnreadCount(folderPath);
+ 			if (unreadCount < mailCount) {
+ 				mailCount = unreadCount;
+ 			}
+ 			
+ 			messages = Arrays.copyOfRange(messages, 0, mailCount);
+ 			
+	        // pre-fetch
+	        FetchProfile fp = new FetchProfile();
+	        fp.add(UIDFolder.FetchProfileItem.UID);
+	        fp.add(FetchProfile.Item.ENVELOPE);
+	        folder.fetch(messages, fp);
+	        
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
+			for (int i=0; i<messages.length; i++) {
+				Message message = messages[i];
+				
+				// href
+				String href = "INBOX/" + uidFolder.getUID(message);
+				
+				// received date
+				Date receivedDate = message.getReceivedDate();
+				String receivedDateStr = sdf.format(receivedDate);
+				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+				
+				// sender
+				String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+				
+				// subject
+				String subject = message.getSubject();
+				
+				if (subject != null && !subject.equals("")) {
+					String[] rawHeaders = message.getHeader("subject");
+					String rawHeader = rawHeaders[0];
+					
+					if (!ezEmailUtil.isPureAscii(rawHeader)) {
+						byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+						
+						subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+					}
+				}
+				
+				subject = (subject != null) ? subject : "";
+				
+				sb.append("<NODE>");
+				sb.append("<HREF><![CDATA[" + href + "]]></HREF>");
+				sb.append("<DATE><![CDATA[" + receivedDateStr + "]]></DATE>");
+				sb.append("<SENDER><![CDATA[" + sender + "]]></SENDER>");
+				sb.append("<SUBJECT><![CDATA[" + subject + "]]></SUBJECT>");
+				sb.append("</NODE>");
+			}
+			
+			sb.append("<TOTALCNT>" + unreadCount + "</TOTALCNT>");
+			sb.append("<MAILBOXSIZE>" + mailboxQuotaStr + "</MAILBOXSIZE>");
+			sb.append("<MAILBOXDETAIL>" + mailboxDetail + "</MAILBOXDETAIL>");
+			sb.append("<MAILPERCENT>" + mailPercent + "</MAILPERCENT>");
+			sb.append("</DATA>");
+			
+			returnData = sb.toString();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("getPortletMailList ended.");
 		
 		return returnData;
 	}

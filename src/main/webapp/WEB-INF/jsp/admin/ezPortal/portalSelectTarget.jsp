@@ -413,7 +413,8 @@
 	                M_TR_DIV.setAttribute("class", "pic");
 	                if (M_TR.getAttribute("_DATA9") != "") {
 	                    var M_TR_IMG = document.createElement("IMG");
-	                    M_TR_IMG.setAttribute("SRC", "/files/upload_personal/photo/" + M_TR.getAttribute("_DATA9"));
+	                    //M_TR_IMG.setAttribute("SRC", "/files/upload_personal/photo/" + M_TR.getAttribute("_DATA9"));
+	                    M_TR_IMG.setAttribute("SRC", "${uploadPortalPath}" + M_TR.getAttribute("_DATA9"));
 	                    M_TR_IMG.setAttribute("width", "90px");
 	                    M_TR_IMG.setAttribute("height", "90px");
 	                    M_TR_DIV.appendChild(M_TR_IMG);

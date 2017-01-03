@@ -20,7 +20,7 @@
 		<c:if test="${isCrossBrowser != true}">
 			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
 			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/kaoni_ActiveX.js"></script>
+			<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		</c:if>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
@@ -1095,7 +1095,7 @@
 									<tr>
 										<th><spring:message code='ezCommunity.t933'/></th>
 										<td class="pos1">
-											<script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans");</script>
+											<script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
 											<div id="lstAttachLink" style="display:none;OVERFLOW:auto;HEIGHT:50px;">&nbsp;</div>
 										</td>
 										<td class="pos2">

@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -796,7 +795,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			m_strMHT= "";
 		}
         
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, request, locale);
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale);
         
         if (strHTML.trim().length() > 0) {
         	return strHTML;
@@ -809,7 +808,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 실행 표출 Method
 	 */
 	@Override
-	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, HttpServletRequest request, Locale locale) throws Exception{
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale) throws Exception{
 		String m_strHTML = "";
 		String strBoundary = "";
 		String[] m_Mimechunk = null;
@@ -845,7 +844,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						//절대경로에서 realPath "" 으로 대체
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(commonUtil.getRealPath(request), ""));
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(realPath, ""));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);

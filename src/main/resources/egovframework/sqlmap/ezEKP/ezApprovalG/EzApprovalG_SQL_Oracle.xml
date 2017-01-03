@@ -7261,7 +7261,7 @@
    		<isEqual property="v_CONTID" compareValue="ADMIN">
    		<![CDATA[
       	 AND   
-      	 	CONTAINERID IN ($v_CONTID$)   
+      	 	CONTAINERID IN #v_CONTID#
    		 ]]>  
    		 </isEqual>
    		 
@@ -7269,7 +7269,7 @@
    		 <isNotEmpty property="v_CONTID">
    			<![CDATA[
       		 AND 
-      		 	CONTAINERID IN ($v_CONTID$)
+      		 	CONTAINERID IN #v_CONTID#
    		 	]]>  
    		 </isNotEmpty>
    		 </isNotEqual>

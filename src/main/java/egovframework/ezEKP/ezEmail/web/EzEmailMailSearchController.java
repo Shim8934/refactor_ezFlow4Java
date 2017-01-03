@@ -181,7 +181,7 @@ public class EzEmailMailSearchController {
 		
 		try {
 		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userEmail, password, egovMessageSource, locale);
+				userEmail, password, egovMessageSource, locale, 150*1000, 20*1000);
 						
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA><ROWS>");

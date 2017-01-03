@@ -3,7 +3,7 @@ var g_XmlDoc;
 var g_ctlSelect;    
 function btnCancel_click() {
     var tdElement;
-    if (BottonTDValue[1].innerText == "fixRecv") {
+    if (getNodeText(BottonTDValue[1]) == "fixRecv") {
         pzFormProc.editor.DOM.body.removeAttribute("fixRecv");
         document.getElementById("EditInput").value = "";
         return;
@@ -51,8 +51,8 @@ function btnApply_click() {
                 }
 
                 if (tdElement) {
-                    tdElement.className = BottonTDValue[0].innerText;
-                    tdElement.id = BottonTDValue[1].innerText + EditInput.value;
+                    tdElement.className = getNodeText(BottonTDValue[0]);
+                    tdElement.id = getNodeText(BottonTDValue[1]) + EditInput.value;
                     pzFormProc.SetCheckFieldForAdmin(true, tdElement);
                 }
             }
@@ -61,18 +61,18 @@ function btnApply_click() {
         case 1:
             {
                 if (curElement.tagName == "SELECT") {
-                    var selectVar = BottonTDValue[1].innerText;
+                    var selectVar = getNodeText(BottonTDValue[1]);
                     if (document.getElementById("EditInput").disabled == false) {
                         selectVar += document.getElementById("EditInput").value
                     }
-                    curElement.className = BottonTDValue[0].innerText;
+                    curElement.className = getNodeText(BottonTDValue[0]);
                     curElement.id = selectVar;
                 }
                 else {
                     var str = "<select class=";
-                    str += BottonTDValue[0].innerText;
+                    str += getNodeText(BottonTDValue[0]);
                     str += " id=";
-                    str += BottonTDValue[1].innerText;
+                    str += getNodeText(BottonTDValue[1]);
                     str += "></select>";
                     pzFormProc.InnerHTML(str);
                 }
@@ -82,11 +82,11 @@ function btnApply_click() {
         case 2:
             {
                 if (curElement.tagName == "INPUT" && curElement.type == "checkbox") {
-                    var selectVar = BottonTDValue[1].innerText;
+                    var selectVar = getNodeText(BottonTDValue[1]);
                     if (document.getElementById("EditInput").disabled == false) {
                         selectVar += document.getElementById("EditInput").value
                     }
-                    curElement.className = BottonTDValue[0].innerText;
+                    curElement.className = getNodeText(BottonTDValue[0]);
                     curElement.id = selectVar;
                 }
                 else {
@@ -96,9 +96,9 @@ function btnApply_click() {
                         return;
                     }
                     var str = "<INPUT type=checkbox class=";
-                    str += BottonTDValue[0].innerText;
+                    str += getNodeText(BottonTDValue[0]);
                     str += " id=";
-                    str += BottonTDValue[1].innerText;
+                    str += getNodeText(BottonTDValue[1]);
                     str += " value=";
                     str += document.getElementById("EditInput").value;
                     str += ">";
@@ -110,8 +110,8 @@ function btnApply_click() {
         case 3:
             {
                 if (curElement.tagName == "INPUT" && curElement.type == "radio") {
-                    curElement.className = BottonTDValue[0].innerText;
-                    curElement.id = BottonTDValue[1].innerText + document.getElementById("EditInput").value;
+                    curElement.className = getNodeText(BottonTDValue[0]);
+                    curElement.id = getNodeText(BottonTDValue[1]) + document.getElementById("EditInput").value;
                 }
                 else {
                     if (!document.getElementById("EditInput").value) {
@@ -121,9 +121,9 @@ function btnApply_click() {
                     }
 
                     var str = "<INPUT type=radio class=";
-                    str += BottonTDValue[0].innerText;
+                    str += getNodeText(BottonTDValue[0]);
                     str += " id=";
-                    str += BottonTDValue[1].innerText;
+                    str += getNodeText(BottonTDValue[1]);
                     str += " value=";
                     str += document.getElementById("EditInput").value;
                     str += ">";
@@ -156,9 +156,9 @@ function fnValueClick() {
         }
 
         BeforeClickID = GetAttribute(parentTR.cells[0], "ID");
-        BottonTDValue[0].innerText = "FIELD";
-        BottonTDValue[1].innerText = GetAttribute(parentTR.cells[0], "ID");
-        BottonTDValue[2].innerText = parentTR.cells[0].innerText;
+        setNodeText(BottonTDValue[0],"FIELD");
+        setNodeText(BottonTDValue[1],GetAttribute(parentTR.cells[0], "ID"));
+        setNodeText(BottonTDValue[2],getNodeText(parentTR.cells[0]));
         document.getElementById("EditInput").value = "";
 
         var idText = GetAttribute(parentTR, "PARENTID");
@@ -177,16 +177,24 @@ function fnValueClick() {
 }
   
 var xmlpara = createXmlDom();
-function add_doc_maker() {
-    var xmlRtn = createXmlDom();
+function add_doc_maker(companyID) {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/admin/ezApproval/getFormPropList.do",
+		data : {
+			companyID  : companyID
+		},
+		success: function(text){
+			result = text;
+		}
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Get_FormPropList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.responseText != "") {
-        xmlpara = loadXMLString(xmlhttp.responseText);
+    if (result != "") {
+    	xmlpara = loadXMLString(result);
         PROPERTY_TABLEINIT();
     }
 }
@@ -251,7 +259,7 @@ function TopPropertyTable(parentTD) {
         TR_1.id = GetAttribute(node, "ID");
         var TD = document.createElement("TD");
         TD.className = "tabTitle";
-        TD.innerText = GetAttribute(node, "NAME");
+        setNodeText(TD,GetAttribute(node, "NAME"));
         TBODY.appendChild(TR_1);
         TR_1.appendChild(TD);
         TR_1.onclick = showHideSubTable;
@@ -291,7 +299,7 @@ function createNewSubTR(TBODY, row, parentID) {
     TD_1.width = "100%";
     TBODY.appendChild(TR_1);
     TR_1.appendChild(TD_1);
-    TD_1.innerText = getNodeText(SelectSingleNode(row, "NAME"));
+    setNodeText(TD_1,getNodeText(SelectSingleNode(row, "NAME")));
     SetAttribute(TD_1, "id", getNodeText(SelectSingleNode(row, "ID")));
     SetAttribute(TR_1, "PARENTID", parentID);
     TD_1.onclick = fnValueClick;
@@ -343,7 +351,7 @@ function BottomPropertyTable(parentTD) {
         var TH_1 = document.createElement("TH");
         var TD_2 = document.createElement("TD");
 
-        TH_1.innerText = BottomValue[i];
+        setNodeText(TH_1,BottomValue[i]);
         TH_1.width = "50px";
         TH_1.style.textAlign = "center";
         TD_2.id = "displayid";
@@ -361,7 +369,7 @@ function BottomPropertyTable(parentTD) {
             var ctlSelect = document.createElement("SELECT");
             var ctlOption1 = document.createElement("OPTION");
             ctlSelect.appendChild(ctlOption1);
-            ctlOption1.innerText = "TD";
+            setNodeText(ctlOption1,"TD");
             SPAN.appendChild(ctlSelect)
             TD_2.appendChild(SPAN);
             g_ctlSelect = ctlSelect;
@@ -369,7 +377,7 @@ function BottomPropertyTable(parentTD) {
             ctlSelect.style.width = "158px";
         }
         else {
-            TD_2.innerText = " ";
+            setNodeText(TD_2," ");
         }
         if (i == 0) {
             TR_1.style.display = "none";
@@ -388,7 +396,7 @@ function BottomPropertyTable(parentTD) {
     TBODY.appendChild(newEditTr);
     newEditTr.appendChild(newEditTd1);
     newEditTr.appendChild(newEditTd2);
-    newEditTd1.innerText = strLang366;
+    setNodeText(newEditTd1,strLang366);
 
     newSpan.className = "inputLayout";
     newSpan.appendChild(newEditInput);
@@ -415,9 +423,9 @@ function BottomPropertyTable(parentTD) {
     var SPAN1 = document.createElement("SPAN");
     var SPAN2 = document.createElement("SPAN");
 
-    SPAN1.innerText = strLang373;
+    setNodeText(SPAN1,strLang373);
     SPAN1.onclick = btnApply_click;
-    SPAN2.innerText = strLang374;
+    setNodeText(SPAN2,strLang374);
     SPAN2.onclick = btnCancel_click;
     LI1.appendChild(SPAN1);
     LI2.appendChild(SPAN2);
@@ -483,25 +491,25 @@ function pzFormProc_ElementChange(oldElement) {
         g_ctlSelect.disabled = true;
 
         if (!tdElement) {
-            BottonTDValue[1].innerText = " ";
-            BottonTDValue[2].innerText = " ";
+            setNodeText(BottonTDValue[1]," ");
+            setNodeText(BottonTDValue[2]," ");
             document.getElementById("EditInput").value = "";
             return;
         }
 
         if (tdElement.className)
-            BottonTDValue[0].innerText = tdElement.className;
+            setNodeText(BottonTDValue[0],tdElement.className);
         else
-            BottonTDValue[0].innerText = " ";
+            setNodeText(BottonTDValue[0]," ");
 
         if (tdElement.id) {
-            BottonTDValue[1].innerText = tdElement.id;
+            setNodeText(BottonTDValue[1],tdElement.id);
         }
         else {
-            BottonTDValue[1].innerText = " ";
+            setNodeText(BottonTDValue[1]," ");
         }
 
-        BottonTDValue[2].innerText = " ";
+        setNodeText(BottonTDValue[2]," ");
 
         if (tdElement.value) {
             document.getElementById("EditInput").value = tdElement.value;
@@ -525,7 +533,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     var SHapyHTML = "";
     var pFormTagName = new Array();  
     var i, j, p, k, z;
-    var xmldom = new ActiveXObject("Microsoft.XMLDOM");
+    var xmldom = createXmlDom();
     xmldom.loadXML(ret);
 
     
@@ -545,7 +553,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     count = objNodes.length;
 
     for (i = 0; i < count; i++) {
-        var KyljeaType = objNodes.item(i).childNodes(1).text;
+        var KyljeaType = getNodeText(objNodes.item(i).childNodes(1));
 
         
         if (KyljeaType == "A03001" || KyljeaType == "A03003" || KyljeaType == "A03004" || KyljeaType == "A03015" || KyljeaType == "A03040") {

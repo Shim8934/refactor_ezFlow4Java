@@ -214,10 +214,15 @@
 		                return;
 		            }
 		        }
-		
+				
 		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-		        if (regex.test(document.getElementById("TextEmail").value) === false) {
-		            alert("<spring:message code='ezAddress.t350' />");
+		        if (document.getElementById("TextEmail").value.trim() == "") {
+		        	alert("<spring:message code='ezAddress.t350' />");
+		            document.getElementById("TextEmail").focus();
+		            return;
+		        }
+		        else if (regex.test(document.getElementById("TextEmail").value) === false) {
+		            alert("<spring:message code='ezAddress.t1100' />");
 		            document.getElementById("TextEmail").focus();
 		            return;
 		        }

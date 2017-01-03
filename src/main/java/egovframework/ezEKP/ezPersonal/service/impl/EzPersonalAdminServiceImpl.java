@@ -363,6 +363,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", "ADMIN");
 		map.put("v_SLIDERID", sliderID);
+		map.put("tenantID", userInfo.getTenantId());
 		
 		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map);
 		

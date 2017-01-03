@@ -17,17 +17,16 @@
 		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
 		
 		<script type="text/javascript">
-			var xmlhttp = createXMLHttpRequest();
-		    var xmldoc  = createXmlDom();		    
+			var OrderCell = "";
+			var companyID = "";
+			var Rtnval = new Array();
 		    var pDeptID;
-		    var Rtnval = new Array();
-		    var companyID = "";
 		    var TreeIdx;
 		    var ListIdx;
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
-		    var OrderCell = "";
 		    var isHWP = false;
 		    var nodeIdx;
+		    var pEDITOR = "<c:out value = '${editor}' />";
 		    
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function() {
@@ -51,18 +50,18 @@
 			    	$('#btnFormListView').hide();
 		    	}
 
-		    	companyID = SCompID.value;
+		    	companyID = document.getElementById("ListCompany").value;
 			    Tree_setconfig();
 			    InitFormCont();
-			
-			    Rtnval[0] = "cancel";
-			    Rtnval[1] = "cancel";
-			    window.returnValue = Rtnval;
 		    });
 		    
+		    function refreshFormList() {
+	            InitFormCont();
+	        }
+		    
 		    function selectCompanyID() {
-		        if (companyID != SCompID.value) {
-		            companyID = SCompID.value;
+		        if (companyID != document.getElementById("ListCompany").value) {
+		            companyID = document.getElementById("ListCompany").value
 	
 		            Tree_setconfig();
 		            InitFormCont();
@@ -72,15 +71,6 @@
 		    function Tree_setconfig() {
 		    	var treeView = new TreeView();
 		    	treeView.SetConfig(loadXMLFile("/xml/organtree_config2.xml"));
-		    	
-		        /* var xmlHTTP = createXMLHttpRequest();    
-		        xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
-		        xmlHTTP.send();
-	
-		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            var treeView = new TreeView();
-		            treeView.SetConfig(xmlHTTP.responseXML);
-		        } */
 		    }
 	
 		    function select_onchange() {
@@ -93,7 +83,7 @@
 				    var ID = treeNode.GetNodeData("DATA1");
 				    var KIND = document.getElementById('FromList').value;
 				
-				    GetFormInfo(ID, KIND);
+				    GetFormInfo(ID, KIND, "", "");
 			    }
 		    }
 	
@@ -110,7 +100,8 @@
 			    if (TreeIdx != "") {	
 				    GetFormContInfo(ID, DeptID, "REQUEST");
 			    }
-			    GetFormInfo(ID,KIND);	
+			    
+			    GetFormInfo(ID, KIND, "", "");	
 		    }
 	
 		    function TreeViewNodeClick(pNodeID, pNodeNM) {
@@ -123,7 +114,7 @@
 			    DeptID =  treeNode.GetNodeData("DATA2");
 			    KIND = document.getElementById('FromList').value;	
 			
-			    GetFormInfo(ID,KIND);	
+			    GetFormInfo(ID, KIND, "", "");
 		    }
 	
 		    var formContMain_dialogArguments = new Array();
@@ -148,8 +139,9 @@
 		        var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContIns&companyID=" + encodeURI(companyID);
 		        formContMain_dialogArguments[0] = para;
 		        formContMain_dialogArguments[1] = btnInsFcont_onclick_complete;
-		
-		        var formContMain = window.open(url, "", GetOpenWindowfeature(685, 555));
+		        
+		        GetOpenWindow(url, "FormContMain", 800, 700, "no");
+		        
 		        try { formContMain.focus(); } catch (e) {
 		        }
 		    }
@@ -197,8 +189,9 @@
 		            var url = "/admin/ezApprovalG/formContMain.do?tCheck=fContMod&companyID=" + encodeURI(companyID);
 		            formContMain_dialogArguments[0] = para;
 			        formContMain_dialogArguments[1] = UpdateFCont_complete;
-			
-			        var formContMain = window.open(url, "", GetOpenWindowfeature(685, 555));
+			        
+			        GetOpenWindow(url, "FormContMain", 800, 700, "no");
+			        
 			        try { formContMain.focus(); } catch (e) {
 			        }
 		        }
@@ -275,9 +268,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApproval/getFormContInfo.do",
 		        	async : false,
+		        	dataType : "json",
 		        	data : {id : ID, companyID : companyID},
 		        	success : function(result) {
-		        		xmlRtn = result;
+		        		xmlRtn = loadXMLString(result["resultXML"]);
 		        	}
 		        });
 		        
@@ -288,28 +282,40 @@
 		        return false;
 		    }
 		    
-		    function btnInsForm_onclick() {
+		    function btnInsForm_onclick(type) {
 		    	var para = new Array();
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 	
-		        nodeIdx = treeView.GetSelectNode();
+		        var nodeIdx = treeView.GetSelectNode();
 		        if (nodeIdx != null) {
 		            if (nodeIdx.GetNodeData("DATA1") != "ROOT") {
 		                var url = "";
-		                if(isHWP == true) {
-		                    url = "/myoffice/ezApprovalG/ezViewHWP/FormMain_HWP.aspx?TCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
-		                } else {
-		                    url = "/admin/ezApprovalG/formMain.do?tCheck=fIns&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURI(companyID);
-		                }
-		                
-		                window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
-
-				        Tree_setconfig();
-		                InitFormCont();
+						var HWP = "&type=HWP";
+						var parameter = "?tCheck=fIns&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+						
+						if (type == "HWP") {
+							if (!CrossYN()) {
+								url = "/myoffice/ezApprovalG/manage/FormMaker/FormMain_Cross.aspx";
+							} else {
+								return;
+							}
+							
+							parameter = parameter + HWP;
+						} else {
+							if (pEDITOR == "DEXT" || pEDITOR == "NAMO") {
+								url = "/myoffice/ezApprovalG/manage/FormMaker/FormMain_Cross.aspx";
+							} else {
+								url = "/admin/ezApprovalG/formMain.do";
+							}
+						}
+						
+						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
+						Tree_setconfig();
+						InitFormCont();
 		                
 		            } else {
-		            	OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
+		            	alert("<spring:message code = 'ezApprovalG.t722' />");
 		            }
 		        }
 		    }
@@ -450,66 +456,139 @@
 		        		if (result == "OK") {
 		        			OpenAlertUI("<spring:message code = 'ezApprovalG.t1581' />");
 				        } else {
-				        	OpenAlertUI("<spring:message code = 'ezApprovalG.t426' />");
+				        	OpenAlertUI("<spring:message code = 'ezApprovalG.t391' />");
 				        }
 		        	},
 		        	error : function() {
-		        		OpenAlertUI("<spring:message code = 'ezApprovalG.t426' />");
+		        		OpenAlertUI("<spring:message code = 'ezApprovalG.t391' />");
 		        	}
 		        });
 		    }
 	
 		    function btnFormListView_onclick() {
-		        var listview = new ListView();
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvtForm");
 		        var oArrRows = listview.GetSelectedRows();
 		        var tr = oArrRows[0];
 
 		        var url = "/admin/ezApprovalG/formPreview.do?href=" + encodeURI(GetAttribute(tr, "DATA4"));
-		        window.showModalDialog(url, "", "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
+		        var retVal = GetOpenWindow(url, "Form_Preview", 1050, 1000, "no");
+		    }
+		    
+		    function searchform() {
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		        ID = treeNode.GetNodeData("DATA1");
+
+		        if (TreeIdx != "") {
+		            if (document.getElementById('forminfo').value == "") {
+		                alert("<spring:message code = 'ezApprovalG.t1160' />");
+						return;
+		        	}
+
+			        var ID = treeNode.GetNodeData("DATA1");
+			        var KIND = document.getElementById('FromList').value;
+			        var searchtype = document.getElementById('searchoption').selectedIndex;
+			        var searchname = document.getElementById('forminfo').value;
+			        GetFormInfo("ALL", KIND, searchtype, searchname);
+		    	}
+		    }
+		    
+		    function reset() {
+		        document.getElementById('forminfo').value = "";
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		        ID = treeNode.GetNodeData("DATA1");
+		        var ID = treeNode.GetNodeData("DATA1");
+		        var KIND = document.getElementById('FromList').value;
+		        
+		        GetFormInfo(ID, KIND, "", "");
+		    }
+
+		    function search_press(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		                searchform();
+		            }
+		        }
+		        else {
+		            if (evt.which == 13)
+		                searchform();
+		        }
+		    }
+
+		    function MoveForm() {
+		        var para = new Array();
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+
+		        var listview = new ListView();
+		        listview.LoadFromID("lvtForm");
+
+		        var nodeIdx = treeView.GetSelectNode();
+		        if (nodeIdx != null) {
+		            para[0] = nodeIdx.GetNodeData("DATA1");
+		        }
+		        var selRow = listview.GetSelectedRows();
+		        if (selRow) {
+		            para[1] = GetAttribute(selRow[0], "DATA1");
+		            para[2] = companyID;
+
+		            var url = "/admin/ezApprovalG/formSelect.do";
+		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
+
+		            if (retVal[0] == "OK") {
+		                Tree_setconfig();
+		                InitFormCont();
+		            }
+		        }
 		    }
 		</script>
 	
 	</head>
 	<body class="mainbody">
-		<xml id='FORMLIST' style="display:none">
+		<xml id='FORMLIST' style="display: none">
 			<LISTVIEWDATA>
-		    	<HEADERS>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezApprovalG.t1537' /></NAME>
-		        		<WIDTH>215</WIDTH>
-		      		</HEADER>
-		    	</HEADERS>
-		  	</LISTVIEWDATA>
+				<HEADERS>
+					<HEADER>
+						<NAME><spring:message code ='ezApprovalG.t1537' /></NAME>
+						<WIDTH>215</WIDTH>
+				    </HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
 		</xml>
-		
-		<xml id='FORMCONTAINER' style="display:none">
+		<xml id='FORMCONTAINER' style="display: none">
 			<TREEVIEWDATA>
-		    	<NODE>
-		      		<EXPANDED>TRUE</EXPANDED>
-		      		<ISLEAF>FALSE</ISLEAF>
-		      		<VALUE><spring:message code = 'ezApprovalG.t1539' /></VALUE>
-		    	</NODE>
-		  	</TREEVIEWDATA>
+				<NODE>
+					<EXPANDED>TRUE</EXPANDED>
+					<ISLEAF>FALSE</ISLEAF>
+					<VALUE><spring:message code ='ezApprovalG.t1539' /></VALUE>
+					<DATA1>ROOT</DATA1> 
+					<DATA2><spring:message code ='ezApprovalG.t1539' /></DATA2> 
+					<DATA4><spring:message code ='ezApprovalG.t1539' /></DATA4> 
+				</NODE>
+			</TREEVIEWDATA>
 		</xml>
 		
 		<h1><spring:message code = 'ezApprovalG.t1612' /></h1>
 		<div id="mainmenu">    
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
+			    <select id="ListCompany" onChange="selectCompanyID()">
 			        	<c:forEach var="item" items="${list}">
 		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
-			    </SELECT><br /><br />
-		    </span><br /><br />
+			    </select><br /><br />
+		    </span>
 		    <ul>
 		        <li id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>
 		        <li id="btnUpFcont"><span onclick="return btnUpFcont_onclick()"><spring:message code = 'ezApprovalG.t1627' /></span></li>
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li>
-		        <li id="btnInsForm"><span onclick="return btnInsForm_onclick()"><spring:message code = 'ezApprovalG.t1667' /></span></li>
+		        <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li id="btnInsForm2"><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
+				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>
 		        <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li>                     
 		        <li id="btnFormListView"><span onclick="return btnFormListView_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></li>
 			</ul>
@@ -521,12 +600,22 @@
 		        	<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
 		        	${docType}
 		      	</select></td>
+				<td style="white-space: nowrap">
+					<select id="searchoption">
+						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
+						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>
+					</select>
+					<input id="forminfo" onkeypress="search_press(event)" type="text" style="margin-bottom: 3px;" />
+					<a class="imgbtn" onclick="searchform()"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
+					<a class="imgbtn" onclick="reset()"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
+				</td>
 		  	</tr>
 		</table>
+		
 		<table style="margin-top:5px;width:1005px;height:500px">
 			<tr>
 		    	<td rowspan="3" style="width:400px; vertical-align:top">
-					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:530px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
+					<div id="divFromTreeView" style="vertical-align:top; padding-top:5px; height:500px; width:100%; overflow-x:auto;overflow-y:auto;BORDER:#b6b6b6 1px solid; BACKGROUND-COLOR:#ffffff" ></div>
 				</td>
 		    	<td style="width:600px; padding-left:5px; padding-right:5px;vertical-align:top">
 			    	<div class="listview">

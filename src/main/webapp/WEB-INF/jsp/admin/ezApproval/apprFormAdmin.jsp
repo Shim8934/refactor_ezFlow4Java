@@ -296,10 +296,10 @@
 		                        if(pEDITOR == "DEXT")
 		                            url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
 		                        else                        
-		                            url = "/myoffice/ezApproval/manage/FormMaker/FormMain.aspx";
+		                            url = "/admin/ezApproval/formMain.do";
 		                    }
 		                }
-		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "NO");
+		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 970, "NO");
 		                Tree_setconfig();
 		                InitFormCont();
 		            }

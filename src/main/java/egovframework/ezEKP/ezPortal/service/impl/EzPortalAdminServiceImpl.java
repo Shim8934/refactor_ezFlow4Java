@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -93,7 +96,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public void setThemeInfo(String uID, String disNm1, String disNm2, String disNm3, String disNm4, String imageURL, String topURL,
-			String mainURL, String companyID, String creatorID, String creatorNm, int topHeight) throws Exception {
+			String mainURL, String companyID, String creatorID, String creatorNm, int topHeight, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", uID);
 		map.put("v_PDISNM1", disNm1);
@@ -107,7 +110,22 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PCREATORID", creatorID);
 		map.put("v_PCREATORNM", creatorNm);
 		map.put("v_TOPHEIGHT", topHeight);
-		ezPortalAdminDAO.setThemeInfo(map);
+		map.put("tenantID", tenantID);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
+		
+		String temp = ezPortalAdminDAO.setThemeInfo_S(map);
+		
+		if (temp != null && temp.equals("1")) {
+			ezPortalAdminDAO.setThemeInfo(map);
+		} else {
+			ezPortalAdminDAO.setThemeInfo_I(map);
+		}
+		
+		
 	}
 	
 	@Override
@@ -776,7 +794,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
    					+" FROM EZPORTAL.TBL_PORTALPAGE_CATEGORY "
    					+"WHERE CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
    					+"FROM EZPORTAL.TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ "
+   					+"LEFT JOIN EZPORTAL.TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ "
    					+"WHERE (NOT EXISTS(SELECT UID_ FROM EZPORTAL.TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
@@ -798,7 +816,6 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		strSQL += " ORDER BY A.DISPLAYNAME ASC";
 		
 		map.put("strSQL", strSQL);
-		logger.debug("strSQL="+strSQL);
 		List<PortalSearchPortalPage2VO> list = ezPortalAdminDAO.searchPortalPage2(map);
 		
 		StringBuilder sb = new StringBuilder();
@@ -823,6 +840,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		sb.append("</DATA>");
+		logger.debug("sb="+sb.toString());
 		logger.debug("searchPortalPage End");
 		return sb.toString();
 	}
@@ -944,6 +962,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("themeUID", pThemeUID);
 			map.put("tableViewOption", pTableViewOption);
 			map.put("tenantID", tenantID);
+			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+			
 			ezPortalAdminDAO.insertTblPortalPageGeneral(map);
 			
 			XPath xpath = XPathFactory.newInstance().newXPath();
@@ -1086,7 +1110,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 							if (portletType.equals("1")) {
 								Map<String, Object> map1 = new HashMap<String, Object>();
-								map1.put("pPortletUID", portletUID);
+								map1.put("v_pPORTLET_UID", portletUID);
 								map1.put("tenantID", tenantID);
 								depth = ezPortalAdminDAO.savePortalPage3(map1);
 							} else {
@@ -1244,6 +1268,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				map9.put("themeUID", pThemeUID);
 				map9.put("tableViewOption", pTableViewOption);
 				map9.put("tenantID", tenantID);
+				
+				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				date.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String nowDate = date.format(new Date());
+				map9.put("nowDate", nowDate);
+				
 				ezPortalAdminDAO.insertTblPortalPageGeneral(map9);
 				
 				XPath xpath = XPathFactory.newInstance().newXPath();
@@ -1975,6 +2005,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_PNEWID", UUID.randomUUID().toString());
 		map.put("v_IMAGETYPE", "2");
 		map.put("v_EMPTYPUID", "");
+		map.put("tenantID", tenantID);
 		
 		ezPortalAdminDAO.saveSubMenuItemConfig_U1(map);
 		

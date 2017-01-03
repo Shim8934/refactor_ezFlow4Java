@@ -32,17 +32,12 @@
 		    var g_toggleFlag = false;
 		    var formURL = "";
 		    var beforeHTML = "";
-		    var FormProcSpelling = "<c:out value = '${formProcSpelling}' />";
+		    var FormProcSpelling = "0";
 	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
 		        };
-		    }
-		    
-		    window.onresize = function () {
-		        pzFormProc.style.height = null;
-		        pzFormProc.height = document.documentElement.clientHeight - 200;
 		    }
 	
 		    document.onselectstart = function () {
@@ -53,7 +48,6 @@
 		    };
 	
 		    $(document).ready(function() {
-		    	window.onresize();
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -62,10 +56,8 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        document.getElementById("1tab2").setAttribute("class", "tabon");
-		        document.getElementById("1tab2").setAttribute("class", "tabon");
-		        Tab1_SelectID = "1tab2";
-		        ChangeTab(document.getElementById("1tab2"));
+		        document.getElementById("1tab1").setAttribute("class", "tabon");
+		        Tab1_SelectID = "1tab1";
 
 		        if (formID != "") {
 		            get_FormInfo();
@@ -73,14 +65,17 @@
 	
 		        getDeptFullTree("<c:out value = '${topID}' />");
 		        getFormRecv();
+		        
+		        add_doc_maker(companyID);
 		    });
 		    
 		    function pzFormProc_DocumentComplete() {
 		        if (flag == false) {
+		        	ChangeTab(document.getElementById("1tab1"));
 		            flag = true;
-	
+		            
 		            if (formURL != "") {
-		                pzFormProc.LoadURL(formURL);
+		            	pzFormProc.LoadURL(formURL);
 		            }
 		        }
 		    }
@@ -92,12 +87,25 @@
 		    function pzFormProc_FieldsAvailable() {
 		        if (formURL != "") {
 		            ReturnFormConnXML();
+// 		            ReturnWorkFlowXML();
 		        }
 		    }
 	
 		    function ReturnFormConnXML() {
-		        if (pzFormProc.editor.DOM.all.conn) {            
-		            txt_OpinionContent.innerText = pzFormProc.editor.DOM.all.conn.innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '');
+		        if (pzFormProc.editor.DOM.all.conn) {
+		        	setNodeText(txt_OpinionContent, pzFormProc.editor.DOM.all.conn.innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', ''));
+// 		            txt_OpinionContent.innerText = pzFormProc.editor.DOM.all.conn.innerHTML.replace('<CONNINFO>', '').replace('</CONNINFO>', '').replace('<conninfo>', '').replace('</conninfo>', '');
+		        }
+		    }
+		    
+		    function ReturnWorkFlowXML() {
+		        if (pzFormProc.editor.DOM.all.WORKFLOW) {
+		            var WorkData = pzFormProc.editor.DOM.all.WORKFLOW.innerHTML.toUpperCase();
+		            var VALIDATIONS = WorkData.slice(WorkData.indexOf("<VALIDATION>"), WorkData.indexOf("</VALIDATIONS>"));
+		            setNodeText(txt_OpinionContent1, ReplaceText(VALIDATIONS, "<BR>", "\n"));
+
+		            var STATUS = WorkData.slice(WorkData.indexOf("<CHECK>"), WorkData.indexOf("</STATUS>"));
+		            setNodeText(txt_OpinionContent2, ReplaceText(STATUS, "<BR>", "\n"));           
 		        }
 		    }
 	
@@ -115,11 +123,11 @@
 			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
 			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
 			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
-			                formURL = "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
-
+			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
+			                
 			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
-			                }                
+			                }
 			            }
 		        	}
 		        });
@@ -217,7 +225,7 @@
 		        treeNode.LoadFromID(TreeIdx);
 		    }
 	
-		    function getFormRecv() {		         
+		    function getFormRecv() {
 		        var xmlpara = createXmlDom();
 		        
 		        $.ajax({
@@ -226,8 +234,8 @@
 		        	async : false,
 		        	data : {node1 : formID},
 		        	success : function(result) {
-		        			xmlpara = loadXMLString(result);
-		        	}
+						xmlpara = loadXMLString(result);
+	        		}
 		        });
 	
 		        listview = new ListView();
@@ -236,7 +244,7 @@
 		        listview.SetRowOnClick("lvtDeptSelect_SelChange");
 		        listview.SetRowOnDblClick("lvtDeptSelect_rowdblclick");
 		        listview.DataSource(xmlpara);
-		        listview.DataBind("divlvtForm");        
+		        listview.DataBind("divlvtForm");
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -295,6 +303,8 @@
 		    }
 	
 		    function DuplicateAprDeptCheck(DeptID) {
+		    	var AprDeptList = listview.GetDataRows();
+		    	
 		        var deptID;
 	
 		        for (var i = 0 ; i < listview.GetRowCount() ; i++) {
@@ -393,7 +403,7 @@
 		    }
 	
 		    function idPropertyBtn_onclick() {
-		        add_doc_maker();
+		        add_doc_maker(companyID);
 		    }
 	
 		    function idSetField_onclick() {
@@ -556,33 +566,49 @@
 		        setAutoItemCode.checked = false;
 		    }
 		    
+		    function btn_OpinionAdd1_onclick() {
+		        var SampleXML = "\n<VALIDATION>\n            <FIELD></FIELD>\n	    <CLASS></CLASS>\n	    <DESC></DESC>\n</VALIDATION>\n";
+		        txt_OpinionContent1.value = txt_OpinionContent1.value + SampleXML;
+		    }
+
+		    function btn_OpinionAdd2_onclick() {
+		        var SampleXML = "\n<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>\n";
+		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
+		    }
+
+		    function btn_WorkFlowSave_onclick() {
+		        if (!pzFormProc.editor.DOM.all.WORKFLOW) {
+		            var XMLInfo = "<xml id=WORKFLOW style='display:none;'></xml>";
+		            pzFormProc.editor.DOM.body.innerHTML = XMLInfo + pzFormProc.editor.DOM.body.innerHTML;
+		            pzFormProc.refresh();
+		        }
+
+		        pzFormProc.editor.DOM.all.WORKFLOW.innerHTML = "\n   <WORKFLOW>\n    <VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n  <STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
+		        pzFormProc.refresh();
+		        alert("XML <spring:message code ='ezApprovalG.t1459' />");
+		    }
+		    
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="FieldsAvailable">
 	        pzFormProc_FieldsAvailable();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="DocumentComplete">
 	        pzFormProc_DocumentComplete()
-	
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="BlurTDElement">
-	        pzFormProc_BlurTDElement()
-	
+	        pzFormProc_BlurTDElement();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="FPError">
-	        pzFormProc_FPError()
-	
+	        pzFormProc_FPError();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="InvalidDocument">
-	        pzFormProc_InvalidDocument()
-	
+	        pzFormProc_InvalidDocument();
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="ElementKeyEvent(nKey)">
-	        pzFormProc_ElementKeyEvent(nKey)
-	
+	        pzFormProc_ElementKeyEvent(nKey);
 	    </script>
 	    <script type="text/javascript" for="pzFormProc" event="ElementChange">
-	        pzFormProc_ElementChange()
-	
+	        pzFormProc_ElementChange();
 	    </script>
 	</head>
 	<body class="popup">
@@ -598,10 +624,10 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
+	        	<p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code = 'ezApprovalG.t00004' /></span></p><!-- 양식정보 -->
 	        	<p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code = 'ezApprovalG.t1456' /></span></p><!-- 양식작성기 -->
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code = 'ezApprovalG.t00004' /></span></p><!-- 양식정보 -->
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code = 'ezApprovalG.t00005' /></span></p><!-- 연동정보 -->
-                <%--<p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">Workflow</span></p>--%>
+                <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">Workflow</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code = 'ezApprovalG.t1629' /></span></p><!-- 고정수신처 -->
 	        </div>
         </div>
@@ -650,7 +676,7 @@
              <div id="editor_content" style="padding-top:5px;">
                 <div id="mainmenu">
                 <ul>
-                    <li id="idPropertyBtn"><span onclick="return idPropertyBtn_onclick()"><spring:message code = 'ezApprovalG.t1466' /></span></li>
+<%--                     <li id="idPropertyBtn"><span onclick="return idPropertyBtn_onclick()"><spring:message code = 'ezApprovalG.t1466' /></span></li> --%>
                     <li id="property"><span onclick="return idSetField_onclick()"><spring:message code = 'ezApprovalG.t999934' /></span></li>                         
                 </ul>
                 </div>
@@ -658,7 +684,8 @@
                     selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
                 </script>              
             </div>
-        </div>      
+        </div>
+        
         <!-- 연동설정 -->
         <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">   
             <h2 id="H2" class="receiver_tltype01" style="margin-bottom:5px;">
@@ -681,14 +708,33 @@
         </div>
         
         <!-- WorkFlow -->
-        <div id="ApvForm_content4" style="width:100%;height:60%;display:none; padding-top:10px;">            
+        <div id="ApvForm_content4" style="width:100%;height:60%;display:none; padding-top:10px;">
+        	<table class="content"> 
+				<tr> 
+					<td>&lt;xml id=WORKFLOW&gt;<br> 
+						&lt;WORKFLOW&gt;<br> 
+						&lt;VALIDATIONS&gt;<br> 
+						<textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
+						<br> &lt;/VALIDATIONS&gt;<br> 
+						&lt;STATUS&gt;<br> 
+						<textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
+						<br> &lt;/STATUS&gt;<br> 
+						&lt;/WORKFLOW&gt;<br> 
+						&lt;/xml&gt; </td> 
+					<th> 
+						<a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code = 'ezApprovalG.t268' /> 1</span></a><br>      
+						<a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code = 'ezApprovalG.t268' /> 2</span></a><br>   
+						<a class="imgbtn" id="Submit3"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code = 'ezApprovalG.t59' /></span></a><br>
+					</th>
+				</tr>
+			</table>
         </div>
         
         <!-- 고정수신처 -->
         <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">         
             
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
-            <span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
+            	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
             <table class="content" style="width:100%; height:565px;">         

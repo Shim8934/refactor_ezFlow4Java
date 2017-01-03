@@ -12,16 +12,16 @@
 		<script type="text/javascript" src="<spring:message code='ezApproval.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/ezForm.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/ezForm.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>    
 		<script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApproval/control_Cross/TreeView.js" ></script>
 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/FormMain.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/FormMain.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/reform/AutoLineRuleMaker_AprLine.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var companyID = "${companyID}";
 		    var contID = "${contID}";
@@ -77,7 +77,6 @@
 		        
 		        if (formID != "") {
 		            get_FormInfo();
-		            
 		        }
 		       
 		        getDeptFullTree("${topID}");
@@ -89,7 +88,7 @@
 		        MakeListXML(pDocType);
 		
 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${userInfo.serverName}");
-		        add_doc_maker();
+		        add_doc_maker(companyID);
 		        FormBuilder_onclick();  //formbulider
 		    }
 		
@@ -120,47 +119,47 @@
 		    }
 		
 		    function get_FormInfo() {
-		        var xmlpara = createXmlDom();
-		        var xmlhttp = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "FORMID", formID);
-		        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-		        createNodeAndInsertText(xmlpara, objNode, "LANG", "${userInfo.lang}");
-		
-		        xmlhttp.open("POST", "aspx/Get_FormInfo.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        if (xmlhttp.status == "200") {
-		            if (xmlhttp.responseText != "") {
-		                var xmldom = createXmlDom();
-		                xmldom = loadXMLString(xmlhttp.responseText);
-		
-		                tbFormName.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME")[0]);
-		                tbFormName2.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME2")[0]);
-		                tbDescript.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDESCRIPTION")[0]);
-		                selFormKind.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDOCTYPE")[0]);             
-		                formURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
-		
-		                if (getNodeText(SelectNodes(xmldom, "DATA/USEFLAG")[0]) == "Y") {
-		                    setAutoItemCode.checked = true;
-		                    document.getElementById('tr_setAutoItemCode').style.display = "";
-		                    isPublic.value = getNodeText(SelectNodes(xmldom, "DATA/ISPUBLIC")[0]);
-		                    tbItemCode.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMCODE")[0]);
-		                    tbItemName.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME")[0]);
-		                    tbItemName2.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME2")[0]);
-		                    keepperiod.value = getNodeText(SelectNodes(xmldom, "DATA/KEEPPERIODCODE")[0]);
-		                    securitylevel.value = getNodeText(SelectNodes(xmldom, "DATA/SECURITYLEVEL")[0]);
-		                }
-		
-		                //2015.1.20 FormBuilder
-		                if (getNodeText(SelectNodes(xmldom, "DATA/REFORMFLAG")[0]) == "Y") {
-		                    pReformURL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/REFORMFILELOCATION")[0]));
-		                    pReformFunctionURL = getNodeText(SelectNodes(xmldom, "DATA/REFORMFUCTIONFILELOCATION")[0]);
-		                    setFormBuilder.checked = true;
-		                }
-		            }
-		        }
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/getFormInfo.do",
+		    		data : {
+		    			formID           : formID,
+		    			lang             : "${userInfo.lang}",
+		    			companyID  		 : companyID
+		    		},
+		    		success: function(text){
+		    			if (text != "") {
+			                var xmldom = createXmlDom();
+			                xmldom = loadXMLString(text);
+			
+			                tbFormName.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME")[0]);
+			                tbFormName2.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME2")[0]);
+			                tbDescript.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDESCRIPTION")[0]);
+			                selFormKind.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDOCTYPE")[0]);             
+			                formURL = "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
+			
+			                if (getNodeText(SelectNodes(xmldom, "DATA/USEFLAG")[0]) == "Y") {
+			                    setAutoItemCode.checked = true;
+			                    document.getElementById('tr_setAutoItemCode').style.display = "";
+			                    isPublic.value = getNodeText(SelectNodes(xmldom, "DATA/ISPUBLIC")[0]);
+			                    tbItemCode.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMCODE")[0]);
+			                    tbItemName.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME")[0]);
+			                    tbItemName2.value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME2")[0]);
+			                    keepperiod.value = getNodeText(SelectNodes(xmldom, "DATA/KEEPPERIODCODE")[0]);
+			                    securitylevel.value = getNodeText(SelectNodes(xmldom, "DATA/SECURITYLEVEL")[0]);
+			                }
+			
+			                //2015.1.20 FormBuilder
+			                if (getNodeText(SelectNodes(xmldom, "DATA/REFORMFLAG")[0]) == "Y") {
+			                    pReformURL = "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/REFORMFILELOCATION")[0]));
+			                    pReformFunctionURL = getNodeText(SelectNodes(xmldom, "DATA/REFORMFUCTIONFILELOCATION")[0]);
+			                    setFormBuilder.checked = true;
+			                }
+			            }
+		    		}
+		    	});
 		    }
 		
 		
@@ -176,6 +175,7 @@
 		            }
 		
 		            try{
+		            	window.close();
 		                window.opener.refreshFormList();
 		            }
 		            catch (ee) {
@@ -198,10 +198,10 @@
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${topID}");
-		            createNodeAndInsertText(xmlpara, objNode, "PROP", "EXTENSIONATTRIBUTE2;DISPLAYNAME1;DISPLAYNAME2");
+		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", false);
+		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
 		
 		            xmlpara = xmlHTTP.responseXML;
@@ -248,9 +248,9 @@
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("CN"));
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "EXTENSIONATTRIBUTE2;DISPLAYNAME1;DISPLAYNAME2");
+		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
-		        xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
 		
 		        var treeView = new TreeView();
@@ -278,24 +278,32 @@
 		
 		
 		    function getFormRecv() {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/getFormRecvAdmin.do",
+		    		data : {
+		    			formID 	  : formID,
+		    			companyID : companyID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		        var xmlRtn = createXmlDom();
 		
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "NODE1", formID);
-		
-		        xmlhttp.open("POST", "/myoffice/ezApproval/formContainer/aspx/getFormRecvAdmin.aspx", false);
-		        xmlhttp.send(xmlpara);
-		        xmlpara = loadXMLString(xmlhttp.responseText);
+		        xmlRtn = loadXMLString(result);
 		
 		        listview = new ListView();
 		        listview.SetID("lvtForm");
 		        listview.SetMulSelectable(true);
 		        listview.SetRowOnClick("lvtDeptSelect_SelChange");
 		        listview.SetRowOnDblClick("lvtDeptSelect_rowdblclick");
-		        listview.DataSource(xmlpara);
-		        listview.DataBind("divlvtForm");        
+		        listview.DataSource(xmlRtn);
+		        listview.DataBind("divlvtForm");
 		    }
 		
 		    function insertCont_onclick() {
@@ -330,9 +338,9 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", aDeptID);
-		            createNodeAndInsertText(xmlpara, objNode, "PROP", "EXTENSIONATTRIBUTE2;DISPLAYNAME1;DISPLAYNAME2");
+		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
-		            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+		            xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
 		
 		            var xmlNodes = createXmlDom();
@@ -633,107 +641,103 @@
 		
 		    var xmlhttpUserlist;
 		    function displayUserList(pDeptID) {
-		
-		        var xmlpara = createXmlDom();
-		        xmlhttpUserlist = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", pDeptID);
-		        createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;telephonenumber");
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "Department;DisplayName;Description;Title");
-		        createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-		
-		        xmlhttpUserlist = createXMLHttpRequest();
-		        xmlhttpUserlist.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
-		        xmlhttpUserlist.send(xmlpara);
-		        if (xmlhttpUserlist.statusText == "OK") {
-		            var retXml = createXmlDom();
-		
-		            if (document.getElementById("UserList").innerHTML != "")
-		                document.getElementById("UserList").innerHTML = "";
-		
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-		            if (xmlhttpUserlist.responseText != "") {
-		                if (CrossYN()) {
-		                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                    var Node = headerData.importNode(xmlRtn, true);
-		                    headerData.documentElement.appendChild(Node);
-		                }
-		                else {
-		                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                    headerData.documentElement.appendChild(xmlRtn);
-		                }
-		            }
-		            var pUserList = new ListView();
-		            pUserList.SetID("lvUserList");
-		            pUserList.SetRowOnClick("list_onSel_Click");
-		            pUserList.SetRowOnDblClick("list_onSel_DBclick");
-		            pUserList.SetSelectFlag(false);
-		            pUserList.SetHeightFree(true);
-		            pUserList.DataSource(headerData);
-		            pUserList.DataBind("UserList");
-		
-		            var userRows = pUserList.GetDataRows();
-		
-		            if (userRows.length <= 0) {
-		                OpenAlertUI(linealt1);
-		            }
-		        }
-		
-		        xmlhttpUserlist = null;
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {
+							deptID   : pDeptID, 
+							cell 	 : "displayName;description;title;telephoneNumber",
+							prop     : "department;displayName;description;title",
+							type 	 : "user"
+							},
+					success: function(text){
+						var retXml = createXmlDom();
+						
+			            if (document.getElementById("UserList").innerHTML != "")
+			                document.getElementById("UserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            if (text != "") {
+			                if (CrossYN()) {
+			                    var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+			                    var Node = headerData.importNode(xmlRtn, true);
+			                    headerData.documentElement.appendChild(Node);
+			                }
+			                else {
+			                    var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+			                    headerData.documentElement.appendChild(xmlRtn);
+			                }
+			            }
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvUserList");
+			            pUserList.SetRowOnClick("list_onSel_Click");
+			            pUserList.SetRowOnDblClick("list_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("UserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
+					}
+				});
 		    }
 		
 		    function displayUserList2(pDeptID) {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {
+							deptID   : pDeptID, 
+							cell 	 : "displayName;description;title;telephoneNumber",
+							prop     : "department;displayName;description;title",
+							type 	 : "user"
+							},
+					success: function(text){
+						var retXml = createXmlDom();
+						
+			            if (document.getElementById("LineUserList").innerHTML != "")
+			                document.getElementById("LineUserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            if (text != "") {
+			                if (CrossYN()) {
+			                    var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+			                    var Node = headerData.importNode(xmlRtn, true);
+			                    headerData.documentElement.appendChild(Node);
+			                }
+			                else {
+			                    var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+			                    headerData.documentElement.appendChild(xmlRtn);
+			                }
+			            }
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvLineUserList");
+			            pUserList.SetRowOnClick("list2_onSel_Click");
+			            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("LineUserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
+					}        			
+				});
+				
 		
-		        var xmlpara = createXmlDom();
-		        xmlhttpUserlist = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", pDeptID);
-		        createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;telephonenumber");
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "Department;DisplayName;Description;Title");
-		        createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-		
-		        xmlhttpUserlist = createXMLHttpRequest();
-		        xmlhttpUserlist.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
-		        xmlhttpUserlist.send(xmlpara);
-		        if (xmlhttpUserlist.statusText == "OK") {
-		            var retXml = createXmlDom();
-		
-		            if (document.getElementById("LineUserList").innerHTML != "")
-		                document.getElementById("LineUserList").innerHTML = "";
-		
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-		            if (xmlhttpUserlist.responseText != "") {
-		                if (CrossYN()) {
-		                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                    var Node = headerData.importNode(xmlRtn, true);
-		                    headerData.documentElement.appendChild(Node);
-		                }
-		                else {
-		                    var xmlRtn = xmlhttpUserlist.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                    headerData.documentElement.appendChild(xmlRtn);
-		                }
-		            }
-		            var pUserList = new ListView();
-		            pUserList.SetID("lvLineUserList");
-		            pUserList.SetRowOnClick("list2_onSel_Click");
-		            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
-		            pUserList.SetSelectFlag(false);
-		            pUserList.SetHeightFree(true);
-		            pUserList.DataSource(headerData);
-		            pUserList.DataBind("LineUserList");
-		
-		            var userRows = pUserList.GetDataRows();
-		
-		            if (userRows.length <= 0) {
-		                OpenAlertUI(linealt1);
-		            }
-		        }
-		
-		        xmlhttpUserlist = null;
 		    }
 		    function list_onSel_Click() {
 		
@@ -1142,7 +1146,7 @@
         </div>
         <div id="ApvForm_content7" style="width:1000px;height:100%;/*display:none;*/ padding-top:10px;">
             <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;"><span style="min-width: 45px;" id="Span4"><spring:message code='ezApproval.hyj11'/></span></h2>
-            <iframe id="iframe_ApvReForm" style="width:1000px;height:830px;"  frameborder="0" scrolling="no" src="/myoffice/ezApproval/manage/reFormMaker/reformDesignProcessor_sub.aspx?CompanyID=${companyID}"></iframe>
+            <iframe id="iframe_ApvReForm" style="width:1000px;height:830px;"  frameborder="0" scrolling="no" src="/admin/ezApproval/reformDesignProcessorSub.do?companyID=${companyID}"></iframe>
         </div>
         <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">   
             <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;"><span style="min-width: 45px;" id="Span8"><spring:message code='ezApproval.hyj12'/></span></h2>         

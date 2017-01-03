@@ -1379,6 +1379,44 @@
 		]]>
 	</select>
 	
+	<select id="EzApprovalAdminDAO.getFormRecvAdmin" parameterClass="ApprFormInfoVO" resultClass="ApprReceiveGroupVO">
+		<![CDATA[
+			SELECT 
+				DEPTID,
+             	UserID 
+        	FROM 
+        		TBFormRecv 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		DEPTSN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormProperty" parameterClass="Map" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CODE, 
+				ID, 
+				NAME 
+			FROM 
+				TBFORMPROPERTY
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				UPPERCODE = #upperCode#
+			ORDER BY 
+				NAME
+		]]>
+	</select>
+	
 	<insert id="EzApprovalAdminDAO.createUserCont" parameterClass="ApprContInfoVO">
 		<selectKey keyProperty="maxContainerID" resultClass="String">
 			<![CDATA[
@@ -1640,6 +1678,111 @@
 		]]>
 	</insert>
 	
+	<insert id="EzApprovalAdminDAO.insertFormData" parameterClass="ApprFormInfoVO">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT
+				CASE
+					WHEN MAX(FORMID) IS NULL
+					THEN CONCAT(#year#, '000001')
+					ELSE TO_CHAR(MAX(FORMID) + 1)
+				END id
+			FROM
+				TBFORMINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</selectKey>
+		
+		INSERT INTO TBFormInfo ( 
+			FORMCONTID,   FORMID, FORMNAME,   FORMNAME2,   FORMDOCTYPE, FORMDESCRIPTION,   FORMFILELOCATION, 					FORMVERSION, FormConnXML, TENANT_ID,  COMPANYID 
+		)
+        VALUES ( 
+        	#formContID#, #id#,   #formName#, #formName2#, #formKind#,  #formDescription#, CONCAT(#url#, CONCAT(#id#, '.mht')), '1', 		 #formConn#,  #tenantID#, #companyID# 
+        )
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.setAutoDocNum" parameterClass="ApprFormInfoVO">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT 
+				'OK' 
+        	FROM 
+        		DUAL
+       		WHERE 
+       			EXISTS ( SELECT 
+       						FORMID 
+                      	 FROM 
+                      	 	TBAUTODOCNUM_ITEM 
+                       	 WHERE  
+                       	 	TENANT_ID = #tenantID#
+                       	 AND
+                       	 	COMPANYID = #companyID#
+                       	 AND
+                       	 	FORMID = #formID# )
+		</selectKey>
+		
+		<isEqual property="id" compareValue="OK">
+			UPDATE TBAUTODOCNUM_ITEM
+         	SET 
+         		KEEPPERIOD = #keepPeriod#,
+             	KEEPPERIODCODE = #keepPeriodCode#,
+             	SecurityLevel = #securityLevel#,
+             	IsPublic = #isPublic#,
+             	ItemCode = #tbItemCode#,
+             	ItemName = #tbItemName#,
+             	ItemName2 = #tbItemName2#,
+             	UseFlag = #useFlag#
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+		</isEqual>
+		
+		<isNotEqual property="id" compareValue="OK">
+			INSERT INTO TBAUTODOCNUM_ITEM (
+				FORMID,   KEEPPERIOD,   SECURITYLEVEL,   ISPUBLIC,   ITEMCODE, 	   ITEMNAME, 	 ITEMNAME2, 	USEFLAG,   KEEPPERIODCODE,   TENANT_ID,  COMPANYID
+			)
+        	VALUES ( 
+        		#formID#, #keepPeriod#, #securityLevel#, #isPublic#, #tbItemCode#, #tbItemName#, #tbItemName2#, #useFlag#, #keepPeriodCode#, #tenantID#, #companyID# 
+        	)
+		</isNotEqual>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertAutoRule" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			INSERT INTO TBFORM_AUTORULE ( 
+				FORMID,   AUTORULESN,   AUTORULEGUID,   CHECKFIELDTYPE,   CHECKFIELD,   OPERTATORTYPE,  OPERATOR,   CONDTYPE,   CONDVALUE,   CONDVALUEDEPTID,   DOCTYPE,   TENANT_ID,  COMPANYID 
+			)
+			VALUES (
+				#formID#, #autoRuleSN#, #autoRuleGUID#, #checkFieldType#, #checkField#, #operatorType#, #operator#, #condType#, #condValue#, #condValueDeptID#, #docType#, #tenantID#, #companyID#
+			)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertAutoRuleLine" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			INSERT INTO TBFORM_AUTORULELINE ( 
+				FORMID,   AUTORULEGUID,   APRMEMBERSN,   APRTYPE,   APRSTATE,   APRMEMBERID,   APRMEMBERISDEPTYN,   APRMEMBERNAME,   APRMEMBERNAME2,   APRMEMBERJOBTITLE,   APRMEMBERJOBTITLE2,   APRMEMBERDEPTID,   APRMEMBERDEPTNAME,   APRMEMBERDEPTNAME2,   APRMEMBERLDAPPATH,   RECEIVEDDATE,  PROCESSDATE,   REASONDONOTAPPROV,   ISPROPOSERYN,   ISBRIEFUSERYN,   TENANT_ID,  COMPANYID 
+        	)
+        	VALUES (
+        		#formID#, #autoRuleGUID#, #aprMemberSN#, #aprType#, #aprState#, #aprMemberID#, #aprMemberIsDeptYN#, #aprMemberName#, #aprMemberName2#, #aprMemberJobTitle#, #aprMemberJobTitle2#, #aprMemberDeptID#, #aprMemberDeptName#, #aprMemberDeptName2#, #aprMemberLdapPath#, #receiveDate#, #processDate#, #reasonDoNotApprov#, #isProposerYN#, #isBriefUserYN#, #tenantID#, #companyID#
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormRecv" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			INSERT INTO TBFORMRECV (
+				FORMID,   DEPTID,   DEPTSN,   USERID,   TENANT_ID,  COMPANYID
+			)
+			VALUES (
+				#formID#, #deptID#, #deptSN#, #userID#, #tenantID#, #companyID#
+			)
+		]]>
+	</insert>
+	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBCONTAINER 
@@ -1880,6 +2023,40 @@
 		]]>
 	</update>
 	
+	<update id="EzApprovalAdminDAO.updateFormVersion" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			UPDATE TBFORMINFO
+			SET 
+				FORMVERSION = FORMVERSION + 1
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateFormData" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			UPDATE TBFormInfo
+	        SET 
+	        	FORMCONTID = #formContID#,
+             	FORMNAME = #formName#,
+             	FORMNAME2 = #formName2#,
+             	FORMDOCTYPE = #formKind#,
+             	FORMDESCRIPTION = #formDescription#,
+             	FORMFILELOCATION = CONCAT(#url#, CONCAT(#formID#, '.mht')),
+             	FormConnXML = #formConn#
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+		]]>
+	</update>
+	
 	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM TBCONTAINERTODOCSTATE
@@ -2027,6 +2204,42 @@
 		    	COMPANYID = #companyID#
 		    AND
 		    	FORMCONTID = #formContID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteAutoRule" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			DELETE TBFORM_AUTORULE
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteAutoRuleLine" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			DELETE TBFORM_AUTORULELINE
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteFormRecv" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE TBFORMRECV
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
 		]]>
 	</delete>
 

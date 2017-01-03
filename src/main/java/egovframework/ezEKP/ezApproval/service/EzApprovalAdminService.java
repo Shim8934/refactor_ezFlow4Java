@@ -112,9 +112,9 @@ public interface EzApprovalAdminService {
 
 	public String insertSealInfo(ApprSealInfoVO apprSealInfoVO) throws Exception;
 
-	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale) throws Exception;
+	public String getUserDocCount(ApprExcelOutVO apprExcelOutVO, Locale locale, String offset) throws Exception;
 
-	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO) throws Exception;
+	public String getDeptTranSendDocCount(ApprExcelOutVO apprExcelOutVO, String offset) throws Exception;
 
 	public String insertFormContainer(ApprFormContVO apprFormContVO, String offset) throws Exception;
 
@@ -129,5 +129,13 @@ public interface EzApprovalAdminService {
 	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception;
 
 	public String getFormContentReform(String formID, String lang, String companyID, int tenantID) throws Exception;
+
+	public String getFormRecvAdmin(ApprFormInfoVO apprFormInfoVO) throws Exception;
+
+	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
+
+	public String saveFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
+
+	public String saveFormInfoReform(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
 
 }

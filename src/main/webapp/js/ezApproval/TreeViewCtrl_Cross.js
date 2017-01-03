@@ -23,7 +23,7 @@
         treeView.DataBind("TreeView");
     }
     catch (ErrMsg) {
-        alert(" TreeViewinitialize : " + ErrMsg.description);
+//        alert(" TreeViewinitialize : " + ErrMsg.description);
     }
 }
 

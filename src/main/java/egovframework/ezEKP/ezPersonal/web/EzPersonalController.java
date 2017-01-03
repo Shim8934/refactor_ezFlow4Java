@@ -249,7 +249,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String pwdType = request.getParameter("pwdType");
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
-		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType);
+		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -333,8 +333,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String type = request.getParameter("type");
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "ezPersonal/persSelectPerson";
 	}
@@ -355,19 +358,19 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String alert = "0";
-        String complite = "0";
+        String complete = "0";
         String bansong = "0";
         String hesong = "0";
         String callBack = "0";
         String saveMailFlag = "0";
         
-        String result = ezPersonalService.getApprovNotiConfig(userInfo.getId());
+        String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getTenantId());
         
         Document xmlDom = commonUtil.convertStringToDocument(result);
         
         if (xmlDom.getElementsByTagName("ALERT").getLength() > 0) {
         	alert = xmlDom.getElementsByTagName("ALERT").item(0).getTextContent();
-            complite = xmlDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
+        	complete = xmlDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
             bansong = xmlDom.getElementsByTagName("BANSONG").item(0).getTextContent();
             hesong = xmlDom.getElementsByTagName("HESONG").item(0).getTextContent();
             callBack = xmlDom.getElementsByTagName("CALLBACK").item(0).getTextContent();
@@ -375,7 +378,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         }
         
         model.addAttribute("alert", alert);
-        model.addAttribute("complite", complite);
+        model.addAttribute("complete", complete);
         model.addAttribute("bansong", bansong);
         model.addAttribute("hesong", hesong);
         model.addAttribute("callBack", callBack);
@@ -396,7 +399,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String[] flagList = request.getParameter("email").split(";");
 		String saveMailFlag = request.getParameter("sentBoxSave");
 		
-		String result = ezPersonalService.setApprovNotiMail(userInfo.getId(), flagList[0], flagList[1], flagList[2], flagList[3], flagList[4], saveMailFlag);
+		String result = ezPersonalService.setApprovNotiMail(userInfo.getId(), flagList[0], flagList[1], flagList[2], flagList[3], flagList[4], saveMailFlag, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -546,7 +549,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String itemSeq = req.getParameter("itemSeq");
 		
 		if (req.getParameter("answer") != null && !req.getParameter("answer").equals("")) {
-			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")));
+			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")), userInfo.getTenantId());
 		}
 		
 		PersonalLightPollVO pollInfo = ezPersonalService.getPollInfo(Integer.parseInt(itemSeq)); 

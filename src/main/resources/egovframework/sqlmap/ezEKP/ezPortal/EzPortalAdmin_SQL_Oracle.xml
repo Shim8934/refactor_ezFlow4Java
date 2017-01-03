@@ -43,13 +43,59 @@
 		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
 		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
 		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
+		<result property="tenantID"			column="TENANT_ID"		columnIndex="11"/>
 	</resultMap>
 	
-	<procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
+	<!-- <procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZPORTAL.EZSP_SET_THEMEINFO(#v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, #v_TOPHEIGHT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.setThemeInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			EXISTS ( SELECT UID_ 
+                      		FROM EZPORTAL.TBL_THEME_GENERAL 
+                       		WHERE  UID_ = #v_PUID# )
+		]]>
+	</select>
+	
+	<update id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZPORTAL.TBL_THEME_GENERAL
+         	SET
+         		DISPLAYNAME = #v_PDISNM1#,
+             	DISPLAYNAME2 = #v_PDISNM2#,
+             	DISPLAYNAME3 = #v_PDISNM3#,
+             	DISPLAYNAME4 = #v_PDISNM4#,
+             	IMAGEURL = #v_PIMAGEURL#,
+             	TOPURL = #v_PTOPURL#,
+             	MAINURL = #v_PMAINURL#,
+             	MODIFYDATE = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
+             	TOPHEIGHT = #v_TOPHEIGHT#
+       		WHERE
+       			UID_ = #v_PUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>		
+	</update>
+	
+	<insert id="EzPortalAdminDAO.setThemeInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZPORTAL.TBL_THEME_GENERAL
+        		( UID_, DISPLAYNAME, DISPLAYNAME2, DISPLAYNAME3, DISPLAYNAME4, IMAGEURL, TOPURL, MAINURL, COMPANAYID, CREATORID, CREATORNM, CREATEDATE, MODIFYDATE, TOPHEIGHT, TENANT_ID )
+        	VALUES
+        		( #v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TOPHEIGHT#, #tenantID# )
+		]]>
+	</insert>
+	
 	
 	<!-- <procedure id="EzPortalAdminDAO.topSetUsePage2" parameterClass="Map" >
 		<![CDATA[
@@ -610,16 +656,16 @@
 			 	EZPORTAL.TBL_PORTLET_GENERAL
          	 SET 
          	 	DISPLAYNAME = #v_pDISPLAYNAME#,
-             	DisplayName2 = #v_pDISPLAYNAME2#,
-             	Portlet_Type = #v_pPORTLET_TYPE#,
+             	DISPLAYNAME2 = #v_pDISPLAYNAME2#,
+             	PORTLET_TYPE = #v_pPORTLET_TYPE#,
              	URL = #v_pURL#,
-             	MaxURL = #v_pMAXURL#,
-             	ShowTitleBar = #v_pSHOWTITLEBAR#,
-             	UserType = #v_pUSERTYPE#,
-             	Width = #v_pWIDTH#,
-             	Height = #v_pHEIGHT#,
+             	MAXURL = #v_pMAXURL#,
+             	SHOWTITLEBAR = #v_pSHOWTITLEBAR#,
+             	USERTYPE = #v_pUSERTYPE#,
+             	WIDTH = #v_pWIDTH#,
+             	HEIGHT = #v_pHEIGHT#,
              	GUBUNFLAG = #v_pGUBUNFLAG#,
-             	FrameType = #v_pFRAMETYPE#
+             	FRAMETYPE = #v_pFRAMETYPE#
        		WHERE
        			UID_ = #v_pUID#
        		AND
@@ -1191,7 +1237,7 @@
        			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
        			LINKURL = #v_PLINKURL#,
        			LINKLOCATION = #v_PLINKLOCATION#,
-       			WINDOWOPTION =  #v_PWINDOWOPTION#
+       			WINDOWOPTION =  #v_PWINDOWOPTION#,
        			TENANT_ID = #tenantID#
        		WHERE
        			UID_ = #v_P_SUB_UID#
@@ -1203,7 +1249,7 @@
 				EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S
        		SET
        			DISPLAYNAME = #v_PDISPLAYNAME#,
-       			DISPLAYNAME2 = #v_PDISPLAYNAME2#
+       			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
        			TENANT_ID = #tenantID#
        		WHERE
        			UID_ = #v_P_SUB_UID#
@@ -1500,7 +1546,7 @@
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS_S 
        		WHERE
-       			PARENTMENUID = #v_PPARENTMENUID#
+       			PARENTMENUID = '$v_PPARENTMENUID$'
 			AND
 				OWNERPAGEID = #v_POWNERPAGEID#
 			AND
@@ -1650,15 +1696,15 @@
                	  WHERE  
                	  	 THEMEUID = #v_PUID#
                	  AND
-               	  	TENANT_ID = #tenantID#  ) TOPUSERCOUNT  ,
+               	  	TENANT_ID = #tenantID#  ) topUserCount  ,
              	( SELECT
              		 COUNT(UID_)  
                	  FROM
                	  	EZPORTAL.TBL_PORTALPAGE_GENERAL 
                   WHERE
-                  	THEMEUID = v_PUID 
+                  	THEMEUID = #v_PUID# 
                   AND
-                  	TENANT_ID = #tenantID#	) PORTALPAGE  
+                  	TENANT_ID = #tenantID#	) portalPage  
         	FROM
         		DUAL
 		]]>
@@ -2029,22 +2075,22 @@
 		<![CDATA[
 			SELECT
 				A.* ,
-				B.DisplayName ,
-             	B.DisplayName2 ,
-             	B.NormalImagePath 
+				B.DISPLAYNAME ,
+             	B.DISPLAYNAME2 ,
+             	B.NORMALIMAGEPATH 
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_LOGOS A,
              	EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE B
        		WHERE
        			A.UID_ = B.UID_
 			AND
-				A.OwnerPageID = B.OwnerPageID
+				A.OWNERPAGEID = B.OWNERPAGEID
 			AND
-				A.OwnerPageID = #v_pPAGEID#
+				A.OWNERPAGEID = #v_pPAGEID#
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY 
-				B.DisplayName ASC
+				B.DISPLAYNAME ASC
 		]]>
 	</select>
 	
@@ -2058,11 +2104,11 @@
 		<![CDATA[
 			SELECT
 				A.UID_ ,
-             	A.ParamName ,
-             	A.ParamValue ,
-             	A.ParamType ,
-             	B.ParamInfo ,
-             	B.Description 
+             	A.PARAMNAME ,
+             	A.PARAMVALUE ,
+             	A.PARAMTYPE ,
+             	B.PARAMINFO ,
+             	B.DESCRIPTION 
         	FROM
         		EZPORTAL.TBL_MENUITEM_PARAMETERS A
 			JOIN
@@ -2242,7 +2288,7 @@
 					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, GUBUNFLAG, COMPANYID, THEMEUID, TABLEVIEWOPTION, TENANT_ID
 					)
 			VALUES (
-				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, sysdate, #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #gubunFlag#,#companyID#, #themeUID#, #tableViewOption#, #tenantID#
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #gubunFlag#,#companyID#, #themeUID#, #tableViewOption#, #tenantID#
 			) 
 			 
 		]]>
