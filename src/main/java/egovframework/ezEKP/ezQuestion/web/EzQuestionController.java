@@ -3392,7 +3392,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(req.getParameter("hidEndPoll").equals("1")){
 			 //endDate = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new java.util.Date()).toString();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			/*sdf.setTimeZone(TimeZone.getTimeZone("GMT"));*/
 			String dateStr = sdf.format(new Date());
 			
 			endDate = commonUtil.getDateStringInUTC(dateStr, loginVO.getOffset(), true);
