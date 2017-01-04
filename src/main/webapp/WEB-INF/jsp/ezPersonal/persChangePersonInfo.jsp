@@ -233,7 +233,7 @@
 		        if (xmlHTTP.status == 200) {
 		            if (xmlHTTP.responseText == "OK") {
 		                alert("<spring:message code='ezPersonal.t197'/>");
-			            window.top.location.href = '/user/login/login.do';
+			            window.top.location.href = '/user/login/actionLogout.do';
 		            } else if (xmlHTTP.responseText == "CHKERROR") {    
 		                alert("<spring:message code='ezPersonal.t946'/>");
 			        } else {
