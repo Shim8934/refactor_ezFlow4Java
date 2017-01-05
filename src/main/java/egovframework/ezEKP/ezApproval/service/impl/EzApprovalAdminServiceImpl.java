@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezApproval.dao.EzApprovalAdminDAO;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
+import egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
@@ -2869,7 +2870,8 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				resultXML.append("<CELL>");
 				
 				if (h == 0) {
-					resultXML.append("<DATA1>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</DATA1>");
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</VALUE>");
+					resultXML.append("<DATA1>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent()) + "</DATA1>");
 					resultXML.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA2>");
 				} else {
 					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("USERID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</VALUE>");
@@ -2930,7 +2932,6 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 
 	@Override
 	public String saveFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("saveFormInfo started");
 
 		String path = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval.ROOT");
@@ -3009,7 +3010,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			
 			ezApprovalAdminDAO.setAutoDocNum(apprFormInfoVO);
 			
-			if (apprFormInfoVO.getFormAutoRule() != null && !apprFormInfoVO.getFormAutoRule().equals("")) {
+			if (apprFormInfoVO.getFormAutoRule() != null && !apprFormInfoVO.getFormAutoRule().equals("") && !apprFormInfoVO.getFormAutoRule().equals("<DATA></DATA>")) {
 				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRule());
 				
 				ApprAutoRuleVO apprAutoRuleVO = new ApprAutoRuleVO();
@@ -3032,7 +3033,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				ezApprovalAdminDAO.insertAutoRule(apprAutoRuleVO);
 			}
 			
-			if (apprFormInfoVO.getFormAutoRuleLine() != null && !apprFormInfoVO.getFormAutoRuleLine().equals("")) {
+			if (apprFormInfoVO.getFormAutoRuleLine() != null && !apprFormInfoVO.getFormAutoRuleLine().equals("") && !apprFormInfoVO.getFormAutoRuleLine().equals("<DATA></DATA>")) {
 				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRuleLine());
 				
 				ApprAutoRuleVO apprAutoRuleVO = new ApprAutoRuleVO();
@@ -3085,7 +3086,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			ezApprovalAdminDAO.updateFormData(apprFormInfoVO);
 			ezApprovalAdminDAO.setAutoDocNum(apprFormInfoVO);
 			
-			if (apprFormInfoVO.getFormAutoRule() != null && !apprFormInfoVO.getFormAutoRule().equals("")) {
+			if (apprFormInfoVO.getFormAutoRule() != null && !apprFormInfoVO.getFormAutoRule().equals("") && !apprFormInfoVO.getFormAutoRule().equals("<DATA></DATA>")) {
 				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRule());
 				
 				ApprAutoRuleVO apprAutoRuleVO = new ApprAutoRuleVO();
@@ -3108,7 +3109,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				ezApprovalAdminDAO.insertAutoRule(apprAutoRuleVO);
 			}
 			
-			if (apprFormInfoVO.getFormAutoRuleLine() != null && !apprFormInfoVO.getFormAutoRuleLine().equals("")) {
+			if (apprFormInfoVO.getFormAutoRuleLine() != null && !apprFormInfoVO.getFormAutoRuleLine().equals("") && !apprFormInfoVO.getFormAutoRuleLine().equals("<DATA></DATA>")) {
 				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRuleLine());
 				
 				ApprAutoRuleVO apprAutoRuleVO = new ApprAutoRuleVO();
@@ -3297,6 +3298,33 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("saveFormInfoReform ended");
 		
 		return null;
+	}
+
+	@Override
+	public List<ApprConnInfoVO> getFormConnInfo(LoginVO userInfo) throws Exception {
+		logger.debug("getFormConnInfo started");
+		logger.debug("getFormConnInfo ended");
+		
+		return ezApprovalAdminDAO.getFormConnInfo(userInfo);
+	}
+
+	@Override
+	public String getFormContent(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormContent started");
+
+		List<ApprFormInfoVO> apprFormInfoVOs = ezApprovalAdminDAO.getFormContent(apprFormInfoVO);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprFormInfoVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprFormInfoVOs.get(i)));
+		}
+		sb.append("</DATA>");
+
+		logger.debug("getFormContent ended");
+		
+		return sb.toString();
 	}
 	
 }

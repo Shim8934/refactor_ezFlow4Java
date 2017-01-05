@@ -69,7 +69,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzBoardAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminController.class);
 
 	/**
 	 * 게시판관리 메인화면 호출 함수
@@ -490,7 +490,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				boardBackgroundVO.setOrgFileName(file.getOriginalFilename());
 				boardBackgroundVO.setSaveFileName(fileName);
 			} catch (Exception e) {
-				LOGGER.error("EzBoardAdmin :: saveBackGroungImage");
+				logger.error("EzBoardAdmin :: saveBackGroungImage");
 			}
 		}
 
@@ -519,7 +519,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.deleteBackGroundImage(boardBackgroundVO);
 
 		} catch (Exception e) {
-			LOGGER.error("EzBoardAdmin :: deleteBackGroundImage");
+			logger.error("EzBoardAdmin :: deleteBackGroundImage");
 		}
 	}
 
@@ -554,9 +554,16 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 이동할 게시판 선택화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMoveSelect.do")
-	public String boardMoveSelect(Model model) throws Exception {
-		String serverName = config.getProperty("config.ServerName");
+	public String boardMoveSelect(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("boardMoveSelect started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String serverName = userInfo.getServerName();
+		
 		model.addAttribute("serverName", serverName);
+
+		logger.debug("boardMoveSelect ended");
 
 		return "admin/ezBoard/boardMoveSelect";
 	}
@@ -740,7 +747,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			rtnValue = "OK";
 		} catch (Exception e) {
 			rtnValue = "ERROR";
-			LOGGER.error("EzBoardAdmin :: saveAttribute");
+			logger.error("EzBoardAdmin :: saveAttribute");
 		}
 
 		return rtnValue;
@@ -780,7 +787,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			rtnValue = "OK";
 		} catch (Exception e) {
 			rtnValue = "ERROR";
-			LOGGER.error("EzBoardAdmin :: saveHeader :: " + e.getMessage());
+			logger.error("EzBoardAdmin :: saveHeader :: " + e.getMessage());
 		}
 
 		return rtnValue;
@@ -936,7 +943,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			rtnValue = "OK";
 		} catch (Exception e) {
 			rtnValue = "ERROR";
-			LOGGER.error("EzBoardAdmin :: saveACL :: " + e.getMessage());
+			logger.error("EzBoardAdmin :: saveACL :: " + e.getMessage());
 		}
 
 		return rtnValue;
@@ -958,7 +965,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			rtnValue = "OK";
 		} catch (Exception e) {
 			rtnValue = "ERROR";
-			LOGGER.error("EzBoardAdmin :: deleteACL :: " + e.getMessage());
+			logger.error("EzBoardAdmin :: deleteACL :: " + e.getMessage());
 		}
 		
 		return rtnValue;
@@ -1128,7 +1135,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			rtnValue = "OK";
 		} catch (Exception e) {
 			rtnValue = "ERROR";
-			LOGGER.error("EzBoardAdmin :: copyBoardAcl :: " + e.getMessage());
+			logger.error("EzBoardAdmin :: copyBoardAcl :: " + e.getMessage());
 		}
 		
 		return rtnValue;

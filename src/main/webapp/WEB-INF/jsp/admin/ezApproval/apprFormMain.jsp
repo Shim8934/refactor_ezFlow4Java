@@ -64,7 +64,7 @@
 		
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
-		        
+       
 		        if (formID != "") {
 		            get_FormInfo(); 
 		        }
@@ -83,9 +83,9 @@
 		        if (flag == false) {
 		            ChangeTab(document.getElementById("1tab1"));
 		            flag = true;
-		
+		            
 		            if (formURL != "") {
-		                pzFormProc.LoadURL(formURL);                
+		                pzFormProc.LoadURL(formURL);
 		            }
 		        }
 		    }
@@ -99,7 +99,6 @@
 		            ReturnFormConnXML();
 		            ReturnWorkFlowXML();
 		        }
-		        
 		    }
 		
 		    function ReturnFormConnXML() {        
@@ -139,8 +138,8 @@
 			                tbFormName2.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME2")[0]);
 			                tbDescript.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDESCRIPTION")[0]);
 			                selFormKind.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDOCTYPE")[0]);             
-			                formURL = "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
-			
+			                formURL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
+			                
 			                if (getNodeText(SelectNodes(xmldom, "DATA/USEFLAG")[0]) == "Y") {
 			                    setAutoItemCode.checked = true;
 			                    document.getElementById('tr_setAutoItemCode').style.display = "";
@@ -155,7 +154,6 @@
 		    		}
 		    	});
 		    }
-		
 		
 		    function SaveFormInfo_after(text) {
 		        try {
@@ -265,7 +263,6 @@
 		
 		        displayUserList(treeNode.GetNodeData("CN"));
 		    }
-		
 		
 		    function getFormRecv() {
 				var result = "";
@@ -489,8 +486,8 @@
 		    function btn_FormConnInfo_onclick() {
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
-		        var url = "/myoffice/ezApproval/manage/FormMaker/FormConnInfo.aspx?companyID=" + escape(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 430, 450, false);
+		        var url = "/admin/ezApproval/formConnInfo.do?companyID=" + escape(companyID);
+		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -716,7 +713,6 @@
 		            APRLINEATTENDADDFunction(selnode, "PERSON");
 		            initJunGyul();
 		        }
-		      
 		    }
 		    function insertContUser_onclick() {
 		        var DuplicateFlag = DuplicateAprDeptCheck(treeNode.GetNodeData("CN"));
@@ -744,7 +740,7 @@
 		            pzFormProc.editor.DOM.body.innerHTML = XMLInfo + pzFormProc.editor.DOM.body.innerHTML;
 		            pzFormProc.refresh();
 		        }
-		
+		        
 		        pzFormProc.editor.DOM.all.WORKFLOW.innerHTML = "\n   <WORKFLOW>\n    <VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n  <STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>\n";
 		        pzFormProc.refresh();
 		        alert("XML <spring:message code='ezApproval.t522'/>");
@@ -756,27 +752,21 @@
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="DocumentComplete">
 		    pzFormProc_DocumentComplete()
-		    
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="BlurTDElement">
 		    pzFormProc_BlurTDElement()
-		
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="FPError">
 		    pzFormProc_FPError()
-		
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="InvalidDocument">
 		    pzFormProc_InvalidDocument()
-		
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="ElementKeyEvent(nKey)">
 		    pzFormProc_ElementKeyEvent(nKey)
-		
 		</script>
 		<script type="text/javascript" for="pzFormProc" event="ElementChange">
 		    pzFormProc_ElementChange()
-		
 		</script>
 	</head>
     <body class="popup">
@@ -902,24 +892,24 @@
 
         <div id="ApvForm_content4" style="width:100%;height:60%;display:none; padding-top:10px;">   
             <table class="content"> 
-                  <tr> 
-                    <td>&lt;xml id=WORKFLOW&gt;<br> 
-                        &lt;WORKFLOW&gt;<br> 
-                        &lt;VALIDATIONS&gt;<br> 
-                            <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
-                        <br> &lt;/VALIDATIONS&gt;<br> 
-                        &lt;STATUS&gt;<br> 
-                            <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
-                        <br> &lt;/STATUS&gt;<br> 
-                        &lt;/WORKFLOW&gt;<br> 
-                        &lt;/xml&gt; </td> 
-                    <th> 
-                        <a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code='ezApproval.t529'/></span></a><br>      
-                        <a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code='ezApproval.t530'/></span></a><br>   
-                        <a class="imgbtn" id="Submit3"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code='ezApproval.t66'/></span></a><br>
-	                </th> 
-                  </tr> 
-                </table>          
+               <tr> 
+                 <td>&lt;xml id=WORKFLOW&gt;<br> 
+                     &lt;WORKFLOW&gt;<br> 
+                     &lt;VALIDATIONS&gt;<br> 
+                         <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
+                     <br> &lt;/VALIDATIONS&gt;<br> 
+                     &lt;STATUS&gt;<br> 
+                         <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
+                     <br> &lt;/STATUS&gt;<br> 
+                     &lt;/WORKFLOW&gt;<br> 
+                     &lt;/xml&gt; </td> 
+                 <th> 
+                     <a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code='ezApproval.t529'/></span></a><br>      
+                     <a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code='ezApproval.t530'/></span></a><br>   
+                     <a class="imgbtn" id="Submit3"><span onclick="btn_WorkFlowSave_onclick()"><spring:message code='ezApproval.t66'/></span></a><br>
+              	 </th> 
+               </tr> 
+            </table>          
         </div>
         
         <div id="ApvForm_content5" style="width:100%;height:100%;display:none; padding-top:10px;">         
@@ -961,7 +951,6 @@
             </table>
         </div>
         <div id="ApvForm_content6" style="width:100%;height:100%;display:none; padding-top:10px;">         
-            
             <h2 id="H3" class="receiver_tltype01" style="margin-bottom:5px;">
             <span style="min-width: 45px;" id="Span3"><spring:message code='ezApproval.t990012'/></span>
             </h2>

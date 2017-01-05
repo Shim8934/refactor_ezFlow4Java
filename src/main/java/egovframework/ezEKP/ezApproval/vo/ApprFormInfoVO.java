@@ -74,6 +74,12 @@ public class ApprFormInfoVO {
 	/** */
 	private String tbItemName2;
 	/** */
+	private String itemCode;
+	/** */
+	private String itemName;
+	/** */
+	private String itemName2;
+	/** */
 	private String keepPeriodCode;
 	/** */
 	private String formWorkFlow;
@@ -353,6 +359,24 @@ public class ApprFormInfoVO {
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getItemCode() {
+		return itemCode;
+	}
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+	public String getItemName() {
+		return itemName;
+	}
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	public String getItemName2() {
+		return itemName2;
+	}
+	public void setItemName2(String itemName2) {
+		this.itemName2 = itemName2;
 	}
 	
 }

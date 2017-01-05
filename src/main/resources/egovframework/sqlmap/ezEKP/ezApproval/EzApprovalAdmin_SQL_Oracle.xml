@@ -10,6 +10,7 @@
 	<typeAlias  alias="ApprLineInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO"/>
 	<typeAlias  alias="ApprExcelOutVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO"/>
 	<typeAlias  alias="ApprAutoRuleVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO"/>
+	<typeAlias  alias="ApprConnInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO"/>
 	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
 	<typeAlias  alias="ApprSealInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO"/>
@@ -1414,6 +1415,64 @@
 				UPPERCODE = #upperCode#
 			ORDER BY 
 				NAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormConnInfo" parameterClass="UserInfo" resultClass="ApprConnInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CONNNODE,
+				CONNINFO,
+				DESCRIPTION, 
+				UPPERNODE 
+			FROM 
+				TBFORMCONNINFO
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContent" parameterClass="ApprFormInfoVO" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				FormContID ,
+             	A.FormID ,
+             	FormName ,
+             	FormName2 ,
+             	FormDocType ,
+             	Formdescription ,
+             	FormFilelocation ,
+             	FormVersion ,
+             	FormOrder ,
+             	KEEPPERIOD ,
+             	KEEPPERIODCODE ,
+             	SECURITYLEVEL ,
+             	ISPUBLIC ,
+             	ITEMCODE ,
+             	ITEMNAME ,
+             	ITEMNAME2 ,
+             	USEFLAG 
+        	FROM 
+        		TBFormInfo A
+            JOIN 
+            	TBAUTODOCNUM_ITEM B   
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
+            AND
+            	A.FormID = B.FormID
+       		WHERE
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			A.COMPANYID = #companyID#
+       		AND  
+       			A.FormID = #formID#
 		]]>
 	</select>
 	
