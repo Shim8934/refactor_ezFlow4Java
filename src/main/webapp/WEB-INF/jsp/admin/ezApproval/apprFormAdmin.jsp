@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
 		<script type="text/javascript" src="/js/ezApproval/admin/FormCont.js"></script>
 		<script type="text/javascript">
-			//Git Test
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc  = createXmlDom();		    
 		    var pDeptID;
@@ -324,7 +323,7 @@
 		        if (selRow) {
 		            var url = "";
 		            var HWP = "&type=HWP";
-		            var parameter = "?TCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
+		            var parameter = "?tCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		                if (!CrossYN())
 		                    url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
@@ -336,7 +335,7 @@
 		                if (pEDITOR == "DEXT")
 		                    url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
 		                else
-		                    url = "/myoffice/ezApproval/manage/FormMaker/FormMain.aspx";
+		                    url = "/admin/ezApproval/formMain.do";
 		            }
 		            var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "YES");
 		            Tree_setconfig();

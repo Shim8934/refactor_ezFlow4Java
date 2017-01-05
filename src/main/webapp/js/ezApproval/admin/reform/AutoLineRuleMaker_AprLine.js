@@ -1686,7 +1686,7 @@ function MakeFormAutoRuleXML() {
     var pDataCheck = false;
     var pErrorMsg = "";
     var retValue = new Array();
-
+    
     if (bodyForm.hidAprRule.value != "") {
         OnChange_DocType(); 
         var AprRuleXML;

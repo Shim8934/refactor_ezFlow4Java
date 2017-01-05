@@ -241,7 +241,7 @@
 	        	}
 	        }
 	        
-	        function btnDel_onclick() {
+	        /* function btnDel_onclick() {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvtDocForm");
 	
@@ -261,7 +261,7 @@
 		          
 		            return;
 		        }
-		    }
+		    } */
 	        
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {
@@ -313,7 +313,7 @@
 		        </SELECT><br /><br />
 	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>
 	            <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
-				<li><span onClick="return btnDel_onclick()" >직인삭제</span></li>
+				<!-- <li><span onClick="return btnDel_onclick()" >직인삭제</span></li> -->
 	        </ul>
 	    </div>
 	

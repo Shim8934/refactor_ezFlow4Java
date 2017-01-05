@@ -1743,7 +1743,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서유통암호화설정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSendInfo.do")
-	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
@@ -1762,11 +1762,49 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String encodeInfoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("encodeInfoPath", encodeInfoPath);
 		
 		return "/admin/ezApprovalG/apprGManageSendInfo";
 	}
+	
+	/**
+	 * 전자결재G관리 문서유통암호화설정 설정파일 조회함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getOptionInfo.do")
+	public String getOptionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getOptionInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = null;
+		
+		try {
+			br = new BufferedReader(new FileReader(new File(realPath + companyPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml")));
+			String line;
+			
+			while((line=br.readLine())!= null){
+			    sb.append(line.trim());
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		} finally {
+			br.close();
+		}
+		
+		model.addAttribute("encodeInfo", sb.toString());
+		
+		logger.debug("getOptionInfo ended.");
+		
+		return "json";
+	}
+	
 	
 	/**
 	 * 전자결재G관리 문서유통암호화설정 실행 함수

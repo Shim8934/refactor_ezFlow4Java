@@ -124,6 +124,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
 			StringBuilder sb = new StringBuilder();
+			StringBuilder unreadSb = new StringBuilder();
+			
 			sb.append("<DATA>");
 			
 			if (message == null) {
@@ -164,9 +166,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					String name = ((InternetAddress)address).getPersonal() == null ? 
 							((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
 					if (email != null) {
-						sb.append("<ROW>");
-						sb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
-						sb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
+						StringBuilder tempSb = new StringBuilder();
+						
+						tempSb.append("<ROW>");
+						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
+						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 						
 						if (individualAliasList.containsKey(email)) { //individualAlias인 경우
 							email = individualAliasList.get(email);
@@ -179,7 +183,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						sb.append("<READDATE><![CDATA[" + readDate + "]]></READDATE>");
+						tempSb.append("<READDATE><![CDATA[" + readDate + "]]></READDATE>");
 						
 						String status = "";
 						for (MailCancelVO vo : cancelList) {
@@ -192,9 +196,15 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 								break;
 							}
 						}
-						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						tempSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
-						sb.append("</ROW>");
+						tempSb.append("</ROW>");
+						
+						if (readDate.equals("UNREAD")) {
+							unreadSb.append(tempSb.toString());
+						} else {
+							sb.append(tempSb.toString());
+						}
 						
 						tempMailList.add(email);
 					}
@@ -236,12 +246,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {
 						String readerEmail = vo.getReaderEmail();
-						//TODO: 회수 저장할 때 이름도 저장, 가져올 때 이름도 가져오도록
 						
-						sb.append("<ROW>");
-						sb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
-						sb.append("<READERNAME><![CDATA[" + readerEmail + "]]></READERNAME>");
-						sb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
+						unreadSb.append("<ROW>");
+						unreadSb.append("<READEREMAIL><![CDATA[" + readerEmail + "]]></READEREMAIL>");
+						unreadSb.append("<READERNAME><![CDATA[" + readerEmail + "]]></READERNAME>");
+						unreadSb.append("<READDATE><![CDATA[UNREAD]]></READDATE>");
 						
 						String status = "";
 						if (vo.getStatus() != null && !vo.getStatus().equals("")) {
@@ -249,12 +258,13 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						} else {
 							status = "0";
 						}
-						sb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
+						unreadSb.append("<CANCEL><![CDATA[" + status + "]]></CANCEL>");
 						
-						sb.append("</ROW>");
+						unreadSb.append("</ROW>");
 					}
 				}
 				
+				sb.append(unreadSb.toString());
 				sb.append("<SUBJECT><![CDATA[" + message.getSubject() + "]]></SUBJECT>");
 				
 			}

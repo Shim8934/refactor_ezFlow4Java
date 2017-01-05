@@ -39,7 +39,6 @@ function ChangeStandVal() {
 
 
 function OnChange_DocType() {
-
     try{
         if (bodyForm.hidAprRule.value == "")
             return;
@@ -75,7 +74,7 @@ function OnChange_DocType() {
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "AUTORULEGUID", GetAttribute(AprRuleRow[i], "DATA4"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CHECKFIELDTYPE", GetAttribute(AprRuleRow[i], "DATA5"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CHECKFIELD", GetAttribute(AprRuleRow[i], "DATA6"));
-                    createNodeAndAppandNodeText(AprRuleXML, newNode, "", "OPERTATORTYPE", GetAttribute(AprRuleRow[i], "DATA7"));
+                    createNodeAndAppandNodeText(AprRuleXML, newNode, "", "OPERATORTYPE", GetAttribute(AprRuleRow[i], "DATA7"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "OPERATOR", GetAttribute(AprRuleRow[i], "DATA8"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CONDTYPE", GetAttribute(AprRuleRow[i], "DATA9"));
                     createNodeAndAppandNodeText(AprRuleXML, newNode, "", "CONDVALUE", GetAttribute(AprRuleRow[i], "DATA10"));
@@ -88,9 +87,6 @@ function OnChange_DocType() {
         }
 
         bodyForm.hidAprRule.value = getXmlString(AprRuleXML);
-        
-
-        
         
         var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
 
@@ -537,9 +533,9 @@ function MakeListXML(pDocType) {
             pListXml = pListXml + " <DATA2>" + getNodeText(GetElementsByTagName(AprRuleXML, "DOCTYPE")[i]) + "</DATA2>";
             pListXml = pListXml + " <DATA3>" + getNodeText(GetElementsByTagName(AprRuleXML, "AUTORULESN")[i]) + "</DATA3>";
             pListXml = pListXml + " <DATA4>" + getNodeText(GetElementsByTagName(AprRuleXML, "AUTORULEGUID")[i]) + "</DATA4>";
-            pListXml = pListXml + " <DATA5>" + getNodeText(GetElementsByTagName(AprRuleXML, "CHECKFIELDTYPE")[i]) + "</DATA5>";
+            pListXml = pListXml + " <DATA5>" + getNodeText(GetElementsByTagName(AprRuleXML, "CHECKFIELDTYPE")[i]) + "</DATA5>";j
             pListXml = pListXml + " <DATA6>" + getNodeText(GetElementsByTagName(AprRuleXML, "CHECKFIELD")[i]) + "</DATA6>";
-            pListXml = pListXml + " <DATA7>" + getNodeText(GetElementsByTagName(AprRuleXML, "OPERTATORTYPE")[i]) + "</DATA7>";
+            pListXml = pListXml + " <DATA7>" + getNodeText(GetElementsByTagName(AprRuleXML, "OPERATORTYPE")[i]) + "</DATA7>";
             pListXml = pListXml + " <DATA8>" + getNodeText(GetElementsByTagName(AprRuleXML, "OPERATOR")[i]) + "</DATA8>";
             pListXml = pListXml + " <DATA9>" + getNodeText(GetElementsByTagName(AprRuleXML, "CONDTYPE")[i]) + "</DATA9>";
             pListXml = pListXml + " <DATA10>" + getNodeText(GetElementsByTagName(AprRuleXML, "CONDVALUE")[i]) + "</DATA10>";
@@ -549,7 +545,7 @@ function MakeListXML(pDocType) {
             pListXml = pListXml + " <VALUE><![CDATA[" + getNodeText(GetElementsByTagName(AprRuleXML, "CHECKFIELD")[i]) + "]]></VALUE>";
             pListXml = pListXml + "</CELL>";
             pListXml = pListXml + "<CELL>";
-            switch (getNodeText(GetElementsByTagName(AprRuleXML, "OPERTATORTYPE")[i])) {
+            switch (getNodeText(GetElementsByTagName(AprRuleXML, "OPERATORTYPE")[i])) {
                 case "TXT":
                     pListXml = pListXml + " <VALUE><![CDATA[문자]]></VALUE>";
                     break;
@@ -744,7 +740,6 @@ function btn_Add() {
     }
 
     pparsingXML = pparsingXML + "</ROW></ROWS></LISTVIEWDATA>";
-
     var Resultxml = loadXMLString(pparsingXML);
 
     var InitTr = pAUTOLINE.GetDataRows();

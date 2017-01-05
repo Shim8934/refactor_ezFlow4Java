@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -360,6 +361,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				result = "TRUE";
 			}
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("updateContainerToDocStateInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -464,6 +466,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertContainer catch");
 			result = "FALSE";
 		}
@@ -505,6 +508,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		    }
 		    result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "FALSE";
 		}
 		
@@ -529,6 +533,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteContainer1,2 catch.");
 			logger.debug(e.getMessage());
 			result = "FALSE";
@@ -909,6 +914,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setTaskCategory catch.");
 			logger.debug(e.getMessage());
 			
@@ -1149,6 +1155,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setTaskCode ERROR.");
 			logger.debug(e.getMessage());
 			
@@ -1227,6 +1234,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				return "TRUE";
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("removeTaskCode catch.");
 			logger.debug(e.getMessage());
 			
@@ -1339,6 +1347,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("addTaskCodeDeptInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1382,6 +1391,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("removeTaskCodeDeptInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1608,6 +1618,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertSealInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1691,6 +1702,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertDeptSealInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -2104,6 +2116,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setFormOrder catch.");
 			logger.debug(e.getMessage());
 			
@@ -2163,6 +2176,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "<PARAMETER><FContID>" + contID + "</FContID></PARAMETER>";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<PARAMETER><FContID>FALSE</FContID></PARAMETER>";
 		}
 	}
@@ -2246,6 +2260,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "<PARAMETER><RTNVALUE>" + contID + "</RTNVALUE></PARAMETER>";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<PARAMETER><RTNVALUE>FALSE</RTNVALUE></PARAMETER>";
 		}
 	}
@@ -2265,6 +2280,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteFormContainer catch.");
 			
 			return "FALSE";
@@ -2449,6 +2465,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteForm catch.");
 			
 			return "FALSE";
@@ -2645,6 +2662,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return result;
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("saveFormInfo catch.");
 			logger.debug(e.getMessage());
 			
