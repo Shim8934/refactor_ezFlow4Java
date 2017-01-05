@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
@@ -137,5 +138,9 @@ public interface EzApprovalAdminService {
 	public String saveFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
 
 	public String saveFormInfoReform(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
+
+	public List<ApprConnInfoVO> getFormConnInfo(LoginVO userInfo) throws Exception;
+
+	public String getFormContent(ApprFormInfoVO apprFormInfoVO) throws Exception;
 
 }

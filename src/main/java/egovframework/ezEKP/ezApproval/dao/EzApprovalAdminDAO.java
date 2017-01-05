@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
+import egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
@@ -438,6 +439,16 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 
 	public void updateFormData(ApprFormInfoVO apprFormInfoVO) throws Exception {
 		update("EzApprovalAdminDAO.updateFormData", apprFormInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprConnInfoVO> getFormConnInfo(LoginVO userInfo) throws Exception {
+		return (List<ApprConnInfoVO>) list("EzApprovalAdminDAO.getFormConnInfo", userInfo);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprFormInfoVO> getFormContent(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		return (List<ApprFormInfoVO>) list("EzApprovalAdminDAO.getFormContent", apprFormInfoVO);
 	}
 	
 }

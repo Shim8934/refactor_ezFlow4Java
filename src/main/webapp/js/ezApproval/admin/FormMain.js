@@ -136,7 +136,6 @@ function OpenAlertUI(pAlertContent) {
 
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {    
-	alert(100);
     var xmlRtn = createXmlDom();
     
     var arrFormInfo = MakeFormInfoXML();
@@ -178,22 +177,20 @@ function SaveFormInfo() {
         if (arrFormWorkFlow[1] != "") {
             formWorkFlow = arrFormWorkFlow[1];
         }
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormWorkFlow[2]);
         document.getElementById("1tab4").click();
         return;
     }
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
-        formAutoRule = arrFormAutoRule[1];           
+        formAutoRule = arrFormAutoRule[1];
         formAutoRuleLine = arrFormAutoRule[2];
       
-        }
-    else {
+    } else {
         formAutoRule = "";
         formAutoRuleLine = "";
-        }
+    }
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
         formRecevGroup = arrFormRecevGroup[1];
