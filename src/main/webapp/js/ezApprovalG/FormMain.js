@@ -8,6 +8,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
@@ -18,6 +19,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "800px";
                 document.getElementById("TForm").style.display = "";
@@ -28,18 +30,29 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
             }
             break;
         case "ApvForm_div4":    // Workflow
+        	if (document.getElementById("ApvForm_content4").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("TForm").style.height = "0px";
+                document.getElementById("TForm").style.display = "none";
+        	}
             break;
         case "ApvForm_div5":    // 고정수신처
             if (document.getElementById("ApvForm_content5").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
@@ -111,7 +124,7 @@ function OpenAlertUI(pAlertContent) {
 }
 
 var xmlhttp = createXMLHttpRequest();
-function SaveFormInfo() {    
+function SaveFormInfo() {
     
     var xmlpara = createXmlDom();
     var xmlRtn = createXmlDom();
@@ -159,21 +172,19 @@ function SaveFormInfo() {
         return;
     }
 
-    //// Workflow정보 XML로 가져오기
-    //var arrFormWorkflow;
-    //if (document.getElementById("ApvForm_div3_ifrm").src != "") {
-    //    arrFormWorkflow = document.getElementById("ApvForm_div3_ifrm").contentWindow.MakeFormWorkflowXML();
-    //    if (arrFormWorkflow[0] == "TRUE") {
-    //        objNode = xmlpara.createNode(1, "FORMWORKFLOW", "");
-    //        objNode.text = arrFormWorkflow[1];
-    //        xmlpara.documentElement.appendChild(objNode);
-    //    }
-    //    else {
-    //        OpenAlertUI(arrFormWorkflow[2]);
-    //        document.getElementById("1tab4").click();
-    //        return;
-    //    }
-    //}
+    // Workflow정보 XML로 가져오기
+    var arrFormWorkFlow = "";
+    arrFormWorkFlow = MakeFormWorkFlow();
+    if (arrFormWorkFlow[0] == "TRUE") {
+        if (arrFormWorkFlow[1] != "") {
+            createNodeAndInsertText(xmlpara, objNode, "FORMWORKFLOW", arrFormWorkFlow[1]);
+        }
+    }
+    else {
+        OpenAlertUI(arrFormWorkFlow[2]);
+        document.getElementById("1tab4").click();
+        return;
+    }
 
     //// 고정수신처정보 XML로 가져오기
 
@@ -393,6 +404,30 @@ function MakeFormConnXML_Detail() {
     return new XMLSerializer().serializeToString(xmlpara);
 }
 
+function MakeFormWorkFlow() {
+    var retValue = new Array();
+
+    try {
+        retValue[0] = "TRUE";
+        retValue[1] = MakeFormWorkFlow_Detail();
+    } catch (e) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = e.message;
+    }
+    return retValue;
+}
+
+function MakeFormWorkFlow_Detail() {
+    var xmlpara = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "WORKFLOW");
+
+    var workflow = "<WORKFLOW>\n<VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n<STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>";
+
+    createNodeAndInsertCDataText(xmlpara, objNode, "WORKFLOWINFO", MakeXMLString(workflow));
+    return getXmlString(xmlpara.childNodes[0]);
+}
 
 function MakeFormRecevGroupXML() {
     var pDataCheck = false;
