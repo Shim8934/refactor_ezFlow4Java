@@ -530,7 +530,7 @@
 		    			html  : mhtBody
 		    		},
 		    		success: function(xml){
-		    			result = loadXMLString(xml);
+		    			result = xml;
 		    		}        			
 		    	});
 		        

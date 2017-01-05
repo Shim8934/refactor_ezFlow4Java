@@ -54,7 +54,7 @@ public interface EzApprovalGService {
 	
 	public String delUserFormInfo(String formID, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String getApprovalPWD(String userID) throws Exception;
+	public String getApprovalPWD(String userID, int tenantID) throws Exception;
 	
 	public String getSecurityType(String selected, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -72,7 +72,7 @@ public interface EzApprovalGService {
 	
 	public String getLineTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getFormInfoDetail(String formID, String companyID) throws Exception;
+	public String getFormInfoDetail(String formID, String companyID, int tenantID) throws Exception;
 	
 	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -153,7 +153,7 @@ public interface EzApprovalGService {
 	
 	public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getEA5Value(String msg) throws Exception;
+	public String getEA5Value(String msg, int tenantID) throws Exception;
 	
 	public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -187,7 +187,7 @@ public interface EzApprovalGService {
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception;
 	
-	public String getApprovalPWD1(String dUserID) throws Exception;
+	public String getApprovalPWD1(String dUserID, int tenantID) throws Exception;
 	
 	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -293,7 +293,7 @@ public interface EzApprovalGService {
 	
 	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception;
 	
-	public String getApprovalPWD2(String dUserID) throws Exception;
+	public String getApprovalPWD2(String dUserID, int tenantID) throws Exception;
 	
 	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID) throws Exception;
 	
@@ -309,7 +309,7 @@ public interface EzApprovalGService {
 	
 	public String getSusinSN(String docID, String companyID, int tenantID) throws Exception;
 	
-	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID) throws Exception; 
+	public List<ApprGSecondApprVO> getSecondApprovalInfo(String companyID, int tenantID) throws Exception; 
 	
 	public Document checkPermission(String docID, String userID, String deptID, String checkMode, String companyID, int tenantID) throws Exception;
 
@@ -345,13 +345,13 @@ public interface EzApprovalGService {
 
 	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception;
 
-	public String getCabScInfo(Document xmlDom) throws Exception;
+	public String getCabScInfo(Document xmlDom, int tenantID) throws Exception;
 
 	public String getCabinetPrintInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
 	public String getCabinetSimpleInfo(Document xmlDom, int tenantID) throws Exception;
 
-	public String changeCabinetInfo(Document xmlDom) throws Exception;
+	public String changeCabinetInfo(Document xmlDom, int tenantID) throws Exception;
 
 	public String getCabinetHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
@@ -359,7 +359,7 @@ public interface EzApprovalGService {
 
 	public String saveCabRoleInfo(Document xmlDom) throws Exception;
 
-	public String updateReceiptOffer(String docID, String orgDocID, String companyID)throws Exception;
+	public String updateReceiptOffer(String docID, String orgDocID, String companyID, int tenantID)throws Exception;
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang, int tenantID)throws Exception;
 

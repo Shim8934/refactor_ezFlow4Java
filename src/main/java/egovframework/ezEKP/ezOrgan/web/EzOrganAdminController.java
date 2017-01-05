@@ -1073,9 +1073,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			} else if (mode.equals("TEMP")) {
 				serverPath = tempPath;
 			} else if (mode.equals("GLOGO")) {
-				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			} else {
-				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			}
 						
 			File file = new File(serverPath);
