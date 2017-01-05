@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -2780,6 +2781,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setAsRead ERROR.");
 			logger.debug(e.toString());
 			
@@ -4339,6 +4341,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug(e.toString());
 			
 			return "ERROR";
@@ -4412,6 +4415,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("moveBoard ERROR.");
 			
 			return "ERROR" + e.getMessage();
@@ -4437,7 +4441,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
-			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("brdDeleteBoard ERROR.");
 			logger.debug(e.getMessage());
 			
@@ -4701,6 +4705,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("saveBoardProperty ERROR.");
 			
 			return "ERROR" + e.getMessage();
@@ -6321,7 +6326,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.debug(e.getMessage());
 			return false;
 		}
 	}
