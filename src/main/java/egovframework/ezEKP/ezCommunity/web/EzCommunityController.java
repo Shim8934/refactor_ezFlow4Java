@@ -4270,5 +4270,26 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String colorPicker() {
 		return "/ezCommunity/communityColorPicker";
 	}
+	
+	/**
+	 * Email관련
+	 */
+	@RequestMapping(value = "/ezCommunity/getItemInfo.do")
+	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getItemInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		String pItemID = request.getParameter("itemID");
+		
+		CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
+		itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
+		
+		model.addAttribute("itemVO", itemVO);
+		
+		logger.debug("getItemInfo ended.");
+		
+		return "json";
+	}
 }
 

@@ -13,6 +13,7 @@
 		
 		<script type="text/javascript">
 	        var PresentCompanyID = "<c:out value = '${userInfo.companyID}' />";
+	        var encodeInfoPath = "<c:out value = '${encodeInfoPath}' />";
 	
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -56,29 +57,32 @@
 			}
 	        
 			function GetOptionInfo(companyID) {
-			    var objXml = new createXmlDom();
-			    objXml.async = false;
-			
-			    objXml = loadXMLFile("/files/upload_approvalG/" + companyID + "/encodeinfo.xml");
-
-			    if (getNodeText(objXml) == "") {
-			        SaveOptionInfo(companyID, "Y", "Y", "Y");
-			        document.getElementById("special1").checked = true;
-			        document.getElementById("special2").checked = true;
-			        document.getElementById("special3").checked = true;
-			    } else {
-			        if (SelectSingleNodeValue(objXml.documentElement, "SIGN") == "Y") {
-			            special1.checked = true;
-			        }
-			        if (SelectSingleNodeValue(objXml.documentElement, "ENCODE") == "Y") {
-			            special2.checked = true;
-			        }
-			        if (SelectSingleNodeValue(objXml.documentElement, "NONE") == "Y") {
-			            special3.checked = true;
-			        }
-			    }
-			    
-			    objXml = null;
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezApprovalG/getOptionInfo.do",
+					async : false,
+					dataType : "json",
+					success : function (result) {
+						objXml = loadXMLString(result["encodeInfo"]);
+						
+						if (getNodeText(objXml) == "") {
+					        SaveOptionInfo(companyID, "Y", "Y", "Y");
+					        document.getElementById("special1").checked = true;
+					        document.getElementById("special2").checked = true;
+					        document.getElementById("special3").checked = true;
+					    } else {
+					        if (SelectSingleNodeValue(objXml.documentElement, "SIGN") == "Y") {
+					            special1.checked = true;
+					        }
+					        if (SelectSingleNodeValue(objXml.documentElement, "ENCODE") == "Y") {
+					            special2.checked = true;
+					        }
+					        if (SelectSingleNodeValue(objXml.documentElement, "NONE") == "Y") {
+					            special3.checked = true;
+					        }
+					    }
+					}
+				});
 			}
 			
 			function bt_OK_onclick() {

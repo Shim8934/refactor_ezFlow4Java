@@ -648,7 +648,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Integer"  resultClass="PersonalLightPollVO">
+	<select id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
 				RESULT ,

@@ -90,21 +90,76 @@ function textUser_onkeypress() {
     }
 }
 
+function searchUserList(search) {
+    var searchdoc = document.getElementById("textUser");
+    var strSearch = searchdoc.value + "";
+    if (textUser.value == "") {
+        var pAlertContent = linealt3;
+        OpenAlertUI(pAlertContent);
+        document.getElementById("textUser").focus();
+    }
+    else if (strSearch.length < 2) {
+        var pAlertContent = linealt4;
+        OpenAlertUI(pAlertContent);
+        document.getElementById("textUser").focus();
+    }
+    else {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : true,
+    		url : "/ezOrgan/getSearchList.do",
+    		data : {
+    			search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+    			cell   : "displayName;description;title;telephonenumber",
+    			prop   : "department;displayName;description;title",
+    			type   : "user"
+    		},
+    		success: function(text) {
+	            var retXml = createXmlDom();
+
+	            if (document.getElementById("UserList").innerHTML != "")
+	                document.getElementById("UserList").innerHTML = "";
+
+	            var headerData = createXmlDom();
+	            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+	            if (text != "") {
+	                var xmlRtn = loadXMLString(text).documentElement.getElementsByTagName("ROWS")[0];
+	                headerData.documentElement.appendChild(xmlRtn);
+	            }
+	            var pUserList = new ListView();
+	            pUserList.SetID("lvUserList");
+	            pUserList.SetRowOnClick("list2_onSel_Click");
+	            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+	            pUserList.SetSelectFlag(false);
+	            pUserList.SetHeightFree(true);
+	            pUserList.DataSource(headerData);
+	            pUserList.DataBind("UserList");
+
+	            var userRows = pUserList.GetDataRows();
+
+	            if (userRows.length <= 0) {
+	                OpenAlertUI(linealt1);
+	            }
+	        },
+	        error: function() {
+	        	OpenAlertUI(linealt2 + g_xmlHTTP.statusText);
+	        }
+    	});
+    }
+}
 
 function btn_searchUser_onclick() {
     searchUserList();
 }
-
 
 function TreeCtrl_onReqData() {
     var xmlRtn = createXmlDom();
     displayMemberTreeReq();
 }
 
-
 function list2_onSel_Click() {
 }
-
 
 function list2_onSel_DBclick() {
     var pUserList = new ListView();
@@ -519,20 +574,26 @@ function LineAprTyepSetAll() {
 }
 
 function isgetUser(DeptID) {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+				deptID   : DeptID, 
+				cell 	 : "displayName",
+				prop     : "",
+				type 	 : "user"
+				},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
     var rtnVal = true;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname");
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "");
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-
-    xmlhttp.open("POST", "/ezOrgan/getDeptMemberList.do", false);
-    xmlhttp.send(xmlpara);
-
-    var XmlNode = loadXMLString(xmlhttp.responseText);
+    var XmlNode = loadXMLString(result);
 
     if (XmlNode.xml == "") rtnVal = false;
     var nodes = SelectNodes(XmlNode, "LISTVIEWDATA/ROWS/ROW");
@@ -637,7 +698,6 @@ function AddRow_AprLine(pAPRTYPE, pAPRSTATE, pAPRMEMBERID, pAPRMEMBERISDEPTYN, p
     pAPRMEMBERJOBTITLE2, pAPRMEMBERDEPTID, pAPRMEMBERDEPTNAME, pAPRMEMBERDEPTNAME2, pAPRMEMBERLDAPPATH) {
     var AprLineAddIndex = GetRowIndex();
     
-
     var nAprType = "";
 
     ListXML = "<LISTVIEWDATA>";
@@ -773,9 +833,9 @@ function AddAprLine_Person(pCurSelectedRow) {
         if (chkDuplflag) {
             var pInformationContent = strLang228 + "<br>" + strLang229;
             var Ans = OpenInformationUI(pInformationContent);
-            if (!Ans) {
+//            if (!Ans) {
                 return;
-            }
+//            }
         }
 
         AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
@@ -820,15 +880,15 @@ function AddAprLine_Dept(pCurSelectedRow) {
         if (chkDuplflag) {
             var pInformationContent = strLang227;
             var Ans = OpenInformationUI(pInformationContent);
-            if (!Ans) {
-                return;
-            }
+//            if (!Ans) {
+            return;
+//            }
         }
         
         var AprTypeTopValue = ChangeAprlineType("group", strAprType1);
         AprTypeTopValue = AprTypeTopValue.substring(AprTypeTopValue.indexOf("value=") + 6, AprTypeTopValue.indexOf(" value2="));
         strAprType1 = AprTypeTopValue;
-
+        
         AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
             pAPRMEMBERJOBTITLE2, pAPRMEMBERDEPTID, pAPRMEMBERDEPTNAME, pAPRMEMBERDEPTNAME2, pAPRMEMBERLDAPPATH);
     }
@@ -870,9 +930,9 @@ function AddAprLine_DeptHeader(pCurSelectedRow) {
         if (chkDuplflag) {
             var pInformationContent = strLang227;
             var Ans = OpenInformationUI(pInformationContent);
-            if (!Ans) {
+//            if (!Ans) {
                 return;
-            }
+//            }
         }
 
         AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
@@ -893,7 +953,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
 
             var i = 0;
             var j = 0;
-
+            
             for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
                 if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
                     p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
@@ -906,8 +966,8 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
                     j = j + 1;
                 }
             }
-
             var p_Aprlinelen = p_AprlineValue.length;
+            
             for (i = 0; i < p_Aprlinelen; i++) {
                 var p_Option = document.createElement("OPTION");
                 setNodeText(p_Option,p_AprlineValue[i]);
@@ -1154,10 +1214,6 @@ function APRLINESNDownFunction() {
             return;
         }
 
-        
-        
-        
-        
 
         var pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA5");
         if (pSelectedRow.length != 0) {
@@ -1165,10 +1221,6 @@ function APRLINESNDownFunction() {
             if (p_NextSelRow == undefined)
                 return;
 
-            
-            
-            
-            
 
             if (GetAttribute(pSelectedRow[0], "DATA7") == "N") {
                 if (pSelectedRow[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRow[0].cells[4].childNodes[0].value == strAprType4) {
@@ -1660,8 +1712,8 @@ function MakeFormAutoRuleXML() {
         var AprRuleLineXML;
 
         try {
-            AprRuleXML = loadXMLString(bodyForm.hidAprRule.value);
-            AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
+            AprRuleXML = bodyForm.hidAprRule.value;
+            AprRuleLineXML = bodyForm.hidAprRuleLine.value;
             pDataCheck = true;
         }
         catch (e) {
@@ -1669,11 +1721,11 @@ function MakeFormAutoRuleXML() {
             pErrorMsg = e.message;
         }
     }
-
+    
     if (pDataCheck) {
         retValue[0] = "TRUE";
-        retValue[1] = AprRuleXML.xml;
-        retValue[2] = AprRuleLineXML.xml;
+        retValue[1] = AprRuleXML;
+        retValue[2] = AprRuleLineXML;
     }
     else {
         retValue[0] = "FALSE";

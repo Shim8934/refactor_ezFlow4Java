@@ -87,7 +87,7 @@
 		    function pzFormProc_FieldsAvailable() {
 		        if (formURL != "") {
 		            ReturnFormConnXML();
-// 		            ReturnWorkFlowXML();
+		            ReturnWorkFlowXML();
 		        }
 		    }
 	
