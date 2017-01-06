@@ -116,11 +116,11 @@ function searchUserList(search) {
     			type   : "user"
     		},
     		success: function(text) {
-	            var retXml = createXmlDom();
-
-	            if (document.getElementById("UserList").innerHTML != "")
-	                document.getElementById("UserList").innerHTML = "";
-
+    			var retXml = createXmlDom();
+    			
+	            if (document.getElementById("LineUserList").innerHTML != "")
+	                document.getElementById("LineUserList").innerHTML = "";
+	
 	            var headerData = createXmlDom();
 	            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
 	            if (text != "") {
@@ -128,16 +128,16 @@ function searchUserList(search) {
 	                headerData.documentElement.appendChild(xmlRtn);
 	            }
 	            var pUserList = new ListView();
-	            pUserList.SetID("lvUserList");
+	            pUserList.SetID("lvLineUserList");
 	            pUserList.SetRowOnClick("list2_onSel_Click");
 	            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
 	            pUserList.SetSelectFlag(false);
 	            pUserList.SetHeightFree(true);
 	            pUserList.DataSource(headerData);
-	            pUserList.DataBind("UserList");
-
+	            pUserList.DataBind("LineUserList");
+	
 	            var userRows = pUserList.GetDataRows();
-
+	
 	            if (userRows.length <= 0) {
 	                OpenAlertUI(linealt1);
 	            }
@@ -348,10 +348,8 @@ function AprTypeToName(tempCode) {
 }
 
 function MakeAprLineListXML( pAutoRuleGuid) {
-    
     var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
 
-    
     if (thisSelGUID != "") {
         for (var i = GetElementsByTagName(AprRuleLineXML, "ROW").length - 1; i > -1 ; i--) {
             if (getNodeText(GetElementsByTagName(AprRuleLineXML, "AUTORULEGUID")[i]) == thisSelGUID) {
@@ -368,8 +366,6 @@ function MakeAprLineListXML( pAutoRuleGuid) {
         var CurListLen = AprRuleLineRow.length;
         var i;
         var GetXml;
-        
-        
 
         if (CurListLen > 0) {
             if (AprRuleLineRow[0].id != (pAPRRULELINE.GetID() + "_TR_noItems")) {
@@ -377,7 +373,6 @@ function MakeAprLineListXML( pAutoRuleGuid) {
                     newNode = createNode(AprRuleLineXML, "ROW");
                     createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "FORMID", GetAttribute(AprRuleLineRow[i], "DATA1"));
                     createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "DOCTYPE", GetAttribute(AprRuleLineRow[i],"DATA2"));
-                    
                     createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRMEMBERSN", getNodeText(AprRuleLineRow[i].cells[0]).replace("★", "").replace("⊙", ""));
                     createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRTYPE", GetAttribute(AprRuleLineRow[i],"DATA4"));
                     createNodeAndAppandNodeText(AprRuleLineXML, newNode, "", "APRSTATE", GetAttribute(AprRuleLineRow[i],"DATA5"));
@@ -406,7 +401,6 @@ function MakeAprLineListXML( pAutoRuleGuid) {
 
         bodyForm.hidAprRuleLine.value = getXmlString(AprRuleLineXML);
     }
-
     
     var pListXml = "<LISTVIEWDATA>";
     pListXml = pListXml + "<HEADERS>";
@@ -429,7 +423,6 @@ function MakeAprLineListXML( pAutoRuleGuid) {
             pListXml = pListXml + "<VALUE>" + getNodeText(GetElementsByTagName(AprLineXML, "APRMEMBERSN")[i]) + "</VALUE>";
             pListXml = pListXml + "<DATA1>" + getNodeText(GetElementsByTagName(AprLineXML, "FORMID")[i]) + "</DATA1>";
             pListXml = pListXml + "<DATA2></DATA2>";
-            
             pListXml = pListXml + "<DATA3>" + getNodeText(GetElementsByTagName(AprLineXML, "APRMEMBERSN")[i]) + "</DATA3>";
             pListXml = pListXml + "<DATA4>" + getNodeText(GetElementsByTagName(AprLineXML, "APRTYPE")[i]) + "</DATA4>";
             pListXml = pListXml + "<DATA5>" + getNodeText(GetElementsByTagName(AprLineXML, "APRSTATE")[i]) + "</DATA5>";
@@ -886,7 +879,7 @@ function AddAprLine_Dept(pCurSelectedRow) {
         }
         
         var AprTypeTopValue = ChangeAprlineType("group", strAprType1);
-        AprTypeTopValue = AprTypeTopValue.substring(AprTypeTopValue.indexOf("value=") + 6, AprTypeTopValue.indexOf(" value2="));
+        AprTypeTopValue = AprTypeTopValue.substring(AprTypeTopValue.indexOf("value=") + 7, AprTypeTopValue.indexOf(" value2=") - 1);
         strAprType1 = AprTypeTopValue;
         
         AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,

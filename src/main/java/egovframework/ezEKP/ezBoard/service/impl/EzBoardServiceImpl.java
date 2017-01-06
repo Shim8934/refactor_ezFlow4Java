@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -21,6 +23,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -45,6 +48,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties config;
+	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 
@@ -57,7 +63,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzBoardServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
 	@Override
 	public List<BoardVO> getLeft_BoardSTD(String redirectBoardID, int tenantID) throws Exception{
@@ -1298,70 +1304,76 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			return "OK";
 		} catch (Exception e) {
-			LOGGER.error("EzBoard :: deleteTempItem");
+			logger.error("EzBoard :: deleteTempItem");
 			return "NO";
 		}
 	}
 
 	@Override
 	public String getItemXML(String boardID, String itemID, String lang, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardID", boardID);
-		map.put("v_pItemID", itemID);
-		map.put("v_TENANTID", tenantID);
-		
-		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfo(map);
-
 		StringBuilder sb = new StringBuilder();
-
-		sb.append("<NODES>");
-		sb.append("<NODE>");
-		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
-		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
 		
-		if (lang.equals("")) {
-			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
+		if (boardID != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_pBoardID", boardID);
+			map.put("v_pItemID", itemID);
+			map.put("v_TENANTID", tenantID);
+			
+			BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfo(map);
+			
+			
+			sb.append("<NODES>");
+			sb.append("<NODE>");
+			sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
+			sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
+			
+			if (lang.equals("")) {
+				sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
+			} else {
+				sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName2()) + "</WriterName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
+			}
+			sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
+			sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
+			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
+			sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
+			sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
+			sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
+			sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
+			sb.append("<Abstract>" + commonUtil.cleanValue(itemInfo.getABSTRACT()) + "</Abstract>");
+			sb.append("<Attachments>" + commonUtil.cleanValue(itemInfo.getAttachments()) + "</Attachments>");
+			sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
+			sb.append("<ItemLevel>" + itemInfo.getItemLevel() + "</ItemLevel>");
+			sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
+			sb.append("<ExtensionAttribute1>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
+			sb.append("<ExtensionAttribute2>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
+			
+			if (lang.equals("")) {
+				sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
+			} else {
+				sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
+			}
+			sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
+			sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
+			sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
+			sb.append("<APPRFLAG>" + commonUtil.cleanValue(itemInfo.getApprFlag()) + "</APPRFLAG>");
+			sb.append("<GUBUN>" + commonUtil.cleanValue(itemInfo.getGuBun()) + "</GUBUN>");
+			//확장값 추가
+			sb.append("<ExtensionAttribute6>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
+			sb.append("<ExtensionAttribute7>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
+			sb.append("<ExtensionAttribute8>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
+			sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
+			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
+			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+			sb.append("</NODE>");
+			sb.append("</NODES>");
 		} else {
-			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName2()) + "</WriterName>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
+			sb.append("<NODES>");
+			sb.append("</NODES>");
 		}
-		sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
-		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
-		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
-		sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
-		sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
-		sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
-		sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
-		sb.append("<Abstract>" + commonUtil.cleanValue(itemInfo.getABSTRACT()) + "</Abstract>");
-		sb.append("<Attachments>" + commonUtil.cleanValue(itemInfo.getAttachments()) + "</Attachments>");
-		sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
-		sb.append("<ItemLevel>" + itemInfo.getItemLevel() + "</ItemLevel>");
-		sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
-		sb.append("<ExtensionAttribute1>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
-		sb.append("<ExtensionAttribute2>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
-		
-        if (lang.equals("")) {
-        	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
-        } else {
-        	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
-        }
-        sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
-		sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
-        sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
-        sb.append("<APPRFLAG>" + commonUtil.cleanValue(itemInfo.getApprFlag()) + "</APPRFLAG>");
-        sb.append("<GUBUN>" + commonUtil.cleanValue(itemInfo.getGuBun()) + "</GUBUN>");
-        //확장값 추가
-        sb.append("<ExtensionAttribute6>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
-        sb.append("<ExtensionAttribute7>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
-        sb.append("<ExtensionAttribute8>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
-        sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
-        sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
-        sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
-		sb.append("</NODE>");
-		sb.append("</NODES>");
 
 		return sb.toString();
 	}
@@ -1467,7 +1479,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			return "OK";
 		} catch (Exception e) {
-			LOGGER.error("EzBoard :: apprItem");
+			logger.error("EzBoard :: apprItem");
 			return "ERROR" + e.getMessage();
 		}
 	}
@@ -1492,7 +1504,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				rtnValue = "FAIL";
 			}
 		} catch (Exception e) {
-			LOGGER.error("EzBoard :: deleteOneLineReply");
+			logger.error("EzBoard :: deleteOneLineReply");
 			rtnValue = "FAIL";
 		}
 		
@@ -1919,6 +1931,111 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} catch(Exception ex) {
 			return "FALSE";
 		}
+	}
+
+	@Override
+	public String getItemAttachmentXMLRetrans(BoardItemVO boardItemVO) throws Exception {
+		logger.debug("getItemAttachmentXMLRetrans started");
+		
+		StringBuilder resultXML = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", boardItemVO.getItemID());
+		map.put("tenantID", boardItemVO.getTenantID());
+		
+		List<BoardAttachVO> boardAttachVOs = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		
+		resultXML.append("<NODES>");
+		
+		if (boardItemVO.getMode().equals("boardAttach")) {
+			File file = new File(boardItemVO.getFilePath() + boardItemVO.getConLocation());
+			
+			String fileExtension = boardItemVO.getConLocation().substring(boardItemVO.getConLocation().lastIndexOf("."));
+			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) + 
+					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + boardItemVO.getTitle() + fileExtension;
+			long mhtSize = file.length();
+			
+			FileUtils.copyFile(file, new File(newFilePath));
+			
+			resultXML.append("<NODE>");
+			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
+			resultXML.append("<FileSize>" + getProperSizeDisplay(mhtSize) + "</FileSize>");
+			resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
+			resultXML.append("</NODE>");
+		}
+		
+		for (int k = 0; k < boardAttachVOs.size(); k++) {
+			String filePath = boardAttachVOs.get(k).getFilePath();
+			String newFilePath = filePath.split("/")[filePath.split("/").length - 1];
+			
+			newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) +
+					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.lastIndexOf("_"), newFilePath.length() - newFilePath.lastIndexOf("_"));
+			
+			FileUtils.copyFile(new File(boardItemVO.getFilePath() + filePath), new File(boardItemVO.getFilePath() + newFilePath));
+			
+			resultXML.append("<NODE>");
+			resultXML.append("<ItemID>" + boardAttachVOs.get(k).getItemID() + "</ItemID>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
+			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
+			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
+			resultXML.append("</NODE>");
+		}
+		
+		resultXML.append("</NODES>");
+
+		logger.debug("getItemAttachmentXMLRetrans ended");
+		
+		return resultXML.toString();
+	}
+
+	private String getProperSizeDisplay(long mhtSize) {
+		logger.debug("getProperSizeDisplay started");
+		
+		String resultSize = "";
+
+		if (mhtSize > 1048576) {
+			resultSize = String.valueOf(mhtSize / 1024 / 102.4 / 10) + " MB";
+		} else if (mhtSize > 1024) {
+			resultSize = String.valueOf(mhtSize / 102.4 / 10) + " KB";
+		} else {
+			resultSize = String.valueOf(mhtSize) + " Byte";
+		}
+
+		logger.debug("getProperSizeDisplay ended");
+		
+		return resultSize;
+	}
+
+	@Override
+	public String getItemAttachmentXML(BoardItemVO boardItemVO) throws Exception {
+		logger.debug("getItemAttachmentXML started");
+
+		StringBuilder resultXML = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", boardItemVO.getItemID());
+		map.put("tenantID", boardItemVO.getTenantID());
+		
+		List<BoardAttachVO> boardAttachVOs = ezBoardDAO.brdGetItemAttachmentInfo(map);
+		
+		resultXML.append("<NODES>");
+		
+		for (int k = 0; k < boardAttachVOs.size(); k++) {
+			resultXML.append("<NODE>");
+			resultXML.append("<ItemID>" + boardAttachVOs.get(k).getItemID() + "</ItemID>");
+			resultXML.append("<GUID>" + boardAttachVOs.get(k).getGuid() + "</GUID>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOs.get(k).getFilePath()) + "</FilePath>");
+			resultXML.append("<FileSize>" + getProperSizeDisplay(Long.parseLong(boardAttachVOs.get(k).getFileSize())) + "</FileSize>");
+			resultXML.append("<FileSize2>" + boardAttachVOs.get(k).getFileSize() + "</FileSize2>");
+			resultXML.append("</NODE>");
+		}
+		
+		resultXML.append("</NODES>");
+
+		logger.debug("getItemAttachmentXML ended");
+		
+		return resultXML.toString();
 	}
 
 }

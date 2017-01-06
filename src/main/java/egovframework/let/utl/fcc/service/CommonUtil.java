@@ -525,7 +525,9 @@ public class CommonUtil {
 		
 		if (realPath.substring(realPath.length() - 1).equals(separator)) {
 			realPath = realPath.substring(0, realPath.length() - 1);
-		} 
+		} else if (realPath.substring(realPath.length() - 1).equals("\\")) {
+			realPath = realPath.substring(0, realPath.length() - 1);
+		}
 		
 		return realPath;
 	}

@@ -1757,13 +1757,13 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/myoffice/ezBoardSTD/interASP/GetItemInfo.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
-        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(Rurl);
+        var fullPath = Rurl;
         var tempXML = createXmlDom();
         var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
@@ -1792,7 +1792,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         if (pRetransType != "boardAttach")
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
 
-        xmlHTTP.open("POST", "/myoffice/ezBoardSTD/interASP/GetItemAttachments.aspx?ItemID=" + pItemID + "&pMode=" + pRetransType + "&ConLocation=" + encodeURI(Rurl) + "&Title=" + encodeURI(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+        xmlHTTP.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURI(Rurl) + "&title=" + encodeURI(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -1809,7 +1809,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
             var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
-            var filepath = "/Upload_BoardSTD/" + filepath;
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
