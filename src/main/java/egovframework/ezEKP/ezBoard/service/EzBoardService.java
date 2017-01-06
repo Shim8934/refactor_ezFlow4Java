@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -75,7 +76,9 @@ public interface EzBoardService {
 	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
 	public List<HashMap<String, Object>> getSearchMyBoardItemListTemp(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
-
+	
+	public List<BoardAccessVO> getPostNotiMailUserList(String boardID, String primary, int tenantID) throws Exception;
+	
 	public List<String> getCopyItemAttach(String orgItemID, int tenantID) throws Exception;
 	
 	public BoardPropertyVO getBoardProperty(String pBoardID, int tenantID) throws Exception;
@@ -157,6 +160,8 @@ public interface EzBoardService {
 	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
 
 	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	
+	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception;
 	
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception;
 	

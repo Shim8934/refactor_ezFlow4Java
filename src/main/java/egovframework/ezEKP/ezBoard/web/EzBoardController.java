@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,6 +47,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -58,7 +60,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -101,8 +106,14 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
@@ -2634,7 +2645,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
             String userDeptPath = deptPathOrgan + ",everyone";
 
-            if (boardType.toUpperCase().equals("") || boardType == null) {
+            if (boardType == null || boardType.toUpperCase().equals("")) {
             	boardType = "GENERAL";
             }
             for (int i = 0; i < userDeptPath.split(",").length; i++) {
@@ -6452,4 +6463,77 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return result;
 	}
-} 
+	
+	/**
+	 * 게시판 게시알림 메일전송 실행 Method
+	 */
+	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do")
+	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("sendPostNotiMail started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		logger.debug("boardID=" + boardID + ",itemID=" + itemID);
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
+		
+		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardInfo.getGuBun() + "');";
+        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+		
+        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
+        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
+        
+        StringBuilder bodyContent = new StringBuilder();
+
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250") + "<br><br>");
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251") + boardInfo.getBoardName());
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252") + strDate);
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253") + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254") + strURL + boardItem.getTitle() + "</a>");
+        bodyContent.append("</DIV>");
+        
+        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255") + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+        
+        List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
+        
+        for (BoardAccessVO vo : list) {
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(vo.getAccessName(), "UTF-8");
+        	to.setAddress(AccessUserInfo.getMail());
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        }
+		
+		logger.debug("sendPostNotiMail ended.");
+	}
+	
+	/**
+	 * 게시글 존재여부 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemViewNew started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		
+		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
+		
+		logger.debug("getItemViewNew ended.");
+		
+		return "<DATA>" + result + "</DATA>";
+	}
+}
