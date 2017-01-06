@@ -1870,9 +1870,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (mode.equals("edit")) {
 			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId(), userInfo.getTenantId());
-			item.setContent(item.getContent().replaceAll("<br>", "\n"));
+			
 			if (item != null) {
 				bIsMyContent = true;
+				item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			}
 		}
 		
@@ -2452,7 +2453,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityService.adminBasicOkUpdate(clubVO, code);
+		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
 		model.addAttribute("sysopCheck", sysopCheck);
@@ -3596,6 +3597,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String gClubG = ezCommunityService.getACLGet1(cID, userInfo.getTenantId());
 		String cPermit = ezCommunityService.getACLGet2(uID, cID, userInfo.getTenantId());
+		logger.debug("gClubG=" + gClubG + " || cPermit=" + cPermit);
 		
 		if (cPermit == null || cPermit.equals("0")) {
 			if (gClubG.trim().equals("3")) {

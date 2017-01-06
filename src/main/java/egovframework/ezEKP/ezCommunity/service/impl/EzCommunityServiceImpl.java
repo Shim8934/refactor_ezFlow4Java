@@ -1334,7 +1334,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String strRegUser = ezCommunityDAO.pollDeleteGet1(map).trim();
 		
-		logger.debug("pollDeleteGet1 ended.");
+		logger.debug("pollDeleteGet1 ended. strRegUser=" + strRegUser);
 		
 		if (strRegUser != null) {
 			logger.debug("pollDeleteGet3 started.");
@@ -1345,7 +1345,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			String sysopID = ezCommunityDAO.pollDeleteGet3(map1).trim();
 			
-			logger.debug("pollDeleteGet3 ended.");
+			logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
 			
 			if (strRegUser.equals(userInfo.getId()) && sysopID.equals(userInfo.getId())) {
 				logger.debug("pollDeleteGet2 started.");
@@ -1358,14 +1358,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					logger.debug("pollDeleteGet4 start. " + question.getQuestionID());
 					
 					Map<String, Object> map2 = new HashMap<String, Object>();
-					map.put("v_QUESTIONID", question.getQuestionID());
-					map.put("tenantID", tenantID);
+					map2.put("v_QUESTIONID", question.getQuestionID());
+					map2.put("tenantID", tenantID);
 					
 					List<CommunityCPollAnswerVO> answerList= ezCommunityDAO.pollDeleteGet4(map2);
 					
 					logger.debug("pollDeleteGet4 ended. size=" + answerList.size());
 					
 					for(CommunityCPollAnswerVO answer : answerList) {
+						logger.debug("getQuestionID="+ question.getQuestionID() + " || getAnswerID=" + answer.getAnswerID());
 						pollDeleteDel1(question.getQuestionID(), answer.getAnswerID(), tenantID);
 					}
 					
@@ -4217,7 +4218,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception {
+	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_C_CLUBNAME", clubVO.getC_ClubName());
 		map.put("v_C_CLUBNAME2", clubVO.getC_ClubName2());
@@ -4226,6 +4227,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ISIN", clubVO.getIsIn());
 		map.put("v_C_CLUBDESC", clubVO.getC_ClubDesc());
 		map.put("v_CODE", code);
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.adminBasicOkupdate(map);
 	}
