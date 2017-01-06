@@ -5421,7 +5421,7 @@
 				ISIN = #v_ISIN#,
 				C_CLUBDESC = #v_C_CLUBDESC#
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				TRIM(C_CLUBNO) = #v_CODE#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -6509,9 +6509,9 @@
         	FROM
         		EZCOMMUNITY.C_CLUBGUEST
         	WHERE
-        		RTRIM(C_NO) = #c_no#
+        		TRIM(C_NO) = #c_no#
         	AND
-        		RTRIM(C_CLUBNO) = #v_code#
+        		TRIM(C_CLUBNO) = #code#
         	AND
         		TENANT_ID = #tenantID#
 		]]>
