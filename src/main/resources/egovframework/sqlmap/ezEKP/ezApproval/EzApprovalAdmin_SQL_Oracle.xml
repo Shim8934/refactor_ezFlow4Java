@@ -1301,7 +1301,7 @@
              	autoruleguid,
              	checkfieldtype,
              	checkfield,
-             	opertatortype,
+             	operatortype,
              	operator,
              	condtype,
              	condvalue,
@@ -1809,36 +1809,80 @@
 		</isNotEqual>
 	</insert>
 	
-	<insert id="EzApprovalAdminDAO.insertAutoRule" parameterClass="ApprAutoRuleVO">
-		<![CDATA[
-			INSERT INTO TBFORM_AUTORULE ( 
-				FORMID,   AUTORULESN,   AUTORULEGUID,   CHECKFIELDTYPE,   CHECKFIELD,   OPERTATORTYPE,  OPERATOR,   CONDTYPE,   CONDVALUE,   CONDVALUEDEPTID,   DOCTYPE,   TENANT_ID,  COMPANYID 
-			)
-			VALUES (
-				#formID#, #autoRuleSN#, #autoRuleGUID#, #checkFieldType#, #checkField#, #operatorType#, #operator#, #condType#, #condValue#, #condValueDeptID#, #docType#, #tenantID#, #companyID#
-			)
-		]]>
+	<insert id="EzApprovalAdminDAO.insertAutoRule" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO TBFORM_AUTORULE ( 
+						FORMID,   AUTORULESN,   AUTORULEGUID,   CHECKFIELDTYPE,   CHECKFIELD,   OPERATORTYPE,  OPERATOR,   CONDTYPE,   CONDVALUE,   CONDVALUEDEPTID,   DOCTYPE,   TENANT_ID,  COMPANYID 
+					)
+					VALUES (
+						#ApprAutoRuleVOs[].formID#, #ApprAutoRuleVOs[].autoRuleSN#, #ApprAutoRuleVOs[].autoRuleGUID#, #ApprAutoRuleVOs[].checkFieldType#, #ApprAutoRuleVOs[].checkField#, #ApprAutoRuleVOs[].operatorType#, #ApprAutoRuleVOs[].operator#, #ApprAutoRuleVOs[].condType#, #ApprAutoRuleVOs[].condValue#, #ApprAutoRuleVOs[].condValueDeptID#, #ApprAutoRuleVOs[].docType#, #ApprAutoRuleVOs[].tenantID#, #ApprAutoRuleVOs[].companyID#
+					)
+				]]>
+			</iterate>
+		SELECT * FROM dual
 	</insert>
 	
-	<insert id="EzApprovalAdminDAO.insertAutoRuleLine" parameterClass="ApprAutoRuleVO">
-		<![CDATA[
-			INSERT INTO TBFORM_AUTORULELINE ( 
-				FORMID,   AUTORULEGUID,   APRMEMBERSN,   APRTYPE,   APRSTATE,   APRMEMBERID,   APRMEMBERISDEPTYN,   APRMEMBERNAME,   APRMEMBERNAME2,   APRMEMBERJOBTITLE,   APRMEMBERJOBTITLE2,   APRMEMBERDEPTID,   APRMEMBERDEPTNAME,   APRMEMBERDEPTNAME2,   APRMEMBERLDAPPATH,   RECEIVEDDATE,  PROCESSDATE,   REASONDONOTAPPROV,   ISPROPOSERYN,   ISBRIEFUSERYN,   TENANT_ID,  COMPANYID 
-        	)
-        	VALUES (
-        		#formID#, #autoRuleGUID#, #aprMemberSN#, #aprType#, #aprState#, #aprMemberID#, #aprMemberIsDeptYN#, #aprMemberName#, #aprMemberName2#, #aprMemberJobTitle#, #aprMemberJobTitle2#, #aprMemberDeptID#, #aprMemberDeptName#, #aprMemberDeptName2#, #aprMemberLdapPath#, #receiveDate#, #processDate#, #reasonDoNotApprov#, #isProposerYN#, #isBriefUserYN#, #tenantID#, #companyID#
-        	)
-		]]>
+	<insert id="EzApprovalAdminDAO.insertAutoRuleLine" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO TBFORM_AUTORULELINE ( 
+						FORMID,   AUTORULEGUID,   APRMEMBERSN,   APRTYPE,   APRSTATE,   APRMEMBERID,   APRMEMBERISDEPTYN,   APRMEMBERNAME,   APRMEMBERNAME2,   APRMEMBERJOBTITLE,   APRMEMBERJOBTITLE2,   APRMEMBERDEPTID,   APRMEMBERDEPTNAME,   APRMEMBERDEPTNAME2,   APRMEMBERLDAPPATH,   RECEIVEDDATE,  PROCESSDATE,   REASONDONOTAPPROV,   ISPROPOSERYN,   ISBRIEFUSERYN,   TENANT_ID,  COMPANYID 
+		        	)
+		        	VALUES (
+		        		#ApprAutoRuleVOs[].formID#, #ApprAutoRuleVOs[].autoRuleGUID#, #ApprAutoRuleVOs[].aprMemberSN#, #ApprAutoRuleVOs[].aprType#, #ApprAutoRuleVOs[].aprState#, #ApprAutoRuleVOs[].aprMemberID#, #ApprAutoRuleVOs[].aprMemberIsDeptYN#, #ApprAutoRuleVOs[].aprMemberName#, #ApprAutoRuleVOs[].aprMemberName2#, #ApprAutoRuleVOs[].aprMemberJobTitle#, #ApprAutoRuleVOs[].aprMemberJobTitle2#, #ApprAutoRuleVOs[].aprMemberDeptID#, #ApprAutoRuleVOs[].aprMemberDeptName#, #ApprAutoRuleVOs[].aprMemberDeptName2#, #ApprAutoRuleVOs[].aprMemberLdapPath#, #ApprAutoRuleVOs[].receiveDate#, #ApprAutoRuleVOs[].processDate#, #ApprAutoRuleVOs[].reasonDoNotApprov#, #ApprAutoRuleVOs[].isProposerYN#, #ApprAutoRuleVOs[].isBriefUserYN#, #ApprAutoRuleVOs[].tenantID#, #ApprAutoRuleVOs[].companyID#
+		        	)
+				]]>
+			</iterate>
+		SELECT * FROM dual
 	</insert>
 	
-	<insert id="EzApprovalAdminDAO.insertFormRecv" parameterClass="ApprReceiveGroupVO">
+	<insert id="EzApprovalAdminDAO.insertFormRecv" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO TBFORMRECV (
+						FORMID,   DEPTID,   DEPTSN,   USERID,   TENANT_ID,  COMPANYID
+					)
+					VALUES (
+						#apprReceiveGroupVOs[].formID#, #apprReceiveGroupVOs[].deptID#, #apprReceiveGroupVOs[].deptSN#, #apprReceiveGroupVOs[].userID#, #apprReceiveGroupVOs[].tenantID#, #apprReceiveGroupVOs[].companyID#
+					)
+				]]>
+			</iterate>
+		SELECT * FROM dual
+	</insert>
+		
+	<insert id="EzApprovalAdmin.formMove" parameterClass="ApprFormContVO">
+		<selectKey keyProperty="formOrder" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					MAX(FORMORDER) + 1
+				FROM
+					TBFORMINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					FORMCONTID = #selContID#
+			]]>
+		</selectKey>
+		
 		<![CDATA[
-			INSERT INTO TBFORMRECV (
-				FORMID,   DEPTID,   DEPTSN,   USERID,   TENANT_ID,  COMPANYID
-			)
-			VALUES (
-				#formID#, #deptID#, #deptSN#, #userID#, #tenantID#, #companyID#
-			)
+			UPDATE TBFORMINFO 
+			SET 
+				FORMCONTID = #selContID#, 
+				FORMORDER = #formOrder# 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMCONTID = #contID# 
+			AND  
+				FORMID = #formID#
 		]]>
 	</insert>
 	
@@ -2116,6 +2160,22 @@
 		]]>
 	</update>
 	
+	<update id="EzApprovalAdmin.setFormOrder" parameterClass="ApprFormContVO">
+		<![CDATA[
+			UPDATE TBFormInfo
+			SET 
+				FormOrder = #formOrder# + 1
+            WHERE
+            	TENANT_ID = #tenantID#
+            AND
+            	COMPANYID = #companyID#
+            AND  
+            	FormID = #formID#
+            AND 
+            	FormContID = #formContID#
+		]]>
+	</update>
+	
 	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM TBCONTAINERTODOCSTATE
@@ -2299,6 +2359,30 @@
 				COMPANYID = #companyID#
 			AND
 				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdmin.deleteForm" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			DELETE TBFormInfo
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND  
+		    	FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdmin.deleteFavoriteForm" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			DELETE TBFavoriteFormInfo
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND  
+		    	FORMID = #formID#
 		]]>
 	</delete>
 

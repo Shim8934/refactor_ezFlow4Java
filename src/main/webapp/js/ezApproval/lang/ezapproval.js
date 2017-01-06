@@ -806,3 +806,24 @@ var strLang1121 = "양식이 존재하지 않습니다.";
 var strLang1122 = "오전";
 var strLang1123 = "오후";
 var strLang1124 = "등록된 문서입니다.";
+
+//추가 리소스
+var strLangyj1 = "직접입력";
+var strLangyj2 = "문자";
+var strLangyj3 = "숫자";
+var strLangyj4 = "이상";
+var strLangyj5 = "이하";
+var strLangyj6 = "미만";
+var strLangyj7 = "초과";
+var strLangyj8 = "동일";
+var strLangyj9 = "포함";
+var strLangyj10 = "미포함";
+var strLangyj11 = "굴림체";
+var strLangyj12 = "수";
+var strLangyj13 = "신";
+var strLangyj14 = "결";
+var strLangyj15 = "재";
+var strLangyj16 = "기";
+var strLangyj17 = "안";
+var strLangyj18 = "합";
+var strLangyj19 = "의";

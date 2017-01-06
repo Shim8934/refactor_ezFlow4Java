@@ -344,22 +344,31 @@
 		    }
 		
 		    function DelForm() {
-		        var xmlpara = createXmlDom();
 		        var xmlRtn = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		
 		        var listview = new ListView();
 		        listview.LoadFromID("lvtForm");
+		        
 		        var selRow = listview.GetSelectedRows();
 		        if (selRow)
 		        {
 		            if (confirm(strLang597) == true) {
-		                createNodeAndInsertText(xmlpara, objNode, "ID", GetAttribute(selRow[0], "DATA1"));
-		                createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-		                xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Del_Form.aspx", false);
-		                xmlhttp.send(xmlpara);
-		                xmlRtn = loadXMLString(xmlhttp.responseText);
+		            	var result = "";
+	    		    	
+	    		    	$.ajax({
+	    		    		type : "POST",
+	    		    		dataType : "text",
+	    		    		async : false,
+	    		    		url : "/admin/ezApproval/delForm.do",
+	    		    		data : {
+	    		    			formID         : GetAttribute(selRow[0], "DATA1"),
+	    		    			companyID  : companyID
+	    		    		},
+	    		    		success: function(text){
+	    		    			result = text;
+	    		    		}
+	    		    	});
+	    		    	
+		                xmlRtn = loadXMLString(result);
 		
 		                if (getNodeText(SelectNodes(xmlRtn, "RESULT")[0]) == "TRUE") {
 		                    listview.DeleteRow(GetAttribute(selRow[0], "id"));
@@ -427,25 +436,29 @@
 		                strFormList += GetAttribute(listview.GetDataRows()[i], "DATA1") + ";";
 		            }
 		        }
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        var objSubNode;
-		        var objDataNode;
-		        objNode = createNodeInsert(xmlpara, objNode, "NODES");
-		        objSubNode = createNodeAndAppandNode(xmlpara, objNode, objSubNode, "NODE");
-		        createNodeAndAppandNodeText(xmlpara, objSubNode, objDataNode, "FORMCONTID", nodeIdx.GetNodeData("DATA1"));
-		        createNodeAndAppandNodeText(xmlpara, objSubNode, objDataNode, "BOARDIDLIST", strFormList);
-		
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/Set_FormOrder.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        if (xmlhttp.responseText == "<RESULT>OK</RESULT>") {
+		        
+            	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezApproval/setFormOrder.do",
+		    		data : {
+		    			formContID  : nodeIdx.GetNodeData("DATA1"),
+		    			formIDList : strFormList,
+		    			companyID   : companyID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}
+		    	});
+		    	
+		        if (result == "<RESULT>OK</RESULT>") {
 		            alert("<spring:message code='ezApproval.t454'/>");
 		        } else {
 		            alert("<spring:message code='ezApproval.t391'/>");
 		        }
-		        xmlhttp = null;
 		    }
 		
 		    function btnFormListView_onclick() {
@@ -453,9 +466,9 @@
 		        listview.LoadFromID("lvtForm");
 		        var oArrRows = listview.GetSelectedRows();
 		        var tr = oArrRows[0];
-		        var url = "Form_Preview.aspx?href=" + escape(GetAttribute(tr, "DATA4"));
+		        var url = "/admin/ezApproval/formPreview.do?href=" + escape(GetAttribute(tr, "DATA4"));
 		        if ("${useReform}" == "YES" && GetAttribute(tr, "DATA7") == "Y")
-		            url = url + "&reformtype=" + escape(GetAttribute(tr, "DATA7")) + "&FormID=" + escape(GetAttribute(tr, "DATA1"));
+		            url = url + "&reformType=" + escape(GetAttribute(tr, "DATA7")) + "&formID=" + escape(GetAttribute(tr, "DATA1"));
 		        var retVal = GetOpenWindow(url, "Form_Preview", 1050, 1000, "YES");
 		    }
 		
@@ -517,7 +530,7 @@
 		            para[1] = GetAttribute(selRow[0], "DATA1");
 		            para[2] = companyID;
 		
-		            var url = "FormSelect.aspx";
+		            var url = "/admin/ezApproval/formSelect.do";
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:430px;dialogHeight:580px;status:no;help:no;scroll:no;edge:sunken");
 		
 		            if (retVal[0] == "OK") {
