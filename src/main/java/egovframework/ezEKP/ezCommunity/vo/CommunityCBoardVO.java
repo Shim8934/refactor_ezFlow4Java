@@ -1,9 +1,5 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
-/**
- * @author DC363
- *
- */
 public class CommunityCBoardVO {
 	/** 게시물일련번호*/
 	int no;

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -170,23 +171,29 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getLeftCommunity.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
-	@ResponseBody
-	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie) throws Exception {
+	@RequestMapping(value = "/ezCommunity/getLeftCommunity.do")
+	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-        return ezCommunityService.getLeftCommunity(userInfo);
+		List<CommunityClubVO> list = ezCommunityService.getLeftCommunity(userInfo);
+		
+		model.addAttribute("list", list);
+		
+        return "json"; 
 	}
 	
 	/**
 	 * 알림마당목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do", method = RequestMethod.POST, produces = "TEXT/XML;CHARSET=UTF-8")
-	@ResponseBody
-	public String getLeftBoardList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do")
+	public String getLeftBoardList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		return ezCommunityService.getLeftBoardList(userInfo.getTenantId());
+		List<CommunityCBoardVO> list = ezCommunityService.getLeftBoardList(userInfo.getTenantId());
+		
+		model.addAttribute("list", list);
+		
+		return "json";
 	}
 	
 	/**
@@ -3755,43 +3762,45 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 카테고리별 커뮤니티화면 업무별/종류별 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	@ResponseBody
+	@RequestMapping(value = "/ezCommunity/myCategoryCop.do")
 	public String myCategoryCop (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("mainPageCategory started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		StringBuilder sb = new StringBuilder();
 		String mode = request.getParameter("mode");
 		
-		sb.append("<ITEM>");
+		List<CommunityCCategoryVO> list = new ArrayList<CommunityCCategoryVO>();
 		
 		if (mode.equals("A")) {
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("a", userInfo.getTenantId());
-			
 			for(CommunityCCategoryVO category : categoryList) {
-				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getTenantId())));
+				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getTenantId());
+				if (vo != null) {
+					list.add(vo);
+				}
 			}
 		} else {
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("b", userInfo.getTenantId());
 			
 			for(CommunityCCategoryVO category : categoryList) {
-				sb.append(commonUtil.getQueryResult(ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getTenantId())));
+				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getTenantId());
+				if (vo != null) {
+					list.add(vo);
+				}
 			}
 		}
 		
-		sb.append("</ITEM>");
-		
 		logger.debug("mainPageCategory ended.");
 		
-		return sb.toString();
+		model.addAttribute("list", list);
+		
+		return "json";
 	}
 	
 	/**
 	 * 카테고리별 커뮤니티화면 업무별/종류에 따른 커뮤니티목록  호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/categoryCopList.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	@ResponseBody
+	@RequestMapping(value = "/ezCommunity/categoryCopList.do")
 	public String categoryCopList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
@@ -3800,33 +3809,27 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int startRow = (5 * (page - 1)) + 1;
 		int endRow = 5 * page;
-		StringBuilder sb = new StringBuilder();
 		
 		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, userInfo.getTenantId());
 		
-		sb.append("<DATA>");
-		
 		for (CommunityClubVO club : clubList) {
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
-			sb.append(commonUtil.getQueryResult(club));
 		}
 		
-		sb.append("</DATA>");
+		model.addAttribute("list", clubList);
 		
-		return sb.toString();
+		return "json";
 	}
 	
 	/**
 	 * 카테고리별 커뮤니티 검색기능 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/searchCop.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
-	@ResponseBody
-	public String searchCop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/ezCommunity/searchCop.do")
+	public String searchCop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("searchCop started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String search = "";
-		StringBuilder sb = new StringBuilder();
 		
 		String option = request.getParameter("option");
 		String keyword = request.getParameter("keyword");
@@ -3846,26 +3849,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		List<CommunityClubVO> clubList = ezCommunityService.searchCop(search, keyword, startRow, endRow, "SEA", userInfo.getTenantId());
-		
-		if (clubList.size() == 0) {
-			return "NOTIME";
-		}
-		
-		sb.append("<DATA>");
+		List<CommunityClubVO> clubCopCnt = ezCommunityService.searchCop(search, keyword, startRow, endRow, "CNT", userInfo.getTenantId());
 		
 		for (CommunityClubVO club : clubList) {
+			if (clubList.indexOf(club) == 0 ) { 
+				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
+			}
+			
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
-			sb.append(commonUtil.getQueryResult(club));
 		}
 		
-		sb.append("<COPCNT>");
-		sb.append(clubList.size());
-		sb.append("</COPCNT>");
-		sb.append("</DATA>");
+		model.addAttribute("list", clubList);
 		
 		logger.debug("searchCop ended.");
 		
-		return sb.toString();
+		return "json";
 	}
 	
 	/**

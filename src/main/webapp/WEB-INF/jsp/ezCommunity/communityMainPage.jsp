@@ -559,46 +559,46 @@
 	        function get_categoryCommunity(type) {
 	            $.ajax({
 					type : "POST",
-					dataType : "text",
+					dataType : "json",
 					async : true,
 					url : "/ezCommunity/myCategoryCop.do",
-					data	:	{mode : type
+					data	:	{
+						mode : type
 					},
 					success: function(result){
-						event_get_categoryCommunity(result);
+						event_get_categoryCommunity(result["list"]);
 					}
 				});
 	        }
 	        
-	        function event_get_categoryCommunity(result) {
+	        function event_get_categoryCommunity(list) {
                 document.getElementById("categorytab").innerHTML = "";
 
-                var xmldom = loadXMLString(result);
                 var ul = document.createElement("UL");
                 ul.className = "left_tabpartLis";
                 
-                for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW").length; i++) {
-                    var li = document.createElement("LI");
-
+                list.forEach(function(categoryVO, index) {
+                	var li = document.createElement("LI");
+                	
                     var a = document.createElement("A");
                     a.style.cursor = "pointer";
-                    a.setAttribute("type", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CATE"));
-                    a.setAttribute("cnt", SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CNT"));
+                    a.setAttribute("type", categoryVO.cate);
+                    a.setAttribute("cnt", categoryVO.cnt);
                     a.onclick = function () { select_category(this); };
                     
-                    if (i == 0) {
+                    if (index == 0) {
                         a.onclick();
                     }
                     
-                    a.innerHTML = getcategoryname(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "C_NAME"));
-
+                    a.innerHTML = getcategoryname(categoryVO.c_Name);
+                    
                     var span = document.createElement("SPAN");
-                    span.innerHTML = "(" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM")[0], "ROW")[i], "CNT") + ")";
+                    span.innerHTML = "(" + categoryVO.cnt + ")";
 
                     a.appendChild(span);
                     li.appendChild(a);
                     ul.appendChild(li);
-                }
+                });
                 
                 document.getElementById("categorytab").appendChild(ul);
 	        }
@@ -709,36 +709,34 @@
 	            
 	            $.ajax({
 					type : "POST",
-					dataType : "text",
-					async : true,
+					dataType : "json",
 					url : "/ezCommunity/categoryCopList.do",
 					data	: {	mode	:	mode,
 								page	:	CurPage,
 								type 	:	type
 					},
 					success: function(result){
-						event_select_category(result);
+						event_select_category(result["list"]);
 					}
 				});
 				
 	        }
 	        
-	        function event_select_category(val) {
-	        	if (val == "NOITEM") {
+	        function event_select_category(list) {
+	        	if (list.length == 0) {
                     alert(strLang1);
                     return;
                 }
                 
-                var xmldom = loadXMLString(val);
                 document.getElementById("categorylist").innerHTML = "";
                 var table = document.createElement("TABLE");
                 table.className = "right_tabpartListLayout";
                 table.style.width = "100%";
                 table.style.border = "0";
 
-                for (var i = 0; i < SelectNodes(xmldom, "DATA/ROW").length; i++) {
-                    if (i == 0 && SelectSingleNodeValue(SelectNodes(xmldom, "DATA")[0], "COPCNT") != "") {
-                        var total = SelectSingleNodeValue(SelectNodes(xmldom, "DATA")[0], "COPCNT");
+                list.forEach(function(clubVO, index) {
+                	if (index == 0 && clubVO.copCnt != 0) {
+                        var total = clubVO.copCnt;
                         
                         if (total % 5 == 0) {
                             totalPage = total / 5;
@@ -746,18 +744,18 @@
                             totalPage = parseInt(total / 5) + 1;
                         }
                     }
-                    
-                    var tr = document.createElement("TR");
+                	
+                	var tr = document.createElement("TR");
                     var td = document.createElement("TD");
                     var dl = document.createElement("DL");
                     dl.className = "right_tabpartList";
                     var dt = document.createElement("DT");
                     var img = document.createElement("IMG");
                     
-                    if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1) {
-                        img.src = "/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_type") > -1) {
+                        img.src = "/images/ezCommunity/logo/" + clubVO.c_Logo_Thumbnail;
                     } else {
-                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + clubVO.c_Logo_Thumbnail;
                     }
                     
                     img.style.width = "84px";
@@ -766,21 +764,21 @@
                     var strong = document.createElement("STRONG");
                     
                     if (strlang == "" || strlang == "1") {
-                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
+                        strong.innerHTML = clubVO.c_ClubName;
                     } else {
-                        strong.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME2");
+                        strong.innerHTML = clubVO.c_ClubName2;
                     }
                     
                     dd.appendChild(strong);
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    dd2.innerHTML = clubVO.c_ClubDesc;
 
                     var dd3 = document.createElement("DD");
                     
                     if (strlang == "" || strlang == "1") {
-                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION") + ")";
+                        dd3.innerHTML = strLang2 + " : " + clubVO.displayName + "(" + clubVO.description + ")";
                     } else {
-                        dd3.innerHTML = strLang2 + " : " + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DISPLAYNAME2") + "(" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "DESCRIPTION2") + ")";
+                        dd3.innerHTML = strLang2 + " : " + clubVO.displayName2 + "(" + clubVO.description2 + ")";
                     }
 
                     dt.appendChild(img);
@@ -809,10 +807,10 @@
                     var span4 = document.createElement("SPAN");
 
                     span.className = "icon_community01";
-                    span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT");
+                    span.innerHTML = clubVO.c_MemberCnt;
                     span2.className = "line";
                     span3.className = "icon_community02";
-                    span3.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "CNT");
+                    span3.innerHTML = clubVO.itemCnt;
                     span4.className = "line";
 
                     var br = document.createElement("BR");
@@ -822,8 +820,8 @@
                     var span5 = document.createElement("SPAN");
                     span5.className = "btn_community01";
 
-                    span5.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
-                    span5.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
+                    span5.setAttribute("code", clubVO.c_ClubNo.trim());
+                    span5.setAttribute("type", clubVO.c_ClubConfirmType);
                     span5.onclick = function () { move_cop(this); };
 
                     var span6 = document.createElement("SPAN");
@@ -846,7 +844,7 @@
                     tr.appendChild(td);
 
                     table.appendChild(tr);
-                }
+                });
                 
                 document.getElementById("categorylist").appendChild(table);
                 makePageSelPage();
@@ -1026,15 +1024,14 @@
 	            
 	            $.ajax({
 					type : "POST",
-					dataType : "text",
-					async : true,
+					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
 								keyword	:	searchvalue,
 								page 	:	CurPage
 					},
 					success: function(result){
-						event_select_category(result);
+						event_select_category(result["list"]);
 					}
 				});
 	        }
@@ -1044,15 +1041,14 @@
 
 	            $.ajax({
 					type : "POST",
-					dataType : "text",
-					async : true,
+					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
 								keyword	:	searchvalue,
 								page 	:	CurPage
 					},
 					success: function(result){
-						event_select_category(result);
+						event_select_category(result["list"]);
 					}
 				});
 	        }
@@ -1090,7 +1086,7 @@
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
-					async : true,
+					async : false,
 					url : "/ezCommunity/remote/getACL.do",
 					data : { cID	:	idx,
 							 uID	:	"${userInfo.id}"
@@ -1118,7 +1114,7 @@
 				$.ajax({
 					type : "POST",
 					dataType : "text",
-					async : true,
+					async : false,
 					url : "/ezCommunity/getIsJoin.do",
 					data : { code	:	idx
 					},
@@ -1131,7 +1127,7 @@
 	                        var left = (width - wWidth) / 2;
 	                        var top = (heigth - wHeight) / 2;
 	                        var type = val.getAttribute("type");
-
+	                        
 	                        if (type == "2") {
 	                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 	                        } else if (type == "3") {
