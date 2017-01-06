@@ -143,4 +143,10 @@ public interface EzApprovalAdminService {
 
 	public String getFormContent(ApprFormInfoVO apprFormInfoVO) throws Exception;
 
+	public String deleteForm(ApprFormInfoVO apprFormInfoVO) throws Exception;
+
+	public String formMove(ApprFormContVO apprFormContVO) throws Exception;
+
+	public String setFormOrder(ApprFormContVO apprFormContVO) throws Exception;
+
 }

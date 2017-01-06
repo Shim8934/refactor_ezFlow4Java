@@ -170,9 +170,10 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTML(HttpServletRequest request, Locale locale) throws Exception{
+	public String mhtToHTML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String filePath = "";
-        String uploadModule = config.getProperty("config.LocalPath");
+        String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
         

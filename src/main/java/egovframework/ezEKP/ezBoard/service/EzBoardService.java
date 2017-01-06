@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -206,6 +207,10 @@ public interface EzBoardService {
 	public void setListOrder(LoginVO userInfo, String pBoardList, String pDelBoardList) throws Exception;
 	
 	public String deleteTempItem(String strItemID, int tenantID) throws Exception;
+
+	public String getItemAttachmentXMLRetrans(BoardItemVO boardItemVO) throws Exception;
+
+	public String getItemAttachmentXML(BoardItemVO boardItemVO) throws Exception;
 
 
 }

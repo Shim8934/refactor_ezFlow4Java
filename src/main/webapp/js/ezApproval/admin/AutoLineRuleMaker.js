@@ -289,7 +289,7 @@ function FormCheck_After() {
 
         pObj.innerHTML = "";
         var optn = document.createElement("OPTION");
-        setNodeText(optn , "직접입력");
+        setNodeText(optn , strLangyj1);
         optn.value = "";
         pObj.options.add(optn);
         optn = null;
@@ -499,38 +499,38 @@ function MakeListXML(pDocType) {
             pListXml = pListXml + "<CELL>";
             switch (getNodeText(GetElementsByTagName(AprRuleXML, "OPERATORTYPE")[i])) {
                 case "TXT":
-                    pListXml = pListXml + " <VALUE><![CDATA[문자]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[" + strLangyj2 + "]]></VALUE>";
                     break;
                 case "NUM":
-                    pListXml = pListXml + " <VALUE><![CDATA[숫자]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[" + strLangyj3 + "]]></VALUE>";
                     break;
             }
             pListXml = pListXml + "</CELL>";
             pListXml = pListXml + "<CELL>";
             switch (getNodeText(GetElementsByTagName(AprRuleXML, "OPERATOR")[i])) {
                 case "NUM_GE":
-                    pListXml = pListXml + " <VALUE><![CDATA[>= (이상)]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[>= (" + strLangyj4 + ")]]></VALUE>";
                     break;
                 case "NUM_LE":
-                    pListXml = pListXml + " <VALUE><![CDATA[<= (이하)]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[<= (" + strLangyj5 + ")]]></VALUE>";
                     break;
                 case "NUM_GT":
-                    pListXml = pListXml + " <VALUE><![CDATA[> (초과)]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[> (" + strLangyj7 + ")]]></VALUE>";
                     break;
                 case "NUM_LT":
-                    pListXml = pListXml + " <VALUE><![CDATA[< (미만)]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[< (" + strLangyj6 + ")]]></VALUE>";
                     break;
                 case "NUM_EQ":
-                    pListXml = pListXml + " <VALUE><![CDATA[= (동일)]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[= (" + strLangyj8 + ")]]></VALUE>";
                     break;
                 case "TXT_EQ":
-                    pListXml = pListXml + " <VALUE><![CDATA[동일]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[" + strLangyj8 + "]]></VALUE>";
                     break;
                 case "TXT_INC":
-                    pListXml = pListXml + " <VALUE><![CDATA[포함]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[" + strLangyj9 + "]]></VALUE>";
                     break;
                 case "TXT_NOTINC":
-                    pListXml = pListXml + " <VALUE><![CDATA[미포함]]></VALUE>";
+                    pListXml = pListXml + " <VALUE><![CDATA[" + strLangyj10 + "]]></VALUE>";
                     break;
             }
             pListXml = pListXml + "</CELL>";

@@ -22,8 +22,18 @@ public class ApprFormContVO {
 	private int tenantID;
 	/** */
 	private int id;
+	/** */
+	private String contID;
+	/** */
+	private String formID;
+	/** */
+	private String selContID;
 	/** 그룹별로 권한 줄때 사용*/
 	private String formContDepts;
+	/** */
+	private int formOrder;
+	/** */
+	private String formIDList;
 	
 	public String getFormContID() {
 		return formContID;
@@ -90,6 +100,36 @@ public class ApprFormContVO {
 	}
 	public void setFormContDepts(String formContDepts) {
 		this.formContDepts = formContDepts;
+	}
+	public String getContID() {
+		return contID;
+	}
+	public void setContID(String contID) {
+		this.contID = contID;
+	}
+	public String getFormID() {
+		return formID;
+	}
+	public void setFormID(String formID) {
+		this.formID = formID;
+	}
+	public String getSelContID() {
+		return selContID;
+	}
+	public void setSelContID(String selContID) {
+		this.selContID = selContID;
+	}
+	public int getFormOrder() {
+		return formOrder;
+	}
+	public void setFormOrder(int formOrder) {
+		this.formOrder = formOrder;
+	}
+	public String getFormIDList() {
+		return formIDList;
+	}
+	public void setFormIDList(String formIDList) {
+		this.formIDList = formIDList;
 	}
 	
 }
