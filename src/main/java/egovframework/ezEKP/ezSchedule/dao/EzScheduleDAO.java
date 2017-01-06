@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezSchedule.dao;
 
-
-
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
@@ -29,13 +26,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheGetHolidayVO> getTholiday(Map<String, Object> map){
 		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholiday", map);
 	}
-	
-	@SuppressWarnings("unchecked")
+		
 	public ScheduleConfigVO getScheduleConfig(Map<String, Object> map){
 		return (ScheduleConfigVO) select("EzScheduleDAO.getScheduleConfig", map);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ScheduleInfoVO getScheduleInfo(Map<String, Object> map){
 		return (ScheduleInfoVO) select("EzScheduleDAO.getScheduleInfo", map);
 	}
@@ -93,12 +88,7 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public UserLocalInfoVO getUserLocalInfo(Map<String, Object> map) {
 		select("EzScheduleDAO.getUserLocalInfo", map);
 		return (UserLocalInfoVO) map.get("ezScheduleDaO.getUserLocalInfo");
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ScheduleGroupListVO> getScheduleGroupList(Map<String, Object> map){
-		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getScheduleGroupList", map);
-	}
+	}	
 	
 	@SuppressWarnings("unchecked")
 	public List<ScheduleGmailInfoVO> getScheduleGmailInfo(Map<String, Object> map){
@@ -107,6 +97,16 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	
 	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception{
 		insert("EzScheduleDAO.scheduleNewItem", scheduleInfoVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userID) throws Exception {
+		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getScheduleGroupList", userID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleInfoVO> getScheduleList(Map<String, Object> map) throws Exception  {
+		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getScheduleList", map);
 	}
 }
 

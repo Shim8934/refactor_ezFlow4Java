@@ -114,18 +114,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
-    		System.out.println("funCode: " + funCode);
         } else {
-        	System.out.println("funCode: NULL");
+        	funCode = "2";
         }
         
         if (request.getParameter("subfunction") != null) {
         	subCode = request.getParameter("subfunction");
+        } else {
+        	subCode = "1";
         }
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-
 		
 		return "/ezSchedule/scheduleIndex";
 	}
@@ -136,20 +136,26 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		String	funCode		= "";	// 일정관리 or 업무관리(3)
-		String	subCode		= "";	// 아직 모름	
-		int	defaultView		= 1;	// 일간, 주간, 월간
+		String	subCode		= "";	// 아직 모름
+		int	defaultView		= 2;	// 일간, 주간, 월간
 		int	startDay		= 7;	// 일요일부터 또는 월요일부터
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
+        } else {
+        	funCode = "1";
         }
         
         if (request.getParameter("subfunction") != null) {
         	subCode = request.getParameter("subfunction");
+        } else {
+        	subCode = "1";
         }
 
         LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId());
+        
+		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId(), loginVO.getTenantId());
+		
 		if (schConfVO != null) {
 			defaultView = schConfVO.getDefaultView();
 			startDay = schConfVO.getStartDay();
@@ -157,11 +163,84 @@ public class EzScheduleController extends EgovFileMngUtil {
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-		model.addAttribute("defautView", defaultView);	// 임시
-		model.addAttribute("startDay", startDay);	// 임시
-
+		model.addAttribute("defautView", defaultView);
+		model.addAttribute("startDay", startDay);
 		
 		return "/ezSchedule/scheduleLeft";
+	}
+	
+	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetHoliday(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String cID = request.getParameter("COMPANYID");
+		
+		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID());
+		
+		String returnXML = "";
+		
+		for (int i=0; i<getHoliday.size(); i++ ) {
+			returnXML += commonUtil.getQueryResult(getHoliday.get(i));
+		}
+		
+		return "<DATA>" + returnXML + "</DATA>";
+	}
+	
+	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = userInfo.getId();
+		String deptID = userInfo.getDeptID();
+		String companyID = userInfo.getCompanyID();
+		String startDate = request.getParameter("STARTDATE");
+		String endDate = request.getParameter("ENDDATE");		
+		String infoXML = "";	
+		startDate = startDate + " 00:00:00";
+		endDate = endDate + " 23:59:59";
+
+		//String idList = request.getParameter("IDLIST");		
+		//String groupID = request.getParameter("GROUPID");
+		//String app = request.getParameter("APP");
+		
+		/* 도메인 및 메일과 관련된 공유 프로세스로 짐작됨. 일단 주석처리함 */
+		/*String domainName = null;
+        domainName = GetSystemConfigValue("DomainName");
+
+        String personalid = null;
+        String sharedeptid = null;
+        String sharecompanyid = null;
+
+        if (GetSystemConfigValue("LoginIDType") == "mail")
+        {
+            personalid = userinfo.Email;
+            sharedeptid = "D" + userinfo.DeptID + "@" + domainName;
+            sharecompanyid = "C" + userinfo.CompanyID + "@" + domainName;
+        }
+        else
+        {
+            personalid = userinfo.UserPrincipalName;
+            sharedeptid = "D" + userinfo.DeptID + "@" + domainName;
+            sharecompanyid = "C" + userinfo.CompanyID + "@" + domainName;
+        }*/
+		
+		/* 구글 메일 연동관련 조건문. 일단 주석처리함 */
+		/*if (idList != "GOOGLE") {
+			
+		} else {
+			
+		}*/
+		
+		infoXML = ezScheduleService.getScheduleList(startDate, endDate, userID, deptID, companyID);
+		
+		return infoXML;
 	}
 
 	/**
@@ -322,7 +401,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             endTime		= 1020 / 60;
         }
 
-        List<ScheduleGroupListVO> groupList = ezScheduleInfo.GetScheduleGroupList(loginVO.getId());
+        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
 		groupXml = commonUtil.getQueryResult(groupList);	// 일정 그룹 목록
         groupXmlTemp = groupXml.replace("\"", "&quot;");
 
@@ -405,7 +484,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("hqList",		hqList);
         model.addAttribute("shareList",		shareList);
         model.addAttribute("useExchange",	useExchange);
-		
+        
 		return "/ezSchedule/scheduleMain";
 	}
 
@@ -686,7 +765,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             }
             // scheduleId == null
             else {
-                groupList = ezScheduleInfo.GetScheduleGroupList(loginVO.getId());
+                groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
             }
             
 			String cDate = "";
@@ -1345,23 +1424,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         strXML.append("</NODES></ROOT>");
         
         return strXML.toString();
-    }
-	
-	/**
-	 * 일정관리 휴일 함수 호출 함수
-	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String scheduleGetHoliday(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().toUpperCase().trim(), userInfo.getCompanyID());
-		String returnXML = "";
-		for (int i=0; i<getHoliday.size(); i++ ) {
-			returnXML = commonUtil.getQueryResult(getHoliday.get(i));
-		}
-		return returnXML;
-	}
+    }	
 
     public int GetReceiveCount_DB(String pUserId)
     {

@@ -10,16 +10,16 @@
         <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
         <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />
-
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js?ver=1.2"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js?ver=1.3"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>
     	
 		<script type="text/javascript">
-		    var userOffset = "${pOffset}";
+		    var UserOffset = "${pOffset}";
 			var timeZoneStr = "${timeZoneStr}";
 			var receivecount = "${receiveCount}";
 			var groupcount = "${groupCount}>";
@@ -35,61 +35,64 @@
 			var groupxml = "${groupXmlTemp}";
 			var sharexml = "${shareXml}";
 		    var idlist = "${idList}";
-
 		    var pDisplaySTime = "${startTime}";
 		    var pDisplayETime = "${endTime}";
 		    var pDefaultview = "${defaultView}";
 		    var pStartday = "${startDay}";
 		    var pUse_Editor = "${useEditor}";
-
-		    var xmlhttp2 = createXMLHttpRequest();
+		    
 		    function schedule_get_holiday() {
-		        xmlhttp2 = createXMLHttpRequest();
+		        /* xmlhttp2 = createXMLHttpRequest();
 		        var xmlDom = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		        createNodeAndInsertText(xmlDom, objNode, "COMPANYID", "VIEW");
 		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do", true);
 		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
-		        xmlhttp2.send(xmlDom);
+		        xmlhttp2.send(xmlDom); */
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezSchedule/scheduleGetHoliday.do",
+		    		data : {
+		    			COMPANYID  : "VIEW"		    			
+		    		},
+		    		success: function(text){
+		    			XmlNodeText = text;
+			            XmlNode = loadXMLString(XmlNodeText);
+			            
+			            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+			                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+			                    var issolar;
+			                    var holiday;
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+			                        issolar = "1";
+			                    else
+			                        issolar = "2";
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+			                        holiday = true;			                    
+			                    else
+			                        holiday = false;
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                    }
+			                    else {                   	
+			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                    }
+			                }
+			            }			            
+			            CalendarView("Calendar");
+		    		}		    		
+		        });
 		    }
-
-		    function event_schedule_get_holiday() {
-		        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
-		            return;
-		        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
-		            XmlNodeText = xmlhttp2.responseText;
-		            XmlNode = loadXMLString(XmlNodeText);
-		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-		                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
-		                    var issolar;
-		                    var holiday;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                        issolar = "1";
-		                    else
-		                        issolar = "2";
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")
-		                        holiday = true;
-		                    else
-		                        holiday = false;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-		                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-                                    GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-                                    GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                    else {
-		                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-                                    GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
-                                    GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-                                    GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                }
-		            }
-		            xmlhttp2 = null;
-		            CalendarView("Calendar");
-		        }
-		    }
-
+		    
 		    window.onresize = resize;
 		    document.onselectstart = function () { return false; };
 		    function disablelayer() {
@@ -100,6 +103,7 @@
 
 		    window.onload = function () {
 		        schedule_get_holiday();
+		        
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
