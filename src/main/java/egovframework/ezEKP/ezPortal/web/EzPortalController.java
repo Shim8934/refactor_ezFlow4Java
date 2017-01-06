@@ -2245,7 +2245,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 	public String menuItemSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mainHTML = "";
-		String strXML = ezPortalService.searchMenuItem("", 1, 10, "", userInfo.getTenantId());
+		String strXML = ezPortalService.searchMenuItem("", 1, 10, "");
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("DISPLAYNAME").getLength(); i++) {
