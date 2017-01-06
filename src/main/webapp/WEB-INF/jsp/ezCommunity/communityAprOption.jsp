@@ -13,17 +13,17 @@
 			var ReturnFunction;
 			var ReturnFunctionName;
 			window.onload = function() {
-				try {
-                    RetValue = parent.ezapropinion_cross_dialogArguments[0];
-                    ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
-                } catch (e) {
-                    try {
-                        RetValue = opener.ezapropinion_cross_dialogArguments[0];
-                        ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
-                    } catch (e) {
-                        RetValue = window.dialogArguments;
-                    }
-                }
+// 				try {
+//                     RetValue = parent.ezapropinion_cross_dialogArguments[0];
+//                     ReturnFunction = parent.ezapropinion_cross_dialogArguments[1];
+//                 } catch (e) {
+//                     try {
+//                         RetValue = opener.ezapropinion_cross_dialogArguments[0];
+//                         ReturnFunction = opener.ezapropinion_cross_dialogArguments[1];
+//                     } catch (e) {
+//                         RetValue = window.dialogArguments;
+//                     }
+//                 }
                 
 				try {
 			        document.getElementById("pMessageContent").innerHTML = parent.ezapropinion_cross_dialogArguments[0];
@@ -65,8 +65,8 @@
 			
 			function btn_OpinionOK_onclick() {
 			    if (ReturnFunction != null) {
-			        window.close();
 			        ReturnFunction(true, ReturnFunctionName);
+			        window.close();
 			    }
 			    else {
 			        window.returnValue = true;

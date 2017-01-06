@@ -3596,6 +3596,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String gClubG = ezCommunityService.getACLGet1(cID, userInfo.getTenantId());
 		String cPermit = ezCommunityService.getACLGet2(uID, cID, userInfo.getTenantId());
+		logger.debug("gClubG=" + gClubG + " || cPermit=" + cPermit);
 		
 		if (cPermit == null || cPermit.equals("0")) {
 			if (gClubG.trim().equals("3")) {
