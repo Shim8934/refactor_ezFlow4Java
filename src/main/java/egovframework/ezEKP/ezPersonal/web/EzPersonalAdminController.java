@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import com.sun.media.jfxmedia.logging.Logger;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -140,7 +142,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		int pageSize = 12;
 		int cnt = 0;
 		
-		int totalCount = ezPersonalAdminService.getNoticeCount(companyID);
+		int totalCount = ezPersonalAdminService.getNoticeCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		int iSn = totalCount - ((currentPage -1 ) * 12);
 		
@@ -150,7 +152,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<CNT>" + cnt + "</CNT>");
 		
-		List<PersonalNoticeVO> list = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, (currentPage-1) * pageSize);
+		List<PersonalNoticeVO> list = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, (currentPage-1) * pageSize, userInfo.getTenantId());
 		
 		result.append("<ROWS>");
 		
@@ -159,7 +161,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1></CELL>");
 			
 			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + vo.getPostDate().substring(0, 10) + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getPostDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE></CELL>");
 			result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
 			result.append("<TYPE>BTN</TYPE>");
 			result.append("<FUNC>mod_notice</FUNC>");
@@ -183,10 +185,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/delNotice.do", produces = "text/xml; charset=utf-8") 
 	@ResponseBody
-	public String delNotice(HttpServletRequest request) throws Exception {
+	public String delNotice(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
-		String result = ezPersonalAdminService.deleteNotice(itemSeq);
+		String result = ezPersonalAdminService.deleteNotice(itemSeq, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -232,16 +235,18 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String saveNotice(@ModelAttribute PersonalNoticeVO vo) throws Exception {
+	public String saveNotice(@CookieValue("loginCookie") String loginCookie,@ModelAttribute PersonalNoticeVO vo) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		if (vo.getTitle2() == null) {
 			vo.setTitle2(vo.getTitle());
 		}
 		
 		if (vo.getItemSeq() == null) {
-			String result = ezPersonalAdminService.insertNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent());
+			String result = ezPersonalAdminService.insertNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), userInfo.getTenantId());
 			return result;
 		} else {
-			String result = ezPersonalAdminService.updateNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), vo.getItemSeq());
+			String result = ezPersonalAdminService.updateNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), vo.getItemSeq(), userInfo.getTenantId());
 			return result;
 		}
 	}
@@ -287,8 +292,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getQuickLinkList() throws Exception {
-		String result = ezPersonalAdminService.getQuickLinkList();
+	public String getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String result = ezPersonalAdminService.getQuickLinkList(userInfo);
 		return result;
 	}
 	
@@ -316,10 +322,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getQuickLink(HttpServletRequest request) throws Exception {
+	public String getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
-		String result = ezPersonalAdminService.getQuickLink(quickLinkID);
+		String result = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -329,10 +336,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkACL.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getQuickLinkACL(HttpServletRequest request) throws Exception {
+	public String getQuickLinkACL(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
-		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID);
+		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -415,9 +423,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		int totalCount = ezPersonalAdminService.getPollCount(companyID);
+		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
-		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize);
+		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
 		
 		result.append("<LISTVIEWDATA>");
 		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
@@ -435,15 +443,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<VALUE>" + vo.getPollTitle() + "</VALUE>");
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 			result.append("<CELL>");
 			
-			if (vo.getEndDate().indexOf("1900-01-01") > -1) {
+			if (commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
 				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");
 				progressPollFlag = "true";
 			} else {
-				result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
+				System.out.println("endDate="+vo.getEndDate());
+				System.out.println("endDate="+commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10));
+				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			}
 			
 			result.append("</CELL>");
@@ -483,10 +493,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/savePoll.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String savePoll(@RequestBody String data) throws Exception {
+	public String savePoll(@CookieValue("loginCookie") String loginCookie,@RequestBody String data) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
-		String result = ezPersonalAdminService.insertPoll(doc);
+		String result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -496,10 +507,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/delPoll.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String delPoll(HttpServletRequest request) throws Exception {
+	public String delPoll(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
-		String result = ezPersonalAdminService.deletePoll(itemSeq);
+		String result = ezPersonalAdminService.deletePoll(itemSeq, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -516,7 +528,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		
 		
-		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq);
+		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("2") && infoVO.getPollTitle2() != null) {
 			subject = infoVO.getPollTitle2();
@@ -524,13 +536,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			subject = infoVO.getPollTitle();
 		}
 		
-		if (infoVO.getEndDate().indexOf("1990-01-01") > -1) {
-			title = infoVO.getStartDate() + " - " + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale());
+		if (commonUtil.getDateStringInUTC(infoVO.getEndDate(), userInfo.getOffset(), false).indexOf("1990-01-01") > -1) {
+			title = commonUtil.getDateStringInUTC(infoVO.getStartDate(), userInfo.getOffset(), false) + " - " + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale());
 		} else {
-			title = infoVO.getStartDate() + " - " + infoVO.getEndDate();
+			title = commonUtil.getDateStringInUTC(infoVO.getStartDate(), userInfo.getOffset(), false) + " - " + infoVO.getEndDate();
 		}
 		
-		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollResult(itemSeq);
+		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollResult(itemSeq, userInfo.getTenantId());
 
 		StringBuilder result = new StringBuilder();
 		int count = Integer.parseInt(infoVO.getPollSelectionCount());
@@ -624,7 +636,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		
 
-		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID);
+		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, userInfo.getTenantId());
 		
 		StringBuilder result = new StringBuilder();
 		
@@ -646,11 +658,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
@@ -691,7 +703,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			
-			vo = ezPersonalAdminService.getPopupInfo(itemSeq);
+			vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 			vo.setItemSeq(Integer.parseInt(itemSeq));
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
 		} else {
@@ -728,16 +740,18 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String savePopup(PersonalPopupVO vo) throws Exception {
+	public String savePopup(@CookieValue("loginCookie") String loginCookie,PersonalPopupVO vo) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		if (vo.getTitle2().equals("")) {
 			vo.setTitle2(vo.getTitle());
 		}
 		
 		try {
 			if (vo.getItemSeq() == null) {
-				ezPersonalAdminService.insertPopup(vo);
+				ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
 			} else {
-				ezPersonalAdminService.updatePopup(vo);
+				ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
 			}
 			
 			return "OK";
@@ -751,11 +765,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/delPopup.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String deletePopup(HttpServletRequest request) throws Exception {
+	public String deletePopup(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
 		try {
-			ezPersonalAdminService.deletePopup(itemSeq);
+			ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
 			
 			return "OK";
 		} catch (Exception e) {
@@ -772,7 +787,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String itemSeq = request.getParameter("itemSeq");
 		String title = "";
 		
-		vo = ezPersonalAdminService.getPopupInfo(itemSeq);
+		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 
 		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
 		
@@ -796,7 +811,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID());
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
 			if (userInfo.getPrimary().equals("2")) {
@@ -898,7 +913,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do")
 	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String dirPath = config.getProperty("upload_portal.ROOT");
+		//String dirPath = config.getProperty("upload_portal.ROOT");
+		String dirPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
 		String resultUpload = "false";
 		String uploadSN = "{" + UUID.randomUUID() + "}";
 		String fileLocation = "";
@@ -979,13 +995,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String fileName = request.getParameter("fileName");
 		String mode = request.getParameter("mode");
 		
-		try {
+		//try {
 			ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo);
 			
 			return "OK";
-		} catch (Exception e) {
-			return "ERROR";
-		}
+		//} catch (Exception e) {
+			//return "ERROR";
+		//}
 	}
 	
 	/**
@@ -993,7 +1009,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/statusChangeSlider.do")
 	@ResponseBody
-	public String statusChangeSlider(HttpServletRequest request) throws Exception {
+	public String statusChangeSlider(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
 		String mode = request.getParameter("mode");
 		
@@ -1001,14 +1018,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			String sliderID = request.getParameter("sliderID");
 			String isUse = request.getParameter("isUse");
 			
-			result = ezPersonalAdminService.statusChangeSlider1(sliderID, isUse, mode);
+			result = ezPersonalAdminService.statusChangeSlider1(sliderID, isUse, mode, userInfo.getTenantId());
 		} else {
 			String aRuleID = request.getParameter("aRuleID");
 			String aPriority = request.getParameter("aPriority");
 			String bRuleID = request.getParameter("bRuleID");
 			String bPriority = request.getParameter("bPriority");
 			
-			result = ezPersonalAdminService.statusChangeSlider2(aRuleID, aPriority, bRuleID, bPriority, mode);
+			result = ezPersonalAdminService.statusChangeSlider2(aRuleID, aPriority, bRuleID, bPriority, mode, userInfo.getTenantId());
 		}
 		
 		return result;
@@ -1034,9 +1051,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String  delQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
-System.out.println("quickLinkID:"+doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent());
-		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent());
+		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent(), userInfo.getTenantId());
 		return "OK";
 	}
 }

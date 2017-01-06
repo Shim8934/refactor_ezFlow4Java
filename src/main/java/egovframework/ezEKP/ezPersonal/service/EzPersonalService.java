@@ -11,7 +11,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 
 public interface EzPersonalService {
-	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID) throws Exception;
+	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID, int tenantID) throws Exception;
 	
 	public List<PersonalLightPollVO> getPollListUser (String pComapnyID, int pTotal, int pCount, int pStart, int tenantID) throws Exception;
 	

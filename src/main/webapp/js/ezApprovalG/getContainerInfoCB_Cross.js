@@ -131,7 +131,7 @@ function processRowClick(tr) {
             }
         }
 
-        if (WriterID.trim() == arr_userinfo[1].trim()) {
+        if (WriterID == arr_userinfo[1]) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
                     // START

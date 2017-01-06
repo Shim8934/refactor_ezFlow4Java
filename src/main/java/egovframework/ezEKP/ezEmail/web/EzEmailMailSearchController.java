@@ -97,11 +97,9 @@ public class EzEmailMailSearchController {
 		String userLang = userInfo.getLang();
 		String useEditor = config.getProperty("config.EDITOR");
 		
-		long[] timeOffset = ezEmailUtil.getTimeOffsetInHourAndMinute();
-		String userTimeSet = String.format("235|+%02d:%02d", timeOffset[0], timeOffset[1]);
-		String addHour = String.format("+%02d", timeOffset[0]);
+		String userTimeSet = userInfo.getOffset();
 		
-		logger.debug("userTimeSet=" + userTimeSet + ",addHour=" + addHour);
+		logger.debug("userTimeSet=" + userTimeSet);
 		
 		List<String> topLevelFolderNames = null;
 		IMAPAccess ia = null;
@@ -135,7 +133,6 @@ public class EzEmailMailSearchController {
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("userTimeSet", userTimeSet);
-		model.addAttribute("addHour", addHour);
 		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
 		
 		logger.debug("mailSearchView ended.");

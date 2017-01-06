@@ -29,7 +29,6 @@
 	var importanceColor = "#ff0000";
 	var g_userLang = "${userLang}";
 	var g_timezone = "${userTimeSet}";
-	var g_addHour = "${addHour}";
     var checkval = "f";
     var m_strColorSelect = "#DBE1E7";
     var m_strColorOver = "#f4f5f5";
