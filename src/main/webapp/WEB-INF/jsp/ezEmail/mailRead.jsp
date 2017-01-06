@@ -262,7 +262,7 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -369,7 +369,7 @@
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <!-- <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li> -->
+		                    <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
