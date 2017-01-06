@@ -998,7 +998,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpNewImage(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		try {
-			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 			model.addAttribute("sliderList", sliderList);
 			return "/ezPortal/portalWpNewImage";
 		} catch (Exception e) {
@@ -1132,7 +1132,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		String pNewsBDNM = "";
 		String pNewsType = "";
 		
-		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "");
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
@@ -2245,7 +2245,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 	public String menuItemSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mainHTML = "";
-		String strXML = ezPortalService.searchMenuItem("", 1, 10, "", userInfo.getTenantId());
+		String strXML = ezPortalService.searchMenuItem("", 1, 10, "");
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("DISPLAYNAME").getLength(); i++) {

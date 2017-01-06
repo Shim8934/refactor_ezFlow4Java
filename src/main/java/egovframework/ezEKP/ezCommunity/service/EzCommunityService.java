@@ -105,9 +105,9 @@ public interface EzCommunityService {
 	
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item, int tenantID) throws Exception;
 	
-	public String getLeftCommunity(LoginVO userInfo) throws Exception;
+	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception;
 	
-	public String getLeftBoardList(int tenantID) throws Exception;
+	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 	
 	public String goAdminOkGet1(String pClubID, LoginVO userInfo) throws Exception;
 	

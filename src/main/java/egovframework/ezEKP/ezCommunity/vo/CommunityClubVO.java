@@ -139,6 +139,8 @@ public class CommunityClubVO {
 	String userName2;
 	/** 권한*/
 	String permit;
+	/** 접속횟수(1일1회)*/
+	int c_Visited;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -554,6 +556,10 @@ public class CommunityClubVO {
 	public void setPermit(String permit) {
 		this.permit = permit;
 	}
-	
-	
+	public int getC_Visited() {
+		return c_Visited;
+	}
+	public void setC_Visited(int c_Visited) {
+		this.c_Visited = c_Visited;
+	}
 }

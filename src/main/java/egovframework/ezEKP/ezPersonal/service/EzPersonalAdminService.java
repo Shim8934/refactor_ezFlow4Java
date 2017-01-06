@@ -12,55 +12,55 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
 
-	List<PersonalNoticeVO> getNoticeList(String companyID, int totalCount, int pageSize, int pStart) throws Exception;
+	List<PersonalNoticeVO> getNoticeList(String companyID, int totalCount, int pageSize, int pStart, int tenantID) throws Exception;
 	
-	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start) throws Exception;
+	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
-	List<PersonalPopupVO> getPopupList(String companyID) throws Exception;
+	List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception;
 	
-	List<PersonalEmpMonthVO> getEmpMonth(String companyID) throws Exception;
+	List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception;
 	
-	List<PersonalLightPollVO> getPollResult(String itemSeq) throws Exception;
+	List<PersonalLightPollVO> getPollResult(String itemSeq, int tenantID) throws Exception;
 	
 	PersonalNoticeVO getNoticeInfo(String itemSeq, int tenantID) throws Exception;
 	
-	PersonalPopupVO getPopupInfo(String itemSeq) throws Exception;
+	PersonalPopupVO getPopupInfo(String itemSeq, int tenantID) throws Exception;
 	
-	PersonalLightPollVO getPollInfo(String itemSeq) throws Exception;
+	PersonalLightPollVO getPollInfo(String itemSeq, int tenantID) throws Exception;
 	
-	String deleteNotice(String itemSeq) throws Exception;
+	String deleteNotice(String itemSeq, int tenantID) throws Exception;
 	
-	String insertNotice(String companyID, String title, String title2, String content) throws Exception;
+	String insertNotice(String companyID, String title, String title2, String content, int tenantID) throws Exception;
 	
-	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq) throws Exception;
+	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	String getQuickLinkList() throws Exception;
+	String getQuickLinkList(LoginVO loginVO) throws Exception;
 	
-	String getQuickLink(String quickLinkID) throws Exception;
+	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
-	String getQuickLinkACL(String quickLinkID) throws Exception;
+	String getQuickLinkACL(String quickLinkID, int tenantID) throws Exception;
 	
-	String insertPoll(Document doc) throws Exception;
+	String insertPoll(Document doc, int tenantID) throws Exception;
 	
-	String deletePoll(String itemSeq) throws Exception;
+	String deletePoll(String itemSeq, int tenantID) throws Exception;
 	
 	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
 	
-	String statusChangeSlider1(String sliderID, String isUse, String mode) throws Exception;
+	String statusChangeSlider1(String sliderID, String isUse, String mode, int tenantID) throws Exception;
 
-	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode) throws Exception;
+	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode, int tenantID) throws Exception;
 	
-	int getNoticeCount(String companyID) throws Exception;
+	int getNoticeCount(String companyID, int tenantID) throws Exception;
 
-	int getPollCount(String companyID) throws Exception;
+	int getPollCount(String companyID, int tenantID) throws Exception;
 
 	void saveQuickLink(LoginVO userInfo, Document doc) throws Exception;
 
-	void insertPopup(PersonalPopupVO vo) throws Exception;
+	void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;
 
-	void updatePopup(PersonalPopupVO vo) throws Exception;	
+	void updatePopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception;	
 
-	void deletePopup(String itemSeq) throws Exception;
+	void deletePopup(String itemSeq, int tenantID) throws Exception;
 
 	void setEmpMonth(String type, String userID, String deptID, String term, int tenantID) throws Exception;
 
@@ -68,7 +68,7 @@ public interface EzPersonalAdminService {
 
 	void deleteSlider(String sliderID) throws Exception;
 
-	void delQuickLink(String quickLinkID) throws Exception;
+	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 
 	
 
