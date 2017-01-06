@@ -8,6 +8,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
@@ -18,6 +19,7 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "800px";
                 document.getElementById("TForm").style.display = "";
@@ -28,18 +30,29 @@ function ChangeTab(obj) {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
             }
             break;
         case "ApvForm_div4":    // Workflow
+        	if (document.getElementById("ApvForm_content4").style.display == "none") {
+                document.getElementById("ApvForm_content1").style.display = "none";
+                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "";
+                document.getElementById("ApvForm_content5").style.display = "none";
+                document.getElementById("TForm").style.height = "0px";
+                document.getElementById("TForm").style.display = "none";
+        	}
             break;
         case "ApvForm_div5":    // 고정수신처
             if (document.getElementById("ApvForm_content5").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
                 document.getElementById("ApvForm_content2").style.display = "none";
                 document.getElementById("ApvForm_content3").style.display = "none";
+                document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
                 document.getElementById("TForm").style.height = "0px";
                 document.getElementById("TForm").style.display = "none";
@@ -111,21 +124,13 @@ function OpenAlertUI(pAlertContent) {
 }
 
 var xmlhttp = createXMLHttpRequest();
-function SaveFormInfo() {    
-    
-    var xmlpara = createXmlDom();
+function SaveFormInfo() {
     var xmlRtn = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMCONTID", contID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMID", formID);
 
     // 양식 정보 XML로 가져오기
     var arrFormInfo = MakeFormInfoXML();    
     if (arrFormInfo[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMINFO", arrFormInfo[1]);
+        formInfo = arrFormInfo[1];
     }
     else {
         OpenAlertUI(arrFormInfo[2]);
@@ -137,7 +142,7 @@ function SaveFormInfo() {
     var arrFormMHT = MakeFormMHTXML();
 
     if (arrFormMHT[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMMHT", arrFormMHT[1]);
+        formMht = arrFormMHT[1];
     }
     else {
         OpenAlertUI(arrFormMHT[2]);
@@ -150,7 +155,7 @@ function SaveFormInfo() {
     arrFormConn = MakeFormConnXML();
     if (arrFormConn[0] == "TRUE") {
         if (arrFormConn[1] != "") { // 빈값일 경우 수정 안된것이므로 처리 안함.
-            createNodeAndInsertText(xmlpara, objNode, "FORMCONN", arrFormConn[1]);
+            formConn = arrFormConn[1];
         }
     }
     else {
@@ -159,27 +164,24 @@ function SaveFormInfo() {
         return;
     }
 
-    //// Workflow정보 XML로 가져오기
-    //var arrFormWorkflow;
-    //if (document.getElementById("ApvForm_div3_ifrm").src != "") {
-    //    arrFormWorkflow = document.getElementById("ApvForm_div3_ifrm").contentWindow.MakeFormWorkflowXML();
-    //    if (arrFormWorkflow[0] == "TRUE") {
-    //        objNode = xmlpara.createNode(1, "FORMWORKFLOW", "");
-    //        objNode.text = arrFormWorkflow[1];
-    //        xmlpara.documentElement.appendChild(objNode);
-    //    }
-    //    else {
-    //        OpenAlertUI(arrFormWorkflow[2]);
-    //        document.getElementById("1tab4").click();
-    //        return;
-    //    }
-    //}
+    // Workflow정보 XML로 가져오기
+    var arrFormWorkFlow = "";
+    arrFormWorkFlow = MakeFormWorkFlow();
+    if (arrFormWorkFlow[0] == "TRUE") {
+        if (arrFormWorkFlow[1] != "") {
+            formWorkFlow = arrFormWorkFlow[1];
+        }
+    }
+    else {
+        OpenAlertUI(arrFormWorkFlow[2]);
+        document.getElementById("1tab4").click();
+        return;
+    }
 
     //// 고정수신처정보 XML로 가져오기
-
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMRECEVGROUP", arrFormRecevGroup[1]);
+    	formRecevGroup = arrFormRecevGroup[1];
     }
     else {
         OpenAlertUI(arrFormRecevGroup[2]);
@@ -187,9 +189,26 @@ function SaveFormInfo() {
         return;
     }
     
-    xmlhttp.open("POST", "/admin/ezApprovalG/formSave.do", true);
-    xmlhttp.onreadystatechange = SaveFormInfo_after;
-    xmlhttp.send(new XMLSerializer().serializeToString(xmlpara));
+    $.ajax({
+    	type : "POST",
+    	async : false,
+    	url : "/admin/ezApprovalG/formSave.do",
+    	dataType : "text",
+    	data : {
+    		companyID  : companyID,
+			formContID : contID,
+			formID     : formID,
+			formInfo   : formInfo,
+			formMHT    : formMht,
+			formConn   : formConn,
+			formWorkFlow : formWorkFlow,
+			formRecevGroup   : formRecevGroup
+    	},
+    	success : function (result) {
+    		SaveFormInfo_after(result);
+    	}
+    	
+    })
 }
 
 function MakeFormInfoXML() {
@@ -229,7 +248,7 @@ function MakeFormInfoXML_Detail() {
     else
         createNodeAndInsertText(xmlpara, objNode, "ConnFlag", "N");
     
-    return new XMLSerializer().serializeToString(xmlpara);
+    return getXmlString(xmlpara.childNodes[0]);
 }
 
 function MakeFormMHTXML() {
@@ -256,19 +275,19 @@ function MakeFormMHTXML() {
     }
 
     if (pzFormProc.editor.DOM.all("doctitle") != null) {
-        if (typeof (pzFormProc.editor.DOM.all("doctitle").length) != "undefined") {
-            if (pzFormProc.editor.DOM.all("doctitle").length > 1) {
+    	if (typeof (pzFormProc.editor.DOM.all("doctitle").length) != "undefined") {
+        	if (pzFormProc.editor.DOM.all("doctitle").length > 1) {
                 pDataCheck = false;
                 pErrorMsg = strLang1014;
             }
         }
     }
     else {
-        if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == null) {
+    	if (GetAttribute(pzFormProc.editor.DOM.body,"doctitlefield") == null) {
             pDataCheck = false;
             pErrorMsg = strLang1015;
         }
-        else if (pzFormProc.editor.DOM.body.getAttribute("doctitlefield") == "") {
+    	else if (GetAttribute(pzFormProc.editor.DOM.body,"doctitlefield") == "") {
             pDataCheck = false;
             pErrorMsg = strLang1015;
         }
@@ -289,12 +308,7 @@ function MakeFormMHTXML() {
 
 function MakeFormMHTXML_Detail() {
     if (beforeHTML != pzFormProc.editor.DOM.body.outerHTML) {
-        var xmlpara = createXmlDom();
-        var objNode;
-
-        createNodeInsert(xmlpara, objNode, "FORMMHT");
-        createNodeAndInsertText(xmlpara, objNode, "FormData", pzFormProc.DocumentHTML); // 양식데이터(MHT binary)         
-        return new XMLSerializer().serializeToString(xmlpara);
+        return pzFormProc.DocumentHTML;
     }
     else {
         return "";
@@ -306,10 +320,10 @@ function MakeFormConnXML() {
     var pErrorMsg = "";
     var retValue = new Array();
 
-    if (txt_OpinionContent.innerText.replace(/\r\n/g, "").replace(/ /g, "") != "") {
+    if (getNodeText(txt_OpinionContent).replace(/\r\n/g, "").replace(/ /g, "") != "") {
         try {
             var xmldom = createXmlDom();
-            xmldom = loadXMLString("<CONNINFO>\n" + txt_OpinionContent.innerText + "\n</CONNINFO>");
+            xmldom = loadXMLString("<CONNINFO>\n" + getNodeText(txt_OpinionContent) + "\n</CONNINFO>");
             
             if (xmldom.getElementsByTagName("conn").length == 0) {
                 // XML로 Parsing이 되며 conn설정이 있는지 확인.
@@ -322,16 +336,16 @@ function MakeFormConnXML() {
 
                 for (var i = 0; i < xmldom.getElementsByTagName("conn").length; i++) {
                     pCheck = true;
-                    if (xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getAttribute("processtime") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("connstring")[0].getAttribute("flag") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("connstring")[0].textContent == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("query")[0].getAttribute("qtype") == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("query")[0].textContent == null) { pCheck = false; }
-                    if (xmldom.getElementsByTagName("conn")[i].getElementsByTagName("keys")[0] == null) { pCheck = false; }
+                    if (GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") == null) { pCheck = false; }
+                    if (GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime") == null) { pCheck = false; }
+                    if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "connstring"), "flag") == null) { pCheck = false; }
+                    if (getNodeText(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "connstring")) == null) { pCheck = false; }
+                    if (GetAttribute(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query"), "qtype") == null) { pCheck = false; }
+                    if (getNodeText(SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "query")) == null) { pCheck = false; }
+                    if (SelectSingleNode(xmldom.getElementsByTagName("conn")[i], "keys") == null) { pCheck = false; }
                     
                     if (pCheck) {
-                        pConnArray[i] = xmldom.getElementsByTagName("conn")[i].getAttribute("processidx") + xmldom.getElementsByTagName("conn")[i].getAttribute("processtime");
+                    	pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i],"processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i],"processtime");
                     }
                     else {
                         // conn 설정의 각 필드설정이 정상인지 확인
@@ -388,11 +402,35 @@ function MakeFormConnXML_Detail() {
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "CONNXML");    
-    createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.innerText)); // 연동 XML
+    createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(getNodeText(txt_OpinionContent))); 
     
-    return new XMLSerializer().serializeToString(xmlpara);
+    return getXmlString(xmlpara.childNodes[0]);
 }
 
+function MakeFormWorkFlow() {
+    var retValue = new Array();
+
+    try {
+        retValue[0] = "TRUE";
+        retValue[1] = MakeFormWorkFlow_Detail();
+    } catch (e) {
+        retValue[0] = "FALSE";
+        retValue[1] = "";
+        retValue[2] = e.message;
+    }
+    return retValue;
+}
+
+function MakeFormWorkFlow_Detail() {
+    var xmlpara = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "WORKFLOW");
+
+    var workflow = "<WORKFLOW>\n<VALIDATIONS>\n" + txt_OpinionContent1.value + "\n</VALIDATIONS>\n<STATUS>\n" + txt_OpinionContent2.value + "\n</STATUS>\n</WORKFLOW>";
+
+    createNodeAndInsertCDataText(xmlpara, objNode, "WORKFLOWINFO", MakeXMLString(workflow));
+    return getXmlString(xmlpara.childNodes[0]);
+}
 
 function MakeFormRecevGroupXML() {
     var pDataCheck = false;
@@ -403,8 +441,7 @@ function MakeFormRecevGroupXML() {
     lvtFormView.LoadFromID("lvtForm");
 
     var selRow = lvtFormView.GetDataRows();
-    //if (selRow.length > 0)
-        pDataCheck = true;
+    pDataCheck = true;
 
     if (pDataCheck) {
         retValue[0] = "TRUE";
@@ -431,7 +468,7 @@ function MakeFormRecevGroupXML_Detail() {
     var selRow = lvtFormView.GetDataRows();
 
     if (selRow.length > 0) {
-        if (selRow.length == 1 && GetAttribute(selRow[0], "id").indexOf("_TR_noItems") > -1) {
+    	if (selRow.length == 1 && (GetAttribute(selRow[0], "id") != null ? GetAttribute(selRow[0], "id").indexOf("_TR_noItems") : -1) > -1) {
             return "";
         }
         
@@ -442,7 +479,7 @@ function MakeFormRecevGroupXML_Detail() {
         }
     }
     
-    return new XMLSerializer().serializeToString(xmlpara);
+    return getXmlString(xmlpara.childNodes[0]);
 }
 
 function btnClose_onclick() {

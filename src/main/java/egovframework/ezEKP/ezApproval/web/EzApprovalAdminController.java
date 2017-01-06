@@ -32,6 +32,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
+import egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
@@ -1917,15 +1918,31 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprFormMainReform";
 	}
 	
-	@RequestMapping(value = "/admin/ezApproval/getFormInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApproval/getFormInfoReform.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
-		logger.debug("getFormInfo started");
+	public String getFormInfoReform(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormInfoReform started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String result = ezApprovalAdminService.getFormContentReform(apprFormInfoVO.getFormID(), apprFormInfoVO.getLang(), apprFormInfoVO.getCompanyID(), userInfo.getTenantId());
 
+		logger.debug("getFormInfoReform ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezApproval/getFormInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
+		logger.debug("getFormInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.getFormContent(apprFormInfoVO);
+		
 		logger.debug("getFormInfo ended");
 		
 		return result;
@@ -2040,7 +2057,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		String docType = ezApprovalAdminService.getDocType("", userInfo);
 		String securityNode = ezApprovalAdminService.getSecurityType("", userInfo);
 		String periodNode = ezApprovalAdminService.getKeepType("", userInfo);
-		String[]  docs;
+		String[] docs;
 		
 		if (docType.split("t").length != 0) {
 			docs = docType.split("t");
@@ -2067,7 +2084,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 			aprRuleLine = ezApprovalAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
 		}
 		
-		String docTypeOption = "<OPTION VALUE='A02001' >" + messageSource.getMessage("ezApproval.t437", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02011' >" + messageSource.getMessage("ezApproval.t990013", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02012' >" + messageSource.getMessage("ezApproval.t990014", userInfo.getLocale()) + "</OPTION>";
+		String docTypeOption = "<OPTION VALUE='A02001'>" + messageSource.getMessage("ezApproval.t437", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02011'>" + messageSource.getMessage("ezApproval.t990013", userInfo.getLocale()) + "</OPTION><OPTION VALUE='A02012'>" + messageSource.getMessage("ezApproval.t990014", userInfo.getLocale()) + "</OPTION>";
 		
 		model.addAttribute("docTypeOption", docTypeOption);
 		model.addAttribute("aprRule", aprRule);
@@ -2087,6 +2104,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		model.addAttribute("formProcSpelling", formProcSpelling);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editorType", editorType);
+		model.addAttribute("formID", formID);
 
 		logger.debug("formMain ended");
 		
@@ -2113,5 +2131,59 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		return resultXML;
 	}
-	
+
+	@RequestMapping(value = "/admin/ezApproval/formConnInfo.do")
+	public String formConnInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formConnInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+		StringBuilder processIdx = new StringBuilder();
+		StringBuilder processTime = new StringBuilder();
+		StringBuilder connStringFlag = new StringBuilder();
+		StringBuilder queryType = new StringBuilder();
+		StringBuilder keyKind = new StringBuilder();
+		
+		userInfo.setCompanyID(companyID);
+		
+		List<ApprConnInfoVO> apprConnInfoVOs = ezApprovalAdminService.getFormConnInfo(userInfo);
+		
+		for (int k = 0; k < apprConnInfoVOs.size(); k++) {
+			switch (apprConnInfoVOs.get(k).getConnNode()) {
+			case "PROCESSIDX":
+				processIdx.append("<option value='" + apprConnInfoVOs.get(k).getDescription() + "'>" + apprConnInfoVOs.get(k).getConnInfo() + "</option>");
+				break;
+				
+			case "PROCESSTIME":
+				processTime.append("<option value='" + apprConnInfoVOs.get(k).getDescription() + "'>" + apprConnInfoVOs.get(k).getConnInfo() + "</option>");
+				break;
+				
+			case "CONNSTRINGFLAG":
+				connStringFlag.append("<option value='" + apprConnInfoVOs.get(k).getDescription() + "'>" + apprConnInfoVOs.get(k).getConnInfo() + "</option>");
+				break;
+				
+			case "QUERYTYPE":
+				queryType.append("<option value='" + apprConnInfoVOs.get(k).getDescription() + "'>" + apprConnInfoVOs.get(k).getConnInfo() + "</option>");
+				break;
+				
+			case "KEYKIND":
+				keyKind.append("<option value='" + apprConnInfoVOs.get(k).getDescription() + "'>" + apprConnInfoVOs.get(k).getConnInfo() + "</option>");
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("processIdx", processIdx.toString());
+		model.addAttribute("processTime", processTime.toString());
+		model.addAttribute("connStringFlag", connStringFlag.toString());
+		model.addAttribute("queryType", queryType.toString());
+		model.addAttribute("keyKind", keyKind.toString());
+
+		logger.debug("formConnInfo ended");
+		
+		return "admin/ezApproval/apprFormConnInfo";
+	}
 }

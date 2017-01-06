@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var ResultString;
@@ -93,93 +94,87 @@
 	        }
 			
 			function getCommunityList() {
-			    xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/ezCommunity/getLeftCommunity.do", true);
-			    xmlhttp.onreadystatechange = getCommunityList_after;
-			    xmlhttp.send();
+				$.ajax({
+					type : "POST",
+					url : "/ezCommunity/getLeftCommunity.do",
+					dataType : "json",
+					success : function(result) {
+						getCommunityList_after(result["list"]);
+					}
+				});
 			}
 			
-			function getCommunityList_after() {
-			    if (xmlhttp == null || xmlhttp.readyState != 4) 
-			    	return;
-			    var objXML = loadXMLString(xmlhttp.responseText);
+			function getCommunityList_after(list) {
+			    var totalCnt = list.length;
 			    
-			    var totalCnt = GetChildNodes(SelectSingleNodeNew(objXML, "DATA")).length;
+			    list.forEach(function(clubVO, index) {
+			    	var confirmtype1 = clubVO.c_ClubConfirmType;
+		            var sysopID1 = clubVO.c_SysopID.trim();
+		            var memberCnt1 = clubVO.c_MemberCnt;
+		            var code2 = clubVO.c_ClubNo.trim();
+		            var copName =clubVO.c_ClubName;
+		            if (lang != "1")
+		                copName = clubVO.c_ClubName2;
+		            var copLogo = clubVO.c_Logo_Thumbnail;
+		            
+		            if (sysopID1 == "${userInfo.id}" || memberCnt1 >= 0) {
+                        if (confirmtype1 == 3 && confirmtype1 == 0) {
+                        }else {
+                            var _li = document.createElement("li");
+                            _li.setAttribute("code", code2);
+                            _li.onclick = function () { GoFunc(this); }
+                            var _span = document.createElement("span");
+                            _span.setAttribute("class", "thumbnail");
 
-			    if (totalCnt > 0) {
-			        for (var i = 0; i < totalCnt; i++) {
-			            var confirmtype1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE");
-			            var sysopID1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_SYSOPID").trim();
-			            var memberCnt1 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_MEMBERCNT");
-			            var code2 = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNO").trim();
-			            var copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME");
-			            if (lang != "1")
-			                copName = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_CLUBNAME2");
-			            var copLogo = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "C_LOGO_THUMBNAIL");
+                            var _img = document.createElement("img");
+                            _img.style.width = "33px";
+                            _img.style.height = "33px";
+                            if (copLogo.indexOf("default_logo_type") > -1)
+                                _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
+                            else
+                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
 
-			            if (sysopID1 == "${userInfo.id}" || memberCnt1 >= 0) {
-	                        if (confirmtype1 == 3 && confirmtype1 == 0) {
-	                        }else {
-	                            var _li = document.createElement("li");
-	                            _li.setAttribute("code", code2);
-	                            _li.onclick = function () { GoFunc(this); }
-	                            var _span = document.createElement("span");
-	                            _span.setAttribute("class", "thumbnail");
-
-	                            var _img = document.createElement("img");
-	                            _img.style.width = "33px";
-	                            _img.style.height = "33px";
-	                            if (copLogo.indexOf("default_logo_type") > -1)
-	                                _img.setAttribute("src", "/images/ezCommunity/logo/" + copLogo);
-	                            else
-	                                _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + encodeURIComponent(copLogo));
-
-	                            _span.appendChild(_img);
-	                            _li.innerHTML = _span.outerHTML + copName;
-	                            document.getElementById("list_thumbnail").appendChild(_li);
-	                        }
-	                    }
-	                }
-	            }
+                            _span.appendChild(_img);
+                            _li.innerHTML = _span.outerHTML + copName;
+                            document.getElementById("list_thumbnail").appendChild(_li);
+                        }
+                    }
+			    });
 	        }
 			
 			function getBoardList() {
-	            xmlhttp2 = createXMLHttpRequest();
-	            xmlhttp2.open("POST", "/ezCommunity/getLeftBoardList.do", true);
-	            xmlhttp2.onreadystatechange = getBoardList_after;
-	            xmlhttp2.send();
+				$.ajax({
+					type : "POST",
+					url : "/ezCommunity/getLeftBoardList.do",
+					dataType : "json",
+					success : function(result) {
+						getBoardList_after(result["list"]);
+					}
+				});
 	        }
 			
-			function getBoardList_after() {
-	            if (xmlhttp2 == null || xmlhttp2.readyState != 4) {
-	            	return;
-	            }
-	            
-	            var objXML = xmlhttp2.responseXML;
-
+			function getBoardList_after(list) {
 	            document.getElementById("list_communitynoti").innerHTML = "";
-	            var totalCnt = GetChildNodes(SelectSingleNodeNew(objXML, "DATA")).length;
+	            var totalCnt = list.length;
 	            
-	            if (totalCnt > 0) {
-	                for (var i = 0; i < totalCnt; i++) {
-	                    if ((screen.height <= 800 && i >= 4) || (screen.height < 1080 && i >= 7)) {
-	                        break;
-	                    }
-	                    
-	                    var title = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "TITLE");
-	                    var boardNum = SelectSingleNodeValue(SelectNodes(objXML, "DATA/ROW")[i], "NO");
-	                    var _li = document.createElement("li");
-	                    _li.setAttribute("onClick", "btn_bbsView(" + boardNum + ",'c_board')");
-	                    
-	                    if (CrossYN()){
-	                        _li.textContent = title;
-	                    }else{
-	                        _li.innerText = title;
-	                    }
+	            list.forEach(function(cBoardVO, index) {
+	            	if ((screen.height <= 800 && index >= 4) || (screen.height < 1080 && index >= 7)) {
+                        return true;
+                    }
+                    
+                    var title = cBoardVO.title;
+                    var boardNum = cBoardVO.no;
+                    var _li = document.createElement("li");
+                    _li.setAttribute("onClick", "btn_bbsView(" + boardNum + ",'c_board')");
+                    
+                    if (CrossYN()){
+                        _li.textContent = title;
+                    }else{
+                        _li.innerText = title;
+                    }
 
-	                    document.getElementById("list_communitynoti").appendChild(_li);
-	                }
-	            }
+                    document.getElementById("list_communitynoti").appendChild(_li);
+	            });
 	        }
 
 	        function btn_bbsView(sURL, ttt) {

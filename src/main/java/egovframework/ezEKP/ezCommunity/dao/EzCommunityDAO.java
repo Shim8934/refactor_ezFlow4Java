@@ -23,7 +23,6 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -32,8 +31,8 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("EzCommunityDAO")
 public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
-	public List<CommunityLeftCommunityVO> leftCommunityGet3(Map<String, Object> map) throws Exception {
-		return (List<CommunityLeftCommunityVO>) list("EzCommunityDAO.leftCommunityGet3", map);
+	public List<CommunityClubVO> leftCommunityGet3(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.leftCommunityGet3", map);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -343,8 +343,6 @@
 				UID_ = #v_pUID# 
 			AND
 				ROWNUM <= 1
-			AND
-				TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -762,8 +760,6 @@
         		EZPORTAL.TBL_MENUITEM_GENERAL 
        		WHERE  
        			UID_ = #v_pUID#
-       		AND
-       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2278,7 +2274,7 @@
    						ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM, UID_, DISPLAYNAME
           			FROM EZPORTAL.TBL_MENUITEM_GENERAL 
    					WHERE DISPLAYNAME like '%' || #v_pDISPLAYNAME# || '%'
-   					AND TENANT_ID = #tenantID#)
+   					)
           	WHERE
           		RNUM <= $v_pENDROW$
 		]]>

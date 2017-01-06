@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +59,6 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollManagerVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollQuestionVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
@@ -132,45 +132,31 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getLeftCommunity(LoginVO userInfo) throws Exception {
+	public List<CommunityClubVO> getLeftCommunity(LoginVO userInfo) throws Exception {
 		logger.debug("getLeftCommunity started.");
 		
-        StringBuilder sb = new StringBuilder();
-        
-        List<CommunityLeftCommunityVO> leftCommunityList =leftCommunityGet3(userInfo.getId(), userInfo.getTenantId());
-        
-        sb.append("<DATA>");
-        
-        for (CommunityLeftCommunityVO leftCommunity : leftCommunityList) {
-        	sb.append(commonUtil.getQueryResult(leftCommunity));
-        }
-        
-        sb.append("</DATA>");
-        
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userInfo.getId());
+		map.put("tenantID", userInfo.getTenantId());
+		
+		logger.debug("leftCommunityGet3 started.");
+		List<CommunityClubVO> list = ezCommunityDAO.leftCommunityGet3(map);
+		logger.debug("leftCommunityGet3 ended.");
+		
         logger.debug("getLeftCommunity ended.");
         
-        return sb.toString();
+        return list;
 	}
 
 	@Override
-	public String getLeftBoardList(int tenantID) throws Exception {
+	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception {
 		logger.debug("getLeftBoardList started.");
-		
-		StringBuilder sb = new StringBuilder();
 		
 		List<CommunityCBoardVO> leftBoardList= ezCommunityDAO.getLeftBoardList(tenantID);
 		
-		sb.append("<DATA>");
-		
-		for (CommunityCBoardVO leftBoard : leftBoardList) {
-			sb.append(commonUtil.getQueryResult(leftBoard));
-		}
-		
-		sb.append("</DATA>");
-		
 		logger.debug("getLeftBoardList ended.");
 		
-		return sb.toString();
+		return leftBoardList;
 	}
 	
 	@Override
@@ -2780,6 +2766,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setAsRead ERROR.");
 			logger.debug(e.toString());
 			
@@ -4339,6 +4326,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug(e.toString());
 			
 			return "ERROR";
@@ -4412,6 +4400,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("moveBoard ERROR.");
 			
 			return "ERROR" + e.getMessage();
@@ -4437,7 +4426,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
-			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("brdDeleteBoard ERROR.");
 			logger.debug(e.getMessage());
 			
@@ -4701,6 +4690,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("saveBoardProperty ERROR.");
 			
 			return "ERROR" + e.getMessage();
@@ -5131,7 +5121,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("categoryListItemCntGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("c_ClubNo", c_ClubNo);
+		map.put("c_ClubNo", c_ClubNo.trim());
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.categoryListItemCntGet(map);
@@ -5538,7 +5528,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return vo;
 	}
 	
-	public List<CommunityLeftCommunityVO> leftCommunityGet3(String userID, int tenantID) throws Exception {
+	public List<CommunityClubVO> leftCommunityGet3(String userID, int tenantID) throws Exception {
 		logger.debug("leftCommunityGet3 started.");
 		logger.debug("userID : " + userID + ", tenantID : " + tenantID);
 		
@@ -5546,7 +5536,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERID", userID);
 		map.put("tenantID", tenantID);
 		
-		List<CommunityLeftCommunityVO> list = ezCommunityDAO.leftCommunityGet3(map);
+		List<CommunityClubVO> list = ezCommunityDAO.leftCommunityGet3(map);
 		
 		logger.debug("leftCommunityGet3 ended.");
 		
@@ -6321,7 +6311,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.debug(e.getMessage());
 			return false;
 		}
 	}

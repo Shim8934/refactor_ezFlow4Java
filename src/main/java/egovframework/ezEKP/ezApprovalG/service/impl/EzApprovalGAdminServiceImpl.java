@@ -11,10 +11,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -360,6 +362,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				result = "TRUE";
 			}
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("updateContainerToDocStateInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -464,6 +467,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertContainer catch");
 			result = "FALSE";
 		}
@@ -505,6 +509,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		    }
 		    result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "FALSE";
 		}
 		
@@ -529,6 +534,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteContainer1,2 catch.");
 			logger.debug(e.getMessage());
 			result = "FALSE";
@@ -909,6 +915,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setTaskCategory catch.");
 			logger.debug(e.getMessage());
 			
@@ -1149,6 +1156,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setTaskCode ERROR.");
 			logger.debug(e.getMessage());
 			
@@ -1227,6 +1235,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				return "TRUE";
 			}
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("removeTaskCode catch.");
 			logger.debug(e.getMessage());
 			
@@ -1339,6 +1348,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("addTaskCodeDeptInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1382,6 +1392,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("removeTaskCodeDeptInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1608,6 +1619,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertSealInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -1691,6 +1703,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("insertDeptSealInfo catch.");
 			logger.debug(e.getMessage());
 			
@@ -2104,6 +2117,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setFormOrder catch.");
 			logger.debug(e.getMessage());
 			
@@ -2163,6 +2177,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "<PARAMETER><FContID>" + contID + "</FContID></PARAMETER>";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<PARAMETER><FContID>FALSE</FContID></PARAMETER>";
 		}
 	}
@@ -2246,6 +2261,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "<PARAMETER><RTNVALUE>" + contID + "</RTNVALUE></PARAMETER>";
 		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<PARAMETER><RTNVALUE>FALSE</RTNVALUE></PARAMETER>";
 		}
 	}
@@ -2265,6 +2281,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteFormContainer catch.");
 			
 			return "FALSE";
@@ -2367,46 +2384,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return sb.toString();
 	}
 
-	@Override
-	public String formSave(Document doc, String realPath, String companyID, LoginVO userInfo) throws Exception {
-		String contID = doc.getElementsByTagName("FORMCONTID").item(0).getTextContent();
-		String formID = doc.getElementsByTagName("FORMID").item(0).getTextContent();
-		String rtnValue = "";
-		
-		if (doc.getElementsByTagName("FORMINFO").getLength() > 0) {
-			String formInfo = doc.getElementsByTagName("FORMINFO").item(0).getTextContent();
-			
-			String formConn = "";
-			if (doc.getElementsByTagName("FORMCONN").getLength() > 0) {
-				formConn = doc.getElementsByTagName("FORMCONN").item(0).getTextContent();
-			}
-			
-			String formWorkFlow = "";
-			if (doc.getElementsByTagName("FORMWORKFLOW").getLength() > 0) {
-				formWorkFlow = doc.getElementsByTagName("FORMWORKFLOW").item(0).getTextContent();
-			}
-			
-			String formRecevGroup = "";
-			if (doc.getElementsByTagName("FORMRECEVGROUP").getLength() > 0) {
-				formRecevGroup = doc.getElementsByTagName("FORMRECEVGROUP").item(0).getTextContent();
-			}
-			
-			String formMht = "";
-			if (doc.getElementsByTagName("FORMMHT").getLength() > 0) {
-				if (!doc.getElementsByTagName("FORMMHT").item(0).getTextContent().equals("")) {
-					formMht = doc.getElementsByTagName("FORMMHT").item(0).getTextContent();
-				}
-			}
-			rtnValue = saveFormInfo(contID, formID, formInfo, formConn, formWorkFlow, formRecevGroup, formMht, companyID, realPath, userInfo);
-		}
-		
-		if (rtnValue.indexOf("ERROR") > 0) {
-			return "<DATA>" + rtnValue + "</DATA>";
-		} else {
-			return "<DATA>OK</DATA>";
-		}
-	}
-
 	private String setTaskHistory(String taskCode, String taskName, String taskName2, String changeFactor, String changeFactor2, String beforeValue, String afterValue, String afterValue2, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_APPLYDATE", commonUtil.getTodayUTCTime(""));
@@ -2449,15 +2426,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteForm catch.");
 			
 			return "FALSE";
 		}
 	}
 	
-	private String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo) throws Exception {
+	//TODO 2017-01-05 이효진 연동정보 및 workflow 등록 및 수정 부분 미구현(EZSP_SETFORMDATA)
+	@Override
+	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("saveFormInfo started.");
-		String strBeforMHT = "";
+		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
@@ -2466,20 +2446,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
 		String formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 
-		//TODO 확인후삭제
+		//TODO 연동정보
 		String connXML = "";
+		logger.debug("formConnInfo" + formConnInfo);
 		if (!formConnInfo.equals("")) {
 			doc = commonUtil.convertStringToDocument(formConnInfo);
 			connXML = doc.getElementsByTagName("CONNXML").item(0).getTextContent();
+			logger.debug("connXML" + connXML);
 		}
 
-		//TODO 확인후삭제
+		//TODO workflow
 		String validationsXML = "";
 		String statusXML = "";
+		logger.debug("formWorkFlow" + formWorkFlow);
 		if (!formWorkFlow.equals("")) {
 			doc = commonUtil.convertStringToDocument(formWorkFlow);
-			validationsXML = doc.getElementsByTagName("VALIDATIONS").item(0).getTextContent();
-			statusXML = doc.getElementsByTagName("STATUS").item(0).getTextContent();
+//			validationsXML = doc.getElementsByTagName("VALIDATIONS").item(0).getTextContent();
+//			statusXML = doc.getElementsByTagName("STATUS").item(0).getTextContent();
 		}
 
 		String recevGroupXML = "";
@@ -2497,19 +2480,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			try {
 				File file = new File(saveFileName);
 				if (file.exists()) {
-					BufferedReader br = new BufferedReader(new FileReader(saveFileName));
-
-					StringBuilder sb = new StringBuilder();
-					String line = br.readLine();
-
-					while (line != null) {
-						sb.append(line);
-						sb.append(System.lineSeparator());
-						line = br.readLine();
-					}
-
-					br.close();
-					strBeforMHT = sb.toString();
+					strBeforeMHT = FileUtils.readFileToString(file);
 				}
 
 				FileWriter fw = new FileWriter(file);
@@ -2535,38 +2506,27 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		String result = "";
 		
-		try {
-			if (formID.equals("")) {
-				logger.debug("setFormDataSelect started.");
-				result = ezApprovalGAdminDAO.setFormDataSelect(map);
-				logger.debug("setFormDataSelect ended.");
-				
-				if (result == null) {
-					result = commonUtil.getTodayUTCTime("YYYY") + "000001";
-				} else {
-					if ( result.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
-						result = Integer.toString((Integer.parseInt(result) + 1));
-					} else {
-						result = commonUtil.getTodayUTCTime("YYYY") + "000001";
-					}
-				}
-				
-				map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
-				map.put("v_PID", result);
-				
-				logger.debug("setFormDataInsert1 started.");
-				ezApprovalGAdminDAO.setFormDataInsert1(map);
-				logger.debug("setFormDataInsert1 ended.");
+		if (formID.equals("")) {
+			logger.debug("setFormDataSelect started.");
+			result = ezApprovalGAdminDAO.setFormDataSelect(map);
+			logger.debug("setFormDataSelect ended.");
+			
+			if (result == null) {
+				result = commonUtil.getTodayUTCTime("YYYY") + "000001";
 			} else {
-				map.put("v_PFORMID", formID);
-				map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
-				
-				logger.debug("setFormDataUpdate started.");
-				ezApprovalGAdminDAO.setFormDataUpdate(map);
-				logger.debug("setFormDataUpdate ended.");
+				if ( result.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
+					result = Integer.toString((Integer.parseInt(result) + 1));
+				} else {
+					result = commonUtil.getTodayUTCTime("YYYY") + "000001";
+				}
 			}
 			
-			logger.debug("recevGroupXML=" + recevGroupXML);
+			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
+			map.put("v_PID", result);
+			
+			logger.debug("setFormDataInsert1 started.");
+			ezApprovalGAdminDAO.setFormDataInsert1(map);
+			logger.debug("setFormDataInsert1 ended.");
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
@@ -2574,82 +2534,74 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				
-				logger.debug("setFormDataDelete started..");
+				logger.debug("setFormDataDelete started.");
 				ezApprovalGAdminDAO.setFormDataDelete(map);
 				logger.debug("setFormDataDelete ended.");
 				
 				doc = commonUtil.convertStringToDocument(recevGroupXML);
 				
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
-					map.put("deptID", doc.getElementsByTagName("DEPTID").item(0).getTextContent());
-					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(0).getTextContent());
+					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
+					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
 					
 					logger.debug("setFormDataInsert2 started.");
 					ezApprovalGAdminDAO.setFormDataInsert2(map);
 					logger.debug("setFormDataInsert2 ended.");
 				}
 			}
+		} else {
+			map.put("v_PFORMID", formID);
+			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			
-			if (result.equals("") || result.indexOf("ERROR") > 0) {
-				if (isUpdate) {
-					String saveFileDir = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator;
-					saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
-					
-					FileWriter fw = null;
-					
-					try {
-						if (!new File(saveFileDir).exists()) {
-							new File(saveFileDir).mkdirs();
-						}
-						
-						File file = new File(saveFileName);
-						fw = new FileWriter(file);
-						fw.append(formMhtInfo);
-					} catch (Exception e) {
-						logger.debug(e.getMessage());
-					} finally {
-						fw.close();
-					}
-				}
+			logger.debug("setFormDataUpdate started.");
+			ezApprovalGAdminDAO.setFormDataUpdate(map);
+			logger.debug("setFormDataUpdate ended.");
+			
+			if (!recevGroupXML.equals("")) {
+				map = new HashMap<String, Object>();
+				map.put("v_PFORMID", formID);
+				map.put("companyID", companyID);
+				map.put("tenantID", userInfo.getTenantId());
 				
-				result = "ERROR";
-			} else {
-				if (formID.equals("") && !isUpdate) {
-					formID = result;
+				logger.debug("setFormDataDelete started.");
+				ezApprovalGAdminDAO.setFormDataDelete(map);
+				logger.debug("setFormDataDelete ended.");
+				
+				doc = commonUtil.convertStringToDocument(recevGroupXML);
+				
+				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
+					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
+					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
 					
-					if (!formMhtInfo.equals("")) {
-						String saveFileDir = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator;
-						saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
-						
-						FileWriter fw = null;
-						
-						try {
-							if (!new File(saveFileDir).exists()) {
-								new File(saveFileDir).mkdirs();
-							}
-							
-							File file = new File(saveFileName);
-							fw = new FileWriter(file);
-							fw.append(formMhtInfo);
-						} catch(Exception e) {
-							logger.debug(e.getMessage());
-						} finally {
-							fw.close();
-						}
-					}
+					logger.debug("setFormDataInsert2 started.");
+					ezApprovalGAdminDAO.setFormDataInsert2(map);
+					logger.debug("setFormDataInsert2 ended.");
 				}
 			}
-			
-			logger.debug("setFormDataInsert,Update ended.");
-			logger.debug("saveFormInfo ended.");
-			
-			return result;
-		} catch (Exception e) {
-			logger.debug("saveFormInfo catch.");
-			logger.debug(e.getMessage());
-			
-			return "";
 		}
+		
+		if (!isUpdate) {
+			if (!formMhtInfo.equals(""))	 {
+				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht";
+				
+				File file = new File(saveFileName);
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				} else {
+					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+				}
+				
+				FileWriter fw = new FileWriter(file);
+				fw.append(formMhtInfo);
+				fw.close();
+			}
+		}
+		
+		logger.debug("setFormDataInsert,Update ended.");
+		logger.debug("saveFormInfo ended.");
+		
+		return result;
 	}
 
 	@Override

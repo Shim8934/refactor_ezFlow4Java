@@ -945,7 +945,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			} else if (lang != null && lang.equals("4")) {
 				returnValue = "zh";
 			}
-			//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
+			
+			//CookieLocaleResolver에 lang값을 set해줌
 			locale = new Locale(returnValue);
 			localeResolver.setLocale(req, resp, locale);
 			
@@ -958,7 +959,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 					}
 				}
 				//loginCookie에 lang값, locale값 설정
-				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone;
+				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId();
 			
 				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
 	        	cookieID.setPath("/");

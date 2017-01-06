@@ -291,12 +291,8 @@
 		</div>
 	    
 	    <div class="btnposition" style="width: 800px;">
-	        <a class="imgbtn" onclick="btnSave_onclick()"><span>CSV <spring:message code='ezApprovalG.t1767'/></span></a>
+	        <a class="imgbtn" onclick="btnSave_onclick()"><span>CSV <spring:message code='ezApprovalG.t59'/></span></a>
 	    </div>
-	    
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	    </script>
 	
 	    <iframe id="saveExcel" name="saveExcel" style="display: none"></iframe>
 	</body>

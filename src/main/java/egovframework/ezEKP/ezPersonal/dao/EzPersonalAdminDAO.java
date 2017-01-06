@@ -26,8 +26,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalQuickLinkVO> getQuickLinkACL(String v_QUICKLINKID) throws Exception {
-		return (List<PersonalQuickLinkVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINK_ACL", v_QUICKLINKID);
+	public List<PersonalQuickLinkVO> getQuickLinkACL(Map<String, Object> map) throws Exception {
+		return (List<PersonalQuickLinkVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINK_ACL", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -36,13 +36,13 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalPopupVO> getPopupList(String v_pCompnayID) throws Exception {
-		return (List<PersonalPopupVO>) list("EzPersonalAdmin.EZSP_GETPOPUPLIST", v_pCompnayID);
+	public List<PersonalPopupVO> getPopupList(Map<String, Object> map) throws Exception {
+		return (List<PersonalPopupVO>) list("EzPersonalAdmin.EZSP_GETPOPUPLIST", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalEmpMonthVO> getEmployeeMonth(String v_pCompanyID) {
-		return (List<PersonalEmpMonthVO>) list("EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH", v_pCompanyID);
+	public List<PersonalEmpMonthVO> getEmployeeMonth(Map<String, Object> map) {
+		return (List<PersonalEmpMonthVO>) list("EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -51,34 +51,36 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalLightPollVO> getPollResult(String v_pItemSeq) throws Exception {
-		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", v_pItemSeq);
+	public List<PersonalLightPollVO> getPollResult(Map<String, Object> map) throws Exception {
+		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", map);
 	}
 	
 	public PersonalNoticeVO getNoticeInfo(Map<String, Object> map) throws Exception {
 		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", map);
 	}
 	
-	public PersonalQuickLinkVO getQuickLink(String v_QUICKLINKID) throws Exception {
-		return (PersonalQuickLinkVO) select("EzPersonalAdmin.EZSP_GETQUICKLINK", v_QUICKLINKID);
+	public PersonalQuickLinkVO getQuickLink(Map<String, Object> map) throws Exception {
+		return (PersonalQuickLinkVO) select("EzPersonalAdmin.EZSP_GETQUICKLINK", map);
 	}
 	
-	public PersonalLightPollVO getPollInfo(String v_pItemSeq) throws Exception {
-		return (PersonalLightPollVO) select("EzPersonalAdmin.EZSP_GETPOLLINFO", v_pItemSeq);
+	public PersonalLightPollVO getPollInfo(Map<String, Object> map) throws Exception {
+		return (PersonalLightPollVO) select("EzPersonalAdmin.EZSP_GETPOLLINFO", map);
 	}
 	
-	public PersonalPopupVO getPopupInfo(String v_pItemSeq) throws Exception {
-		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", v_pItemSeq);
+	public PersonalPopupVO getPopupInfo(Map<String, Object> map) throws Exception {
+		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", map);
 	}
 
 	public int getNoticeCount(Map<String, Object> map) throws Exception {
-		select("EzPersonalAdmin.EZSP_GETNOTICECOUNT", map);
-		return (int) map.get("v_pCount");
+		return (int)select("EzPersonalAdmin.EZSP_GETNOTICECOUNT", map);
 	}
 	
 	public int getPollCount(Map<String, Object> map) throws Exception {
-		select("EzPersonalAdmin.EZSP_GETPOLLCOUNT", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzPersonalAdmin.EZSP_GETPOLLCOUNT", map);
+	}
+	
+	public int setSliderImage_S(Map<String, Object> map) throws Exception {
+		return (int) select("EzPersonalAdmin.EZSP_SETSLIDERIMAGE_S", map);
 	}
 	
 	public void insertNotice(Map<String, Object> map) throws Exception {
@@ -109,6 +111,38 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		insert("EzPersonalAdmin.EZSP_SETSLIDERIMAGE", map);
 	}
 	
+	public void setQuickLinkItem_I(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETQUICKLINKITEM_I", map);
+	}
+	
+	public void setQuickLink_I(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_I", map);
+	}
+	
+	public void insertPoll_I1(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_INSERTPOLL_I1", map);
+	}
+	
+	public void insertPoll_I2(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_INSERTPOLL_I2", map);
+	}
+	
+	public void setEmployeeMonth_I(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_I", map);
+	}
+	
+	public void setSliderImage_I(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_SETSLIDERIMAGE_I", map);
+	}
+	
+	public void setSliderImage_U(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_SETSLIDERIMAGE_U", map);
+	}
+	
+	public void setQuickLinkItem_U(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_SETQUICKLINKITEM_U", map);
+	}
+	
 	public void updateNotice(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_UPDATENOTICE", map);
 	}
@@ -120,30 +154,53 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public void statusChangeSlider(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_STATUSCHANGESLIDER", map);
 	}
-
-	public void deleteNotice(String v_pItemSeq) throws Exception {
-		delete("EzPersonalAdmin.EZSP_DELETENOTICE", v_pItemSeq);
+	
+	public void insertPoll_U1(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_INSERTPOLL_U1", map);
 	}
 	
-	public void deletePoll(String v_pItemSeq) throws Exception {
-		delete("EzPersonalAdmin.EZSP_DELETEPOLL", v_pItemSeq);
+	public void insertPoll_U2(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_INSERTPOLL_U2", map);
 	}
 
-	public void deletePopup(String v_pItemSeq) throws Exception {
-		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", v_pItemSeq);
+	public void deleteNotice(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELETENOTICE", map);
+	}
+	
+	public void deletePoll(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELETEPOLL", map);
+	}
+	
+	public void deletePoll_D(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELETEPOLL_D", map);
+	}
+
+	public void deletePopup(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", map);
 	}
 
 	public void delSliderImage(String v_SLIDERID) throws Exception {
 		delete("EzPersonalAdmin.EZSP_DELSLIDERIMAGE", v_SLIDERID);
 	}
 	
-	public void deleteQuickLinkID(String quickLinkID) throws Exception {
-		delete("EzPersonalAdmin.deleteQuickLinkID", quickLinkID);
+	public void deleteQuickLinkID(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.deleteQuickLinkID", map);
 	}
 	
-	public void delQuickLink(String quickLinkID) throws Exception {
-		delete("EzPersonalAdmin.delQuickLink", quickLinkID);
+	public void delQuickLink(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.delQuickLink", map);
 	}
 	
+	public void delQuickLink_D(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.delQuickLink_D", map);
+	}
+	
+	public void setQuickLink_D(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_D", map);
+	}
+	
+	public void setEmployeeMonth_D(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D", map);
+	}
 	
 }

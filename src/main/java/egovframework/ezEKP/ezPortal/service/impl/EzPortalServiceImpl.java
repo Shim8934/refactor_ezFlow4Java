@@ -381,19 +381,18 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	@Override
-	public int getMenuItemHtml(String uID, int tenantID) throws Exception {
+	public int getMenuItemHtml(String uID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
-		map.put("tenantID", tenantID); 
+		
 		return ezPortalDAO.getMenuItemHtml(map);
 	}
 	
 	@Override
-	public String getMenuItemConfigItem(String itemName, String uID, int tenantID) throws Exception {
+	public String getMenuItemConfigItem(String itemName, String uID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pITEMNAME", itemName); 
 		map.put("v_pUID", uID);
-		map.put("tenantID", tenantID); 
 		return ezPortalDAO.getMenuItemConfigItem(map);
 	}
 	
@@ -1326,9 +1325,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getMenuItemHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
-		String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID, userInfo.getTenantId()) + "' frameborder=0 scrolling=no></iframe>";
+		String strHTML = "<iframe width=100% height=100% border=0 src='" + getMenuItemConfigItem("URL",pUID) + "' frameborder=0 scrolling=no></iframe>";
 		
-		int result = getMenuItemHtml(pUID, userInfo.getTenantId());
+		int result = getMenuItemHtml(pUID);
 		
 		switch (result) {
 		case 1:
@@ -2869,13 +2868,12 @@ StringBuilder strData = new StringBuilder();
 		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
 	}
 	
-	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception {
+	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList) throws Exception {
 		String retXML = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pENDROW", pEndRow);
 		map.put("v_pDISPLAYNAME", pDisplayName);
-		map.put("tenantID", tenantID);
 		List<PortalSearchMenuItemVO> list = ezPortalDAO.searchMenuItem(map);
 		
 		String strXML = "<DATA>";

@@ -3,7 +3,6 @@
 
 <sqlMap namespace="ezCommunity">
 	<typeAlias alias="CommunityClubVO" 					type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
-	<typeAlias alias="CommunityLeftCommunityVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityLeftCommunityVO"/>
 	<typeAlias alias="CommunityCBoardVO" 				type="egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO"/>
 	<typeAlias alias="CommunityCCategoryVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityCCategoryVO"/>
 	<typeAlias alias="CommunityBoardTreeVO" 			type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardTreeVO"/>	
@@ -1873,7 +1872,7 @@
 <!-- 	<procedure id="EzCommunityDAO.searchCop"					parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_SEARCHCOP(#v_SEARCHNAME#, #v_SEARCHVALUE#, #v_PSTART#, #v_PEND#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.searchCop"						parameterClass="Map"		resultClass="CommunityClubVO">
+	<select id="EzCommunityDAO.searchCop"						parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<isEqual property="v_mode" compareValue="SEA">
 			<![CDATA[
 				SELECT
@@ -2158,10 +2157,10 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityLeftCommunityVO"> -->
+<!-- 	<procedure id="EzCommunityDAO.leftCommunityGet3"			parameterClass="String"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_LEFT_COMMUNITY_GET3(#USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.leftCommunityGet3"				parameterClass="Map"		resultClass="CommunityLeftCommunityVO">
+	<select id="EzCommunityDAO.leftCommunityGet3"				parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
 				C_CLUBUSER.C_ClubNo,
@@ -2841,9 +2840,9 @@
 			FROM
 				EZCOMMUNITY.C_CLUBUSER
 			WHERE
-				RTRIM(C_ID) = #v_USERINFO_USERID#
+				TRIM(C_ID) = #v_USERINFO_USERID#
 			AND
-				RTRIM(C_CLUBNO) = #v_CODE#
+				TRIM(C_CLUBNO) = #v_CODE#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -4134,7 +4133,7 @@
 	<select id="EzCommunityDAO.categoryListItemCntGet"			parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(*), 0) CNT  
+				NVL(COUNT(*), 0)
 			FROM
 				EZCOMMUNITY.TBL_Comm_BoardInfo
 	        JOIN
@@ -4144,7 +4143,7 @@
 	        AND
 	        	TBL_Comm_BoardInfo.Tenant_ID = TBL_Comm_Item.Tenant_ID
 	        WHERE
-	        	RTRIM(C_CLUBNO) = #v_C_CLUBNO#
+	        	TRIM(C_CLUBNO) = #c_ClubNo#
 	        AND
 	        	TBL_Comm_BoardInfo.Tenant_ID = #tenantID#
 		]]>    

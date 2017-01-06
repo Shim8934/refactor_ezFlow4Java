@@ -242,7 +242,7 @@
 		        }
 		    }
 		    
-		    function btnDel_onclick() {
+		    /* function btnDel_onclick() {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvtDocForm");
 	
@@ -260,7 +260,7 @@
 		          
 		            return;
 		        }
-		    }
+		    } */
 		    
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {
@@ -315,7 +315,7 @@
 	    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
 	    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 	    	<!-- 2016-08-26 이효진 삭제버튼 생성 -->
-	    	<li><span onClick="return btnDel_onclick()" ><spring:message code = 'ezApprovalG.lhj11' /></span></li>
+	    	<%-- <li><span onClick="return btnDel_onclick()" ><spring:message code = 'ezApprovalG.lhj11' /></span></li> --%>
 	  	</ul>
 		</div>
 	

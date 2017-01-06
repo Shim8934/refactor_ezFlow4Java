@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -372,15 +373,27 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String formSave (@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request) throws Exception {
+	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(data);
 		String realPath = commonUtil.getRealPath(request);
-		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("formContID");
+		String formID = request.getParameter("formID");
+		String formInfo = request.getParameter("formInfo");
+		String formMHT = request.getParameter("formMHT");
+		String formConnInfo = request.getParameter("formConn");
+		String formWorkFlow = request.getParameter("formWorkFlow");
+		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-		String result = ezApprovalGAdminService.formSave(doc, realPath, companyID, userInfo);
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo);
 		
-		return result;
+		logger.debug("result = " + result);
+		
+		if (result.indexOf("ERROR") > 0) {
+			return "<DATA>" + result + "</DATA>";
+		} else {
+			return "<DATA>OK</DATA>";
+		}
 	}
 	
 	/**
@@ -1743,7 +1756,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서유통암호화설정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSendInfo.do")
-	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
@@ -1762,11 +1775,37 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String encodeInfoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("encodeInfoPath", encodeInfoPath);
 		
 		return "/admin/ezApprovalG/apprGManageSendInfo";
 	}
+	
+	/**
+	 * 전자결재G관리 문서유통암호화설정 설정파일 조회함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getOptionInfo.do")
+	public String getOptionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getOptionInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String encodeInfo = "";
+		
+		File file = new File(realPath + companyPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml");
+		encodeInfo = FileUtils.readFileToString(file);
+		
+		model.addAttribute("encodeInfo", encodeInfo);
+		
+		logger.debug("getOptionInfo ended.");
+		
+		return "json";
+	}
+	
 	
 	/**
 	 * 전자결재G관리 문서유통암호화설정 실행 함수

@@ -87,7 +87,7 @@
 		    function pzFormProc_FieldsAvailable() {
 		        if (formURL != "") {
 		            ReturnFormConnXML();
-// 		            ReturnWorkFlowXML();
+		            ReturnWorkFlowXML();
 		        }
 		    }
 	
@@ -103,7 +103,7 @@
 		            var WorkData = pzFormProc.editor.DOM.all.WORKFLOW.innerHTML.toUpperCase();
 		            var VALIDATIONS = WorkData.slice(WorkData.indexOf("<VALIDATION>"), WorkData.indexOf("</VALIDATIONS>"));
 		            setNodeText(txt_OpinionContent1, ReplaceText(VALIDATIONS, "<BR>", "\n"));
-
+		
 		            var STATUS = WorkData.slice(WorkData.indexOf("<CHECK>"), WorkData.indexOf("</STATUS>"));
 		            setNodeText(txt_OpinionContent2, ReplaceText(STATUS, "<BR>", "\n"));           
 		        }
@@ -133,11 +133,9 @@
 		        });
 		    }
 	
-		    function SaveFormInfo_after() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	
+		    function SaveFormInfo_after(result) {
 		        try {
-		            if (xmlhttp.responseText == "<DATA>OK</DATA>") {
+		            if (result == "<DATA>OK</DATA>") {
 		                alert("<spring:message code = 'ezApprovalG.t1663' />");
 		            } else {
 		                alert("<spring:message code = 'ezApprovalG.t1669' />");
