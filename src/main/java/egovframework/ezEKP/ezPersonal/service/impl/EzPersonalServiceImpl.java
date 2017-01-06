@@ -57,11 +57,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID) throws Exception {
+	public List<PersonalSliderImageVO> getSilderList(String companyID, String mode, String sliderID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyID);
 		map.put("v_MODE", mode);
 		map.put("v_SLIDERID", sliderID);
+		map.put("tenantID", tenantID);
 		return ezPersonalDAO.getSilderList(map);
 	}
 
