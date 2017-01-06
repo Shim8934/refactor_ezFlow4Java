@@ -3162,7 +3162,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					list.add(map);
 				} else {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("displayName", user.getDisplayName());

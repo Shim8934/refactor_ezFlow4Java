@@ -386,7 +386,7 @@ public class EzEmailAdminController {
 					}
 				
 				} else {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					if (user != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
