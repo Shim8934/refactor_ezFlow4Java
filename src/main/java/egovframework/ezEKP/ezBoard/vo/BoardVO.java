@@ -48,6 +48,8 @@ public class BoardVO {
 	private String mode;
 	/** tenant*/
 	private int tenantID;
+	/** 현재시간*/
+	private String nowDate;
 
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -186,6 +188,12 @@ public class BoardVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
 	}
 	
 }
