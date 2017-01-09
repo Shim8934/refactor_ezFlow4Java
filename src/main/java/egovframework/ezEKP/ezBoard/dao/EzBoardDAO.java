@@ -6,15 +6,16 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
-import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -104,6 +105,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<BoardLineReplyVO> readOneLineReply(Map<String, Object> map) throws Exception{
 		return (List<BoardLineReplyVO>) list("EzBoardDAO.readOneLineReply", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardAccessVO> getPostNotiMailUserList(Map<String, Object> map) throws Exception{
+		return (List<BoardAccessVO>) list("EzBoardDAO.getPostNotiMailUserList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -350,6 +356,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public int getReservedItemListCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getReservedItemListCount", map);
+	}
+	
+	public int getItemViewNew(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getItemViewNew", map);
 	}
 	
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception{

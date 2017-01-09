@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -582,6 +583,7 @@ public class EzEmailUtil {
 				if (p.isMimeType("text/plain")) {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());
+				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
@@ -621,6 +623,8 @@ public class EzEmailUtil {
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
+				
+				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
 					htmlBody += tempList.get(0);
@@ -683,6 +687,159 @@ public class EzEmailUtil {
 		return resultList;
 	}
 	
+    /**
+     * 메일에서 Text 부분을 찾아 반환하는 함수
+     */
+    public List<String> getTextPart(Part part) throws Exception {
+        List<String> resultList = new ArrayList<String>();
+        
+        String textBody = "";
+        String contentType = "";
+                
+        if (part.isMimeType("text/html")) {
+            String strContent = null;
+            
+            try {
+                strContent = part.getContent().toString();
+            // charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+            // 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                InputStream is = null; 
+                    
+                try {
+                    is = part.getInputStream();
+                // Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+                // 예) Content-Type: Text/Html; Charset="utf-8"
+                //    Content-Transfer-Encoding: 
+                } catch (IOException ioe) {
+                    // gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+                    if (part instanceof MimeBodyPart) {
+                        is = ((MimeBodyPart)part).getRawInputStream();
+                    } else if (part instanceof MimeMessage) {
+                        is = ((MimeMessage)part).getRawInputStream();
+                    }
+                    else {
+                        throw ioe;
+                    }
+                }
+                
+                if (is.available() > 0) {
+                    byte[] buf = new byte[is.available()];
+                    is.read(buf);
+                    
+                    strContent = decodeNonAsciiBytes(buf);                      
+                }
+            }
+            
+            textBody = strContent;   
+            contentType = "text/html";
+        } else if (part.isMimeType("text/plain")) {
+            String strContent = "";
+            String[] headers = part.getHeader("Content-Type");
+            
+            // Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
+            // 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
+            if (headers == null) {
+                logger.debug("no Content-Type header");
+                
+                InputStream is = null; 
+                
+                try {
+                    is = part.getInputStream();
+                // Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+                // 예) Content-Transfer-Encoding: 
+                } catch (IOException ioe) {
+                    // gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+                    if (part instanceof MimeBodyPart) {
+                        is = ((MimeBodyPart)part).getRawInputStream();
+                    } else if (part instanceof MimeMessage) {
+                        is = ((MimeMessage)part).getRawInputStream();
+                    }
+                    else {
+                        throw ioe;
+                    }
+                }
+                
+                if (is.available() > 0) {
+                    byte[] buf = new byte[is.available()];
+                    is.read(buf);
+                    
+                    strContent = decodeNonAsciiBytes(buf);                      
+                }                   
+            }
+            else {
+                strContent = part.getContent().toString();
+            }
+            
+            textBody = strContent;
+            contentType = "text/plain";
+        } else if (part.isMimeType("multipart/alternative")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            Part p = null;
+            
+            for (int i = 0; i < count; i++) {
+                p = mp.getBodyPart(i);
+                
+                // text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.
+                if (!p.isMimeType("text/plain")) {
+                    List<String> tempList = getTextPart(p);
+                    textBody = tempList.get(0);
+                    contentType = tempList.get(1);
+                    break;
+                }
+            }
+            
+            if (textBody.equals("")) {
+                for (int i = 0; i < count; i++) {
+                    p = mp.getBodyPart(i);
+                    if (p.isMimeType("text/plain")) {
+                        textBody = p.getContent().toString();
+                        contentType = "text/plain";
+                        break;
+                    }
+                }
+            }
+        } else if (part.isMimeType("multipart/related")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            for (int i = 0; i < count; i++) {
+                Part p = mp.getBodyPart(i);
+                
+                // text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
+                if (!p.isMimeType("text/plain") && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
+                    List<String> tempList = getTextPart(p);
+                    textBody = tempList.get(0);
+                    contentType = tempList.get(1);
+
+                    if (!contentType.equals("")) {
+                        break;            
+                    }                    
+                }
+            }
+        } else if (part.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            for (int i = 0; i < count; i++) {
+                Part p = mp.getBodyPart(i);
+                List<String> tempList = getTextPart(p);
+                textBody = tempList.get(0);
+                contentType = tempList.get(1);
+                
+                if (!contentType.equals("")) {
+                    break;            
+                }
+            }
+        } 
+        
+        resultList.add(textBody);
+        resultList.add(contentType);
+            
+        return resultList;
+    }
+    
 	/**
 	 * searches an open folder for messages matching the specified criterion. 
 	 */
@@ -697,6 +854,8 @@ public class EzEmailUtil {
 			boolean isUnreadOnly
 			) throws Exception {
 		Message[] messages = folder.getMessages();
+		
+		logger.debug("searchField=" + searchField);
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -804,7 +963,61 @@ public class EzEmailUtil {
 				};					
 			}
 			else if (searchField.equalsIgnoreCase("CONTENT")) {
-				sTerm = new BodyTerm(searchValue);
+//				sTerm = new BodyTerm(searchValue);
+			    
+                sTerm = new SearchTerm() {
+                    public boolean match(Message message) {
+                        try {
+                            ((IMAPMessage)message).setPeek(true);
+                            List<String> bodyInfoList = getTextPart(message);
+                            String textBody = bodyInfoList.get(0);
+                            String contentType = bodyInfoList.get(1);
+                            
+                            // html의 경우엔 html tag를 제거한다.
+                            if (textBody != null && contentType.equals("text/html")) {
+                                Pattern p = Pattern.compile("\\s*<(head|title|style)(.*?)<\\/(head|title|style)>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+                                Matcher m = p.matcher(textBody);
+                                textBody = m.replaceAll("");
+                                
+                                p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+                                m = p.matcher(textBody);
+                                textBody = m.replaceAll("").trim();
+
+                                p = Pattern.compile("&nbsp;");
+                                m = p.matcher(textBody);
+                                textBody = m.replaceAll(" ");
+
+                                p = Pattern.compile("&lt;");
+                                m = p.matcher(textBody);
+                                textBody = m.replaceAll("<");
+                                
+                                p = Pattern.compile("&gt;");
+                                m = p.matcher(textBody);
+                                textBody = m.replaceAll(">");
+
+                                p = Pattern.compile("&amp;");
+                                m = p.matcher(textBody);
+                                textBody = m.replaceAll("&");                                
+                            }
+                            
+//                            logger.debug("contentType=" + contentType + ",textBody=" + textBody);
+//                            logger.debug("searchValue=" + searchValue);
+                            
+                            if (textBody != null) {                                
+                                Pattern p = Pattern.compile(searchValue, Pattern.CASE_INSENSITIVE);
+                                Matcher m = p.matcher(textBody);
+                                
+                                if (m.find()) {
+                                    return true;
+                                }                      
+                            }
+                        } 
+                        catch (Exception e) {
+                        }
+                        
+                        return false;
+                    }
+                };                  			    
 			}
 		}
 		

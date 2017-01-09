@@ -747,17 +747,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			vo.setTitle2(vo.getTitle());
 		}
 		
-		try {
-			if (vo.getItemSeq() == null) {
-				ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
-			} else {
-				ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
-			}
-			
-			return "OK";
-		} catch (Exception e) {
-			return "ERROR";
+		if (vo.getItemSeq() == null) {
+			ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+		} else {
+			ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
 		}
+			
+		return "OK";
 	}
 	
 	/**
@@ -769,13 +765,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
-		try {
-			ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
+		ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
 			
-			return "OK";
-		} catch (Exception e) {
-			return "ERROE";
-		}
+		return "OK";
 	}
 	
 	/**
@@ -856,13 +848,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		int tenantID = userInfo.getTenantId();
 		
-		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
+		ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
 			
-			return "OK";
-		} catch (Exception e) {
-			return "ERROR";
-		}
+		return "OK";
 	}
 	
 	/**
@@ -908,7 +896,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 초기화면 슬라이드이미지 등혹 이미지등록 실행 함수
+	 * 초기화면 슬라이드이미지 등록 이미지등록 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do")
 	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
@@ -995,13 +983,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String fileName = request.getParameter("fileName");
 		String mode = request.getParameter("mode");
 		
-		//try {
-			ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo);
+		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo);
 			
-			return "OK";
-		//} catch (Exception e) {
-			//return "ERROR";
-		//}
+		return "OK";
 	}
 	
 	/**
@@ -1033,16 +1017,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezPersonal/deleteSlider.do")
 	@ResponseBody
-	public String deleteSlider(HttpServletRequest request) throws Exception {
+	public String deleteSlider(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = request.getParameter("sliderID");
-		
-		try {
-			ezPersonalAdminService.deleteSlider(sliderID);
-			
-			return "OK";
-		} catch (Exception e) {
-			return "ERROR";
-		}
+		ezPersonalAdminService.deleteSlider(sliderID, userInfo.getTenantId());
+		return "OK";
 	}
 	
 	/**

@@ -17,9 +17,11 @@ function OpenInformationUI(pInformationContent, FunctionName)
 	}
 }
 
-function OpenInformationUI_Complete() {
-    DivPopUpHidden();
+function OpenInformationUI_Complete(RtnVal, Complete_Function) {
+    if (RtnVal)
+        Complete_Function(RtnVal);
 }
+
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;

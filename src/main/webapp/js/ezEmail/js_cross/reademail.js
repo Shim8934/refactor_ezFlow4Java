@@ -847,9 +847,8 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         var pLeft = (pwidth - 765) / 2;
 
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/myoffice/ezBoardSTD/interASP/GetItemViewNew.aspx?pBoardID=" + pBoardID + "&pItemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
         xmlhttp.send();
-
         if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
             window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
         }
@@ -866,11 +865,11 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         pwidth = pwidth - 359;
 
         var xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/myoffice/ezBoardSTD/interASP/GetItemViewNew.aspx?pBoardID=" + pBoardID + "&pItemID=" + pItemID, false);
+        xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
         xmlhttp.send();
 
         if (getNodeText(xmlhttp.responseXML.documentElement) != "0") {
-            window.open("/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=765, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");
         }
         else {
             alert(strLang166);
@@ -886,7 +885,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezBoardSTD/interASP/GetItemViewNew.aspx?pBoardID=" + pBoardID + "&pItemID=" + pItemID, false);
+    xmlhttp.open("POST", "/ezBoard/getItemViewNew.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlhttp.send();
 
     
@@ -895,7 +894,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
             window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "height=770,width=765, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
         else {
-            window.open("/myoffice/ezBoardSTD/BoardItemView_Cross.aspx?ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
     }
     else {

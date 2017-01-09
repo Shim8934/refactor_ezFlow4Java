@@ -10,6 +10,7 @@
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO" />
+	<typeAlias  alias="BoardAccessVO"	 			type="egovframework.ezEKP.ezBoard.vo.BoardAccessVO"/>
 	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	<typeAlias  alias="BoardLineReplyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
@@ -4044,4 +4045,53 @@
    		]]>
 	</delete>
 	
+	<select id="EzBoardDAO.getPostNotiMailUserList" parameterClass="Map" resultClass="BoardAccessVO">
+		<isEqual property="primary" compareValue="1">
+			<![CDATA[
+				SELECT
+					accessid,
+					accessname
+				FROM
+					ezBoardSTD.TBL_BOARD_BOARDMANAGE
+				WHERE
+					boardid = #boardID#
+				AND
+					boardadmin_fg = 'true'
+				AND
+					postnotice = 'true'
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="primary" compareValue="1">
+			<![CDATA[
+				SELECT
+					accessid,
+					accessname2 AS accessname
+				FROM
+					ezBoardSTD.TBL_BOARD_BOARDMANAGE
+				WHERE
+					boardid = #boardID#
+				AND
+					boardadmin_fg = 'true'
+				AND
+					postnotice = 'true'
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzBoardDAO.getItemViewNew" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			ezBoardSTD.TBL_BOARD_ITEM
+		WHERE
+			boardid = #boardID#
+        AND
+        	itemid = #itemID#
+        AND
+        	tenant_id = #tenantID#
+	</select>
 </sqlMap>

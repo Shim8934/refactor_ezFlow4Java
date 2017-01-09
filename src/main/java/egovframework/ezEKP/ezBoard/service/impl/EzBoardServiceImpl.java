@@ -21,6 +21,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -2050,6 +2051,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getItemAttachmentXML ended");
 		
 		return resultXML.toString();
+	}
+
+	@Override
+	public List<BoardAccessVO> getPostNotiMailUserList(String boardID, String primary, int tenantID)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		return ezBoardDAO.getPostNotiMailUserList(map);
+	}
+
+	@Override
+	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		return ezBoardDAO.getItemViewNew(map);
 	}
 
 }

@@ -274,7 +274,7 @@
 		
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
-		            var ret = window.showModalDialog("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "",
+		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
 		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		            if (typeof (ret) != "undefined") {
@@ -376,7 +376,7 @@
 							<c:if test="${useEzKMS == 'YES'}">
 								<li><span ID='btn_KMS' onclick='ToKMS()'>KMS</span></li>
 							</c:if>
-							<li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li>
+							<!--  <li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li> -->
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
