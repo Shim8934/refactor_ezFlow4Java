@@ -712,7 +712,7 @@
 				EZPERSONAL.TBLPOPUP
      			( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID )
    			VALUES 
-     			( #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# );
+     			( #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -765,9 +765,9 @@
 	                 	COMPANY2 ,
 	                 	TITLE ,
 	                 	TITLE2 ,
-	                 	$v_pTerm$ ,
-	                 	$v_pTerm$ ,
-	                 	TENANTID
+	                 	#v_pTerm# ,
+	                 	to_date('$v_pTerm$', 'YYYY-MM') ,
+	                 	TENANT_ID
           			FROM
           				EZHRMASTER.TBLUSERMASTER
            			WHERE
@@ -789,8 +789,8 @@
                  		COMPANY2 ,
                  		A.TITLE ,
                  		A.TITLE2 ,
-                 		$v_pTerm$ ,
-                 		$v_pTerm$ ,
+                 		#v_pTerm# ,
+                 		to_date('$v_pTerm$', 'YYYY-MM') ,
                  		A.TENANT_ID
           			FROM
           				EZHRMASTER.TBLADDJOBMASTER A
