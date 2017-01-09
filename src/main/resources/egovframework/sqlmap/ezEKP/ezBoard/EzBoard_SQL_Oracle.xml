@@ -140,10 +140,6 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="32"/>
 	</resultMap>
 	
-<!-- 	<procedure id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_LEFT_BOARDSTD(#v_REDIRECTBOARDID#, #v_TENANTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		<![CDATA[
 			SELECT 
@@ -156,10 +152,6 @@
        			TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
-
-<!-- 	<procedure id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GET_FAVORITELIST(#v_USERID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 
 	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="MyFavoriteVO">
 		<![CDATA[
@@ -248,10 +240,6 @@
 			]]>
 		</isEqual>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.get_parentBoardName" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GET_PARENTBOARDNAME(#v_BOARDIDLIST#, #v_BOARDCOUNTLIST#, #v_PRIMARY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 
 	<select id="EzBoardDAO.getBoardGroupID" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -292,11 +280,6 @@
 			]]>
 		</isNotEqual>
 	</select>
-	
-
-<!-- 	<procedure id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER(#v_PBOARDTYPE#, #v_PSTRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getListHeader" parameterClass="Map" resultClass="BoardListHeaderVO">
 		<isEmpty property="v_PSTRLANG">
@@ -359,10 +342,6 @@
 			</isNotEqual>
 		</isNotEmpty>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getListHeaderBoardID" parameterClass="Map" resultClass="BoardListHeaderVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_BOARDID(#v_PBOARDID#, #v_PSTRLANG#, #v_PBOARDTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getListOptionBoardID" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -439,10 +418,6 @@
 		</isNotEmpty>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW(#v_pItemID#, #v_pBoardID#, #v_pStartRow#, #v_pEndRow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
 		<![CDATA[
 			SELECT 
@@ -469,10 +444,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.photoViewDBAll" parameterClass="Map" resultMap="photoViewDBAll"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_PHOTOLISTVIEW_ALL(#v_pItemID#, #v_pBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.photoViewDBAll" parameterClass="Map" resultMap="photoViewDBAll">
 		<![CDATA[
 			SELECT 
@@ -493,10 +464,6 @@
 	        	WriteDate ASC
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETRESERVEDITEMLISTXML(#v_PENDROW#, #v_PUSERID#, #v_PSORTBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
 		<isEmpty property="v_PSORTBY">
@@ -586,10 +553,6 @@
 			]]>
 		</isNotEmpty>
 	</select>
-
-<!-- 	<procedure id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDNEWITEMCOUNT(#v_pUserID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -629,22 +592,18 @@
                                AND 
                                		itemid = A.itemid
                                AND 
-                               		ReadDate > TO_DATE(SYSDATE - 5,'YYYY-MM-DD HH24:MI:SS') ) )
+                               		ReadDate > TO_DATE(#nowDate# - 5,'YYYY-MM-DD HH24:MI:SS') ) )
             AND 
-            	A.StartDate < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+            	A.StartDate < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	A.StartDate > TO_CHAR(SYSDATE - 5,'YYYY-MM-DD HH24:MI:SS')
+            	A.StartDate > TO_CHAR(#nowDate# - 5,'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	A.EndDate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+            	A.EndDate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	( A.APPRFLAG = 'Y'
                   OR A.APPRFLAG IS NULL )
 		]]>
 	</select>
-
-<!-- 	<procedure id="EzBoardDAO.getPersonalCount" parameterClass="String" resultClass="BoardConfigVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETPERSONALCOUNT(#userID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getPersonalCount" parameterClass="userInfo" resultClass="BoardConfigVO">
 		<![CDATA[
@@ -663,10 +622,6 @@
        			USERID = #id#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getItemInfo" parameterClass="String" resultClass="BoardListVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETITEMINFO(#itemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getBoardItem" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -721,10 +676,6 @@
 		</isEmpty>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETREADERLIST(#boardID#, #itemID#, #userID#, #lang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT  
@@ -755,10 +706,6 @@
 		   		ReadDate DESC
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_COPYITEM_GET1(#v_PORGITEMID#, #v_PORGBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
@@ -816,10 +763,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getAdjacentItems3" parameterClass="Map" resultClass="BoardListVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETADJACENTITEMS3(#v_PBOARDID#, #v_PPARENTWRITEDATE#, #v_PITEMID#, #v_PUPPERITEMIDTREE#, #v_PREVIOUSITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getAdjacentItems3" parameterClass="Map" resultClass="BoardListVO">
 		<isNotEmpty property="v_PREVIOUSITEMID">
 			<![CDATA[
@@ -843,9 +786,9 @@
                       AND 
                       	UPPERITEMIDTREE NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
-                      	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                      	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                       AND 
-                      	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                      	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                       AND 
                       	ITEMID <>  #v_PREVIOUSITEMID# 
                       ORDER BY 
@@ -888,10 +831,6 @@
 			]]>
 		</isEmpty>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETNEWITEMLISTXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
@@ -961,11 +900,11 @@
       			  	(A.APPRFLAG = 'Y' 
       			     OR A.APPRFLAG IS NULL)
       			  AND 
-      			  	A.STARTDATE > TO_CHAR(SYSDATE-5, 'YYYY-MM-DD HH24:MI:SS') 
+      			  	A.STARTDATE > TO_CHAR(#nowDate# - 5, 'YYYY-MM-DD HH24:MI:SS') 
       			  AND 
-      			  	A.STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+      			  	A.STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
       			  AND 
-      			  	A.ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')					
+      			  	A.ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')					
       			  AND 
       			  	(NOT EXISTS
       							(SELECT 
@@ -983,15 +922,11 @@
       							 AND
       							 	S.USERID = #v_PUSERID# 
       							 AND 
-      							 	S.READDATE > (TO_DATE(SYSDATE-5, 'YYYY-MM-DD HH24:MI:SS'))))) T1 
+      							 	S.READDATE > (TO_DATE(#nowDate# - 5, 'YYYY-MM-DD HH24:MI:SS'))))) T1 
       		WHERE 
       			RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
@@ -1066,10 +1001,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETQNABOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#,#v_TYPE#, #v_ADMINTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
@@ -1142,10 +1073,6 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETNOTICEPOSTITEM(#v_PBOARDID#,#v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-
 	<select id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
 		SELECT 
 			* 
@@ -1203,9 +1130,9 @@
 	              AND
 	              	BOARDID = #v_PBOARDID#
 	              AND 
-	              	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	              	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	              AND 
-	              	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	              	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	              AND 
 	              	extensionAttribute1 = '0'
 	              AND 
@@ -1219,10 +1146,6 @@
         WHERE  
         	ROWNUM_ BETWEEN #v_START# AND #v_END#
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETMYNOTICEPOSTITEM(#v_PUSERID#, #v_TYPE#, #v_START#,#v_END#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
 		<isEqual property="v_TYPE" compareValue="Y">
@@ -1278,9 +1201,9 @@
 	                 AND  
 	                 	WRITERID = #v_PUSERID#
 	                 AND 
-	                 	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	                 	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	                 AND 
-	                 	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	                 	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	                 AND 
 	                 	extensionAttribute1 = '0'
 	                 AND 
@@ -1351,10 +1274,6 @@
 			]]>
 		</isNotEqual>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getMyBoardListItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETMYBOARDLISTITEMXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getMyBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
@@ -1428,17 +1347,13 @@
    				  AND 
    				  	WRITERID = #v_PUSERID# 
    				  AND 
-   				  	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    				  AND 
-   				  	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') ) T1 
+   				  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') ) T1 
    			WHERE 
    				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getMyBoardListItemTemp" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETMYBOARDLISTITEMXMLTEMP(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getMyBoardListItemTemp" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
@@ -1515,10 +1430,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETAPPRBOARDLISTITEMXML(#v_PUSERID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
@@ -1591,9 +1502,9 @@
    				   WHERE
    				   		A.TENANT_ID = #v_TENANTID#
    				   AND 
-   				   		STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+   				   		STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
    				   AND 
-   				   		ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				   		ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    				   AND 
    				   		A.APPRFLAG = 'N' 
    				   AND 
@@ -1602,10 +1513,6 @@
    				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETAPPRUSERLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.get_apprUserList" parameterClass="Map" resultMap="get_apprUserList">
 		<![CDATA[
@@ -1630,10 +1537,6 @@
        			BOARDID = #v_PBOARDID#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILLISTXML(#v_PUSERID#,#v_PBOARDID#,#v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
 		<![CDATA[
@@ -1702,10 +1605,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETSEARCHTHUMBNAILLISTXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_TITLE#, #v_WRITERNAME#, #v_ABSTRACT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
 		<![CDATA[
 			SELECT 
@@ -1772,9 +1671,9 @@
 	   			  AND 
 	   			  	B.MAIN_FLAG = 'Y'
 	   			  AND 
-	   			  	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')  
+	   			  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')  
 	   			  AND 
-	   			  	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')   
+	   			  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')   
 	   		      $v_PSUBQUERY$ ) T1 
 	   		WHERE 
 	   			RNUM BETWEEN  #v_PSTARTROW#  AND   #v_PENDROW#
@@ -1840,10 +1739,6 @@
                 A.WriteDate ASC
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getSearchBoardItemList" parameterClass="Map" resultClass="HashMap"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETSEARCHBOARDLISTITEMXML(#v_PUSERID#, #v_PBOARDID#, #v_PSTARTROW#, #v_PENDROW#, #v_PTOTALCOUNT#, #iv_PORDERBYSUB#, #v_PORDERBYMAIN#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_TITLE#, #v_WRITERNAME#, #v_ABSTRACT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getSearchBoardItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
@@ -1916,9 +1811,9 @@
    				  AND
    				  	A.TENANT_ID = #v_TENANTID#
    				  AND 
-   				  	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    				  AND 
-   				  	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    				  $v_PSUBQUERY$ ) T1 
    			WHERE 
    				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
@@ -2151,10 +2046,6 @@
 		]]>
 	</delete>
 	
-<!-- 	<procedure id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETITEMINFO(#v_pBoardID#,#v_pItemID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getBrdGetItemInfo" parameterClass="Map" resultMap="getBrdGetItemInfo">
 		<![CDATA[
 			SELECT
@@ -2310,9 +2201,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getQNABrdTotalItemCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETQNABRDTOTALITEMCOUNT(#v_PBOARDID#, #v_PNOW#, #v_PUSERID#,#v_PTYPE#, #v_PADMINTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="MyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2344,9 +2232,9 @@
             		AND
             			BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                    AND 
-                   	ENDDATE > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
                    AND 
@@ -2383,9 +2271,9 @@
                	AND  
                		BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                    AND 
-                   	ENDDATE > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                    AND 
                    	D.TOTALCOUNT IS NULL
 			]]>
@@ -2405,9 +2293,9 @@
                   	AND
                   		BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                    AND 
-                   	ENDDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 			<isEqual property="v_PADMINTYPE" compareValue="false">
                    AND 
@@ -2470,10 +2358,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getBrdTotalItemCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDTOTALITEMCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#, #v_PTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="MyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
@@ -2488,9 +2372,9 @@
                 AND 
                 	APPRFLAG = 'Y'
                 AND 
-                	STARTDATE < TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                 AND 
-                	ENDDATE > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+                	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
@@ -2653,9 +2537,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getThumbNailCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETTHUMBNAILCOUNT(#v_PBOARDID#, SYSDATE, #v_PUSERID#,#v_PTYPE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzBoardDAO.getBoardApprList" parameterClass="MyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2693,9 +2574,9 @@
              	AND
              		A.BoardID = #boardId#
                 AND 
-                	STARTDATE < SYSDATE
+                	STARTDATE < #nowDate#
                 AND 
-                	ENDDATE > SYSDATE
+                	ENDDATE > #nowDate#
                 AND 
                 	B.Main_Flag = 'Y'
                 AND 
@@ -2737,9 +2618,9 @@
                 AND  
                 	A.BoardID = #boardId#
                 AND 
-                	STARTDATE < SYSDATE
+                	STARTDATE < #nowDate#
                 AND 
-                	ENDDATE > SYSDATE
+                	ENDDATE > #nowDate#
                 AND 
                 	D.TOTALCOUNT IS NULL
                 AND 
@@ -2766,9 +2647,9 @@
              	AND
              		A.BoardID = #boardId#
                 AND 
-                	STARTDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                 AND 
-                	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                 AND 
                 	B.Main_Flag = 'Y'
 			]]>
@@ -2839,10 +2720,6 @@
 		</isEqual>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CHECKITEMID(#v_ITEMID#, #v_BOARDTYPE#, #v_ACCESSID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
@@ -2883,10 +2760,6 @@
 		</isEqual>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SEARCHBRDTOTALITEMCOUNT(#v_pBoardID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -2898,16 +2771,12 @@
    			AND
    				TENANT_ID = #v_TENANTID#
    			AND 
-   				STARTDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    			AND 
-   				ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') 
+   				ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
    			$v_PSUBQUERY$
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETMYNOTICEPOSTCOUNT(#v_PUSERID#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -2920,19 +2789,15 @@
        		AND
        			WRITERID = #v_PUSERID#
             AND 
-            	STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+            	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+            	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	extensionAttribute1 = '0'
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardDAO.getSearchMyBoardItemCount" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SEARCHBRDMYTOTALITEMCOUNT(#v_PUSERID#, #v_PSUBFLAG#, #v_PSUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -3109,10 +2974,6 @@
 		]]>
 	</insert>
 	
-<!-- 	<procedure id="EzBoardDAO.set_ListOrder" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SET_LISTORDER(#v_ORDERBOARDIDLIST#, #v_ORDERBOARDLISTCOUNT#, #v_DELBOARDIDLIST#, #v_DELBOARDLISTCOUNT#, #v_USERID#, #v_ERR_CD,javaType=java.lang.Integer,jdbcType=INTEGER,mode=INOUT#)} -->
-<!-- 	</procedure> -->
-	
 	<update id="EzBoardDAO.set_ListOrder_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE EZBOARDSTD.TBL_Board_MyBoards
@@ -3158,10 +3019,6 @@
 		    	USERID = #userID#
 		]]>
 	</update>
-	
-<!-- 	<procedure id="EzBoardDAO.set_TabUsed" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SET_TABUSED(#v_BOARDID#, #v_TABUSED#, #v_USERID#)} -->
-<!-- 	</procedure> -->
 	
 	<update id="EzBoardDAO.set_TabUsed" parameterClass="Map">
 		<![CDATA[
@@ -3309,10 +3166,6 @@
 			]]>
 		</isEqual>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardDAO.setAsRead" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDSETASREAD(#iv_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#)} -->
-<!-- 	</procedure> -->
 
 	<select id="EzBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
 		<isEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
@@ -3844,9 +3697,9 @@
             AND 
             	upperitemidtree LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
-            	startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+            	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	enddate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+            	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	        ORDER BY 
 	        	upperitemidtree, 
 	        	startdate DESC
@@ -3870,9 +3723,9 @@
 	             AND 
 	             	parentwritedate >= #v_PPARENTWRITEDATE#
 	             AND 
-	             	startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	             AND 
-	             	enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	        	 ORDER BY 
 	        	 	parentwritedate ASC,
 	                upperitemidtree ,
@@ -3899,9 +3752,9 @@
 	             AND 
 	             	parentwritedate >= #v_PPARENTWRITEDATE#
 	             AND 
-	             	startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	             AND 
-	             	enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+	             	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	             ORDER BY 
 	             	parentwritedate DESC,
 	             	startdate DESC,
@@ -3929,9 +3782,9 @@
                   AND 
                   	 parentwritedate <= #v_PPARENTWRITEDATE#
                   AND 
-                  	 startdate <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                  	 startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                  	 enddate > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+                  	 enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
         		  ORDER BY 
         		  	 parentwritedate DESC,
                   	 startdate DESC,
@@ -3954,9 +3807,9 @@
 	        AND
 	        	boardid = #boardId#
 	        AND 
-	        	startdate <= TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+	        	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	        AND 
-	        	enddate > TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+	        	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	        AND 
 	        	extensionattribute1 = '0'
 	        AND 

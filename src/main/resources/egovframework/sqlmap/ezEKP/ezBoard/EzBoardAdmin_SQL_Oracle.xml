@@ -98,10 +98,6 @@
             QUERY = #v_PQUERY#
 	</select>
 
-<!-- 	<procedure id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET2(#v_PACCESSID#, #v_PROOTBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true">
 		<![CDATA[
 			SELECT 
@@ -416,10 +412,6 @@
 		]]>
 	</insert>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_SET(#v_STRLANG#, #v_PQUERY#, #v_RESULT#)} -->
-<!-- 	</procedure> -->
-	
 	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
 		<![CDATA[
 			DELETE 
@@ -453,10 +445,6 @@
 	        ]]>
 		</isNotEqual>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDCHECKIFBOARDGROUPADMIN(#v_pBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_TENANTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
