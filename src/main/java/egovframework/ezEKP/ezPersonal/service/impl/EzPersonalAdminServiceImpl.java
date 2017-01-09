@@ -585,8 +585,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 	
 	@Override
-	public void deleteSlider(String sliderID) throws Exception {
-		ezPersonalAdminDAO.delSliderImage(sliderID);
+	public void deleteSlider(String sliderID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SLIDERID", sliderID);
+		map.put("tenantID", tenantID);
+		ezPersonalAdminDAO.delSliderImage_D(map);
+		ezPersonalAdminDAO.delSliderImage();
 	}
 	
 	@Override

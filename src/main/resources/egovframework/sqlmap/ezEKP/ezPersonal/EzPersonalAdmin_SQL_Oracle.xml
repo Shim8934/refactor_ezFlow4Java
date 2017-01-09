@@ -967,7 +967,7 @@
 	<delete id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				TBL_SLIDERIMAGE
+				EZPERSONAL.TBL_SLIDERIMAGE
    			WHERE
    				SLIDERID = #v_SLIDERID#
    			AND
@@ -975,7 +975,26 @@
 		]]>
 	</delete>
 	
-	
+	<statement id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE">
+		<![CDATA[
+			MERGE INTO
+				EZPERSONAL.TBL_SLIDERIMAGE 
+      		USING (	SELECT
+      						EZPERSONAL.TBL_SLIDERIMAGE.ROWID row_id, TEMPTABLE.SN
+      					FROM
+      						EZPERSONAL.TBL_SLIDERIMAGE 
+             			JOIN ( SELECT
+             						 SLIDERID , ROW_NUMBER() OVER ( ORDER BY SN  ) SN  
+                    			FROM
+                    				EZPERSONAL.TBL_SLIDERIMAGE  ) TEMPTABLE 
+                    	ON
+                    		EZPERSONAL.TBL_SLIDERIMAGE.SliderID = TEMPTABLE.SLIDERID ) src
+      		ON
+      			( TBL_SLIDERIMAGE.ROWID = src.row_id )
+      		WHEN
+      			MATCHED THEN UPDATE SET SN = src.SN		
+		]]>
+	</statement>
 	
 	<!-- <procedure id="EzPersonalAdmin.delQuickLink"			parameterClass="String">
 		<![CDATA[
