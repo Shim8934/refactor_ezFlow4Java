@@ -1860,7 +1860,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
 function GetBoardItemInfo_New3(pBoardID, pItemID) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/myoffice/ezCommunity/aspx/GetItemInfo.aspx?BoardID=" + pBoardID + "&ItemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -1893,7 +1893,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
 
-        xmlHTTP.open("POST", "/myoffice/ezCommunity/aspx/GetItemAttachments.aspx?ItemID=" + pItemID, false);
+        xmlHTTP.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");

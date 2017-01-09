@@ -516,7 +516,7 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 
-                var szUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?boardid=" + pBoardID + "&itemid=" + pItemID + "&cmd=Community";
+                var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=Community";
 
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
