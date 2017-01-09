@@ -592,13 +592,13 @@
                                AND 
                                		itemid = A.itemid
                                AND 
-                               		ReadDate > TO_DATE(#nowDate# - 5,'YYYY-MM-DD HH24:MI:SS') ) )
+                               		ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5 ) ) )
             AND 
-            	A.StartDate < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	A.StartDate < #nowDate#
             AND 
-            	A.StartDate > TO_CHAR(#nowDate# - 5,'YYYY-MM-DD HH24:MI:SS')
+            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
             AND 
-            	A.EndDate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	A.EndDate > #nowDate#
             AND 
             	( A.APPRFLAG = 'Y'
                   OR A.APPRFLAG IS NULL )
@@ -786,9 +786,9 @@
                       AND 
                       	UPPERITEMIDTREE NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
-                      	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                      	STARTDATE <= #nowDate#
                       AND 
-                      	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                      	ENDDATE > #nowDate#
                       AND 
                       	ITEMID <>  #v_PREVIOUSITEMID# 
                       ORDER BY 
@@ -900,11 +900,11 @@
       			  	(A.APPRFLAG = 'Y' 
       			     OR A.APPRFLAG IS NULL)
       			  AND 
-      			  	A.STARTDATE > TO_CHAR(#nowDate# - 5, 'YYYY-MM-DD HH24:MI:SS') 
+      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5) 
       			  AND 
-      			  	A.STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+      			  	A.STARTDATE <= #nowDate#
       			  AND 
-      			  	A.ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')					
+      			  	A.ENDDATE > #nowDate#					
       			  AND 
       			  	(NOT EXISTS
       							(SELECT 
@@ -922,7 +922,7 @@
       							 AND
       							 	S.USERID = #v_PUSERID# 
       							 AND 
-      							 	S.READDATE > (TO_DATE(#nowDate# - 5, 'YYYY-MM-DD HH24:MI:SS'))))) T1 
+      							 	S.READDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))) T1 
       		WHERE 
       			RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 		]]>
@@ -1130,9 +1130,9 @@
 	              AND
 	              	BOARDID = #v_PBOARDID#
 	              AND 
-	              	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	              	STARTDATE <= #nowDate#
 	              AND 
-	              	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	              	ENDDATE > #nowDate#
 	              AND 
 	              	extensionAttribute1 = '0'
 	              AND 
@@ -1201,9 +1201,9 @@
 	                 AND  
 	                 	WRITERID = #v_PUSERID#
 	                 AND 
-	                 	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	                 	STARTDATE <= #nowDate#
 	                 AND 
-	                 	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	                 	ENDDATE > #nowDate#
 	                 AND 
 	                 	extensionAttribute1 = '0'
 	                 AND 
@@ -1347,9 +1347,9 @@
    				  AND 
    				  	WRITERID = #v_PUSERID# 
    				  AND 
-   				  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	STARTDATE <= #nowDate# 
    				  AND 
-   				  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') ) T1 
+   				  	ENDDATE > #nowDate# ) T1 
    			WHERE 
    				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
 		]]>
@@ -1502,9 +1502,9 @@
    				   WHERE
    				   		A.TENANT_ID = #v_TENANTID#
    				   AND 
-   				   		STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+   				   		STARTDATE <= #nowDate#
    				   AND 
-   				   		ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				   		ENDDATE > #nowDate# 
    				   AND 
    				   		A.APPRFLAG = 'N' 
    				   AND 
@@ -1671,9 +1671,9 @@
 	   			  AND 
 	   			  	B.MAIN_FLAG = 'Y'
 	   			  AND 
-	   			  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')  
+	   			  	STARTDATE <= #nowDate#  
 	   			  AND 
-	   			  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')   
+	   			  	ENDDATE > #nowDate#   
 	   		      $v_PSUBQUERY$ ) T1 
 	   		WHERE 
 	   			RNUM BETWEEN  #v_PSTARTROW#  AND   #v_PENDROW#
@@ -1811,9 +1811,9 @@
    				  AND
    				  	A.TENANT_ID = #v_TENANTID#
    				  AND 
-   				  	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	STARTDATE <= #nowDate# 
    				  AND 
-   				  	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				  	ENDDATE > #nowDate# 
    				  $v_PSUBQUERY$ ) T1 
    			WHERE 
    				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
@@ -2232,9 +2232,9 @@
             		AND
             			BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < #nowDate#
                    AND 
-                   	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE > #nowDate#
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
                    AND 
@@ -2271,9 +2271,9 @@
                	AND  
                		BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < #nowDate#
                    AND 
-                   	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE > #nowDate#
                    AND 
                    	D.TOTALCOUNT IS NULL
 			]]>
@@ -2293,9 +2293,9 @@
                   	AND
                   		BOARDID = #v_PBOARDID#
                    AND 
-                   	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	STARTDATE < #nowDate#
                    AND 
-                   	ENDDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                   	ENDDATE < #nowDate#
 			]]>
 			<isEqual property="v_PADMINTYPE" compareValue="false">
                    AND 
@@ -2372,9 +2372,9 @@
                 AND 
                 	APPRFLAG = 'Y'
                 AND 
-                	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                	STARTDATE < #nowDate#
                 AND 
-                	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                	ENDDATE > #nowDate#
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
@@ -2647,9 +2647,9 @@
              	AND
              		A.BoardID = #boardId#
                 AND 
-                	STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                	STARTDATE < #nowDate#
                 AND 
-                	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                	ENDDATE > #nowDate#
                 AND 
                 	B.Main_Flag = 'Y'
 			]]>
@@ -2771,9 +2771,9 @@
    			AND
    				TENANT_ID = #v_TENANTID#
    			AND 
-   				STARTDATE < TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				STARTDATE < #nowDate# 
    			AND 
-   				ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   				ENDDATE > #nowDate# 
    			$v_PSUBQUERY$
 		]]>
 	</select>
@@ -2789,9 +2789,9 @@
        		AND
        			WRITERID = #v_PUSERID#
             AND 
-            	STARTDATE <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	STARTDATE <= #nowDate#
             AND 
-            	ENDDATE > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	ENDDATE > #nowDate#
             AND 
             	extensionAttribute1 = '0'
             AND 
@@ -3697,9 +3697,9 @@
             AND 
             	upperitemidtree LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
-            	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	startdate <= #nowDate#
             AND 
-            	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+            	enddate > #nowDate#
 	        ORDER BY 
 	        	upperitemidtree, 
 	        	startdate DESC
@@ -3723,9 +3723,9 @@
 	             AND 
 	             	parentwritedate >= #v_PPARENTWRITEDATE#
 	             AND 
-	             	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	             	startdate <= #nowDate#
 	             AND 
-	             	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	             	enddate > #nowDate#
 	        	 ORDER BY 
 	        	 	parentwritedate ASC,
 	                upperitemidtree ,
@@ -3752,9 +3752,9 @@
 	             AND 
 	             	parentwritedate >= #v_PPARENTWRITEDATE#
 	             AND 
-	             	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	             	startdate <= #nowDate#
 	             AND 
-	             	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	             	enddate > #nowDate#
 	             ORDER BY 
 	             	parentwritedate DESC,
 	             	startdate DESC,
@@ -3782,9 +3782,9 @@
                   AND 
                   	 parentwritedate <= #v_PPARENTWRITEDATE#
                   AND 
-                  	 startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  	 startdate <= #nowDate#
                   AND 
-                  	 enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  	 enddate > #nowDate#
         		  ORDER BY 
         		  	 parentwritedate DESC,
                   	 startdate DESC,
@@ -3807,9 +3807,9 @@
 	        AND
 	        	boardid = #boardId#
 	        AND 
-	        	startdate <= TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	        	startdate <= #nowDate#
 	        AND 
-	        	enddate > TO_CHAR(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+	        	enddate > #nowDate#
 	        AND 
 	        	extensionattribute1 = '0'
 	        AND 

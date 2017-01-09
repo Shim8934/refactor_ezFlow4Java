@@ -601,11 +601,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         }
         
 		if (type.equals("1")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		} else if (type.equals("2")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
 		} else if (type.equals("3")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE < '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -639,11 +639,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (type.equals("1")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		} else if (type.equals("2")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
 		} else if (type.equals("3")) {
-			strSQL += " AND STARTDATE <= TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_CHAR('" + commonUtil.getTodayUTCTime("") + "', 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE < '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -731,9 +731,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         }
 		
         if (boardVO.getType().equals("1")) {
-        	strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' " ;
+        	strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' " ;
         } else if (boardVO.getType().equals("2")) {
-        	strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' AND READFLAG = '0' " ;
+        	strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' AND READFLAG = '0' " ;
         }
         
 		Map<String, Object> map = new HashMap<String, Object>();
