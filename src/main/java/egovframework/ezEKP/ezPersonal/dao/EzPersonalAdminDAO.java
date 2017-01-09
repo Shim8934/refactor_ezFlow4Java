@@ -179,8 +179,12 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		delete("EzPersonalAdmin.EZSP_DELETEPOPUP", map);
 	}
 
-	public void delSliderImage(String v_SLIDERID) throws Exception {
-		delete("EzPersonalAdmin.EZSP_DELSLIDERIMAGE", v_SLIDERID);
+	public void delSliderImage() throws Exception {
+		update("EzPersonalAdmin.EZSP_DELSLIDERIMAGE");
+	}
+	
+	public void delSliderImage_D(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.EZSP_DELSLIDERIMAGE_D", map);
 	}
 	
 	public void deleteQuickLinkID(Map<String, Object> map) throws Exception {

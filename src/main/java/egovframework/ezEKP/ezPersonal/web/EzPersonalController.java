@@ -1068,7 +1068,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 	
 		String realPath = req.getServletContext().getRealPath("");
-		String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode;
 		
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
@@ -1100,10 +1100,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			if (file1.exists()) {
 				FileUtils.deleteQuietly(file1);
 			}
-			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
 		} else {
-			logger.debug("path="+config.getProperty("upload_portal.ROOT") + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
-			return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+			logger.debug("path="+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
+			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
 		}
 	}
 	

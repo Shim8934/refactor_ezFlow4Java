@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
  * @Description [Controller] 메일 검색
@@ -163,6 +164,8 @@ public class EzEmailMailSearchController {
 		
 		String mailFolder = doc.getElementsByTagName("MAILFOLDER").item(0).getTextContent();
 		String keyword = doc.getElementsByTagName("KEYWORD").item(0).getTextContent();
+		keyword = EgovStringUtil.getHtmlStrCnvr(keyword);
+		
 		String category = doc.getElementsByTagName("CATEGORY").item(0).getTextContent();
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
