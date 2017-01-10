@@ -4784,7 +4784,7 @@
    				TENANT_ID)
    			VALUES
     			(#v_CODE#,
-    			#v_pNow#,
+    			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
     			#v_CLUBNAME#,
     			#v_CLUBNAME2#,
     			#v_C_CATE_A#,

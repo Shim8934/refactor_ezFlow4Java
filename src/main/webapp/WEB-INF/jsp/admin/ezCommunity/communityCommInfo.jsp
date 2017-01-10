@@ -12,7 +12,7 @@
 		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
-			<!--
+			
 			function comClose_onclick( code, pType ) {
 				if ( pType == "Del") {
 					var result = confirm("<spring:message code = 'ezCommunity.t59' />");
@@ -21,8 +21,9 @@
 						window.location.href = "/admin/ezCommunity/commCloseAll.do?code=" + code;
 					} else {
 						alert("<spring:message code = 'ezCommunity.t60' />");
+						self.close();
 					}
-					self.close();
+					
 				} else {	//if (pType == "New")
 					var result = confirm("<spring:message code = 'ezCommunity.t61' />");
 					
@@ -49,7 +50,6 @@
 					}
 				}
 			}
-			//-->
 		</script>
 	</head>
 	<body class="popup" >
