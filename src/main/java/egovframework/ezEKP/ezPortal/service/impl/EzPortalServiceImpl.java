@@ -181,13 +181,19 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	@Override
-	public String getParentUID(String parentTopMenuID) throws Exception {
-		return ezPortalDAO.getParentUID(parentTopMenuID);
+	public String getParentUID(String parentTopMenuID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentTopMenuID", parentTopMenuID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getParentUID(map);
 	}
 	
 	@Override
-	public String getPortalParentUID(String temp) throws Exception {
-		return ezPortalDAO.getPortalParentUID(temp);
+	public String getPortalParentUID(String temp, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("temp", temp);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getPortalParentUID(map);
 	}
 
 	@Override
@@ -532,8 +538,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception {
-		return ezPortalDAO.getPortalPageCategory();
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory(int tenantID) throws Exception {
+		return ezPortalDAO.getPortalPageCategory(tenantID);
 	}
 	
 	@Override
@@ -606,13 +612,19 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getMainUrl(String pUID) throws Exception {
-		return ezPortalDAO.getMainUrl(pUID);
+	public String getMainUrl(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getMainUrl(map);
 	}
 
 	@Override
-	public String getTopUrl(String pUID) throws Exception {
-		return ezPortalDAO.getTopUrl(pUID);
+	public String getTopUrl(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getTopUrl(map);
 	}
 	
 	@Override
@@ -642,22 +654,34 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalTBLPortletURLVO getTBLPortletURL(String pUID) throws Exception {
-		return ezPortalDAO.getTBLPortletURL(pUID);
+	public PortalTBLPortletURLVO getTBLPortletURL(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getTBLPortletURL(map);
 	}
 
 	@Override
-	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage(String pUID) throws Exception {
-		return ezPortalDAO.getTBLPortletHtmlPage(pUID);
+	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getTBLPortletHtmlPage(map);
 	}
 
 	@Override
-	public PortalTBLPortletImageVO getTBLPortletImage(String pUID) throws Exception {
-		return ezPortalDAO.getTBLPortletImage(pUID);
+	public PortalTBLPortletImageVO getTBLPortletImage(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
+		return ezPortalDAO.getTBLPortletImage(map);
 	}
 
 	@Override
-	public PortalTBLPortletBoardVO getTBLPortletBoard(String pUID) throws Exception {
+	public PortalTBLPortletBoardVO getTBLPortletBoard(String pUID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pUID", pUID);
+		map.put("tenantID", tenantID);
 		return ezPortalDAO.getTBLPortletBoard(pUID);
 	}
 	
@@ -941,7 +965,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		while (count < 10) {
 			
-			parentTopMenuID = getParentUID(parentTopMenuID);
+			parentTopMenuID = getParentUID(parentTopMenuID, userInfo.getTenantId());
 			
 			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
@@ -996,16 +1020,19 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex;
+		strSQL = "SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
 		
 		while (count < 10) {
-			parentTopMenuID = ezPortalDAO.getParentUID(parentTopMenuID);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("parentTopMenuID", parentTopMenuID);
+			map.put("tenantID", userInfo.getTenantId());
+			parentTopMenuID = ezPortalDAO.getParentUID(map);
 			
 			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
 			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID;
+			strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
 			count ++;
 		}
 
@@ -2067,7 +2094,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         strSQL = "SELECT * FROM EZPORTAL.TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
         
         while (count < 10) {
-        	parentPortalPageID = getPortalParentUID(parentPortalPageID);
+        	
+        	parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
 
         	if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
         		break;
@@ -2204,14 +2232,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		String strSQL = "";
         String parentPortalPageID = pCallingPageID;
         int count = 0;
-        
-        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+  ///////////////////////tenantID      
+        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
         
         while (count < 10) {
-        	parentPortalPageID = getPortalParentUID(parentPortalPageID);
+        	parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
 
         	String param = parentPortalPageID;
-        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
         	count ++;
         }
         
@@ -2374,19 +2402,19 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 	}
 	
-	public String getPortletSubProperties (String pUID, String pType) throws Exception {
+	public String getPortletSubProperties (String pUID, String pType, int tenantID) throws Exception {
 		String resultXML = "";
 		if (pType.equals("1")) {
-			PortalTBLPortletURLVO result = getTBLPortletURL(pUID);
+			PortalTBLPortletURLVO result = getTBLPortletURL(pUID, tenantID);
 			resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		} else if (pType.equals("2")) {
-			PortalTBLPortletHtmlPageVO result = getTBLPortletHtmlPage(pUID);
+			PortalTBLPortletHtmlPageVO result = getTBLPortletHtmlPage(pUID, tenantID);
 			resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		} else if (pType.equals("3")) {
-			PortalTBLPortletImageVO result = getTBLPortletImage(pUID);
+			PortalTBLPortletImageVO result = getTBLPortletImage(pUID, tenantID);
 			resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		} else if (pType.equals("4")) {
-			PortalTBLPortletBoardVO result = getTBLPortletBoard(pUID);
+			PortalTBLPortletBoardVO result = getTBLPortletBoard(pUID, tenantID);
 			resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		}
 		return resultXML;

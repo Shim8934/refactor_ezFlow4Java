@@ -59,8 +59,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLPortalPageCategoryVO> getPortletCategory () {
-		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalAdminDAO.getPortletCategory"); 
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory (int tenantID) {
+		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalAdminDAO.getPortletCategory", tenantID); 
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -69,8 +69,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLBuiltInParametersVO> menuItemEdit () {
-		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.menuItemEdit"); 
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit (int tenantID) {
+		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.menuItemEdit", tenantID); 
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -114,7 +114,7 @@
 	 					data : {attachList	:	pAttachFileList,
 	 							content	:	message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"),
 	 							title	:	title.value,
-	 							textcontent	:	message.GetEditorContent(),
+	 							textContent	:	message.GetEditorContent(),
 	 							mode	:	pMode,
 	 							no	:	pNo,
 	 							sRadio	:	pSradio,

@@ -186,13 +186,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception {
-		return ezPortalAdminDAO.getPortletCategory();
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory(int tenantID) throws Exception {
+		return ezPortalAdminDAO.getPortletCategory(tenantID);
 	}
 	
 	@Override
-	public List<PortalTBLBuiltInParametersVO> menuItemEdit() throws Exception {
-		return ezPortalAdminDAO.menuItemEdit();
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit(int tenantID) throws Exception {
+		return ezPortalAdminDAO.menuItemEdit(tenantID);
 	}
 	
 	@Override
@@ -792,10 +792,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		strSQL += "SELECT A.*, B.DISPLAYNAME AS THEMENM, B.DISPLAYNAME2 AS THEMENM2, B.DISPLAYNAME3 AS THEMENM3,B.DISPLAYNAME4 AS THEMENM4,"
    					+"(SELECT DISPLAYNAME" 
    					+" FROM EZPORTAL.TBL_PORTALPAGE_CATEGORY "
-   					+"WHERE CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
+   					+"WHERE TENANT_ID="+tenantID+" AND CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
    					+"FROM EZPORTAL.TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN EZPORTAL.TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ "
-   					+"WHERE (NOT EXISTS(SELECT UID_ FROM EZPORTAL.TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_)) "
+   					+"LEFT JOIN EZPORTAL.TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
+   					+"WHERE (NOT EXISTS(SELECT UID_ FROM EZPORTAL.TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
 		if (pUseFlag != null && !pUseFlag.equals("")) {
@@ -812,6 +812,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		
 		strSQL += " AND A.TENANT_ID='"+tenantID+"'";
 		
+		strSQL += " AND B.TENANT_ID='"+tenantID+"'";
 		
 		strSQL += " ORDER BY A.DISPLAYNAME ASC";
 		

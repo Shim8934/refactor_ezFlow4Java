@@ -105,8 +105,6 @@
 				        </c:if>
 				    } else {
 				    }
-				    
-// 				       
 		        }
 
 		        //로고, 베너 등록 시 이미지 파일 확장자가 아닐 때 비교하는 함수 추가_2013.01.30
@@ -123,29 +121,49 @@
 		        }
 
 		        function logo_onpropertychange() {
-		            var check = "false";
-		            var logo = image.logo.value;
-		            
-		            if (CrossYN()) {
-		                document.getElementById("filename").textContent = logo;
-		            } else {
-		                document.getElementById("filename").innerText = logo;
-		            }
-		            
-		            var extension = image.logo.value.split('.');
-		            check = compareExtension(check, extension[1]);
-
-		            if (check == "false") {
-		                alert("<spring:message code ='ezCommunity.lhj03' />");
-		                logo = "";
-		            }
-
-		            if (logo != "") {
-		                window.parent.parent.opener.coplogo.src = logo;
-		                window.parent.parent.opener.coplogo.style.visibility = "visible";
-		            } else {
-		                image.reset();
-		            }
+					var logoFile = $("#logo")[0].files[0];
+					
+					if (logoFile == null) {
+						return ;
+					}
+					
+					formData = new FormData();
+		        	formData.append('code', $("#code").val());
+		        	formData.append('type', $("#Type").val());
+		        	formData.append('logoFile', $("#logo")[0].files[0]);
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		url : "/ezCommunity/adminLogoUpload.do",
+		        		data : formData,
+		        		cache : false,
+		                async : false,
+		                contentType : false,
+		                processData : false,
+		        		dataType : "json",
+		        		success : function (result) {
+		        			tempLogoPath = result["tempLogoPath"];
+		        			
+		        			var check = "false";
+				            
+				            document.getElementById("filename").innerText = logoFile.name;
+				            
+				            var extension = logoFile.name.split('.');
+				            check = compareExtension(check, extension[1]);
+				            
+				            if (check == "false") {
+				                alert("<spring:message code ='ezCommunity.lhj03' />");
+				                tempLogoPath = "";
+				            }
+				            
+				            if (tempLogoPath != "") {
+				                window.parent.parent.opener.coplogo.src = tempLogoPath;
+				                window.parent.parent.opener.coplogo.style.visibility = "visible";
+				            } else {
+				                image.reset();
+				            }
+		        		}
+		        	});
 		        }
 		        
 		        function radioClick(obj, type) {
@@ -230,7 +248,7 @@
 			            
 			           	$.ajax({
 			            	type : "POST",
-			            	url : "/ezCommunity/adminLogoUpload.do",
+			            	url : "/ezCommunity/adminLogoUploadIE9.do",
 			            	async : false,
 			            	data : {
 			            		fileName : fileName,
@@ -264,7 +282,6 @@
 	            <tr>
 	                <th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t498' /></th>
 	                <td>
-	                    
 	                    <c:if test="${isCrossBrowser == true}">
 	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    	<span id="filename" style="vertical-align:middle"></span>

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,8 +64,10 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -86,6 +90,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Resource(name="EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
+	
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@Autowired
 	private EgovFileScrty egovFileScrty;
@@ -1680,7 +1687,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void adminLogoOk(MultipartHttpServletRequest request, int tenantID) throws Exception {
-		String fileName = "", attachFile = "", extName = "";
+		String attachFile = "", extName = "";
 		int iStart = 0;
 		
 		String code = request.getParameter("code");
@@ -1691,7 +1698,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
 		
 		if (!logoFile.isEmpty()) {
-			fileName = code;
+			String fileName = code;
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
@@ -1730,14 +1737,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			if (logoFile.isEmpty()) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName, tenantID);
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", code, tenantID);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void adminLogoUpload(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
+	public void adminLogoUploadIE9(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
 		int iStart = 0;
 		if (fileData != null) {
 			iStart = fileName.lastIndexOf(".");
@@ -2769,7 +2776,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("setAsRead ERROR.");
-			logger.debug(e.toString());
+			logger.error(e.getMessage());
 			
 			return "ERROR";
 		}
@@ -3357,6 +3364,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Override
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("bbsEditOk started.");
+		
 		int myRef = 0, myStep = 0, myLevel = 0;
 		String mode = request.getParameter("mode");
 		String code = request.getParameter("code");
@@ -3391,6 +3400,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         OutputStream os = null;
         PrintWriter pw = null;
 		
+        
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
         	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
@@ -3399,7 +3409,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                bbsEditOkSet1(bName.toUpperCase(), title, no, code, attachList, textContent, userInfo.getTenantId());
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
-	                
+	                logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
 			    		pw.print(MHTcontent);
@@ -3520,6 +3530,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
              }
         }
 		
+		logger.debug("bbsEditOk ended.");
 		return "OK";
 	}
 
@@ -4069,9 +4080,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception {
+	public String commOutOk(String loginCookie, String code, String reason) throws Exception {
 		logger.debug("commOutOk started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String strReturn = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4079,7 +4091,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		map.put("tenantID", userInfo.getTenantId());
 		
-		if (ezCommunityDAO.commOutOkGet1(map) != null) {
+		logger.debug("code="+ code);
+		
+		if (ezCommunityDAO.commOutOkGet1(map) != 0) {
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
 		} else {
 			map = new HashMap<String, Object>();
@@ -4092,11 +4106,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.commOutOkInsert(map);
 			
 			strReturn = "<RETURN><VALUE>1</VALUE></RETURN>";
-			//TODO email
-//			SndMail(code);
+			commOutOkSendMail(loginCookie, userInfo, code, reason);
 		}
 
-		logger.debug("commOutOk ended.");
+		logger.debug("commOutOk ended. strReturn=" + strReturn);
 		
 		return strReturn;
 	}
@@ -4329,7 +4342,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			logger.debug(e.toString());
+			logger.error(e.getMessage());
 			
 			return "ERROR";
 		}
@@ -4430,7 +4443,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("brdDeleteBoard ERROR.");
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			
 			return "ERROR" + e.getMessage();
 		}
@@ -5998,7 +6011,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_BNAME", bName);	
 		map.put("v_CODE", code);
-		map.put("v_STRMAXNUM", maxNum);
+		map.put("v_STRMAXNUM", Integer.toString(maxNum));
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityDAO.bbsEditOkGet3(map);
@@ -6242,7 +6255,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return true;
 		} catch(Exception e) {
 			logger.debug("saveMHT ERROR");
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			return false;
 		}
 	}
@@ -6314,7 +6327,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return true;
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			return false;
 		}
 	}
@@ -6395,8 +6408,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERNM", userNm);
-		map.put("v_USERNM2", userNm2);
+		map.put("v_USERINFO_DISPLAYNAME1", userNm);
+		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("tenantID", tenantID);
@@ -6821,80 +6834,59 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         FileCopyUtils.copy(orgFile, destFile);
 	}
+
+	@Override
+	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception {
+		String oriFileName = logoFile.getOriginalFilename();
+		String logoFileName = code + "_logo_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
+		
+		File logoDir = new File(realPath + commonUtil.separator + logoPath);
+		File logo = new File(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName);
+		
+		String result = "";
+		try {
+			if (!logoDir.isDirectory()) {
+				boolean _flag = logoDir.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+			}
+			
+			logoFile.transferTo(logo);
+			
+			result = logoFileName;
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+		
+		return result;
+	}
 	
-	/*public void SndMail(string code)
-	{
-        try
-        {
-            string PositionNM = userinfo.Title;			//  직위
-            string DeptNM = userinfo.DeptName;		//  부서명
-            string CompanyNM = userinfo.CompanyName;		//  회사명
-            string mailSendServer = "\"" + userinfo.DisplayName + "\" <" + userinfo.Email + ">";
-            string strSql = "";
-
-
-#if USE_MSSQL
-            SqlConnection conn2 = new SqlConnection(GetSystemConfigValue("ezCommunity"));
-            SqlCommand comm2 = new SqlCommand("EZSP_COMM_OUT_OK_GET2", conn2);
-            comm2.CommandType = CommandType.StoredProcedure;
-            comm2.Parameters.Add("@CODE", SqlDbType.NChar, 20).Value = code;
-            comm2.Parameters.Add("@USERINFO_LANG", SqlDbType.NChar, 1).Value = GetMultiData(userinfo.lang);
-            conn2.Open();
-            SqlDataReader EMailRS = comm2.ExecuteReader();
-#elif USE_ORACLE
-            OracleConnection conn2 = new OracleConnection(GetSystemConfigValue("ezCommunityOra"));
-            OracleCommand comm2 = new OracleCommand("EZSP_COMM_OUT_OK_GET2", conn2);
-            comm2.CommandType = CommandType.StoredProcedure;
-            comm2.Parameters.Add("v_CODE", OracleType.NChar, 20).Value = code;
-            comm2.Parameters.Add("v_USERINFO_LANG", OracleType.NChar, 1).Value = GetMultiData(userinfo.lang);
-            comm2.Parameters.Add("cv_1", OracleType.Cursor).Direction = ParameterDirection.Output;
-            conn2.Open();
-            OracleDataReader EMailRS = comm2.ExecuteReader();
-#endif
-            while (EMailRS.Read())
-            {
-                if (EMailRS["EMail"].ToString() != "")
-                {
-                    string CommunityUser = "\"" + EMailRS["UserName"].ToString() + "\" <" + EMailRS["EMail"].ToString() + ">";
-                    string content = "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] " + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t587") + "< " + reason + " > " + RM.GetString("t721");
-                    string strXML = "<DATA>";
-                    strXML += "<FROM><![CDATA[" + mailSendServer + "]]></FROM>";
-                    strXML += "<TO><![CDATA[" + CommunityUser + "]]></TO>";
-                    strXML += "<CC></CC>";
-                    strXML += "<BCC></BCC>";
-                    strXML += "<SUBJECT><![CDATA[" + "[" + EMailRS["c_clubName" + GetMultiData(userinfo.lang)].ToString() + "] Community" + RM.GetString("t720") + userinfo.DisplayName + " " + RM.GetString("t722") + "]]></SUBJECT>";
-                    strXML += "<BODY><![CDATA[" + content + "]]></BODY>";
-                    strXML += "</DATA>";
-
-                    // 2011.06 : 메일 노티 페이지 변경
-                    string WebServerName = Server.MachineName;
-                    string url = Request.Url.Scheme + "://" + WebServerName + "/myoffice/ezEmail/remote/mail_send_noti.aspx";
-
-                    string[] HeaderOption = new string[10];
-                    HeaderOption[0] = "Authorization\n" + Request.ServerVariables["HTTP_AUTHORIZATION"];
-                    HeaderOption[1] = "Content-Type\ntext/xml; charset=utf-8";
-                    HeaderOption[2] = "Accept-Language\nutf-8";
-
-                    string rtnStatus = "";
-                    Stream ResponseStream = null;
-                    long StreamSize = 0;
-
-                    if (ExecuteWebURL("POST", url, strXML, HeaderOption, ref rtnStatus, ref ResponseStream, ref StreamSize))
-                    {
-                        if (ResponseStream != null) { ResponseStream.Close(); }
-                        if (ResponseStream != null) { ResponseStream = null; }
-                    }
-                }
-            }
-            conn2.Close();
-            comm2.Dispose();
-            conn2.Dispose();
+	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
+		logger.debug("commOutOkSendMail started.");
+		
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_code", code);
+        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+        map.put("tenantID", userInfo.getTenantId());
+        
+        CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
+        
+        if (vo.getEmail() != null) {
+        	String subject = "[" + vo.getC_ClubName() + "] Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
+        	String bodyContent = "[" + vo.getC_ClubName() + "] " + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(vo.getUserName(), "UTF-8");
+        	to.setAddress(vo.getEmail());
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
         }
-        catch (Exception ex)
-        {
-            WriteTextLog("ezcomm_comm_out_ok", "SndMail", ex.ToString());
-        }
-	}*/
-	
-	
+        
+        logger.debug("commOutOkSendMail ended.");
+	}
 }

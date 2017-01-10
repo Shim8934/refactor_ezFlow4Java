@@ -2088,7 +2088,9 @@
 			AND
 				A.OWNERPAGEID = #v_pPAGEID#
 			AND
-				A.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
+			AND
+				B.TENANT_ID = #tenantID#		
 			ORDER BY 
 				B.DISPLAYNAME ASC
 		]]>
@@ -2115,10 +2117,14 @@
 				EZPORTAL.TBL_BUILTIN_PARAMETERS B  
 			ON
 				A.PARAMTYPE = B.PARAMTYPE
+			AND
+				A.TENANT_ID = B.TENANT_ID	
        		WHERE
        			UID_ = #v_UID#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
 	
@@ -2128,12 +2134,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.getPortletCategory" resultClass="PortalTBLPortalPageCategoryVO">
+	<select id="EzPortalAdminDAO.getPortletCategory" parameterClass="Integer" resultClass="PortalTBLPortalPageCategoryVO">
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		EZPORTAL.TBL_PORTLET_CATEGORY
+        	WHERE
+        		TENANT_ID = $tenantID$	
 		]]>
 	</select>
 	
@@ -2143,12 +2151,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.menuItemEdit" resultClass="PortalTBLBuiltInParametersVO">
+	<select id="EzPortalAdminDAO.menuItemEdit" parameterClass="Integer" resultClass="PortalTBLBuiltInParametersVO">
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		EZPORTAL.TBL_BUILTIN_PARAMETERS
+        	WHERE
+        		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	

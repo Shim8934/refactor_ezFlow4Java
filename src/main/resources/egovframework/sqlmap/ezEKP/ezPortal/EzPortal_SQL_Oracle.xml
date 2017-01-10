@@ -505,7 +505,7 @@
 			AND
 				B.UserID = #v_pUSERID#
 			AND
-				A.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -526,7 +526,9 @@
                              		FROM
                              			EZPORTAL.TBL_TOPMENU_ITEMS 
                               		WHERE
-                              			UID_ = A.UID_ ) )
+                              			UID_ = A.UID_
+                              		AND
+                              			TENANT_ID = #tenantID#	 ) )
             AND
             	A.UID_ = B.UID_
 			AND
@@ -564,7 +566,9 @@
                               FROM
                               	EZPORTAL.TBL_PORTALPAGE_ITEMS 
 							  WHERE
-							  	UID_ = A.UID_ ) )
+							  	UID_ = A.UID_
+							  AND
+							  	TENANT_ID = #tenantID#	 ) )
              		  AND
              		  	A.UID_ = B.ParentUID
                       AND
@@ -638,7 +642,9 @@
                             		 FROM
                             		 	EZPORTAL.TBL_PORTALPAGE_ITEMS 
                             		 WHERE
-                            		 	UID_ = A.UID_ ) )
+                            		 	UID_ = A.UID_
+                            		 AND
+                            		 	TENANT_ID = #tenantID#	 ) )
             AND
             	A.UID_ = B.ParentUID
             AND
@@ -673,13 +679,17 @@
 					FROM
 						EZPORTAL.TBL_PORTALPAGE_ITEMS
 					WHERE
-						UID_ = A.UID_))
+						UID_ = A.UID_
+					AND
+						TENANT_ID = #tenantID#	))
                     AND
                     	A.UID_ = B.ParentUID
                     AND
                     	A.UseFlag = '$v_pUSEFLAG$'
                     AND
                     	A.TENANT_ID = $tenantID$
+                    AND
+                    	B.TENANT_ID = $tenantID$	
 		]]>
 		
 		<isGreaterThan property="v_pCOUNT" compareValue="0">
@@ -1071,7 +1081,9 @@
 			AND
 				( B.ACCESSID = #v_pACCESSID# AND B.VIEW_RIGHT = 2 )
 			AND
-				A.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
+			AND
+				B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
 	
@@ -1192,6 +1204,8 @@
 				A.OWNERPAGEID = #v_pOWNERPAGEID#
 			AND
 				A.TENANT_ID = #tenantID#	
+			AND
+				B.TENANT_ID = #tenantID#	
         	ORDER BY
         		A.COLUMNPOS ASC
 		]]>
@@ -1411,11 +1425,13 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalDAO.getPortalPageCategory" resultMap="portalTBLPortalPageCategoryVO">
+	<select id="EzPortalDAO.getPortalPageCategory" parameterClass="Integer" resultMap="portalTBLPortalPageCategoryVO">
 		SELECT 
 			* 
         FROM
         	EZPORTAL.TBL_PORTALPAGE_CATEGORY
+        WHERE
+        	TENANT_ID = #tenantID#	
 	</select>
 	
 	<!-- <procedure id="EzPortalDAO.newMyPortalPageCreate" parameterClass="Map" resultClass="Integer">
@@ -1830,7 +1846,9 @@
    				FROM
    					EZPORTAL.TBL_THEME_GENERAL
    				WHERE
-   					UID_=B.THEMEUID) AS IMAGEURL
+   					UID_=B.THEMEUID
+   				AND
+   					TENANT_ID = #tenantID#	) AS IMAGEURL
 			FROM
 				EZPORTAL.TBL_PORTALPAGE_GENERAL A ,
    				(SELECT
@@ -1856,6 +1874,10 @@
 				ROWNUM <= #v_pENDROW#
 			AND
 				A.UID_ = B.PARENTUID
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				B.TENANT_ID = #tenantID#		
 			ORDER BY
 				DISPLAYNAME ASC
 		]]>
@@ -2048,7 +2070,7 @@
                	  FROM
                	  	EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS A
                   LEFT JOIN
-                  	EZPORTAL.TBL_PORTAL_ACL B   ON A.UID_ = B.UID_
+                  	EZPORTAL.TBL_PORTAL_ACL B   ON A.UID_ = B.UID_ AND A.TENANT_ID = B.TENANT_ID
                 WHERE  
                 	A.PARENTUID = '203'
                 AND
@@ -2539,7 +2561,7 @@
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getParentUID" parameterClass="String" resultClass="String">
+	<select id="EzPortalDAO.getParentUID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				ParentUID
@@ -2547,10 +2569,12 @@
       			EZPORTAL.TBL_TOPMENU_GENERAL
       		WHERE
       			UID_	=	#parentTopMenuID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getPortalParentUID" parameterClass="String" resultClass="String">
+	<select id="EzPortalDAO.getPortalParentUID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				ParentUID
@@ -2558,6 +2582,8 @@
       			EZPORTAL.TBL_PORTALPAGE_GENERAL
       		WHERE
       			UID_	=	#temp#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2602,7 +2628,7 @@
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getTopUrl" parameterClass="String" resultClass="String">
+	<select id="EzPortalDAO.getTopUrl" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				TOPURL
@@ -2610,10 +2636,12 @@
       			EZPORTAL.TBL_THEME_GENERAL
       		WHERE
       			UID_	=	#pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getMainUrl" parameterClass="String" resultClass="String">
+	<select id="EzPortalDAO.getMainUrl" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				MAINURL
@@ -2621,10 +2649,12 @@
       			EZPORTAL.TBL_THEME_GENERAL
       		WHERE
       			UID_	=	#pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getTBLPortletURL" parameterClass="String" resultMap="portalTBLPortletURLVO">
+	<select id="EzPortalDAO.getTBLPortletURL" parameterClass="Map" resultMap="portalTBLPortletURLVO">
 		<![CDATA[
 			SELECT
 				*
@@ -2632,10 +2662,12 @@
       			EZPORTAL.TBL_PORTLET_URL
       		WHERE
       			UID_ = #pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getTBLPortletHtmlPage" parameterClass="String" resultMap="portalTBLPortletHtmlPageVO">
+	<select id="EzPortalDAO.getTBLPortletHtmlPage" parameterClass="Map" resultMap="portalTBLPortletHtmlPageVO">
 		<![CDATA[
 			SELECT
 				*
@@ -2643,10 +2675,12 @@
       			EZPORTAL.TBL_PORTLET_HTMLPAGE
       		WHERE
       			UID_ = #pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getTBLPortletImage" parameterClass="String" resultMap="portalTBLPortletImageVO">
+	<select id="EzPortalDAO.getTBLPortletImage" parameterClass="Map" resultMap="portalTBLPortletImageVO">
 		<![CDATA[
 			SELECT
 				*
@@ -2654,10 +2688,12 @@
       			EZPORTAL.TBL_PORTLET_IMAGE
       		WHERE
       			UID_ = #pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getTBLPortletBoard" parameterClass="String" resultMap="portalTBLPortletBoardVO">
+	<select id="EzPortalDAO.getTBLPortletBoard" parameterClass="Map" resultMap="portalTBLPortletBoardVO">
 		<![CDATA[
 			SELECT
 				*
@@ -2665,6 +2701,8 @@
       			EZPORTAL.TBL_PORTLET_BOARD
       		WHERE
       			UID_ = #pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	

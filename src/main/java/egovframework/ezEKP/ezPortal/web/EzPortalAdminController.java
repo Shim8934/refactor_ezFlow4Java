@@ -632,7 +632,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			int listPageSize = 15; // 목록갯수
 			
-			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 			
 			// 전체선택시 Root페이지만 보여지도록 설정
 			if (portalGubun == null || portalGubun.equals("")) {
@@ -913,7 +913,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			int listPageSize = 15;
 			
-			List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory();
+			List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 			portalPageCategoryXML = "<DATA>";
 			for (int i=0; i<portalPagelist.size(); i++) {
 				portalPageCategoryXML += commonUtil.getQueryResult(portalPagelist.get(i));
@@ -921,7 +921,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML.replace("\"", "\\\"");
 			
-			List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory();
+			List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory(userInfo.getTenantId());
 			portletCategoryXML = "<DATA>";
 			for (int i=0; i<portletPagelist.size(); i++) {
 				portletCategoryXML += commonUtil.getQueryResult(portletPagelist.get(i));
@@ -1006,7 +1006,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			mode = req.getParameter("mode");
 		}
 		
-		List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory();
+		List<PortalTBLPortalPageCategoryVO> portletPagelist = ezPortalAdminService.getPortletCategory(userInfo.getTenantId());
 		portletCategoryXML = "<DATA>";
 		for (int i=0; i<portletPagelist.size(); i++) {
 			portletCategoryXML += commonUtil.getQueryResult(portletPagelist.get(i));
@@ -1035,16 +1035,16 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String portletType = String.valueOf(prop.getPortlet_Type());
-		String subData = ezPortalService.getPortletSubProperties(uID, portletType);
+		String subData = ezPortalService.getPortletSubProperties(uID, portletType, userInfo.getTenantId());
 
 		Document subProp = commonUtil.convertStringToDocument(subData);
 		
-		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit(userInfo.getTenantId());
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		//포탈페이지 카테고리 정보를 가져온다.
-		List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory();
+		List<PortalTBLPortalPageCategoryVO> portalPagelist = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 		portalPageCategoryXML = "<DATA>";
 		for (int i=0; i<portalPagelist.size(); i++) {
 			portalPageCategoryXML += commonUtil.getQueryResult(portalPagelist.get(i));
@@ -1936,7 +1936,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID, userInfo.getTenantId());
 		
-		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit();
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit(userInfo.getTenantId());
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		

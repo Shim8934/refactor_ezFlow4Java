@@ -922,12 +922,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATE(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+				EndDate > #v_pEndDate#
 		</isNotEqual>
 		
 		<![CDATA[
@@ -1426,13 +1426,37 @@
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(USERID) = #v_USERINFO_USERID#
+				RTRIM(userid) = #v_USERINFO_USERID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-		 
+	</select>
+
+<!-- 	<procedure id="EzCommunityDAO.commOutOkGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET2(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->	
+	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
+				C_CLUB.c_sysopid,
+				C_MEMBERINFO.email,
+				C_MEMBERINFO.username
+			FROM
+				EZCOMMUNITY.C_CLUB 
+			INNER JOIN
+				EZCOMMUNITY.C_MEMBERINFO
+			ON
+				TRIM(C_CLUB.c_sysopid) = C_MEMBERINFO.userid
+			AND
+				C_CLUB.TENANT_ID = C_MEMBERINFO.TENANT_ID
+			WHERE
+				TRIM(C_CLUB.c_clubno) = #v_code#
+			AND
+				C_CLUB.TENANT_ID = #tenantID#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
@@ -3004,7 +3028,7 @@
 	<select id="EzCommunityDAO.bbsEditOkGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(#v_MAXIDFIELDNAME#),0) 
+				NVL(MAX($v_MAXIDFIELDNAME$),0) 
 			FROM
 				EZCOMMUNITY.$v_BNAME$
 			WHERE
@@ -3029,7 +3053,7 @@
 			FROM
 				EZCOMMUNITY.$v_BNAME$  
 			WHERE
-				#v_MAXIDFIELDNAME# = #v_STRMAXNUM#
+				$v_MAXIDFIELDNAME$ = #v_STRMAXNUM#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -4495,8 +4519,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.bbsEditOkInsert"					parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZCOMMUNITY.$v_BNAME$ (
-				COMPANYID,
+			INSERT INTO EZCOMMUNITY.$v_BNAME$
+				(COMPANYID,
 				ID,
 				USERNAME,
 				USERNAME2,
@@ -4508,23 +4532,27 @@
 			STEP,
 			RE_LEVEL,
 		</isNotEqual>
-		
-		<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
-			REF,
-			STEP,
-			RE_LEVEL,
-		</isNotEqual>
+		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+				REF,
+				STEP,
+				RE_LEVEL,
+			</isNotEqual>
+		</isEqual>
 		
 		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
 			CHARFILENAME,
 		</isEqual>
+		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+				CHARFILENAME,
+			</isEqual>
+		</isNotEqual>
 		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
-			CHARFILENAME,
-		</isEqual>
+		
 		
 		<![CDATA[
-			#v_MAXIDFIELDNAME#,
+			$v_MAXIDFIELDNAME$,
 			CONTENT,
 			READNUM,
 			WRITEDAY,
@@ -4544,19 +4572,22 @@
 			#v_NEWSTEP#,
 			#v_NEWLEVEL#
 		</isNotEqual>
-		<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
-			,#v_MYREF#,
-			#v_NEWSTEP#,
-			#v_NEWLEVEL#
-		</isNotEqual>
+		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+				,#v_MYREF#,
+				#v_NEWSTEP#,
+				#v_NEWLEVEL#
+			</isNotEqual>
+		</isEqual>
 		
 		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
 			,#v_ATTACHLIST#
 		</isEqual>
-		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
 			,#v_ATTACHLIST#
 		</isEqual>
+		</isNotEqual>
 		
 		<![CDATA[
 			,#v_NUMBER#,
@@ -4753,7 +4784,7 @@
    				TENANT_ID)
    			VALUES
     			(#v_CODE#,
-    			#v_pNow#,
+    			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
     			#v_CLUBNAME#,
     			#v_CLUBNAME2#,
     			#v_C_CATE_A#,
