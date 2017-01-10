@@ -47,12 +47,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<CommunityCCategoryVO> getCategoryValueB(int tenantID) throws Exception {
-		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueB");
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueB", tenantID);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<CommunityCCategoryVO> getCategoryValueC(int tenantID) throws Exception {
-		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueC");
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueC", tenantID);
 	}
 	
 	@SuppressWarnings("unchecked")
