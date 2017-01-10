@@ -1426,13 +1426,37 @@
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				TRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(USERID) = #v_USERINFO_USERID#
+				TRIM(userid) = #v_USERINFO_USERID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-		 
+	</select>
+
+<!-- 	<procedure id="EzCommunityDAO.commOutOkGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
+<!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET2(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->	
+	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
+				C_CLUB.c_sysopid,
+				C_MEMBERINFO.email,
+				C_MEMBERINFO.username
+			FROM
+				EZCOMMUNITY.C_CLUB 
+			INNER JOIN
+				EZCOMMUNITY.C_MEMBERINFO
+			ON
+				TRIM(C_CLUB.c_sysopid) = C_MEMBERINFO.userid
+			AND
+				C_CLUB.TENANT_ID = C_MEMBERINFO.TENANT_ID
+			WHERE
+				C_CLUB.c_clubno = #v_code#
+			AND
+				C_CLUB.TENANT_ID = #tenantID#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->

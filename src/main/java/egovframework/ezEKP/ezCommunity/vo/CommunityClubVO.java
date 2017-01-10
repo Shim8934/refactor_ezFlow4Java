@@ -141,6 +141,8 @@ public class CommunityClubVO {
 	String permit;
 	/** 접속횟수(1일1회)*/
 	int c_Visited;
+	/** mail 관련 email */
+	String email;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -562,4 +564,11 @@ public class CommunityClubVO {
 	public void setC_Visited(int c_Visited) {
 		this.c_Visited = c_Visited;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 }

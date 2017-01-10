@@ -332,6 +332,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (Integer) select("EzCommunityDAO.commOutOkGet1", map);
 	}
 	
+	public CommunityClubVO commOutOkGet2(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.commOutOkGet2", map);
+	}
+	
 	public CommunityCPollManagerVO pollResGet2(Map<String, Object> map) throws Exception {
 		return (CommunityCPollManagerVO) select("EzCommunityDAO.pollResGet2", map);
 	}

@@ -2302,13 +2302,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commOutOk.do")
 	@ResponseBody
 	public String commOutOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception{
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
 		
 		String code = xmlDoc.getElementsByTagName("CODE").item(0).getTextContent();
 		String reason = xmlDoc.getElementsByTagName("REASON").item(0).getTextContent();
 		
-		String retValue = ezCommunityService.commOutOk(userInfo, code, reason);
+		String retValue = ezCommunityService.commOutOk(loginCookie, code, reason);
 		
 		return retValue;
 	}

@@ -204,7 +204,7 @@ public interface EzCommunityService {
 	
 	public String categoryPrint(String c_Cate_A, String c_Cate_B, String c_Cate_C, LoginVO userInfo) throws Exception;
 
-	public String commOutOk(LoginVO userInfo, String code, String reason) throws Exception;
+	public String commOutOk(String loginCookie, String code, String reason) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 
