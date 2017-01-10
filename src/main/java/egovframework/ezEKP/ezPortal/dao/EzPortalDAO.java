@@ -213,16 +213,16 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalPortletGeneralVO) select("EzPortalDAO.getPorletProperties", map);
 	}
 	
-	public PortalTBLPortletURLVO getTBLPortletURL (String pUID) {
-		return (PortalTBLPortletURLVO) select("EzPortalDAO.getTBLPortletURL", pUID);
+	public PortalTBLPortletURLVO getTBLPortletURL (Map<String, Object> map) {
+		return (PortalTBLPortletURLVO) select("EzPortalDAO.getTBLPortletURL", map);
 	}
 	
-	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage (String pUID) {
-		return (PortalTBLPortletHtmlPageVO) select("EzPortalDAO.getTBLPortletHtmlPage", pUID);
+	public PortalTBLPortletHtmlPageVO getTBLPortletHtmlPage (Map<String, Object> map) {
+		return (PortalTBLPortletHtmlPageVO) select("EzPortalDAO.getTBLPortletHtmlPage", map);
 	}
 	
-	public PortalTBLPortletImageVO getTBLPortletImage (String pUID) {
-		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortletImage", pUID);
+	public PortalTBLPortletImageVO getTBLPortletImage (Map<String, Object> map) {
+		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortletImage", map);
 	}
 	
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) {
@@ -289,12 +289,12 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.newMyPortalPageCreate2_S", map);
 	}
 	
-	public String getTopUrl (String pUID) {
-		return (String) select("EzPortalDAO.getTopUrl", pUID);
+	public String getTopUrl (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getTopUrl", map);
 	}
 	
-	public String getMainUrl (String pUID) {
-		return (String) select("EzPortalDAO.getMainUrl", pUID);
+	public String getMainUrl (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getMainUrl", map);
 	}
 	
 	public String checkViewRight(Map<String, Object> map) {
@@ -305,12 +305,12 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (String) select("EzPortalDAO.checkEditRight", map);
 	}
 	
-	public String getParentUID (String parentTopMenuID) {
-		return (String) select("EzPortalDAO.getParentUID", parentTopMenuID);
+	public String getParentUID (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getParentUID", map);
 	}
 	
-	public String getPortalParentUID (String temp) {
-		return (String) select("EzPortalDAO.getPortalParentUID", temp);
+	public String getPortalParentUID (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getPortalParentUID", map);
 	}
 	
 	public String ezCkAdminACL (Map<String, Object> map) {
