@@ -8457,7 +8457,7 @@
       	 	CONTAINERID IS NOT NULL
    		 ]]>  
    		 </isEqual>
-   		 
+   		  
    		 <isNotEqual property="v_CONTID" compareValue="ADMIN">
    		 <isNotEmpty property="v_CONTID">
    			<![CDATA[
