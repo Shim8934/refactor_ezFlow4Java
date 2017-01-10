@@ -66,7 +66,7 @@ public interface EzPersonalAdminService {
 
 	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
 
-	void deleteSlider(String sliderID) throws Exception;
+	void deleteSlider(String sliderID, int tenantID) throws Exception;
 
 	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 

@@ -268,30 +268,6 @@ public class IMAPAccess {
 		return returnValues;
 	}
 	
-	public void createFolder(String folderName, String folderPath) {
-		boolean isCreated = false;
-		
-		try {
-			Folder paraentFolder = null;
-			if (!folderPath.equals("")) {
-				paraentFolder = getStore().getFolder(folderPath);
-			} else {
-				paraentFolder = getStore().getDefaultFolder();
-			}
-			if (paraentFolder.exists()) {
-				if (!paraentFolder.getFolder(folderName).exists()) {
-					isCreated = paraentFolder.getFolder(folderName).create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-					if (isCreated) {
-						logger.debug(folderName + " folder is created.");
-					}
-				}
-			}
-		} catch (MessagingException e) {
-			logger.error("Error create folder: " + e.getMessage());
-		}
-		
-	}
-	
 	public static boolean hasAttachment(Part part) {
 		boolean isAttached = false;
 		

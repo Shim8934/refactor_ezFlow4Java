@@ -224,6 +224,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getNewItemListCount(map);
 	}
@@ -271,6 +272,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getNewItemList(map);
 	}
@@ -335,6 +337,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PTYPE", myFavoriteVO.getType());
 		map.put("v_PADMINTYPE", myFavoriteVO.getBoardAdmin_FG());
 		map.put("v_TENANTID", myFavoriteVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getQNABrdTotalItemCount(map);
 	}
@@ -566,6 +569,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_START", start);
 		map.put("v_END", end);
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getNoticePostItem(map);
 	}
@@ -597,11 +601,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         }
         
 		if (type.equals("1")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		} else if (type.equals("2")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
 		} else if (type.equals("3")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE < '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -635,11 +639,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (type.equals("1")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		} else if (type.equals("2")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' AND READFLAG = '0' " ;
 		} else if (type.equals("3")) {
-			strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
+			strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE < '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + startRow + "' AND '" + endRow + "' " ;
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -679,6 +683,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_WRITERNAME", boardVO.getWriterName());
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM EZBOARDSTD.TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -726,9 +731,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         }
 		
         if (boardVO.getType().equals("1")) {
-        	strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' " ;
+        	strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' " ;
         } else if (boardVO.getType().equals("2")) {
-        	strSQL += " AND STARTDATE <= TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' AND READFLAG = '0' " ;
+        	strSQL += " AND STARTDATE <= '" + commonUtil.getTodayUTCTime("") + "' AND ENDDATE > '" + commonUtil.getTodayUTCTime("") + "') T1 WHERE RNUM BETWEEN '" + boardListVO.getStartRow() + "' AND '" + boardListVO.getEndRow() + "' AND READFLAG = '0' " ;
         }
         
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -769,6 +774,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_TEMP", "");
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM EZBOARDSTD.TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -797,6 +803,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
 		map.put("v_END", end);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getMyNoticePostItem(map);
 	}
@@ -821,6 +828,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getMyBoardListItem(map);
 	}
@@ -869,6 +877,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getApprBoardListItem(map);
 	}
@@ -993,6 +1002,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getAdjacentItems1(map);
 	}
@@ -1003,6 +1013,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getAdjacentItems2(map);
 	}
@@ -1016,6 +1027,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUPPERITEMIDTREE", upperItemIDTree);
 		map.put("v_PREVIOUSITEMID", previousItemID);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getAdjacentItems3(map);
 	}
@@ -1026,6 +1038,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getAdjacentItems2Photo(map);
 	}
@@ -1036,6 +1049,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PBOARDID", boardID);
 		map.put("v_PPARENTWRITEDATE", parentWriteDate);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getAdjacentItems3Photo(map);
 	}
@@ -1164,6 +1178,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getMyNoticePostItemCount(map);
 	}
@@ -1321,7 +1336,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_TENANTID", tenantID);
 			
 			BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfo(map);
-			
 			
 			sb.append("<NODES>");
 			sb.append("<NODE>");

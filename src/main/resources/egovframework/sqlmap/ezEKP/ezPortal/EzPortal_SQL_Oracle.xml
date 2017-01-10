@@ -343,6 +343,8 @@
 				UID_ = #v_pUID# 
 			AND
 				ROWNUM <= 1
+			AND
+				TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -760,6 +762,8 @@
         		EZPORTAL.TBL_MENUITEM_GENERAL 
        		WHERE  
        			UID_ = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -1109,11 +1113,13 @@
         	FROM
         		EZPORTAL.TBL_MENUITEM_PARAMETERS A
 			JOIN
-				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
+				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE AND A.TENANT_ID = B.TENANT_ID
        		WHERE
        			A.UID_ = #v_pUID#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
 	
@@ -1133,11 +1139,13 @@
         	FROM
         		EZPORTAL.TBL_PORTLET_PARAMETERS A
 			JOIN
-				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
+				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE AND A.TENANT_ID = B.TENANT_ID
        		WHERE
        			A.UID_ = #v_pPortletID#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
 	
@@ -1175,7 +1183,7 @@
         	FROM
         		EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS A
 			LEFT JOIN
-				EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE B   ON A.IMAGEUID = B.UID_
+				EZPORTAL.TBL_MENUITEM_ITEMS_IMAGE B   ON A.IMAGEUID = B.UID_ AND A.TENANT_ID = B.TENANT_ID
 			AND
 				B.SKINNUM = #v_pSKINNUM#
        		WHERE
@@ -2274,6 +2282,7 @@
    						ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM, UID_, DISPLAYNAME
           			FROM EZPORTAL.TBL_MENUITEM_GENERAL 
    					WHERE DISPLAYNAME like '%' || #v_pDISPLAYNAME# || '%'
+   					AND TENANT_ID = #tenantID#
    					)
           	WHERE
           		RNUM <= $v_pENDROW$
@@ -2460,11 +2469,13 @@
         	FROM
         		EZPORTAL.TBL_PORTLET_PARAMETERS A
 			JOIN
-				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE
+				EZPORTAL.TBL_BUILTIN_PARAMETERS B   ON A.PARAMTYPE = B.PARAMTYPE AND A.TENANT_ID = B.TENANT_ID
        		WHERE
        			UID_ = #v_pUID#
        		AND
        			A.TENANT_ID = #tenantID#	
+       		AND
+       			B.TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
