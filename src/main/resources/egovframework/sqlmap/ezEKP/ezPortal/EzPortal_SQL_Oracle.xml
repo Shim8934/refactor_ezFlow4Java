@@ -2048,7 +2048,7 @@
                	  FROM
                	  	EZPORTAL.TBL_MENUITEM_ITEMS_MENUITEMS A
                   LEFT JOIN
-                  	EZPORTAL.TBL_PORTAL_ACL B   ON A.UID_ = B.UID_
+                  	EZPORTAL.TBL_PORTAL_ACL B   ON A.UID_ = B.UID_ AND A.TENANT_ID = B.TENANT_ID
                 WHERE  
                 	A.PARENTUID = '203'
                 AND
