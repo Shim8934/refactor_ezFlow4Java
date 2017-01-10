@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
@@ -2492,11 +2495,39 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 커뮤니티 환경설정화면 로고 temp파일 저장 실행함수
+	 */
+	@RequestMapping(value = "ezCommunity/adminLogoUpload.do")
+	public String adminLogoUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminLogoUpload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String logoPath = commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId());
+		MultipartFile logoFile = request.getFile("logoFile");
+		String code = request.getParameter("code");
+		String result = "";
+		
+		if (!logoFile.isEmpty()) {
+			result = logoPath + commonUtil.separator + ezCommunityService.adminLogoUpload(code, realPath, logoPath, logoFile, userInfo.getTenantId());
+		}
+		
+		//cache 문제로 인한 ? 랜덤값 추가
+		result = result + "?" + new Random().nextInt(50);
+
+		model.addAttribute("tempLogoPath", result);
+		logger.debug("adminLogoUpload ended.");
+		logger.debug("result======" + result);
+		return "json";
+	}
+	
+	
+	/**
 	 * 커뮤니티 환경설정화면 IE9 로고 업테이트 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoUpload.do")
-	public String adminLogoUpload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("adminLogoUpload started. IE9 ");
+	@RequestMapping(value = "/ezCommunity/adminLogoUploadIE9.do")
+	public String adminLogoUploadIE9(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminLogoUploadIE9 started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
@@ -2509,14 +2540,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("fileName : " + fileName + ", code : " + code + ", type : " + type);
 		
 		try {
-			ezCommunityService.adminLogoUpload(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
+			ezCommunityService.adminLogoUploadIE9(code, type, imageSrc, logoPath, fileName, fileData, userInfo.getTenantId());
 			model.addAttribute("result", true);
-			logger.debug("adminLogoUpload ended. ");
 		} catch (Exception e) {
 			model.addAttribute("result", false);
 			throw e;
 		}
 		
+		logger.debug("adminLogoUploadIE9 ended.");
 		return "json";
 	}
 	
@@ -2528,9 +2559,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String code = request.getParameter("code");
+		String copType = request.getParameter("type");
+		String imageSrc = request.getParameter("imageSrc");
+		MultipartFile logoFile = request.getFile("logo");
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		//request 빼고 파라미터로 변경해야함
 		ezCommunityService.adminLogoOk(request, userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);

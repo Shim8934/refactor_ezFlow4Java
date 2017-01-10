@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -1680,7 +1681,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	@Override
 	public void adminLogoOk(MultipartHttpServletRequest request, int tenantID) throws Exception {
-		String fileName = "", attachFile = "", extName = "";
+		String attachFile = "", extName = "";
 		int iStart = 0;
 		
 		String code = request.getParameter("code");
@@ -1691,7 +1692,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
 		
 		if (!logoFile.isEmpty()) {
-			fileName = code;
+			String fileName = code;
 			attachFile = logoFile.getOriginalFilename();
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
@@ -1730,14 +1731,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			if (logoFile.isEmpty()) { 
 				if (imageSrc.indexOf("default_logo_type") > -1) {
-					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", fileName, tenantID);
+					adminLogoOkUpdate1("default_logo_" + copType + ".jpg", "default_logo_" + copType + ".jpg", code, tenantID);
 				}
 			}
 		}
 	}
 	
 	@Override
-	public void adminLogoUpload(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
+	public void adminLogoUploadIE9(String code, String copType, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception {
 		int iStart = 0;
 		if (fileData != null) {
 			iStart = fileName.lastIndexOf(".");
@@ -6821,8 +6822,35 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         FileCopyUtils.copy(orgFile, destFile);
 	}
+
+	@Override
+	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception {
+		String oriFileName = logoFile.getOriginalFilename();
+		String logoFileName = code + "_logo_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
+		
+		File logoDir = new File(realPath + commonUtil.separator + logoPath);
+		File logo = new File(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName);
+		
+		String result = "";
+		try {
+			if (!logoDir.isDirectory()) {
+				boolean _flag = logoDir.mkdirs();
+				if (!_flag) {
+				    throw new IOException("Directory creation Failed ");
+				}
+			}
+			
+			logoFile.transferTo(logo);
+			
+			result = logoFileName;
+		} catch (IOException e) {
+			logger.debug(e.getMessage());
+		}
+		
+		return result;
+	}
 	
-	/*public void SndMail(string code)
+	/*public void SendMail(string code)
 	{
         try
         {

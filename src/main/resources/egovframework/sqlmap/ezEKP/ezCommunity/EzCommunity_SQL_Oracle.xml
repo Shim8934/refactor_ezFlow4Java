@@ -922,12 +922,12 @@
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				TO_DATE(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				TO_DATE(EndDate, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+				EndDate > #v_pEndDate#
 		</isNotEqual>
 		
 		<![CDATA[

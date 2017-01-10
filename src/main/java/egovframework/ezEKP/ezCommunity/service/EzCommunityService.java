@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
@@ -341,5 +342,7 @@ public interface EzCommunityService {
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath, int tenantID) throws Exception;
 
-	public void adminLogoUpload(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
+	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
+
+	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception;
 }
