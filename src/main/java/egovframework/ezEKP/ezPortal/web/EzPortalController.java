@@ -582,6 +582,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezPortal/portalPage.do")
 	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String langPrimary = "";
 		String langSecondary = "";
 		String mode = "";
@@ -606,7 +608,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String gubunFlag = "";
 		String portalPageCategoryXML = "";
 		try {
-			userInfo = commonUtil.userInfo(loginCookie);
 			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
 			langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 			mode = "edit";
@@ -751,8 +752,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	            } else {
 	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
 	            }
-	                    
-	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+	            
+	            logger.debug("왜널?"+userInfo.getTenantId());
+	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 	            portalPageCategoryXML = "<DATA>";
 	            for (PortalTBLPortalPageCategoryVO result : list) {
 	            	portalPageCategoryXML += commonUtil.getQueryResult(result);
@@ -1731,7 +1733,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		
 		int listPageSize = 15;
 		
-		List<PortalTBLPortalPageCategoryVO> portalPageCategory = ezPortalService.getPortalPageCategory();
+		List<PortalTBLPortalPageCategoryVO> portalPageCategory = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 		
 		if (portalGubun == null || portalGubun.equals("")) {
 			for (PortalTBLPortalPageCategoryVO temp : portalPageCategory) {
@@ -2077,7 +2079,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
 	            }
 	                    
-	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 	            portalPageCategoryXML = "<DATA>";
 	            for (PortalTBLPortalPageCategoryVO result : list) {
 	            	portalPageCategoryXML += commonUtil.getQueryResult(result);
@@ -2128,7 +2130,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 			mode = req.getParameter("mode");
 		}
 		
-		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 		
 		//Root페이지만 보여지도록 설정
 		for (int i=0; i<list.size(); i++) {
@@ -2166,7 +2168,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 	public String portletSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder sb = new StringBuilder();
-		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory();
+		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 		
 		sb.append("<DATA>");
 		for (int i=0; i<list.size(); i++) {

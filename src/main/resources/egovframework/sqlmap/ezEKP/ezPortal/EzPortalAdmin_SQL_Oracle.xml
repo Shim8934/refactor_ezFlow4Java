@@ -2130,12 +2130,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.getPortletCategory" resultClass="PortalTBLPortalPageCategoryVO">
+	<select id="EzPortalAdminDAO.getPortletCategory" parameterClass="Integer" resultClass="PortalTBLPortalPageCategoryVO">
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		EZPORTAL.TBL_PORTLET_CATEGORY
+        	AND
+        		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2145,12 +2147,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.menuItemEdit" resultClass="PortalTBLBuiltInParametersVO">
+	<select id="EzPortalAdminDAO.menuItemEdit" parameterClass="Integer" resultClass="PortalTBLBuiltInParametersVO">
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		EZPORTAL.TBL_BUILTIN_PARAMETERS
+        	AND
+        		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
