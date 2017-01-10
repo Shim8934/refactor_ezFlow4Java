@@ -36,8 +36,23 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> goAdminOkGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.goAdminOkGet2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception {
 		return (List<CommunityCBoardVO>) list("EzCommunityDAO.getLeftBoardList", tenantID);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> categoryListGet(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.categoryListGet", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> searchCop(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.searchCop", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -56,6 +71,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<CommunityCCategoryVO> mainPageGet4(Map<String, Object> map) throws Exception {
+		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.mainPageGet4", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<CommunityBoardTreeVO> brdBoardTree(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardTreeVO>) list("EzCommunityDAO.brdBoardTree", map);
 	}
@@ -68,11 +88,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> goAdminOkGet1(int tenantID) throws Exception {
 		return (List<String>) list("EzCommunityDAO.goAdminOkGet1", tenantID);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityClubVO> goAdminOkGet2(Map<String, Object> map) throws Exception {
-		return (List<CommunityClubVO>) list("EzCommunityDAO.goAdminOkGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -89,7 +104,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public List<CommunityBoardInfoVO> copHomeBoardGet(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.copHomeBoardGet", map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<CommunityBoardItemVO> copHomeBoardItemGet(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.copHomeBoardItemGet", map);
@@ -101,13 +121,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardListVO> boardItemListGet2(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardListVO>) list("EzCommunityDAO.boardItemListGet2", map);
+	public List<CommunityBoardItemVO> boardItemListPhotoGet2 (Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardListVO> searchItemXML(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardListVO>) list("EzCommunityDAO.searchItemXML", map);
+	public List<CommunityBoardItemVO> getAdjacentItemsGet2Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet2Pho", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemVO> getAdjacentItemsGet3Pho(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -121,13 +146,33 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemAttachmentVO> getItemAttachmentXML(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.getItemAttachmentXML", map);
+	public List<CommunityBoardListVO> boardItemListGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.boardItemListGet2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> searchItemXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.searchItemXML", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<CommunityBoardListVO> getReservedItemListXML(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardListVO>) list("EzCommunityDAO.getReservedItemListXML", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardListVO> adminSearchItemXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardListVO>) list("EzCommunityDAO.adminSearchItemXML", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemAttachmentVO> getItemAttachmentXML(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.getItemAttachmentXML", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardItemAttachmentVO> copyItemGet2(Map<String, Object> map) {
+		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.copyItemGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -176,13 +221,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardInfoVO> getBoardList(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardInfoVO>) list("EzCommunityDAO.getBoardList", map);
+	public List<CommunityCClubUserVO> adminMemPermitGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.adminMemPermitGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityBoardListVO> adminSearchItemXML(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardListVO>) list("EzCommunityDAO.adminSearchItemXML", map);
+	public List<CommunityCClubUserVO> adminMemberListGet3(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.adminMemberListGet3", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -190,21 +235,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityCOutApplicationVO>) list("EzCommunityDAO.adminOuterListGet2", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<CommunityCClubUserVO> adminMemPermitGet2(Map<String, Object> map) throws Exception {
-		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.adminMemPermitGet2", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemAttachmentVO> copyItemGet2(Map<String, Object> map) {
-		return (List<CommunityBoardItemAttachmentVO>) list("EzCommunityDAO.copyItemGet2", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> myCommunityGet(Map<String, Object> map) throws Exception {
-		return (List<String>) list("EzCommunityDAO.myCommunityGet", map);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<CommunityMyCommunityVO> myCommunityItemGet(Map<String, Object> map) throws Exception {
 		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.myCommunityItemGet", map);
@@ -221,43 +251,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CommunityCClubUserVO> adminMemberListGet3(Map<String, Object> map) throws Exception {
-		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.adminMemberListGet3", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityCCategoryVO> mainPageGet4(Map<String, Object> map) throws Exception {
-		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.mainPageGet4", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityClubVO> categoryListGet(Map<String, Object> map) throws Exception {
-		return (List<CommunityClubVO>) list("EzCommunityDAO.categoryListGet", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityClubVO> searchCop(Map<String, Object> map) throws Exception {
-		return (List<CommunityClubVO>) list("EzCommunityDAO.searchCop", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> boardItemListPhotoGet2 (Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.boardItemListPhotoGet2", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> getAdjacentItemsGet2Pho(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet2Pho", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CommunityBoardItemVO> getAdjacentItemsGet3Pho(Map<String, Object> map) throws Exception {
-		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.getAdjacentItemsGet3Pho", map);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<String> getClubCHK(Map<String, Object> map) throws Exception {
 		return (List<String>) select("EzCommunityDAO.getClubCHK", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> myCommunityGet(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.myCommunityGet", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
 	}
 	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
@@ -552,6 +557,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (String)select("EzCommunityDAO.setAsReadSelectBoardID", map);
 	}
 	
+	public String todayCopGet3(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.todayCopGet3", map);
+	}
+	
 	public Integer todayCopGet2SelectTotalCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("EzCommunityDAO.todayCopGet2SelectTotalCount", map);
 	}
@@ -630,10 +639,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public Integer todayCopGet1(int tenantID) throws Exception {
 		return (Integer) select("EzCommunityDAO.todayCopGet1", tenantID);
-	}
-	
-	public String todayCopGet3(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.todayCopGet3", map);
 	}
 
 	public Integer categoryListItemCntGet(Map<String, Object> map) throws Exception {
@@ -929,11 +934,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		update("EzCommunityDAO.adminMemberListGoSEUpdate1", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<String> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
-		return (List<String>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
-	}
-	
 	public void adminMemberListGoSEUpdate2(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.adminMemberListGoSEUpdate2", map);
 	}
@@ -1081,6 +1081,4 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void brdDeleteBoardInsert(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.brdDeleteBoardInsert", map);
 	}
-
-
 }
