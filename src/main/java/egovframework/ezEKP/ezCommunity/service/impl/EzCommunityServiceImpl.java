@@ -4089,7 +4089,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("code="+ code);
 		
-		if (ezCommunityDAO.commOutOkGet1(map) != null) {
+		if (ezCommunityDAO.commOutOkGet1(map) != 0) {
+			//자꾸 여기걸림
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
 		} else {
 			map = new HashMap<String, Object>();
@@ -4105,7 +4106,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			commOutOkSendMail(loginCookie, userInfo, code, reason);
 		}
 
-		logger.debug("commOutOk ended.");
+		logger.debug("commOutOk ended. strReturn=" + strReturn);
 		
 		return strReturn;
 	}
@@ -6859,6 +6860,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
+		logger.debug("commOutOkSendMail started.");
+		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_code", code);
         map.put("v_userInfo_lang", userInfo.getPrimary());
@@ -6880,5 +6883,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
         }
+        
+        logger.debug("commOutOkSendMail ended.");
 	}
 }

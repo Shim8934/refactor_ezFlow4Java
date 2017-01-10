@@ -1426,9 +1426,9 @@
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
-				TRIM(c_clubno) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TRIM(userid) = #v_USERINFO_USERID#
+				RTRIM(userid) = #v_USERINFO_USERID#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
