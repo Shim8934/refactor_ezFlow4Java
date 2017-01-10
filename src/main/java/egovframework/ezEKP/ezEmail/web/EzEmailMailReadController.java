@@ -380,17 +380,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					logger.debug("dateStr=" + dateStr);
 					
 					// subject
-					subject = message.getSubject();
-					if (subject != null && !subject.equals("")) {
-						String[] rawHeaders = message.getHeader("subject");
-						String rawHeader = rawHeaders[0];
-						
-						if (!ezEmailUtil.isPureAscii(rawHeader)) {
-							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-							
-							subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-						}
-					}
+					subject = ezEmailUtil.getSubject(message);
+					
 					logger.debug("subject=" + subject);
 					
 					if (subject != null) {
@@ -1059,18 +1050,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					logger.debug("dateStr=" + dateStr);
 					
-					subject = message.getSubject();
-					if (subject != null && !subject.equals("")) {
-						String[] rawHeaders = message.getHeader("subject");
-						String rawHeader = rawHeaders[0];
-						
-						// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-						if (!ezEmailUtil.isPureAscii(rawHeader)) {
-							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-							
-							subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-						}
-					}
+					subject = ezEmailUtil.getSubject(message);
+					
 					logger.debug("subject=" + subject);
 					
 					// 메일 중요도
@@ -1360,18 +1341,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					logger.debug("pReciveDT=" + pReciveDT);
 					
-					pSubject = message.getSubject() == null ? "" : message.getSubject();
+					pSubject = ezEmailUtil.getSubject(message);
+					pSubject = pSubject == null ? "" : pSubject;
 					
-					if (pSubject != null && !pSubject.equals("")) {
-						String[] rawHeaders = message.getHeader("subject");
-						String rawHeader = rawHeaders[0];
-						
-						if (!ezEmailUtil.isPureAscii(rawHeader)) {
-							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-							
-							pSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-						}
-					}
 					logger.debug("pSubject=" + pSubject);
 					
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true);
