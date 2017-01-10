@@ -107,7 +107,7 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory () {
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory (int tenantID) {
 		return (List<PortalTBLPortalPageCategoryVO>) list("EzPortalDAO.getPortalPageCategory"); 
 	}
 	

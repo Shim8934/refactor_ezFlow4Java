@@ -186,13 +186,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception {
-		return ezPortalAdminDAO.getPortletCategory();
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory(int tenantID) throws Exception {
+		return ezPortalAdminDAO.getPortletCategory(tenantID);
 	}
 	
 	@Override
-	public List<PortalTBLBuiltInParametersVO> menuItemEdit() throws Exception {
-		return ezPortalAdminDAO.menuItemEdit();
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit(int tenantID) throws Exception {
+		return ezPortalAdminDAO.menuItemEdit(tenantID);
 	}
 	
 	@Override

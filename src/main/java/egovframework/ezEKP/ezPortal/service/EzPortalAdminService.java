@@ -16,9 +16,9 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 public interface EzPortalAdminService {
 	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() throws Exception;
 	
-	public List<PortalTBLPortalPageCategoryVO> getPortletCategory() throws Exception;
+	public List<PortalTBLPortalPageCategoryVO> getPortletCategory(int tenantID) throws Exception;
 	
-	public List<PortalTBLBuiltInParametersVO> menuItemEdit () throws Exception;
+	public List<PortalTBLBuiltInParametersVO> menuItemEdit (int tenantID) throws Exception;
 	
 	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 () throws Exception;
 	

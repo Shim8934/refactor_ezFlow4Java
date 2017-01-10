@@ -61,7 +61,7 @@ public interface EzPortalService {
 	
 	public List<PortalGetThemeListVO> getThemeList (String pCompanyID, int tenantID) throws Exception;
 	
-	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory() throws Exception;
+	public List<PortalTBLPortalPageCategoryVO> getPortalPageCategory(int tenantID) throws Exception;
 	
 	public List<PortalGetPortletParametersVO> getPortletParametres (String pUID, int tenantID) throws Exception;
 	
