@@ -910,7 +910,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
 				pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 			} else {
-				String mainUrl = ezPortalService.getMainUrl(pUserThemeUID);
+				String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
 				pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
 			}
 			
@@ -952,8 +952,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
 			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-				logger.debug("getPortletSubProperties="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
-				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent()));
+				logger.debug("getPortletSubProperties="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent(), userInfo.getTenantId()));
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent(), userInfo.getTenantId()));
 				
 				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
 					//pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
@@ -2365,7 +2365,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
 			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent()));
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent(), userInfo.getTenantId()));
 				
 				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
 					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
