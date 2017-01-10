@@ -735,7 +735,6 @@
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAprPortletDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
 		<isEqual property="v_PLISTTYPE" compareValue="1">
-		    
 			    SELECT * 		
 	   				FROM (
 						SELECT 
@@ -2090,15 +2089,211 @@
 		
 	</select>
 	
-	<procedure id="EzApprovalG.getWebPartList" parameterClass="Map" resultClass="ApprGWebPartVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETWEBPARTLIST(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_LISTCOUNT#, #v_BASICORDER#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getWebPartList" parameterClass="Map" resultClass="ApprGWebPartVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETWEBPARTLIST(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_LISTCOUNT#, #v_BASICORDER#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getWebPartList" parameterClass="Map" resultClass="ApprGWebPartVO">
+		<isEqual property="v_LISTTYPE" compareValue="1">
+			<![CDATA[
+			SELECT 
+				DOCID, 
+				APRMEMBERID, 
+				APRMEMBERNAME$v_LANGTYPE$, 
+				APRMEMBERDEPTID,
+      			HREF, 
+      			DOCTITLE, 
+      			FUNCTIONTYPE, 
+      			DOCSTATE, 
+      			WRITERNAME, 
+      			WRITERNAME$v_LANGTYPE$, 
+      			'0' AS RECEIVESN, 
+      			DOCTYPE
+      		FROM 
+      			EZAPPROVALG_${companyID}.VAPRDOINGDOCLIST 
+      		WHERE 
+      			TENANT_ID = #v_TENANTID#
+      		AND
+      			APRMEMBERID IN ($v_USERIDS$) 
+      		AND 
+      			ROWNUM <= #v_LISTCOUNT#
+      		ORDER BY 
+      			STARTDATE $v_BASICORDER$
+      			]]>
+		</isEqual>
+		<isEqual property="v_LISTTYPE" compareValue="2">
+		<![CDATA[
+			SELECT 
+				DOCID, 
+				WRITERNAME, 
+				WRITERNAME$v_LANGTYPE$, 
+				HREF, 
+				DOCTITLE, 
+				HASOPINIONYN
+         	FROM 
+         		EZAPPROVALG_${companyID}.VAPRWILLDOCLIST 
+         	WHERE 
+         		TENANT_ID = #v_TENANTID#
+      		AND
+         		APRMEMBERID = #v_USERID# 
+         	AND 
+         		APRMEMBERSN = 1  
+         	AND 
+         		APRTYPE <> '015' 
+         	AND 
+         		ROWNUM <= #v_LISTCOUNT#
+         	ORDER BY 
+         		STARTDATE $v_BASICORDER$
+         ]]>
+		</isEqual>
+		<isEqual property="v_LISTTYPE" compareValue="3">
+		<![CDATA[
+			SELECT 
+				DISTINCT DOCID, 
+					     WRITERNAME, 
+					     WRITERNAME$v_LANGTYPE$, 
+					     HREF, 
+					     DOCTITLE, 
+					     HASOPINIONYN, 
+					     STARTDATE
+            FROM 
+            	EZAPPROVALG_${companyID}.VAPRWILLDOCLIST 
+            WHERE 
+            	TENANT_ID = #v_TENANTID#
+      		AND
+            	APRMEMBERID = #v_USERID# 
+            AND 
+            	ROWNUM <= #v_LISTCOUNT#
+            ORDER BY 
+            	STARTDATE $v_BASICORDER$
+          ]]>
+		</isEqual>
+		<isEqual property="v_LISTTYPE" compareValue="4">
+		<![CDATA[
+			SELECT 
+				TBAPRDOCINFO.DOCID, 
+				TBAPRDOCINFO.HREF, 
+				TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME,  
+				TBAPRRECEIPTPROCESSINFO.SENTDEPTNAME$v_LANGTYPE$,
+               	TBAPRDOCINFO.DOCTITLE, 
+               	TBAPRRECEIPTPROCESSINFO.DOCSTATE, 
+               	TBAPRRECEIPTPROCESSINFO.APRSTATE,
+               	TBAPRDOCINFO.HASOPINIONYN, TBAPRDOCINFO.DOCTYPE
+            FROM 
+            	EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+            INNER JOIN 	
+            	EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+            ON 	
+            	TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+            AND
+            	TBAPRRECEIPTPROCESSINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+            INNER JOIN 
+            	EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+            ON 
+            	TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+            AND
+            	TBEXPAPRDOCINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+            WHERE 
+            	TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
+            AND
+            	TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            AND 
+            	ROWNUM <= #v_LISTCOUNT#
+            AND 
+            	(((TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+            AND 
+            	(TBAPRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBAPRRECEIPTPROCESSINFO.APRSTATE = '015'))
+            ]]>	
+            <isEqual property="v_USERFLAG" compareValue="admin">
+             OR 
+             	(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($v_DEPTIDS$) AND TBAPRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014'))
+             OR 
+             	(TBAPRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($ v_DEPTIDS$) AND TBAPRRECEIPTPROCESSINFO.APRSTATE = '015')
+            </isEqual>
+            	 ) ORDER BY PROCESSDATE $v_BASICORDER$
+		</isEqual>
+		<isEqual property="v_LISTTYPE" compareValue="5">
+			<![CDATA[
+			SELECT 
+				TBAPRDOCINFO.DOCID, 
+				TBAPRDOCINFO.HREF, 
+				TBAPRDOCINFO.HASOPINIONYN,
+                TBAPRDOCINFO.DOCTITLE, 
+                TBAPRDOCINFO.WRITERNAME, 
+                TBAPRDOCINFO.WRITERNAME$v_LANGTYPE$, 
+                TBAPRDOCINFO.ORGDOCID,
+                TBAPRRECEIPTPROCESSINFO.DOCSTATE , 
+                TBAPRRECEIPTPROCESSINFO.APRSTATE
+            FROM 
+            	EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+            INNER JOIN 
+            	EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+            ON 
+            	TBAPRRECEIPTPROCESSINFO.DOCID = TBAPRDOCINFO.DOCID
+            AND
+            	TBAPRRECEIPTPROCESSINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+            INNER JOIN 
+            	EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO 
+            ON 
+            	TBEXPAPRDOCINFO.DOCID = TBAPRDOCINFO.DOCID
+            AND
+            	TBEXPAPRDOCINFO.TENANT_ID = TBAPRDOCINFO.TENANT_ID
+            WHERE 
+            	(TBAPRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#)
+            AND
+            	TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+            AND 
+            	(TBAPRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBAPRRECEIPTPROCESSINFO.APRSTATE = '004')
+            AND 
+            	TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
+            AND 
+            	ROWNUM <= #v_LISTCOUNT# 
+            ORDER BY 
+            	PROCESSDATE $v_BASICORDER$
+            ]]>
+		</isEqual>
+		
+		<isNotEqual property="v_LISTTYPE" compareValue="1">
+		<isNotEqual property="v_LISTTYPE" compareValue="2">
+		<isNotEqual property="v_LISTTYPE" compareValue="3">
+		<isNotEqual property="v_LISTTYPE" compareValue="4">
+		<isNotEqual property="v_LISTTYPE" compareValue="5">
+			<![CDATA[
+			SELECT 
+				DOCID, 
+				APRMEMBERID, 
+				APRMEMBERNAME, 
+				APRMEMBERNAME$v_LANGTYPE$, 
+				APRMEMBERDEPTID,
+                HREF, 
+                DOCTITLE, 
+                FUNCTIONTYPE, 
+                DOCSTATE, 
+                WRITERNAME, 
+                WRITERNAME$v_LANGTYPE$, 
+                '0' AS RECEIVESN, 
+                DOCTYPE
+            FROM 
+            	EZAPPROVALG_${companyID}.VAPRDOINGDOCLIST 
+            WHERE 
+            	TENANT_ID = #v_TENANTID#
+            AND
+            	APRMEMBERID IN ($v_USERIDS$) 
+            AND 
+            	ROWNUM <= #v_LISTCOUNT#
+            ORDER BY 
+            	STARTDATE $v_BASICORDER$
+            	]]>
+		</isNotEqual>
+		</isNotEqual>
+		</isNotEqual>
+		</isNotEqual>
+		</isNotEqual>
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfo" parameterClass="Map" resultClass="ApprGFormVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETFORMINFO(#v_FORMCONTID#, #v_USERID#, #v_FORMKIND#, #v_LANGTYPE#, #v_SEARCHTYPE#, #v_SEARCHNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getFormInfo" parameterClass="Map" resultClass="ApprGFormVO">
-		
 		<isEqual property="v_FORMCONTID" compareValue="ROOT">
 			<isNotEmpty property="v_USERID">
 				SELECT 
@@ -3129,9 +3324,14 @@
           	 TBRECORD.TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<procedure id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO" remapResults="true">
-		{CALL EZAPPROVALG_${companyID}.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO" remapResults="true"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getRecordList" parameterClass="Map" resultClass="ApprGRecordVO" remapResults="true">
+		SELECT 
+		 * 
+		FROM ( $sqlString$
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCodeInfo" parameterClass="Map" resultClass="ApprGCabCodeVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCODEINFO(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3249,126 +3449,127 @@
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETMYTASKCODE(#v_USERID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO">
-			SELECT 
-					DISTINCT TBCABINET.CabinetID , 
-		                     TBCABINETCLASS.TaskCode ,
-		                     TBCABINET.CabinetClassNo ,
-		                     TBCABINETCLASS.OwnerID ,
-		                     TBCABINETCLASS.Title ,
-		                     TBCABINETCLASS.Title2 ,
-		                     VTASKCLASS.KEEPINGPERIOD , 
-		                     VTASKCLASS.TEMPFLAG ,
-		                     VTASKCLASS.DISPLAYRECFLAG ,
-		                     VTASKCLASS.SPECIALCATALOGFLAG ,
-		                     VTASKCLASS.SC1 ,
-		                     VTASKCLASS.SC2 ,
-		                     VTASKCLASS.SC3 ,
-		                     VTASKCLASS.KEEPINGMETHOD ,
-		                     VTASKCLASS.KEEPINGPLACE ,
-		                     VTASKCLASS.TASKNAME ,
-		                     VTASKCLASS.TASKNAME2 ,
-		                     VTASKCLASS.SCName ,
-		                     VTASKCLASS.SubCategoryCode ,
-		                     TBCABINETCLASS.RecTypeCode ,
-		                     TBCABINETCLASS.RegSerialNo ,
-		                     TBCABINET.VolumeNo 
-		        FROM 
-		        		EZAPPROVALG_${companyID}.TBCABINETCLASS 
-		        JOIN 
-		        		EZAPPROVALG_${companyID}.TBCABINET    
-		        ON 
-		        		TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo
-		        AND
-		        		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
-		        JOIN 
-		        		EZAPPROVALG_${companyID}.TBMYTASKCODE   
-		        ON 
-		        		TBMYTASKCODE.CabinetID = TBCABINET.CabinetID
-		        AND
-		        		TBMYTASKCODE.TENANT_ID = TBCABINET.TENANT_ID
-		        JOIN 
-		        		EZAPPROVALG_${companyID}.VTASKCLASS    
-		        ON 
-		        		VTASKCLASS.TaskCode = TBMYTASKCODE.TaskCode 
-		        AND
-		        		VTASKCLASS.TENANT_ID = TBMYTASKCODE.TENANT_ID
+		SELECT 
+				DISTINCT TBCABINET.CabinetID , 
+	                     TBCABINETCLASS.TaskCode ,
+	                     TBCABINET.CabinetClassNo ,
+	                     TBCABINETCLASS.OwnerID ,
+	                     TBCABINETCLASS.Title ,
+	                     TBCABINETCLASS.Title2 ,
+	                     VTASKCLASS.KEEPINGPERIOD , 
+	                     VTASKCLASS.TEMPFLAG ,
+	                     VTASKCLASS.DISPLAYRECFLAG ,
+	                     VTASKCLASS.SPECIALCATALOGFLAG ,
+	                     VTASKCLASS.SC1 ,
+	                     VTASKCLASS.SC2 ,
+	                     VTASKCLASS.SC3 ,
+	                     VTASKCLASS.KEEPINGMETHOD ,
+	                     VTASKCLASS.KEEPINGPLACE ,
+	                     VTASKCLASS.TASKNAME ,
+	                     VTASKCLASS.TASKNAME2 ,
+	                     VTASKCLASS.SCName ,
+	                     VTASKCLASS.SubCategoryCode ,
+	                     TBCABINETCLASS.RecTypeCode ,
+	                     TBCABINETCLASS.RegSerialNo ,
+	                     TBCABINET.VolumeNo 
+        FROM 
+        		EZAPPROVALG_${companyID}.TBCABINETCLASS 
+        JOIN 
+        		EZAPPROVALG_${companyID}.TBCABINET    
+        ON 
+        		TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo
+        AND
+        		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
+        JOIN 
+        		EZAPPROVALG_${companyID}.TBMYTASKCODE   
+        ON 
+        		TBMYTASKCODE.CabinetID = TBCABINET.CabinetID
+        AND
+        		TBMYTASKCODE.TENANT_ID = TBCABINET.TENANT_ID
+        JOIN 
+        		EZAPPROVALG_${companyID}.VTASKCLASS    
+        ON 
+        		VTASKCLASS.TaskCode = TBMYTASKCODE.TaskCode 
+        AND
+        		VTASKCLASS.TENANT_ID = TBMYTASKCODE.TENANT_ID
 <!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
-		       WHERE  
-		       			TBCABINET.DelFlag = '0'
-		       AND 
-		      			TBCABINETCLASS.DelFlag = '0'
-		       AND 
-		       			NOT ( TBCABINET.CabinetTransferFlag = '2'
-		        				AND CONFIRMFLAG = '0' )
-		       AND 
-		       			TBMYTASKCODE.CN = #v_USERID#
-		       AND
-		       			TBCABINETCLASS.TENANT_ID = #v_TENANTID#
-		        ORDER BY TBCABINETCLASS.Title 
+       WHERE  
+       			TBCABINET.DelFlag = '0'
+       AND 
+      			TBCABINETCLASS.DelFlag = '0'
+       AND 
+       			NOT ( TBCABINET.CabinetTransferFlag = '2'
+        				AND CONFIRMFLAG = '0' )
+       AND 
+       			TBMYTASKCODE.CN = #v_USERID#
+       AND
+       			TBCABINETCLASS.TENANT_ID = #v_TENANTID#
+       ORDER BY 
+       			TBCABINETCLASS.Title 
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCabinetInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABINETCLASSINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getCabinetInfo" parameterClass="Map" resultClass="ApprGTaskVO">
-			SELECT 
-				 TBCABINET.CabinetClassNo ,
-	             VOLUMENO ,
-	             TITLE ,
-	             NVL(TITLE2, TITLE) TITLE2  ,
-	             TBCABINETCLASS.ProcessDeptCode ,
-	             TBCABINETCLASS.TaskCode ,
-	             REGSERIALNO ,
-	             PRODUCTIONYEAR ,
-	             RECTYPECODE ,
-	             TBCABINETCLASS.DisplayRecFlag ,
-	             TBCABINETCLASS.DisplayEndDate ,
-	             TBCABINETCLASS.SpecialCatalogFlag ,
-	             SCINFO.SC1 ,
-	             SCINFO.SC2 ,
-	             SCINFO.SC3 ,
-	             CATEGORYCODE ,
-	             MCATEGORYCODE ,
-	             SUBCATEGORYCODE ,
-	             CABINETTRANSFERFLAG ,
-	             TCABINETID ,
-	             TDEPTCODE 
-	         FROM 
-	        	 EZAPPROVALG_${companyID}.TBCABINETCLASS 
-	         LEFT JOIN 
-	         		( 
-	         			SELECT 
-	         					CABINETCLASSNO ,
-	                            SC1 ,
-	                            SC2 ,
-	                            SC3 ,
-	                            TENANT_ID
-	                     FROM 
-	                     		EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB 
-	                     WHERE  
-	                     		SERIALNO = '000' 
-	                     AND
-	                     		TENANT_ID = #v_TENANTID#) SCINFO   
-	           ON 
-	           		TBCABINETCLASS.CabinetClassNo = SCINFO.CABINETCLASSNO
-	           AND
-	           		TBCABINETCLASS.TENANT_ID = SCINFO.TENANT_ID
-	           JOIN 
-	           		EZAPPROVALG_${companyID}.TBCABINET    
-	           ON 
-	           		TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo
-	           AND
-	           		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
-	           JOIN 
-	           		EZAPPROVALG_${companyID}.VTASKCLASS    
-	           ON 
-	           		TBCABINETCLASS.TaskCode = VTASKCLASS.TASKCODE 
-	           AND
-	           		TBCABINETCLASS.TENANT_ID = VTASKCLASS.TENANT_ID 
-	       	   WHERE  
-	       	   		TRIM(TBCABINET.CabinetID) = #v_CABINETID#
-	       	   AND
-	       	   		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
+		SELECT 
+			 TBCABINET.CabinetClassNo ,
+             VOLUMENO ,
+             TITLE ,
+             NVL(TITLE2, TITLE) TITLE2  ,
+             TBCABINETCLASS.ProcessDeptCode ,
+             TBCABINETCLASS.TaskCode ,
+             REGSERIALNO ,
+             PRODUCTIONYEAR ,
+             RECTYPECODE ,
+             TBCABINETCLASS.DisplayRecFlag ,
+             TBCABINETCLASS.DisplayEndDate ,
+             TBCABINETCLASS.SpecialCatalogFlag ,
+             SCINFO.SC1 ,
+             SCINFO.SC2 ,
+             SCINFO.SC3 ,
+             CATEGORYCODE ,
+             MCATEGORYCODE ,
+             SUBCATEGORYCODE ,
+             CABINETTRANSFERFLAG ,
+             TCABINETID ,
+             TDEPTCODE 
+         FROM 
+        	 EZAPPROVALG_${companyID}.TBCABINETCLASS 
+         LEFT JOIN 
+         		( 
+         			SELECT 
+         					CABINETCLASSNO ,
+                            SC1 ,
+                            SC2 ,
+                            SC3 ,
+                            TENANT_ID
+                     FROM 
+                     		EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB 
+                     WHERE  
+                     		SERIALNO = '000' 
+                     AND
+                     		TENANT_ID = #v_TENANTID#) SCINFO   
+           ON 
+           		TBCABINETCLASS.CabinetClassNo = SCINFO.CABINETCLASSNO
+           AND
+           		TBCABINETCLASS.TENANT_ID = SCINFO.TENANT_ID
+           JOIN 
+           		EZAPPROVALG_${companyID}.TBCABINET    
+           ON 
+           		TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo
+           AND
+           		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
+           JOIN 
+           		EZAPPROVALG_${companyID}.VTASKCLASS    
+           ON 
+           		TBCABINETCLASS.TaskCode = VTASKCLASS.TASKCODE 
+           AND
+           		TBCABINETCLASS.TENANT_ID = VTASKCLASS.TENANT_ID 
+       	   WHERE  
+       	   		TRIM(TBCABINET.CabinetID) = #v_CABINETID#
+       	   AND
+       	   		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO"> -->
@@ -3420,46 +3621,46 @@
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO">
-			SELECT 
-				DISTINCT 
-					DOCID, 
-					MODIFYDATE,
-					MODIFYSN, 
-					MODIFYUSERID,
-		   			MODIFYUSERNAME, 
-		   			MODIFYUSERNAME2, 
-		   			MODIFYUSERJOBTITLE, 
-		   			MODIFYUSERJOBTITLE2, 
-		   			MODIFYUSERDEPTID, 
-		   			MODIFYUSERDEPTNAME, 
-		   			MODIFYUSERDEPTNAME2, 
-		   			CHKFLAG
-		   	FROM 
-		   			EZAPPROVALG_${companyID}.TBHISTORYLINEINFO 
-		   	WHERE 
-		   			DOCID = #v_DOCID#
-		   	AND
-		   			TENANT_ID =#v_TENANTID#
-		   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
-		   	<isGreaterEqual  property="v_ORDEROPTIONLENGTH" compareValue="10">
-		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
-			   		ORDER BY 
-			   			$v_ORDEROPTION$
-		   		</isEqual>
-		   		<isNotEqual>
-			   		ORDER BY 
-			   			$v_ORDEROPTION$, MODIFYDATE DESC
-		   		</isNotEqual>
-		   	</isGreaterEqual>
-		   	<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
-				   	 ORDER BY 
-				   	 		$v_ORDEROPTION$, MODIFYDATE DESC
-		   	</isLessThan>
-		   	</isGreaterThan>
-		   	<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
-				   	 ORDER BY 
-				   	 		MODIFYDATE DESC
-		   	</isLessEqual>
+		SELECT 
+			DISTINCT 
+				DOCID, 
+				MODIFYDATE,
+				MODIFYSN, 
+				MODIFYUSERID,
+	   			MODIFYUSERNAME, 
+	   			MODIFYUSERNAME2, 
+	   			MODIFYUSERJOBTITLE, 
+	   			MODIFYUSERJOBTITLE2, 
+	   			MODIFYUSERDEPTID, 
+	   			MODIFYUSERDEPTNAME, 
+	   			MODIFYUSERDEPTNAME2, 
+	   			CHKFLAG
+	   	FROM 
+	   			EZAPPROVALG_${companyID}.TBHISTORYLINEINFO 
+	   	WHERE 
+	   			DOCID = #v_DOCID#
+	   	AND
+	   			TENANT_ID =#v_TENANTID#
+	   	<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+	   	<isGreaterEqual  property="v_ORDEROPTIONLENGTH" compareValue="10">
+	   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="modifydate">
+		   		ORDER BY 
+		   			$v_ORDEROPTION$
+	   		</isEqual>
+	   		<isNotEqual>
+		   		ORDER BY 
+		   			$v_ORDEROPTION$, MODIFYDATE DESC
+	   		</isNotEqual>
+	   	</isGreaterEqual>
+	   	<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="10">
+			   	 ORDER BY 
+			   	 		$v_ORDEROPTION$, MODIFYDATE DESC
+	   	</isLessThan>
+	   	</isGreaterThan>
+	   	<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+			   	 ORDER BY 
+			   	 		MODIFYDATE DESC
+	   	</isLessEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getHistoryForLineDetail" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
@@ -3675,37 +3876,37 @@
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DODOCCOMPLETE_DOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doDocCompleteDocInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
-			 SELECT 
-			 		 A.DocType ,
-		             A.DocState ,
-		             A.OrgDocID ,
-		             B.AprMemberID ,
-		             B.AprMemberName ,
-		             B.AprMemberName2 ,
-		             B.AprMemberDeptID ,
-		             B.AprMemberDeptName ,
-		             B.AprMemberDeptName2 ,
-		             C.companyID 
-		        FROM 
-		        	 EZAPPROVALG_${companyID}.TBAPRDOCINFO A
-		        LEFT JOIN 
-		        	 EZAPPROVALG_${companyID}.TBAPRLINEINFO B   
-		        ON 
-		        	 A.DocID = B.DocID
-		        AND 
-		        	 B.AprMemberSN = '1'
-		        AND
-		        	A.TENANT_ID = B.TENANT_ID
-		        LEFT JOIN 
-		        	 EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO C   
-		        ON 
-		        	 A.DocID = C.DocID
-		        AND
-		        	A.TENANT_ID = C.TENANT_ID
-		        WHERE  
-		       		 A.DocID = #v_DOCID#
-		       	AND
-		       		A.TENANT_ID = #v_TENANTID#
+		 SELECT 
+		 		 A.DocType ,
+	             A.DocState ,
+	             A.OrgDocID ,
+	             B.AprMemberID ,
+	             B.AprMemberName ,
+	             B.AprMemberName2 ,
+	             B.AprMemberDeptID ,
+	             B.AprMemberDeptName ,
+	             B.AprMemberDeptName2 ,
+	             C.companyID 
+	        FROM 
+	        	 EZAPPROVALG_${companyID}.TBAPRDOCINFO A
+	        LEFT JOIN 
+	        	 EZAPPROVALG_${companyID}.TBAPRLINEINFO B   
+	        ON 
+	        	 A.DocID = B.DocID
+	        AND 
+	        	 B.AprMemberSN = '1'
+	        AND
+	        	A.TENANT_ID = B.TENANT_ID
+	        LEFT JOIN 
+	        	 EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO C   
+	        ON 
+	        	 A.DocID = C.DocID
+	        AND
+	        	A.TENANT_ID = C.TENANT_ID
+	        WHERE  
+	       		 A.DocID = #v_DOCID#
+	       	AND
+	       		A.TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doSendDocReceiptInfo" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
@@ -3999,16 +4200,16 @@
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETTOTALATTACHSIZE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getTotalAttachSizeTemp" parameterClass="Map" resultClass="int">
-	 		SELECT 
-	 			COUNT(DOCID)  
-            FROM 
-            	EZAPPROVALG_${companyID}.TBRECEIPTPOINTINFO 
-            WHERE  
-            	DocID = #v_DOCID#
-            AND 
-            	ExtReceptYN = 'Y'
-            AND
-            	TENANT_ID = #v_TENANTID#
+		SELECT 
+			COUNT(DOCID)  
+        FROM 
+          	EZAPPROVALG_${companyID}.TBRECEIPTPOINTINFO 
+        WHERE  
+          	DocID = #v_DOCID#
+        AND 
+          	ExtReceptYN = 'Y'
+        AND
+          	TENANT_ID = #v_TENANTID#
 	</select>
 	<select id="EzApprovalG.getTotalAttachSize" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 		<isEqual property="v_temp" compareValue="1">
@@ -4755,11 +4956,11 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doSusinHesongAprDocInfo" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
 	 	SELECT 
-	 		 ORGDOCID ,
-             COMPANYID ,
-             WRITERDEPTID ,
-             WRITERDEPTNAME ,
-             WRITERDEPTNAME2 
+	 		TBAPRDOCINFO.ORGDOCID ,         
+			TBEXPAPRDOCINFO.COMPANYID ,          
+			TBAPRDOCINFO.WRITERDEPTID ,   
+			TBAPRDOCINFO.WRITERDEPTNAME ,       
+			TBAPRDOCINFO.WRITERDEPTNAME2  
         FROM 
         	 EZAPPROVALG_${companyID}.TBAPRDOCINFO 
         JOIN 
@@ -5205,17 +5406,344 @@
 				</isEmpty>
 	</select>
 	
-	<procedure id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETCONTDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCONTDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			* 
+		FROM 
+			(
+				SELECT 
+					* 
+				FROM (
+						SELECT 
+							* 
+						FROM (
+								SELECT 
+									 DISTINCT TBENDAPRDOCINFO.DOCID, 
+									 		  TBENDAPRDOCINFO.DOCTYPE,
+				   							  TBENDAPRDOCINFO.DOCSTATE, 
+				   							  TBENDAPRDOCINFO.FUNCTIONTYPE, 
+				   							  TBENDAPRDOCINFO.HREF, 
+				   							  TBENDAPRDOCINFO.DOCTITLE,
+				   							  TBENDAPRDOCINFO.DOCNO, 
+				   							  TBENDAPRDOCINFO.HASATTACHYN, 
+				   							  TBENDAPRDOCINFO.HASOPINIONYN,
+				   							  TBENDAPRDOCINFO.STARTDATE, 
+				   							  TBENDAPRDOCINFO.ENDDATE, 
+				   							  TBENDAPRDOCINFO.WRITERID,
+				   							  TBENDAPRDOCINFO.WRITERNAME,
+				   							  TBENDAPRDOCINFO.WRITERNAME2, 
+				   							  TBENDAPRDOCINFO.WRITERJOBTITLE, 
+				   							  TBENDAPRDOCINFO.WRITERJOBTITLE2, 
+				   							  TBENDAPRDOCINFO.WRITERDEPTID, 
+				   							  TBENDAPRDOCINFO.WRITERDEPTNAME2,
+				   							  TBENDAPRDOCINFO.WRITERDEPTNAME, 
+				   							  TBENDAPRDOCINFO.FORMID, 
+				   							  TBENDAPRDOCINFO.CONTAINERID,
+				   							  TBEXPENDAPRDOCINFO.FORMNAME, 
+				   							  TBEXPENDAPRDOCINFO.FORMNAME2, 
+				   							  TBEXPENDAPRDOCINFO.STATUS, 
+				   							  TBENDAPRDOCINFO.ORGDOCID,
+				   							  TBENDAPRDOCINFO.ISPUBLIC, 
+				   							  TBEXPENDAPRDOCINFO.EDMSYN, 
+				   							  (CASE WHEN TBEXPENDAPRDOCINFO.SECURITYAPPROVAL IS NULL THEN ''
+				   							  	   ELSE TBEXPENDAPRDOCINFO.SECURITYAPPROVAL
+				   							  END)  AS SECURITYAPPROVAL
+				   						FROM 
+				   							  EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+				   						LEFT OUTER JOIN 
+				   							  EZAPPROVALG_${companyID}.TBENDAPRLINEINFO 
+				   						ON 
+				   							  TBENDAPRDOCINFO.DOCID = TBENDAPRLINEINFO.DOCID
+				   						AND
+				   							  TBENDAPRDOCINFO.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID
+				   						LEFT OUTER JOIN 
+				   							  EZAPPROVALG_${companyID}.TBEXPENDAPRLINE 
+				   						ON 
+				   							  TBENDAPRDOCINFO.DOCID = TBEXPENDAPRLINE.DOCID
+				   						AND
+				   							  TBENDAPRDOCINFO.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID	
+				   						INNER JOIN 
+				   							  EZAPPROVALG_${companyID}.TBEXPENDAPRDOCINFO 
+				   						ON 
+				   							  TBENDAPRDOCINFO.DOCID = TBEXPENDAPRDOCINFO.DOCID
+				   						AND
+				   							  TBENDAPRDOCINFO.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID	 
+									<isEmpty property="v_CONTID" >
+										WHERE 
+											  TBENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
+									</isEmpty>
+									<isEqual property="v_CONTID" compareValue=" " >
+										WHERE 
+											  TBENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
+									</isEqual>
+									<isNotEmpty property="v_CONTID">
+									<isNotEqual property="v_CONTID" compareValue=" " >
+									<isEqual property="v_CONTID" compareValue="ADMIN">
+										WHERE 
+											  CONTAINERID IS NOT NULL
+									</isEqual>
+									<isNotEqual property="v_CONTID" compareValue="ADMIN">
+									 	WHERE 	
+									 		  CONTAINERID IN (#v_CONTID#)
+									</isNotEqual>
+									</isNotEqual>
+									</isNotEmpty>
+									    AND 
+									  		  TBEXPENDAPRDOCINFO.DELFLAG IS NULL 		
+									<isNotEqual property="v_USERSECCODE" compareValue="0">
+										<![CDATA[
+										AND 
+											#v_USERSECCODE# <= TBEXPENDAPRDOCINFO.SECURITYCODE
+										]]>
+									</isNotEqual>
+									<isEqual property="v_PUBFLAG" compareValue="Y">
+									<isNotEqual property="v_CONTID" compareValue=" ">
+									<isNotEmpty property="v_CONTID">
+										<![CDATA[
+										AND ( (TBENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBENDAPRDOCINFO.ISPUBLIC = 'N' AND TBENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+								      	]]>
+									</isNotEmpty>
+									</isNotEqual>
+									</isEqual>
+									<isNotEmpty property="v_SUBQUERY">
+										AND 
+											$v_SUBQUERY$
+									</isNotEmpty>	
+										AND
+											TBENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+									<isNotEmpty property="v_ORDEROPTION">
+									<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+									<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+										ORDER BY 
+											$v_ORDEROPTION$
+									</isEqual>
+									<isNotEqual  property="v_ORDEROPTIONVALUE" compareValue="enddate">
+										ORDER BY 
+											$v_ORDEROPTION$, ENDDATE DESC
+									</isNotEqual>
+									</isGreaterEqual>
+									<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+										ORDER BY 
+											$v_ORDEROPTION$, ENDDATE DESC
+									</isLessThan>
+									</isNotEmpty>
+									<isEmpty property="v_ORDEROPTION">
+										ORDER BY 
+											ENDDATE DESC
+									</isEmpty>
+									 <![CDATA[
+									  ) WHERE 
+									  		ROWNUM <= #v_PAGESIZE#) A
+									  ]]>
+						<isNotEmpty property="v_ORDEROPTION2">
+						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
+						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
+						<![CDATA[
+							ORDER BY 
+								$v_ORDEROPTION2$) WHERE ROWNUM <= #v_PAGESIZE2#
+						]]>
+						</isEqual>
+						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
+						<![CDATA[
+							ORDER BY 
+								$v_ORDEROPTION2$, ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+						]]>
+						</isNotEqual>
+						</isGreaterEqual>
+						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
+						<![CDATA[	
+							ORDER BY 
+								$v_ORDEROPTION2$, ENDDATE)	WHERE ROWNUM <= #v_PAGESIZE2#
+						]]>
+						</isLessThan>
+						</isNotEmpty>
+						<isEmpty property="v_ORDEROPTION2">
+						<![CDATA[	
+							ORDER BY 
+								ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+						]]>
+						</isEmpty>
+		   			
+	</select>
 	
-	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
-		{CALL EZAPPROVALG_${companyID}.EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_APRATTACHMAIL(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
+		<isEqual property="v_FLAG" compareValue="1">
+			 SELECT 
+			 	DOCID 
+           	 FROM 
+           	 	EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+             WHERE  
+             	TENANT_ID = #v_TENANTID#
+             AND
+             	DOCID = #v_DOCID#
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="2">
+			SELECT 
+				DOCTITLE 
+            FROM 
+            	EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+            WHERE  
+            	TENANT_ID =  #v_TENANTID#
+            AND
+            	DOCID = #v_DOCID#
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="3">
+		<![CDATA[
+			SELECT * 
+                 FROM ( 
+                 		SELECT 
+               			     ATTACHFILENAME ATTACHNAME  ,
+                             ATTACHFILEHREF ATTACHFILEHREF  ,
+                             ATTACHFILESIZE ATTACHFILESIZE  
+                        FROM 
+                        	 EZAPPROVALG_${companyID}.TBAPRATTACHINFO 
+                        WHERE  
+                        	DOCID = #v_DOCID#
+                        	
+                        UNION ALL 
+                        
+                        SELECT 
+                        	   ATTACHDOCNAME ATTACHNAME  ,
+                               ATTACHDOCURL ATTACHFILEHREF  ,
+                               NULL ATTACHFILESIZE  
+                        FROM 
+                        	   EZAPPROVALG_${companyID}.TBAPRDOCATTACHINFO 
+                        WHERE  
+                         	   DOCID = #v_DOCID# ) A
+                WHERE  
+                	A.ATTACHFILEHREF <> ' ' 
+         ]]>
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="4">
+			 SELECT 
+			 	DOCTITLE 
+             FROM 
+             	EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+             WHERE 
+             	TENANT_ID = #v_TENANTID#
+             AND 
+             	DOCID = #v_DOCID#
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="5">
+		<![CDATA[
+			SELECT 
+				* 
+            FROM ( 
+            		SELECT 
+            			ATTACHFILENAME ATTACHNAME  ,
+                        ATTACHFILEHREF ATTACHFILEHREF  ,
+                        ATTACHFILESIZE ATTACHFILESIZE  
+                    FROM 
+                    	EZAPPROVALG_${companyID}.TBENDATTACHINFO 
+                    WHERE  
+                    	DOCID = #v_DOCID#
+                    AND
+                    	TENANT_ID = #v_TENANTID#
+                    
+                    UNION ALL 
+                    
+                    SELECT 
+                    	ATTACHDOCNAME ATTACHNAME  ,
+                        ATTACHDOCURL ATTACHFILEHREF  ,
+                        NULL ATTACHFILESIZE  
+                    FROM 
+                    	EZAPPROVALG_${companyID}.TBENDAPRDOCATTACHINFO 
+                    WHERE  
+                    	DOCID = #v_DOCID#
+                    AND
+                    	TENANT_ID = #v_TENANTID# ) A
+             WHERE 
+             	 	A.ATTACHFILEHREF <> ' '
+            ]]>
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="6">
+			 SELECT 
+			 	DOCTITLE 
+             FROM ( 
+             		SELECT 
+             			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+                         DOCTITLE 
+                    FROM 
+                    	EZAPPROVALG_${companyID}.TBTMPAPRDOCINFO
+                    WHERE 
+                    	TENANT_ID = #v_TENANTID#  ) TMP
+             WHERE  
+             	DOCID = #v_DOCID#
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="7">
+		<![CDATA[
+			SELECT 
+				* 
+            FROM ( 
+            		SELECT 
+            			ATTACHFILENAME ATTACHNAME  ,
+                        ATTACHFILEHREF ATTACHFILEHREF  ,
+                        ATTACHFILESIZE ATTACHFILESIZE  
+                    FROM ( 
+                    		SELECT 
+                    			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+                                 ATTACHFILENAME ,
+                                 ATTACHFILEHREF ,
+                                 ATTACHFILESIZE 
+                            FROM 
+                            	EZAPPROVALG_${companyID}.TBTMPATTACHINFO
+                            WHERE
+                            	TENANT_ID = #v_TENANTID# ) TMP
+                     WHERE  
+                     	DOCID = #v_DOCID#
+                   
+                   UNION ALL 
+                    
+                   SELECT 
+                   		ATTACHDOCNAME ATTACHNAME  ,
+                        ATTACHDOCURL ATTACHFILEHREF  ,
+                        TO_BINARY_FLOAT(NULL) ATTACHFILESIZE  
+                   FROM ( 
+                   			SELECT 
+                   				(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+                                ATTACHDOCNAME ,
+                                ATTACHDOCURL 
+                           FROM 
+                           		EZAPPROVALG_${companyID}.TBTMPAPRDOCATTACHINFO  ) TMP
+                           WHERE  
+                           		DOCID = #v_DOCID#
+                           	AND 
+                           		TENANT_ID= #v_TENANTID# ) A
+                   WHERE  A.ATTACHFILEHREF <> ' '
+                   ]]>
+		
+		</isEqual>
+	</select>
 	
-	<procedure id="EzApprovalG.gongRamActivateLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_LINEINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.gongRamActivateLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_LINEINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.gongRamActivateLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		 <![CDATA[
+		SELECT 
+			* 
+        FROM ( 
+        		SELECT 
+        			  APRMEMBERSN ,
+                      APRMEMBERID 
+        		FROM 
+        			  EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+       			WHERE  
+       				  DOCID = #v_DOCID#
+                AND 
+                	  APRSTATE = '001'
+        		ORDER BY 
+        			  APRMEMBERSN )
+        WHERE 
+        		ROWNUM <= 1
+        	]]>
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETSENDOUTDOCLIST(#v_MODE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_BASICORDER#, #v_BASICORDER2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -5457,22 +5985,174 @@
 		             A.AprMemberSN DESC
 	</select>
 	
-	<procedure id="EzApprovalG.doSendOfferRejectAprDoc" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDOFFERREJECT_APRDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doSendOfferRejectAprDoc" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDOFFERREJECT_APRDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doSendOfferRejectAprDoc" parameterClass="Map" resultClass="ApprGDocListVO">
+	 	SELECT 
+	 		 WRITERID ,
+             WRITERNAME ,
+             WriterName2 ,
+             WRITERJOBTITLE ,
+             WriterJobTitle2 ,
+             WRITERDEPTID ,
+             WRITERDEPTNAME ,
+             WriterDeptName2 ,
+             ORGDOCID 
+        FROM 
+        	 EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+        WHERE  
+        	 DOCID = #v_DOCID#
+        AND
+        	 TENANT_ID = #v_TENANTID#
+	</select>
 	
-	<procedure id="EzApprovalG.doSendOfferRejectReceipt" parameterClass="Map" resultClass="ApprGReceiveDocVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDOFFERREJECT_RECEIPT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doSendOfferRejectReceipt" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDOFFERREJECT_RECEIPT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doSendOfferRejectReceipt" parameterClass="Map" resultClass="ApprGReceiveDocVO">
+	 	<![CDATA[
+	 	SELECT 
+	 		* 
+        FROM ( 
+        		SELECT 
+        			  RECEIVESN ,
+                      SENTDEPTID ,
+                      SENTDEPTNAME ,
+                      (CASE WHEN SENTDEPTNAME2 IS NULL THEN SENTDEPTNAME
+                      	    ELSE SENTDEPTNAME2
+                      END) AS SENTDEPTNAME2
+                      RECEIVEDDEPTID ,
+                      RECEIVEDDEPTNAME ,
+                      (CASE WHEN RECEIVEDDEPTNAME2 IS NULL THEN RECEIVEDDEPTNAME
+                      	    ELSE RECEIVEDDEPTNAME2
+                      END) AS RECEIVEDDEPTNAME2
+        		FROM 
+        			  EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+       			WHERE  
+       				  TENANT_ID = #v_TENANTID#
+       			AND
+       				  DOCID = #v_DOCID#
+        		ORDER BY 
+        			  RECEIVESN DESC )
+        WHERE 
+        	ROWNUM <= 1 
+        	]]>
+	</select>
 	
-	<procedure id="EzApprovalG.setCabinetReject1" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_SETCABINETREJECT1(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.setCabinetReject1" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_SETCABINETREJECT1(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.setCabinetReject1" parameterClass="Map" resultClass="ApprGDocListVO">
+		SELECT 
+			ORGDOCNUMCODE ,
+            HREF 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO A
+        JOIN 
+        	EZAPPROVALG_${companyID}.TBAPRDOCINFO B   
+       	ON 
+       		A.DocID = B.DocID
+       	AND
+       		A.TENANT_ID = B.TENANT_ID
+        WHERE  
+        	A.DocID = #v_DOCID#
+        AND
+        	A.TENANT_ID =#v_TENANTID#
+	</select>
 	
-	<procedure id="EzApprovalG.setCabinetReject2" parameterClass="Map" resultClass="ApprGDocListVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_SETCABINETREJECT2(#v_DOCID#, #v_HESONGFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.setCabinetReject2" parameterClass="Map" resultClass="ApprGDocListVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_SETCABINETREJECT2(#v_DOCID#, #v_HESONGFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.setCabinetReject2" parameterClass="Map" resultClass="ApprGDocListVO">
+		<isNotEmpty property="v_HESONGFLAG" >
+		<![CDATA[
+			SELECT 
+				A.DocNo ,
+                B.CabinetID ,
+                A.DocTitle ,
+                A.WriterDeptID ,
+                A.WriterDeptName ,
+                A.WriterDeptName2 ,
+                A.WriterName ,
+                A.WriterName2 ,
+                A.EndDate ,
+                A.OrgDocID ,
+                B.SpecialRecordCode ,
+                B.PublicityCode ,
+                B.PageNum ,
+                B.LimitRange ,
+                A.HasAttachYN ,
+                '회송문서' APRMEMBERJOBTITLE  ,
+                'Return a document' APRMEMBERJOBTITLE2  ,
+                B.SeperateAttachXML ,
+                B.DocNumCode ,
+                B.OrgDocNumCode 
+           FROM 
+           		EZAPPROVALG_${companyID}.TBAPRDOCINFO A
+           JOIN 
+           		EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO B   
+           ON 
+           		A.DocID = B.DocID
+           AND
+           		A.TENANT_ID = B.TENANT_ID
+           WHERE  
+           		A.TENANT_ID = #v_TENANTID#
+           AND
+           		A.DocID = #v_DOCID# 
+           AND 
+           		ROWNUM <= 1
+           ]]>
+		</isNotEmpty>
+		<isEmpty property="v_HESONGFLAG">
+			 SELECT 
+			 	* 
+           	 FROM ( 
+           	 		SELECT 
+           	 			 A.DocNo ,
+                         B.CabinetID ,
+                         A.DocTitle ,
+                         A.WriterDeptID ,
+                         A.WriterDeptName ,
+                         A.WriterDeptName2 ,
+                         A.WriterName ,
+                         A.WriterName2 ,
+                         A.EndDate ,
+                         A.OrgDocID ,
+                         B.SpecialRecordCode ,
+                         B.PublicityCode ,
+                         B.PageNum ,
+                         B.LimitRange ,
+                         A.HasAttachYN ,
+                         C.AprMemberJobTitle ,
+                         C.AprMemberJobTitle2 ,
+                         B.SeperateAttachXML ,
+                         B.DocNumCode ,
+                         B.OrgDocNumCode 
+           			FROM 
+           				 EZAPPROVALG_${companyID}.TBAPRDOCINFO A
+                    JOIN 
+                    	 EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO B   
+                    ON 
+                    	 A.DocID = B.DocID
+                    AND
+                    	 A.TENANT_ID = B.TENANT_ID
+                    JOIN 
+                    	 EZAPPROVALG_${companyID}.TBAPRLINEINFO C   
+                    ON 
+                    	 A.DocID = C.DocID
+                    AND
+                    	 A.TENANT_ID = C.TENANT_ID
+          			WHERE  
+          				 A.TENANT_ID = #v_TENANTID#
+          			AND
+          				 A.DocID = #v_DOCID#
+                	AND 
+                		 C.AprState IN ( '004' )
+           ORDER BY 
+           		C.AprMemberSN DESC )
+		</isEmpty>
+	</select>
 <!-- 	<procedure id="EzApprovalG.getDocInfoSP" parameterClass="Map" resultClass="ApprGDocInfoWebSrvVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDOCINFO_WEBSRV(#v_PDOCID#, #v_PDOCNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -5554,7 +6234,8 @@
 			CODE1 = 'A01' 
 		AND  
 			ISUSE = 1
-		ORDER BY CODE2
+		ORDER BY 
+			CODE2
 	</select>
 <!-- 	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -5572,7 +6253,8 @@
 	      		CODE1 = #v_CODE1# 
 	      	AND  
 	      		TRIM(CODE2) = #v_CODE2#
-	      	ORDER BY CODE2
+	      	ORDER BY 
+	      		CODE2
 			]]>
 		</isEqual>
 		<isEqual property="v_LANGTYPE" compareValue="0">
@@ -5587,7 +6269,8 @@
 	      		CODE1 =#v_CODE1# 
 	      	AND  
 	      		CODE2 =#v_CODE2#
-	      	ORDER BY CODE2
+	      	ORDER BY 
+	      		CODE2
 			]]>
 		</isEqual>
 		<isNotEqual property="v_LANGTYPE" compareValue="1">
@@ -5603,7 +6286,8 @@
 	      		CODE1 = #v_CODE1#
 	      	AND  
 	      		CODE2 = #v_CODE2#
-	      	ORDER BY CODE2
+	      	ORDER BY 
+	      		CODE2
 			]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -6170,10 +6854,19 @@
 		    		TENANT_ID = #v_TENANTID#;
 		    END;
 	</delete>
-	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String">
+		SELECT 
+			DOCSTATE 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBAPRDOCINFO 
+       	WHERE  
+       		DOCID = #v_DOCID#
+       	AND
+       		TENANT_ID = #v_TENANTID#
+	</select>
 <!-- 	<procedure id="EzApprovalG.getDocTitle" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETDOCTITLE(#v_DOCID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6325,9 +7018,25 @@
 	     	DUAL  
 	</select>
 	
-	<procedure id="EzApprovalG.makeContainer" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_MAKECONTAINER(#v_CONTAINERTYPE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.makeContainer" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_MAKECONTAINER(#v_CONTAINERTYPE#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.insertTbContainer" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.tbContainer
+     	( CONTAINERID, 		  CONTAINERTYPEID,   CONTAINEROWNDEPID, TENANT_ID )
+     	VALUES 
+     	( #v_MAXCONTAINERID#, #v_CONTAINERTYPE#, #v_DEPTID#,        #TENANT_ID# )
+	</insert>
+	
+	<select id="EzApprovalG.makeContainer" parameterClass="Map" resultClass="String">
+		SELECT  
+     		SUBSTR('0000000000' || ((CASE WHEN MAX(CONTAINERID) IS NULL THEN '0000000000'  ELSE MAX(CONTAINERID)  END) + 1 ), -10, 10)
+     	  FROM 
+     	  		EZAPPROVALG_${companyID}.tbContainer
+     	  WHERE 
+     	  		TENANT_ID = #v_TENANTID#
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getRecordSCFlag" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETRECORDSCFLAG(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6513,10 +7222,21 @@
 	    AND
 	    		TENANT_ID = #v_TENANTID#
 	</select>
-	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String">
+		SELECT 
+			CONTENT 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBAPROPINIONINFO 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        ORDER BY 
+        	OPINIONSN DESC
+	</select>
 <!-- 	<procedure id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMDOCINFO(#v_ORGDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6862,9 +7582,12 @@
        		TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<procedure id="EzApprovalG.getRecordListCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getRecordListCount" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getRecordListCount" parameterClass="Map" resultClass="int">
+		SELECT COUNT(TBRECORD.RecordID) $sqlString$
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.isCabCharger" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.spISCabCharger(#v_CabClassNo#, #v_UserID#, #v_Result,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -6922,9 +7645,23 @@
       		TENANT_ID = #v_TENANTID#
 
 	</select>
-	<procedure id="EzApprovalG.doApproveLineCnt" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINECNT(#v_DOCID#, #v_APRTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doApproveLineCnt" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOAPPROVE_LINECNT(#v_DOCID#, #v_APRTYPE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.doApproveLineCnt" parameterClass="Map" resultClass="int">
+		 SELECT 
+		 	COUNT(DOCID)  CNT  
+         FROM 
+         	EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+         WHERE  
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	DOCID = #v_DOCID#
+         AND 
+         	APRTYPE = #v_APRTYPE#
+         AND 
+         	APRSTATE IN ( '002','005' )
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.updateSignInfoAprSN" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_UPDATESIGNINFO_APRSN(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -6998,9 +7735,35 @@
          	EXTRECEPTYN = 'Y'
 	</select>
 	
-	<procedure id="EzApprovalG.checkAprLine" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_CHECKAPRLINE(#v_DOCID#, #v_MODE#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.checkAprLine" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_CHECKAPRLINE(#v_DOCID#, #v_MODE#, #v_USERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.checkAprLine" parameterClass="Map" resultClass="int">
+		<isEqual property="v_MODE" compareValue="END">
+			SELECT 
+				COUNT(DOCID)  
+            FROM 
+            	EZAPPROVALG_${companyID}.TBENDAPRLINEINFO 
+            WHERE  
+            	TENANT_ID = #v_TENANTID#
+            AND	
+            	DOCID = #v_DOCID#
+            AND 
+            	APRMEMBERID = #v_USERID#
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="END">
+			 SELECT 
+			 	COUNT(DOCID)  
+             FROM 
+             	EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+             WHERE
+             	TENANT_ID = #v_TENANTID#
+             AND  
+             	DOCID = #v_DOCID#
+             AND 
+             	APRMEMBERID = #v_USERID# 
+		</isNotEqual>
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.spGetSerialNo(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_RtnSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -7387,9 +8150,21 @@
 	     AND
 	     		TENANT_ID = #v_TENANTID#
 	</update>
-	<procedure id="EzApprovalG.setLastOpinionToOrgDocOpinionSN" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_SETLASTOPINIONTOORGDOC_OP(#v_ORGDOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.setLastOpinionToOrgDocOpinionSN" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_SETLASTOPINIONTOORGDOC_OP(#v_ORGDOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.setLastOpinionToOrgDocOpinionSN" parameterClass="Map" resultClass="int">
+	 	SELECT 
+	 		CASE WHEN MAX(OPINIONSN) IS NULL THEN 0
+	 			 ELSE MAX(OPINIONSN)
+	 		END OPINIONSN 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBAPROPINIONINFO 
+       	WHERE  
+       		TENANT_ID = #v_TENANTID#
+       	AND
+       		DOCID = #v_ORGDOCID#
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getMaxTmpDocSN" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETMAXTMPDOCSN(#v_PUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
@@ -7728,10 +8503,76 @@
    			TBENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
    		</isNotEmpty>
 	</select>
-	<procedure id="EzApprovalG.getContDocListCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETCONTDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.getContDocListCount" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCONTDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getContDocListCount" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(DISTINCT TBENDAPRDOCINFO.DOCID)
+   		FROM 
+   			EZAPPROVALG_${companyID}.TBENDAPRDOCINFO 
+   		LEFT OUTER JOIN 
+   			EZAPPROVALG_${companyID}.TBENDAPRLINEINFO 
+   		ON 
+   			TBENDAPRDOCINFO.DOCID = TBENDAPRLINEINFO.DOCID
+   		AND
+   			TBENDAPRDOCINFO.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID
+   		LEFT OUTER JOIN 
+   			EZAPPROVALG_${companyID}.TBEXPENDAPRLINE 
+   		ON 
+   			TBENDAPRDOCINFO.DOCID = TBEXPENDAPRLINE.DOCID
+   		AND
+   			TBENDAPRDOCINFO.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID
+   		INNER JOIN 
+   			EZAPPROVALG_${companyID}.TBEXPENDAPRDOCINFO 
+   		ON 
+   			TBENDAPRDOCINFO.DOCID = TBEXPENDAPRDOCINFO.DOCID
+   		AND
+   			TBENDAPRDOCINFO.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID
+		<isEmpty property="v_CONTID" >
+			WHERE 
+				  TBENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
+		</isEmpty>
+		<isEqual property="v_CONTID" compareValue=" " >
+			WHERE 
+				  TBENDAPRLINEINFO.APRMEMBERID = #v_USERID#
+		</isEqual>
+		<isNotEmpty property="v_CONTID">
+		<isNotEqual property="v_CONTID" compareValue=" " >
+		<isEqual property="v_CONTID" compareValue="ADMIN">
+			WHERE 
+				  CONTAINERID IS NOT NULL
+		</isEqual>
+		<isNotEqual property="v_CONTID" compareValue="ADMIN">
+		 	WHERE 	
+		 		  CONTAINERID IN (#v_CONTID#)
+		</isNotEqual>
+		</isNotEqual>
+		</isNotEmpty>
+		AND 
+			TBEXPENDAPRDOCINFO.DELFLAG IS NULL
+		<isNotEqual property="v_USERSECCODE" compareValue="0">
+		<![CDATA[
+		AND 
+			#v_USERSECCODE# <= TBEXPENDAPRDOCINFO.SECURITYCODE
+		]]>
+		</isNotEqual>
+		<isEqual property="v_PUBFLAG" compareValue="Y">
+		<isNotEqual property="v_CONTID" compareValue=" ">
+		<isNotEmpty property="v_CONTID">
+		<![CDATA[
+		AND ( (TBENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBENDAPRDOCINFO.ISPUBLIC = 'N' AND TBENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+      	]]>
+		</isNotEmpty>
+		</isNotEqual>
+		</isEqual>
+		<isNotEmpty property="v_SUBQUERY">
+		AND 
+			$v_SUBQUERY$
+		</isNotEmpty>
+		AND
+			TBENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+	</select>
 <!-- 	<procedure id="EzApprovalG.getUncompleteDocCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETUNCOMPLETEDOCCOUNT(#v_CABINETID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -7764,10 +8605,21 @@
     ]]>
 	</select>
 	
-	<procedure id="EzApprovalG.gongRamActivateCount" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_COUNT(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-	
+<!-- 	<procedure id="EzApprovalG.gongRamActivateCount" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_COUNT(#v_DOCID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.gongRamActivateCount" parameterClass="Map" resultClass="int">
+	 	SELECT 
+	 		COUNT(DOCID)  CNT  
+        FROM 
+        	EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	APRSTATE = '002'
+	</select>
 <!-- 	<procedure id="EzApprovalG.getUncabinetedDocCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETUNCABINETEDDOCCOUNT(#v_DEPTINFO#, #v_UNTILYEAR#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -7824,7 +8676,7 @@
         AND 
         	TBCABINETCLASS.ConfirmFlag = '0'
         AND 
-        	TBCABINETCLASS.ExpirationYear < TO_CHAR(SYSDATE,'YYYY')
+        	TBCABINETCLASS.ExpirationYear < #v_UTCYEAR#
         AND 
         	TBCABINETCLASS.TerminateFlag = '0'
         AND
@@ -7992,9 +8844,73 @@
         	TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<procedure id="EzApprovalG.getUserRecRight" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.SPHASRECVIEWRIGHT(#v_RecID#, #v_SepAttNo#, #v_UserID#, #v_RtnVal,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.getUserRecRight" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.SPHASRECVIEWRIGHT(#v_RecID#, #v_SepAttNo#, #v_UserID#, #v_RtnVal,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.getUserRecRight" parameterClass="Map" resultClass="String">
+		SELECT 
+			UserRight 
+	    FROM 
+	    	EZAPPROVALG_${companyID}.TBRECROLEINFO 
+	    WHERE  
+	    	TENANT_ID = #v_TENANTID#
+	    AND
+	    	RecordID = #v_RecID#
+	    AND 
+	    	SeperateAttachNo = #v_SepAttNo#
+	    AND 
+	    	UserID = 'All_User'
+	</select>
+	
+	<select id="EzApprovalG.getUserRecRightCount" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 	COUNT(RecordID)  
+         FROM 
+         	ezApprovalG_S907000.TBRECORD 
+         JOIN ( 
+         		SELECT 
+         			DEPARTMENT DEPTID  , TENANT_ID
+                FROM 
+                	TBLUSERMASTER@DBLK_EZHRMASTER
+                WHERE  
+                	CN = #v_UserID#
+                AND
+                	TENANT_ID = #v_TENANTID#
+                
+                UNION ALL 
+                
+                SELECT 
+                	DEPTID DEPTID  , TENANT_ID
+                FROM 
+                	EZHRMASTER.TBLAddJobMaster
+                WHERE  
+                	CN = #v_UserID#
+                AND
+                	TENANT_ID = #v_TENANTID# ) DEPTINFO   
+          ON 
+          	DEPTINFO.DEPTID = TBRECORD.ProcessDeptCode
+          AND
+            DEPTINFO.TENANT_ID = TBRECORD.TENANT_ID
+       	  WHERE  
+       	  	RECORDID = #v_RecID#
+       	  AND
+       	  	TBRECORD.TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<select id="EzApprovalG.getUserRecRightCount2" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 	UserRight 
+         FROM 
+         	EZAPPROVALG_${companyID}.TBRECROLEINFO 
+         WHERE  
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	RecordID = #v_RecID#
+         AND 
+         	SeperateAttachNo = #v_SepAttNo#
+         AND 
+         	UserID = #v_UserID#
+	</select>
 	
 	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int">
 		{CALL EZAPPROVALG_${companyID}.SPROLLBACKSN(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_CurSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -8094,7 +9010,6 @@
 			]]>
 		</isEqual>
 		
-		<!--Ѹ׷Ȓ ٮܭ -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
 			<![CDATA[
 				SELECT 
@@ -8189,7 +9104,6 @@
 				)
 		</isEqual>
 		
-		<!-- މܧȒ ٮܭ  -->
 		<isEqual property="v_LISTTYPE" compareValue="5">
 			<![CDATA[
 				SELECT 
@@ -8219,7 +9133,6 @@
 			]]>
 		</isEqual>
 		
-		<!-- ·N GؚȔ  -->
 		<isEqual property="v_LISTTYPE" compareValue="7">
 			<![CDATA[
 				SELECT 
@@ -8251,7 +9164,6 @@
 			]]>		
 		</isEqual>
 		
-		<!-- ·N իe -->
 		<isEqual property="v_LISTTYPE" compareValue="8">
 			<![CDATA[
 				SELECT 
@@ -8283,7 +9195,6 @@
 			]]>
 		</isEqual>
 		
-			<!-- ѡgȒ ٮܭ -->
 		<isNotEqual property="v_LISTTYPE" compareValue="1">
 			<isNotEqual property="v_LISTTYPE" compareValue="99">
 				<isNotEqual property="v_LISTTYPE" compareValue="2">
@@ -8325,10 +9236,263 @@
    				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, SYSDATE,      '0',                '0' )
 	</insert> 
 	
-	<procedure id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_APRMAKETMP2ING(#v_PDOCID#, #v_PUSERID#, #v_PSN#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_APRMAKETMP2ING(#v_PDOCID#, #v_PUSERID#, #v_PSN#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBRECEIPTPOINTINFO
+	     ( SELECT 
+	     		  #v_PDOCID# ,
+	              RECEIPTPOINTID ,
+	              RECEIPTPOINTNAME ,
+	              EXTRECEPTYN ,
+	              PROCESSYN ,
+	              PROCESSSN ,
+	              CANEDITYN ,
+	              EXTRECEPTEMAIL ,
+	              RECEIPTMEMBERID ,
+	              RECEIPTMEMBERNAME ,
+	              PROCESSDATE ,
+	              RECEIPTMEMBERJOBTITLE ,
+	              DEPTMEMBERSN ,
+	              ReceiptPointName2 ,
+	              ReceiptMemberJobTitle2 ,
+	              ReceiptMemberName2 ,
+	              RouteYN ,
+	              TENANT_ID
+	       FROM 
+	       		  EZAPPROVALG_${companyID}.TBTMPRECEIPTPOINTINFO 
+	       WHERE  
+	       		  TENANT_ID = #v_TENANTID#
+	       AND
+	       		  OWNERID = #v_PUSERID#
+	       AND 
+	       		  SN = #v_PSN# )
+	</insert>
 	
+	<insert id="EzApprovalG.aprMakeTmp2Ing2" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBAPROPINIONINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              USERID ,
+              OPINIONGB ,
+              CONTENT ,
+              USERNAME ,
+              USERJOBTITLE ,
+              USERDEPTID ,
+              USERDEPTNAME ,
+              OPINIONSN ,
+              UserName2 ,
+              UserJobTitle2 ,
+              UserDeptName2 ,
+	          TENANT_ID
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPAPROPINIONINFO 
+          WHERE
+          	  TENANT_ID = #v_TENANTID#
+	      AND  
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing3" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBAPRDOCATTACHINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              ATTACHSN ,
+              ATTACHDOCNAME ,
+              ATTACHDOCURL ,
+              SUBATTACHYN ,
+              ATTACHUSERID ,
+              ATTACHUSERNAME ,
+              ATTACHUSERDEPTID ,
+              ATTACHUSERDEPTNAME ,
+              ATTACHUSERJOBTITLE ,
+              AttachUserName2 ,
+              AttachUserJobTitle2 ,
+              AttachUserDeptName2 ,
+	          TENANT_ID
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPAPRDOCATTACHINFO 
+          WHERE
+          	  TENANT_ID = #v_TENANTID#
+	      AND    
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing4" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBAPRATTACHINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              ATTACHFILESN ,
+              ATTACHFILENAME ,
+              ATTACHFILEHREF ,
+              ATTACHFILESIZE ,
+              ATTACHUSERID ,
+              ATTACHUSERNAME ,
+              ATTACHUSERJOBTITLE ,
+              ATTACHUSERDEPTID ,
+              ATTACHUSERDEPTNAME ,
+              PAGENUM ,
+              DISPLAYNAME ,
+              BODYATTACH ,
+              AttachUserName2 ,
+              AttachUserJobTitle2 ,
+              AttachUserDeptName2 ,
+	          TENANT_ID
+       	  FROM 
+       	   	  EZAPPROVALG_${companyID}.TBTMPATTACHINFO 
+          WHERE 
+          	  TENANT_ID = #v_TENANTID#
+	      AND   
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing5" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBEXPAPRLINE
+     	( SELECT 
+     		  #v_PDOCID# ,
+              APRMEMBERSN ,
+              ORGUSERID ,
+              PROXYUSERID ,
+              PROXYUSERNAME ,
+              PROXYUSERJOBTITLE ,
+              PROXYUSERDEPTID ,
+              PROXYUSERDEPTNAME ,
+              proxyusername2 ,
+              proxyuserjobtitle2 ,
+              proxyuserdeptname2 ,
+	          TENANT_ID
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPEXPAPRLINE 
+          WHERE  
+          	  TENANT_ID = #v_TENANTID#
+	      AND  
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing6" parameterClass="Map">
+	 	INSERT INTO 
+	 		EZAPPROVALG_${companyID}.TBAPRLINEINFO
+     	( SELECT 
+     	      #v_PDOCID# ,
+              APRMEMBERSN ,
+              APRTYPE ,
+              APRSTATE ,
+              APRMEMBERID ,
+              APRMEMBERISDEPTYN ,
+              APRMEMBERNAME ,
+              APRMEMBERJOBTITLE ,
+              APRMEMBERDEPTID ,
+              APRMEMBERDEPTNAME ,
+              APRMEMBERLDAPPATH ,
+              RECEIVEDDATE ,
+              PROCESSDATE ,
+              REASONDONOTAPPROV ,
+              ISPROPOSERYN ,
+              ISBRIEFUSERYN ,
+              AprMemberName2 ,
+              AprMemberJobTitle2 ,
+              AprMemberDeptName2 ,
+	          TENANT_ID
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPAPRLINEINFO 
+          WHERE 
+          	  TENANT_ID = #v_TENANTID#
+	      AND   
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing7" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBEXPAPRDOCINFO
+     	( DocID, SECURITYCODE, STORAGEPERIOD, KEYWORD, FORMNAME, COMPANYID, ITEMCODE, ITEMNAME, URGENTAPPROVAL, SECURITYAPPROVAL, TEMPATTRIBUTE, STATUS, SPECIALRECORDCODE, PUBLICITYCODE, LIMITRANGE, PAGENUM, CABINETID, TASKCODE, DOCNUMCODE, ORGDOCNUMCODE, SEPERATEATTACHXML, SUMMARY, FormName2, ItemName2, TENANT_ID )
+     	( SELECT 
+     		  #v_PDOCID# ,
+              SECURITYCODE ,
+              STORAGEPERIOD ,
+              KEYWORD ,
+              FORMNAME ,
+              COMPANYID ,
+              ITEMCODE ,
+              ITEMNAME ,
+              URGENTAPPROVAL ,
+              SECURITYAPPROVAL ,
+              TEMPATTRIBUTE ,
+              STATUS ,
+              SPECIALRECORDCODE ,
+              PUBLICITYCODE ,
+              LIMITRANGE ,
+              PAGENUM ,
+              CABINETID ,
+              TASKCODE ,
+              DOCNUMCODE ,
+              ORGDOCNUMCODE ,
+              SEPERATEATTACHXML ,
+              SUMMARY ,
+              FormName2 ,
+              ItemName2 ,
+	          TENANT_ID
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPEXPAPRDOCINFO 
+          WHERE  
+          	  TENANT_ID = #v_TENANTID#
+	      AND  
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing8" parameterClass="Map">
+		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBAPRDOCINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              FORMID ,
+              ORGDOCID ,
+              DOCTYPE ,
+              DOCSTATE ,
+              FUNCTIONTYPE ,
+              HREF ,
+              DOCTITLE ,
+              DOCNO ,
+              HASATTACHYN ,
+              HASOPINIONYN ,
+              NULL ,
+              ENDDATE ,
+              WRITERID ,
+              WRITERNAME ,
+              WRITERJOBTITLE ,
+              WRITERDEPTID ,
+              WRITERDEPTNAME ,
+              ISPUBLIC ,
+              WriterName2 ,
+              WriterJobTitle2 ,
+              WriterDeptName2 ,
+              TENANT_ID 
+          FROM 
+          	  EZAPPROVALG_${companyID}.TBTMPAPRDOCINFO 
+          WHERE  	
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN#)
+	</insert>
 <!-- 	<procedure id="EzApprovalG.transferCabinet" parameterClass="Map"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.SPTRANSCABINET1(#v_DDeptCode#, #v_DDeptName#, #v_DDeptName2#, #v_DTaskCode#, #v_DTaskName#, #v_DTaskName2#, #v_CabIDList#, #v_DeptMID#, #v_DeptMName#, #v_DeptMName2#)} -->
 <!-- 	</procedure> -->
@@ -10215,17 +11379,261 @@
           			TENANT_ID = #v_TENANTID#)
 	</insert>
 	
-	<procedure id="EzApprovalG.setJijung" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.setJijung" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_SETJIJUNG(#v_DOCID#, #v_RECEIVESN#, #v_DOCSTATE#, #v_PROCESSORID#, #v_PROCESSORNAME#, #v_PROCESSORNAME2#, #v_PROCESSORJOBTITLE#, #v_PROCESSORJOBTITLE2#, #v_RECEIVEDDEPTID#, #v_RECEIVEDDEPTNAME#, #v_RECEIVEDDEPTNAME2#, #v_CHARGEID#, #v_CHARGENAME#, #v_CHARGENAME2#, #v_MANAGEDEPTID#, #v_GFLAG#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.jiJungInsertReceiptProInfo" parameterClass="Map">
+		 INSERT INTO 
+		 	EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
+        ( RECEIVESN, DOCID, SENTDEPTID, SENTDEPTNAME, SENTDEPTNAME2, RECEIVEDDEPTID, RECEIVEDDEPTNAME, RECEIVEDDEPTNAME2, DOCSTATE, APRSTATE, PROCESSDATE, PROCESSYN, PROCESSDOCID, PROCESSORID, PROCESSORNAME, PROCESSORNAME2, PROCESSORJOBTITLE, PROCESSORJOBTITLE2, PARENTSDOCID )
+        ( SELECT 
+        	     #v_RECEIVESN# ,
+                 #v_DOCID# ,
+                 SENTDEPTID ,
+                 SENTDEPTNAME ,
+                 SENTDEPTNAME2 ,
+                 #v_RECEIVEDDEPTID# ,
+                 #v_RECEIVEDDEPTNAME# ,
+                 #v_RECEIVEDDEPTNAME2# ,
+                 DOCSTATE ,
+                 '012' ,
+                 TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
+                 '1' ,
+                 PROCESSDOCID ,
+                 #v_PROCESSORID# ,
+                 #v_PROCESSORNAME# ,
+                 #v_PROCESSORNAME2# ,
+                 #v_PROCESSORJOBTITLE# ,
+                 #v_PROCESSORJOBTITLE2# ,
+                 PARENTSDOCID 
+          FROM 
+          	     EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO 
+          WHERE  
+          		 TENANT_ID = #v_TENANTID#
+          AND
+          		 DOCID = #v_DOCID#
+          AND 
+          		 RECEIVESN = #v_RECEIVESN#
+          AND 
+          	     PROCESSYN = 'N' )
+	</insert>
 	
-	<procedure id="EzApprovalG.gongRamUpdate" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMUPDATE(#v_DOCID#, #v_USERID#, #v_FLAG#)}
-	</procedure>
+	<update id="EzApprovalG.jiJungUpdateReceiptProInfo" parameterClass="Map">
+		UPDATE 
+			 EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
+         SET 
+         	 PROCESSDATE = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
+             PROCESSYN = 'Y'
+         WHERE  
+         	 TENANT_ID = #v_TENANTID#
+         AND
+         	 DOCID = #v_DOCID#
+         AND 
+         	 RECEIVESN = #v_RECEIVESN#
+         AND 
+         	 PROCESSYN = 'N'
+	</update>
 	
-	<procedure id="EzApprovalG.gongRamActivateAprState" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_APRSTATE(#v_DOCID#, #v_APRMEMBERSN#, #v_FLAG#)}
-	</procedure>
+	<update id="EzApprovalG.jiJungUpdateReceiptProInfo2" parameterClass="Map">
+		UPDATE 
+			EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
+        SET 
+        	PROCESSYN = 'N'
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	RECEIVESN = #v_RECEIVESN#
+        AND 
+        	PROCESSYN = '1'
+	</update>
+	
+	<delete id="EzApprovalG.jiJungDeleteReceiptProInfo" parameterClass="Map">
+		DELETE 
+			EZAPPROVALG_${companyID}.TBEXPAPRLINE
+       	WHERE  
+       		TENANT_ID = #v_TENANTID#
+         AND 
+       		DOCID = #v_DOCID#
+	</delete>
+	
+	<delete id="EzApprovalG.jiJungDeleteReceiptProInfo2" parameterClass="Map">
+		 DELETE 
+		 	EZAPPROVALG_${companyID}.TBEXPAPRLINE
+         WHERE 
+         	TENANT_ID = #v_TENANTID#
+         AND 
+         	DOCID = #v_DOCID#
+	</delete>
+	
+	<update id="EzApprovalG.jiJungUpdateTbDocDelivery" parameterClass="Map" >
+		UPDATE 
+			EZAPPROVALG_${companyID}.TBDOCDELIVERY
+        SET 
+        	CHARGEID = #v_CHARGEID#,
+            CHARGENAME = #v_CHARGENAME#,
+            CHARGENAME2 = #v_CHARGENAME2#
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	MANAGEDEPTID = #v_MANAGEDEPTID#
+	</update>
+	
+	<select id="EzApprovalG.selectCodeValue" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 		CODE2 
+         FROM 
+         		EZAPPROVALG_${companyID}.TBCODELIST 
+         WHERE  
+         		TENANT_ID = #v_TENANTID#
+         AND
+         		CODE1 = 'A04'
+         AND 
+         		NAME = #v_DOCSTATE#
+	</select>
+	
+	<update id="EzApprovalG.jiJungUpdateReceiptProInfo3" parameterClass="Map">
+		UPDATE 
+			EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
+        SET 
+        	APRSTATE = '012',
+            PROCESSORID = #v_PROCESSORID#,
+            PROCESSORNAME = #v_PROCESSORNAME#,
+            PROCESSORNAME2 = #v_PROCESSORNAME2#,
+            PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
+        WHERE  
+        	TENANT_ID=#v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	RECEIVESN = #v_RECEIVESN#
+        AND 
+        	SENTDEPTID = #v_RECEIVEDDEPTID#
+	</update>
+	
+	<update id="EzApprovalG.jiJungUpdateReceiptProInfo4" parameterClass="Map">
+		UPDATE 
+			EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
+        SET 
+        	APRSTATE = '012',
+            PROCESSORID = #v_PROCESSORID#,
+            PROCESSORNAME = #v_PROCESSORNAME#,
+            PROCESSORNAME2 = #v_PROCESSORNAME2#,
+            PROCESSORJOBTITLE = #v_PROCESSORJOBTITLE#,
+            PROCESSORJOBTITLE2 = #v_PROCESSORJOBTITLE2#,
+            RECEIVEDDEPTID = #v_RECEIVEDDEPTID#,
+            RECEIVEDDEPTNAME = #v_RECEIVEDDEPTNAME#,
+            RECEIVEDDEPTNAME2 = #v_RECEIVEDDEPTNAME2#
+        WHERE  
+        	TENANT_ID=#v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	RECEIVESN = #v_RECEIVESN#
+        AND 
+        	RECEIVEDDEPTID = #v_RECEIVEDDEPTID#
+	</update>
+<!-- 	<procedure id="EzApprovalG.gongRamUpdate" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMUPDATE(#v_DOCID#, #v_USERID#, #v_FLAG#)} -->
+<!-- 	</procedure> -->
+	<update id="EzApprovalG.gongRamUpdate" parameterClass="Map">
+		<isEqual property="v_FLAG" compareValue="1">
+		 	UPDATE 
+		 		EZAPPROVALG_${companyID}.TBAPRLINEINFO
+         	SET 
+         		APRSTATE = '010',
+                PROCESSDATE = SYSDATE
+       		WHERE  
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			DOCID = #v_DOCID#
+        	AND 
+        		APRMEMBERID = #v_USERID#
+        	AND 
+        		APRSTATE = '002'
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="2">
+			UPDATE 
+				EZAPPROVALG_${companyID}.TBAPRLINEINFO
+            SET 
+            	APRSTATE = '002',
+                PROCESSDATE = NULL
+            WHERE  
+       			TENANT_ID = #v_TENANTID#
+       		AND  
+            	DOCID = #v_DOCID#
+            AND 
+            	APRMEMBERID = #v_USERID#
+            AND 	
+            	APRSTATE = '010'
+		</isEqual>
+		<isEqual property="v_FLAG" compareValue="3">
+			UPDATE 
+				EZAPPROVALG_${companyID}.TBAPRDOCINFO
+            SET 
+            	ENDDATE = STARTDATE
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+            AND  
+            	DOCID = #v_DOCID#
+		</isEqual>
+	</update>
+	
+	<select id="EzApprovalG.selectGongRamDocID" parameterClass="Map" resultClass="String">
+		SELECT 
+			DOCID 
+        FROM 
+        	EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	APRTYPE = '015'
+        AND 
+        	APRSTATE IN ( '001','002' )
+	</select>
+<!-- 	<procedure id="EzApprovalG.gongRamActivateAprState" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GONGRAMACTIVATE_APRSTATE(#v_DOCID#, #v_APRMEMBERSN#, #v_FLAG#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.gongRamActivateAprState" parameterClass="Map">
+		<isEqual property="v_FLAG" compareValue="1">
+			UPDATE 
+				EZAPPROVALG_${companyID}.TBAPRLINEINFO
+         	SET 
+         		APRSTATE = '002',
+             	RECEIVEDDATE = SYSDATE
+       		WHERE  
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			DOCID = #v_DOCID#
+        	AND 
+        		APRSTATE = '001'
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="1">
+			UPDATE 
+				EZAPPROVALG_${companyID}.TBAPRLINEINFO
+	         SET 
+	         	 APRSTATE = '002',
+	             RECEIVEDDATE = SYSDATE
+	       	 WHERE  
+	       	 	 TENANT_ID = #v_TENANTID#
+       		 AND
+	       	 	 DOCID = #v_DOCID#
+	         AND 
+	         	 APRSTATE = '001'
+	         AND 
+	         	 APRMEMBERSN = #v_APRMEMBERSN#
+		</isNotEqual>
+		
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.delUserFormInfo" parameterClass="Map"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DELUSERFORMINFO(#v_FORMID#, #v_USERID#)} -->
@@ -10389,10 +11797,72 @@
        	AND
        			TENANT_ID = #v_TENANTID#
 	</update>
-	<procedure id="EzApprovalG.doCallBack" parameterClass="Map">
-		{CALL EZAPPROVALG_${companyID}.EZSP_DOCALLBACK(#v_DOCID#, #v_USERID#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.doCallBack" parameterClass="Map"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOCALLBACK(#v_DOCID#, #v_USERID#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.selectDoCallBack" parameterClass="Map" resultClass="int">
+	<![CDATA[
+	 	SELECT 
+	 		*
+     	FROM ( 
+     			SELECT 
+     				APRMEMBERSN 
+     			FROM 
+     				EZAPPROVALG_${companyID}.TBAPRLINEINFO 
+    			WHERE  
+    				TENANT_ID = #v_TENANTID#
+    			AND
+    				DOCID = #v_DOCID#
+             	AND 
+             		APRMEMBERID = #v_USERID#
+             	AND 
+             		APRSTATE = '003'
+     			ORDER BY 
+     				APRMEMBERSN DESC )
+     	WHERE 
+     		ROWNUM <= 1
+     ]]>
+	</select>
 	
+	<update id="EzApprovalG.updateDoCallBack" parameterClass="Map">
+		 UPDATE 
+		 	EZAPPROVALG_${companyID}.TBAPRDOCINFO
+         SET 
+         	FUNCTIONTYPE = '006'
+         WHERE  
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	DOCID = #v_DOCID#
+	</update>
+	
+	<update id="EzApprovalG.updateDoCallBack2" parameterClass="Map">
+		 UPDATE 
+		 	EZAPPROVALG_${companyID}.TBAPRLINEINFO
+         SET 
+         	 APRSTATE = '002',
+             PROCESSDATE = NULL
+         WHERE 
+         	 TENANT_ID = #v_TENANTID#
+         AND 
+         	 DOCID = #v_DOCID#
+         AND 
+         	 APRMEMBERSN = #v_APRMEMBERSN#
+	</update>
+	
+	<update id="EzApprovalG.updateDoCallBack3" parameterClass="Map">
+		UPDATE 
+			EZAPPROVALG_${companyID}.TBAPRLINEINFO
+        SET 
+        	 APRSTATE = '001',
+             RECEIVEDDATE = NULL,
+             PROCESSDATE = NULL
+        WHERE
+        	 TENANT_ID = #v_TENANTID#
+        AND   
+        	 DOCID = #v_DOCID#
+        AND 
+        	 APRMEMBERSN >= #v_APRMEMBERSN#
+	</update>
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">
 		{CALL EZAPPROVALG_${companyID}.TRANSACTIONSQL(#sqlString#)}
 	</procedure>
@@ -11433,7 +12903,11 @@
 	</insert>
 	
 	<insert id="EzApprovalG.insertSignInfoAprSN" parameterClass="Map">
-	$sqlString$
+		$sqlString$
+	</insert>
+	
+	<insert id="EzApprovalG.insertTbAprReceiptProcessInfo" parameterClass="Map">
+		$sqlString$
 	</insert>
 	
 	<insert id="EzApprovalG.insertTbSpecialCatalogInfo_Cab" parameterClass="Map">
@@ -11451,6 +12925,10 @@
 	 	Values 
 	 		(#v_CABINETCLASSNO#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_TENANTID#)
 	</insert>
+	
+	<update id="EzApprovalG.updateTbAprReceiptProcessInfo" parameterClass="Map">
+		$sqlString$
+	</update>
 	
 <!-- 		<procedure id="EzApprovalG.doSendOffer_endDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDOFFER_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
