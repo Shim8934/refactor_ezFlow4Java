@@ -1229,6 +1229,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			rtn = true;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			rtn = false;
 		}
 		
@@ -4682,7 +4683,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (strSql.toUpperCase().equals("FALSE") || strSql.toUpperCase().equals("<RESULT>FALSE</RESULT>")) {
 			if (signSaveFlag) {
-				rollBackSignInfo(signNum, docID, companyID, signAdd);
+				rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 			}
 			
 			if (docNumFlag) {
@@ -4724,7 +4725,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				if (signSaveFlag) {
-					rollBackSignInfo(signCnt, docID, companyID, signAdd);
+					rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
 				}
 				
 				return "Link ERROR";
@@ -4771,14 +4772,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (signSaveFlag) {
-						rollBackSignInfo(signCnt, docID, companyID, signAdd);
+						rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
 					}
 					
 					return "Link ERROR";
 				}
 				
 				if (signSaveFlag) {
-					rollBackSignInfo(signNum, docID, companyID, signAdd);
+					rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 				}
 				
 				if (docNumFlag) {
@@ -4825,7 +4826,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (signSaveFlag) {
-						rollBackSignInfo(signCnt, docID, companyID, signAdd);
+						rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
 					}
 					
 					return "Link ERROR";
@@ -4836,26 +4837,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
-	private boolean rollBackSignInfo(String signNum, String docID, String companyID, String signAdd) throws Exception{
+	private boolean rollBackSignInfo(String signNum, String docID, String companyID, String signAdd, int tenantID) throws Exception{
 		boolean result = false;
 		
 		StringBuilder strQuery = new StringBuilder();
 		
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = '" + signAdd + "sign" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = '" + signAdd + "sign" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = '" + signAdd + "seumyung" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = '" + signAdd + "seumyung" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = '" + signAdd + "seumyungdate" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = '" + signAdd + "seumyungdate" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
 
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = 'habyui" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = 'habyui" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = 'habyuipositon" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = 'habyuipositon" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = 'habyuisign" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = 'habyuisign" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         strQuery.append("DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "' ");
-        strQuery.append("   AND SIGNNAME = 'habyuidate" + signNum + "'; ");
+        strQuery.append("   AND SIGNNAME = 'habyuidate" + signNum + "' AND TENANT_ID =" + tenantID +"; ");
         
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -7728,11 +7729,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < signLength; k++) {
 			maxAprSN = aprSN + k + 1;
 			
-			strSQL.append("INSERT INTO TBSIGNINFO (DocID, AprSN, SignType, SignName, Content) ");
+			strSQL.append("INSERT INTO TBSIGNINFO (DocID, AprSN, SignType, SignName, Content, TENANT_ID) ");
             strSQL.append("VALUES ('" + docID + "', '" + maxAprSN + "', '");
 			strSQL.append(makeRightField(xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent().trim()) + "', N'");
 			strSQL.append(makeRightField(xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent().trim()) + "', N'");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent().trim()) + "');\n");
+			strSQL.append(makeRightField(xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent().trim()) + "'," + tenantID +");\n");
 		}
 		
 		if (mode.toUpperCase().equals("QUERY")) {

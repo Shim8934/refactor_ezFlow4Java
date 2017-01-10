@@ -3945,9 +3945,9 @@
        FROM 
        		 EZAPPROVALG_${companyID}.TBAPRDOCINFO 
        WHERE  
-       		 DOCID = #v_DOCID#
-       AND
        		 TENANT_ID = #v_TENANTID#
+       AND
+       		 DOCID = #v_DOCID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.doSendDocReceiptGroupSub" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_DOSENDDOC_RECEIPTGROUPSUB(#v_MAINID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3961,9 +3961,9 @@
          FROM 
          	 EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_SUB 
          WHERE  
-         	TENANT_ID = #v_TENANTID#
+         	 TENANT_ID = #v_TENANTID#
          AND
-         	MAINID = #v_MAINID#
+         	 MAINID = #v_MAINID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.updateProcessYNReceipt" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
@@ -8453,8 +8453,8 @@
    		
    		<isEqual property="v_CONTID" compareValue="ADMIN">
    		<![CDATA[
-      	 AND   
-      	 	CONTAINERID IN #v_CONTID#
+      	 AND 
+      	 	CONTAINERID IS NOT NULL
    		 ]]>  
    		 </isEqual>
    		 
@@ -8462,7 +8462,7 @@
    		 <isNotEmpty property="v_CONTID">
    			<![CDATA[
       		 AND 
-      		 	CONTAINERID IN #v_CONTID#
+      		 	CONTAINERID IN (#v_CONTID#)
    		 	]]>  
    		 </isNotEmpty>
    		 </isNotEqual>
@@ -8912,84 +8912,84 @@
          	UserID = #v_UserID#
 	</select>
 	
-	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int">
-		{CALL EZAPPROVALG_${companyID}.SPROLLBACKSN(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_CurSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-	</procedure>
-<!-- 	<insert id="EzApprovalG.spRollbackSN" parameterClass="Map" > -->
-<!-- 		INSERT  -->
-<!-- 			INTO  -->
-<!-- 				EZAPPROVALG_${companyID}.TBSERIALNUMGEN -->
-<!--      				( Type1,  -->
-<!--      				  Type2,  -->
-<!--      				  Type3,  -->
-<!--      				  TimeSep,  -->
-<!--      				  RegSerialNo,  -->
-<!--      				  RollbackFlag ) -->
-<!--      		VALUES ( ( -->
-<!-- 		   				SELECT  -->
-<!-- 		   					CASE WHEN ISUsed ='0' THEN 0  -->
-<!-- 		          			ELSE #iv_Type1# end -->
-<!-- 		     			FROM ( -->
-<!-- 		     					SELECT  -->
-<!-- 		     							Code , -->
-<!-- 		           						ISUsed   -->
-<!-- 		   	  					FROM  -->
-<!-- 		   	  							EZAPPROVALG_${companyID}.TBCABINETCODELIST  -->
-<!-- 		   	 					WHERE   -->
-<!-- 		   	 							CodeType = '007' -->
-<!-- 		   	 					AND -->
-<!--    	 								TENANT_ID=#TENANTID# ) -->
-<!-- 		    			WHERE   -->
-<!-- 		    					Code = '1'),  -->
-<!-- 		    		( -->
-<!-- 		    			SELECT  -->
-<!-- 		    				CASE WHEN ISUsed ='0' THEN '0'  -->
-<!--           					ELSE #iv_Type2# end -->
-<!--      					FROM ( -->
-<!--      							SELECT  -->
-<!--            								Code , -->
-<!-- 		           						ISUsed    -->
-<!--    	 							FROM  -->
-<!--    	 								EZAPPROVALG_${companyID}.TBCABINETCODELIST  -->
-<!--    	 							WHERE   -->
-<!--    	 								CodeType = '007' -->
-<!--    	 							AND -->
-<!--    	 								TENANT_ID=#TENANTID# ) -->
-<!--     					WHERE   -->
-<!--     							Code = '2'),  -->
-<!--     				( -->
-<!--     					SELECT  -->
-<!--     						CASE WHEN ISUsed ='0' THEN '0'  -->
-<!--           					ELSE #iv_Type3# end -->
-<!--      					FROM ( -->
-<!--      							SELECT  -->
-<!--            								Code , -->
-<!-- 		           						ISUsed    -->
-<!--    	  							FROM  -->
-<!--    	  								EZAPPROVALG_${companyID}.TBCABINETCODELIST  -->
-<!--    	 							WHERE   -->
-<!--    	 								CodeType = '007' -->
-<!--    	 							AND -->
-<!--    	 								TENANT_ID=#TENANTID# ) -->
-<!--     					WHERE  Code = '3',  -->
-<!--     				( -->
-<!--     					SELECT  -->
-<!--     							CASE WHEN ISUsed ='1' THEN #v_AccountYear# -->
-<!--            							 WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE) || REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end  -->
-<!--      					FROM ( -->
-<!--      							SELECT  -->
-<!--            								Code , -->
-<!-- 		           						ISUsed    -->
-<!--    	  							FROM  -->
-<!--    	  								EZAPPROVALG_${companyID}.TBCABINETCODELIST  -->
-<!--    	 							WHERE   -->
-<!--    	 								CodeType = '007' -->
-<!--    	 							AND -->
-<!--    	 								TENANT_ID=#TENANTID# ) -->
-<!--     					WHERE  Code = '4'),  -->
-<!--     					#v_CurSN#,  -->
-<!--     					1 ); -->
-<!-- 	</insert> -->
+<!-- 	<procedure id="EzApprovalG.spRollbackSN" parameterClass="Map" resultClass="int"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.SPROLLBACKSN(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_CurSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.spRollbackSN" parameterClass="Map" >
+		INSERT 
+			INTO 
+				EZAPPROVALG_${companyID}.TBSERIALNUMGEN
+     				( Type1, 
+     				  Type2, 
+     				  Type3, 
+     				  TimeSep, 
+     				  RegSerialNo, 
+     				  RollbackFlag )
+     		VALUES ( (
+		   				SELECT 
+		   					CASE WHEN ISUsed ='0' THEN 0 
+		          			ELSE #iv_Type1# end
+		     			FROM (
+		     					SELECT 
+		     							Code ,
+		           						ISUsed  
+		   	  					FROM 
+		   	  							EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+		   	 					WHERE  
+		   	 							CodeType = '007'
+		   	 					AND
+   	 								TENANT_ID=#TENANTID# )
+		    			WHERE  
+		    					Code = '1'), 
+		    		(
+		    			SELECT 
+		    				CASE WHEN ISUsed ='0' THEN '0' 
+          					ELSE #iv_Type2# end
+     					FROM (
+     							SELECT 
+           								Code ,
+		           						ISUsed   
+   	 							FROM 
+   	 								EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+   	 							WHERE  
+   	 								CodeType = '007'
+   	 							AND
+   	 								TENANT_ID=#TENANTID# )
+    					WHERE  
+    							Code = '2'), 
+    				(
+    					SELECT 
+    						CASE WHEN ISUsed ='0' THEN '0' 
+          					ELSE #iv_Type3# end
+     					FROM (
+     							SELECT 
+           								Code ,
+		           						ISUsed   
+   	  							FROM 
+   	  								EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+   	 							WHERE  
+   	 								CodeType = '007'
+   	 							AND
+   	 								TENANT_ID=#TENANTID# )
+    					WHERE  Code = '3'), 
+    				(
+    					SELECT 
+    							CASE WHEN ISUsed ='1' THEN #v_AccountYear#
+           							 WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE) || REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+     					FROM (
+     							SELECT 
+           								Code ,
+		           						ISUsed   
+   	  							FROM 
+   	  								EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+   	 							WHERE  
+   	 								CodeType = '007'
+   	 							AND
+   	 								TENANT_ID=#TENANTID# )
+    					WHERE  Code = '4'), 
+    					#v_CurSN#, 
+    					1 )
+	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETWEBPARTLISTCOUNT(#v_LISTTYPE#, #v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
