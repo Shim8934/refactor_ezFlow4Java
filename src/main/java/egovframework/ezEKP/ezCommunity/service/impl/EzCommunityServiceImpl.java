@@ -4090,7 +4090,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code="+ code);
 		
 		if (ezCommunityDAO.commOutOkGet1(map) != 0) {
-			//자꾸 여기걸림
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
 		} else {
 			map = new HashMap<String, Object>();
@@ -6864,7 +6863,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_code", code);
-        map.put("v_userInfo_lang", userInfo.getPrimary());
+        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
         map.put("tenantID", userInfo.getTenantId());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);

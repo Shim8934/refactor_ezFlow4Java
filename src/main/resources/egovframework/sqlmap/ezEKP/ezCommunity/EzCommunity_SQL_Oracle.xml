@@ -1453,7 +1453,7 @@
 			AND
 				C_CLUB.TENANT_ID = C_MEMBERINFO.TENANT_ID
 			WHERE
-				C_CLUB.c_clubno = #v_code#
+				TRIM(C_CLUB.c_clubno) = #v_code#
 			AND
 				C_CLUB.TENANT_ID = #tenantID#
 		]]>
