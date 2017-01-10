@@ -3028,7 +3028,7 @@
 	<select id="EzCommunityDAO.bbsEditOkGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(#v_MAXIDFIELDNAME#),0) 
+				NVL(MAX($v_MAXIDFIELDNAME$),0) 
 			FROM
 				EZCOMMUNITY.$v_BNAME$
 			WHERE
@@ -3053,7 +3053,7 @@
 			FROM
 				EZCOMMUNITY.$v_BNAME$  
 			WHERE
-				#v_MAXIDFIELDNAME# = #v_STRMAXNUM#
+				$v_MAXIDFIELDNAME$ = #v_STRMAXNUM#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -4519,8 +4519,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.bbsEditOkInsert"					parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZCOMMUNITY.$v_BNAME$ (
-				COMPANYID,
+			INSERT INTO EZCOMMUNITY.$v_BNAME$
+				(COMPANYID,
 				ID,
 				USERNAME,
 				USERNAME2,
@@ -4532,23 +4532,27 @@
 			STEP,
 			RE_LEVEL,
 		</isNotEqual>
-		
-		<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
-			REF,
-			STEP,
-			RE_LEVEL,
-		</isNotEqual>
+		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+				REF,
+				STEP,
+				RE_LEVEL,
+			</isNotEqual>
+		</isEqual>
 		
 		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
 			CHARFILENAME,
 		</isEqual>
+		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+				CHARFILENAME,
+			</isEqual>
+		</isNotEqual>
 		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
-			CHARFILENAME,
-		</isEqual>
+		
 		
 		<![CDATA[
-			#v_MAXIDFIELDNAME#,
+			$v_MAXIDFIELDNAME$,
 			CONTENT,
 			READNUM,
 			WRITEDAY,
@@ -4568,19 +4572,22 @@
 			#v_NEWSTEP#,
 			#v_NEWLEVEL#
 		</isNotEqual>
-		<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
-			,#v_MYREF#,
-			#v_NEWSTEP#,
-			#v_NEWLEVEL#
-		</isNotEqual>
+		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+				,#v_MYREF#,
+				#v_NEWSTEP#,
+				#v_NEWLEVEL#
+			</isNotEqual>
+		</isEqual>
 		
 		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
 			,#v_ATTACHLIST#
 		</isEqual>
-		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
 			,#v_ATTACHLIST#
 		</isEqual>
+		</isNotEqual>
 		
 		<![CDATA[
 			,#v_NUMBER#,

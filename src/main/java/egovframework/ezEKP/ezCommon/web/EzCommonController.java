@@ -152,7 +152,8 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTMLContent(HttpServletRequest request, Locale locale) throws Exception{
+	public String mhtToHTMLContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemID = "";
 		String type = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -160,7 +161,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
-		strResult = ezCommonService.getMHTtoHTML(type, itemID, realPath, request, locale);
+		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale);
 		
 		return strResult;
 	}
