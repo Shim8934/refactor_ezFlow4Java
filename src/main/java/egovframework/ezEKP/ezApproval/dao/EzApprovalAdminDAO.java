@@ -413,24 +413,24 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 		delete("EzApprovalAdminDAO.deleteAutoRuleLine", apprAutoRuleVO);
 	}
 
-	public void insertAutoRuleLine(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
-		insert("EzApprovalAdminDAO.insertAutoRuleLine", apprAutoRuleVO);
+	public void insertAutoRuleLine(List<ApprAutoRuleVO> apprAutoRuleVOs) throws Exception {
+		insert("EzApprovalAdminDAO.insertAutoRuleLine", apprAutoRuleVOs);
 	}
 
 	public void deleteAutoRule(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
 		delete("EzApprovalAdminDAO.deleteAutoRule", apprAutoRuleVO);
 	}
 
-	public void insertAutoRule(ApprAutoRuleVO apprAutoRuleVO) throws Exception {
-		insert("EzApprovalAdminDAO.insertAutoRule", apprAutoRuleVO);
+	public void insertAutoRule(List<ApprAutoRuleVO> apprAutoRuleVOs) throws Exception {
+		insert("EzApprovalAdminDAO.insertAutoRule", apprAutoRuleVOs);
 	}
 
 	public void deleteFormRecv(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
 		delete("EzApprovalAdminDAO.deleteFormRecv", apprReceiveGroupVO);
 	}
 
-	public void insertFormRecv(ApprReceiveGroupVO apprReceiveGroupVO) throws Exception {
-		insert("EzApprovalAdminDAO.insertFormRecv", apprReceiveGroupVO);
+	public void insertFormRecv(List<ApprReceiveGroupVO> apprReceiveGroupVOs) throws Exception {
+		insert("EzApprovalAdminDAO.insertFormRecv", apprReceiveGroupVOs);
 	}
 
 	public void updateFormVersion(ApprFormInfoVO apprFormInfoVO) throws Exception {
@@ -449,6 +449,22 @@ public class EzApprovalAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprFormInfoVO> getFormContent(ApprFormInfoVO apprFormInfoVO) throws Exception {
 		return (List<ApprFormInfoVO>) list("EzApprovalAdminDAO.getFormContent", apprFormInfoVO);
+	}
+
+	public int deleteForm(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		return delete("EzApprovalAdmin.deleteForm", apprFormInfoVO);
+	}
+
+	public void deleteFavoriteForm(ApprFormInfoVO apprFormInfoVO) throws Exception {
+		delete("EzApprovalAdmin.deleteFavoriteForm", apprFormInfoVO);
+	}
+
+	public int formMove(ApprFormContVO apprFormContVO) throws Exception {
+		return update("EzApprovalAdmin.formMove", apprFormContVO);
+	}
+
+	public int setFormOrder(ApprFormContVO apprFormContVO) throws Exception {
+		return update("EzApprovalAdmin.setFormOrder", apprFormContVO);
 	}
 	
 }

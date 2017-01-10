@@ -1419,10 +1419,10 @@
 <!-- 	<procedure id="EzCommunityDAO.commOutOkGet1"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET1(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.commOutOkGet1"					parameterClass="Map"		resultMap="communityCOutApplicationVO">
+	<select id="EzCommunityDAO.commOutOkGet1"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				*
+				NVL(COUNT(*), 0)
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
@@ -1539,7 +1539,7 @@
 				A.USERID,
 				A.OUTDATE,
 				A.OUTREASON,
-				B.USERNAME$v_USERINFO_LANG$ USERNAME
+				B.USERNAME$v_USERINFO_LANG$ userName
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION A 
 			INNER JOIN
@@ -5421,7 +5421,7 @@
 				ISIN = #v_ISIN#,
 				C_CLUBDESC = #v_C_CLUBDESC#
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				TRIM(C_CLUBNO) = #v_CODE#
 			AND
 				TENANT_ID = #tenantID#
 		]]>
@@ -6509,9 +6509,9 @@
         	FROM
         		EZCOMMUNITY.C_CLUBGUEST
         	WHERE
-        		RTRIM(C_NO) = #c_no#
+        		TRIM(C_NO) = #c_no#
         	AND
-        		RTRIM(C_CLUBNO) = #v_code#
+        		TRIM(C_CLUBNO) = #code#
         	AND
         		TENANT_ID = #tenantID#
 		]]>

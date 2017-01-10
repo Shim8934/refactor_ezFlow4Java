@@ -1079,10 +1079,12 @@
 	            }
 	        }
 
+	        var idx = "";
+	        var mainVal = "";
 	        function move_cop(val) {
 	        	var clubgubun = 0;
-	            var idx = val.getAttribute("code");
-	            
+	            idx = val.getAttribute("code");
+	            mainVal = val;
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -1094,7 +1096,37 @@
 					success: function(result){
 						if (result == "ERR" || clubgubun == "1") {
 							if (CrossYN()) {
-								OpenInformationUI(strLang5 + "<BR>" + strLang6, getIsJoin(idx, val));
+								var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6, move_cop_Complete);
+								
+								if (rtn) {
+									$.ajax({
+										type : "POST",
+										dataType : "text",
+										async : false,
+										url : "/ezCommunity/getIsJoin.do",
+										data : { code	:	idx
+										},
+										success: function(result){
+											if (result == "FALSE") {
+												var wWidth = "330";
+								                var wHeight = "220";
+								                var heigth = window.screen.availHeight;
+								                var width = window.screen.availWidth;
+						                        var left = (width - wWidth) / 2;
+						                        var top = (heigth - wHeight) / 2;
+						                        var type = val.getAttribute("type");
+						                        
+						                        if (type == "2") {
+						                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+						                        } else if (type == "3") {
+						                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+						                        }
+						                	} else {
+						                    	alert(strLang7);
+						                	}
+										}
+									});
+				                }
 							} else {
 								var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
 								
@@ -1110,34 +1142,36 @@
 				});
 	        }
 	        
-	        function getIsJoin(idx, val) {
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCommunity/getIsJoin.do",
-					data : { code	:	idx
-					},
-					success: function(result){
-						if (result == "FALSE") {
-							var wWidth = "330";
-			                var wHeight = "220";
-			                var heigth = window.screen.availHeight;
-			                var width = window.screen.availWidth;
-	                        var left = (width - wWidth) / 2;
-	                        var top = (heigth - wHeight) / 2;
-	                        var type = val.getAttribute("type");
-	                        
-	                        if (type == "2") {
-	                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
-	                        } else if (type == "3") {
-	                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
-	                        }
-	                	} else {
-	                    	alert(strLang7);
-	                	}
-					}
-				});
+	        function move_cop_Complete(rtn) {
+	        	if (rtn) {
+	        		$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/getIsJoin.do",
+						data : { code	:	idx
+						},
+						success: function(result){
+							if (result == "FALSE") {
+								var wWidth = "330";
+				                var wHeight = "220";
+				                var heigth = window.screen.availHeight;
+				                var width = window.screen.availWidth;
+		                        var left = (width - wWidth) / 2;
+		                        var top = (heigth - wHeight) / 2;
+		                        var type = mainVal.getAttribute("type");
+		                        
+		                        if (type == "2") {
+		                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+		                        } else if (type == "3") {
+		                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+		                        }
+		                	} else {
+		                    	alert(strLang7);
+		                	}
+						}
+					});
+	        	}
 	        }
 
 	        function GoFunc(obj) {

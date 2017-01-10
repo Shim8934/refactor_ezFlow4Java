@@ -102,7 +102,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		logger.debug("mailMakeFolder started.");
 		logger.debug("bodyData=" + bodyData);
 		
-		String returnValue = "OK";
+		String returnValue = "ERROR";
 		
 		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
@@ -130,99 +130,121 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userEmail = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userAccount);
 		
 		IMAPAccess ia = null;
 		try {
-			
 	        switch (cmd) {
 	            case "NEW": 
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale);
 	            	if (!name.equals("") && !url.equals("")) {
-	            		ia.createFolder(name, url);
+	            		Folder folder = ia.getFolder(url);
+	            		if (folder.exists()) {
+	            			Folder newFolder = ia.getFolder(url).getFolder(name);
+	            			if (newFolder.exists()) {
+	            				returnValue = "ALREADY_EXISTS";
+	            			} else {
+	            				boolean isCreated = newFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+	            				if (isCreated) {
+	            					logger.debug(newFolder.getFullName() + " folder is created.");
+	            					returnValue = "OK";
+	            				}
+	            			}
+	            		}
+	            	}
+	                break;
+	            case "MODIFY":
+	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	            			userAccount, password, egovMessageSource, locale);
+	            	if (!name.equals("") && !url.equals("")) {
+		            	Folder oldFolder = ia.getFolder(url);
+		            	
+		            	if (oldFolder.exists()) {
+		            		String parentPath = oldFolder.getParent().getFullName();
+		            		Folder newFolder = ia.getFolder(parentPath).getFolder(name);
+		            		
+		            		if (newFolder.exists()) {
+		            			returnValue = "ALREADY_EXISTS";
+		            		} else {
+			            		boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+			            		if (isRenamed) {
+			            			logger.debug(url + " folder is renamed as " + newFolder.getFullName() + ".");
+			            			returnValue = "OK";
+			            		}
+		            		}
+		            		
+		            	}
 	            	}
 	                break;
 	            case "MOVE": //폴더 이동(폴더삭제기능 포함 : 지운편지함으로 이동)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale);
 	            	if (!destination.equals("") && !url.equals("")) {
 	            		Folder oldFolder = ia.getFolder(url);
-	            		if (oldFolder.exists()) {
-	            			Folder destinationFolder = ia.getFolder(destination);
-	                		if (destinationFolder.exists()) {
-	                			Folder movedFolder = destinationFolder.getFolder(oldFolder.getName());
-	                			if (movedFolder.exists()) {
-	                				return "ALREADY_EXISTS";
-	                			}
-	                			boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(movedFolder);
+	            		Folder destinationFolder = ia.getFolder(destination);
+	            		
+	            		if (oldFolder.exists() && destinationFolder.exists()) {
+                			Folder movedFolder = destinationFolder.getFolder(oldFolder.getName());
+                			
+                			if (movedFolder.exists()) {
+                				returnValue = "ALREADY_EXISTS";
+                			} else {
+                				boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(movedFolder);
 	    	            		if (isRenamed) {
 	    	            			logger.debug(url + " folder is moved to " + destination + ".");
+	    	            			returnValue = "OK";
 	    	            		}
-	                		}
+                			}
+                			
+	            		}
+	            	}
+	                break;
+	            case "COPY": //특정 편지함을 복사 - 하위폴더는 복사하지 않음(닷넷버전은 하위폴더도 복사)
+	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	            			userAccount, password, egovMessageSource, locale, 120000, 20000);
+	            	if (!destination.equals("") && !url.equals("")) {
+	            		Folder folder = ia.getFolder(url);
+	            		Folder destinationFolder = ia.getFolder(destination);
+	            		
+	            		if (folder.exists() && destinationFolder.exists()) {
+	            			Folder copiedFolder = destinationFolder.getFolder(folder.getName());
+	            			
+	            			if (copiedFolder.exists()) {
+	            				returnValue = "ALREADY_EXISTS";
+	            			} else {
+	            				boolean isCreated = copiedFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+		        				if (isCreated) {
+		        					logger.debug(folder.getName() + " folder is created.");
+		        					folder.open(Folder.READ_WRITE);
+		        					folder.copyMessages(folder.getMessages(), copiedFolder);
+		        					folder.close(true);
+		        					logger.debug(url + " folder is copied to " + destination + ".");
+		        					returnValue = "OK";
+		        				}
+	            			}
+	            			
 	            		}
 	            	}
 	                break;
 	            case "DEL": //지운편지함 하위에 있는 폴더 영구삭제 - 하위폴더도 삭제됨(메일도 삭제됨)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale);
 	            	if (!url.equals("")) {
 	            		Folder folder = ia.getFolder(url);
 	            		if (folder.exists()) {
 	            			boolean isDeleted = folder.delete(true);
 	            			if (isDeleted) {
 	            				logger.debug(url + " folder is deleted.");
+	            				returnValue = "OK";
 	            			}
 	            		}
 	            	}
 	                break;
-	            case "COPY": //특정 편지함을 복사 - 하위폴더는 복사하지 않음(닷넷버전은 하위폴더도 복사)
+	            case "MAILREALDEL": //지운편지함에 있는 모든 메시지 영구삭제
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale, 120000, 20000);
-	            	if (!destination.equals("") && !url.equals("")) {
-	            		Folder folder = ia.getFolder(url);
-	            		if (folder.exists()) {
-	            			Folder copiedFolder = ia.getFolder(destination).getFolder(folder.getName());
-	            			
-	            			if (copiedFolder.exists()) {
-	            				return "ALREADY_EXISTS";
-	            			}
-	            			
-	        				boolean isCreated = copiedFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-	        				if (isCreated) {
-	        					logger.debug(folder.getName() + " folder is created.");
-	        					folder.open(Folder.READ_WRITE);
-	        					folder.copyMessages(folder.getMessages(), copiedFolder);
-	        					folder.close(true);
-	        				}
-	            			
-	            		}
-	            	}
-	                break;
-	            case "MODIFY":
-	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale);
-	            	if (!destination.equals("") && !url.equals("")) {
-		            	Folder oldFolder = ia.getFolder(url);
-		            	if (oldFolder.exists()) {
-		            		String parentPath = oldFolder.getParent().getFullName();
-		            		Folder newFolder = ia.getFolder(parentPath).getFolder(destination);
-		            		
-		            		if (newFolder.exists()) {
-		            			return "ALREADY_EXISTS";
-		            		}
-		            		
-		            		boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
-		            		if (isRenamed) {
-		            			logger.debug(url + " folder is renamed as " + destination + ".");
-		            		}
-		            	}
-	            	}
-	                break;
-	            case "MAILREALDEL": //지운편지함에 있는 메시지 영구삭제
-	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale);
+	            			userAccount, password, egovMessageSource, locale);
 	            	if (!url.equals("")) {
 	            		Folder folder = ia.getFolder(url);
 	            		if (folder.exists()) {
@@ -230,24 +252,27 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            			Message[] messages = folder.getMessages();
 	        				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
 	            			folder.close(true);
+	            			logger.debug(url + " folder is clean.");
+	            			returnValue = "OK";
 	            		}
 	            	}
 	                break;
-	            case "MAILDEL": //특정폴더의 모든 메시지 삭제(모든 메시지를 지운편지함으로 이동)
+	            case "MAILDEL": //특정폴더의 모든 메시지 삭제(지운편지함으로 이동)
 	            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	            			userEmail, password, egovMessageSource, locale, 120000, 20000);
+	            			userAccount, password, egovMessageSource, locale, 120000, 20000);
 	            	if (!url.equals("")) {
-	            		Folder folder = ia.getFolder(url);
-	            		if (folder.exists()) {
-	            			String trashFolderName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
-	            			Folder trashFolder = ia.getFolder(trashFolderName);
-	            			if (trashFolder.exists()) {
-	            				folder.open(Folder.READ_WRITE);
-	            				folder.copyMessages(folder.getMessages(), trashFolder);
-	            				Message[] messages = folder.getMessages();
-	            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-	            				folder.close(true);
-	            			}
+	            		String trashFolderName = egovMessageSource.getMessage("ezEmail.t99000028", locale);
+            			Folder trashFolder = ia.getFolder(trashFolderName);
+            			Folder folder = ia.getFolder(url);
+            			
+	            		if (folder.exists() && trashFolder.exists()) {
+            				folder.open(Folder.READ_WRITE);
+            				Message[] messages = folder.getMessages();
+            				folder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+            				folder.copyMessages(messages, trashFolder);
+            				folder.close(true);
+            				logger.debug(url + " folder's message is moved to " + trashFolderName + ".");
+            				returnValue = "OK";
 	            		}
 	            	}
 	                break;
@@ -255,7 +280,6 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	                break;
 	        }
 		} catch (MessagingException e) {
-			//TODO: exception별로 client단 처리 해줘야함.
 			returnValue = "ERROR : " + e.getMessage();
 			e.printStackTrace();
 		} finally {

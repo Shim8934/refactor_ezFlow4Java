@@ -313,7 +313,7 @@ public interface EzCommunityService {
 
 	public void saveOneLineReply(Document xmlDoc, LoginVO userInfo) throws Exception;
 	
-	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code) throws Exception;
+	public void adminBasicOkUpdate(CommunityClubVO clubVO, String code, int tenantID) throws Exception;
 
 	public void adminHomeBoardSet(String clear, String position, int sn, String cn, String boardID, int tenantID) throws Exception;
 

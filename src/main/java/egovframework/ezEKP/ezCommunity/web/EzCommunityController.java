@@ -1870,9 +1870,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (mode.equals("edit")) {
 			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId(), userInfo.getTenantId());
-			item.setContent(item.getContent().replaceAll("<br>", "\n"));
+			
 			if (item != null) {
 				bIsMyContent = true;
+				item.setContent(item.getContent().replaceAll("<br>", "\n"));
 			}
 		}
 		
@@ -2452,7 +2453,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		ezCommunityService.adminBasicOkUpdate(clubVO, code);
+		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
 		model.addAttribute("sysopCheck", sysopCheck);
@@ -3596,6 +3597,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String gClubG = ezCommunityService.getACLGet1(cID, userInfo.getTenantId());
 		String cPermit = ezCommunityService.getACLGet2(uID, cID, userInfo.getTenantId());
+		logger.debug("gClubG=" + gClubG + " || cPermit=" + cPermit);
 		
 		if (cPermit == null || cPermit.equals("0")) {
 			if (gClubG.trim().equals("3")) {
@@ -4272,7 +4274,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * Email관련
 	 */
-	@RequestMapping(value = "/ezCommunity/getItemInfo.do")
+	@RequestMapping(value = "/ezCommunity/getItemInfo.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
 	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getItemInfo started.");
 		
@@ -4280,14 +4283,49 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
-		itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
+		StringBuilder sb = new StringBuilder();
+		sb.append("<NODES>");
 		
-		model.addAttribute("itemVO", itemVO);
+		try {
+			CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
+			itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
+			
+			if (itemVO != null) {
+				sb.append("<NODE>");
+				sb.append("<ItemID>" + itemVO.getItemID() + "</ItemID>");
+				sb.append("<WriterID>" + itemVO.getWriterID() + "</WriterID>");
+				sb.append("<WriterName>" + itemVO.getWriterName() + "</WriterName>");
+				sb.append("<WriterDeptName>" + itemVO.getWriterDeptName() + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + itemVO.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriteDate>" + itemVO.getWriteDate() + "</WriteDate>");
+				sb.append("<ParentWriteDate>" + itemVO.getParentWriteDate() + "</ParentWriteDate>");
+				sb.append("<Importance>" + itemVO.getImportance() + "</Importance>");
+				sb.append("<Title>" + itemVO.getTitle() + "</Title>");
+				sb.append("<ContentLocation>" + itemVO.getContentLocation() + "</ContentLocation>");
+				sb.append("<StartDate>" + itemVO.getStartDate() + "</StartDate>");
+				sb.append("<EndDate>" + itemVO.getEndDate() + "</EndDate>");
+				sb.append("<Abstract>" + itemVO.getAbsTract() + "</Abstract>");
+				sb.append("<Attachments>" + itemVO.getAttachments() + "</Attachments>");
+				sb.append("<UpperItemIDTree>" + itemVO.getUpperItemIDTree() + "</UpperItemIDTree>");
+				sb.append("<ItemLevel>" + itemVO.getItemLevel() + "</ItemLevel>");
+				sb.append("<copiedItem>" + itemVO.getCopiedItem() + "</copiedItem>");
+				sb.append("<ExtensionAttribute1>" + itemVO.getExtensionAttribute1() + "</ExtensionAttribute1>");
+				sb.append("<ExtensionAttribute2>" + itemVO.getExtensionAttribute2() + "</ExtensionAttribute2>");
+				sb.append("<ExtensionAttribute3>" + itemVO.getExtensionAttribute3() + "</ExtensionAttribute3>");
+				sb.append("<ExtensionAttribute4>" + itemVO.getExtensionAttribute4() + "</ExtensionAttribute4>");
+				sb.append("<ExtensionAttribute5>" + itemVO.getExtensionAttribute5() + "</ExtensionAttribute5>");
+				sb.append("</NODE>");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		sb.append("</NODES>");
 		
 		logger.debug("getItemInfo ended.");
 		
-		return "json";
+		return sb.toString();
 	}
 }
 

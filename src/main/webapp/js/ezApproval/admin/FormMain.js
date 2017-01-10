@@ -186,7 +186,6 @@ function SaveFormInfo() {
     if (arrFormAutoRule[0] == "TRUE") {
         formAutoRule = arrFormAutoRule[1];
         formAutoRuleLine = arrFormAutoRule[2];
-      
     } else {
         formAutoRule = "";
         formAutoRuleLine = "";

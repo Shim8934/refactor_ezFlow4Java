@@ -58,7 +58,7 @@
             if (mode == "edit") AttachEvents(main_table);
             
             // 2009.11.25 - 소스보기시 개인정보 유출방지
-            pwd = CheckPwd();
+//            pwd = CheckPwd();
             
             // 검색UI 설정
             try {

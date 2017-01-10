@@ -174,7 +174,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mailSign1 = "";
 		String mailSign2 = "";
 		String mailSign3 = "";
-		String mailSignSel = "";
+		String mailSignSel = "0";
 		
 		String boardID = "";
 		String itemID = "";
@@ -284,6 +284,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		}
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
  		
+        //set mail sign
+        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
+        
+        if (mailSignatureVO != null) {
+        	mailSign1 = mailSignatureVO.getContent1();
+            mailSign2 = mailSignatureVO.getContent2();
+            mailSign3 = mailSignatureVO.getContent3();
+            mailSignSel = mailSignatureVO.getUseFlag().trim();
+        }
+        
+        if (!mailSignSel.equals("0") && !mailSignSel.equals("1") && !mailSignSel.equals("2") && !mailSignSel.equals("3")) {
+        	mailSignSel = "0";
+        }
+        
         //TODO: setting
   		String useMultiLangMail = "1";
   		String pSecurity = "1";
@@ -340,37 +354,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	includeContent = request.getParameter("include");
 		}
         
+        
+        //in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
-            String resultXML = "";
-            
-            MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
-            
-            if (mailSignatureVO != null) {
-            	mailSign1 = mailSignatureVO.getContent1();
-                mailSign2 = mailSignatureVO.getContent2();
-                mailSign3 = mailSignatureVO.getContent3();
-                mailSignSel = mailSignatureVO.getUseFlag().trim();
-                
-                switch (mailSignSel) {
-                    case "1": resultXML = mailSign1; break;
-                    case "2": resultXML = mailSign2; break;
-                    case "3": resultXML = mailSign3; break;
-                    default: resultXML = ""; mailSignSel = "0"; break;
-                }
-                
-            } else {
-                mailSignSel = "0";
-                resultXML = "";
-            }
-            
-            //사용안함(폼프로세스에서 사용하는것 같음)
-            //body = EgovStringUtil.getSpclStrCnvr("<DIV style='font-size:12px;'><br><br><DIV id='MailSign'>" + resultXML + "</div><br></DIV>");
-        } 
+        }
+        // in case of board/Community
+        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community"))) {
+        	boardID = request.getParameter("boardID") == null ? "" : request.getParameter("boardID");
+        	itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
+        	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
+        }
         // when _url is passed in from the client
         else if (!_url.equals("")) {
-        	mailSignSel = "0";
-        	
     		long uid = 0;
 			int index = _url.lastIndexOf("/");			
 			
@@ -446,18 +442,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                attach = attachXmlList.toString();	
 						}
 						
-						MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
-						
-						if (mailSignatureVO != null) {
-		                	mailSign1 = mailSignatureVO.getContent1();
-		                    mailSign2 = mailSignatureVO.getContent2();
-		                    mailSign3 = mailSignatureVO.getContent3();
-		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-		                }
-						
-						//임시보관함에서 메일 더블클릭해서 수정할 때에는 서명사용안함이 default.
+						//임시보관함의 메일을 수정할 때에는 서명사용안함이 default.
 	                    mailSignSel = "0";
-						
 		        	}
 		        	// in case of resending
 		        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
@@ -544,19 +530,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
-		                MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
-		                
-		                if (mailSignatureVO != null) {
-		                	mailSign1 = mailSignatureVO.getContent1();
-		                    mailSign2 = mailSignatureVO.getContent2();
-		                    mailSign3 = mailSignatureVO.getContent3();
-		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-		                    
-		                }
-		                    
 		                //메일 재전송할 때에는 서명사용안함이 default.
 	                    mailSignSel = "0";
-		                
 		        	}
 		        	// in case of replying
 		        	else if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL") || _cmd.equals("FORWARD")) {
@@ -754,18 +729,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		logger.debug("draftUID=" + draftUID);
 		        		
 		        		draftsFolder.close(true);
-		                
-		        		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
-		                
-		                if (mailSignatureVO != null) {
-		                	mailSign1 = mailSignatureVO.getContent1();
-		                    mailSign2 = mailSignatureVO.getContent2();
-		                    mailSign3 = mailSignatureVO.getContent3();
-		                    mailSignSel = mailSignatureVO.getUseFlag().trim();
-		                    
-		                } else {
-		                    mailSignSel = "0";
-		                }
 		                
 		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
 		                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
@@ -1926,7 +1889,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 			
-			// 메일 From,Recipient,CC,BCC
+			// 메일 From,TO,CC,BCC
 			InternetAddress internetAddress = new InternetAddress();
 			String name = "";
 			String address = "";
@@ -3199,7 +3162,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					list.add(map);
 				} else {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("displayName", user.getDisplayName());

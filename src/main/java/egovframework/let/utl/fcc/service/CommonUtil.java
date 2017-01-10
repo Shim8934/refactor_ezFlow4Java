@@ -525,7 +525,9 @@ public class CommonUtil {
 		
 		if (realPath.substring(realPath.length() - 1).equals(separator)) {
 			realPath = realPath.substring(0, realPath.length() - 1);
-		} 
+		} else if (realPath.substring(realPath.length() - 1).equals("\\")) {
+			realPath = realPath.substring(0, realPath.length() - 1);
+		}
 		
 		return realPath;
 	}
@@ -544,7 +546,7 @@ public class CommonUtil {
 	 * </pre>
 	 */
 	public String getDateStringInUTC(String dateStr, String offset, boolean timeZoneToUTC) {
-		logger.debug("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
+//		logger.debug("dateStr=" + dateStr + ", offset=" + offset + ", timeZoneToUTC=" + timeZoneToUTC);
 		
 		if (dateStr == null) {
 			logger.error("dateStr is null.");
@@ -578,7 +580,7 @@ public class CommonUtil {
 				pattern = "yyyy-MM-dd HH:mm:ss";
 			}
 		}
-		logger.debug("pattern=" + pattern);
+//		logger.debug("pattern=" + pattern);
 		
 		String[] offsetArr = offset.split("\\|");
 		
@@ -600,7 +602,7 @@ public class CommonUtil {
 			return dateStr;
 		}
 		
-		logger.debug("resultDateStr=" + resultDateStr);
+//		logger.debug("resultDateStr=" + resultDateStr);
 		return resultDateStr;
 	}
 	

@@ -262,7 +262,7 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -274,7 +274,7 @@
 		
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
-		            var ret = window.showModalDialog("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "",
+		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
 		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		            if (typeof (ret) != "undefined") {
@@ -369,14 +369,14 @@
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <!-- <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li> -->
+		                    <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
 							<c:if test="${useEzKMS == 'YES'}">
 								<li><span ID='btn_KMS' onclick='ToKMS()'>KMS</span></li>
 							</c:if>
-							<li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li>
+							<!--  <li id="btnITSM" style="display:none" onClick="ITSM_send()"><span >ITSM 이관</span></li> -->
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>

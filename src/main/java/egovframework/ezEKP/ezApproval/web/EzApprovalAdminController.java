@@ -1818,6 +1818,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가(리폼) 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formMainReform.do")
 	public String formMainReform(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("formMainReform started");
@@ -1918,6 +1921,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprFormMainReform";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가(리폼) 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/getFormInfoReform.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormInfoReform(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
@@ -1932,6 +1938,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/getFormInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO) throws Exception {
@@ -2008,6 +2017,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprReformDesignProcessorSub";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가(리폼) 저장 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formSaveReform.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String formSaveReform(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
@@ -2025,6 +2037,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가/수정 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("formMain started");
@@ -2111,6 +2126,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprFormMain";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가 저장 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String formSave(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
@@ -2132,6 +2150,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return resultXML;
 	}
 
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식추가 연동정보 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formConnInfo.do")
 	public String formConnInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("formConnInfo started");
@@ -2185,5 +2206,121 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		logger.debug("formConnInfo ended");
 		
 		return "admin/ezApproval/apprFormConnInfo";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식삭제 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/delForm.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delForm(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
+		logger.debug("delForm started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.deleteForm(apprFormInfoVO);
+		
+		if (result.equals("<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>")) {
+			String saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator +
+					apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".mht";
+			
+			File file = new File(saveFileName);
+			
+			if (file.exists()) {
+				deleteFile(saveFileName);
+			} else {
+				saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator +
+						apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".hwp";
+				
+				File file2 = new File(saveFileName);
+				
+				if (file2.exists()) {
+					deleteFile(saveFileName);
+				}
+			}
+		}
+
+		logger.debug("delForm ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식이동 양식함선택 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/formSelect.do")
+	public String formSelect(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("formSelect started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+
+		logger.debug("formSelect ended");
+		
+		return "admin/ezApproval/apprFormSelect";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식이동 이동 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/formMove.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String formMove(@CookieValue("loginCookie") String loginCookie, ApprFormContVO apprFormContVO) throws Exception {
+		logger.debug("formMove started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormContVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.formMove(apprFormContVO);
+
+		logger.debug("formMove ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 미리보기 호출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/formPreview.do")
+	public String formPreview(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formPreview started");
+
+		String docHref = request.getParameter("href");
+		String reformType = request.getParameter("reformType");
+		String formID = request.getParameter("formID");
+		
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("reformType", reformType);
+		model.addAttribute("formID", formID);
+
+		logger.debug("formPreview ended");
+		
+		return "admin/ezApproval/apprFormPreview";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 양식등록 양식리스트 순서 저장 표출
+	 */
+	@RequestMapping(value = "/admin/ezApproval/setFormOrder.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setFormOrder(@CookieValue("loginCookie") String loginCookie, ApprFormContVO apprFormContVO) throws Exception {
+		logger.debug("setFormOrder started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		apprFormContVO.setTenantID(userInfo.getTenantId());
+		
+		String result = ezApprovalAdminService.setFormOrder(apprFormContVO);
+
+		logger.debug("setFormOrder ended");
+		
+		return result;
 	}
 }

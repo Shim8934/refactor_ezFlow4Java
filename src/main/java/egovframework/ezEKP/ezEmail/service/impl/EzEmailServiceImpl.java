@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.service.impl;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,10 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.Message.RecipientType;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
@@ -34,6 +40,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -1008,7 +1015,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				
 				if (reasonCode == 0) {
 					if ((JSONObject)responseObj.get("result") != null) {
-						resultMap =(JSONObject)responseObj.get("result");
+						resultMap = (JSONObject)responseObj.get("result");
 					}
 				}
 			}
@@ -1017,6 +1024,66 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getIndividualAliasMap ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return resultMap;
+	}
+
+	@Override
+	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception {
+		logger.debug("sendMail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				userAccount, password);
+		
+		MimeMessage message = sa.createMimeMessage();
+		
+		// set from
+		logger.debug("from=" + from.getAddress());
+		message.setFrom(from);
+		
+		// set to
+		for (InternetAddress to : toArr) {
+			logger.debug("to=" + to.getAddress());
+			message.addRecipient(RecipientType.TO, to);
+		}
+		
+		// set cc
+		if (ccArr != null) {
+			for (InternetAddress cc : ccArr) {
+				logger.debug("cc=" + cc.getAddress());
+				message.addRecipient(RecipientType.CC, cc);
+			}
+		}
+		
+		// set bcc
+		if (bccArr != null) {
+			for (InternetAddress bcc : bccArr) {
+				logger.debug("bcc=" + bcc.getAddress());
+				message.addRecipient(RecipientType.BCC, bcc);
+			}
+		}
+		
+		// set subject
+		logger.debug("subject=" + subject);
+		message.setSubject(subject, "UTF-8");
+		
+		// set content
+		message.setContent(content, "text/html; charset=utf-8");
+		
+		// set sentDate
+        message.setSentDate(Calendar.getInstance().getTime());
+        
+        //set User-Agent header
+        message.setHeader("User-Agent", "JMocha Mail 1.0");
+        
+        Transport.send(message);
+        logger.debug("Mail send success.");
+        
+        logger.debug("sendMail ended.");
 	}
 	
 }

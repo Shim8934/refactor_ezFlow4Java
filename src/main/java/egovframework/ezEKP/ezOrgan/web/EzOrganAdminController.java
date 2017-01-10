@@ -1683,7 +1683,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		List<String> mailList = new ArrayList<String>();
 		
-		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getLang(), tenantID);
+		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), tenantID);
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
 		String userAccount = userId + "@" + domainName;
 		if (userAccount.equals(userVO.getMail())) {

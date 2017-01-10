@@ -15,10 +15,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,9 +48,11 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -57,7 +61,10 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -100,13 +107,19 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzBoardController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
 	/**
 	 * 게시판 메인화면 호출 Method
@@ -866,7 +879,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	                        fieldName = fieldName + strMultiData;
 	                    }
 	                    if (fieldName.equals("WRITEDATE")) {
-	                    	fieldValue = (String) noticeList.get(k).get(fieldName);
+	                    	fieldValue = commonUtil.getDateStringInUTC((String) noticeList.get(k).get(fieldName), userInfo.getOffset(), false);
 	                    	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
 	                    } else {
 	                    	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
@@ -881,7 +894,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
 	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
 	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-	    					String nowDate = EgovDateUtil.getTodayTime();
+	    					String nowDate = commonUtil.getTodayUTCTime("");
 	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 	    				    
 	    					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -980,7 +993,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
 
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue = (String) boardListItem.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String) boardListItem.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
@@ -994,7 +1007,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = EgovDateUtil.getTodayTime();
+					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1017,6 +1030,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         return resultXML.toString();
 	}
+    
 	/**
 	 * 게시판 나의게시판리스트 표출 Method
 	 */
@@ -1110,7 +1124,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	                        fieldName = fieldName + strMultiData;
 	                    }
 	                    if (fieldName.equals("WRITEDATE")) {
-	                    	fieldValue = (String) noticeList.get(k).get(fieldName);
+	                    	fieldValue = commonUtil.getDateStringInUTC((String) noticeList.get(k).get(fieldName), userInfo.getOffset(), false);
 	                    	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
 	                    } else {
 	                    	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
@@ -1125,7 +1139,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
 	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
 	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-	    				    String nowDate = EgovDateUtil.getTodayTime();
+	    				    String nowDate = commonUtil.getTodayUTCTime("");
 	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 	    				    
 	    					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1224,7 +1238,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
 
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue = (String) boardListItem.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String) boardListItem.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
@@ -1238,7 +1252,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = EgovDateUtil.getTodayTime();
+					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1298,6 +1312,7 @@ public class EzBoardController extends EgovFileMngUtil{
         int noticeCount = 0;
         
         if (type.equals("1")) {
+        	boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
         	noticeCount = ezBoardService.getNoticePostItemCount(boardVO);
         }
         BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
@@ -1305,6 +1320,7 @@ public class EzBoardController extends EgovFileMngUtil{
         boardMyFavoriteVO.setUserId(userInfo.getId());
         boardMyFavoriteVO.setType(type);
         boardMyFavoriteVO.setTenantID(userInfo.getTenantId());
+        boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
         
         int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
    
@@ -1362,7 +1378,7 @@ public class EzBoardController extends EgovFileMngUtil{
                         fieldName = fieldName + strMultiData;
                     }
                     if (fieldName.equals("WRITEDATE")) {
-                    	fieldValue = (String) noticeList.get(k).get(fieldName);
+                    	fieldValue = commonUtil.getDateStringInUTC((String) noticeList.get(k).get(fieldName), userInfo.getOffset(), false);
                     	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                     } else {
                     	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
@@ -1377,7 +1393,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
     					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
     					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
-    					String nowDate = EgovDateUtil.getTodayTime();
+    					String nowDate = commonUtil.getTodayUTCTime("");
     				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
     				    
     					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1452,7 +1468,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
 
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue = (String) boardListItem.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String) boardListItem.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
@@ -1466,7 +1482,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
 					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
 					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
-					String nowDate = EgovDateUtil.getTodayTime();
+					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1535,6 +1551,7 @@ public class EzBoardController extends EgovFileMngUtil{
         myFavoriteVO.setBoardId(boardVO.getBoardId());
         myFavoriteVO.setUserId(userInfo.getId());
         myFavoriteVO.setType(type);
+        myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
         
         int boardCount = ezBoardService.getThumbNailCount(myFavoriteVO);
         
@@ -1601,7 +1618,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     fieldName = fieldName + strMultiData;
                 }
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue =(String)boardThumbnailList.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String)boardThumbnailList.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardThumbnailList.get(j).get(fieldName)));
@@ -1613,7 +1630,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 	resultXML.append("<DATA1>" + boardThumbnailList.get(j).get("BOARDID") + "</DATA1>");
                 	resultXML.append("<DATA2>" + boardThumbnailList.get(j).get("ITEMID") + "</DATA2>");
         			resultXML.append("<DATA3>" + boardThumbnailList.get(j).get("WRITERID") + "</DATA3>");
-        			String nowDate = EgovDateUtil.getTodayTime();
+        			String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1670,11 +1687,11 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 
         if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
-            returnQuery += " AND WRITEDATE > '" + searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00' ";
+            returnQuery += " AND WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
         }
         
         if (boardVO.getSearchQuery().indexOf("ENDDATE;") != -1) {
-            returnQuery += " AND WRITEDATE <  '" + searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59' ";
+            returnQuery += " AND WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
         }
         
         if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
@@ -1882,6 +1899,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
         }
         
+        boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
         int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
         
         BoardListVO boardListVO = new BoardListVO();
@@ -1948,19 +1966,19 @@ public class EzBoardController extends EgovFileMngUtil{
                     fieldName = fieldName + strMultiData;
                 }
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue =(String)boardThumbnailList.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String)boardThumbnailList.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardThumbnailList.get(j).get(fieldName)));
                 }
                 
-                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
                 if (i == 0) {
                 	resultXML.append("<DATA1>" + boardThumbnailList.get(j).get("BOARDID") + "</DATA1>");
                 	resultXML.append("<DATA2>" + boardThumbnailList.get(j).get("ITEMID") + "</DATA2>");
         			resultXML.append("<DATA3>" + boardThumbnailList.get(j).get("WRITERID") + "</DATA3>");
-        			String nowDate = EgovDateUtil.getTodayTime();
+        			String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardThumbnailList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -2011,7 +2029,10 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
             }
         }
+        
+        boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
         int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+        
         BoardListVO boardListVO = new BoardListVO();
         boardListVO.setPageCount(boardCount);
         boardListVO.setTotalCount(boardCount);
@@ -2076,7 +2097,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     fieldName = fieldName + strMultiData;
                 }
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue =(String)boardSearchList.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String)boardSearchList.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
@@ -2091,7 +2112,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>" + boardSearchList.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardSearchList.get(j).get("READFLAG") + "</DATA5>");
 					resultXML.append("<DATA6>" + boardSearchList.get(j).get("ABSTRACT") + "</DATA6>");
-					String nowDate = EgovDateUtil.getTodayTime();
+					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardSearchList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -2209,13 +2230,13 @@ public class EzBoardController extends EgovFileMngUtil{
                     fieldName = fieldName + strMultiData;
                 }
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue =(String)boardList.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String)boardList.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
                 }
                 
-                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
                 if (i == 0) {
                 	resultXML.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");
@@ -2278,6 +2299,7 @@ public class EzBoardController extends EgovFileMngUtil{
         int noticeCount = 0;
         
         if (type.equals("1")) {
+        	boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
         	noticeCount = ezBoardService.getNoticePostItemCount(boardVO);
         }
         
@@ -2286,6 +2308,7 @@ public class EzBoardController extends EgovFileMngUtil{
         boardMyFavoriteVO.setUserId(userInfo.getId());
         boardMyFavoriteVO.setType(type);
         boardMyFavoriteVO.setTenantID(userInfo.getTenantId());
+        boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
         
         int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
    
@@ -2343,7 +2366,7 @@ public class EzBoardController extends EgovFileMngUtil{
                         fieldName = fieldName + strMultiData;
                     }
                     if (fieldName.equals("WRITEDATE")) {
-                    	fieldValue = (String) noticeList.get(k).get(fieldName);
+                    	fieldValue = commonUtil.getDateStringInUTC((String) noticeList.get(k).get(fieldName), userInfo.getOffset(), false);
                     	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                     } else {
                     	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
@@ -2358,7 +2381,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA4>" + noticeList.get(k).get("IMPORTANCE") + "</DATA4>");
     					resultXML.append("<DATA5>" + noticeList.get(k).get("READFLAG") + "</DATA5>");
     					resultXML.append("<DATA6>" + noticeList.get(k).get("ABSTRACT") + "</DATA6>");
-    					String nowDate = EgovDateUtil.getTodayTime();
+    					String nowDate = commonUtil.getTodayUTCTime("");
     				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
     				    
     					if (noticeList.get(k).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -2380,7 +2403,7 @@ public class EzBoardController extends EgovFileMngUtil{
     						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
     					}
-    					resultXML.append("<WRITEDATE>" + noticeList.get(k).get("WRITEDATE") + "</WRITEDATE>");
+    					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
                     }
                     resultXML.append("</CELL>");
@@ -2434,7 +2457,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
 
                 if (fieldName.equals("WRITEDATE")) {
-                	fieldValue = (String) boardListItem.get(j).get(fieldName);
+                	fieldValue = commonUtil.getDateStringInUTC((String) boardListItem.get(j).get(fieldName), userInfo.getOffset(), false);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
@@ -2453,7 +2476,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
 					resultXML.append("<DATA6>" + boardListItem.get(j).get("ABSTRACT") + "</DATA6>");
-					String nowDate = EgovDateUtil.getTodayTime();
+					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardListItem.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -2484,7 +2507,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
 					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
-					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
+					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
                 }
                 resultXML.append("</CELL>");
@@ -2550,6 +2573,7 @@ public class EzBoardController extends EgovFileMngUtil{
             			myFavoriteVO.setUserId(userInfo.getId());
             			myFavoriteVO.setType("1");
             			myFavoriteVO.setTenantID(userInfo.getTenantId());
+            			myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
             			
 	            		if (node.getChildNodes().item(6).getTextContent().equals("4")) {
 	            			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
@@ -2633,7 +2657,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
             String userDeptPath = deptPathOrgan + ",everyone";
 
-            if (boardType.toUpperCase().equals("") || boardType == null) {
+            if (boardType == null || boardType.toUpperCase().equals("")) {
             	boardType = "GENERAL";
             }
             for (int i = 0; i < userDeptPath.split(",").length; i++) {
@@ -2727,14 +2751,14 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 
-        String nowTime = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+        String nowTime = commonUtil.getTodayUTCTime("");
         String parentTime = boardItem.getParentWriteDate().toString();
 
         if (EgovDateUtil.getDaysDiff(parentTime.substring(0,10), nowTime.substring(0,10)) < 0) {
             pReservedItem = "true";
         }
         if (EgovDateUtil.getDaysDiff(boardItem.getParentWriteDate().substring(0,10), boardItem.getWriteDate().substring(0,10)) < 0) {
-            boardItem.setWriteDate(boardItem.getParentWriteDate());
+            boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
         }
 
         if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
@@ -2832,7 +2856,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
         String extenLang = "1";
         String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        String uploadFilePath = config.getProperty("upload_board.ROOT");
+        String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
         String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
         String mode = "";
@@ -2887,13 +2911,12 @@ public class EzBoardController extends EgovFileMngUtil{
         		extenLang = "2";
         	}
         }
-        String strNow = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
         String startDateTime = "";
         String endDateTime = "";
         String expireDays = "";
         String expireItem = "";
         String strTitle = "";
-        String today = EgovDateUtil.getToday("-");
+        String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
         
         if (!url.equals("")) {        	
         	startDateTime = today;
@@ -2919,7 +2942,7 @@ public class EzBoardController extends EgovFileMngUtil{
         			hasAttach = "YES";
         		}
         	}
-        	startDateTime = egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString();
+        	startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
         	
         	if (mode.equals("modify") || mode.equals("temp")) {
         		if (boardListVO.getEndDate().substring(0, 4).equals("9999")) {
@@ -2930,9 +2953,9 @@ public class EzBoardController extends EgovFileMngUtil{
         				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
         			}
         		} else {
-        			boardListVO.setEndDate(boardListVO.getEndDate().split(" ")[0]);
+        			boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0]);
         		}
-        		startDateTime = boardListVO.getStartDate();
+        		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
         	} else {
         		if (expireDays.equals("-1")) {
         			endDateTime = EgovDateUtil.addDay(today, 30, "yyyy-MM-dd");
@@ -2950,8 +2973,9 @@ public class EzBoardController extends EgovFileMngUtil{
         		}
         	}
         }
-        Calendar strDate = Calendar.getInstance();
-        
+        TimeZone tz = TimeZone.getTimeZone("GMT" + userInfo.getOffset().split("\\|")[1]);
+        Calendar strDate = Calendar.getInstance(tz, userInfo.getLocale());
+//////////// 여기까지         
         if (strDate.get(Calendar.MINUTE) > 30) {
         	strDate.add(Calendar.HOUR, 1);
         	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
@@ -2960,11 +2984,11 @@ public class EzBoardController extends EgovFileMngUtil{
         	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
         	strDate.add(Calendar.MINUTE, 30);
         	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
-        }
-        startDateTime = strDate.get(Calendar.YEAR) + "-" + (strDate.get(Calendar.MONTH)+1) + "-" + strDate.get(Calendar.DATE) + " " + strDate.get(Calendar.HOUR) + ":" + strDate.get(Calendar.MINUTE) + ":" + strDate.get(Calendar.SECOND);
+        } 
+        startDateTime = strDate.get(Calendar.YEAR) + "-" + (strDate.get(Calendar.MONTH) + 1) + "-" + strDate.get(Calendar.DATE) + " " + strDate.get(Calendar.HOUR) + ":" + strDate.get(Calendar.MINUTE) + ":" + strDate.get(Calendar.SECOND);
                 
         if (reservedItem.equals("true")) {
-        	startDateTime = boardListVO.getStartDate();
+        	startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
         }
         
         checkForm = ezBoardService.checkForm(boardID, "Y", userInfo.getTenantId());
@@ -2998,7 +3022,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("reservedItem", reservedItem);
         model.addAttribute("checkForm", checkForm);
         model.addAttribute("useBackGround", useBackGround);
-        model.addAttribute("strNow", strNow);
+        model.addAttribute("strNow", today);
         model.addAttribute("startDateTime", startDateTime);
         model.addAttribute("endDateTime", endDateTime);
         model.addAttribute("expireDays", expireDays);
@@ -3147,7 +3171,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (pMode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
-			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
 		}
 		
 		if (doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")) {
@@ -3281,12 +3305,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		
-		File file = new File(realPath + docPath);
+		File file = new File(realPath + stordFilePathReal);
 		
 		if (!file.exists()) {
 			boolean _flag = file.mkdirs();
-			file = new File(realPath + stordFilePathReal);
-			file.mkdirs();
 			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
 			file.mkdirs();
 			
@@ -3376,7 +3398,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
                 file = null;
             } else {
-                File file = new File(realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
+                File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
                 fileSize = file.length();
                 
                 filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
@@ -3452,7 +3474,7 @@ public class EzBoardController extends EgovFileMngUtil{
             pFileName[i] = pFileName[i].replace(";", "%3b");
         }
 
-        String pDirPath = config.getProperty("upload_board.ROOT");
+        String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
         
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -3476,7 +3498,7 @@ public class EzBoardController extends EgovFileMngUtil{
                     if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
                         resultUpload[i] = "denied";
                     } else {
-                        String pAttachPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator;
+                        String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
                         File fTemp = new File(pAttachPath);
                         
                         if (!file.exists()) {
@@ -3551,7 +3573,7 @@ public class EzBoardController extends EgovFileMngUtil{
         fileName = fileName.replace("~", "%7e");
         fileName = fileName.replace("=", "%3d");
         
-        String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+        String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
         
         if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
         	returnVal = "denied";
@@ -3647,7 +3669,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			fileExt = fileName.substring(fileName.length() - 4).toLowerCase();
 		}
 		
-		String dirPath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		if (!new File(dirPath + "tempUploadFile").exists()) {
 			new File(dirPath + "tempUploadFile").mkdirs();
@@ -3718,7 +3740,7 @@ public class EzBoardController extends EgovFileMngUtil{
             ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + fileExt));
 		}
 		
-		returnVal = "OK_" + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + uploadSN + fileExt;
+		returnVal = "OK_" + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + uploadSN + fileExt;
 		
 		return returnVal;
 	}
@@ -3767,7 +3789,7 @@ public class EzBoardController extends EgovFileMngUtil{
             File file = new File(filePath + commonUtil.separator + pConLocation);
             String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
             String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
-            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + commonUtil.separator + newFilePath);
+            File fileMove = new File(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + newFilePath);
             FileUtils.copyFile(file, fileMove);
             
             long mhtSize = file.length();
@@ -3788,7 +3810,7 @@ public class EzBoardController extends EgovFileMngUtil{
             newFilePath = "tempUploadFile" +commonUtil.separator+ "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
 
             File file = new File(filePath + commonUtil.separator + pFilePath);
-            File fileMove = new File(filePath + config.getProperty("upload_board.ROOT") + commonUtil.separator + newFilePath);
+            File fileMove = new File(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + newFilePath);
             FileUtils.copyFile(file, fileMove);
             
             resultXML.append("<NODE>");
@@ -3999,15 +4021,24 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getACL(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String boardID = "";
+		String boardID = request.getParameter("boardID");
 		String strACLXML = "";
+		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
 		
 		if (ezBoardAdminService.checkIfBoardGroupAdmin(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId()).equals("OK")) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
 		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
 		} else {
-			BoardPropertyVO boardPropertyVO = ezBoardAdminService.getACL(boardID, "everyone", userInfo.getTenantId());
+			BoardPropertyVO boardPropertyVO = null;
+			
+			for (int k = 0; k < userDeptPath.split(",").length; k++) {
+				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
+				
+				if (boardPropertyVO != null) {
+					break;
+				}
+			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("<NODES>");
 			
@@ -4068,7 +4099,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orgItemIDList = "";
 		String orgBoardID = "";
 		String destBoardID = "";
-		String uploadFilePath = config.getProperty("upload_board.ROOT");
+		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		
@@ -4123,7 +4154,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String attachments = "";
 		
 		if (attachmentList != null) {
-			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy");
+			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -4174,15 +4205,16 @@ public class EzBoardController extends EgovFileMngUtil{
 
 	/**
 	 * 게시판 첨부복사 표출 Method
+	 * @param tenantID 
 	 */
-	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode) throws Exception{
+	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception{
 		String orgFilePath = "";
 		String destFilePath = "";
 		String returnString = "";
 		
         for (int i = 0; i < attachmentList.size(); i++) {
             orgFilePath = attachmentList.get(i);
-            orgFilePath = path.replace(config.getProperty("upload_board.ROOT"), "") + orgFilePath;
+            orgFilePath = path.replace(commonUtil.getUploadPath("upload_board.ROOT", tenantID), "") + orgFilePath;
             
             String fileName = "";
             fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
@@ -4273,7 +4305,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orgItemIDList = "";
 		String orgBoardID = "";
 		String destBoardID = "";
-		String uploadFilePath = config.getProperty("upload_board.ROOT");
+		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		
@@ -4328,7 +4360,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String attachments = "";
 		
 		if (attachmentList != null) {
-			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move");
+			attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -5048,7 +5080,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "main/warning"; 
 		}
-		uploadFilePath = config.getProperty("upload_board.ROOT");
+		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = EgovDateUtil.getTodayTime();
 		
 		model.addAttribute("userID", userID);
@@ -5088,10 +5120,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (mode.equals("PICTURE")) {
 			multiFile = request.getFiles("file1");
-			dirPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE");
+			dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 			serverPath = dirPath + commonUtil.separator;
 		} else if (mode.equals("DEL")) {
-			String delServerPath = realPath + config.getProperty("upload_board.TEMPUPLOADFILE");
+			String delServerPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 			String imagePath = "";
 			String s_imagePath = "";
 			String unique_ID = "";
@@ -5206,17 +5238,19 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 섬네일정보 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardThumbnailInfo.do")
-	public void getBoardThumbnailInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void getBoardThumbnailInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String type = request.getParameter("type");
 		String boardID = request.getParameter("boardID");
 		String fileName = request.getParameter("fileName");
-		String pSignatureDir = config.getProperty("upload_board.ROOT");
+		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String filePath = "";
 		
         if (type.equals("BOARDTHUM")) {
         	pSignatureDir = pSignatureDir + commonUtil.separator + boardID + commonUtil.separator + "uploadFile";
         } else {
-        	pSignatureDir = config.getProperty("upload_board.TEMPUPLOADFILE");
+        	pSignatureDir = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
         }
         filePath = pSignatureDir + commonUtil.separator + fileName;
         
@@ -5299,7 +5333,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("copy")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
-			boardListVO.setContentLocation(config.getProperty("upload_board.ROOT")+ commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
 		}
 		
 		boardListVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
@@ -5453,11 +5487,11 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	String filePath = photoViewList.get(k).getFilePath();
         	int idx = filePath.lastIndexOf(commonUtil.separator);
-        	g_ImageUrl = config.getProperty("upload_board.ROOT") + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
+        	g_ImageUrl = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
 
-            String pDirPath = realPath + config.getProperty("upload_board.ROOT");
+            String pDirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
             String orgpDirPath = pDirPath + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
-            String despPath = config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + filePath.substring(idx + 1);
+            String despPath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(idx + 1);
         	
             File file = new File(orgpDirPath);
             File file2 = new File(despPath);
@@ -5525,7 +5559,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String[] filePaths = boardListVO.getFilePath().split(";");
         String[] fileContents = boardListVO.getFileContent().split(";:;");
         String[] imageName = boardListVO.getImageNames().split(";");
-        String uploadFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT");
+        String uploadFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
         
         savecount = boardListVO.getImageID().split(";").length;
         boardListVO.setWriteDate(EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", ""));
@@ -5593,7 +5627,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	if (imageID.equals(listImage)) {
         		imageContent = photoViewList.get(k).getFileContent();
-        		String filePath = config.getProperty("upload_board.ROOT") + commonUtil.separator + photoViewList.get(k).getFilePath();
+        		String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
         		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
         		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5650,11 +5684,11 @@ public class EzBoardController extends EgovFileMngUtil{
         		
         		rtnValue = "OK";
 			} catch (Exception e) {
-				LOGGER.error("EzBoard :: deleteImageItem");
+				logger.error("EzBoard :: deleteImageItem");
 				rtnValue = "ERROR";
 			}
         } else if (mod.equals("Mod")) {
-        	String uploadFilePath = commonUtil.getRealPath(request) + config.getProperty("upload_board.ROOT");
+        	String uploadFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
         	String mainFg = doc.getElementsByTagName("MAINFG").item(0).getTextContent();
         	
         	boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
@@ -5743,7 +5777,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = config.getProperty("upload_board.ROOT") + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5793,7 +5827,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = config.getProperty("upload_board.ROOT") + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -6263,7 +6297,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/uploadApprovFile.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String uploadApprovFile(HttpServletRequest request, @RequestBody String xmlPara) throws Exception{
+	public String uploadApprovFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String xmlPara) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String strXML = "";
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
@@ -6287,13 +6322,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
 		}
 		
-		String dirPath = realPath + config.getProperty("upload_board.ROOT") + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath2 = "";
 		
 		if (type[0].equals("APPROVAL")) {
-			dirPath2 = realPath + config.getProperty("upload_approval.ROOT");
+			dirPath2 = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		} else {
-			dirPath2 = realPath + config.getProperty("upload_approvalG.ROOT");
+			dirPath2 = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		}
 		
 		File file = new File(dirPath + boardID);
@@ -6401,4 +6436,125 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardBoardSelect";
 	}
-} 
+	
+	/**
+	 * 게시판 메일보내기 컨텐츠 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getItemInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+
+		String result = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getItemInfo ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 게시판 메일보내기 첨부파일 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getItemAttachments.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, HttpServletRequest request) throws Exception {
+		logger.debug("getItemAttachments started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		
+		boardItemVO.setTenantID(userInfo.getTenantId());
+		boardItemVO.setFilePath(realPath);
+		
+		String result = "";
+		
+		if (boardItemVO.getMode().equals("boardContent") || boardItemVO.getMode().equals("boardAttach")) {
+			boardItemVO.setTitle(commonUtil.cleanValue(boardItemVO.getTitle()));
+			result = ezBoardService.getItemAttachmentXMLRetrans(boardItemVO);
+		} else {
+			result = ezBoardService.getItemAttachmentXML(boardItemVO);
+		}
+		
+		logger.debug("getItemAttachments ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 게시판 게시알림 메일전송 실행 Method
+	 */
+	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do")
+	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("sendPostNotiMail started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		logger.debug("boardID=" + boardID + ",itemID=" + itemID);
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, userInfo.getTenantId());
+		
+		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardInfo.getGuBun() + "');";
+        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+		
+        String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
+        strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
+        
+        StringBuilder bodyContent = new StringBuilder();
+
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t250") + "<br><br>");
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251") + boardInfo.getBoardName());
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252") + strDate);
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253") + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254") + strURL + boardItem.getTitle() + "</a>");
+        bodyContent.append("</DIV>");
+        
+        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255") + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+        
+        List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
+        
+        for (BoardAccessVO vo : list) {
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(vo.getAccessName(), "UTF-8");
+        	to.setAddress(AccessUserInfo.getMail());
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        }
+		
+		logger.debug("sendPostNotiMail ended.");
+	}
+	
+	/**
+	 * 게시글 존재여부 표출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemViewNew started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		
+		int result = ezBoardService.getItemViewNew(boardID, itemID, userInfo.getTenantId());
+		
+		logger.debug("getItemViewNew ended.");
+		
+		return "<DATA>" + result + "</DATA>";
+	}
+}

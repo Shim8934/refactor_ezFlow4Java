@@ -743,7 +743,7 @@
 		                if (document.getElementById("chk_reservation").checked == false) {
 		                    if (strItemID == "") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "interASP/SendPostNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }

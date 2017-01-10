@@ -70,12 +70,14 @@
                 var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false)
                 PostTreeView.putchildxml(nodeIdx, childxml);
             }
+            
             var inputNameDlg_cross_dialogArguments = new Array();
             function add_onclick() {
                 if (PostTreeView.selectedIndex() == -1) {
                     alert("<spring:message code='ezEmail.t158' />");
                     return;
                 }
+                
                 inputNameDlg_cross_dialogArguments[0] = "";
                 inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
                 inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
@@ -83,37 +85,36 @@
             }
 		    function add_onclick_Complete(szName) {
 		        DivPopUpHidden();
-		        if (checkBadFolderName(szName))
-		            return;
-
-		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        var result = make_folder_2010(szURL, szName);
-		        if (result != true) {
-		            if (result == 405)
-		                alert("<spring:message code='ezEmail.t456' />");
-		             else
-		                alert("<spring:message code='ezEmail.t457' />");
+		        if (typeof (szName) == "undefined" || szName.trim() == "") {
 		            return;
 		        }
-		        var childXML = "<node imgidx='1' caption='" + MakeRightField(szName) + "' ";
-		        childXML += ("href='" + szURL + "' ");
-		        childXML += "></node>";
+		        else if (checkBadFolderName(szName)) {
+		            return;
+		        }
+		        
+		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        var result = mail_make_folder("NEW", szURL, "", szName);
+		        if (result != "OK") {
+		            if (result == "ALREADY_EXISTS") {
+		                alert("<spring:message code='ezEmail.t456' />");
+		            } else {
+		                alert("<spring:message code='ezEmail.t457' />");
+		            }
+		            return;
+		        }
+		        
 		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
-		        PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
+                PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
+                
 		        EventCheck = true;
 		    }
-		    function LoadAddressTree(idx) {
-		        PostTreeView.config(treeconfig);
-		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
-		        PostTreeView.update();
-		        PostTreeView.toggle(idx);
-		    }
+		    
 		    function modify_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        else if (PostTreeView.selectedIndex() < 6) {
+		        else if (checkTopLevelFolder(PostTreeView.selectedIndex())) {
 		            alert("<spring:message code='ezEmail.t458' />");
 		            return;
 		        }
@@ -124,222 +125,159 @@
 		    }
 		    function modify_onclick_Complete(szName) {
 		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || ReplaceText(szName, " ", "") == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption"))
-		            return;
-		        if (checkBadFolderName(szName))
-		            return;
-
-		        var orgURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        var szURL = "";
-		        var tempIdx = orgURL.lastIndexOf(PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption"));
-		        if (tempIdx != -1) {
-		        	szURL = orgURL.substring(0, tempIdx) + szName;
-		        }
-
-		        var result = Modify_folder_2010(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szName);
-		        if (result != true) {
-		            if (result == 412 || result == 500)
-		                alert("<spring:message code='ezEmail.t459' />");
-
+		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption")) {
 		            return;
 		        }
-		        PostTreeView.putcaption(PostTreeView.selectedIndex(), szName);
-		        PostTreeView.putvalue(PostTreeView.selectedIndex(), "href", szURL);
-		        PostTreeView.putvalue(PostTreeView.selectedIndex(), "caption", szName);
+		        if (checkBadFolderName(szName)) {
+		            return;
+		        }
+
+		        var result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", szName);
+		        
+		        if (result != "OK") {
+		        	if (result == "ALREADY_EXISTS") {
+		        		alert("<spring:message code='ezEmail.t99000088' />");
+		        	} else {
+		        		alert("<spring:message code='ezEmail.t459' />");
+		        	}
+		        	return;
+		        }
+		        
 		        LoadAddressTree(PostTreeView.selectedIndex());
 		        EventCheck = true;
 		    }
-		    function CheckRootFolder(currentnode) {
-		        if (currentnode.parentNode.parentNode.parentNode.parentNode.id == "PostTreeView")
-		            return true;
-		        else
-		            return false;
-		    }
-		    function delete_onclick() {
-		        if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
-		            return;
-		        }
-		        if (CheckRootFolder(PostTreeView.selectedNode())) {
-		            alert("<spring:message code='ezEmail.t460' />");
-		            return;
-		        }
-		        var deleteURL = "${pDeleteBoxID }";
-		        var deleteboxname = "${pDeleteBoxName}";
-		        if (gettopvalue(PostTreeView.selectedNode(), 'href') == deleteURL) {
-		            if (confirm("<spring:message code='ezEmail.t461' />")) {
-		                if (delete_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) != true) {
-		                    alert("<spring:message code='ezEmail.t462' />");
-		                    return;
-		                }
-		                PostTreeView.deletenode(PostTreeView.selectedIndex());
-		                EventCheck = true;
-		            }
-		        }
-		        else {
-		            if (confirm("<spring:message code='ezEmail.t463' />")) {
-		                var szName = PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption");
-		                var szURL = deleteURL;
-		                var result = move_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
-		                
-		                if (result != true) {
-		                    if (result == 412 || result == 500)		                        
-		                        alert("<spring:message code='ezEmail.t464' />");
-		                    return;
-		                }
-		                
-		                var haschild = PostTreeView.haschild(PostTreeView.selectedIndex());
-		                var childXML = "<node imgidx='1' caption='" + szName + "' ";
-		                childXML += ("href='" + szURL + "/' ");
-		                
-		                if (haschild) {
-                            childXML += "hassub='1' />";
-		                } else {
-                            childXML += "/>";
-		                }
-		                
-		                PostTreeView.deletenode(PostTreeView.selectedIndex());
-			            var nodeIdx = PostTreeView.findindex("href", deleteURL);
-			            PostTreeView.addnode(nodeIdx, childXML);
-			            LoadAddressTree(nodeIdx);
-		                EventCheck = true;
-		            }
-		        }
-		    }
+		    
 		    var mail_movecopy_cross_dialogArguments = new Array();
 		    function move_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        if (getparentnode(PostTreeView.selectedNode()) == null) {
-		            alert("<spring:message code='ezEmail.t465' />");
+		        else if (checkTopLevelFolder(PostTreeView.selectedIndex())) {
+		        	alert("<spring:message code='ezEmail.t465' />");
 		            return;
 		        }
+		        
 		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
 		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
 		        DivPopUpShow(320, 375,"/ezEmail/mailMoveCopy.do");
 		    }
 		    function move_onclick_Complete(moveUrl) {
 		        DivPopUpHidden();
-		        if (typeof (moveUrl) == "undefined")
+		        if (typeof (moveUrl) == "undefined") {
 		            return;
+		        }
 
-		        var szName = PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption");
+		        var oldUrl = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 		        var szURL = moveUrl["url"];
 
-		        if (moveUrl["url"] == PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) {
+		        if (moveUrl["url"] == oldUrl) {
 		            alert("<spring:message code='ezEmail.t466' />");
 		            return;
 		        }
-		        var oldurl = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        oldurl = oldurl.substring(0, oldurl.length - 1);
-		        oldurl = oldurl.substring(0, oldurl.lastIndexOf("/") + 1);
 
-		        if (szURL == oldurl) {
+		        if (szURL.indexOf(oldUrl) == 0) {
 		            alert("<spring:message code='ezEmail.t467' />");
 		            return;
 		        }
+		        
 		        if (moveUrl["cmd"] == "MOVE") {
-		            var result = move_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
-		            if (result != true) {
-		                if (result == 412 || result == 500)		                    
-		                    alert("<spring:message code='ezEmail.t468' />");
+		            var result = mail_make_folder("MOVE", oldUrl, szURL, "");
+		            
+		            if (result != "OK") {
+		            	if (result == "ALREADY_EXISTS") {
+		            		alert("<spring:message code='ezEmail.t99000086' />");
+		            	} else {
+		            		alert("<spring:message code='ezEmail.t468' />");
+		            	}
 		                return;
 		            }
-
-		            var childXML = "<node imgidx='1' caption='" + szName + "' ";
-		            childXML += ("href='" + szURL + "/' ");
-                    childXML += "/>";
-		            PostTreeView.deletenode(PostTreeView.selectedIndex());
-		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML);
 		        }
 		        else if (moveUrl["cmd"] == "COPY") {
-		            var result = copy_folder(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), szURL);
-		            if (result != true) {
-		                if (result == 412 || result == 500)
-		                    alert("<spring:message code='ezEmail.t469' />");
-		                return;
+		            var result = mail_make_folder("COPY", oldUrl, szURL, "");
+		            
+		            if (result != "OK") {
+		            	if (result == "ALREADY_EXISTS") {
+		            		alert("<spring:message code='ezEmail.t99000086' />");
+		            	} else if (result.indexOf("NO COPY processing failed.") > -1) {
+		            		alert(strLang241);
+		            	} else {
+		            		alert("<spring:message code='ezEmail.t469' />");
+		            	}
+		            	return;
 		            }
-		            var childXML = "<node imgidx='1' caption='" + szName + "' ";
-		            childXML += ("href='" + szURL + "/' ");
-                    childXML += "/>";
-		            var nodeIdx = PostTreeView.findindex("href", moveUrl["url"]);
-		            PostTreeView.addnode(nodeIdx, childXML);
 		        }
+		        
 		        LoadAddressTree(moveUrl["idx"]);
 		        EventCheck = true;
 		    }
+		    
+		    function delete_onclick() {
+		    	if (PostTreeView.selectedIndex() == -1) {
+		            alert("<spring:message code='ezEmail.t158' />");
+		            return;
+		        }
+		        else if (checkTopLevelFolder(PostTreeView.selectedIndex())) {
+		        	alert("<spring:message code='ezEmail.t460' />");
+		            return;
+		        }
+		    	
+		        var trashBoxURL = "${pDeleteBoxID}";
+		        var deleteURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        
+		        //편지함 영구삭제
+		        if (deleteURL.indexOf(trashBoxURL) == 0) {
+		            if (confirm("<spring:message code='ezEmail.t461' />")) {
+		            	var result = mail_make_folder("DEL", deleteURL, "", "");
+		            	
+		                if (result != "OK") {
+		                    alert("<spring:message code='ezEmail.t462' />");
+		                    return;
+		                }
+		                
+		                PostTreeView.deletenode(PostTreeView.selectedIndex());
+		                EventCheck = true;
+		            }
+		        }
+		        //편지함 지운편지함으로 이동
+		        else {
+		            if (confirm("<spring:message code='ezEmail.t463' />")) {
+		                var result = mail_make_folder("MOVE", deleteURL, trashBoxURL, "");
+		                
+		                if (result != "OK") {
+			            	if (result == "ALREADY_EXISTS") {
+			            		alert("<spring:message code='ezEmail.t99000087' />");
+			            	} else {
+			            		alert("<spring:message code='ezEmail.t464' />");
+			            	}
+			                return;
+			            }
+		                
+			            LoadAddressTree(PostTreeView.findindex("href", trashBoxURL));
+		                EventCheck = true;
+		            }
+		        }
+		    }
+		    
 		    function delete_mail_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        var deleteURL = "${pDeleteBoxID}";
-		        var deleteboxname = "${pDeleteBoxName}";
-		        if (PostTreeView.getvalue(PostTreeView.selectedIndex(), 'href') == deleteURL) {
+		        
+		        var trashBoxURL = "${pDeleteBoxID}";
+		        var deleteURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        
+		      	//지운편지함의 메일 영구삭제
+		        if (deleteURL == trashBoxURL) {
 		            if (confirm("<spring:message code='ezEmail.t470' />")) {
-		                delete_mail_2010(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), true, "");
+		                delete_mail(deleteURL, true, "");
 		            }
 		        }
+		      	//편지함의 메일 지운편지함으로 이동
 		        else {
 		            if (confirm("<spring:message code='ezEmail.t475' />")) {
-		                delete_mail_2010(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, deleteURL);
-		            }
-		        }
-		    }
-
-		    var xmlHTTP2;
-		    var tmpURL;
-		    function delete_mail_2010(szURL, bDelete, DestURL) {
-		        xmlHTTP2 = createXMLHttpRequest();
-		        tmpURL = DestURL;
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        var deltype = "";
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
-		        if (bDelete)
-		            deltype = "MAILREALDEL";
-		        else
-		            deltype = "MAILDEL";
-
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", DestURL);
-		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
-		        xmlHTTP2.onreadystatechange = delete_mail_2010_complete;
-		        xmlHTTP2.send(xmlDOM);
-		        ShowMailProgress();
-		    }
-
-		    function delete_mail_2010_complete() {
-		        if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
-		            HiddenMailProgress();
-		            if (tmpURL == "") {
-		                if (xmlHTTP2.status == 100)
-		                    alert("<spring:message code='ezEmail.t471' />");
-		                else if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300)
-		                    alert("<spring:message code='ezEmail.t473' />");
-		                else
-		                    alert("<spring:message code='ezEmail.t472' />");
-		            }
-		            else {
-		                if (xmlHTTP2.status == 100) {
-		                    alert("<spring:message code='ezEmail.t476' />");
-		                }
-		                else if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-		                	if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
-		    	        		alert(strLang241);
-		                	}
-		                	else {
-		                    	alert("<spring:message code='ezEmail.t478' />");
-		                	}
-		                }
-		                else {
-		                    alert("<spring:message code='ezEmail.t477' />");
-		                }
+		                delete_mail(deleteURL, false, trashBoxURL);
 		            }
 		        }
 		    }
@@ -356,142 +294,117 @@
 				return false;
 			}
 			
-		    function make_folder_2010(szURL, szName) {
-		        var xmlHTTP = createXMLHttpRequest();
+			//TODO: copy일때 비동기로 처리하도록 함수 따로 만들어야함.
+		    function mail_make_folder(szCMD, szURL, destURL, szName) {
+		    	var xmlHTTP = createXMLHttpRequest();
 		        var xmlDOM = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlDOM, objNode, "DATA");
+		        createNodeAndInsertText(xmlDOM, objNode, "CMD", szCMD);
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "NEW");
+		        
 		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
 		        xmlHTTP.send(xmlDOM);
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
-		            return true;
-		        else
-		            return xmlHTTP.status;
-		    }
-		    function move_folder_2010(szOriURL, szURL) {
-
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "MOVE");
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
-		        xmlHTTP.send(xmlDOM);
-
+		        
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
-		        	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
-		        		if (szURL == "<spring:message code='ezEmail.t99000028' />") {
-		        			alert("<spring:message code='ezEmail.t99000087' />");
-		        		} else {
-		        			alert("<spring:message code='ezEmail.t99000086' />");
-		        		}
-		        		return false;
-		        	}
-		            return true;
-		        }
-		        else
-		            return xmlHTTP.status;
-		    }
-		    function move_folder(szOriURL, szURL) {
-		        return move_folder_2010(szOriURL, szURL);
-		    }
-		    function copy_folder_2010(szOriURL, szURL) {
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "COPY");
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
-		        xmlHTTP.send(xmlDOM);
-
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
-		        	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
-		        		alert("<spring:message code='ezEmail.t99000086' />");
-		        		return false;
-		        	}
-		        	else if (xmlHTTP.responseText.indexOf("NO COPY processing failed.") > -1) {
-    	        		alert(strLang241);
-		        		return false;
-		        	}
-		            return true;
-		        }
-		        else {
-		            return xmlHTTP.status;
+		            return xmlHTTP.responseText;
+		        } else {
+		            return "ERROR";
 		        }
 		    }
 			
-		    function copy_folder(szOriURL, szURL) {
-		        return copy_folder_2010(szOriURL, szURL);
-		    }
-		    function delete_folder_2010(szURL) {
-		        var xmlHTTP = createXMLHttpRequest();
+		    var xmlHTTP2 = null;
+		    var deltype = null;
+		    function delete_mail(szURL, bDelete, destURL) {
+		    	xmlHTTP2 = createXMLHttpRequest();
 		        var xmlDOM = createXmlDom();
 		        var objNode;
+		        
+		        if (bDelete) {
+		            deltype = "MAILREALDEL";
+		        } else {
+		            deltype = "MAILDEL";
+		        }
+		        
 		        createNodeInsert(xmlDOM, objNode, "DATA");
 		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", "DEL");
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
-		        xmlHTTP.send(xmlDOM);
-
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
-		            return true;
-		        else
-		            return xmlHTTP.status;
+		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
+		        
+		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
+		        xmlHTTP2.onreadystatechange = delete_mail_complete;
+		        xmlHTTP2.send(xmlDOM);
+		        
+		        ShowMailProgress();
 		    }
 
-			function delete_folder(szURL)
-			{
-			    return delete_folder_2010(szURL);
+		    function delete_mail_complete() {
+		        if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
+		            HiddenMailProgress();
+		            
+		            //지운편지함의 메일 영구삭제
+		            if (deltype == "MAILREALDEL") {
+		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+					    	if (xmlHTTP2.responseText == "OK") {
+					    		alert("<spring:message code='ezEmail.t473' />");
+					    	} else {
+					    		alert("<spring:message code='ezEmail.t472' />");
+					    	}
+					    } else {
+					    	alert("<spring:message code='ezEmail.t472' />");
+					    }
+		            }
+		            //편지함의 메일 지운편지함으로 이동
+		            else {
+		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+		            		if (xmlHTTP2.responseText == "OK") {
+		            			alert("<spring:message code='ezEmail.t478' />");
+		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
+		            			alert(strLang241);
+		            		} else {
+		            			alert("<spring:message code='ezEmail.t477' />");
+		            		}
+		            	} else {
+		            		alert("<spring:message code='ezEmail.t477' />");
+		            	}
+		            }
+		            
+		        }
+		    }
+		    
+			function LoadAddressTree(idx) {
+		        PostTreeView.config(treeconfig);
+		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+		        PostTreeView.update();
+		        PostTreeView.toggle(idx);
+		    }
+			
+			// 2016-12-28 이효민 추가
+			function checkTopLevelFolder(nodeIdx) {
+				var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
+				if (folderUrl.indexOf(".") > -1) {
+					return false;
+				} else {
+					return true;
+				}
 			}
-
-			//function delete_mail(szURL, bDelete, DestURL) {
-			//    return delete_mail_2010(szURL, bDelete, DestURL);
-			//}
-            		
-			function Modify_folder_2010(szOriURL, szURL) {
-			    var xmlHTTP = createXMLHttpRequest();
-			    var xmlDOM = createXmlDom();
-			    var objNode;
-			    createNodeInsert(xmlDOM, objNode, "DATA");
-			    createNodeAndInsertText(xmlDOM, objNode, "URL", szOriURL);
-			    createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", szURL);
-			    createNodeAndInsertText(xmlDOM, objNode, "CMD", "MODIFY");
-			    xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
-			    xmlHTTP.send(xmlDOM);
-			    if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
-			    	if (xmlHTTP.responseText == "ALREADY_EXISTS") {
-		        		alert("<spring:message code='ezEmail.t99000088' />");
-		        		return false;
-		        	}
-			        return true;
-			    }
-			    else {
-			        return xmlHTTP.status;
-			    }
+			
+			function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
 			}
-			function getparentnode(currentnode) {
-			    var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling;
-			    if (tmpnode == null) return null;
-
-			    var parentnode = tmpnode.lastChild;
-			    return parentnode;
+			function ShowMailProgress() {
+			    //document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
 			}
-			function getnodeidx(currentnode) {
-			    var nodeidval = currentnode.attributes.getNamedItem('id').nodeValue;
-			    var nodeidvalsubstrstart = nodeidval.lastIndexOf('_') + 1;
-			    var nodeidvalsubstrend = nodeidval.length;
-			    var nodeidx = parseInt(nodeidval.substring(nodeidvalsubstrstart, nodeidvalsubstrend), 10);
-			    return nodeidx;
-			}
+			
+			/* 2016-12-28 이효민 : 사용하지 않음 
 			function gettopvalue(currentnode, attrname) {
-
+				if (currentnode == null) return null;
 			    if (!CheckRootFolder(currentnode)) {
 			        var parentnode = getparentnode(currentnode);
 			        if (CheckRootFolder(parentnode)) {
@@ -505,16 +418,28 @@
 			    else
 			        return PostTreeView.getvalue(getnodeidx(currentnode), attrname);
 			}
-			function HiddenMailProgress() {
-			    document.getElementById("mailPanel").style.display = "none";
-			    document.getElementById("MailProgress").style.display = "none";
+			function getparentnode(currentnode) {
+			    var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.parentNode.firstChild;
+			    if (tmpnode == null) return null;
+
+			    var parentnode = tmpnode.lastChild;
+			    return parentnode;
 			}
-			function ShowMailProgress() {
-			    //document.getElementById("mailPanel").style.display = "";
-			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
-			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
-			    document.getElementById("MailProgress").style.display = "";
+			function getnodeidx(currentnode) {
+			    var nodeidval = currentnode.attributes.getNamedItem('id').nodeValue;
+			    var nodeidvalsubstrstart = nodeidval.lastIndexOf('_') + 1;
+			    var nodeidvalsubstrend = nodeidval.length;
+			    var nodeidx = parseInt(nodeidval.substring(nodeidvalsubstrstart, nodeidvalsubstrend), 10);
+			    return nodeidx;
 			}
+			function CheckRootFolder(currentnode) {
+		    	if (currentnode != null) {
+			        if (currentnode.parentNode.parentNode.parentNode.parentNode.parentNode.id == "PostTreeView")
+			            return true;
+		    	}
+		    	return false;
+		    } */
+			
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">

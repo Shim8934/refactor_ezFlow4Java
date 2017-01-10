@@ -157,7 +157,8 @@ public class LoginController {
     	// 1. 일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {    
+            /* dhlee: Expire 시, 패스워드 변경 UI를 작성할 때까지 임시로 주석 처리함.
         	Calendar cal = Calendar.getInstance();
         	cal.add(Calendar.MONTH, -6);
         	
@@ -170,6 +171,7 @@ public class LoginController {
 				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
 	        	return "forward:/user/login/login.do";
 			} else {			    
+			*/
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
 				
@@ -260,7 +262,9 @@ public class LoginController {
 	        	} else {
 	        	    return "redirect:/ezPortal/portalMain.do";
 	        	}
+/*	        	
 			}
+			*/
         } else {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
