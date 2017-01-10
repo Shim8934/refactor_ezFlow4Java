@@ -2242,7 +2242,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(deptID, containerType, companyID, userInfo.getTenantId());
 		
 		if (containerID == null) {
-			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID);
+			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID, userInfo.getTenantId());
 		}
 		
 		String result;

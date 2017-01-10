@@ -135,7 +135,7 @@ public interface EzApprovalGService {
 	
 	public String getListInfoXml(String listFlag, String listType, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
-	public String getRecordList(Document doc, String lang, int tenantID) throws Exception;
+	public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception;
 	
 	public String getCodeInfo(String companyID, String lang, int tenantID) throws Exception;
 	
@@ -254,7 +254,7 @@ public interface EzApprovalGService {
 	
 	public String updateSignCheck(String strSQL, String companyID) throws Exception;
 	
-	public String aprAttachMail(String docID, String flag, String companyID) throws Exception;
+	public String aprAttachMail(String docID, String flag, String companyID, int tenantID) throws Exception;
 	
 	public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType, int tenantID) throws Exception;
 	
@@ -291,13 +291,13 @@ public interface EzApprovalGService {
 	
 	public String getFindSimpleCabinetListAll(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 	
-	public String doSendOfferReject(String docID, String userID, String companyID) throws Exception;
+	public String doSendOfferReject(String docID, String userID, String companyID, int tenantID) throws Exception;
 	
 	public String getApprovalPWD2(String dUserID, int tenantID) throws Exception;
 	
-	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID) throws Exception;
+	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID) throws Exception;
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
 	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -305,7 +305,7 @@ public interface EzApprovalGService {
 	
 	public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String checkAprLine(String docID, String mode, String userID, String companyID) throws Exception;
+	public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 	
 	public String getSusinSN(String docID, String companyID, int tenantID) throws Exception;
 	
@@ -373,7 +373,7 @@ public interface EzApprovalGService {
 
 	public String getRecSCInfo(Document xmlDom, String lang, LoginVO userInfo)throws Exception;
 	
-	public String makeContainer(String deptID, String containerType, String companyID) throws Exception;
+	public String makeContainer(String deptID, String containerType, String companyID, int tenantID) throws Exception;
 	
 	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID) throws Exception;
 
