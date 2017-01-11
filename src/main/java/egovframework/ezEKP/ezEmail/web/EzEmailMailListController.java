@@ -431,19 +431,7 @@ public class EzEmailMailListController {
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", addressStr));
 							
 				// subject
-				String subject = message.getSubject();
-				
-				if (subject != null && !subject.equals("")) {
-					String[] rawHeaders = message.getHeader("subject");
-					String rawHeader = rawHeaders[0];
-					
-					if (!ezEmailUtil.isPureAscii(rawHeader)) {
-						byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-						
-						subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-					}
-				}
-				
+				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
 							
 				if (viewSelectIndex.equals("1")) {
@@ -1089,19 +1077,7 @@ public class EzEmailMailListController {
 				String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
 				
 				// subject
-				String subject = message.getSubject();
-				
-				if (subject != null && !subject.equals("")) {
-					String[] rawHeaders = message.getHeader("subject");
-					String rawHeader = rawHeaders[0];
-					
-					if (!ezEmailUtil.isPureAscii(rawHeader)) {
-						byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-						
-						subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-					}
-				}
-				
+				String subject = ezEmailUtil.getSubject(message);				
 				subject = (subject != null) ? subject : "";
 				
 				sb.append("<NODE>");

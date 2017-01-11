@@ -15,6 +15,7 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.UIDFolder;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -353,21 +354,8 @@ public class EzEmailMailSearchController {
 				sb.append(String.format("<PARENTNAME><![CDATA[/%s]]></PARENTNAME>", folderPathName));
 				
 				// subject
-				String subject = message.getSubject();
-				
-				if (subject != null && !subject.equals("")) {
-					String[] rawHeaders = message.getHeader("subject");
-					String rawHeader = rawHeaders[0];
-					
-					// if the subject contains Non-Ascii characters(violating the standard), 
-					// try to decode it by examining the characters.					
-					if (!ezEmailUtil.isPureAscii(rawHeader)) {
-						byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-						
-						subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
-					}
-				}
-				
+				String subject = ezEmailUtil.getSubject(message);
+								
 				subject = (subject != null) ? subject : "";
 				sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
 				
