@@ -3309,8 +3309,10 @@ public class EzQuestionController extends EgovFileMngUtil {
         pollEndDate = s.parse(qstUserPollItemVO.getPollEndDate()).toString();*/
 		logger.debug("pollStartDate="+pollStartDate);
 		logger.debug("pollEndDate="+pollEndDate);
-        String uploadSDate = isoUTFDate(pollStartDate).toString();
-        String uploadEDate = isoUTFDate(pollEndDate).toString();
+        //String uploadSDate = isoUTFDate(pollStartDate).toString();
+        //String uploadEDate = isoUTFDate(pollEndDate).toString();
+		String uploadSDate = pollStartDate;
+        String uploadEDate = pollEndDate;
         logger.debug("uploadSDate="+uploadSDate);
         logger.debug("uploadEDate"+uploadEDate);
 		model.addAttribute("uploadSDate", uploadSDate);
@@ -3328,8 +3330,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		String[] offsetArr = loginVO.getOffset().split("\\|");
 		
-		model.addAttribute("offset", offsetArr[1].substring(1,3));
+		model.addAttribute("offset", offsetArr[1].substring(0,3));
+		model.addAttribute("offset2", offsetArr[1].substring(4,6));
 		
+		logger.debug("offset="+offsetArr[1]);
+		logger.debug("offset1="+offsetArr[1].substring(0,3));
+		logger.debug("offset2="+offsetArr[1].substring(4,6));
 		logger.debug("qstChangePermission End");
 		return "/ezQuestion/qstChangePermission";
 	}
