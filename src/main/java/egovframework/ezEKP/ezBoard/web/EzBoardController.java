@@ -3070,6 +3070,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/saveItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveItem(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("saveItem started.");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String prm = egovFileScrty.getPrm();
@@ -3140,7 +3142,9 @@ public class EzBoardController extends EgovFileMngUtil{
         } else {
             ret = insertNewItem(doc, pMode, realPath, userInfo);
         }
-
+        
+        logger.debug("saveItem ended. ret=" + ret);
+        
         return "<RESULT>" + ret + "</RESULT>";
 	}
 
@@ -6522,7 +6526,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시알림 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do")
-	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	@ResponseBody
+	public String sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("sendPostNotiMail started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -6569,6 +6574,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 		
 		logger.debug("sendPostNotiMail ended.");
+		return "";
 	}
 	
 	/**
