@@ -47,7 +47,7 @@ public interface EzBoardService {
 	
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, int tenantID) throws Exception;
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception;
 	
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception;
 	
@@ -111,9 +111,9 @@ public interface EzBoardService {
 	
 	public String getDocPassWord(String itemID, int tenantID) throws Exception;
 	
-	public String getItemXML(String boardID, String itemID, String lang, int tenantID) throws Exception;
+	public String getItemXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception;
 
-	public String getItemTempXML(String boardID, String itemID, String lang, int tenantID) throws Exception;
+	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception;
 	
 	public String setBoardConfig(String userID, String listCount, String preView, int tenantID) throws Exception;
 	
@@ -123,7 +123,7 @@ public interface EzBoardService {
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
-	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, int tenantID) throws Exception;
+	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, String offset, int tenantID) throws Exception;
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
@@ -216,6 +216,10 @@ public interface EzBoardService {
 	public String getItemAttachmentXMLRetrans(BoardItemVO boardItemVO) throws Exception;
 
 	public String getItemAttachmentXML(BoardItemVO boardItemVO) throws Exception;
+
+	public List<BoardListVO> getReplyNoticeMail(String boardID, String itemTreeID, String lang, int tenantID) throws Exception;
+
+	public List<LoginVO> getSendApprMailList(String boardID, String lang, int tenantID) throws Exception;
 
 
 }

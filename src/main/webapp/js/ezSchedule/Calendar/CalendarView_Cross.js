@@ -5,7 +5,6 @@ var sDate = parent.frames["left"].sDate;//new Date();
 
 //리스트뷰 바디 생성
 var startOfWeek, endOfWeek;
-
 var xmlhttp;
 var g_szCurrentApptNum = null;
 var g_szCurrentApptPNum;
@@ -25,12 +24,10 @@ var dayOfWeeks;
 var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 260) / 6) - 11;
 
 function CalendarView(pTagetID) {
-
     document.getElementById(pTagetID).innerHTML = "";
 
     if (!parent.frames["left"].document.getElementById("iYear"))
         return;
-
 
     if (DefaultView == 0)
         dayOfWeeks = strLang5; // 일>토
@@ -39,7 +36,6 @@ function CalendarView(pTagetID) {
 
     var objElm = document.getElementById(pTagetID);
     if (objElm) {
-
         var tDiv = document.createElement("DIV");
         tDiv.setAttribute("id", "tooltip");
         tDiv.style.position = "absolute";
@@ -67,6 +63,7 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
             oTh.colSpan = "2";
+            
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
@@ -80,7 +77,7 @@ function CalendarView(pTagetID) {
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
                     LunarDate = LunarDatemonth + "." + LunarDateday;
                 }
-
+                
                 oTable.className = "calendar_day_title";
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var isholiday = false;
@@ -137,7 +134,7 @@ function CalendarView(pTagetID) {
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
-
+            
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_prev";
             var mImg = document.createElement("IMG");
@@ -159,10 +156,12 @@ function CalendarView(pTagetID) {
             var mImg = document.createElement("IMG");
             mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
             mImg.setAttribute("border", "0");
+            
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].nextMonth()");
             else
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].nextDay()");
+            
             mSpan.appendChild(mImg);
             oTh.appendChild(mSpan);
             oTBody.appendChild(oTh);
@@ -172,7 +171,6 @@ function CalendarView(pTagetID) {
                 oTr.setAttribute("id", "calTR");
                 var oTd = document.createElement("TD");
                 oTd.className = "calendar_time";
-
                 var dTable = document.createElement("TABLE")
                 var dTbody = document.createElement("TBODY");
                 dTable.setAttribute("cellpadding", "0");
@@ -227,11 +225,11 @@ function CalendarView(pTagetID) {
 
             oTable.appendChild(oTBody);
             objElm.appendChild(oTable);
+            
             if (typeCal == 2) {
                 var oDiv = document.createElement("DIV");
                 oDiv.setAttribute("id", "CalDiv")
             }
-
         }
         else {
             var oTable = document.createElement("TABLE");
@@ -256,14 +254,13 @@ function CalendarView(pTagetID) {
             oDiv.setAttribute("id", "CalDiv")
         }
 
-
-
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("id", "dayDiv");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
+        
         if (typeCal == 0)
             oTable.className = "calendar_month";
         else if (typeCal == 1)
@@ -294,7 +291,6 @@ function CalendarView(pTagetID) {
 
         objElm = null;
     }
-
 
     CalViewSource();
     resize();
@@ -454,7 +450,6 @@ function MonthData(oThisDate, TDIndex) {
     else if (oThisDate.getDay() == 6)  // 토요일
         className = " sat";
 
-
     var nowDate = new Date();
     var cell_ID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
@@ -486,9 +481,9 @@ function MonthData(oThisDate, TDIndex) {
     //subTd.innerHTML = pDateData;
     if (tempyear > 1800 && tempyear <= 2101) {
         subTd.innerHTML = pDateData + " (" + LunarDate2 + ") " + holidayname;
-    }
-    else
+    } else {
         subTd.innerHTML = pDateData;
+    }
     subTr.appendChild(subTd);
     subTable.appendChild(subTr);
     objTd.appendChild(subTable);
@@ -500,6 +495,7 @@ function MonthData(oThisDate, TDIndex) {
 
     if (monthHeight < 50)
         monthHeight = 70;
+    
     subSpan.style.height = monthHeight + "px"
     subSpan.setAttribute("name", "span_list");
     subTable.setAttribute("id", "TD_" + cell_ID + "_Value");
@@ -938,12 +934,10 @@ function GetDayBodyObj() {
 
     objTr.appendChild(objTd);
 
-
     var objTd = document.createElement("TD");
     objTd.className = "td_list";
 
     for (var j = 0; j < 24; j++) {
-
         var objTD = DayData(j);
         objTd.appendChild(objTD);
     }// this Month Start
@@ -960,7 +954,6 @@ function GetDayBodyObj() {
 
 
 function DayData(j) {
-
     var divID = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
     var sTable = document.createElement("TABLE");
     sTable.setAttribute("cellpadding", "0");
@@ -1049,8 +1042,19 @@ function mfFormatTime(iMin) {
     }
     if (-1 < szRet.search(/\[h/g)) //12 hour format
     {
-        if (iHr > 12) iHr -= 12;
-        if (iHr == 0) iHr = 12;
+        if (iHr > 12) {
+        	if (iHr == 24) {
+        		iHr = "0";
+        	} else {
+        		if(iHr > 24){
+        			iHr -= 24;
+        		} else {
+        			iHr -= 12;
+        		}
+        	}        		
+        } else if (iHr == 0) {        	
+        	iHr = 12;
+        }        
         szRet = szRet.replace(/\[hh\]/g, iHr > 9 ? iHr : "0" + iHr);
         szRet = szRet.replace(/\[h\]/g, iHr);
     }
@@ -1063,6 +1067,7 @@ function mfFormatTime(iMin) {
         szRet = szRet.replace(/\[mm\]/g, iMn > 9 ? iMn : "0" + iMn);
         szRet = szRet.replace(/\[m\]/g, iMn);
     }
+
     return (szRet);
 }
 

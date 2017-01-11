@@ -61,6 +61,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -135,8 +136,7 @@ public class CommonUtil {
 			
 			LoginVO user = loginService.selectUser(login);
 	
-			user.setDeptPathCode(userID+ "," + ezOrganService.getDeptFullPath(user.getDeptID(), login.getTenantId()));
-			
+			user.setDeptPathCode(userID+ "," + user.getDeptPathCode());
 			user.setLang(lang);
 			user.setTheme("BASIC");
 			user.setTableViewOption("D");
@@ -170,6 +170,38 @@ public class CommonUtil {
 			user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);
 			
+			user.setServerName(serverName);
+			
+			return user;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public LoginSimpleVO userInfoSimple(String loginCookie){
+		try{
+			String decData = egovFileScrty.decryptAES(loginCookie);
+
+			String[] decDataArray = decData.split("///");
+			
+			String serverName = decDataArray[0];
+			String userID = decDataArray[1];
+			String locale = decDataArray[5];
+			String lang = decDataArray[6];
+			String timeZone = decDataArray[7];
+			
+            String tenantIdStr = "0";
+            
+            if (decDataArray.length >= 9) {
+                tenantIdStr = decDataArray[8];	
+            }
+            
+            LoginSimpleVO user = new LoginSimpleVO();
+            user.setId(userID);
+            user.setTenantId(Integer.parseInt(tenantIdStr));
+            user.setLang(lang);
+            user.setLocale(new Locale(locale));
+			user.setOffset(timeZone);			
 			user.setServerName(serverName);
 			
 			return user;
@@ -372,7 +404,7 @@ public class CommonUtil {
 	public String getQueryResult(Object vo) throws Exception{
 		StringBuilder stb = new StringBuilder();		
 		
-		if(vo != null){		
+		if (vo != null) {
 			stb.append("<ROW>");
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
@@ -387,9 +419,10 @@ public class CommonUtil {
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
 			stb.append("</ROW>");
-		}else{
+		} else {
 			stb.append("");
-		}		
+		}
+
 		return stb.toString();
 	}
 	

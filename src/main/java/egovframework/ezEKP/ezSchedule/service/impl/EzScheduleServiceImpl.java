@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
@@ -21,11 +20,13 @@ import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzScheduleService")
 public class EzScheduleServiceImpl implements EzScheduleService{
+	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
 	
@@ -44,9 +45,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public ScheduleConfigVO getScheduleConfig(String userID) throws Exception {
+	public ScheduleConfigVO getScheduleConfig(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", userID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
 		return ezScheduleDAO.getScheduleConfig(map);
 	}
 
@@ -125,7 +128,108 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public void scheduleNewItem(ScheduleInfoVO schInfoVO) throws Exception {
 		ezScheduleDAO.scheduleNewItem(schInfoVO);
-//		ezBoardDAO.newItem(boardListVO.getItemID());
 	}
+
+	@Override
+	public String getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID) throws Exception {
+		StringBuilder sb = new StringBuilder("<DATA>");			
+		String pidList = "'" + userID + "'," + "'" + deptID + "'," + "'" + companyID + "'";		
+		
+		List<ScheduleGroupListVO> gList = getScheduleGroupList(userID);
+		
+		for(int i = 0; i < gList.size(); i++){			
+			if(i == 0){
+				pidList += ",";
+			}
+			
+			ScheduleGroupListVO data = gList.get(i);			
+			pidList += "'" + data.getGroupId() + "'";
+			
+			if(i != gList.size()-1){
+				pidList += ",";
+			}	
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PIDLIST", pidList);
+		map.put("v_PFIELDLIST", "");
+		map.put("v_PFILTER", "");
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		map.put("v_PKEYWORD", "");
+		
+		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
+		
+		for(int j = 0; j < sList.size(); j++){			
+			ScheduleInfoVO data = sList.get(j);
+			
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userID) throws Exception {		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getScheduleGroupList(userID);
+		
+		return gList;
+	}
+
+	@Override
+	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantID) throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupList(map);
+		
+		return gList;
+	}
+	
+	@Override
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);
+		map.put("lang", lang);
+		map.put("tenantID", tenantId);
+		
+		int cnt = ezScheduleDAO.getMyGroupMemberListCnt(map);
+		
+		return cnt;
+	}
+
+	@Override
+	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception {
+		StringBuilder sb = new StringBuilder("<DATA>");		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);
+		map.put("lang", lang);
+		map.put("tenantID", tenantId);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupMemberList(map);
+		
+		for(int j = 0; j < gList.size(); j++){			
+			ScheduleGroupListVO data = gList.get(j);
+			
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);		
+		map.put("tenantID", tenantId);
+		
+		ezScheduleDAO.deleteScheduleGroup(map);
+		ezScheduleDAO.deleteScheduleGroupMember(map);
+	}	
+	
 }
 

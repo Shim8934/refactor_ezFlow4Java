@@ -252,6 +252,7 @@
               												(	A.BRD_ID = #v_PSTRBRDID#
               													AND A.COMPLETE_FLAG = 'Y'
               													AND A.TENANT_ID = #tenantID#
+              													AND B.TENANT_ID = #tenantID#
               													AND ( 	B.RESPONSE_RANGE = '0'
                     														AND to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:ss') BETWEEN to_date(A.POLL_STARTDATE, 'yyyy-MM-DD HH24:MI:ss')
                     														AND to_date(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss') +A.POST_TERM

@@ -21,23 +21,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.lib.EzScheduleInfo;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
@@ -49,11 +43,10 @@ import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
-import egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -114,18 +107,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
-    		System.out.println("funCode: " + funCode);
         } else {
-        	System.out.println("funCode: NULL");
+        	funCode = "2";
         }
         
         if (request.getParameter("subfunction") != null) {
         	subCode = request.getParameter("subfunction");
+        } else {
+        	subCode = "1";
         }
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-
 		
 		return "/ezSchedule/scheduleIndex";
 	}
@@ -136,20 +129,26 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		String	funCode		= "";	// 일정관리 or 업무관리(3)
-		String	subCode		= "";	// 아직 모름	
-		int	defaultView		= 1;	// 일간, 주간, 월간
+		String	subCode		= "";	// 아직 모름
+		int	defaultView		= 2;	// 일간, 주간, 월간
 		int	startDay		= 7;	// 일요일부터 또는 월요일부터
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
+        } else {
+        	funCode = "1";
         }
         
         if (request.getParameter("subfunction") != null) {
         	subCode = request.getParameter("subfunction");
+        } else {
+        	subCode = "1";
         }
 
         LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId());
+        
+		ScheduleConfigVO schConfVO = ezScheduleService.getScheduleConfig(loginVO.getId(), loginVO.getTenantId());
+		
 		if (schConfVO != null) {
 			defaultView = schConfVO.getDefaultView();
 			startDay = schConfVO.getStartDay();
@@ -157,11 +156,84 @@ public class EzScheduleController extends EgovFileMngUtil {
         
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("subCode", subCode);
-		model.addAttribute("defautView", defaultView);	// 임시
-		model.addAttribute("startDay", startDay);	// 임시
-
+		model.addAttribute("defautView", defaultView);
+		model.addAttribute("startDay", startDay);
 		
 		return "/ezSchedule/scheduleLeft";
+	}
+	
+	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetHoliday(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String cID = request.getParameter("COMPANYID");
+		
+		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID());
+		
+		String returnXML = "";
+		
+		for (int i=0; i<getHoliday.size(); i++ ) {
+			returnXML += commonUtil.getQueryResult(getHoliday.get(i));
+		}
+		
+		return "<DATA>" + returnXML + "</DATA>";
+	}
+	
+	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = userInfo.getId();
+		String deptID = userInfo.getDeptID();
+		String companyID = userInfo.getCompanyID();
+		String startDate = request.getParameter("STARTDATE");
+		String endDate = request.getParameter("ENDDATE");		
+		String infoXML = "";	
+		startDate = startDate + " 00:00:00";
+		endDate = endDate + " 23:59:59";
+
+		//String idList = request.getParameter("IDLIST");		
+		//String groupID = request.getParameter("GROUPID");
+		//String app = request.getParameter("APP");
+		
+		/* 도메인 및 메일과 관련된 공유 프로세스로 짐작됨. 일단 주석처리함 */
+		/*String domainName = null;
+        domainName = GetSystemConfigValue("DomainName");
+
+        String personalid = null;
+        String sharedeptid = null;
+        String sharecompanyid = null;
+
+        if (GetSystemConfigValue("LoginIDType") == "mail")
+        {
+            personalid = userinfo.Email;
+            sharedeptid = "D" + userinfo.DeptID + "@" + domainName;
+            sharecompanyid = "C" + userinfo.CompanyID + "@" + domainName;
+        }
+        else
+        {
+            personalid = userinfo.UserPrincipalName;
+            sharedeptid = "D" + userinfo.DeptID + "@" + domainName;
+            sharecompanyid = "C" + userinfo.CompanyID + "@" + domainName;
+        }*/
+		
+		/* 구글 메일 연동관련 조건문. 일단 주석처리함 */
+		/*if (idList != "GOOGLE") {
+			
+		} else {
+			
+		}*/
+		
+		infoXML = ezScheduleService.getScheduleList(startDate, endDate, userID, deptID, companyID);
+		
+		return infoXML;
 	}
 
 	/**
@@ -169,50 +241,41 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleMain.do")
 	public String  scheduleMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
-		int		receiveCount = 0;
-		int 	groupCount = 0;
+		int	receiveCount = 0;
+		int groupCount = 0;
+		int	defaultView = 0;
+		int	startDay = 0;
+		int	startTime = 0;
+		int	endTime = 0;
+		int	timeZone = 0;
 		String	deptAdmin = "";
 		String	companyAdmin = "";
 		String	idList = "";
-		String	idType = "T";
-        String	groupId = "";
-
-		String	otherId = "";
-		int		defaultView;
-		int		startDay;
-		int		startTime;
-		int		endTime;
+		String	idType = "T";        
+		String	otherId = "";		
 		String	secretaryXml = "";
         String	groupXml = "";
         String	groupXmlTemp = "";
-		String	shareXml = "";
-        String	scheduleType = "";
-        String	pOffset = "";
-		int		timeZone = 0;
-        String	useGoogleCalendar = config.getProperty("UseGoogleCalrendar");
-        String	gList = "";
-        String	useEditor = config.getProperty("config.EDITOR");
-        String	useIE11Browser = "";
-        String	pFlag = "";
-        String	pGoogleID = "";
+		String	shareXml = "";        
+        String	pOffset = "";        
         String	defaultTitle = "";
 		
-		groupId = request.getParameter("groupid");
+		loginVO = commonUtil.userInfo(loginCookie);
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
+		String groupId = request.getParameter("groupid");
+		
 		if (groupId == null) {
 			groupId = "";
 		}
-
-		loginVO = commonUtil.userInfo(loginCookie);
 
 		List<PubScheHqVO> pubScheHqVO = ezScheduleService.getPublicScheduleHq(loginVO.getId());
 		List<PubScheSecVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang());
 		List<PubScheDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getLang());
 		List<PubScheCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getLang());
 
-		//본부아이디
-        List<Map> hqList = new ArrayList();
-        if (pubScheHqVO.size() > 0)
-        {
+		//본부아이디        
+		List<Map<String, Object>> hqList = new ArrayList<Map<String, Object>>();
+        if (pubScheHqVO.size() > 0) {
             /* 20110406 표준에는 없는 기능이므로 일단 주석처리
             string _hqid = hq[0]["HQID"].ToString().Trim();
             LitHq.Text = string.Format("<option value=\"{0}\" >{1}</option>", "HQ", RM.GetString("t995"));
@@ -221,79 +284,51 @@ public class EzScheduleController extends EgovFileMngUtil {
             userinfo.HqName2 = hq[0]["HQNAME2"].ToString().Trim();
              * */
         	// 원래 소스는 위처럼 주석처리되어 있지만 필요할 것 같아 다음과 같이 추가. 어쩌면 리스트일 수도
-            HashMap hm = new HashMap();
+            Map<String, Object> hm = new HashMap<String, Object>();
             hm.put("value", pubScheHqVO.get(0).getHqId().trim());
             hm.put("text", pubScheHqVO.get(0).getHqName().trim());
             hqList.add(hm);
         }
  
-        List<Map> shareList = new ArrayList();
-        for (int i = 0; i < pubScheSecVO.size(); i++)
-        {
-            HashMap hm = new HashMap();
+        List<Map<String, Object>> shareList = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < pubScheSecVO.size(); i++) {
+        	Map<String, Object> hm = new HashMap<String, Object>();
             hm.put("value", pubScheSecVO.get(i).getSecId().trim());
             hm.put("type", "user");
             hm.put("text", pubScheSecVO.get(i).getSecName().trim());
             shareList.add(hm);
         }
        
-        for (int i = 0; i < pubScheDeptVO.size(); i++)
-        {
-            HashMap hm = new HashMap();
+        for (int i = 0; i < pubScheDeptVO.size(); i++) {
+            Map<String, Object> hm = new HashMap<String, Object>();
             hm.put("value", pubScheDeptVO.get(i).getDeptId().trim());
             hm.put("type", "dept");
             hm.put("text", "[" + msg.getMessage("ezSchedule.t205", locale) + "]" + pubScheDeptVO.get(i).getDeptName().trim());
             shareList.add(hm);
         }
 
-        for (int i = 0; i < pubScheCumulerVO.size(); i++)
-        {
-            HashMap hm = new HashMap();
+        for (int i = 0; i < pubScheCumulerVO.size(); i++) {
+            Map<String, Object> hm = new HashMap<String, Object>();
             hm.put("value", pubScheCumulerVO.get(i).getDeptId().trim());
             hm.put("type", "dept");
             hm.put("text", "[" + msg.getMessage("ezSchedule.t996", locale) + "]" + pubScheCumulerVO.get(i).getTitleName().trim());
             shareList.add(hm);
         }
         
-        if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1"))
-        {
+        if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
             companyAdmin = "Y";
             deptAdmin = "Y";
-        }
-        else if (loginVO.getRollInfo().contains("g=1"))
-        {
+        } else if (loginVO.getRollInfo().contains("g=1")) {
             deptAdmin = "Y";
         }
 
-        String useExchange = config.getProperty("Use_Exchange_Pims");
-        if (useExchange == null) useExchange = "";
-        
-        if (useExchange.equals("YES")) {	// 20160824 by kgs: Exchange를 쓸 일은 없으니 Skip. 나중에 CalDAV로 수정
-            String domainName = config.getProperty("DomainName");
-
-            String personalId = null;
-
-            if (config.getProperty("LoginIDType").equals("mail"))
-            {
-                personalId = loginVO.getEmail();
-            }
-            else
-            {
-                personalId = loginVO.getName();	// UserPrincipalName
-            }
-            // receiveCount = GetReceiveCount(esb);
-        }
-        else
-        {
-            receiveCount = GetReceiveCount_DB(loginVO.getId());
-        }
+        receiveCount = GetReceiveCount_DB(loginVO.getId());        
         groupCount = GetInviteScheduleGroupCount(loginVO.getId());	// 일정 그룹 초대건수
 
         ScheduleConfigVO scheduleConfigVO = ezScheduleInfo.GetConfigInfo(loginVO.getId());	// 환경설정 정보            
 
         // 일정 환경설정 정보
-        if (scheduleConfigVO != null)
-        {
+        if (scheduleConfigVO != null) {
             defaultView	= scheduleConfigVO.getDefaultView();
             startDay	= scheduleConfigVO.getStartDay();
             startTime	= scheduleConfigVO.getStartTime();
@@ -313,22 +348,19 @@ public class EzScheduleController extends EgovFileMngUtil {
 	                defaultTitle = msg.getMessage("ezSchedule.t142", locale);
 	           		break;
             }
-        }
-        else
-        {
+        } else {
             defaultView	= 2;
             startDay	= 7;
             startTime	= 540 / 60;
             endTime		= 1020 / 60;
         }
 
-        List<ScheduleGroupListVO> groupList = ezScheduleInfo.GetScheduleGroupList(loginVO.getId());
+        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
 		groupXml = commonUtil.getQueryResult(groupList);	// 일정 그룹 목록
         groupXmlTemp = groupXml.replace("\"", "&quot;");
-
         otherId = request.getParameter("otherid");
-
         idType = request.getParameter("idtype");
+        
         if (idType == null) {
         	idType = "";
         }
@@ -363,25 +395,9 @@ public class EzScheduleController extends EgovFileMngUtil {
             }
         }
 
-        UserLocalInfoVO userLocalInfo = ezScheduleInfo.GetUserLocalInfo(loginVO.getId());
-        if (userLocalInfo != null) {
-        	String[] timeZoneStr = userLocalInfo.getTimeZone().split(":");
-        	timeZone = Integer.parseInt(timeZoneStr[0]) * 60 + Integer.parseInt(timeZoneStr[1]);
-        }
+        pOffset = loginVO.getOffset().split("\\|")[1];      
+        timeZone = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 
-        // 2011-06 GoogleCalendar              
-        String pGooglePWD = "";
-        List<ScheduleGmailInfoVO> gmailInfo = ezScheduleInfo.GetScheduleGmailInfo(loginVO.getId());
-		Document docGmail = commonUtil.convertStringToDocument(commonUtil.getQueryResult(gmailInfo));
-
-		try {
-	        if (docGmail != null)
-	        {
-	        	pFlag = docGmail.getElementsByTagName("FLAG").item(0).getTextContent().trim();
-	        	pGoogleID = docGmail.getElementsByTagName("GMAILID").item(0).getTextContent().trim();
-	        }
-		} catch (Exception e) {e.printStackTrace();}
-        
         model.addAttribute("userInfo",		loginVO);
         model.addAttribute("pOffset",		pOffset);
         model.addAttribute("timeZoneStr",	timeZone);
@@ -404,11 +420,96 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("hqList",		hqList);
         model.addAttribute("shareList",		shareList);
-        model.addAttribute("useExchange",	useExchange);
-		
+        model.addAttribute("useExchange",	"");
+        
 		return "/ezSchedule/scheduleMain";
 	}
+	
+	/**
+	 * 일정그룹관리 메인화면
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleManageGroup.do")
+	public String scheduleManageGroup(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginSimpleVO.getTenantId());
 
+		model.addAttribute("use_ocs", use_ocs);
+		
+		return "/ezSchedule/scheduleManageGroup";
+	}
+	
+	/**
+	 * 일정그룹관리 그리드 리스트
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGroupList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleGroupList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId());
+		
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>60%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>40%</WIDTH></HEADER></HEADERS>");
+        result.append("<ROWS>");
+		
+        for (int i = 0; i < myList.size(); i++) {
+        	ScheduleGroupListVO data = myList.get(i);
+        	
+        	result.append("<ROW>");
+            result.append("<CELL>");
+            result.append("<VALUE>CHECK</VALUE>");
+            result.append("<DATA1>" + data.getGroupId() + "</DATA1>");
+            result.append("<DATA2><![CDATA[" + data.getDescription() + "]]></DATA2>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            
+            int myMemberListCnt = ezScheduleService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+            String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
+            
+            result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            result.append("</CELL>");
+            result.append("<CELL>");
+            result.append("<VALUE>" + cDate + "</VALUE>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+		
+		return result.toString();
+	}
+	
+	/**
+	 * 일정그룹관리 리스트 상세화면
+	 */
+	@RequestMapping(value="/ezSchedule/getGroupDetail.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getGroupDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String gID = request.getParameter("groupID");
+		String xmlResult = ezScheduleService.getMyGroupMemberList(gID, loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+		
+		return xmlResult;
+	}
+	
+	/**
+	 * 일정그룹관리 리스트 삭제
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleDelGroup.do")	
+	public void scheduleDelGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String groupID = request.getParameter("groupID");
+		String gIDs[] = groupID.split(";");
+		
+		for (int i = 0; i < gIDs.length; i++) {
+			ezScheduleService.deleteScheduleGroup(gIDs[i], loginSimpleVO.getTenantId());
+		}		
+		
+	}
+	
 	/**
 	 * 일정작성
 	 */
@@ -686,7 +787,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             }
             // scheduleId == null
             else {
-                groupList = ezScheduleInfo.GetScheduleGroupList(loginVO.getId());
+                groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
             }
             
 			String cDate = "";
@@ -1032,7 +1133,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 //                String attendantdeptname = xmldom.GetElementsByTagName("ATTENDANTDEPTNAME")[i].InnerText;
 //                String attendantdeptname2 = xmldom.GetElementsByTagName("ATTENDANTDEPTNAME2")[i].InnerText;
 //
-//				attendantsql.Append("INSERT INTO TBLATTENDANT(ScheduleID,AttendantID,AttendantName,AttendantDeptName,Status,ResponseDate) VALUES(seq_inc_TBLSCHEDULE.CURRVAL, '" + 
+//				attendantsql.append("INSERT INTO TBLATTENDANT(ScheduleID,AttendantID,AttendantName,AttendantDeptName,Status,ResponseDate) VALUES(seq_inc_TBLSCHEDULE.CURRVAL, '" + 
 //				MakeRightField(attendantid) + "','" + MakeRightField(attendantname) + "','" + MakeRightField(attendantdeptname) + "',0,sysdate);)";
 //            }                
 //            pTitle = LeftByte(pTitle, 250);
@@ -1047,15 +1148,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 //            if (attendantsql.Length > 0) hasattendant = "Y";
 //
 //            StringBuilder sql = new StringBuilder();
-//			sql.Append(  "INSERT INTO TBLSCHEDULE(ScheduleID,ParentID,OwnerID,OwnerName,CreatorID,CreatorName,CreateDate,ModifierID,ModifierName,");
-//			sql.Append( "ModifyDate,ScheduleType,Importance,HasAttendant,HasAttach,HasComment,IsReadOnly,IsPublic,DateType,StartDate,");
-//			sql.Append( "EndDate,Repetition,RepetitionDelete,Title,Location,ContentPath) VALUES(seq_inc_TBLSCHEDULE.NEXTVAL,0,'" + MakeRightField(pOwnerID) );
-//            sql.Append( "','" + MakeRightField(pOwnerName) + "','" + MakeRightField(pCreatorID) + "','" );
-//            sql.Append( MakeRightField(pCreatorName) + "',sysdate,'" + MakeRightField(pCreatorID) + "','" + MakeRightField(pCreatorName) + "'," );
-//			sql.Append( "sysdate," + pScheduleType + "," + pImportance + ",'" + hasattendant + "','" + hasattach + "','N','N','" );
-//			sql.Append( pIsPublic + "'," + pDateType + ",to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi'),to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),'" + pRepetition);
-//            sql.Append( "','','" + MakeRightField(pTitle) + "','" +	MakeRightField(pLocation) + "','" + path + "');");
-//            sql.Append(attachsql.ToString() + attendantsql.ToString());
+//			sql.append(  "INSERT INTO TBLSCHEDULE(ScheduleID,ParentID,OwnerID,OwnerName,CreatorID,CreatorName,CreateDate,ModifierID,ModifierName,");
+//			sql.append( "ModifyDate,ScheduleType,Importance,HasAttendant,HasAttach,HasComment,IsReadOnly,IsPublic,DateType,StartDate,");
+//			sql.append( "EndDate,Repetition,RepetitionDelete,Title,Location,ContentPath) VALUES(seq_inc_TBLSCHEDULE.NEXTVAL,0,'" + MakeRightField(pOwnerID) );
+//            sql.append( "','" + MakeRightField(pOwnerName) + "','" + MakeRightField(pCreatorID) + "','" );
+//            sql.append( MakeRightField(pCreatorName) + "',sysdate,'" + MakeRightField(pCreatorID) + "','" + MakeRightField(pCreatorName) + "'," );
+//			sql.append( "sysdate," + pScheduleType + "," + pImportance + ",'" + hasattendant + "','" + hasattach + "','N','N','" );
+//			sql.append( pIsPublic + "'," + pDateType + ",to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi'),to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),'" + pRepetition);
+//            sql.append( "','','" + MakeRightField(pTitle) + "','" +	MakeRightField(pLocation) + "','" + path + "');");
+//            sql.append(attachsql.ToString() + attendantsql.ToString());
 //
 //            return GetSingleQueryResult("ezPims", sql.ToString());
 //        }
@@ -1089,8 +1190,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 //                String filename = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[1];
 //                String filepath = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[0];
 //                String filesize = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[2];
-//				attachsql.Append("INSERT INTO TBLSCHEDULEATTACH(AttachID, ScheduleID, FileName, FilePath, FileSize) VALUES(SEQ_INC_TBLSCHEDULEATTACH.NEXTVAL,");
-//                attachsql.Append( pScheduleID + ", '" +MakeRightField(filename) + "','" + MakeRightField(filepath) + "', " + filesize + ") ;");
+//				attachsql.append("INSERT INTO TBLSCHEDULEATTACH(AttachID, ScheduleID, FileName, FilePath, FileSize) VALUES(SEQ_INC_TBLSCHEDULEATTACH.NEXTVAL,");
+//                attachsql.append( pScheduleID + ", '" +MakeRightField(filename) + "','" + MakeRightField(filepath) + "', " + filesize + ") ;");
 //            }
 //            pTitle = LeftByte(pTitle, 250);
 //            pLocation = LeftByte(pLocation, 250);
@@ -1100,13 +1201,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 //            String hasattach = "N";
 //            if (attachsql.Length > 0) hasattach = "Y";
 //            StringBuilder sql = new StringBuilder();
-//            sql.Append("UPDATE TBLSCHEDULE SET ModifierID='" + MakeRightField(pModifierID) + "',ModifierName=N'" + MakeRightField(pModifierName) + "'," + "ModifierName2=N'" + MakeRightField(pModifierName2) + "',");
-//            sql.Append("ModifyDate=sysdate,Importance=" + pImportance + ",HasAttach='" + hasattach + "',IsPublic='" + pIsPublic + "',DateType=" + pDateType + "," );
-//			sql.Append("StartDate=to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi:ss'),EndDate=to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),Repetition='" + pRepetition + "',Title='" + MakeRightField(pTitle) + "',Location='" + MakeRightField(pLocation) + "' " );
-//            sql.Append("WHERE ScheduleID=" + pScheduleID + " OR ParentID=" + pScheduleID + " ;");
-//            sql.Append("DELETE FROM TBLSCHEDULEATTACH WHERE ScheduleID=" + pScheduleID + " ;");
+//            sql.append("UPDATE TBLSCHEDULE SET ModifierID='" + MakeRightField(pModifierID) + "',ModifierName=N'" + MakeRightField(pModifierName) + "'," + "ModifierName2=N'" + MakeRightField(pModifierName2) + "',");
+//            sql.append("ModifyDate=sysdate,Importance=" + pImportance + ",HasAttach='" + hasattach + "',IsPublic='" + pIsPublic + "',DateType=" + pDateType + "," );
+//			sql.append("StartDate=to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi:ss'),EndDate=to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),Repetition='" + pRepetition + "',Title='" + MakeRightField(pTitle) + "',Location='" + MakeRightField(pLocation) + "' " );
+//            sql.append("WHERE ScheduleID=" + pScheduleID + " OR ParentID=" + pScheduleID + " ;");
+//            sql.append("DELETE FROM TBLSCHEDULEATTACH WHERE ScheduleID=" + pScheduleID + " ;");
 //
-//            sql.Append(attachsql.ToString());
+//            sql.append(attachsql.ToString());
 //
 //            return ExecuteSQL("ezPims", sql.ToString());
 //        }
@@ -1345,23 +1446,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         strXML.append("</NODES></ROOT>");
         
         return strXML.toString();
-    }
-	
-	/**
-	 * 일정관리 휴일 함수 호출 함수
-	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String scheduleGetHoliday(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().toUpperCase().trim(), userInfo.getCompanyID());
-		String returnXML = "";
-		for (int i=0; i<getHoliday.size(); i++ ) {
-			returnXML = commonUtil.getQueryResult(getHoliday.get(i));
-		}
-		return returnXML;
-	}
+    }	
 
     public int GetReceiveCount_DB(String pUserId)
     {
