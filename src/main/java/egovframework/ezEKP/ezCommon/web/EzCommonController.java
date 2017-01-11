@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,9 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.web.EzEmailMailWriteController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -65,6 +70,11 @@ public class EzCommonController extends EgovFileMngUtil{
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
+	
 	@RequestMapping(value = "/ezCommon/manyColor.do")
 	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
 		return "ezCommon/manyColor";
@@ -76,6 +86,8 @@ public class EzCommonController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommon/htmlToMHT.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("htmlToMHT started.");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
         String strHTML = "";
@@ -91,23 +103,19 @@ public class EzCommonController extends EgovFileMngUtil{
     		scheme = "https://";
     	}
         
-        //ezEmail 관련 부분이라 스킵 exchange 관련소스 많음
-//        while (strHTML.indexOf("src=\"http") > 0)
-//        {
-//            int pos1 = strHTML.indexOf("src=\"http") + 5;
-//            int pos2 = strHTML.substring(pos1).indexOf("\"");
-//            String imgurlOrg = strHTML.substring(pos1, pos2);
-//            if (imgurlOrg.indexOf("ezEmail") > 0) {
-//                string Imgurl = ImgurlOrg.Replace(@"&amp;", @"&");
-//                string ConverImgurl = MailContentDownload(Imgurl);
-//                ConverImgurl = "replace_"+scheme + HttpContext.Current.Request.Url.Host + ConverImgurl;
-//                strHTML = strHTML.Replace(ImgurlOrg, ConverImgurl);
-//            }
-//            else
-//            {
-//                break;
-//            }
-//        }
+    	while (strHTML.indexOf("src=\"/ezEmail/downloadInline.do") > 0) {
+    		int pos1 = strHTML.indexOf("src=\"/ezEmail/downloadInline.do") + 5;
+    		int pos2 = pos1 + strHTML.substring(pos1).indexOf("\"");
+    		String imgUrlOrg = strHTML.substring(pos1, pos2);
+			String imgUrl = imgUrlOrg.replaceAll("&amp;", "&");
+			
+			String convertImgUrl = ezEmailService.mailContentDownload(loginCookie, imgUrl, realPath);
+			convertImgUrl = "replace_" + scheme + userInfo.getServerName() + convertImgUrl;
+			logger.debug("convertImgUrl=" + convertImgUrl);
+			
+			strHTML = strHTML.replace(imgUrlOrg, convertImgUrl);
+    	}
+    	
         strHTML = strHTML.replace("replace_" + scheme, scheme);
 
         // reform 리폼관련 
@@ -143,6 +151,8 @@ public class EzCommonController extends EgovFileMngUtil{
 //        }
         // reform - end
         String mhtData = ezCommonService.startHtml2Mht(strHTML, realPath, userInfo.getLocale());
+        
+        logger.debug("htmlToMHT ended.");
         
         return mhtData;
 	}

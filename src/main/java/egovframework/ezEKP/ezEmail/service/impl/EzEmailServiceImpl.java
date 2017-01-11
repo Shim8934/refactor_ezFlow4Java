@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
+import java.io.File;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -11,9 +13,12 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
 import org.json.simple.JSONArray;
@@ -26,7 +31,11 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.sun.mail.imap.IMAPFolder;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
@@ -69,6 +78,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;    
 	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
@@ -1086,4 +1098,73 @@ public class EzEmailServiceImpl implements EzEmailService {
         logger.debug("sendMail ended.");
 	}
 	
+	@Override
+	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception {
+		logger.debug("mailContentDownload started. url=" + url);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userAccount = userInfo.getId() + "@" + domainName;
+        
+		String returnValue = "";
+		
+		try {
+			int attachIDPos1 = url.indexOf("&folderPath=") + 12;
+            int attachIDPos2 = url.indexOf("&uid=");
+            int attachIDPos3 = url.indexOf("&contentId=");
+			
+            String mailbox = url.substring(attachIDPos1, attachIDPos2);
+            String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
+            String contentId = url.substring(attachIDPos3 + 11);
+            contentId = URLDecoder.decode(contentId, "utf-8");
+            logger.debug("mailbox=" + mailbox + ",uid=" + uidStr + ",contentId=" + contentId);
+            
+            IMAPAccess ia = null;
+            try {
+            	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userAccount, password, egovMessageSource, userInfo.getLocale());
+            	
+            	Folder folder = ia.getFolder(mailbox);
+            	
+            	if (folder.exists()) {
+            		folder.open(Folder.READ_ONLY);
+        			Message message = ((IMAPFolder)folder).getMessageByUID(Long.parseLong(uidStr));
+        			
+        			if (message != null) {
+        				MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getInlinePart(message, contentId);
+    					
+    					if (part != null) {
+    						String fileName = UUID.randomUUID().toString() + ".jpg";
+    						String saveDirectory = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+    						saveDirectory += commonUtil.separator + commonUtil.getTodayUTCTime("yyyyMMdd");
+    						
+    						File f = new File(realPath + saveDirectory);
+    						if (!f.exists()) {
+    							f.mkdirs();
+    						}
+    						
+    						part.saveFile(realPath + saveDirectory + commonUtil.separator + fileName);
+    						logger.debug(fileName + " is saved to " + saveDirectory + " temporarily.");
+    						
+    						returnValue = saveDirectory + commonUtil.separator + fileName;
+    					}
+        			}
+        			
+        			folder.close(false);
+            	}
+            } catch (Exception e) {
+            	e.printStackTrace();
+            } finally {
+				ia.close();
+			}
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("mailContentDownload ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
 }

@@ -940,7 +940,8 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        MailxmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_read_board.aspx", false);
+		        var _newGuid = "{" + NewGuid + "}";
+		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do?NewGuid=" + _newGuid, false);
 		
 		        MailxmlHTTP.send(strQuery);
 		        if (MailxmlHTTP.status == 200) {
@@ -959,10 +960,18 @@
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
 		            message.SetEditorContent(Content);
-		            //var ret = "";
-		           // ret = SelectBoard(InsertMailInfo_Complete);
+		            
+		            if (mailXml.getElementsByTagName("ROOT").length > 0) {
+		                mgubun = "M";
+		                
+		                attachxml = getNodeText(mailXml.getElementsByTagName("ATTACH").item(0));
+		                var strXML = getXmlString(mailXml.getElementsByTagName("ROOT").item(0));
+		                returnvalue(strXML);
+		            }
 		        }
 		    }
+		    
+		    /* 2017-01-11 이효민사원 - 사용안함 
 		    function InsertMailInfo_Complete(ret) {
 		        OpenWin.close();
 		        if (ret == "") {
@@ -1024,7 +1033,7 @@
 		            strXML += "</NODES></ROOT>";
 		            returnvalue(strXML);
 		        }
-		    }
+		    } */
 		    
 		     /*
 		    function InsertDocInfo() {

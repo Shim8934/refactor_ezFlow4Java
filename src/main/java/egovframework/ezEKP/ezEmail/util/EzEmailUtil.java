@@ -1301,6 +1301,70 @@ public class EzEmailUtil {
 	}
 	
 	/**
+	 * 메일 첨부파일 Part 반환 함수
+	 */
+	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
+		logger.debug("getAttachPart started.");
+		
+		if (part.isMimeType("multipart/mixed")){
+			Part p = ((Multipart)part.getContent()).getBodyPart(index);
+			
+			logger.debug("getAttachPart ended.");
+			return p;
+		// multipart/alternative 안에 multipart/mixed가 있는 경우의 처리
+		} else if (part.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            
+            for (int i = 0; i < count; i++) {
+                Part p = getAttachPart(mp.getBodyPart(i), index);
+                
+                if (p != null) {
+                    return p;
+                }
+            }
+		}
+		
+		logger.debug("getAttachPart ended.");
+		return null;
+	}
+	
+	/**
+	 * 메일 인라인 이미지 Part 반환 함수
+	 */
+	public Part getInlinePart(Part part, String contentId) throws MessagingException, IOException{
+		logger.debug("getInlinePart started.");
+		
+		if(part.isMimeType("multipart/related")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				Part p = mp.getBodyPart(i);
+				if(p instanceof MimePart){
+					if(((MimePart)p).getContentID()!=null && ((MimePart)p).getContentID().equals(contentId)){
+						logger.debug("getInlinePart ended.");
+						return p;
+					}
+				}
+			}
+		} else if(part.isMimeType("multipart/*")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			Part p = null;
+			for (int i = 0; i < count; i++) {
+				p = getInlinePart(mp.getBodyPart(i), contentId);
+				if(p != null){
+					logger.debug("getInlinePart ended.");
+					return p;
+				}
+			}
+		}
+		
+		logger.debug("getInlinePart ended.");
+		return null;
+	}
+	
+	/**
 	 * returns an array of long of size 2.
 	 * first element is hour of time offset and
 	 * second element is minute of time offset

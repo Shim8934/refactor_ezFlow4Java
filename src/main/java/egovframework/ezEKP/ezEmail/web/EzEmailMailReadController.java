@@ -8,9 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -23,12 +25,11 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
@@ -60,7 +62,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
@@ -673,7 +674,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						part = message;
 					}
 					else {
-						part = getAttachPart(message, index);
+						part = ezEmailUtil.getAttachPart(message, index);
 					}
 					
 					if (part == null) {
@@ -824,7 +825,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
-					Part part = getInlinePart(message, contentId);
+					Part part = ezEmailUtil.getInlinePart(message, contentId);
 					
 					if (part == null) {
 						logger.error("InlinePart not found. contentId=" + contentId);
@@ -1489,69 +1490,160 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
-	
-	/**
-	 * 메일 첨부파일 Part 반환 함수
-	 */
-	private Part getAttachPart(Part part, int index) throws MessagingException, IOException {
-		logger.debug("getAttachPart started.");
+	@RequestMapping(value="/ezEmail/mailReadBoard.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailReadBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("mailReadBoard started.");
 		
-		if (part.isMimeType("multipart/mixed")){
-			Part p = ((Multipart)part.getContent()).getBodyPart(index);
+		Document xmldom = commonUtil.convertStringToDocument(bodyData);
+		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
+		String newGuid = request.getParameter("NewGuid");
+		logger.debug("url=" + url + ",newGuid=" + newGuid);
+		
+		String folderPath = url.split("/")[0];
+		String uidStr = url.split("/")[1];
+		long uid = Long.parseLong(uidStr);
+		
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userAccount = loginInfo.getId() + "@" + domainName;
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<DATA>");
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
 			
-			logger.debug("getAttachPart ended.");
-			return p;
-		// multipart/alternative 안에 multipart/mixed가 있는 경우의 처리
-		} else if (part.isMimeType("multipart/*")) {
-            Multipart mp = (Multipart)part.getContent();
-            int count = mp.getCount();
-            
-            for (int i = 0; i < count; i++) {
-                Part p = getAttachPart(mp.getBodyPart(i), index);
-                
-                if (p != null) {
-                    return p;
-                }
-            }
-		}
-		
-		logger.debug("getAttachPart ended.");
-		return null;
-	}
-	
-	/**
-	 * 메일 인라인 이미지 Part 반환 함수
-	 */
-	private Part getInlinePart(Part part, String contentId) throws MessagingException, IOException{
-		logger.debug("getInlinePart started.");
-		
-		if(part.isMimeType("multipart/related")){
-			Multipart mp = (Multipart)part.getContent();
-			int count = mp.getCount();
-			for (int i = 0; i < count; i++) {
-				Part p = mp.getBodyPart(i);
-				if(p instanceof MimePart){
-					if(((MimePart)p).getContentID()!=null && ((MimePart)p).getContentID().equals(contentId)){
-						logger.debug("getInlinePart ended.");
-						return p;
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f.exists()) {
+				f.open(Folder.READ_ONLY);
+				Message message = ((IMAPFolder)f).getMessageByUID(uid);
+				
+				if (message != null) {
+					FetchProfile fp = new FetchProfile();
+					
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);
+					fp.add("Subject");
+					fp.add("From");
+					fp.add("To");
+					fp.add("Cc");
+					fp.add("Bcc");
+					
+					Message[] fetchMessages = new Message[] {message};
+					f.fetch(fetchMessages, fp);
+					
+					// subject
+					String subject = message.getSubject();
+					if (subject != null && !subject.equals("")) {
+						String[] rawHeaders = message.getHeader("subject");
+						String rawHeader = rawHeaders[0];
+						
+						if (!ezEmailUtil.isPureAscii(rawHeader)) {
+							byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+							
+							subject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+						}
+					}
+					sb.append("<SUBJECT><![CDATA[" + subject + "]]></SUBJECT>");
+					
+					// from
+					Address[] arrFroms = message.getFrom();
+					String fromStr = "";
+					if (arrFroms != null) {
+						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						fromStr = commonUtil.trimDoubleQuotes(fromStr);
+					} else {
+						String[] fromHeaders = message.getHeader("From");
+						if (fromHeaders != null) {
+							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
+						}
+					}
+					sb.append("<FROMNAME>" + fromStr + "</FROMNAME>");
+					
+					// received date
+					String dateStr = "";
+					Date date = message.getReceivedDate();
+					if (date != null) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(date);
+						
+						dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
+					}
+					sb.append("<DATE><![CDATA[" + dateStr + "]]></DATE>");
+					
+					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, false);
+					
+					String htmlBody = bodyInfoList.get(0);
+					htmlBody = EgovStringUtil.getSpclStrCnvr(htmlBody);
+					sb.append("<HTMLDESCRIPTION>" + htmlBody + "</HTMLDESCRIPTION>");
+					
+					//첨부파일 관련
+					if (attachedFileList.size() > 0) {
+						sb.append("<ROOT><NODES>");
+						
+						String realPath = commonUtil.getRealPath(request);
+						String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", loginInfo.getTenantId());
+						
+						String attach = ""; 
+						
+						for (int i=0; i<attachedFileList.size(); i++) {
+							MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
+							
+							if (part != null) {
+								String orgFileName = attachedFileList.get(i).get("filename");
+								String fileName = newGuid + "_" + orgFileName;
+								
+								File file = new File(realPath + path);
+								if (!file.exists()) {
+									file.mkdirs();
+								}
+								
+								part.saveFile(realPath + path + commonUtil.separator + fileName);
+								logger.debug(fileName + " is saved to " + realPath + path + " temporarily.");
+								
+								attach += "tempUploadFile" + commonUtil.separator + fileName + ";";
+								
+								sb.append("<NODE>");
+								sb.append("<PUPLOADSN><![CDATA[" + fileName + "]]></PUPLOADSN>");
+								sb.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
+								sb.append("<PFILENAME><![CDATA[" + orgFileName + "]]></PFILENAME>");
+								sb.append("<FILESIZE><![CDATA[" + attachedFileList.get(i).get("size") + "]]></FILESIZE>");
+								sb.append("<FILELOCATION><![CDATA[" + path + "]]></FILELOCATION>");
+								sb.append("</NODE>");
+							}
+						}
+						
+						sb.append("<ATTACH><![CDATA[" + attach + "]]></ATTACH>");
+						sb.append("</NODES></ROOT>");
 					}
 				}
+				f.close(false);
 			}
-		} else if(part.isMimeType("multipart/*")){
-			Multipart mp = (Multipart)part.getContent();
-			int count = mp.getCount();
-			Part p = null;
-			for (int i = 0; i < count; i++) {
-				p = getInlinePart(mp.getBodyPart(i), contentId);
-				if(p != null){
-					logger.debug("getInlinePart ended.");
-					return p;
-				}
+			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
 		}
 		
-		logger.debug("getInlinePart ended.");
-		return null;
+		sb.append("</DATA>");
+		
+		logger.debug("mailReadBoard ended.");
+		
+		return sb.toString();
 	}
 	
 	/**
