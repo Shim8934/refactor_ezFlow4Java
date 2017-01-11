@@ -28,6 +28,7 @@
 			var g_myemail = "${userInfo.mail}";
 			var g_szUserID = "${userInfo.cn}";
 			var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
+			var tid = "${tenantId}";
 			var g_senderinfo = "${senderInfo}";
 			var g_eImportance = "${importance}";                                      
 			var g_ePostType = "${postType}";                                          
