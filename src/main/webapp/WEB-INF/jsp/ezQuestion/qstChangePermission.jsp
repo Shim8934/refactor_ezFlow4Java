@@ -64,15 +64,30 @@
 	        	});
 	        	var NowDate = new Date("${uploadSDate}");
 	        	var NowDate2 = new Date("${uploadEDate}");
-				
+				//2017-01-09 그냥 서버단에서 함수 쓴다음 넘김
+	        	
 	        	//offset
-	        	var offset = "${offset}";
-	        	offset *= 1;
-
-	        	NowDate.setHours(NowDate.getHours() - offset);
-	        	NowDate2.setHours(NowDate2.getHours() - offset);
-
+	        	//var offset = "${offset}";
+	        	//offset *= 1;
+//alert(offset);
+	        	//NowDate.setHours(NowDate.getHours() - offset);
+	        	//NowDate2.setHours(NowDate2.getHours() - offset);
+	        	
+	        	//var offset2 = "${offset2}";
+	        	//offset2 *= 1;
+//alert(offset2);
+//alert("${offset}".substring(0,1));
+	        	//if ("${offset}".substring(0,1) == "+") {
+	        		//NowDate.setMinutes(NowDate.getMinutes() - offset2);
+		        	//NowDate2.setMinutes(NowDate2.getMinutes() - offset2);	
+	        	//} else {
+	        		//NowDate.setMinutes(NowDate.getMinutes() + offset2);
+		        	//NowDate2.setMinutes(NowDate2.getMinutes() + offset2);
+	        	//}
+//alert("NowDate="+NowDate);
+//alert("NowDate2="+NowDate2);
 	        	//2016-12-21 -9 , 한국기준으로만 되어있어서 offset으로 변경
+	        	
 	        	//NowDate.setHours(NowDate.getHours() - 9);
 	        	//NowDate2.setHours(NowDate2.getHours() - 9);
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");

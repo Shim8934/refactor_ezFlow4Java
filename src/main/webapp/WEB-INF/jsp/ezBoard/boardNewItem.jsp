@@ -749,7 +749,7 @@
 		                    }
 		                    if (pMode == "reply") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "interASP/SendReplyNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID + "&ItemTreeID=" + strUpperItemIDTree, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
@@ -762,16 +762,12 @@
 		                    xmlhttp = createXMLHttpRequest();
 		
 		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprnoticemail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 		                    } else {
-		                        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + strItemID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprnoticemail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
 		                    }
 		                        
 		                    xmlhttp.send();
-		                    var ResponseXML = xmlhttp.responseXML;
-		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
-		                    xmlhttp.send(ResponseXML);
 		                    xmlhttp = null;
 		                }
 		            }
@@ -797,7 +793,7 @@
 		                    if (typeof (window.parent.SuccessBoard) == null || typeof (window.parent.SuccessBoard) == "undefined") {
 		                        try {
 		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mail_readcontent.aspx") < 0)
+		                            if (checkboard.indexOf("mailReadContent.do") < 0)
 		                                window.opener.location.reload(false);
 		                        } catch (e) {
 		
@@ -809,7 +805,7 @@
 		                    try {
 		                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mail_readcontent.aspx") < 0)
+		                            if (checkboard.indexOf("mailReadContent.do") < 0)
 		                                window.parent.parent.location.reload(false);
 		                        }
 		                    }
@@ -936,11 +932,12 @@
 		
 		    var MailxmlHTTP = createXMLHttpRequest();
 		    function InsertMailInfo() {
-		        var strQuery = "<URL>" + pUrl + "</URL>";
+		        var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT></DATA>";
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        MailxmlHTTP.open("POST", "/myoffice/ezEmail/remote/mail_read_board.aspx", false);
+		        var _newGuid = "{" + NewGuid + "}";
+		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
 		
 		        MailxmlHTTP.send(strQuery);
 		        if (MailxmlHTTP.status == 200) {
@@ -959,10 +956,22 @@
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
 		            message.SetEditorContent(Content);
-		            //var ret = "";
-		           // ret = SelectBoard(InsertMailInfo_Complete);
+		            
+		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
+	            		alert(strLang8 + AttachLimit + "MB" + strLang9);
+	            	} else {
+			            if (mailXml.getElementsByTagName("ROOT").length) {
+		            		mgubun = "M";
+			                
+			                attachxml = getNodeText(mailXml.getElementsByTagName("ATTACH").item(0));
+			                var strXML = getXmlString(mailXml.getElementsByTagName("ROOT").item(0));
+			                returnvalue(strXML);
+			            }
+	            	}
 		        }
 		    }
+		    
+		    /* 2017-01-11 이효민사원 - 사용안함 
 		    function InsertMailInfo_Complete(ret) {
 		        OpenWin.close();
 		        if (ret == "") {
@@ -1024,7 +1033,7 @@
 		            strXML += "</NODES></ROOT>";
 		            returnvalue(strXML);
 		        }
-		    }
+		    } */
 		    
 		     /*
 		    function InsertDocInfo() {

@@ -32,7 +32,7 @@
 	        var ReturnFunction;
 	        
 	        $(document).ready(function(){
-// 	            try {
+	            try {
 	                try {
 	                    RetValue = parent.ezsealinfo_dialogArguments[0];
 	                    ReturnFunction = parent.ezsealinfo_dialogArguments[1];
@@ -55,39 +55,23 @@
 	                pRegUserID = RetValue[7];
 	                pRegUserName = RetValue[8];
 	
-	                if (!window.ActiveXObject) {
-	                    document.getElementById("SealName").textContent = pSealName;
-	                    document.getElementById("SealSize").textContent = pSealWidth + "mm * " + pSealHeight + "mm";
-	                    document.getElementById("RegDate").textContent = pRegDate;
+                    $("#SealName").html(pSealName);
+                    $("#SealSize").html(pSealWidth + "mm * " + pSealHeight + "mm");
+                    $("#RegDate").html(pRegDate);
 
-	                    if (pDelDate == "") {
-	                        document.getElementById("DelDate").textContent = "--";
-	                    } else {
-	                        document.getElementById("DelDate").textContent = pDelDate;
-	                    }
-	                } else {
-	                    document.getElementById("SealName").innerText = pSealName;
-	                    document.getElementById("SealSize").innerText = pSealWidth + "mm * " + pSealHeight + "mm";
-	                    document.getElementById("RegDate").innerText = pRegDate;
-	                    
-	                    if (pDelDate == "") {
-	                        document.getElementById("DelDate").innerText = "--";
-	                    } else {
-	                        document.getElementById("DelDate").innerText = pDelDate;
-	                    }
-	                }
-	                document.getElementById("RegUser").innerHTML = "<span style=\"cursor:pointer\" onclick='return openUserInfo(\"" + pRegUserID + "\")'>" + pRegUserName + "</span>";
-	                
-	                if(CrossYN()){
-	                	document.getElementById("signimage").style.width = pSealWidth + "px";
-		                document.getElementById("signimage").style.height = pSealHeight + "px";
-		                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
-	                } else {
-	                	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
-	                }
-// 	            } catch (e) {
-// 	                alert("window_onload : " + e.description);
-// 	            }
+                    if (pDelDate == "") {
+                        $("#DelDate").html("--");
+                    } else {
+                        $("#DelDate").html(pDelDate);
+                    }
+	                	                
+	                $("#RegUser").html("<span style=\"cursor:pointer\" onclick='return openUserInfo(\"" + pRegUserID + "\")'>" + pRegUserName + "</span>");
+	                document.getElementById("signimage").style.width = pSealWidth + "mm";
+	                document.getElementById("signimage").style.height = pSealHeight + "mm";
+	                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
+	            } catch (e) {
+	                alert("window_onload : " + e.description);
+	            }
 	        });
 	        
 	        function openUserInfo(tempUserID) {
@@ -156,12 +140,11 @@
 	            <th><spring:message code = 'ezApprovalG.t1254' /></th>
 	            <td id="RegUser"></td>
 	        </tr>
+	        <tr>
+	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
+	                  <img id="signimage" alt="" src="" />
+	            </td>
+	        </tr>
 	    </table>
-	    
-		<div class="nobox" id="Div2" name="sealsign" style="width: 470px;height:200px ;margin-top: 5px; text-align: center;overflow:auto">
-			<div id="SIGNVIEW" class="IMAGEVIEW" style="overflow:auto;BORDER: #b6b6b6 1px solid; FONT-SIZE: 9pt; WIDTH: auto; PADDING-TOP: 10px; HEIGHT: 150px; background-color: white;text-align:center;">
-       			<img id="signimage" alt="" src="about:blank" />
-       		</div>
-       	</div>
 	</body>
 </html>

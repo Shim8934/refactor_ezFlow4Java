@@ -290,6 +290,34 @@ public class EzEmailUtil {
 		return stringList;
 	}
 	
+	public String getSubject(Message message) throws Exception {
+        String subject = message.getSubject();
+        
+        if (subject != null && !subject.equals("")) {
+            String[] rawHeaders = message.getHeader("subject");
+            String rawHeader = rawHeaders[0];
+            
+            // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+            if (!isPureAscii(rawHeader)) {
+                byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+                
+                subject = decodeNonAsciiBytes(rawBytes);
+            } else {
+                // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+                // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
+                if (rawHeader.startsWith("=?ks_c_5601-1987")) {
+                    rawHeader = rawHeader.replace("ks_c_5601-1987", "ms949");
+                    
+                    logger.debug("changed ks_c_5601-1987 to ms949.");
+                    
+                    subject = MimeUtility.decodeText(rawHeader);
+                }
+            }
+        }
+
+        return subject;
+	}
+	
 	public boolean isPureAscii(String str) {
 		boolean result = true;
 		
@@ -384,6 +412,7 @@ public class EzEmailUtil {
             String strSize = getSizeWithUnit(size);
 		    
             String NonAsciiFilename = null;
+            String originalFilename = null;
 		    String[] headers = ((MimeBodyPart)part).getHeader("Content-Disposition");
 		    
 		    if (headers != null && headers.length > 0) {
@@ -396,10 +425,14 @@ public class EzEmailUtil {
 		        if (!isPureAscii(contentDisposition)) {
     		        ContentDisposition cd = new ContentDisposition(contentDisposition);
     		        NonAsciiFilename = cd.getParameter("filename");
+		        } else {
+                    ContentDisposition cd = new ContentDisposition(contentDisposition);
+                    originalFilename = cd.getParameter("filename");		            
 		        }
 		    }
 		    
 		    logger.debug("NonAsciiFilename=" + NonAsciiFilename);
+		    logger.debug("originalFilename=" + originalFilename);
 		    
             // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
             // 디코딩이 수행된 형태인 경우도 있다.
@@ -410,7 +443,15 @@ public class EzEmailUtil {
 			
 			logger.debug("filename=" + filename);
 									
-			if (filename != null) {
+            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
+            if (originalFilename != null && originalFilename.startsWith("=?ks_c_5601-1987")) {
+                originalFilename = originalFilename.replace("ks_c_5601-1987", "ms949");
+                
+                logger.debug("changed ks_c_5601-1987 to ms949.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
+            } else if (filename != null) {
 			    // filename이 US-ASCII 로만 되어 있지 않은 경우는 위에서 part.getFileName 메소드에 의해 디코딩된 경우이므로
 			    // 디코딩 처리를 하지 않는다.
 				if (isPureAscii(filename)) {
@@ -659,7 +700,7 @@ public class EzEmailUtil {
 			double size = part.getSize();
 			String strSize = getSizeWithUnit(size);
 			
-			String filename = nestedMessage.getSubject();
+			String filename = getSubject(nestedMessage);;
 			filename = (filename != null) ? filename + ".eml" : "ForwardedMessage.eml";
 			String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 			
@@ -864,29 +905,13 @@ public class EzEmailUtil {
 				sTerm = new SearchTerm() {
 				    public boolean match(Message message) {
 				        try {
-				        	String subject = message.getSubject();
-				        	
-							if (subject != null && !subject.equals("")) {
-								String[] rawHeaders = message.getHeader("subject");
-								String rawHeader = rawHeaders[0];
-								
-								// if the subject contains Non-Ascii characters(violating the standard), 
-								// try to decode it by examining the characters.								
-								if (!isPureAscii(rawHeader)) {
-									try {
-										byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
-										
-										subject = decodeNonAsciiBytes(rawBytes);
-									} catch (UnsupportedEncodingException e) {										
-									}
-								}
-							}				        	
+				        	String subject = getSubject(message);				        	
 				        	
 				            if (subject != null && subject.toLowerCase().contains(searchValue.toLowerCase())) {
 				                return true;
 				            }
 				        } 
-				        catch (MessagingException e) {
+				        catch (Exception e) {
 				        }
 				        
 				        return false;
@@ -1298,6 +1323,70 @@ public class EzEmailUtil {
 		} 
 		
 		return false;
+	}
+	
+	/**
+	 * 메일 첨부파일 Part 반환 함수
+	 */
+	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
+		logger.debug("getAttachPart started.");
+		
+		if (part.isMimeType("multipart/mixed")){
+			Part p = ((Multipart)part.getContent()).getBodyPart(index);
+			
+			logger.debug("getAttachPart ended.");
+			return p;
+		// multipart/alternative 안에 multipart/mixed가 있는 경우의 처리
+		} else if (part.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)part.getContent();
+            int count = mp.getCount();
+            
+            for (int i = 0; i < count; i++) {
+                Part p = getAttachPart(mp.getBodyPart(i), index);
+                
+                if (p != null) {
+                    return p;
+                }
+            }
+		}
+		
+		logger.debug("getAttachPart ended.");
+		return null;
+	}
+	
+	/**
+	 * 메일 인라인 이미지 Part 반환 함수
+	 */
+	public Part getInlinePart(Part part, String contentId) throws MessagingException, IOException{
+		logger.debug("getInlinePart started.");
+		
+		if(part.isMimeType("multipart/related")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				Part p = mp.getBodyPart(i);
+				if(p instanceof MimePart){
+					if(((MimePart)p).getContentID()!=null && ((MimePart)p).getContentID().equals(contentId)){
+						logger.debug("getInlinePart ended.");
+						return p;
+					}
+				}
+			}
+		} else if(part.isMimeType("multipart/*")){
+			Multipart mp = (Multipart)part.getContent();
+			int count = mp.getCount();
+			Part p = null;
+			for (int i = 0; i < count; i++) {
+				p = getInlinePart(mp.getBodyPart(i), contentId);
+				if(p != null){
+					logger.debug("getInlinePart ended.");
+					return p;
+				}
+			}
+		}
+		
+		logger.debug("getInlinePart ended.");
+		return null;
 	}
 	
 	/**

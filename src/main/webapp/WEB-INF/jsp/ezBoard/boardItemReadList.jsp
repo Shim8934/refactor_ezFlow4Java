@@ -11,8 +11,8 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		    
 		    var ReturnFunction;
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.item_readlist_cross_dialogArguments[1];
@@ -51,10 +51,14 @@
 		    <table style="width:100%" class="popuplist">
 		    	<c:forEach var="list" items="${boardReadList}">
 		    		<tr>
-				        <td style="white-space:nowrap">[ ${list.readDate} ]</td>
+				        <td style="white-space:nowrap" id="readDate"></td>
 				        <td style="cursor:pointer; white-space:nowrap" onClick="show_info('${list.userID}');"><b style="color:black"> ${list.userName} </b>( ${list.userID} )</td>
 				        <td style="white-space:nowrap; color:#168501">${list.userDeptName}</td>
 				        <td style="width:100%; white-space:nowrap; color:#737373"><c:out value="${list.userTitle}"/></td>
+		    			<script type="text/javascript">
+		    				var readDate = GetLocalTime("${offset}", "${list.readDate}")
+		    				$("#readDate").html("[ " + readDate + " ]");
+		    			</script>
 		      		</tr>
 		    	</c:forEach>
 		    </table>

@@ -51,7 +51,7 @@
 		            try { ezAPRALERT_Cross.focus(); } catch (e) { }
 		        } else {
 		            var parameter = pAlertContent;
-		            var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+		            var url = "/ezApprovalG/ezAprAlert.do";
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
@@ -90,7 +90,10 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/getSealList.do",
 		        	async : false,
-		        	data : {listFlag : "ADMIN", companyID : pCompanyID},
+		        	data : {
+		        		listFlag : "ADMIN",
+	        			companyID : pCompanyID
+	        			},
 		        	success : function(result){
 	        			var listview = new ListView();
 		                listview.LoadFromID("lvtDocForm");
@@ -165,34 +168,25 @@
 		    
 		    var ezsealinfo_dialogArguments = new Array();
 		    function btnInfo_onclick() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvtDocForm");
-	
-		        var selRow = listview.GetSelectedRows();
+		    	var listview = new ListView();
+	            listview.LoadFromID("lvtDocForm");
+	            var selRow = listview.GetSelectedRows();
 		        
-		        if (selRow) {
-		            parameter[0] = selRow[0].getAttribute("DATA1");
-		            parameter[1] = selRow[0].cells[0].innerText;
-		            parameter[2] = encodeURI(selRow[0].getAttribute("DATA2"));
-		            parameter[3] = selRow[0].cells[1].innerText;
-		            parameter[4] = selRow[0].cells[2].innerText;
-		            parameter[5] = selRow[0].cells[3].innerText;
-		            parameter[6] = selRow[0].cells[4].innerText;
-		            parameter[7] = selRow[0].getAttribute("DATA3");
-		            parameter[8] = selRow[0].cells[5].innerText;
+		        if (selRow.length > 0) {
+		        	parameter[0] = GetAttribute(selRow[0], "DATA1");
+	                parameter[1] = getNodeText(selRow[0].cells[0]);
+	                parameter[2] = escape(GetAttribute(selRow[0], "DATA2"));
+	                parameter[3] = getNodeText(selRow[0].cells[1]);
+	                parameter[4] = getNodeText(selRow[0].cells[2]);
+	                parameter[5] = getNodeText(selRow[0].cells[3]);
+	                parameter[6] = getNodeText(selRow[0].cells[4]);
+	                parameter[7] = GetAttribute(selRow[0], "DATA3")
+	                parameter[8] = getNodeText(selRow[0].cells[5]);
+	                
+	                ezsealinfo_dialogArguments[0] = parameter;
+	                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
 	
-		            if (CrossYN()) {
-		                ezsealinfo_dialogArguments[0] = parameter;
-		                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
-	
-		                var ezSealInfo = window.open("/admin/ezApprovalG/ezSealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420));
-		                try { ezSealInfo.focus(); } catch (e) {
-		                }
-		            } else {
-		                var url = "/admin/ezApprovalG/ezSealInfo.do";
-		                var feature = GetShowModalPosition(610, 265);
-		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
-		            }
+	                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420))
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
 		            OpenAlertUI(pInformationString);
@@ -204,63 +198,74 @@
 		    function btnInfo_onclick_Complete() {
 		    }
 	
-		    var ezapralert_cross_dialogArguments = new Array();
+		    var AddSealInfo_dialogArguments = new Array();
 		    function btnAdd_onclick() {
 		        var parameter = new Array();
 		        parameter[0] = pUserID;
 		        parameter[1] = pUserName;
 		        parameter[2] = pCompanyID;
-	
-		        ezapralert_cross_dialogArguments[0] = parameter;
-		        ezapralert_cross_dialogArguments[1] = btnAdd_onclick_complete;
 		        
-		        var url = "/admin/ezApprovalG/addSealInfo.do";
-				window.open(url, "", GetOpenWindowfeature(430, 350));
-		    }
-		    
-		    function btnAdd_onclick_complete(ret) {
-		    	if (ret[0] == "OK") {
-		            var RtnVal = DeleteSealInfo("");
-		            if (RtnVal == "TRUE") {
-		                RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
-		                if (RtnVal == "TRUE") {
-		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
-		 		            OpenAlertUI(pInformationString);
-		                    getSealList();
-		                } else {
-		                    var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
-		 		            OpenAlertUI(pInformationString);
-
-		                    return;
-		                }
-		            } else {
-		                var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
-	 		            OpenAlertUI(pInformationString);
-
-		                return;
-		            }
-		        }
-		    }
-		    
-		    /* function btnDel_onclick() {
-		    	var listview = new ListView();
-		        listview.LoadFromID("lvtDocForm");
-	
-		        var selRow = listview.GetSelectedRows();
-		        
-		        if (selRow) {
-		            if (confirm("관인을 삭제하시겠습니까?")) {
-		            	DeleteSealInfo(selRow[0].getAttribute("DATA1"));
-		            } else {
-		            	return;
-		            }
+		        if (CrossYN()) {
+		        	AddSealInfo_dialogArguments[0] = parameter;
+			        AddSealInfo_dialogArguments[1] = btnAdd_onclick_complete;
+			        
+			        var url = "/admin/ezApprovalG/addSealInfo.do";
+			        var ezSealInfo = window.open(url, "", GetOpenWindowfeature(430, 350));
+			        try { ezSealInfo.focus(); } catch (e) {
+	                }
 		        } else {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
-		            OpenAlertUI(pInformationString);
-		          
-		            return;
+		        	var url = "/admin/ezApprovalG/addSealInfo.do";
+	                var feature = "status:no;dialogWidth:430px;dialogHeight:350px;edge:sunken;scroll:no;help:no"
+	                var ret = window.showModalDialog(url, parameter, feature);
+
+	                if (ret[0] == "OK") {
+	                    var RtnVal = DeleteSealInfo("");
+
+	                    if (RtnVal == "TRUE") {
+	                        RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
+	                        if (RtnVal == "TRUE") {
+	                            var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
+	                            OpenAlertUI(pInformationString);
+	                            getSealList();
+	                        }
+	                        else {
+	                            var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
+	                            OpenAlertUI(pInformationString);
+	                            return;
+	                        }
+	                    }
+	                    else {
+	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
+	                        OpenAlertUI(pInformationString);
+	                        return;
+	                    }
+	                }
 		        }
-		    } */
+		    }
+		    
+		    function btnAdd_onclick_complete(RtnVal) {
+		    	if (RtnVal[0] == "OK") {
+	                var DelRtnVal = DeleteSealInfo("");
+	                if (DelRtnVal == "TRUE") {
+	                    RtnVal = InsertSealInfo(RtnVal[1], RtnVal[2], RtnVal[3], RtnVal[4], RtnVal[5]);
+	                    if (RtnVal == "TRUE") {
+	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
+	                        OpenAlertUI(pInformationString);
+	                        getSealList();
+	                    }
+	                    else {
+	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
+	                        OpenAlertUI(pInformationString);
+	                        return;
+	                    }
+	                }
+	                else {
+	                    var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
+	                    OpenAlertUI(pInformationString);
+	                    return;
+	                }
+	            }
+		    }
 		    
 		    function selectCompanyID() {
 		        if (pCompanyID != document.getElementById("SCompID").value) {
@@ -305,22 +310,20 @@
 	<body  class="mainbody">
 		<h1><spring:message code = 'ezApprovalG.t1283' /></h1>
 		<div id="mainmenu">
-	  	<ul>
-	  		<b><spring:message code = 'ezApprovalG.t1276' /></b>
-	        <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-	        </SELECT><br /><br />
-	    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
-	    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
-	    	<!-- 2016-08-26 이효진 삭제버튼 생성 -->
-	    	<%-- <li><span onClick="return btnDel_onclick()" ><spring:message code = 'ezApprovalG.lhj11' /></span></li> --%>
-	  	</ul>
+		  	<ul>
+		  		<b><spring:message code = 'ezApprovalG.t1276' /></b>
+		        <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+		        </select><br /><br />
+		    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
+		    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
+		  	</ul>
 		</div>
 	
 		<div class="listview"  style="width:790px" >
-			<DIV id=lvtForm class="text" style="border:0; WIDTH:790px"></DIV>
+			<DIV id=lvtForm class="text" style="border:0; HEIGHT:300px; WIDTH:790px"></DIV>
 		</div>
 	
 		<script type="text/javascript">

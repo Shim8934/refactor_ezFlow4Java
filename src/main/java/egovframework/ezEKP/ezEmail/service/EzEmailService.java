@@ -46,5 +46,5 @@ public interface EzEmailService {
 	public String checkIndividualAlias(String individualAlias) throws Exception;
 	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception;
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception;
-
+	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 }

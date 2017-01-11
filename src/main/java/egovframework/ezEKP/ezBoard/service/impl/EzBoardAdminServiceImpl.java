@@ -102,14 +102,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public String saveMHT(String boardID, String formContent, String realPath) throws Exception {
+	public String saveMHT(String boardID, String formContent, String realPath, int tenantID) throws Exception {
 		InputStream stream = null;
 		OutputStream bos = null;
 		String mhtFilePath = "";
 		String dbPath = "";
 		
 		try{			
-			String docPath = config.getProperty("upload_board.FORM") + commonUtil.separator;	
+			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;	
 			String fullPath = realPath + docPath;
 			File doc = new File(fullPath);		
 		
