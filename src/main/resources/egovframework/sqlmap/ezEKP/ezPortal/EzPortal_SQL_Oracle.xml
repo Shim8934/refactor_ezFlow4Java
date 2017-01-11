@@ -2570,7 +2570,7 @@
       		WHERE
       			UID_	=	#parentTopMenuID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
 		]]>
 	</select>
 	

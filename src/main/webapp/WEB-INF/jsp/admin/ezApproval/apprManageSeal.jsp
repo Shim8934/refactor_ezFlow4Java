@@ -156,9 +156,7 @@
 	                var url = "/admin/ezApproval/sealInfo.do";
 	                ezSealInfo_dialogArguments[0] = parameter;
 	                var OpenWin = window.open(url, "ezSealInfo", GetOpenWindowfeature(500, 420));
-// 	                var OpenWin = GetOpenWindow(url, "ezSealInfo", 500, 420, "NO");
-	            }
-	            else {
+	            } else {
 	                var pInformationString = "<spring:message code='ezApproval.t370'/>";
 	                OpenAlertUI(pInformationString);
 	                return;

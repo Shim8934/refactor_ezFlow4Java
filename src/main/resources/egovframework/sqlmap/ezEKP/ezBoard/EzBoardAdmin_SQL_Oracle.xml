@@ -83,9 +83,6 @@
 		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="20"/>			
 	</resultMap>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.getBoardTree_Get1" parameterClass="Map" resultClass="String" remapResults="true"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETBOARDTREE_GET1(#v_STRLANG#,#v_PQUERY#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
          SELECT 
             <isEqual property="v_STRLANG" compareValue="2"> result2 </isEqual> 
@@ -114,10 +111,6 @@
 	        	PARENTBOARDID = #v_PROOTBOARDID#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3" remapResults="true"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETMYBOARDTREE_GET3(#v_PUSERID#, #v_PTREEUPPER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3">
 		<![CDATA[
@@ -152,11 +145,6 @@
 		]]>
 	</select>
 		
-<!-- 	<procedure id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDBOARDTREE(#v_pRootBoardID#, #v_pUserID#, #v_pDeptID#, #v_pCompanyID#, #v_pMode#, #v_pSelectBy#,  -->
-<!-- 										   #v_pExcludeBoardID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree">
 		<isEqual property="v_pMode" compareValue="1">
 			<isEqual property="v_pSelectBy" compareValue="3">
@@ -275,10 +263,6 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.getBoardHeader" parameterClass="Map" resultMap="boardAttribute"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETLISTHEADER_ADMIN(#v_PBOARDTYPE#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardAdminDAO.getBoardItemListOptionBoard" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -371,10 +355,6 @@
         		PARENTBOARDID = #v_PBOARDID#
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.addMyBoards" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDADDTOMYBOARDS(#v_PUSERID#, #v_PBOARDID#)} -->
-<!-- 	</procedure> -->
 	
 	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
 		<![CDATA[
@@ -473,11 +453,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CREATEBOARDGROUP(#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, -->
-<!-- 											   #v_PARENTBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}		 -->
-<!-- 	</procedure> -->
-	
 	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO EZBOARDSTD.TBL_Board_BoardInfo ( 
@@ -499,11 +474,6 @@
      		)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.createBoard" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CREATEBOARD_INSERT(#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_ACCESSID#,  -->
-<!-- 											     #v_ACCESSNAME#, #v_ACCESSNAME2#)}		 -->
-<!-- 	</procedure> -->
 	
 	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
 		<![CDATA[
@@ -565,10 +535,6 @@
 		]]>
 	</update>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDORDER(#v_pBoardIDList#, #v_pBoardListCount#, #v_err_cd,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<update id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
 		<![CDATA[
 			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
@@ -580,10 +546,6 @@
             	BoardID = #v_boardID#
 		]]>
 	</update>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.saveBackGroundImage" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETBACKGROUNDIMAGE(#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, #v_WIDTH#, #v_HEIGHT#, #v_MODE#)} -->
-<!-- 	</procedure> -->
 	
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
 		<![CDATA[
@@ -612,10 +574,6 @@
            AND  
            	BACKGROUNDID = #v_BACKGROUNDID#
 	</update>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.deleteBoard" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDDELETEBOARD(#v_pBoardID#)} -->
-<!-- 	</procedure> -->
 	
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
@@ -658,10 +616,6 @@
 		]]>
 	</insert>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.moveBoard" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDMOVEBOARD(#v_pOrgBoardID#, #v_pNewParentBoardID#, #v_pNewBoardGroupID#)} -->
-<!-- 	</procedure>	 -->
-	
 	<update id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
 		<![CDATA[
 			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
@@ -686,12 +640,6 @@
            		BoardID = #v_pOrgBoardID#
 		]]>
 	</update>	
-	
-<!-- 	<procedure id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" > -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY(#v_PBOARDID#, #v_PATTACHMAX#, #v_PDESCRIPTION#, #v_PEXPIRES#, #v_PURL#, #v_PREPLYNOTIFY#, #v_PGUBUN#, #v_PBOARDNAME#, -->
-<!-- 		                                           #v_PDELETEAFTER#, #v_PBOARDCOLOR#, #v_PBOARDNAME2#, #v_PPORTLET#, #v_PONELINEREPLY#, #v_PBACKGROUND#, #v_PFORM#,  -->
-<!-- 		                                           #v_PAPPRFLAG#, #v_PAPPRMAILFLAG#)} -->
-<!-- 	</procedure> -->
 	
 	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
 		<![CDATA[
@@ -732,10 +680,6 @@
     			BOARDID = #v_PBOARDID#
 		]]>
 	</update>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDGETBOARDACCESSLIST(#v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
 		<![CDATA[
@@ -811,10 +755,6 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.setMyBoardTreeConfig" parameterClass="MyFavoriteVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE(#treeId#, #userId#, #treeName#, #treeName2#, #treeUpper#, #mode#, #boardId#)} -->
-<!-- 	</procedure> -->
-	
 	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			INSERT INTO EZBOARDSTD.TBL_Board_MyTree ( 
@@ -854,10 +794,6 @@
 		]]>
 	</delete>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETMYBOARDTREE_MOVECOPY(#userId#, #selTreeID#, #moveTreeID#, #mode#)} -->
-<!-- 	</procedure> -->
-	
 	<update id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			UPDATE EZBOARDSTD.TBL_Board_MyTree
@@ -879,11 +815,6 @@
             	USERID = #userId#
 		]]>
 	</update>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.saveACL" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEACL(#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pParentBoardID#, #v_pInherit#, #v_pAdmin#, #v_pAccess#,  -->
-<!-- 		                                 #v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pPostNotice#, #v_pAccessName2#, #v_pBoardGroupACL#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.getBoardManage" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -934,10 +865,6 @@
 		]]>
 	</update>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.deleteACL" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDDELETEACL(#v_pBoardID#, #v_pAccessID#)} -->
-<!-- 	</procedure> -->
-	
 	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
 		<![CDATA[
 			DELETE EZBOARDSTD.TBL_Board_BoardManage
@@ -949,10 +876,6 @@
       			AccessID = #v_pAccessID#
 		]]>
 	</delete>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_GETUNDERBOARDID(#v_PBOARDID#, #v_PTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO">
 		<isEqual property="v_PTYPE" compareValue="1">
@@ -1003,12 +926,6 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL(#v_PBOARDID#, #v_PACCESSID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, #v_PACCESSLEVEL#, #v_PACCESS#, #v_PPARENTBOARDID#, -->
-<!-- 												 #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, -->
-<!-- 												 #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#)} -->
-<!-- 	</procedure> -->
-	
 	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
 		UPDATE EZBOARDSTD.TBL_Board_BoardManage
         SET 
@@ -1050,10 +967,6 @@
         )
 	</insert>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETUNDERBOARDIDACL2(#v_PDEFAULTBOARDID#, #v_PBOARDID#, #v_PPARENTBOARDID#)} -->
-<!-- 	</procedure> -->
-	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
@@ -1085,10 +998,6 @@
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETCOPYBOARDACL(#v_PBOARDID#, #v_PPARENTBOARDID#, #v_PDEFAULTBOARDID#)} -->
-<!-- 	</procedure> -->
 	
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
@@ -1122,10 +1031,6 @@
 		]]>
 	</insert>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.saveBoardProperty_appr" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_BRDSAVEBOARDPROPERTY_APPR(#v_pBoardID#, #v_pAPPRUSERID#, #v_pMODE#)} -->
-<!-- 	</procedure> -->
-	
 	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
 		<![CDATA[
 			DELETE EZBOARDSTD.TBL_Board_ApprList
@@ -1146,10 +1051,6 @@
           	)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_APPRPROPERTY_INFO(#v_PBOARDID#, #v_PMODE#)} -->
-<!-- 	</procedure> -->
 	
 	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
 		<isEqual property="v_PMODE" compareValue="Y">
@@ -1176,10 +1077,6 @@
 		</isNotEqual>
 	</update>
 	
-<!-- 	<procedure id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		SELECT 
 			COUNT(BOARDID) CNT 
@@ -1195,10 +1092,6 @@
         AND 
         	FORMLOCATION IS NOT NULL
 	</select>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.setBoardForm" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETBOARDFORM(#v_PBOARDID#, #v_PFORMLOCATION#)} -->
-<!-- 	</procedure> -->
 	
 	<update id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
 		<![CDATA[

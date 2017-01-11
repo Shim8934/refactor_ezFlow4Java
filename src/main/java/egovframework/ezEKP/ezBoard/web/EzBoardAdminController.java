@@ -276,7 +276,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		String upperBoardID = request.getParameter("upperBoardID");
-		String boardTree = ezBoardService.getBoardTree(upperBoardID,	user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", user.getTenantId());
 
 		return boardTree;
 	}
@@ -354,7 +354,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				xmlStr.append("<ORGFILENAME>" + list.get(i).getOrgFileName() + "</ORGFILENAME>");
 				xmlStr.append("<SAVEFILENAME>" + list.get(i).getSaveFileName() + "</SAVEFILENAME>");
 				xmlStr.append("<REGUSERID>" + list.get(i).getRegUserID() + "</REGUSERID>");
-				xmlStr.append("<REGDATE>" + list.get(i).getRegDate() + "</REGDATE>");
+				xmlStr.append("<REGDATE>" + commonUtil.getDateStringInUTC(list.get(i).getRegDate(), userInfo.getOffset(), false) + "</REGDATE>");
 				xmlStr.append("<ISUSE>" + list.get(i).getIsUse() + "</ISUSE>");
 				xmlStr.append("<SN>" + list.get(i).getSn() + "</SN>");
 				xmlStr.append("<WIDTH>" + list.get(i).getWidth() + "</WIDTH>");
@@ -408,7 +408,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			List<BoardBackgroundVO> list = ezBoardAdminService.getBackGroundImage(boardBackgroundVO);
 
 			if (list.size() > 0) {
-				String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+				String filePath = commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId());
 				String fileName = ((BoardBackgroundVO) list.get(0)).getSaveFileName();
 
 				model.addAttribute("width", boardBackgroundVO.getWidth());
@@ -431,12 +431,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 파일 업로드 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/uploadBackGroundImage.do")
-	public void uploadBackGroundImage(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void uploadBackGroundImage(MultipartHttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		MultipartFile file = request.getFile("file1");
 
 		String fileType = file.getContentType().split("/")[1];
 		String fileName = request.getParameter("guid") + "." + fileType;
-		String filePath = config.getProperty("upload_board.TEMPUPLOADFILE");
+		String filePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String realFullPath = realPath + filePath + commonUtil.separator + "S_" + fileName;
 
@@ -474,8 +475,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		if (file != null) {
 			String fileName = boardBackgroundVO.getSaveFileName();
-			String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
-			String tempFilePath = config.getProperty("upload_board.TEMPUPLOADFILE");
+			String filePath = commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", user.getTenantId());
+			String tempFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", user.getTenantId());
 			String realPath = commonUtil.getRealPath(request);
 
 			writeUploadedFile(file, "S_" + fileName, realPath + filePath);
@@ -504,7 +505,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public void deleteBackGroundImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, BoardBackgroundVO boardBackgroundVO) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String fileName = boardBackgroundVO.getSaveFileName();
-		String filePath = config.getProperty("upload_board.BOARDBACKGROUND");
+		String filePath = commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
@@ -709,10 +710,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveAttribute.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String saveAttribute(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response,	BoardAttributeVO boardAttributeVO) {
+	public String saveAttribute(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, BoardAttributeVO boardAttributeVO) {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
-		
+		//TODO: 서비스로 넘기는거 하기 트랜잭션안된다 이거
 		String rtnValue = "";
 
 		try {
@@ -762,7 +763,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		String rtnValue = "";
-
+//TODO: 서비스로 옮기기 트랜잭션안됨
 		try {
 			String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
 			ezBoardAdminService.deleteHeader(boardID, userInfo.getTenantId());
@@ -1198,7 +1199,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String formContent = request.getParameter("formContent");
 		String realPath = commonUtil.getRealPath(request);
 		
-		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath);		
+		String formLocation = ezBoardAdminService.saveMHT(boardID, formContent, realPath, userInfo.getTenantId());		
 
 		ezBoardAdminService.setBoardForm(boardID, formLocation, userInfo.getTenantId());
 		

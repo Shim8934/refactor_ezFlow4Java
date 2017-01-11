@@ -362,8 +362,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getItemViewNew", map);
 	}
 	
-	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception{
-		return (int) select("EzBoardDAO.getApprBoardTotalItemCount", userInfo);
+	public int getApprBoardTotalItemCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.getApprBoardTotalItemCount", map);
 	}
 	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{
@@ -576,6 +576,16 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	public int getBoardOneLineReply(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getBoardOneLineReply", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getReplyNoticeMail(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("EzBoardDAO.getReplyNoticeMail", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getSendApprMailList(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzBoardDAO.getSendApprMailList", map);
 	}
 
 }

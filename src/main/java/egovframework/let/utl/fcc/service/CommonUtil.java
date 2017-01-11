@@ -372,7 +372,7 @@ public class CommonUtil {
 	public String getQueryResult(Object vo) throws Exception{
 		StringBuilder stb = new StringBuilder();		
 		
-		if(vo != null){		
+		if (vo != null) {
 			stb.append("<ROW>");
 			
 			for(Field field : vo.getClass().getDeclaredFields()){
@@ -387,9 +387,10 @@ public class CommonUtil {
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
 			stb.append("</ROW>");
-		}else{
+		} else {
 			stb.append("");
-		}		
+		}
+
 		return stb.toString();
 	}
 	
