@@ -1514,7 +1514,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					f.fetch(fetchMessages, fp);
 					
 					// subject
-					String subject = message.getSubject();
+					String subject = ezEmailUtil.getSubject(message);
 					if (subject != null && !subject.equals("")) {
 						String[] rawHeaders = message.getHeader("subject");
 						String rawHeader = rawHeaders[0];
