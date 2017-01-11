@@ -26,6 +26,7 @@
 		<result property="email"				column="mail"						columnIndex="16"/>
 		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
         <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
 	</resultMap>	
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
@@ -55,9 +56,10 @@
 		     	telephonenumber,
 		     	mail,
 		     	extensionattribute10 as jikchek,
-                tenant_id
+                tenant_id,
+                (SELECT 'top,Top,' || dept_cd_path FROM	ezHrmaster.TBLDEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode
 		  	FROM 
-		  		ezHrMaster.TBLUSERMASTER
+		  		ezHrMaster.TBLUSERMASTER a
 		 	WHERE 
 		 		cn = #id# AND tenant_id = #tenantId#
 		]]>
