@@ -932,12 +932,12 @@
 		
 		    var MailxmlHTTP = createXMLHttpRequest();
 		    function InsertMailInfo() {
-		        var strQuery = "<URL>" + pUrl + "</URL>";
+		        var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT></DATA>";
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
 		        var _newGuid = "{" + NewGuid + "}";
-		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do?NewGuid=" + _newGuid, false);
+		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
 		
 		        MailxmlHTTP.send(strQuery);
 		        if (MailxmlHTTP.status == 200) {
@@ -957,13 +957,17 @@
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
 		            message.SetEditorContent(Content);
 		            
-		            if (mailXml.getElementsByTagName("ROOT").length > 0) {
-		                mgubun = "M";
-		                
-		                attachxml = getNodeText(mailXml.getElementsByTagName("ATTACH").item(0));
-		                var strXML = getXmlString(mailXml.getElementsByTagName("ROOT").item(0));
-		                returnvalue(strXML);
-		            }
+		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
+	            		alert(strLang8 + AttachLimit + "MB" + strLang9);
+	            	} else {
+			            if (mailXml.getElementsByTagName("ROOT").length) {
+		            		mgubun = "M";
+			                
+			                attachxml = getNodeText(mailXml.getElementsByTagName("ATTACH").item(0));
+			                var strXML = getXmlString(mailXml.getElementsByTagName("ROOT").item(0));
+			                returnvalue(strXML);
+			            }
+	            	}
 		        }
 		    }
 		    
