@@ -12,12 +12,7 @@
 				<title><spring:message code = 'ezApprovalG.t1266' /></title>
 			</c:otherwise>
 		</c:choose>
-		
-		<style>
-	        DIV.IMAGEVIEW {
-	            behavior: url("SealView.htc");
-	        }
-	    </style>
+
 		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
@@ -83,7 +78,7 @@
 	        }
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden">
+	<body class="popup" style="overflow:auto">
 		<c:choose>
 			<c:when test="${pDeptYN == 'Y' }">
 				<h1><spring:message code = 'ezApprovalG.t1264' /></h1>
