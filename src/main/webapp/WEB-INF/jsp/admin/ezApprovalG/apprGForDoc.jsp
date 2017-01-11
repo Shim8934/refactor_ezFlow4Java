@@ -98,6 +98,7 @@
 	            	type : "POST",
 	            	url : "/admin/ezApprovalG/getStatSearchDocList.do",
 	            	async : true,
+	            	dataType : "text",
 	            	data : {
 	            		docNumber : SearchCond[0],
 	            		docTitle : SearchCond[1],

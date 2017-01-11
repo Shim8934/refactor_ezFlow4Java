@@ -16,43 +16,58 @@
 		
 		<script type="text/javascript">
 			var pSealName = "";
-		    var pSealPath = "";
-		    var pSealWidth = "";
-		    var pSealHeight = "";
-		    var pRegUserID = "";
-		    var pRegUserName = "";
-		    var pCompanyID = "";
-		    var fileName = "";
+	        var pSealPath = "";
+	        var pSealWidth = "";
+	        var pSealHeight = "";
+	        var pRegUserID = "";
+	        var pRegUserName = "";
+	        var pCompanyID = "";
+	        var fileName = "";
 		    var dirPath = "";
-		    var ret = new Array("");
-		    var ezapralert_cross_dialogArguments = new Array();
-		    var ReturnFunction;
-		    
-		    $(document).ready(function(){
-		        try {
-		        	para = opener.ezapralert_cross_dialogArguments[0];
-		        	ReturnFunction = opener.ezapralert_cross_dialogArguments[1];
-		            pRegUserID = para[0];
-		            pRegUserName = para[1];
-		            pCompanyID = para[2];
-		            tbRegUser.innerText = pRegUserName;
+	        var ret = new Array("");
+	        var RetValue;
+	        var ReturnFunction;
+	        
+	        window.onload = function () {
+	            try {
+	                try {
+	                    RetValue = parent.AddSealInfo_dialogArguments[0];
+	                    ReturnFunction = parent.AddSealInfo_dialogArguments[1];
+	                } catch (e) {
+	                    try {
+	                        RetValue = opener.AddSealInfo_dialogArguments[0];
+	                        ReturnFunction = opener.AddSealInfo_dialogArguments[1];
+	                    } catch (e) {
+	                        RetValue = window.dialogArguments;
+	                    }
+	                }
+	                
+	                pRegUserID = RetValue[0];
+	                pRegUserName = RetValue[1];
+	                pCompanyID = RetValue[2];
+	                	                
+	                $("#tbRegUser").val(pRegUserName);
+	                $("#companyID").val(pCompanyID);
+	                
+	                ret[0] = "cancel";
+	                ret[1] = "";
+	                ret[2] = pSealName;
+	                ret[3] = pSealPath;
+	                ret[4] = pSealWidth;
+	                ret[5] = pSealHeight;
+	                
+	                try {
+	                    window.returnValue = ret;
+	                } catch (e) { }
 	
-		            ret[0] = "cancel";
-		            ret[1] = "";
-		            ret[2] = pSealName;
-		            ret[3] = pSealPath;
-		            ret[4] = pSealWidth;
-		            ret[5] = pSealHeight;
-		            ReturnFunction(ret);
-		            
-		            document.getElementById("companyID").value = pCompanyID;
-		        } catch (e) {
-		            alert("window_onload : " + e.description);
-		        }
-		    });
-		    
-		    function btnOK_onclick() {
-		        pSealName = document.getElementById("tbSealName").value;
+	
+	            } catch (e) {
+	                alert("window_onload : " + e.description);
+	            }
+	        }
+	        
+	        function btnOK_onclick() {
+	        	pSealName = $("#tbSealName").val();
 		        if (pSealName == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1256' />";
 		            OpenAlertUI(pInformationString);
@@ -67,15 +82,15 @@
 		            return;
 		        }
 	
-		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
+		        pSealWidth = $("#tbSealWidth").val();
 		        if (pSealWidth == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1258' />";
 		            OpenAlertUI(pInformationString);
 		            
 		            return;
 		        }
-	
-		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
+		        
+		        pSealHeight = $("#tbSealHeight").val();
 		        if (pSealHeight == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1259' />";
 		            OpenAlertUI(pInformationString);
@@ -89,11 +104,16 @@
 		        ret[3] = pSealPath;
 		        ret[4] = pSealWidth;
 		        ret[5] = pSealHeight;
-		        
-		        ReturnFunction(ret);
+		
+		        if (ReturnFunction != null) {
+		            ReturnFunction(ret);
+		        } else {
+		            window.returnValue = ret;
+		        }
+		
 		        window.close();
 		    }
-		    
+	        
 		    function btnCancel_onclick() {
 		        window.close();
 		    }
@@ -103,33 +123,43 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-		        pSealWidth = document.getElementsByName("tbSealWidth")[0].value;
-		        pSealHeight = document.getElementsByName("tbSealHeight")[0].value;
-	
+		        pSealWidth = $("#tbSealWidth").val();
+		        pSealHeight = $("#tbSealHeight").val();
+		
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1260' />";
 		            OpenAlertUI(pInformationString);
-		            
 		            return;
 		        }
-		        
-		        if(CrossYN()){
-                	document.getElementById("signimage").style.width = pSealWidth + "px";
-	                document.getElementById("signimage").style.height = pSealHeight + "px";
-	                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
-                } else {
-                	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
-                }
+		        document.getElementById("SIGNVIEW").innerHTML = "";
+		        var Img = document.createElement("IMG");
+		        Img.style.width = pSealWidth + "mm";
+		        Img.style.height = pSealHeight + "mm";
+		        Img.src = pSealPath;
+		        SIGNVIEW.appendChild(Img);
+		    }
+		
+		    var ezapralert_cross_dialogArguments = new Array();
+		    function OpenAlertUI(pAlertContent) {
+		        if (CrossYN()) {
+		            ezapralert_cross_dialogArguments[0] = pAlertContent;
+		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+		            try { ezAPRALERT_Cross.focus(); } catch (e) {
+		            }
+		        } else {
+		            var parameter = pAlertContent;
+		            var url = "/ezApprovalG/ezAPRALERT.do";
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            var RtnVal = window.showModalDialog(url, parameter, feature);
+		        }
 		    }
 		    
-		    function OpenAlertUI(pAlertContent) {
-		        ezapralert_cross_dialogArguments[0] = pAlertContent;
-		        var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
-		        try { ezAPRALERT_Cross.focus(); } catch (e) { }
+		    function OpenAlertUI_Complete() {
 		    }
 		    
 		    window.onbeforeunload = function () {
-		        if ((ret[0] == "cancel") && (pSealPath != "")) {
+		    	if ((ret[0] == "cancel") && (pSealPath != "")) {
 		        	$.ajax({
 		        		type : "POST",
 		        		url : "/admin/ezApprovalG/sealDelete.do",
@@ -143,23 +173,21 @@
 		        	});
 		        }
 		    }
-		    
-		    function btn_AttachAdd_onclick() {
+		
+		    function btn_AttachAdd_onclick(obj) {
 		        if (document.form.file1.value != "") {
-		            var frm = document.getElementById('form');
+					var frm = document.getElementById('form');
 		            var form = new FormData(frm);
-		            $.ajax({
-		            	type :'POST',
-		            	url : "/admin/ezApprovalG/sealUpload.do",
-		            	async : false,
-		            	dataType : 'json',
-		            	data : form,
+		            
+		        	$.ajax({
+		        		type : "POST",
+		        		url : "/admin/ezApprovalG/sealImageUpload.do",
+		        		dataType : "json",
+		        		data : form,
 		            	processData : false,
 		            	contentType : false,
-		            	success : function(result) {
-		            		fileName = result["fileName"];
-		            		document.getElementsByName("tbSealWidth")[0].value = result["width"];
-		            		document.getElementsByName("tbSealHeight")[0].value = result["height"];
+		        		success : function(result) {
+		        			fileName = result["fileName"];
 		            		dirPath = result["path"];
 		            		
 		            		try {
@@ -178,18 +206,30 @@
 		                    }
 		            		
 		            		pSealPath = dirPath + fileName;
-		            	}
-		            });
+		        		}
+		        	});
 		            
 		            document.form.file1.value = "";
 		        }
+		    }
+		
+		    function returnvalue(strXML) {
+		        var xml = loadXMLString(strXML);
+		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+		        if (getNodeText(GetChildNodes(nodes[0])[1]) == "true") {
+		            var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
+		            document.getElementById("filename").value = fileinfo;
+		            fileName = getNodeText(GetChildNodes(nodes[0])[4]);
+		        }
+		        
+		        pSealPath = "/${userInfo.tenantId}/files/upload_approvalG/sealImg/" + fileName;
 		    }
 		    
 		    function showKeyCode(event) {
 				event = event || window.event;
 				var keyID = (event.which) ? event.which : event.keyCode;
-				//숫자패드 모두, 방향키, 백슬러쉬, 딜리트만 포함
-				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8) {
+				//숫자패드 모두, 방향키, 백슬러쉬, 딜리트, Teb만 포함
+				if( ( keyID >=48 && keyID <= 57 ) || ( keyID >=96 && keyID <= 105 ) || ( keyID >=37 && keyID <= 40 ) || keyID == 46 || keyID == 8 || keyID == 19) {
 					return;
 				} else {
 					return false;
@@ -203,26 +243,27 @@
 	        	<li><span onClick="return btnOK_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 	        </ul>
 		</div>
-		<div id="close"><ul><li><span onClick="window.close()" ><spring:message code = 'ezApprovalG.t64' /></span></li></ul></div>
+		<div id="close">
+			<ul>
+				<li><span onClick="window.close()" ><spring:message code = 'ezApprovalG.t64' /></span></li>
+			</ul>
+		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	
-		<table width="410" class="content">
+		<table class="content">
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1262' /></th>
 	    		<td id="SealName"> 
-	        		<iframe name="ifrm" id="ifrm" src="about:blank" style="display:none"></iframe>        
-	        		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezApprovalG/sealUpload.do" target="ifrm">                    
-	            		<input type="text" name="tbSealName" id = "tbSealName" />
-			            <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 0px; height: 0px; "/>
-			            <input type="hidden" name="boardID" id="boardid" />
-			            <input type="hidden" name="maxSize" id="maxsize" />
-			            <input type="hidden" name="mailGubun" id="mailgubun" />
-			            <input type="hidden" name="companyID" id="companyID" />
-			        </form>
+	    			<input type="text" id="tbSealName" name="tbSealName" style="width: 140px">
+	    		</td>
+	    	</tr>
+	    	<tr>
+				<th><spring:message code = 'ezApprovalG.t00010' /></th>
+				<td style="vertical-align:middle;">
 	        		<a class="imgbtn" ><span onClick="btnFileUp_onclick()"><spring:message code = 'ezApprovalG.t1251' /></span></a>
 	        		<a class="imgbtn" ><span onClick="btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	    		</td>
@@ -230,23 +271,28 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1263' /></th>
 	    		<td id="SealSize"> 
-	      			<input type="text" name="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
-	      			<input type="text" name="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
+	      			<input type="text" id="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
+	      			<input type="text" id="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
 	      		</td>
 	  		</tr>
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1254' /></th>
 	    		<td id="tbRegUser"> </td>
 	  		</tr>
+	  		<tr>
+	  			<td id="SIGNVIEW" colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;"></td>
+	  		</tr>
 		</table>
-			<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
-				<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle>
-        			<img id="signimage" alt="" src="" style=/>
-        		</div>
-        	</div>
-        	
-			<!-- <div class="nobox" id="Div1" name="sealsign" style="width: 410px; margin-top: 5px">
-        		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle></div>
-        	</div> -->
+		
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+		
+	    <form style="display: none;" method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
+	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" accept="image/*">
+	        <input type="hidden" name="mode" id="mode" />
+	        <input type="hidden" name="companyID" id="companyID" />
+	    </form>
 	</body>
+	<c:if test="${!isCrossBrowser}">
+	    <script type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</script>
+	</c:if>
 </html>
