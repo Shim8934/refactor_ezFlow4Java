@@ -793,7 +793,7 @@
 		                    if (typeof (window.parent.SuccessBoard) == null || typeof (window.parent.SuccessBoard) == "undefined") {
 		                        try {
 		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mail_readcontent.aspx") < 0)
+		                            if (checkboard.indexOf("mailReadContent.do") < 0)
 		                                window.opener.location.reload(false);
 		                        } catch (e) {
 		
@@ -805,7 +805,7 @@
 		                    try {
 		                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mail_readcontent.aspx") < 0)
+		                            if (checkboard.indexOf("mailReadContent.do") < 0)
 		                                window.parent.parent.location.reload(false);
 		                        }
 		                    }
