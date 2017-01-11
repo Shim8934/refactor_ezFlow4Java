@@ -1750,11 +1750,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getOptionInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID;
 		String encodeInfo = "";
 		
-		File file = new File(realPath + companyPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml");
+		File fileDir = new File(realPath + companyPath);
+		
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		
+		File file = new File(realPath + companyPath + commonUtil.separator + "encodeinfo.xml");
 		encodeInfo = FileUtils.readFileToString(file);
 		
 		model.addAttribute("encodeInfo", encodeInfo);
@@ -1805,7 +1812,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 결재건수조회 메뉴 화면 호출 함수
 	 */
-	@RequestMapping("/admin/ezApprovalG/EzStatistics.do")
+	@RequestMapping("/admin/ezApprovalG/statistics.do")
 	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
@@ -1843,7 +1850,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("tempYear", tempYear);
 		model.addAttribute("tempMonth", tempMonth);
 		
-		return "admin/ezApprovalG/apprGEzStatistics";
+		return "admin/ezApprovalG/apprGStatistics";
 	}
 	
 	/**
