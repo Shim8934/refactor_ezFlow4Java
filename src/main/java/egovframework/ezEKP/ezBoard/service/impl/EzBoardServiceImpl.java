@@ -297,6 +297,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", userID);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getBrdNewItemCount(map);
 	}
@@ -391,6 +392,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_FileContent", content);
 		map.put("v_OFileName", oFileName);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		ezBoardDAO.photoListUpdate(map);
 		
@@ -906,6 +908,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getSearchMyBoardItemList(map);
 	}
@@ -1100,6 +1103,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
 		map.put("v_pUserTitle2", userInfo.getTitle2());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		String tempString = ezBoardDAO.getBoardItemRead(map);
 		
@@ -1160,6 +1164,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getMyBoardTotalItemCount(map);
 	}
@@ -1194,6 +1199,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
 	}
@@ -1215,7 +1221,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception {
-		return ezBoardDAO.getApprBoardTotalItemCount(userInfo);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userInfo.getId());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		return ezBoardDAO.getApprBoardTotalItemCount(map);
 	}
 
 	@Override
@@ -1274,6 +1285,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		List<BoardListVO> resultList = ezBoardDAO.getNoticePostItemAll(map);
 		
@@ -1326,7 +1338,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String getItemXML(String boardID, String itemID, String lang, int tenantID) throws Exception {
+	public String getItemXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		if (boardID != null) {
@@ -1351,13 +1363,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
 			}
-			sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
-			sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
+			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
+			sb.append("<ParentWriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getParentWriteDate(), offset, false) + "</ParentWriteDate>");
 			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 			sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
 			sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
-			sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
-			sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
+			sb.append("<StartDate>" + commonUtil.getDateStringInUTC(itemInfo.getStartDate(), offset, false) + "</StartDate>");
+			sb.append("<EndDate>" + commonUtil.getDateStringInUTC(itemInfo.getEndDate(), offset, false) + "</EndDate>");
 			sb.append("<Abstract>" + commonUtil.cleanValue(itemInfo.getABSTRACT()) + "</Abstract>");
 			sb.append("<Attachments>" + commonUtil.cleanValue(itemInfo.getAttachments()) + "</Attachments>");
 			sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
@@ -1394,7 +1406,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String getItemTempXML(String boardID, String itemID, String lang, int tenantID) throws Exception {
+	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
@@ -1418,13 +1430,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
 			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
 		}
-		sb.append("<WriteDate>" + itemInfo.getWriteDate() + "</WriteDate>");
-		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
+		sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
+		sb.append("<ParentWriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getParentWriteDate(), offset, false) + "</ParentWriteDate>");
 		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 		sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
 		sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
-		sb.append("<StartDate>" + itemInfo.getStartDate() + "</StartDate>");
-		sb.append("<EndDate>" + itemInfo.getEndDate() + "</EndDate>");
+		sb.append("<StartDate>" + commonUtil.getDateStringInUTC(itemInfo.getStartDate(), offset, false) + "</StartDate>");
+		sb.append("<EndDate>" + commonUtil.getDateStringInUTC(itemInfo.getEndDate(), offset, false) + "</EndDate>");
 		sb.append("<Abstract>" + commonUtil.cleanValue(itemInfo.getABSTRACT()) + "</Abstract>");
 		sb.append("<Attachments>" + commonUtil.cleanValue(itemInfo.getAttachments()) + "</Attachments>");
 		sb.append("<UpperItemIDTree>" + itemInfo.getUpperItemIDTree() + "</UpperItemIDTree>");
@@ -1546,7 +1558,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, int tenantID) throws Exception {
+	public List<BoardListVO> getReservedItemList(String userID, int startRow, int endRow, String sortBy, String lang, String offset, int tenantID) throws Exception {
 		if(!(endRow > 0)){
 			endRow = 0;
 		}
@@ -1556,8 +1568,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PUSERID", userID);
 		map.put("v_PSORTBY", sortBy);
 		map.put("v_TENANTID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		return ezBoardDAO.getReservedItemList(map);
+		List<BoardListVO> boardListVOs = ezBoardDAO.getReservedItemList(map);
+		
+		for (int k = 0; k < boardListVOs.size(); k++) {
+			boardListVOs.get(k).setStartDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getStartDate(), offset, false));
+			boardListVOs.get(k).setEndDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getEndDate(), offset, false));
+		}
+		
+		return boardListVOs;
 	}
 
 	@Override
@@ -1576,6 +1596,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		return ezBoardDAO.getReservedItemListCount(map);
 	}
@@ -1707,11 +1728,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
 		map.put("TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		ezBoardDAO.saveOneLineReply(map);
 	}
 	
-	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, int tenantID) throws Exception {
+	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, String offset, int tenantID) throws Exception {
 		BoardListVO boardListVO = new BoardListVO();
 		BoardVO ezBoardVO = new BoardVO();
 		ezBoardVO.setBoardType(pBoardType);
@@ -1783,6 +1805,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				if (fieldName.equals("WRITEDATE")) {
 					fieldValue =(String)boardList.get(j).get(fieldName);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, offset, false);
 				} else {
 					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
 				}
@@ -1790,10 +1813,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("<VALUE>"+fieldValue+"</VALUE>");
 				
 				if (i == 0) {
-					sb.append("<DATA1>"+boardList.get(j).get("BOARDID")+"</DATA1>");
-                	sb.append("<DATA2>"+boardList.get(j).get("ITEMID")+"</DATA2>");
-        			sb.append("<DATA3>"+boardList.get(j).get("WRITERID")+"</DATA3>");
-        			String nowDate = EgovDateUtil.getTodayTime();
+					sb.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");
+                	sb.append("<DATA2>" + boardList.get(j).get("ITEMID") + "</DATA2>");
+        			sb.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
+        			String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
 					if (boardList.get(j).get("WRITEDATE").toString().compareTo(nowDate) > 0) {
@@ -1801,8 +1824,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					} else {
 						sb.append("<DATA4>N</DATA4>");
 					}
-					sb.append("<DATA5>"+boardList.get(j).get("FILEPATH")+"</DATA5>");
-					sb.append("<DATA6>"+ boardList.get(j).get("MAINCONTENT") +"</DATA6>");
+					sb.append("<DATA5>" + boardList.get(j).get("FILEPATH") + "</DATA5>");
+					sb.append("<DATA6>" + boardList.get(j).get("MAINCONTENT") + "</DATA6>");
 				}
 				sb.append("</CELL>");
 			}
@@ -2072,6 +2095,35 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("tenantID", tenantID);
 		
 		return ezBoardDAO.getItemViewNew(map);
+	}
+
+	@Override
+	public List<BoardListVO> getReplyNoticeMail(String boardID, String itemTreeID, String lang, int tenantID) throws Exception {
+		logger.debug("getReplyNoticeMail started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("itemTreeID", itemTreeID.substring(0, 38));
+		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getReplyNoticeMail ended");
+		
+		return ezBoardDAO.getReplyNoticeMail(map);
+	}
+
+	@Override
+	public List<LoginVO> getSendApprMailList(String boardID, String lang, int tenantID) throws Exception {
+		logger.debug("getSendApprMailList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("tenantID", tenantID);
+
+		logger.debug("getSendApprMailList ended");
+		
+		return ezBoardDAO.getSendApprMailList(map);
 	}
 
 }

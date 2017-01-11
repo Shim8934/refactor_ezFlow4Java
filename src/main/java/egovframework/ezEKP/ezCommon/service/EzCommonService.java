@@ -18,7 +18,7 @@ public interface EzCommonService {
 	
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
-	public String getMHTtoHTML(String type, String itemID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
+	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
 	
 	public String loadMHTFile(String path) throws Exception;
 	

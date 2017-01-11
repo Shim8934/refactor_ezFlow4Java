@@ -37,7 +37,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert("<spring:message code='ezBoard.t2000' />");
+		            alert("<spring:message code='ezBoard.t2000'/>");
 		            return;
 		        }
 		        var filelist;
@@ -93,13 +93,14 @@
 		        oTable.className = "sublist";
 		
 		        var objTr = document.createElement("TR");
-		
 		        var objTh = document.createElement("TH");
+		        
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
 		            objTh.style.width = "24px";
-		        }else{
+		        } else {
 		            objTh.style.width = "15px";
 		        }
+		        
 		        var input = document.createElement("input");
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
@@ -126,13 +127,15 @@
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
 		        window.parent.returnvalue(xhr.responseText);
-// 		        if (CrossYN()) {
-// 		            document.getElementById("file").value = "";
-// 		        }
-// 		        else {
-// 		            document.getElementById("file").type = "text";
-// 		            document.getElementById("file").type = "file";
-// 		        }
+		        
+		        if (CrossYN()) {
+		            document.getElementById("file").value = "";
+		        }
+		        else {
+		            document.getElementById("file").type = "text";
+		            document.getElementById("file").type = "file";
+		        }
+		        
 		        var strRet = "";
 		        var pBoardID = window.parent.pBoardID;
 		        var filecnt = document.getElementById("filelist").childNodes.length;
@@ -150,11 +153,11 @@
 		    }
 		
 		    function uploadFailed(evt) {
-		        alert("There was an error attempting to upload the file.");
+		        alert("<spring:message code='ezBoard.hyj02'/>");
 		    }
 		
 		    function uploadCanceled(evt) {
-		        alert("The upload has been canceled by the user or the browser dropped the connection.");
+		        alert("<spring:message code='ezBoard.hyj03'/>");
 		    }
 		
 		    function btnfileup() {

@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -554,7 +555,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		StringBuilder result = new StringBuilder();
 		String realPath = commonUtil.getRealPath(request); 
 		String path = "xml" + commonUtil.separator + "ezApprovalG" + commonUtil.separator + "componentlist_admin.xml";
-		path = realPath + path;
+		path = realPath + commonUtil.separator + path;
 		
 		logger.debug("path : " + path);
 		
@@ -1475,7 +1476,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 관인대장 관인정보보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/ezSealInfo.do")
+	@RequestMapping(value = "/admin/ezApprovalG/sealInfo.do")
 	public String ezSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean checkIE = commonUtil.checkIE(request);
@@ -1485,7 +1486,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("checkIE", checkIE);
 		model.addAttribute("pDeptYN", pDeptYN);
 		
-		return "admin/ezApprovalG/apprGEzSealInfo";
+		return "admin/ezApprovalG/apprGSealInfo";
 	}
 	
 	/**
@@ -1495,24 +1496,27 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String addSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean checkIE = commonUtil.checkIE(request);
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("checkIE", checkIE);
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		return "admin/ezApprovalG/apprGAddSealInfo";
 	}
 	
 	/**
-	 * 전자결재G관리 관인대장 관인등록 파일등록 실행 함수
+	 * 전자결재G관리 관인대장 관인등록 파일등록 실행 함수 최신
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/sealUpload.do")
-	public String sealUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/admin/ezApprovalG/sealImageUpload.do")
+	public String sealImageUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		MultipartFile multiFile = request.getFile("file1");
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.SEALIMG", userInfo.getTenantId());
-		String currentDate = EgovDateUtil.getTodayTime().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
+		String currentDate = commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
 		File dir = new File(realPath + dirPath);
@@ -1521,24 +1525,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         	dir.mkdirs();
         }
         
-        int width = 0;
-		int height = 0;
 		String fileName = companyID + "_" + currentDate + fileExt;
 		
 		writeUploadedFile(multiFile, fileName, realPath + dirPath);
 		
-		File imageFile = new File(realPath + dirPath + commonUtil.separator + fileName);
-	
-		if (imageFile.exists()) {
-			BufferedImage bi = ImageIO.read(new File(realPath + dirPath + commonUtil.separator + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("path", dirPath + commonUtil.separator);
-		model.addAttribute("width", width);
-		model.addAttribute("height", height);
 		
 		return "json";
 	}
@@ -2170,6 +2162,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchDocList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getStatSearchDocLlist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getStatSearchDocList started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docNumber = request.getParameter("docNumber");
         String docTitle = request.getParameter("docTitle");
@@ -2207,6 +2201,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
 				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset());
         
+        logger.debug("result = " + result);
+        logger.debug("getStatSearchDocList ended.");
 		return result;
 	}
 	
@@ -2242,7 +2238,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(deptID, containerType, companyID, userInfo.getTenantId());
 		
 		if (containerID == null) {
-			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID);
+			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID, userInfo.getTenantId());
 		}
 		
 		String result;

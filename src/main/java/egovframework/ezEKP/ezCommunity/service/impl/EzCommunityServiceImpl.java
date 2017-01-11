@@ -3364,6 +3364,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Override
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("bbsEditOk started.");
+		
 		int myRef = 0, myStep = 0, myLevel = 0;
 		String mode = request.getParameter("mode");
 		String code = request.getParameter("code");
@@ -3398,6 +3400,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         OutputStream os = null;
         PrintWriter pw = null;
 		
+        
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
         	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
@@ -3406,7 +3409,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                bbsEditOkSet1(bName.toUpperCase(), title, no, code, attachList, textContent, userInfo.getTenantId());
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
-	                
+	                logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
 			    		pw.print(MHTcontent);
@@ -3527,6 +3530,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
              }
         }
 		
+		logger.debug("bbsEditOk ended.");
 		return "OK";
 	}
 
@@ -4090,7 +4094,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code="+ code);
 		
 		if (ezCommunityDAO.commOutOkGet1(map) != 0) {
-			//자꾸 여기걸림
 			strReturn = "<RETURN><VALUE>0</VALUE></RETURN>";
 		} else {
 			map = new HashMap<String, Object>();
@@ -6008,7 +6011,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("v_BNAME", bName);	
 		map.put("v_CODE", code);
-		map.put("v_STRMAXNUM", maxNum);
+		map.put("v_STRMAXNUM", Integer.toString(maxNum));
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityDAO.bbsEditOkGet3(map);
@@ -6405,8 +6408,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_CODE", code);
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("v_USERINFO_USERID", id);
-		map.put("v_USERNM", userNm);
-		map.put("v_USERNM2", userNm2);
+		map.put("v_USERINFO_DISPLAYNAME1", userNm);
+		map.put("v_USERINFO_DISPLAYNAME2", userNm2);
 		map.put("v_TITLE", title);
 		map.put("v_MAXIDFIELDNAME", maxIdFieldName);
 		map.put("tenantID", tenantID);
@@ -6864,7 +6867,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_code", code);
-        map.put("v_userInfo_lang", userInfo.getPrimary());
+        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
         map.put("tenantID", userInfo.getTenantId());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);

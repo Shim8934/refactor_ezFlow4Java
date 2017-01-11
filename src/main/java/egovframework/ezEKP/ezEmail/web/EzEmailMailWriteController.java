@@ -413,7 +413,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
 						
 						// retrieve the subject from the message.
-						subject = orgMessage.getSubject();
+						subject = ezEmailUtil.getSubject(orgMessage);
 						subject = (subject != null) ? subject : "";
 						
 						// analyze the message and retrieve the attached file list.
@@ -611,7 +611,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		}
 						
 						// retrieve the subject from the message.
-						subject = orgMessage.getSubject();
+						subject = ezEmailUtil.getSubject(orgMessage);
 						
 						if (subject != null && !subject.equals("")) {
 							String[] rawHeaders = orgMessage.getHeader("subject");
@@ -670,7 +670,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
 			            sb.append(String.format("<B>%s : </B> %s<BR>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            
-			            String orgMessageSubject = orgMessage.getSubject();	
+			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 						if (orgMessageSubject != null && !orgMessageSubject.equals("")) {
 							rawHeaders = orgMessage.getHeader("subject");
 							rawHeader = rawHeaders[0];

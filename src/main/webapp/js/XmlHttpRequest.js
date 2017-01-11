@@ -1543,3 +1543,51 @@ function MACSAFARIYN() {
     }
     return result;
 }
+//UTC Time -> Real Time(Offset)
+function GetLocalTime(Offset , pDateTime)
+{
+    if (pDateTime == "")
+        return "";
+
+    var pOffset = Offset.split("|")[1];
+	var pOffsetHour = pOffset.split(":")[0];
+	var pOffsetMinute = pOffset.split(":")[1];
+	
+	var szYear = pDateTime.substring(0,4);
+	var szMonth = pDateTime.substring(5,7);
+	var szDay = pDateTime.substring(8,10);
+	var szHr = Number(pDateTime.substring(11,13)) + Number(pOffsetHour);
+	var szMin = Number(pDateTime.substring(14,16)) + Number(pOffsetMinute);
+	var szSec = pDateTime.substring(17,19)
+	var ibjD = new Date();	
+	
+	ibjD.setFullYear(szYear ,szMonth-1 , szDay );
+	ibjD.setHours(szHr ,szMin , szSec );
+	
+	var rYear = ibjD.getFullYear();
+	var rMonth = addzero(ibjD.getMonth()+1);
+	var rDate = addzero(ibjD.getDate());
+	var rHour = addzero(ibjD.getHours());
+	var rMin = addzero(ibjD.getMinutes());
+	var rSec = addzero(ibjD.getSeconds());	
+	
+	//javascript 31 보정
+	/*if (szDay =="31" && (Number(pDateTime.substring(11,13)) + Number(pOffsetHour) < 24))
+	{
+		rMonth = addzero(Number(rMonth) -1) ;
+		rDate = 31 ;		
+	}
+	*/
+
+	return rYear + "-" + rMonth + "-" + rDate + " " + rHour + ":" + rMin + ":" + rSec;
+}
+
+function addzero(arg)
+{
+	if (arg < 10)
+	{
+		arg = "0" + arg;
+	}
+	return arg
+
+}

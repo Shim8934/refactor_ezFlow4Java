@@ -47,7 +47,7 @@ public interface EzBoardAdminService {
 	
 	public String setMyBoardTreeMoveCopy(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception;
 	
-	public String saveMHT(String boardID, String formContent, String realPath) throws Exception;
+	public String saveMHT(String boardID, String formContent, String realPath, int tenantID) throws Exception;
 	
 	public int checkIfLeafBoard(String pBoardID, int tenantID) throws Exception;
 	

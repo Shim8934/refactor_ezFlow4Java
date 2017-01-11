@@ -2556,15 +2556,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/adminLogoOk.do")
 	public String adminLogoOk(@CookieValue("loginCookie")String loginCookie, Model model, MultipartHttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
 		String code = request.getParameter("code");
-		String copType = request.getParameter("type");
-		String imageSrc = request.getParameter("imageSrc");
-		MultipartFile logoFile = request.getFile("logo");
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		//request 빼고 파라미터로 변경해야함
 		ezCommunityService.adminLogoOk(request, userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);

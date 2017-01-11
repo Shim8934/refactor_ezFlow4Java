@@ -2088,7 +2088,9 @@
 			AND
 				A.OWNERPAGEID = #v_pPAGEID#
 			AND
-				A.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
+			AND
+				B.TENANT_ID = #tenantID#		
 			ORDER BY 
 				B.DISPLAYNAME ASC
 		]]>
@@ -2120,7 +2122,9 @@
        		WHERE
        			UID_ = #v_UID#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			B.TENANT_ID = #tenantID#		
 		]]>
 	</select>
 	
@@ -2136,8 +2140,8 @@
 				* 
         	FROM
         		EZPORTAL.TBL_PORTLET_CATEGORY
-        	AND
-        		TENANT_ID = #tenantID#	
+        	WHERE
+        		TENANT_ID = $tenantID$	
 		]]>
 	</select>
 	
@@ -2153,7 +2157,7 @@
 				* 
         	FROM
         		EZPORTAL.TBL_BUILTIN_PARAMETERS
-        	AND
+        	WHERE
         		TENANT_ID = #tenantID#	
 		]]>
 	</select>
