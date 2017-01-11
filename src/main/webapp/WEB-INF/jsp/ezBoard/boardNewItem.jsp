@@ -762,9 +762,9 @@
 		                    xmlhttp = createXMLHttpRequest();
 		
 		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprnoticemail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 		                    } else {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprnoticemail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
 		                    }
 		                        
 		                    xmlhttp.send();
@@ -924,7 +924,7 @@
 		    function SelectBoard(CompleteFunction) {
 		        BoardSelect_Cross_dialogArgument[0] = "";
 		        BoardSelect_Cross_dialogArgument[1] = CompleteFunction;
-		        var url = "BoardSelect_Cross.aspx";
+		        var url = "/ezBoard/boardSelect.do";
 		
 		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(352, 700));
 		        try { OpenWin.focus(); } catch (e) { }
@@ -1061,7 +1061,19 @@
 		
 		        if (pcheckForm.toUpperCase() == "TRUE") {
 		            var tempHtml = message.GetEditorContent();
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
+		            var fullPath = "";
+                	$.ajax({
+    					type : "POST",
+    					dataType : "text",
+    					async : false,
+    					url : "/ezBoard/getContentInfo.do",	        			
+    					data : { type : "BOARDFORM", 
+    							 docID: pBoardID
+    						   },
+    					success: function(result){
+    						fullPath = result;
+    					}        			
+    				});	
 		            var htmlData = message.SetEditorContentURL2(fullPath);
 		            message.SetEditorContent(htmlData + tempHtml);
 		        }
@@ -1117,7 +1129,7 @@
 		        var xmlstring = "<DocID>" + pDocID + "</DocID>";
 		        xmlpara = loadXMLString(xmlstring);
 		        if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-		            xmlHTTP.open("POST", "/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+		            xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
 		        else
 		            xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -1284,7 +1296,7 @@
 		                    }
 		                    message.SetEditorContent("<p></p>");
 		                }
-		            }else {
+		            } else {
 		                if (pUrl == "") {
 		                    var fullPath = strContentLocation;
 		                    if (pMode == "reply") {
@@ -1305,7 +1317,7 @@
 		                    }else {
 		                        message.SetEditorContentURL(fullPath);
 		                    }
-		                }else {
+		                } else {
 		                    if (pDocID == "") {
 		                        if (InsertMailInfo() == -1) window.close();
 		                    }else {
@@ -1472,7 +1484,20 @@
 		                pBoardType = "";
 		                
 		                if (pcheckForm.toUpperCase() == "TRUE") {
-		                    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
+		                	var fullPath = "";
+		                	$.ajax({
+		    					type : "POST",
+		    					dataType : "text",
+		    					async : false,
+		    					url : "/ezBoard/getContentInfo.do",	        			
+		    					data : { type : "BOARDFORM", 
+		    							 docID: pBoardID
+		    						   },
+		    					success: function(result){
+		    						fullPath = result;
+		    					}        			
+		    				});	
+		                	
 		                    var htmlData = message.SetEditorContentURL2(fullPath);
 		                    message.SetEditorContent(htmlData);
 		                }
@@ -1521,7 +1546,19 @@
 		                pBoardType = "";
 		
 		                if (pcheckForm.toUpperCase() == "TRUE") {
-		                    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
+		                	var fullPath = "";
+		                	$.ajax({
+		    					type : "POST",
+		    					dataType : "text",
+		    					async : false,
+		    					url : "/ezBoard/getContentInfo.do",	        			
+		    					data : { type : "BOARDFORM", 
+		    							 docID: pBoardID
+		    						   },
+		    					success: function(result){
+		    						fullPath = result;
+		    					}        			
+		    				});	
 		                    var htmlData = message.SetEditorContentURL2(fullPath);
 		                    message.SetEditorContent(htmlData);
 		                }
@@ -2150,15 +2187,16 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-	    function SelectBoard2() {
-	        var url = "BoardSelect2.aspx";
-	        var feature = "status:no;dialogWidth:352px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-	        feature = feature + GetShowModalPosition(352, 700);
-	        var ret = window.showModalDialog(url, "", feature);
+	//사용안되는듯 2017-01-11 파악
+// 	    function SelectBoard2() {
+// 	        var url = "BoardSelect2.aspx";
+// 	        var feature = "status:no;dialogWidth:352px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
+// 	        feature = feature + GetShowModalPosition(352, 700);
+// 	        var ret = window.showModalDialog(url, "", feature);
 	
-	        if (typeof (ret) == "undefined") return "";
-	        return ret;
-	    }
+// 	        if (typeof (ret) == "undefined") return "";
+// 	        return ret;
+// 	    }
 	</script>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

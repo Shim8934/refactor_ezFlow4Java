@@ -363,29 +363,25 @@
 					if (strItemID == "")
 					{
 					    xmlhttp = createXMLHttpRequest();
-						xmlhttp.open("POST", "interASP/SendPostNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + itemid, false);
+						xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
 						xmlhttp.send();		
 						xmlhttp = null;
 					}
 					if (pMode == "reply")
 					{
 					    xmlhttp = createXMLHttpRequest();
-					    xmlhttp.open("POST", "interASP/SendReplyNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + itemid + "&ItemTreeID=" + strUpperItemIDTree, false);
+					    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
 					    xmlhttp.send();
 					    xmlhttp = null;
 					}
 					if ("${boardInfo.apprMail_FG}" == "Y") {
 					    xmlhttp = createXMLHttpRequest();
 					    if (pMode != "modify") {
-					        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + itemid, false);
+					        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
 					    } else {
-					        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + itemid, false);
+					        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
 					    }
 					    xmlhttp.send();
-					    var ResponseXML = xmlhttp.responseXML;
-					    xmlhttp = createXMLHttpRequest();
-					    xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
-					    xmlhttp.send(ResponseXML);
 					    xmlhttp = null;
 					}
 	
