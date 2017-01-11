@@ -88,44 +88,6 @@
 		    	});
 		    }
 	
-		    /* function event_schedule_get_holiday() {
-		        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
-		            return;
-
-		        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
-		            XmlNodeText = xmlhttp2.responseText;
-		            XmlNode = loadXMLString(XmlNodeText);
-		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-		                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
-		                    var issolar;
-		                    var holiday;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                        issolar = "1";
-		                    else
-		                        issolar = "2";
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")
-		                        holiday = true;
-		                    else
-		                        holiday = false;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-		                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                    else {
-		                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                }
-		            }
-		            xmlhttp2 = null;
-		            CalendarMiniDataSource();
-		        }
-		    } */
-	
-
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (pStartday == 1)
@@ -143,8 +105,6 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-
-//	            CalendarMiniView("CalendarMini");
 
 	            if ("WEB" == _subCode) {
 	                if ("3" == _funCode) {
@@ -378,7 +338,7 @@
 		                break;
 
 		            case 5:		// Adress
-		                window.open("/myoffice/ezSchedule/schedule_manage_group.aspx", "right")
+		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
 		                break;
 
 		            case 6:		// Search calendar

@@ -105,11 +105,7 @@ function getCalMonthViewSource_after(text) {
                 var day = 1000 * 60 * 60 * 24;
                 betweenDay = parseInt(betweenDay / day, 10);
                 
-                String tmp = parseInt(DataSDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]) - 9);
-alert(tmp);                
-                
-                
-                for (var j = 0; j <= betweenDay; j++) {
+                for (var j = 0; j <= betweenDay; j++) {                	
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalMonthDataBind(tempData[k]);
                     DataSDT.setDate(DataSDT.getDate() + 1);
@@ -318,8 +314,8 @@ function getCalDayViewSource_after(text) {
 
 
 function tempInsert(objNodes, DataSDT, DataEDT) {
-    var startHour = parseInt(DataSDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]) - 9);
-    var endHour = parseInt(DataEDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]) - 9);
+    var startHour = parseInt(DataSDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]));
+    var endHour = parseInt(DataEDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]));
     var startMin = parseInt(DataSDT.getMinutes(), 10) + parseInt(UserOffset.split(':')[1]);
     var endMin = parseInt(DataEDT.getMinutes(), 10) + parseInt(UserOffset.split(':')[1]);
 
@@ -366,21 +362,21 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.IsReadOnly = SelectSingleNodeValue(objNodes, "ISREADONLY");
     pTempData.DateType = SelectSingleNodeValue(objNodes, "DATETYPE");
     pTempData.Subject = SelectSingleNodeValue(objNodes, "TITLE");
-    pTempData.StartDate = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataSDT.getMinutes());
-    pTempData.EndDate = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataEDT.getMinutes());
+    pTempData.StartDate = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataSDT.getMinutes());
+    pTempData.EndDate = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataEDT.getMinutes());
     pTempData.RepeatCount = SelectSingleNodeValue(objNodes, "REPEATCOUNT");
     pTempData.Location = SelectSingleNodeValue(objNodes, "LOCATION"); // 임시 주석
-    pTempData.dtstartUTC = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataSDT.getMinutes());
-    pTempData.dtendUTC = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataEDT.getMinutes());
-    pTempData.dtstartHour = DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9);
+    pTempData.dtstartUTC = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataSDT.getMinutes());
+    pTempData.dtendUTC = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataEDT.getMinutes());
+    pTempData.dtstartHour = DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]));
     pTempData.dtstartMinute = DataSDT.getMinutes() + parseInt(UserOffset.split(':')[1]);
-    pTempData.dtendHour = DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9);
+    pTempData.dtendHour = DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]));
     pTempData.dtendMinute = DataEDT.getMinutes() + parseInt(UserOffset.split(':')[1]);
-    pTempData.dtstartDisplay = mfFormatTime(((OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9)) * 60) + OrgDataSDT.getMinutes());
-    pTempData.dtendDisplay = mfFormatTime(((OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9)) * 60) + OrgDataEDT.getMinutes());
+    pTempData.dtstartDisplay = mfFormatTime(((OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]))) * 60) + OrgDataSDT.getMinutes());
+    pTempData.dtendDisplay = mfFormatTime(((OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]))) * 60) + OrgDataEDT.getMinutes());
 
-    pTempData.OrgStartDate = mfGetUTFIsoDate(OrgDataSDT.getFullYear(), OrgDataSDT.getMonth(), OrgDataSDT.getDate(), OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), OrgDataSDT.getMinutes());
-    pTempData.OrgEndDate = mfGetUTFIsoDate(OrgDataEDT.getFullYear(), OrgDataEDT.getMonth(), OrgDataEDT.getDate(), OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), OrgDataEDT.getMinutes());
+    pTempData.OrgStartDate = mfGetUTFIsoDate(OrgDataSDT.getFullYear(), OrgDataSDT.getMonth(), OrgDataSDT.getDate(), OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), OrgDataSDT.getMinutes());
+    pTempData.OrgEndDate = mfGetUTFIsoDate(OrgDataEDT.getFullYear(), OrgDataEDT.getMonth(), OrgDataEDT.getDate(), OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), OrgDataEDT.getMinutes());
 
     pTempData.timeCount = timeCnt;
     pTempData.o_start = DataSDT;

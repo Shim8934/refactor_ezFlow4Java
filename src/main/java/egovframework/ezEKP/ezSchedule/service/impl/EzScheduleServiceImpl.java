@@ -128,7 +128,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public void scheduleNewItem(ScheduleInfoVO schInfoVO) throws Exception {
 		ezScheduleDAO.scheduleNewItem(schInfoVO);
-//		ezBoardDAO.newItem(boardListVO.getItemID());
 	}
 
 	@Override
@@ -151,8 +150,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			}	
 		}
 		
-System.out.println("orign : " +pidList);
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);
 		map.put("v_PFIELDLIST", "");
@@ -170,8 +167,6 @@ System.out.println("orign : " +pidList);
 		}
 		sb.append("</DATA>");
 		
-System.out.println(sb.toString());		
-		
 		return sb.toString();
 	}
 	
@@ -182,7 +177,59 @@ System.out.println(sb.toString());
 		return gList;
 	}
 
+	@Override
+	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantID) throws Exception {	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupList(map);
+		
+		return gList;
+	}
+	
+	@Override
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);
+		map.put("lang", lang);
+		map.put("tenantID", tenantId);
+		
+		int cnt = ezScheduleDAO.getMyGroupMemberListCnt(map);
+		
+		return cnt;
+	}
 
+	@Override
+	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception {
+		StringBuilder sb = new StringBuilder("<DATA>");		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);
+		map.put("lang", lang);
+		map.put("tenantID", tenantId);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupMemberList(map);
+		
+		for(int j = 0; j < gList.size(); j++){			
+			ScheduleGroupListVO data = gList.get(j);
+			
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupID", groupId);		
+		map.put("tenantID", tenantId);
+		
+		ezScheduleDAO.deleteScheduleGroup(map);
+		ezScheduleDAO.deleteScheduleGroupMember(map);
+	}	
 	
 }
 

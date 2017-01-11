@@ -130,6 +130,14 @@
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupListVO">
 		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
+		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
+		<result property="mail"				column="MAIL"				columnIndex="2"/>
+		<result property="info"				column="INFO"				columnIndex="3"/>		
 	</resultMap>
 
 	<resultMap class="ScheduleGmailInfoVO" id="scheduleGmailInfoVO">
@@ -138,10 +146,6 @@
 		<result property="gmailId"			column="GMAILID"			columnIndex="3"/>
 		<result property="gmailPwd"			column="GMAILPWD"			columnIndex="4"/>
 	</resultMap>
-
-	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
-		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
 			
 	<select id="EzScheduleDAO.getScheduleConfig" resultMap="scheduleConfigVO">
 		<![CDATA[
@@ -156,7 +160,7 @@
        		WHERE  
        			userid = #userID#
        		AND
-       			tenant_id = #tenantID#	
+       			tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -164,7 +168,9 @@
 		<![CDATA[
 			SELECT 
 				DISTINCT A.groupid as groupid,
-				groupname
+				groupname,
+				'' as description,
+              	'' as createdate
         	FROM 
         		EZPIMS.TBLSCHEDULEGROUP A LEFT JOIN EZPIMS.TBLSCHEDULEGROUPMEMBER B ON A.GroupID = B.GroupID
        		WHERE  
@@ -213,6 +219,88 @@
         	ORDER BY startdate ASC
 		]]>
 	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
+		<![CDATA[
+			SELECT 
+				groupid,
+            	groupname,
+              	description,
+              	createdate
+        	FROM 
+        		EZPIMS.TBLSCHEDULEGROUP 
+        	WHERE  
+        		creatorid = #userID#
+       		AND
+       			tenant_id = #tenantID#
+        	ORDER BY GroupName
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
+		<![CDATA[
+			 SELECT 
+			 	count(*)
+             FROM (
+	                  SELECT 
+	                  	memberid 
+                      FROM 
+                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      WHERE  
+                      	groupid = #groupID#
+                      AND
+                      	tenant_id = #tenantID#	
+             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             WHERE
+             	B.tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+		<![CDATA[
+			 SELECT 
+			 	A.memberid,
+             	B.mail,
+             	CASE #lang#
+	                WHEN '1' THEN B.displayname || '(' || description || ')'
+                    WHEN '2' THEN B.displayname2 || '(' || description2 || ')'   
+                END info  
+             FROM (
+	                  SELECT 
+	                  	memberid 
+                      FROM 
+                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      WHERE  
+                      	groupid = #groupID#
+                      AND
+                      	tenant_id = #tenantID#	
+             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             WHERE
+             	B.tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
+		DELETE 
+			EZPIMS.TBLSCHEDULEGROUP
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			tenant_id = #tenantID#	
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleGroupMember" parameterClass="map">
+		DELETE 
+			EZPIMS.TBLSCHEDULEGROUPMEMBER
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			tenant_id = #tenantID#	
+	</delete>
+	
+	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
+		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
 	
 	<procedure id="EzScheduleDAO.getScheduleInfo" parameterClass="Map" resultMap="scheduleInfoVO" >
 		{CALL EZPIMS.EZSP_GETSCHEDULEINFO(#v_SCHEDULEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

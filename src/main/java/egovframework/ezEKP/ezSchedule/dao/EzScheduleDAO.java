@@ -98,6 +98,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception{
 		insert("EzScheduleDAO.scheduleNewItem", scheduleInfoVO);
 	}
+	
+	public int getMyGroupMemberListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzScheduleDAO.getMyGroupMemberListCnt", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userID) throws Exception {
@@ -108,5 +112,24 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheduleInfoVO> getScheduleList(Map<String, Object> map) throws Exception  {
 		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getScheduleList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupListVO> getMyGroupList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getMyGroupList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupListVO> getMyGroupMemberList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getMyGroupMemberList", map);
+	}
+
+	public void deleteScheduleGroup(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleGroup", map);
+	}
+
+	public void deleteScheduleGroupMember(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleGroupMember", map);
+	}
+
 }
 
