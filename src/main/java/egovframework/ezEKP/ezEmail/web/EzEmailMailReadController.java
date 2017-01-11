@@ -1469,8 +1469,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		String newGuid = request.getParameter("NewGuid");
-		logger.debug("url=" + url + ",newGuid=" + newGuid);
+		String newGuid = xmldom.getElementsByTagName("NEWGUID").item(0).getTextContent();
+		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
+		logger.debug("url=" + url + ",newGuid=" + newGuid + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
@@ -1514,7 +1515,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					f.fetch(fetchMessages, fp);
 					
 					// subject
-					String subject = message.getSubject();
+					String subject = ezEmailUtil.getSubject(message);
 					if (subject != null && !subject.equals("")) {
 						String[] rawHeaders = message.getHeader("subject");
 						String rawHeader = rawHeaders[0];
@@ -1562,42 +1563,55 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					//첨부파일 관련
 					if (attachedFileList.size() > 0) {
-						sb.append("<ROOT><NODES>");
-						
-						String realPath = commonUtil.getRealPath(request);
-						String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", loginInfo.getTenantId());
-						
-						String attach = ""; 
+						float attachLimitF = Float.parseFloat(attachLimit) * 1024 * 1024;
+						float size = 0;
 						
 						for (int i=0; i<attachedFileList.size(); i++) {
-							MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
-							
-							if (part != null) {
-								String orgFileName = attachedFileList.get(i).get("filename");
-								String fileName = newGuid + "_" + orgFileName;
-								
-								File file = new File(realPath + path);
-								if (!file.exists()) {
-									file.mkdirs();
-								}
-								
-								part.saveFile(realPath + path + commonUtil.separator + fileName);
-								logger.debug(fileName + " is saved to " + realPath + path + " temporarily.");
-								
-								attach += "tempUploadFile" + commonUtil.separator + fileName + ";";
-								
-								sb.append("<NODE>");
-								sb.append("<PUPLOADSN><![CDATA[" + fileName + "]]></PUPLOADSN>");
-								sb.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
-								sb.append("<PFILENAME><![CDATA[" + orgFileName + "]]></PFILENAME>");
-								sb.append("<FILESIZE><![CDATA[" + attachedFileList.get(i).get("size") + "]]></FILESIZE>");
-								sb.append("<FILELOCATION><![CDATA[" + path + "]]></FILELOCATION>");
-								sb.append("</NODE>");
-							}
+							size += Float.parseFloat(attachedFileList.get(i).get("size"));
 						}
 						
-						sb.append("<ATTACH><![CDATA[" + attach + "]]></ATTACH>");
-						sb.append("</NODES></ROOT>");
+						if (size > attachLimitF) { //첨부파일 제한크기 초과
+							sb.append("<OVERSIZE />");
+						} else {
+
+							sb.append("<ROOT><NODES>");
+
+							String realPath = commonUtil.getRealPath(request);
+							String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", loginInfo.getTenantId());
+
+							String attach = ""; 
+
+							for (int i=0; i<attachedFileList.size(); i++) {
+								MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
+
+								if (part != null) {
+									String orgFileName = attachedFileList.get(i).get("filename");
+									String fileName = newGuid + "_" + orgFileName;
+
+									File file = new File(realPath + path);
+									if (!file.exists()) {
+										file.mkdirs();
+									}
+
+									part.saveFile(realPath + path + commonUtil.separator + fileName);
+									logger.debug(fileName + " is saved to " + realPath + path + " temporarily.");
+
+									attach += "tempUploadFile" + commonUtil.separator + fileName + ";";
+
+									sb.append("<NODE>");
+									sb.append("<PUPLOADSN><![CDATA[" + fileName + "]]></PUPLOADSN>");
+									sb.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
+									sb.append("<PFILENAME><![CDATA[" + orgFileName + "]]></PFILENAME>");
+									sb.append("<FILESIZE><![CDATA[" + attachedFileList.get(i).get("size") + "]]></FILESIZE>");
+									sb.append("<FILELOCATION><![CDATA[" + path + "]]></FILELOCATION>");
+									sb.append("</NODE>");
+								}
+							}
+							
+							sb.append("</NODES></ROOT>");
+							sb.append("<ATTACH><![CDATA[" + attach + "]]></ATTACH>");
+						}
+
 					}
 				}
 				f.close(false);

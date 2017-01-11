@@ -312,7 +312,7 @@ function CalendarMiniDataSource() {
     if (!document.getElementById("MiniCalendar"))
         return;
 
-    MiniHttp = createXMLHttpRequest();
+ /*   MiniHttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "DATA");
@@ -321,67 +321,78 @@ function CalendarMiniDataSource() {
     createNodeAndInsertText(xmlpara, objNode, "APP", idtype);
     createNodeAndInsertText(xmlpara, objNode, "GROUPID", groupid);
     createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);
-//    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
-//    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
-//    MiniHttp.send(xmlpara);
+    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
+    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
+    MiniHttp.send(xmlpara);
     //getCalendarMiniDataSource_after(xmlhttp);
+*/    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezSchedule/scheduleGetList.do",
+		data : {
+			STARTDATE : sStartDate,
+			ENDDATE : sEndDate,
+			APP : idtype,
+			GROUPID : groupid,
+			IDLIST : (idlist == "") ? idtype : idlist
+		},
+		success: function(text){
+			var tempData = new Array();
+			
+			try {		        
+		        var listNode = loadXMLString(text);
+		        var nlength = SelectNodes(listNode, "DATA/ROW").length;    
+		        var k = 0;
+		        for (var i = 0; i < nlength; i++) {
+		            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
+		            var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
+		            var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
+		            var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, _Dtstart.substring(8, 10), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
+		            var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, _Dtend.substring(8, 10), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
+
+		            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+
+		                var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+		                var day = 1000 * 60 * 60 * 24;
+		                betweenDay = parseInt(betweenDay / day, 10);
+
+		                for (var j = 0; j <= betweenDay; j++) {
+
+		                    var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+		                    tempData[k] = new sTempData();
+		                    tempData[k].trID = trID;
+
+		                    MiniDataBind(tempData[k]);
+		                    DataSDT.setDate(DataSDT.getDate() + 1);
+		                    k += 1;
+		                }
+		            } else {
+		                var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+		                tempData[k] = new sTempData();
+		                tempData[k].trID = trID;
+
+		                MiniDataBind(tempData[k]);
+		                k += 1;
+		            }
+		            DataSDT = null;
+		            DataEDT = null;
+		        } 
+		        tempData = null;
+		    }
+		    catch (e) {
+		        alert("getCalendarMiniDataSource_after : " + e.description);
+		    }
+		},
+		error: function(ee){
+			
+		}
+		
+    });
 }
 
 function sTempData() {
-}
-
-function getCalendarMiniDataSource_after() {
-    var tempData = new Array();
-    if (MiniHttp == null || MiniHttp.readyState != 4) return;
-
-    try {
-
-        if (MiniHttp.responseText == "") return;
-        var listNode = loadXMLString(MiniHttp.responseText);
-        var nlength = SelectNodes(listNode, "DATA/ROW").length;
-        var k = 0;
-        for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
-            var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
-            var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
-            var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, _Dtstart.substring(8, 10), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
-            var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, _Dtend.substring(8, 10), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
-
-            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
-                var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-                var day = 1000 * 60 * 60 * 24;
-                betweenDay = parseInt(betweenDay / day, 10);
-
-                for (var j = 0; j <= betweenDay; j++) {
-
-                    var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                    tempData[k] = new sTempData();
-                    tempData[k].trID = trID;
-
-                    MiniDataBind(tempData[k]);
-                    DataSDT.setDate(DataSDT.getDate() + 1);
-                    k += 1;
-                }
-            } else {
-                var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                tempData[k] = new sTempData();
-                tempData[k].trID = trID;
-
-                MiniDataBind(tempData[k]);
-                k += 1;
-            }
-            DataSDT = null;
-            DataEDT = null;
-        }
-
-        xmlhttp = null;
-        tempData = null;
-    }
-    catch (e) {
-        alert("getCalendarMiniDataSource_after : " + e.description);
-    }
 }
 
 function MiniDataBind(oAppointment) {
@@ -391,7 +402,6 @@ function MiniDataBind(oAppointment) {
         objElm.style.fontWeight = "bold"
     }
 }
-
 
 function mfGetUTFIsoDate(iYr, iMon, iDate, iHr, iMin) {
     var oDate = new Date();

@@ -35,6 +35,27 @@
 		<result property="isAutoDelete"		column="AUTODELETE"			columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap class="ScheduleInfoVO" id="scheduleListVO">
+		<result property="scheduleId"		column="SCHEDULEID"			columnIndex="1"/>
+		<result property="parentId"			column="PARENTID"			columnIndex="2"/>
+		<result property="ownerId"			column="OWNERID"			columnIndex="3"/>
+		<result property="ownerName"		column="OWNERNAME"			columnIndex="4"/>
+		<result property="ownerName2"		column="OWNERNAME2"			columnIndex="5"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="6"/>
+		<result property="modifierId"		column="MODIFIERID"			columnIndex="7"/>
+		<result property="scheduleType"		column="SCHEDULETYPE"		columnIndex="8"/>
+		<result property="importance"		column="IMPORTANCE"			columnIndex="9"/>
+		<result property="isReadOnly"		column="ISREADONLY"			columnIndex="10"/>
+		<result property="dateType"			column="DATETYPE"			columnIndex="11"/>
+		<result property="startDate"		column="STARTDATE"			columnIndex="12"/>
+		<result property="endDate"			column="ENDDATE"			columnIndex="13"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="14"/>
+		<result property="repetitionDel"	column="REPETITIONDELETE"	columnIndex="15"/>
+		<result property="title"			column="TITLE"				columnIndex="16"/>
+		<result property="location"			column="LOCATION"			columnIndex="17"/>
+		<result property="isPublic"			column="ISPUBLIC"			columnIndex="18"/>		
+	</resultMap>
+	
 	<resultMap class="ScheduleInfoVO" id="scheduleInfoVO">
 		<result property="parentId"			column="parentId"			columnIndex="1"/>
 		<result property="ownerId"			column="ownerId"			columnIndex="2"/>
@@ -109,6 +130,14 @@
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupListVO">
 		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
+		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
+		<result property="mail"				column="MAIL"				columnIndex="2"/>
+		<result property="info"				column="INFO"				columnIndex="3"/>		
 	</resultMap>
 
 	<resultMap class="ScheduleGmailInfoVO" id="scheduleGmailInfoVO">
@@ -117,13 +146,160 @@
 		<result property="gmailId"			column="GMAILID"			columnIndex="3"/>
 		<result property="gmailPwd"			column="GMAILPWD"			columnIndex="4"/>
 	</resultMap>
-
+			
+	<select id="EzScheduleDAO.getScheduleConfig" resultMap="scheduleConfigVO">
+		<![CDATA[
+			SELECT 
+				defaultview,
+            	startday,
+             	starttime,
+             	endtime,
+             	autodelete 
+        	FROM 
+        		EZPIMS.TBLSCHEDULECONFIG 
+       		WHERE  
+       			userid = #userID#
+       		AND
+       			tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleGroupList" resultMap="scheduleGroupListVO">
+		<![CDATA[
+			SELECT 
+				DISTINCT A.groupid as groupid,
+				groupname,
+				'' as description,
+              	'' as createdate
+        	FROM 
+        		EZPIMS.TBLSCHEDULEGROUP A LEFT JOIN EZPIMS.TBLSCHEDULEGROUPMEMBER B ON A.GroupID = B.GroupID
+       		WHERE  
+       			creatorid = #userID#
+            OR 
+            	( memberid = #userID# AND status = 1 )
+        	ORDER BY GroupName
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
+		<![CDATA[
+			SELECT 
+				scheduleid,
+				parentid,
+				ownerid,
+				ownername,
+				ownername2, 
+				creatorid,
+				modifierid,
+				scheduletype,
+				importance,
+				isreadonly,
+				datetype,
+				startdate,
+				enddate,
+				repetition,
+				repetitiondelete,
+				title,
+				location,
+				ispublic
+        	FROM 
+        		EZPIMS.TBLSCHEDULE
+       		WHERE  
+       			ownerid IN ($v_PIDLIST$)
+            AND 
+            	(
+            		(startdate >= ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND startdate <= ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' ) 
+            		OR
+            		(enddate >= ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND enddate <  ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'') 
+            		OR
+            		(startdate < ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND enddate >=  ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' ) 
+            		OR 
+            		(datetype='3')
+            	)
+        	ORDER BY startdate ASC
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
+		<![CDATA[
+			SELECT 
+				groupid,
+            	groupname,
+              	description,
+              	createdate
+        	FROM 
+        		EZPIMS.TBLSCHEDULEGROUP 
+        	WHERE  
+        		creatorid = #userID#
+       		AND
+       			tenant_id = #tenantID#
+        	ORDER BY GroupName
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
+		<![CDATA[
+			 SELECT 
+			 	count(*)
+             FROM (
+	                  SELECT 
+	                  	memberid 
+                      FROM 
+                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      WHERE  
+                      	groupid = #groupID#
+                      AND
+                      	tenant_id = #tenantID#	
+             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             WHERE
+             	B.tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+		<![CDATA[
+			 SELECT 
+			 	A.memberid,
+             	B.mail,
+             	CASE #lang#
+	                WHEN '1' THEN B.displayname || '(' || description || ')'
+                    WHEN '2' THEN B.displayname2 || '(' || description2 || ')'   
+                END info  
+             FROM (
+	                  SELECT 
+	                  	memberid 
+                      FROM 
+                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      WHERE  
+                      	groupid = #groupID#
+                      AND
+                      	tenant_id = #tenantID#	
+             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             WHERE
+             	B.tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
+		DELETE 
+			EZPIMS.TBLSCHEDULEGROUP
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			tenant_id = #tenantID#	
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleGroupMember" parameterClass="map">
+		DELETE 
+			EZPIMS.TBLSCHEDULEGROUPMEMBER
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			tenant_id = #tenantID#	
+	</delete>
+	
 	<procedure id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO" >
 		{CALL EZPIMS.EZSP_GET_THOLIDAY(#v_COMPANYID#, #v_USERCOMPANY#,  #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzScheduleDAO.getScheduleConfig" parameterClass="Map" resultMap="scheduleConfigVO" >
-		{CALL EZPIMS.EZSP_GETCONFIGINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
 	<procedure id="EzScheduleDAO.getScheduleInfo" parameterClass="Map" resultMap="scheduleInfoVO" >
@@ -185,11 +361,7 @@
 	
 	<procedure id="EzScheduleDAO.getUserLocalInfo" parameterClass="Map" resultMap="userLocalInfoVO" >
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzScheduleDAO.getScheduleGroupList" parameterClass="Map" resultMap="scheduleGroupListVO" >
-		{CALL EZPIMS.EZSP_GETSCHEDULEGROUPLIST(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	</procedure>	
 	
 	<procedure id="EzScheduleDAO.getScheduleGmailInfo" parameterClass="Map" resultMap="scheduleGmailInfoVO" >
 		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

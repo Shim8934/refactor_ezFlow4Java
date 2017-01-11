@@ -4,8 +4,7 @@ var xmlhttp;
 var delFlag = false;
 
 function CalViewSource() {
-
-    xmlhttp = createXMLHttpRequest();
+   /* xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "DATA");
@@ -13,12 +12,36 @@ function CalViewSource() {
     createNodeAndInsertText(xmlpara, objNode, "ENDDATE", sEndDate);
     createNodeAndInsertText(xmlpara, objNode, "APP", idtype);
     createNodeAndInsertText(xmlpara, objNode, "GROUPID", groupid);
-    createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);
+    createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);*/
+    	
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : (!delFlag ? true : false),
+		url : "/ezSchedule/scheduleGetList.do",
+		data : {
+			STARTDATE : sStartDate,
+			ENDDATE : sEndDate,
+			APP : idtype,
+			GROUPID : groupid,
+			IDLIST : (idlist == "") ? idtype : idlist
+		},
+		success: function(text){
+			if (typeCal == 0) {
+				getCalMonthViewSource_after(text);
+			} else if (typeCal == 1) {
+				getCalWeekViewSource_after(text);
+			} else if (typeCal == 2) {
+				getCalDayViewSource_after(text);
+			}
+			delFlag = false;
+		}
+    });    
     
-//    if (!delFlag)
-//        xmlhttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
-//    else
-//        xmlhttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", false);
+    /*if (!delFlag)
+        xmlhttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
+    else
+        xmlhttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", false);
 
     if (typeCal == 0) {
         if (!delFlag) {
@@ -51,7 +74,7 @@ function CalViewSource() {
             getCalDayViewSource_after();
         }
     }
-    delFlag = false;
+    delFlag = false;*/
 }
 
 function sDataTemp() {
@@ -60,32 +83,29 @@ function sDataTemp() {
 //월보기
 var OrgDataSDT;
 var OrgDataEDT;
-function getCalMonthViewSource_after() {
-
-    var tempData = new Array();
-    if (xmlhttp == null || xmlhttp.readyState != 4) return;
-
-    try {
-
-        if (xmlhttp.responseText == "") return;
-        var listNode = loadXMLString(xmlhttp.responseText);
+function getCalMonthViewSource_after(text) {
+	var tempData = new Array();
+	
+    try {        
+        var listNode = loadXMLString(text);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
+        
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");    
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
+  
             if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
                 var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
                 var day = 1000 * 60 * 60 * 24;
                 betweenDay = parseInt(betweenDay / day, 10);
-                for (var j = 0; j <= betweenDay; j++) {
+                
+                for (var j = 0; j <= betweenDay; j++) {                	
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalMonthDataBind(tempData[k]);
                     DataSDT.setDate(DataSDT.getDate() + 1);
@@ -98,8 +118,7 @@ function getCalMonthViewSource_after() {
             }
             DataSDT = null;
             DataEDT = null;
-        }
-        xmlhttp = null;
+        }        
         tempData = null;
     }
     catch (e) {
@@ -107,66 +126,59 @@ function getCalMonthViewSource_after() {
     }
 }//월보기
 
-
 //주보기
-function getCalWeekViewSource_after() {
-
-    var tempData = new Array();
-    if (xmlhttp == null || xmlhttp.readyState != 4) return;
-
+function getCalWeekViewSource_after(text) {
+	var tempData = new Array();
+	
     try {
-
-        if (xmlhttp.responseText == "") return;
-
-        var listNode = loadXMLString(xmlhttp.responseText);
+        var listNode = loadXMLString(text);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-
             sStartDate = sStartDate.split("-")[0] + "-" + leadingZeros(sStartDate.split("-")[1], 2) + "-" + leadingZeros(sStartDate.split("-")[2], 2)
             sEndDate = sEndDate.split("-")[0] + "-" + leadingZeros(sEndDate.split("-")[1], 2) + "-" + leadingZeros(sEndDate.split("-")[2], 2)
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
+            
             if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
-                    if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
-                        var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-                        var day = 1000 * 60 * 60 * 24;
-                        betweenDay = parseInt(betweenDay / day, 10);
-                        for (var j = 0; j <= betweenDay; j++) {
-                            if (j == 0) {
-                                DataEDT.setHours(23);
-                                DataEDT.setMinutes(59);
-                            }
-                            else if (j < betweenDay) {
-                                DataSDT.setHours(0);
-                                DataSDT.setMinutes(0);
-                                DataEDT.setHours(23);
-                                DataEDT.setMinutes(59);
-                            }
-                            else {
-                                DataSDT.setHours(0);
-                                DataSDT.setMinutes(0);
-                                DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-                            }
-                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                            aheadDataCell(tempData[k], k)
-                            CalWeekDataBind(tempData[k], k);
-                            DataSDT.setDate(DataSDT.getDate() + 1);
-                            k += 1;
+                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+                    var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+                    var day = 1000 * 60 * 60 * 24;
+                    betweenDay = parseInt(betweenDay / day, 10);
+                    
+                    for (var j = 0; j <= betweenDay; j++) {
+                        if (j == 0) {
+                            DataEDT.setHours(23);
+                            DataEDT.setMinutes(59);
                         }
-                    } else {
+                        else if (j < betweenDay) {
+                            DataSDT.setHours(0);
+                            DataSDT.setMinutes(0);
+                            DataEDT.setHours(23);
+                            DataEDT.setMinutes(59);
+                        }
+                        else {
+                            DataSDT.setHours(0);
+                            DataSDT.setMinutes(0);
+                            DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                        }
                         tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                         aheadDataCell(tempData[k], k)
                         CalWeekDataBind(tempData[k], k);
+                        DataSDT.setDate(DataSDT.getDate() + 1);
                         k += 1;
                     }
+                } else {
+                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                    aheadDataCell(tempData[k], k)
+                    CalWeekDataBind(tempData[k], k);
+                    k += 1;
+                }
             }
             else {
                 if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
@@ -185,8 +197,7 @@ function getCalWeekViewSource_after() {
             }
             DataSDT = null;
             DataEDT = null;
-        }
-        
+        }        
 
         for (var i = 0; i < tempData.length; i++) {
             if (tempData[i].DateType != "2")
@@ -196,9 +207,7 @@ function getCalWeekViewSource_after() {
         for (var i = 0; i < tempData.length; i++) {
             if (tempData[i].DateType != "2")    
                 CalDataWidth(tempData[i], i, tempData);
-        }
-
-        xmlhttp = null;
+        }        
         tempData = null;
     }
     catch (e) {
@@ -207,68 +216,65 @@ function getCalWeekViewSource_after() {
 }//주보기
 
 //일보기
-function getCalDayViewSource_after() {
-
-    var tempData = new Array();
-    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+function getCalDayViewSource_after(text) {
+    var tempData = new Array();    
 
     try {
-
-        if (xmlhttp.responseText == "") return;
-
-        var listNode = loadXMLString(xmlhttp.responseText);
+        var listNode = loadXMLString(text);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
+        
         for (var i = 0; i < nlength; i++) {
             var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
             var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
             var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
+            
             if (SelectSingleNodeValue(objNodes, "DATETYPE") != "2") {
-                    if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
-                        var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-                        var day = 1000 * 60 * 60 * 24;
-                        betweenDay = parseInt(betweenDay / day, 10);
-                        for (var j = 0; j <= betweenDay; j++) {
-                            var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
-                            var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2)
-                            if (toDay == DataDay) {
-                                if (betweenDay >= 1) {
-                                    if (j == 0) {
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else if (j < betweenDay) {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT.setHours(23);
-                                        DataEDT.setMinutes(59);
-                                    }
-                                    else {
-                                        DataSDT.setHours(0);
-                                        DataSDT.setMinutes(0);
-                                        DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-                                    }
+                if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+                    var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+                    var day = 1000 * 60 * 60 * 24;
+                    betweenDay = parseInt(betweenDay / day, 10);
+                    
+                    for (var j = 0; j <= betweenDay; j++) {
+                        var toDay = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+                        var DataDay = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2);
+                        
+                        if (toDay == DataDay) {
+                            if (betweenDay >= 1) {
+                                if (j == 0) {
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
                                 }
-                                tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                                aheadDataCell(tempData[k], k);
-                                CalDayDataBind(tempData[k], k);
-
-                                k += 1;
+                                else if (j < betweenDay) {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT.setHours(23);
+                                    DataEDT.setMinutes(59);
+                                }
+                                else {
+                                    DataSDT.setHours(0);
+                                    DataSDT.setMinutes(0);
+                                    DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+                                }
                             }
-                            DataSDT.setDate(DataSDT.getDate() + 1);
+                            tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                            aheadDataCell(tempData[k], k);
+                            CalDayDataBind(tempData[k], k);
+
+                            k += 1;
                         }
-                    } else {
-                        tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
-                        aheadDataCell(tempData[k], k);
-                        CalDayDataBind(tempData[k], k);
-                        k += 1;
+                        DataSDT.setDate(DataSDT.getDate() + 1);
                     }
+                } else {
+                    tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
+                    aheadDataCell(tempData[k], k);
+                    CalDayDataBind(tempData[k], k);
+                    k += 1;
+                }
             }
             else {
                 if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
@@ -298,8 +304,7 @@ function getCalDayViewSource_after() {
         for (var i = 0; i < tempData.length; i++) {
             if (tempData[i].DateType != "2")
                 CalDataWidth(tempData[i], i, tempData);
-        }
-        xmlhttp = null;
+        }        
         tempData = null;
     }
     catch (e) {
@@ -309,9 +314,8 @@ function getCalDayViewSource_after() {
 
 
 function tempInsert(objNodes, DataSDT, DataEDT) {
-
-    var startHour = parseInt(DataSDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]) - 9);
-    var endHour = parseInt(DataEDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]) - 9);
+    var startHour = parseInt(DataSDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]));
+    var endHour = parseInt(DataEDT.getHours(), 10) + (parseInt(UserOffset.split(':')[0]));
     var startMin = parseInt(DataSDT.getMinutes(), 10) + parseInt(UserOffset.split(':')[1]);
     var endMin = parseInt(DataEDT.getMinutes(), 10) + parseInt(UserOffset.split(':')[1]);
 
@@ -358,21 +362,21 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.IsReadOnly = SelectSingleNodeValue(objNodes, "ISREADONLY");
     pTempData.DateType = SelectSingleNodeValue(objNodes, "DATETYPE");
     pTempData.Subject = SelectSingleNodeValue(objNodes, "TITLE");
-    pTempData.StartDate = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataSDT.getMinutes());
-    pTempData.EndDate = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataEDT.getMinutes());
+    pTempData.StartDate = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataSDT.getMinutes());
+    pTempData.EndDate = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataEDT.getMinutes());
     pTempData.RepeatCount = SelectSingleNodeValue(objNodes, "REPEATCOUNT");
     pTempData.Location = SelectSingleNodeValue(objNodes, "LOCATION"); // 임시 주석
-    pTempData.dtstartUTC = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataSDT.getMinutes());
-    pTempData.dtendUTC = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), DataEDT.getMinutes());
-    pTempData.dtstartHour = DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9);
+    pTempData.dtstartUTC = mfGetUTFIsoDate(DataSDT.getFullYear(), DataSDT.getMonth(), DataSDT.getDate(), DataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataSDT.getMinutes());
+    pTempData.dtendUTC = mfGetUTFIsoDate(DataEDT.getFullYear(), DataEDT.getMonth(), DataEDT.getDate(), DataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), DataEDT.getMinutes());
+    pTempData.dtstartHour = DataSDT.getHours() + (parseInt(UserOffset.split(':')[0]));
     pTempData.dtstartMinute = DataSDT.getMinutes() + parseInt(UserOffset.split(':')[1]);
-    pTempData.dtendHour = DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9);
+    pTempData.dtendHour = DataEDT.getHours() + (parseInt(UserOffset.split(':')[0]));
     pTempData.dtendMinute = DataEDT.getMinutes() + parseInt(UserOffset.split(':')[1]);
-    pTempData.dtstartDisplay = mfFormatTime(((OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9)) * 60) + OrgDataSDT.getMinutes());
-    pTempData.dtendDisplay = mfFormatTime(((OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9)) * 60) + OrgDataEDT.getMinutes());
+    pTempData.dtstartDisplay = mfFormatTime(((OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]))) * 60) + OrgDataSDT.getMinutes());
+    pTempData.dtendDisplay = mfFormatTime(((OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]))) * 60) + OrgDataEDT.getMinutes());
 
-    pTempData.OrgStartDate = mfGetUTFIsoDate(OrgDataSDT.getFullYear(), OrgDataSDT.getMonth(), OrgDataSDT.getDate(), OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), OrgDataSDT.getMinutes());
-    pTempData.OrgEndDate = mfGetUTFIsoDate(OrgDataEDT.getFullYear(), OrgDataEDT.getMonth(), OrgDataEDT.getDate(), OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0]) - 9), OrgDataEDT.getMinutes());
+    pTempData.OrgStartDate = mfGetUTFIsoDate(OrgDataSDT.getFullYear(), OrgDataSDT.getMonth(), OrgDataSDT.getDate(), OrgDataSDT.getHours() + (parseInt(UserOffset.split(':')[0])), OrgDataSDT.getMinutes());
+    pTempData.OrgEndDate = mfGetUTFIsoDate(OrgDataEDT.getFullYear(), OrgDataEDT.getMonth(), OrgDataEDT.getDate(), OrgDataEDT.getHours() + (parseInt(UserOffset.split(':')[0])), OrgDataEDT.getMinutes());
 
     pTempData.timeCount = timeCnt;
     pTempData.o_start = DataSDT;

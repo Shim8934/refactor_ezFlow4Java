@@ -29,13 +29,6 @@ public class EzScheduleInfoImpl implements EzScheduleInfo {
 	};
 
 	@Override
-	public List<ScheduleGroupListVO> GetScheduleGroupList(String pUserID) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", pUserID);
-		return ezScheduleDAO.getScheduleGroupList(map);
-	};
-
-	@Override
 	public List<ScheduleGmailInfoVO> GetScheduleGmailInfo(String pUserID) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", pUserID);
