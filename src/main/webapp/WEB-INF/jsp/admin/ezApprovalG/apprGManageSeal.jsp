@@ -168,31 +168,25 @@
 		    
 		    var ezsealinfo_dialogArguments = new Array();
 		    function btnInfo_onclick() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvtDocForm");
-	
-		        var selRow = listview.GetSelectedRows();
+		    	var listview = new ListView();
+	            listview.LoadFromID("lvtDocForm");
+	            var selRow = listview.GetSelectedRows();
 		        
-		        if (selRow) {
-		            parameter[0] = selRow[0].getAttribute("DATA1");
-		            parameter[1] = selRow[0].cells[0].innerText;
-		            parameter[2] = encodeURI(selRow[0].getAttribute("DATA2"));
-		            parameter[3] = selRow[0].cells[1].innerText;
-		            parameter[4] = selRow[0].cells[2].innerText;
-		            parameter[5] = selRow[0].cells[3].innerText;
-		            parameter[6] = selRow[0].cells[4].innerText;
-		            parameter[7] = selRow[0].getAttribute("DATA3");
-		            parameter[8] = selRow[0].cells[5].innerText;
-	
+		        if (selRow.length > 0) {
+		        	parameter[0] = GetAttribute(selRow[0], "DATA1");
+	                parameter[1] = getNodeText(selRow[0].cells[0]);
+	                parameter[2] = escape(GetAttribute(selRow[0], "DATA2"));
+	                parameter[3] = getNodeText(selRow[0].cells[1]);
+	                parameter[4] = getNodeText(selRow[0].cells[2]);
+	                parameter[5] = getNodeText(selRow[0].cells[3]);
+	                parameter[6] = getNodeText(selRow[0].cells[4]);
+	                parameter[7] = GetAttribute(selRow[0], "DATA3")
+	                parameter[8] = getNodeText(selRow[0].cells[5]);
+	                
 	                ezsealinfo_dialogArguments[0] = parameter;
 	                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
 	
-	                var ezSealInfo = window.open("/admin/ezApprovalG/ezSealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420))
-// 		            } else {
-// 		                var url = "/admin/ezApprovalG/ezSealInfo.do";
-// 		                var feature = GetShowModalPosition(610, 265);
-// 		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
-// 		            }
+	                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420))
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
 		            OpenAlertUI(pInformationString);

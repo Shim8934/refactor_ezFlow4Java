@@ -1476,7 +1476,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 관인대장 관인정보보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/ezSealInfo.do")
+	@RequestMapping(value = "/admin/ezApprovalG/sealInfo.do")
 	public String ezSealInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean checkIE = commonUtil.checkIE(request);
@@ -1486,7 +1486,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("checkIE", checkIE);
 		model.addAttribute("pDeptYN", pDeptYN);
 		
-		return "admin/ezApprovalG/apprGEzSealInfo";
+		return "admin/ezApprovalG/apprGSealInfo";
 	}
 	
 	/**
