@@ -460,7 +460,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalGAdmin.getSealDeptList"
 		parameterClass="Map" resultClass="ApprGSealInfoVO">
-		<isEqual property="v_LISTFLAG" compareValue="">
+		<isEqual property="v_LISTFLAG" compareValue="ADMIN">
 			<![CDATA[
 				SELECT
 					sealnum,
@@ -484,7 +484,7 @@
 			]]>
 		</isEqual>
 		
-		<isNotEqual property="v_LISTFLAG" compareValue="">
+		<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 			<![CDATA[
 				SELECT
 					sealnum,

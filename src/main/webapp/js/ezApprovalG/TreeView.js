@@ -91,7 +91,7 @@ function TreeNode() {
         var bExpanded = false;
 
         var strExpanded = GetAttribute(treeDiv, "EXPANDED");
-        if (strExpanded.toUpperCase() == "TRUE")
+        if (strExpanded != null && strExpanded.toUpperCase() == "TRUE")
             bExpanded = true;
 
         //부모노드의 점선 이미지와 동일하게 세팅한다.
@@ -108,8 +108,10 @@ function TreeNode() {
 
         //부모노드가 마지막 노드인지 확인한다.
         var bParentEndNode = false;
-        if (GetAttribute(pParentNode, "ENDNODE").toLowerCase() == "true")
-            bParentEndNode = true;
+        if (GetAttribute(pParentNode, "ENDNODE") != null) {
+            if (GetAttribute(pParentNode, "ENDNODE").toLowerCase() == "true")
+                bParentEndNode = true;
+        }
 
         //부모노드의 점선 아이콘의 개수가 0보다 작거나 같은 경우
         //iParentImgCnt의 값을 0으로 주어 자신의 점선 아이콘을 생성할 개수의 기준으로 잡는다.
@@ -155,8 +157,13 @@ function TreeNode() {
         //기관표시 사용 여부가 true 체크
         if (pUseAgency) {
             var strIconByName = GetAttribute(treeDiv, "SETNODEICONBYNAME");
-            if (strIconByName.toUpperCase() != "ICONCOMP")
+            if (strIconByName != null) {
+                if (strIconByName.toUpperCase() != "ICONCOMP")
+                    pUseAgency = false;
+            }
+            else {
                 pUseAgency = false;
+            }
         }
         if (strIsLeaf == "TRUE")
             imgNode.src = TreeIcons["node_end"];
@@ -644,7 +651,7 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     var treeDiv = document.getElementById(pTreeID);
     var preSelectID = GetAttribute(treeDiv, "SELECTNODEID");
 
-    if (preSelectID != "" && preSelectID != "undefined") {
+    if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);
         objSpan.className = TreeClasses["normal"];
     }
