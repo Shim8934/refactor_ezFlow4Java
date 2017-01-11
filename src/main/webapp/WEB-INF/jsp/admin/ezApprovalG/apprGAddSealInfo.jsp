@@ -131,6 +131,7 @@
 		            OpenAlertUI(pInformationString);
 		            return;
 		        }
+		        
 		        document.getElementById("SIGNVIEW").innerHTML = "";
 		        var Img = document.createElement("IMG");
 		        Img.style.width = pSealWidth + "mm";
@@ -173,7 +174,7 @@
 		        	});
 		        }
 		    }
-		
+			
 		    function btn_AttachAdd_onclick(obj) {
 		        if (document.form.file1.value != "") {
 					var frm = document.getElementById('form');
@@ -194,7 +195,6 @@
 			            		if (fileName.length > 1000) {
 			                        var pInformationString = imgName + "<spring:message code = 'ezApprovalG.t1246' />";
 			                        OpenAlertUI(pInformationString);
-			                        alert(fileName);
 			                        
 			                        return;
 			                    }
@@ -206,16 +206,17 @@
 		                    }
 		            		
 		            		pSealPath = dirPath + fileName;
+		            		var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
+				            document.getElementById("filename").value = fileinfo;
 		        		}
 		        	});
-		            
-		            document.form.file1.value = "";
 		        }
 		    }
 		
 		    function returnvalue(strXML) {
 		        var xml = loadXMLString(strXML);
 		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+		        
 		        if (getNodeText(GetChildNodes(nodes[0])[1]) == "true") {
 		            var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
 		            document.getElementById("filename").value = fileinfo;
@@ -258,12 +259,13 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1262' /></th>
 	    		<td id="SealName"> 
-	    			<input type="text" id="tbSealName" name="tbSealName" style="width: 140px">
+	    			<input type="text" id="tbSealName" name="tbSealName" style="width:140px">
 	    		</td>
 	    	</tr>
 	    	<tr>
 				<th><spring:message code = 'ezApprovalG.t00010' /></th>
 				<td style="vertical-align:middle;">
+					<input type="text" readonly id="filename" style="width:180px;">
 	        		<a class="imgbtn" ><span onClick="btnFileUp_onclick()"><spring:message code = 'ezApprovalG.t1251' /></span></a>
 	        		<a class="imgbtn" ><span onClick="btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	    		</td>

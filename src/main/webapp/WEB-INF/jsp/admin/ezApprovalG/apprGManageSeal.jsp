@@ -244,7 +244,6 @@
 		    }
 		    
 		    function btnAdd_onclick_complete(RtnVal) {
-		    	
 		    	if (RtnVal[0] == "OK") {
 	                var DelRtnVal = DeleteSealInfo("");
 	                if (DelRtnVal == "TRUE") {
