@@ -1406,7 +1406,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID");
 		String docID = request.getParameter("docID");
 		String draftFlag = request.getParameter("draftFlag");
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		String susinAdmin = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -3293,7 +3293,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String susinAdmin = "";
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -3412,7 +3412,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useOcs = config.getProperty("config.USE_OCS");
 		String userEmail = userInfo.getEmail();
 		String susinAdmin = "";
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -4669,13 +4669,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/delayCabEndY.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String delayCabEndY(HttpServletRequest request) throws Exception{
+	public String delayCabEndY(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+	    userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String companyID = request.getParameter("companyID");
 		String deptCode = request.getParameter("deptCode");
 		String flag = request.getParameter("flag");
 		String cabClassList = request.getParameter("cabClassList");
 		
-		String result = ezApprovalGService.delayCabEndY(deptCode, flag, cabClassList, companyID);
+		String result = ezApprovalGService.delayCabEndY(deptCode, flag, cabClassList, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -4769,12 +4771,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/endCabProduce.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String endCabProduce(HttpServletRequest request) throws Exception{
+	public String endCabProduce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String companyID = request.getParameter("companyID");
 		String cabClassNo = request.getParameter("cabClassNO");
 		String flag = request.getParameter("flag");
 		
-		String result = ezApprovalGService.endCabProduce(cabClassNo.trim(), flag, companyID);
+		String result = ezApprovalGService.endCabProduce(cabClassNo.trim(), flag, companyID, userInfo.getTenantId() );
 		
 		return result;
 	}
@@ -4861,12 +4865,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/reqDelayCabEndY.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String reqDelayCabEndY(HttpServletRequest request) throws Exception{
+	public String reqDelayCabEndY(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String companyID = request.getParameter("companyID");
 		String cabClassList = request.getParameter("cabClassList");
 		String flag = request.getParameter("flag");
 		
-		String result = ezApprovalGService.reqDelayCabEndY(cabClassList, flag, companyID);
+		String result = ezApprovalGService.reqDelayCabEndY(cabClassList, flag, companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -5100,7 +5106,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String type = "APR";
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		
 		if (request.getParameter("type") != null) {
 			type = request.getParameter("type");
