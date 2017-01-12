@@ -375,7 +375,7 @@ public class EzApprovalGarchiveController {
         String debenturer = "";
         
         if(xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent().equals("0")){
-        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, userInfo.getTenantId());
+        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
         }
         else{
             deptcode = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim();
@@ -384,7 +384,7 @@ public class EzApprovalGarchiveController {
             sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), false), debenturer, isdocprint, userInfo.getTenantId());
+            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), false), debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
         }
 			return result;
 	}

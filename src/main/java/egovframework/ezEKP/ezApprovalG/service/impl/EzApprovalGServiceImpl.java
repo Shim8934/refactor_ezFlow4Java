@@ -451,7 +451,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		LOGGER.debug("getLineInfo started.");
 
 		String listString = "";
@@ -515,7 +515,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
@@ -577,7 +577,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		LOGGER.debug("getAttachInfo started.");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -628,7 +628,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHHREF").item(k).getTextContent()) + "</DATA1>");
@@ -649,7 +649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getReceiptInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getReceiptInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
@@ -717,7 +717,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent()) + "</DATA1>");
@@ -745,7 +745,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
@@ -811,7 +811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
@@ -1178,7 +1178,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
         strSQL.append("APRRejectEnd ('" + newDocID + "', '" + docID + "', '");
         strSQL.append(endURL + "', '" + docState + "', '" + docNo + "', '" + docNumCode);
-        strSQL.append("', SYSDATE, '" + containerID + "');\n");
+        strSQL.append("', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), '" + containerID + "');\n");
 		
         map.put("v_HESONGFLAG", hesongFlag.trim());
         
@@ -1277,7 +1277,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append(gongRamDocID.trim() + "', FormID, '" + docID.trim());
 			strSQL.append("', DocType, '" + staDSGongRam + "', '" + staASJinHang + "', '");
             strSQL.append(susinDocURL.trim() + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, ");
-            strSQL.append("SYSDATE, NULL, WriterID, WriterName, WriterName2, ");
+            strSQL.append("TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), NULL, WriterID, WriterName, WriterName2, ");
             strSQL.append("WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID ");
             strSQL.append("FROM TBAPRDOCINFO WHERE DocID = '" + docID.trim() + "' AND TENANT_ID =" + tenantID + ";\n");
 
@@ -1430,7 +1430,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("WriterJobTitle,WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) SELECT '");
             strSQL.append(gongRamDocID.trim() + "', FormID, '" + docID.trim());
             strSQL.append("', DocType, '" + staDSGongRam + "', '" + staASJinHang + "', '");
-            strSQL.append(susinDocURL.trim() + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, SYSDATE");
+            strSQL.append(susinDocURL.trim() + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", NULL, WriterID, WriterName, WriterName2, ");
             strSQL.append("WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID ");
             strSQL.append("FROM TBENDAPRDOCINFO WHERE DocID = '" + docID.trim() + "' AND TENANT_ID= " + tenantID +";\n");
@@ -1710,7 +1710,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID) throws Exception {
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String listString = getListHeader("013", companyID, lang, tenantID);
 		
@@ -1764,7 +1764,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
@@ -2373,7 +2373,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String addToAprLine(String userID, String formID, String aprSN, String companyID, String lang, int tenantID) throws Exception {
+	public String addToAprLine(String userID, String formID, String aprSN, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		listString = getListHeader("013", companyID, lang, tenantID);
@@ -2414,7 +2414,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
@@ -2742,7 +2742,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID) throws Exception {
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		listString = getListHeader("023", companyID, lang, tenantID);
@@ -2798,7 +2798,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent()) + "</DATA1>");
@@ -3325,7 +3325,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -3413,7 +3413,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -3549,7 +3549,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(userInfo.getLang());
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId())) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset())) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -3894,7 +3894,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID) throws Exception {
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -3966,7 +3966,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fieldName = fieldName + commonUtil.getMultiData(userLang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -4179,7 +4179,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int receivedSN = 1;
 		
 		strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET ProcessDate = ");
-        strSQL.append("SYSDATE, AprState = '");
+        strSQL.append("TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), AprState = '");
         strSQL.append(staASBanSong + "', ProcessYN = 'Y' WHERE DocID = '" + docID);
         strSQL.append("' AND ProcessorID = '" + userID + "' AND AprState = '" + staASJinHang + "' AND TENANT_ID =" + tenantID +"\n");
     	
@@ -4214,7 +4214,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         strSQL2.append("ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) ");
 		strSQL2.append("VALUES (" + receivedSN + ", '" + docID + "', '" + signList2.getSendDeptID() + "', N'");
         strSQL2.append(signList2.getSentDeptName() + "', N'" + signList2.getSentDeptName2() + "', '" + signList2.getReceivedDeptID() + "', N'" + signList2.getReceivedDeptName() + "', N'" + signList2.getReceivedDeptName2() + "', '" + staDSSimSa);
-		strSQL2.append("', '" + staASBanSong + "'," +commonUtil.getTodayUTCTime(""));
+		strSQL2.append("', '" + staASBanSong + "'," +"TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
         strSQL2.append(", 'N', NULL, '" + signList.getWriterID() + "', N'" + signList.getWriterName() + "', N'" + signList.getWriterName2() + "', N'" + signList.getWriterJobTitle() + "', N'" + signList.getWriterJobTitle2());
 		strSQL2.append("', '" + signList.getOrgDocID() + "'," + tenantID +")\n");
 		
@@ -4292,13 +4292,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", companyID, userInfo.getTenantId());
 		
 		if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
-			String receiveRet = getReceivedDocInfo(docID, companyID, strLang, userInfo.getTenantId());
+			String receiveRet = getReceivedDocInfo(docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(receiveRet);
 			
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 		} else {
-			String approveRet = getApproveDocInfo(docID, companyID, strLang, userInfo.getTenantId());
+			String approveRet = getApproveDocInfo(docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(approveRet);
 			
 			drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
@@ -4371,7 +4371,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strSeumyungDate = "";
 		String strSql = "TRUE";
 		
-		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId());
+		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 		
 		Document lineXml = commonUtil.convertStringToDocument(lineResult);
 		NodeList docListNode = lineXml.getElementsByTagName("ROW");
@@ -5562,7 +5562,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAttachFileInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getAttachFileInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
@@ -5632,7 +5632,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "</DATA1>");
@@ -6353,7 +6353,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAttachDocInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getAttachDocInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		String listString = "";
@@ -6421,7 +6421,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "</DATA1>");
@@ -6855,7 +6855,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getHistoryForDoc(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getHistoryForDoc(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		String listString = "";
@@ -6925,7 +6925,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
@@ -6945,7 +6945,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getHistoryForLine(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getHistoryForLine(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		String listString = "";
@@ -7014,7 +7014,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
@@ -7034,7 +7034,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		String listString = "";
@@ -7104,7 +7104,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
@@ -7127,7 +7127,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getHistoryForLineDetail(String docID, String modifySN, String sortHeader, String sortOption, String companyID, String lang, int tenantID) throws Exception {
+	public String getHistoryForLineDetail(String docID, String modifySN, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		String listString = "";
@@ -7197,7 +7197,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
@@ -7521,7 +7521,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<APROVEDATA>");
@@ -7614,10 +7614,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
-		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID));
+		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<APRLINEINFO>");
-		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID));
+		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</APRLINEINFO></APROVEDATA>");
 		
 		return rtnVal.toString();
@@ -7862,7 +7862,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	// 수신 문서와 심사 문서를 같이 가져온다. admin, user = 수신문서, simsa = 심사문서
 	public String getReceiveDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
-			String searchQuery, Document xmlDomSub, int tenantID) throws Exception {
+			String searchQuery, Document xmlDomSub, int tenantID, String offset) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -7948,7 +7948,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fieldName = fieldName + commonUtil.getMultiData(userLang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -8023,7 +8023,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<RECEIVEDATA>");
@@ -8130,7 +8130,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
-		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID));
+		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<CONVDOCINFO>");
 		rtnVal.append("<HAPYUI>" + makeXMLString(getCode2Name("A36", "001", companyID, lang, tenantID)) + "</HAPYUI>");
@@ -8358,7 +8358,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("OWNERNAME2").item(0).getTextContent()));
 		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent()));
 		strSQL.append("', '" + makeRightField("1") + "', '0', '" + makeRightField(specialFlag));
-		strSQL.append("', '" + makeRightField("0") + "', " + makeRightField("SYSDATE"));
+		strSQL.append("', '" + makeRightField("0") + "', " + "TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 		strSQL.append(", '" + makeRightField(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent()));
 		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("DISPLAYFLAG").item(0).getTextContent()));
 		strSQL.append("', '" + makeRightField(deptCode));
@@ -8645,13 +8645,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("SELECT '" + receiveSN + "', '" + docID + "', ReceivedDeptID, ");
             strSQL.append("ReceivedDeptName, ReceivedDeptName2, '" + makeRightField(objRows.item(0).getTextContent()));
 			strSQL.append("', '" + makeRightField(objRows.item(1).getTextContent()) + "', '"+ makeRightField(objRows.item(2).getTextContent()) + "', DocState, '");
-			strSQL.append(staASBaeBu + "', SYSDATE");
+			strSQL.append(staASBaeBu + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", '1', ProcessDocID, NULL, NULL, NULL, NULL, NULL, ParentsDocID FROM ");
             strSQL.append("TBAPRRECEIPTPROCESSINFO WHERE DocID ='" + docID);
 			strSQL.append("' AND ReceiveSN = '" + receiveSN + "' AND ProcessYN = 'N' AND TENANT_ID = " + tenantID +";\n");
 
 			strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET ProcessDate = ");
-			strSQL.append("SYSDATE, ProcessYN = 'Y' WHERE DocID ='");
+			strSQL.append("TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), ProcessYN = 'Y' WHERE DocID ='");
 			strSQL.append(docID + "' AND ReceiveSN = '" + receiveSN + "' AND ProcessYN = 'N' AND TENANT_ID = " + tenantID +";\n");
 
 			strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET ProcessYN = 'N' ");
@@ -8676,7 +8676,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  			for (int k = 0; k < xmlDom.getDocumentElement().getChildNodes().getLength(); k++) {
  				if (k == 0) {
  					strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET AprState = '" + staASBaeBu);
-                    strSQL.append("', ProcessDate = SYSDATE" );
+                    strSQL.append("', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
                     strSQL.append(", ReceivedDeptID = '" + makeRightField(objRows.item(0).getTextContent()));
                     strSQL.append("', ReceivedDeptName = N'" + makeRightField(objRows.item(1).getTextContent()));
                     // 2010.08.03 다국어 
@@ -8749,7 +8749,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("INSERT INTO TBAPRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
 			strSQL.append("DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, ");
             strSQL.append("EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ");
-			strSQL.append("isPublic, TENANT_ID) SELECT '" + newID + "', FormID, OrgDocID, DocType, '011', '" + staASDoJak + "', '" + url + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, SYSDATE");
+			strSQL.append("isPublic, TENANT_ID) SELECT '" + newID + "', FormID, OrgDocID, DocType, '011', '" + staASDoJak + "', '" + url + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
             strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID FROM TBAPRDOCINFO WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID + ";\n");
 
@@ -8786,7 +8786,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ");
             strSQL.append("ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) SELECT '1', '");
             strSQL.append(newID + "', WriterDeptID, WriterDeptName, WriterDeptName2, '" + deptID + "', N'" + deptName + "', N'" + deptName2);
-            strSQL.append("', '011', '" + staASBaeBu + "', SYSDATE"  );
+            strSQL.append("', '011', '" + staASBaeBu + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')"  );
             strSQL.append(", 'N', '', '', '', '', '', '', DocID, TENANT_ID FROM TBAPRDOCINFO WHERE DocID = '");
             strSQL.append(docID + "' AND TENANT_ID = " + tenantID + ";\n");
             
@@ -8855,7 +8855,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("INSERT INTO TBDOCDELIVERY (sn, DocID, Href, ReceiptDate, ");
             strSQL.append("OrganID, Organ, Organ2, DocNumber, ManageDeptID, ManageDept, ManageDept2, ChargeID, ");
             strSQL.append("ChargeName, ChargeName2, DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID) SELECT '");
-			strSQL.append(maxSN + "', a.DocID, a.Href, SYSDATE");
+			strSQL.append(maxSN + "', a.DocID, a.Href, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", '" + makeRightField(organID) + "', N'" + makeRightField(organ) + "', N'" + makeRightField(organ2));
 			strSQL.append("', a.DocNo, '" + makeRightField(manageDeptID) + "', N'");
 			strSQL.append(makeRightField(manageDept) + "', N'" + makeRightField(manageDept2) + "', '" + makeRightField(chargeID));
@@ -9578,7 +9578,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							"TEMPATTRIBUTE , STATUS , SPECIALRECORDCODE , PUBLICITYCODE , LIMITRANGE , PAGENUM , CABINETID , TASKCODE , DOCNUMCODE , ORGDOCNUMCODE , SEPERATEATTACHXML , SUMMARY , FormName2 , ItemName2, TENANT_ID  FROM TBEXPAPRDOCINFO"+ 
 							" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
 			appendSql.append(" INSERT INTO TBTMPAPRDOCINFO"+
-					"( SELECT '" + userID +"'," + sn +", FORMID , ORGDOCID , DOCTYPE , DOCSTATE , '000' , HREF , DOCTITLE , DOCNO , HASATTACHYN , HASOPINIONYN ,SYSDATE , ENDDATE , WRITERID , WRITERNAME , WRITERJOBTITLE ,WRITERDEPTID , WRITERDEPTNAME ,ISPUBLIC , WriterName2 , WriterJobTitle2 , WriterDeptName2, TENANT_ID FROM TBAPRDOCINFO"+ 
+					"( SELECT '" + userID +"'," + sn +", FORMID , ORGDOCID , DOCTYPE , DOCSTATE , '000' , HREF , DOCTITLE , DOCNO , HASATTACHYN , HASOPINIONYN ,TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') , ENDDATE , WRITERID , WRITERNAME , WRITERJOBTITLE ,WRITERDEPTID , WRITERDEPTNAME ,ISPUBLIC , WriterName2 , WriterJobTitle2 , WriterDeptName2, TENANT_ID FROM TBAPRDOCINFO"+ 
 					" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
 		}
 		
@@ -9601,7 +9601,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		//?꾩쭅 ?뚮꼳???덊븿
-		strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = SYSDATE");
+		strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
         strSQL.append(" WHERE DocID = '");
 		strSQL.append(docID + "' AND AprMemberID = '" + userID + "' AND AprState = '" + staASJinHang + "' AND TENANT_ID=" + tenantID +";\n");
 
@@ -9634,7 +9634,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				return strSQL.toString();
 			}
 		} else {
-			strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = SYSDATE");
+			strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 			strSQL.append(" WHERE DocID = '");
 			strSQL.append(docID + "' AND AprMemberID = '" + userID + "' AND (AprState = '" + staASJinHang);
             strSQL.append("' OR AprState = '" + staASBoRyu + "') AND TENANT_ID =" + userInfo.getTenantId() +";\n");
@@ -9686,10 +9686,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			curAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			beforeAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
 			
-			strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = SYSDATE ");
+			strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
 			
 			if (beforeAprMemberSN.equals("1")) {
-				strSQL.append(", ReceivedDate = SYSDATE ");
+				strSQL.append(", ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
 			}
 			
 			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "'" + " AND TENANT_ID='"+ userInfo.getTenantId() +"' ;\n");
@@ -9756,7 +9756,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATYilBan;
 
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -9770,7 +9770,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staatwhoakin;
 		
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -9784,8 +9784,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATAnHam;
 
                 strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASSungIn);
-				strSQL.append("', ReceivedDate = SYSDATE");
-				strSQL.append(", ProcessDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
+				strSQL.append(", ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -9797,7 +9797,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					lastState = staATJunGyul;
 					
 					strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-					strSQL.append("', ReceivedDate = SYSDATE");
+					strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -9808,8 +9808,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					lastState = "003";
 					
 					strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + aprState);
-					strSQL.append("', ReceivedDate = SYSDATE");
-					strSQL.append(", ProcessDate = SYSDATE");
+					strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
+					strSQL.append(", ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 					strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -9821,8 +9821,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATChamJo;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASAprEND);
-				strSQL.append("', ReceivedDate = SYSDATE");
-				strSQL.append(", ProcessDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
+				strSQL.append(", ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -9855,7 +9855,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATSoonChaHyubJo;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -9873,7 +9873,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else {
 						strSQL.append(subSQL);
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '");
-						strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
+						strSQL.append(staASSungIn + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 						strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 						strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
@@ -9889,7 +9889,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (!curAprType.equals(staATByungRyulHyubJo)) {
 					while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-						strSQL.append("', ReceivedDate = SYSDATE");
+						strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 						strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
@@ -9906,7 +9906,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							} else {
 								strSQL.append(subSQL);
 								strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '");
-								strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
+								strSQL.append(staASSungIn + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 								strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 								strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 								strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID=" + userInfo.getTenantId() + ";\n");
@@ -9925,7 +9925,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATBuSeuSoonChaHyubJo;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -9950,7 +9950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (!curAprType.equals(staATBuSeuByungRyulHyubJo)) {
 					while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATBuSeuByungRyulHyubJo) && whileFlag) {
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-						strSQL.append("', ReceivedDate = SYSDATE");
+						strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 						strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 						
@@ -9979,7 +9979,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATGamSa;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID= '" + userInfo.getTenantId() + "';\n");
 				
@@ -10001,7 +10001,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATGamSaBu;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -10023,8 +10023,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = staATGongram;
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASmikyul);
-				strSQL.append("', ReceivedDate = SYSDATE");
-				strSQL.append(", ProcessDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
+				strSQL.append(", ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '" );
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 
@@ -10054,7 +10054,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = "018";
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -10067,7 +10067,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = "019";
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -10085,7 +10085,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else {
 						strSQL.append(subSQL);
 						strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '");
-						strSQL.append(staASSungIn + "', ProcessDate = SYSDATE");
+						strSQL.append(staASSungIn + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 						strSQL.append(", ReasonDoNotApprov = N'" + makeXMLString(absentReason));
 						strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 						strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
@@ -10099,7 +10099,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				lastState = "016";
 				
 				strSQL.append("UPDATE TBAPRLINEINFO SET AprState = '" + staASJinHang);
-				strSQL.append("', ReceivedDate = SYSDATE");
+				strSQL.append("', ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberSN = '");
 				strSQL.append(docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent() + "'" + " AND TENANT_ID='" + userInfo.getTenantId() + "';\n");
 				
@@ -10662,12 +10662,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String updateChamjoResult(String orgDocID, String deptID, String userID, String orgCompanyID, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		
-		strSQL.append("UPDATE TBAPRLINEINFO SET ProcessDate = SYSDATE");
+		strSQL.append("UPDATE TBAPRLINEINFO SET ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 		strSQL.append(", AprState = '" + staASSungIn + "' WHERE DocID = '" + orgDocID);
 		strSQL.append("' AND AprMemberDeptID = '" + deptID + "' AND AprMemberID = '" + userID);
 		strSQL.append("' AND AprState = '" + staASmikyul + "' AND TENANT_ID = " + tenantID + ";\n");
 
-		strSQL.append("UPDATE TBENDAPRLINEINFO SET ProcessDate = SYSDATE");
+		strSQL.append("UPDATE TBENDAPRLINEINFO SET ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 		strSQL.append(", AprState = '" + staASSungIn + "' WHERE DocID = '" + orgDocID);
 		strSQL.append("' AND AprMemberDeptID = '" + deptID + "' AND AprMemberID = '" + userID);
         strSQL.append("' AND AprState = '" + staASmikyul + "' AND TENANT_ID = " + tenantID + ";\n");
@@ -11053,11 +11053,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiptUserID = makeListField(ezApprovalGDAO.updateSusinResultReceipt(map));
 		
 		if (receiptUserID.toUpperCase().equals(userID.toUpperCase())) {
-			strSQL = "UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processFlag + "', ProcessDate = SYSDATE" + 
+			strSQL = "UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processFlag + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" + 
 					" WHERE DocID = '" + orgDocID + 
 					"' AND ReceiptPointID = '" + deptID + "' AND ReceiptMemberID = '" + userID + "' AND TENANT_ID =" + tenantID +";\n";
 		} else {
-			strSQL = "UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processFlag + "', ProcessDate = SYSDATE" + 
+			strSQL = "UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processFlag + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" + 
 				", ReceiptMemberID = '" + userID +
                 "', ReceiptMemberName = '" + userName + "', ReceiptMemberName2 = '" + userName2 + "' WHERE DocID = '" + orgDocID + 
 				"' AND ReceiptPointID = '" + deptID + "' AND ProcessYN <> '" + processFlag + "' AND TENANT_ID =" + tenantID +";\n";
@@ -11282,7 +11282,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag, ManualRegFlag, ");
 		strSQL.append("DocType,TENANT_ID) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
         strSQL.append("', N'" + makeRightField(deptName) + "', N'" + makeRightField(deptName2) + "', '" + makeRightField(deptCode));
-		strSQL.append("', '" + makeRightField(regYear) + "', SYSDATE");
+		strSQL.append("', '" + makeRightField(regYear) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
         strSQL.append(", '" + makeRightField(registerSN) + "', N'" + makeRightField(aprMemberTitle) + "', N'" + makeRightField(aprMemberTitle2));
         strSQL.append("', N'" + makeRightField(drafterName) + "', N'" + makeRightField(drafterName2) + "', TO_DATE('" + makeRightField(executeDate));
         strSQL.append("','YYYY-MM-DD HH24:MI:SS'), N'" + makeRightField(receiptMember) + "', N'" + makeRightField(receiptMember2) + "', NULL, NULL, '" + makeRightField(deliveryNo));
@@ -11290,7 +11290,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("', '" + makeRightField(specialRec) + "', '" + makeRightField(publicCode));
 		strSQL.append("', '" + makeRightField(limitRange) + "', '" + makeRightField(oldFlag));
 		strSQL.append("', NULL, '" + makeRightField("0") + "', " + makeRightField(specialCatalogFlag));
-		strSQL.append(", '" + makeRightField(attachFlag) + "', SYSDATE" );
+		strSQL.append(", '" + makeRightField(attachFlag) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
 		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
         strSQL.append("', '" + makeRightField(docType) + "','" + tenantID +"');\n");
         
@@ -11458,7 +11458,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 				if (rtnVal) {
 					strSQL = " INSERT INTO TBENDAPRDOCINFO ( DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )" +
-							"( SELECT '" + docID +"', FormID, OrgDocID, DocType, DocState, '003','" + endURL +"', DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, SYSDATE, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, '"+ containerID + "', isPublic, TENANT_ID  FROM TBAPRDOCINFO  WHERE  DocID = '" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
+							"( SELECT '" + docID +"', FormID, OrgDocID, DocType, DocState, '003','" + endURL +"', DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, '"+ containerID + "', isPublic, TENANT_ID  FROM TBAPRDOCINFO  WHERE  DocID = '" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
 							" INSERT INTO TBENDAPRLINEINFO ( DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )"+
 							"(SELECT '" + docID +"', AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID FROM TBAPRLINEINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"');\n" +
 							"INSERT INTO TBENDATTACHINFO ( DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )"+
@@ -11709,7 +11709,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ");
                             strSQL.append("ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) SELECT '" + susinSN + "', '" + newID);
                             strSQL.append("', WriterDeptID, WriterDeptName, WriterDeptName2, '" + receiptPointID + "', N'" + receiptPointName + "', N'" + receiptPointName2);
-							strSQL.append("', '" + docState + "', '" + staASDoJak + "', SYSDATE, 'N', '', '" + receiptMemberID);
+							strSQL.append("', '" + docState + "', '" + staASDoJak + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), 'N', '', '" + receiptMemberID);
                             strSQL.append("', N'" + receiptMemberName + "', N'" + receiptMemberName2 + "', N'" + receiptMemberJobTitle + "', N'" + receiptMemberJobTitle2 + "', '" + orgDocID + "', TENANT_ID FROM TBAPRDOCINFO ");
 							strSQL.append("WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID + ";\n");
 							
@@ -11784,7 +11784,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!flag.equals("G")) {
 			strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processYN);
-            strSQL.append("', ProcessDate = SYSDATE");
+            strSQL.append("', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(" WHERE DocID = '" + docID.trim() + "' AND ReceiptPointID = '");
             strSQL.append(makeRightField(deptID.trim()) + "'"+ "AND TENANT_ID =" + tenantID +";\n");
             
@@ -11840,11 +11840,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			if (deptID.equals("")) {
 				 strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processYN);
-                 strSQL.append("', ProcessDate = SYSDATE");
+                 strSQL.append("', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
                  strSQL.append(" WHERE DocID = '" + docID.trim() + "' AND ProcessYN = 'O'  AND TENANT_ID="+ tenantID +";\n");
 			} else {
 				strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processYN);
-                strSQL.append("', ProcessDate = SYSDATE");
+                strSQL.append("', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
                 strSQL.append(" WHERE DocID = '" + docID.trim() + "' AND ReceiptPointID = '");
                 strSQL.append(makeRightField(deptID.trim()) + "'"+ "AND TENANT_ID="+tenantID+";\n");
                 
@@ -11887,7 +11887,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("INSERT INTO TBHISTORYRECEIPTINFO (DocID, ReceiptDeptID, ");
             strSQL.append("ReceiptDeptName, ReceiptDeptName2, Status, StatusDate,TENANT_ID) VALUES ('" + docID.trim());
 			strSQL.append("', '" + makeRightField(deptID.trim()) + "', N'");
-			strSQL.append(makeRightField(deptName.trim()) + "', N'" + makeRightField(deptName2.trim()) + "', '" + processYN + "', SYSDATE");
+			strSQL.append(makeRightField(deptName.trim()) + "', N'" + makeRightField(deptName2.trim()) + "', '" + processYN + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 			strSQL.append(","+tenantID+");\n");
 		}
 		
@@ -11967,7 +11967,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ");
             strSQL.append("ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) SELECT 1, '" + newID + "', WriterDeptID, ");
             strSQL.append("WriterDeptName, WriterDeptName2, '" + deptID + "', N'" + deptName + "', N'" + deptName2 + "', '" + docState);
-            strSQL.append("', '" + staASDoJak + "', SYSDATE, 'N', '', '', '', '', '', '', DocID, TENANT_ID FROM TBAPRDOCINFO ");
+            strSQL.append("', '" + staASDoJak + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), 'N', '', '', '', '', '', '', DocID, TENANT_ID FROM TBAPRDOCINFO ");
             strSQL.append("WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID + ";\n");
 		} else {
 			strSQL.append("FALSE");
@@ -12161,7 +12161,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ");
 			strSQL.append("isPublic, TENANT_ID) SELECT '" + newID + "', FormID, '" + docID + "', DocType, '" + docState);
 			strSQL.append("', '" + aprState + "', '" + url + "', DocTitle, DocNo, HasAttachYN, ");
-            strSQL.append("HasOpinionYN, TO_DATE("+ commonUtil.getTodayUTCTime("") +",'YYYY-MM-DD HH24:MI:SS') , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
+            strSQL.append("HasOpinionYN, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
             strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID FROM TBAPRDOCINFO WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID + ";\n");
 
 			// 수정(2005.08.29) : 보안결재 필드(SecurityApproval) 추가
@@ -12206,7 +12206,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL.append("ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) VALUES ('");
 				strSQL.append(newID + "', 1, '" + aprType + "', '" + aprState + "', '" + userID);
                 strSQL.append("', 'N', N'" + userName + "', N'" + userName2 + "', N'" + userJobTitle + "', N'" + userJobTitle2 + "', '" + deptID);
-                strSQL.append("', '" + deptName + "', N'" + deptName2 + "', '" + pCompanyID + "', TO_DATE("+ commonUtil.getTodayUTCTime("") +",'YYYY-MM-DD HH24:MI:SS')");
+                strSQL.append("', '" + deptName + "', N'" + deptName2 + "', '" + pCompanyID + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 				strSQL.append(", NULL, '', 'N', 'N', "+ tenantID +");\n");
 				strSQL.append("INSERT INTO TBEXPAPRLINE (docid, aprmemberSN, orguserid, ");
                 strSQL.append("proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, ");
@@ -12979,7 +12979,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("CatalogTransferFlag, DocTransferFlag, TENANT_ID) Values ('" + makeRightField(recID));
 		strSQL.append("', '" + makeRightField(sepAttSN) + "', '" + makeRightField(cabID) + "', '");
 		strSQL.append(makeRightField(regType) + "', N'" + makeRightField(title) + "', '");
-		strSQL.append(makeRightField(numOfPage) + "', '0', SYSDATE");
+		strSQL.append(makeRightField(numOfPage) + "', '0', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
         strSQL.append(", '0', '0', '0','"+tenantID+"');\n");
         strSQL.append("INSERT INTO TBRECROLEINFO  ( RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID )Values");
         strSQL.append("('"+ makeRightField(recID) + "','" +makeRightField(sepAttSN)+ "' , 'All_User' , 1 ,   '모든 이용자' , 'All User' ,"+tenantID+" );");
@@ -13094,23 +13094,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 
 		case "2" :		// 기록물 생산 현황
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM SYSDATE)";
+			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'))";
 			break;
 
 		case "3" :		// 목록이관 대상
 			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBCABINETCLASS.ConfirmFlag='1' " + 
 					"And ( ( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
-		            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM SYSDATE) " +
-		            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-		            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM SYSDATE) ) " + 
+		            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) " +
+		            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+		            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " + 
 					") ) And CatalogTransferFlag='0' ";
 			break;
 
 		case "6" :		// 연기신청목록
 			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + "And TBCABINETCLASS.KeepingPlace='1' " +
-		            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-		            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM SYSDATE) ) " +
-		            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM SYSDATE) ) OR " +
+		            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+		            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " +
+		            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) OR " +
 		            " ( TBCABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From ezApprovalG_S907000.TBCABINET ) ) ) ";
 			break;
 
@@ -13159,9 +13159,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    } else {
 	        strSQL = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
 	                "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
-	                " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM SYSDATE-(INTERVAL '1' YEAR)) " +
-	                " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-	                " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) ) " +
+	                " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')-(INTERVAL '1' YEAR)) " +
+	                " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+	                " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) ) " +
 	                " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
 	
 	    }
@@ -13641,7 +13641,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (companyID.toUpperCase().equals(orgCompanyID.toUpperCase())) {
 					strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET AprState = '" + staASWheSong);
-					strSQL.append("', ProcessYN = 'Y', ProcessDate = SYSDATE");
+					strSQL.append("', ProcessYN = 'Y', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND ReceiveSN = '" + receiveSN + "' AND ProcessYN = 'N' AND TENANT_ID=" + tenantID +";\n");
 					
 					int pSN = Integer.parseInt(receiveSN) + 1;
@@ -13654,12 +13654,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					strSQL.append(makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent()) + "', N'");
 					strSQL.append(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent()) + "', N'");
 					strSQL.append(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent()));
-					strSQL.append("', DocState, '" + staASWheSong + "', SYSDATE" );
+					strSQL.append("', DocState, '" + staASWheSong + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
 					strSQL.append(", 'N', '', '', '', '', '', '', DocID, TENANT_ID FROM TBAPRRECEIPTPROCESSINFO " + " WHERE ROWNUM <= 1 AND DocID = '");
 					strSQL.append(docID + "' AND ReceiveSN = '" + receiveSN + "' AND TENANT_ID = " + tenantID +" order by ProcessDate desc;\n");
 				} else {
 					strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET AprState = '" + staASWheSong);
-					strSQL.append("', ProcessYN = 'Y', ProcessDate = SYSDATE");
+					strSQL.append("', ProcessYN = 'Y', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 					strSQL.append(" WHERE DocID = '" + docID + "' AND ReceiveSN = '" + receiveSN + "' AND ProcessYN = 'N' AND TENANT_ID =" + tenantID +"\n");
 					
 					subSQL = doSendHesongDoc(docID, dirPath, companyID, orgCompanyID, tenantID);
@@ -13690,7 +13690,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		} else {
 			strSQL.append("UPDATE TBAPRRECEIPTPROCESSINFO SET AprState = '" + staASWheSong);
-			strSQL.append("', ProcessYN = 'Y', ProcessDate = SYSDATE");
+			strSQL.append("', ProcessYN = 'Y', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 			strSQL.append(" WHERE DocID = '" + docID + "' AND ReceiveSN = '" + receiveSN + "' AND ProcessYN = 'N' AND TENANT_ID ="+ tenantID +"\n");
 			
             int pSN = Integer.parseInt(receiveSN) + 1;
@@ -13700,7 +13700,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ");
             strSQL.append("ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) SELECT '" + pSN);
             strSQL.append("', DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID, SentDeptName, SentDeptName2, DocState, '");
-			strSQL.append(staASWheSong + "', SYSDATE");
+			strSQL.append(staASWheSong + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", 'N', '', '', '', '', '', '', DocID , TENANT_ID FROM TBAPRRECEIPTPROCESSINFO " + "WHERE ROWNUM <= 1 AND DocID = '");
 			strSQL.append(docID + "' AND ReceiveSN = '" + receiveSN + "' AND TENANT_ID="+ tenantID +" order by ProcessDate desc;\n");
 
@@ -13986,7 +13986,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					fieldName = fieldName + commonUtil.getMultiData(lang);
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -14214,7 +14214,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, ");
             strSQL.append("EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ");
 			strSQL.append("isPublic, TENANT_ID) SELECT '" + newID + "', FormID, OrgDocID, DocType, DocState, '");
-			strSQL.append(staASWheSong + "', '" + url + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, SYSDATE");
+			strSQL.append(staASWheSong + "', '" + url + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
             strSQL.append(", NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
             strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID FROM TBAPRDOCINFO  WHERE DocID = '" + docID + "' AND TENANT_ID =" +tenantID +";\n");
 
@@ -14249,7 +14249,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             strSQL.append("AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ");
             strSQL.append("ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) SELECT '1', '" + newID);
             strSQL.append("', ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID, SentDeptName, SentDeptName2, DocState, '");
-            strSQL.append(staASWheSong + "', SYSDATE, 'N', '', '','', '', '', '', DocID , TENANT_ID");
+            strSQL.append(staASWheSong + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), 'N', '', '','', '', '', '', DocID , TENANT_ID");
             strSQL.append("FROM TBAPRRECEIPTPROCESSINFO  WHERE DocID = '" + docID + "' AND ReceiveSN = '1' AND TENANT_ID ="+tenantID +";\n");
 		}
 		
@@ -14583,7 +14583,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID) throws Exception {
+	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet) throws Exception {
 		LOGGER.debug("aprDocList started.");
 
 		String orderOption1 = "";
@@ -14679,7 +14679,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -14747,7 +14747,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getAprDocListReceiveSN(map);
 	}
 
-	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID) throws Exception{
+	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception{
 		String rtnVal = "";
 		
 		switch (fieldName) {
@@ -14785,7 +14785,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			default : 
                 if(fieldName.indexOf("DATE") > -1) {
-                	fieldValue = convertDate(fieldValue);
+                	fieldValue = commonUtil.getDateStringInUTC(convertDate(fieldValue), offSet, false);
                 }
 				rtnVal = fieldValue;
 				break;
@@ -16049,7 +16049,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, int tenantID) throws Exception {
+	public String getDeliveryList(String p_DeptID, String pageSize, String pageNum, String SortHeader, String SortOption, String pQuery, String companyID, String lang, String deptcode, String deptcode2, String title, String sregdate, String eregdate, String debenturer, String isdocprint, int tenantID, String offset) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
@@ -16161,7 +16161,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent();
-				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID) + "</VALUE>");
+				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
 				
 				if(i==0){
 					resultXML.append("<DATA1>" + makeRightField(docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim())+ "</DATA1>");
@@ -16292,7 +16292,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag, ManualRegFlag, ");
 		strSQL.append("DocType, TENANT_ID) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
 		strSQL.append("', N'" + makeRightField(deptName) + "', N'" + makeRightField(deptName2) + "', '" + makeRightField(deptCode));
-		strSQL.append("', '" + makeRightField(regYear) + "', SYSDATE" );
+		strSQL.append("', '" + makeRightField(regYear) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
         strSQL.append(", '" + makeRightField(registerSN) + "', N'" + makeRightField(aprMemberTitle) + "', N'" + makeRightField(aprMemberTitle2));
 		strSQL.append("', N'" + makeRightField(drafterName) + "', N'" + makeRightField(drafterName2) + "', TO_DATE('" + makeRightField(executeDate));
 		strSQL.append("','YYYY-MM-DD HH24:MI:SS'), N'" + makeRightField(receiptMember) + "', N'" + makeRightField(receiptMember2) + "', NULL, NULL, '" + makeRightField(deliveryNo));
@@ -16300,7 +16300,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL.append("', '" + makeRightField(specialRec) + "', '" + makeRightField(publicCode));
 		strSQL.append("', '" + makeRightField(limiTrange) + "', '" + makeRightField(OldFlag));
 		strSQL.append("', NULL, '" + makeRightField("0") + "', '" + makeRightField(specialCatalogFlag));
-		strSQL.append("', '" + makeRightField(attachFlag) + "', SYSDATE");
+		strSQL.append("', '" + makeRightField(attachFlag) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
 		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
 		strSQL.append("', '" + makeRightField(docType) + "'," + tenantID + ");\n");
         // '## 기록물 분리첨부 테이블에 저장
@@ -16404,16 +16404,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 
 		case "2" :	// 기록물철 생산현황
-				listTypeConst = " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM SYSDATE)";
+				listTypeConst = " And TBCABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'))";
 				listType = "004";
 				break;
 
 			case "3" :	// 목록이관 대상
 				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='1' " + 
 						"And ( ( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
-			            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM SYSDATE) " +
-			            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-			            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM SYSDATE) ) " + 
+			            " And TBCABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) " +
+			            ") OR( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+			            " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " + 
 						") ) And CatalogTransferFlag='0' ";
 				listType = "006";
 				break;
@@ -16426,16 +16426,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			case "5" :	// 이관목록
 				listTypeConst =  " And DocTransferFlag='1' " +
-			            "And DocTransferYear=EXTRACT(YEAR FROM SYSDATE) ";
+			            "And DocTransferYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ";
 
 				listType = "006";
 				break;
     
 			case "6" :	// 연기신청목록
 				listTypeConst = "And TBCABINETCLASS.KeepingPlace='1' " +
-			            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-			            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM SYSDATE) ) " +
-			            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM SYSDATE) ) OR " +
+			            "And ( (TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+			            " OR (TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear>EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " +
+			            " ) And ( ( TBCABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) OR " +
 			            " ( TBCABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBCABINET ) ) ) ";
 				listType = "008";
 				break;
@@ -16610,9 +16610,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 else{
 				 constraint =  " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
                          "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
-                         " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM SYSDATE-(INTERVAL '1' YEAR)) " +
-                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM SYSDATE) AS char(4)) ) " +
-                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM SYSDATE - (INTERVAL '1' YEAR)) ) " +
+                         " And TBCABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')-(INTERVAL '1' YEAR)) " +
+                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And TBCABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) ) " +
                          " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
 			 }
 		}
@@ -17695,7 +17695,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
            strSQL.append("ProcessYN, ProcessDocID, ProcessorID, ProcessorName,ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) ");
            strSQL.append("VALUES (" + Integer.toString(receivedSn) + ", '" + docID + "', '" + sentDeptID + "', N'");
            strSQL.append(sentDeptName + "', N'" + sentDeptName2 + "', '" + deptID + "', N'" + deptName + "', N'" + deptName2 + "', '" + staDSSimSa);
-           strSQL.append("', '" + staASJinHang + "', SYSDATE");
+           strSQL.append("', '" + staASJinHang + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
            strSQL.append(", 'N', NULL, '" + userID + "', N'" + userName + "', N'" + userName2 + "', N'" + userJobTitle + "', N'" + userJobTitle2);
            strSQL.append("', '" + orgDocID + "'," + tenantID +");\n");
            
@@ -17786,7 +17786,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if(!gFlag.equals("G")){
 			strSQL.append("UPDATE TBENDRECEIPTPOINTINFO SET ProcessYN = '" + processYN);
-            strSQL.append("', ProcessDate = SYSDATE" );
+            strSQL.append("', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
             strSQL.append(" WHERE DocID = '" + docID.trim() + "' AND ReceiptPointID = '");
             strSQL.append(makeRightField(deptID.trim()) + "'," + tenantID + ";\n");
             
@@ -17850,7 +17850,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		            strSQL.append("INSERT INTO TBHISTORYRECEIPTINFO (DocID, ReceiptDeptID, ");
 		            strSQL.append("ReceiptDeptName, ReceiptDeptName2, Status, StatusDate, TENANT_ID) VALUES ('" + docID.trim());
 					strSQL.append("', '" + makeRightField(docID.trim()) + "', N'");
-					strSQL.append(makeRightField(deptName.trim()) + "', N'" + makeRightField(deptName2.trim()) + "', '" + processYN + "', SYSDATE, " +tenantID);
+					strSQL.append(makeRightField(deptName.trim()) + "', N'" + makeRightField(deptName2.trim()) + "', '" + processYN + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), " +tenantID);
 					strSQL.append(");\n");
 				 
 		}
@@ -17901,7 +17901,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERID").item(i).getTextContent()) + "', N'");
 				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERNAME").item(i).getTextContent()) + "', N'");
                 strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERNAME2").item(i).getTextContent()) + "', ");
-                strSQL2.append("SYSDATE, N'");
+                strSQL2.append("TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), N'");
 				strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(i).getTextContent()) + "',N'");
                 strSQL2.append(makeRightField(xmlDom.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(i).getTextContent()) + "', '");
                 strSQL2.append(makeRightField(xmlDom.getElementsByTagName("DEPTMEMBERSN").item(i).getTextContent()) + "'," +tenantID +");\n");
@@ -18125,7 +18125,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
                                 strSQL.append("ProcessorJobTitle, ParentsDocID, TENANT_ID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);
                                 strSQL.append("', WriterDeptID, WriterDeptName, '" + strReceiptPointID + "', N'" + strReceiptPointName);
-                                strSQL.append("', '" + docState + "', '" + staASDoJak + "',  SYSDATE, 'N', '', '" + strReceiptMemberID);
+                                strSQL.append("', '" + docState + "', '" + staASDoJak + "',  TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), 'N', '', '" + strReceiptMemberID);
                                 strSQL.append("', N'" + strReceiptMemberName + "', N'" + strReceiptMemberJobTitle + "', DocID, TENANT_ID FROM TBENDAPRDOCINFO ");
                                 strSQL.append("WHERE DocID = '" + docID + "' AND TENANT_ID =" +tenantID +";");
                             }
@@ -18136,7 +18136,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 strSQL.append("ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ");
                                 strSQL.append("ProcessorJobTitle, ParentsDocID, TENANT_ID) SELECT '" + Integer.toString(pSusinSN) + "', '" + newID);
                                 strSQL.append("', WriterDeptID, WriterDeptName, '" + strReceiptPointID + "', N'" + strReceiptPointName);
-                                strSQL.append("', '" + docState + "', '" + staASJiJung + "', SYSDATE, 'N', '', '" + strReceiptMemberID);
+                                strSQL.append("', '" + docState + "', '" + staASJiJung + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), 'N', '', '" + strReceiptMemberID);
                                 strSQL.append("', N'" + strReceiptMemberName + "', N'" + strReceiptMemberJobTitle + "', DocID, TENANT_ID FROM TBENDAPRDOCINFO ");
                                 strSQL.append("WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID +";");
                             }
