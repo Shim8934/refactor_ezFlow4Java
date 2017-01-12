@@ -850,6 +850,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //        }
 
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);

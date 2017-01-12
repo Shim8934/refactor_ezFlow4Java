@@ -31,6 +31,7 @@
 	    var g_szUserID = "${userInfo.mailNickName}";
 	    var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 	    var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
+	    var tid = "${tenantId}";
 	    var g_eImportance = "${importance}";
 	    var g_ePostType = "${postType}";
 	    var g_url = "${url}";

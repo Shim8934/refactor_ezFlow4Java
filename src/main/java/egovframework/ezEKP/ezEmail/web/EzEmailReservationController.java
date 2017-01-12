@@ -471,6 +471,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("importance", importance);
 		model.addAttribute("senderInfo", senderInfo);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("tid", loginInfo.getTenantId());
 		model.addAttribute("unread", unread);
 		model.addAttribute("charsetCheck", charsetCheck);
 		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
