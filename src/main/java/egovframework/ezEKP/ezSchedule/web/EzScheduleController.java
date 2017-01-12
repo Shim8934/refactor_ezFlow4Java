@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -507,7 +508,53 @@ public class EzScheduleController extends EgovFileMngUtil {
 		for (int i = 0; i < gIDs.length; i++) {
 			ezScheduleService.deleteScheduleGroup(gIDs[i], loginSimpleVO.getTenantId());
 		}		
+	}
+	
+	/**
+	 * 일정그룹관리 멤버 팝업
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGroupMember.do")	
+	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
+		String groupID = request.getParameter("groupID");
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+
+		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getTenantId(), offSetMin);
 		
+		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("groupID", groupID);
+		model.addAttribute("memberList", mList);
+		
+		return "/ezSchedule/scheduleGroupMember";
+	}
+	
+	/**
+	 * 일정그룹관리 멤버 제외 버튼 클릭 시
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleDelMember.do")
+	@ResponseBody
+	public void scheduleDelMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String groupID = request.getParameter("groupID");
+		
+		for (int i=0; i < member.length; i++) {			
+			ezScheduleService.deleteScheduleMember(groupID, member[i], loginSimpleVO.getTenantId());
+		}
+	}
+	
+	/**
+	 * 일정그룹관리 멤버 재요청 버튼 클릭 시
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleUpdateMember.do")
+	@ResponseBody
+	public void scheduleUpdateMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String groupID = request.getParameter("groupID");
+		String status = request.getParameter("status");
+		
+		for (int i=0; i < member.length; i++) {			
+			ezScheduleService.updateScheduleMember(groupID, member[i], status, loginSimpleVO.getTenantId());
+		}
 	}
 	
 	/**
