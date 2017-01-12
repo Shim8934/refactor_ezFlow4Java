@@ -25,6 +25,7 @@
         <property name="apb" value="${CRYPTO.apb}"/>
     </bean>
     
+    <!-- JMocha superpassword 설정 -->
     <bean id="jspw" class="java.lang.String" factory-method="valueOf">
     	<constructor-arg value="${config.JMochaSuperPassword}"/>
     </bean>
