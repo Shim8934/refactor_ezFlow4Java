@@ -18,7 +18,8 @@
 			var OrderCell = "";
 			var xmlhttp = createXMLHttpRequest();
 			var xmldoc = createXmlDom();
-			var DocID, pURL, FormID, DocTitle, OrgDocid, jobState = "" ;
+			var DocID, pURL, FormID, DocTitle, OrgDocid;
+			var jobState = "APPROVAL" ;
 			var pChackYN = "FALSE";
 			var g_tagSelectsub = "1";
 			var NodeList2, pageSize = 10, ListViewNode, Block_Size, pTotalCnt = "";
@@ -45,6 +46,7 @@
 				GetDocList();
 			});
 			
+			var _draftUser = "";
 			function lvtDoclist_SelChange() {
 				var SelList = new ListView();
 				SelList.LoadFromID("DocList");
@@ -53,10 +55,11 @@
 				if (oArrRows.length != 0) {
 				    var tr = oArrRows[0];
 				
-				    DocID = tr.getAttribute("DATA1");
-				    pURL = tr.getAttribute("DATA2");
-				    FormID = tr.getAttribute("DATA6");
-				    OrgDocid = tr.getAttribute("DATA5");
+				    DocID = GetAttribute(tr, "DATA1");
+	                pURL = GetAttribute(tr, "DATA2");
+	                FormID = GetAttribute(tr, "DATA6");
+	                OrgDocid = GetAttribute(tr, "DATA5");
+	                _draftUser = GetAttribute(tr, "DATA3");
 				
 				    switch (jobState) {
 				        case "ATTACH":
@@ -85,13 +88,7 @@
 				    for (var i = 0; i < 20; i++) {
 				        SearchCond[i] = "";
 				    }
-				    //curpage = 1;
-				    //nowblock = 0;
-				    //totalPage = 0;
 				} else if (pChackYN == "SEARCH") {
-				    //curpage = 1;
-				    //nowblock = 0;
-				    //totalPage = 0;
 				}
 				
 				$.ajax({
@@ -138,31 +135,26 @@
 				try {
 				    Resultxml = loadXMLString(result);
 				
-				    ListViewNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
-				    NodeList = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/ROWS/ROW");
-				    NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
-				    Haders = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/HEADERS/HEADER");
-				    NodeListLen = 0;
-				
-				    var lstCnt = getNodeText(NodeList2);
+				    var listNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
+				    var cntNode = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
+				    
+				    if (listNode == null) {
+				    	return;
+				    }
+				    
+				    var lstCnt = getNodeText(cntNode);
+	                if (lstCnt == "") {
+	                    lstCnt = 0;
+	                }
+	                
 				    totalPage = Math.ceil(new Number(lstCnt / pageSize));
 				    pTotalCnt = lstCnt;
 				    makePageSelPage();
 				
 				    var xmlDoc;
-				    
-				    if (CrossYN()) {
-				        var xmlLIST = createXmlDom();
-				        var nodeToImport = xmlLIST.importNode(ListViewNode, true);
-				        xmlLIST.appendChild(nodeToImport);
-				        xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-				    } else {
-				        xmlDoc = createXmlDom();
-				        xmlDoc.appendChild(ListViewNode);
-				    }
-				
-				    ListViewNode = xmlDoc;
-				
+				    xmlDoc = createXmlDom();
+	                xmlDoc.appendChild(listNode);
+	                
 				    if (document.getElementById("lvtDoclist").innerHTML != "") {
 				        document.getElementById("lvtDoclist").innerHTML = "";
 				    }
@@ -174,15 +166,35 @@
 				    DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
 				    DocList.SetUrgentFlag(true);
 				    DocList.SetSecurityFlag(false);
-				    DocList.DataSource(ListViewNode);
+				    DocList.DataSource(xmlDoc);
 				    DocList.DataBind("lvtDoclist");
 				    DocList = null;
-				
-				    selFirstRow(Resultxml);
 				}
 				catch (e) {
 				}
+				
+				selFirstRow();
 			}
+			
+			function selFirstRow() {
+	            var DocList = new ListView();
+	            DocList.LoadFromID("DocList");
+	            var oArrRows = DocList.GetSelectedRows();
+	            var tr = oArrRows[0];
+
+	            if (oArrRows.length != 0) {
+	                DocID = GetAttribute(tr, "DATA1");
+	                pURL = GetAttribute(tr, "DATA2");
+	                _draftUser = GetAttribute(tr, "DATA3");
+	            }
+	            else {
+	                DocID = "";
+	                pURL = "";
+	                _draftUser = "";
+	            }
+
+	            getDataInfo();
+	        }
 			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
@@ -329,31 +341,6 @@
 				tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 			}
 			
-			function selFirstRow(Resultxml) {
-			    var DocList = new ListView();
-			    DocList.LoadFromID("DocList");
-			    var oArrRows = DocList.GetSelectedRows();
-			    var tr = oArrRows[0];
-			
-			    if (oArrRows.length != 0) {
-			        DocID = tr.getAttribute("DATA1");
-			    } else {
-			        DocID = "";
-			    }
-			
-			    if (jobState == "APPROVAL") {
-			        Approval_onclick();
-			    } else if (jobState == "ATTACH") {
-			        Attach_onclick();
-			    } else if (jobState == "RECIPENT") {
-			        Recipent_onclick();
-			    } else if (jobState == "OPINION") {
-			        Opinion_onclick();
-			    } else {
-			        Approval_onclick();
-			    }
-			}
-			
 			function getDataInfo() {
 				var ajaxURL = "";
 	            var ajaxAsync = false;
@@ -384,6 +371,7 @@
 	            	type : "POST",
 	            	url : ajaxURL,
 	            	async : ajaxAsync,
+	            	dataType : "text",
 	            	data : {docID : DocID, flag : "END", companyID : pCompanyID},
 	            	success : function (result) {
 	            		getdoclistSub_after(result);
@@ -460,7 +448,7 @@
 			        para[1] = pURL;
 			        var openLocation = "";
 			        
-			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+			        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글기안
 			            openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP.aspx";
 			        } else {
 			            if (CrossYN()) {
@@ -533,28 +521,28 @@
 				            var width = window.screen.availWidth;
 				            var left = (parseInt(width) - 525) / 2;
 				            var top = (parseInt(heigth) - 220) / 2;
-				            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				            window.open("/ezApprovalG/ezLineInfo.do?docID=" + GetAttribute(tr, "DATA3") + "&deptID=" + encodeURI(GetAttribute(tr, "DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			        	} else {
 				            var heigth = window.screen.availHeight;
 				            var width = window.screen.availWidth;
 				            var left = (parseInt(width) - 600) / 2;
 				            var top = (parseInt(heigth) - 450) / 2;
-				            window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+				            window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 			        	}
 			    	} else if (jobState == "RECIPENT") {
 				        var heigth = window.screen.availHeight;
 				        var width = window.screen.availWidth;
 				        var left = (parseInt(width) - 540) / 2;
 				        var top = (parseInt(heigth) - 220) / 2;
-				        var isExtYN = tr.getAttribute("DATA3");
+				        var isExtYN = GetAttribute(tr, "DATA3");
 //TODO 외부부서일때 isExtYN ==Y
 			        	if (isExtYN.toUpperCase() == "Y") {
-				            var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(tr.getAttribute("DATA1"));
+				            var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(GetAttribute(tr, "DATA1"));
 				            var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
 				            feature = feature + GetShowModalPosition(555, 240);
 				            var ret = window.showModalDialog(url, "", feature);
 			        	} else {
-			            	window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			            	window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			        	}
 			    	}
 				}
@@ -630,7 +618,7 @@
 				    	type : "POST",
 				    	url : "/admin/ezApprovalG/setContainerIDForDoc.do",
 				    	async : false,
-				    	data : {docID : DocID, deptID : tr.getAttribute("DATA4"), containerType : '999', companyID : pCompanyID},
+				    	data : {docID : DocID, deptID : GetAttribute(tr, "DATA4"), containerType : '999', companyID : pCompanyID},
 				    	dataType : 'text',
 				    	success : function (result) {
 				    		if (result == 'OK') {
@@ -739,11 +727,11 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
+	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-		        </SELECT><br /><br />
+		        </select><br /><br />
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
 	            <img src="/images/i_bar.gif" align="absmiddle">
