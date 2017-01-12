@@ -271,7 +271,7 @@ public interface EzApprovalGService {
 	
 	public String gongRamUpdate(String docID, String userID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID) throws Exception;
+	public String delayCabEndY(String deptCode, String flag, String cabClassList, String companyID, int tenantID) throws Exception;
 	
 	public String getUncabinetedDocCount(String deptID, String confirmYN, String companyID, int tenantID) throws Exception;
 	
@@ -281,11 +281,11 @@ public interface EzApprovalGService {
 	
 	public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String endCabProduce(String cabClassNo, String flag, String companyID) throws Exception;
+	public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 	
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request, LoginVO userInfo) throws Exception;
 	
-	public String reqDelayCabEndY(String cabClassList, String flag, String companyID) throws Exception;
+	public String reqDelayCabEndY(String cabClassList, String flag, String companyID, int tenantID) throws Exception;
 	
 	public String doSendOfferApprove(String docID, String orgDocID, String userID, String userName, String userName2, String deptID, String dirPath, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
@@ -357,7 +357,7 @@ public interface EzApprovalGService {
 
 	public String getTaskCharger(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String saveCabRoleInfo(Document xmlDom) throws Exception;
+	public String saveCabRoleInfo(Document xmlDom, int tenantID) throws Exception;
 
 	public String updateReceiptOffer(String docID, String orgDocID, String companyID, int tenantID)throws Exception;
 

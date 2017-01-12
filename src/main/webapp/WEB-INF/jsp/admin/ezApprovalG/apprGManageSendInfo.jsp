@@ -62,6 +62,7 @@
 					url : "/admin/ezApprovalG/getOptionInfo.do",
 					async : false,
 					dataType : "json",
+					data : {companyID : companyID},
 					success : function (result) {
 						objXml = loadXMLString(result["encodeInfo"]);
 						
@@ -73,12 +74,18 @@
 					    } else {
 					        if (SelectSingleNodeValue(objXml.documentElement, "SIGN") == "Y") {
 					            special1.checked = true;
+					        } else {
+					        	special1.checked = false;
 					        }
 					        if (SelectSingleNodeValue(objXml.documentElement, "ENCODE") == "Y") {
 					            special2.checked = true;
+					        } else {
+					        	special2.checked = false;
 					        }
 					        if (SelectSingleNodeValue(objXml.documentElement, "NONE") == "Y") {
 					            special3.checked = true;
+					        } else {
+					        	special3.checked = false;
 					        }
 					    }
 					}
@@ -109,7 +116,7 @@
 			    SaveOptionInfo(SCompID.value, option1, option2, option3);
 			}
 			
-			function OnSelChange() {
+			function selectCompanyID() {
 			    GetOptionInfo(document.getElementById("SCompID").value);
 			}
 		</script>

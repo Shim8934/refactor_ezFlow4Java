@@ -46,7 +46,7 @@
 	                pRegUserName = RetValue[1];
 	                pCompanyID = RetValue[2];
 	                	                
-	                $("#tbRegUser").val(pRegUserName);
+	                $("#tbRegUser").html(pRegUserName);
 	                $("#companyID").val(pCompanyID);
 	                
 	                ret[0] = "cancel";

@@ -30,9 +30,46 @@
 		    var ReturnFunction;
 		    
 		    $(document).ready(function(){
-		        try {
-		        	para = opener.ezaddSeal_cross_dialogArguments[0];
-		        	ReturnFunction = opener.ezaddSeal_cross_dialogArguments[1];
+		    	try {
+
+	                try {
+	                    RetValue = parent.AddDeptSealInfo_dialogArguments[0];
+	                    ReturnFunction = parent.AddDeptSealInfo_dialogArguments[1];
+	                } catch (e) {
+	                    try {
+	                        RetValue = opener.AddDeptSealInfo_dialogArguments[0];
+	                        ReturnFunction = opener.AddDeptSealInfo_dialogArguments[1];
+	                    } catch (e) {
+	                        RetValue = window.dialogArguments;
+	                    }
+	                }
+	                pRegUserID = RetValue[0];
+	                pRegUserName = RetValue[1];
+	                pDeptID = RetValue[2];
+	                pCompanyID = RetValue[3];
+	                
+	                $("#tbRegUser").html(pRegUserName);
+	                $("#companyID").val(pCompanyID);
+	                $("#deptID").val(pDeptID);
+
+	                ret[0] = "cancel";
+	                ret[1] = "";
+	                ret[2] = pSealName;
+	                ret[3] = pSealPath;
+	                ret[4] = pSealWidth;
+	                ret[5] = pSealHeight;
+
+	                try {
+	                    window.returnValue = ret;
+	                } catch (e) { }
+	            } catch (e) {
+	                alert("window_onload : " + e.description);
+	            }
+	            
+	            
+		        /* try {
+		        	para = opener.AddDeptSealInfo_dialogArguments[0];
+		        	ReturnFunction = opener.AddDeptSealInfo_dialogArguments[1];
 		            pRegUserID = para[0];
 		            pRegUserName = para[1];
 		            pDeptID = para[2];
@@ -51,11 +88,11 @@
 		            document.getElementById("deptID").value = pDeptID;
 		        } catch (e) {
 		            alert("window_onload : " + e.description);
-		        }
+		        } */
 		    });
 		    
 		    function btnOK_onclick() {
-		    	pSealName = document.getElementById("tbSealName").value;
+		    	pSealName = $("#tbSealName").val();
 		        if (pSealName == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1242' />";
 		            OpenAlertUI(pInformationString);
@@ -70,7 +107,7 @@
 		            return;
 		        }
 	
-		        pSealWidth = document.getElementById("tbSealWidth").value;
+		        pSealWidth = $("#tbSealWidth").val();
 		        if (pSealWidth == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1244' />";
 		            OpenAlertUI(pInformationString);
@@ -78,7 +115,7 @@
 		            return;
 		        }
 	
-		        pSealHeight = document.getElementById("tbSealHeight").value;
+		        pSealHeight = $("#tbSealHeight").val();
 		        if (pSealHeight == "") {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1245' />";
 		            OpenAlertUI(pInformationString);
@@ -146,23 +183,21 @@
 		    }
 		    
 		    function btnDisplay_onclick() {
-		        pSealWidth = document.getElementById("tbSealWidth").value;
-		        pSealHeight = document.getElementById("tbSealHeight").value;
-	
+		        pSealWidth = $("#tbSealWidth").val();
+		        pSealHeight = $("#tbSealHeight").val();
+		
 		        if (pSealWidth == "" || pSealHeight == "" || pSealPath == "") {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1248' />";
+		            var pInformationString = "<spring:message code = 'ezApprovalG.t1260' />";
 		            OpenAlertUI(pInformationString);
-		            
 		            return;
 		        }
 		        
-		        if(CrossYN()){
-                	document.getElementById("signimage").style.width = pSealWidth + "mm";
-	                document.getElementById("signimage").style.height = pSealHeight + "mm";
-	                document.getElementById("signimage").src = "/ezCommon/downloadAttach.do?filePath=" + pSealPath;
-                } else {
-                	SIGNVIEW.AddImage(pSealPath, pSealWidth, pSealHeight);
-                }
+		        document.getElementById("SIGNVIEW").innerHTML = "";
+		        var Img = document.createElement("IMG");
+		        Img.style.width = pSealWidth + "mm";
+		        Img.style.height = pSealHeight + "mm";
+		        Img.src = pSealPath;
+		        SIGNVIEW.appendChild(Img);
 		    }
 		    
 		    function OpenAlertUI(pAlertContent) {
@@ -192,18 +227,16 @@
 		        if (document.form.file1.value != "") {
 		            var frm = document.getElementById('form');
 		            var form = new FormData(frm);
+		            
 		            $.ajax({
 		            	type :'POST',
-		            	url : "/admin/ezApprovalG/deptSealUpload.do",
-		            	async : false,
+		            	url : "/admin/ezApprovalG/sealImageUpload.do",
 		            	dataType : 'json',
 		            	data : form,
 		            	processData : false,
 		            	contentType : false,
 		            	success : function(result) {
 		            		fileName = result["fileName"];
-		            		document.getElementById("tbSealWidth").value = result["width"];
-		            		document.getElementById("tbSealHeight").value = result["height"];
 		            		dirPath = result["path"];
 		            		
 		            		try {
@@ -221,10 +254,10 @@
 		                    }
 		            		
 		            		pSealPath = dirPath + fileName;
+		            		var fileinfo = document.getElementById("file1").value.substring(document.getElementById("file1").value.lastIndexOf("\\") + 1, document.getElementById("file1").value.length);
+				            document.getElementById("filename").value = fileinfo;
 		            	}
 		            });
-		            
-		            document.form.file1.value = "";
 		        }
 		    }
 		    
@@ -256,8 +289,9 @@
 		<table class="content">
 		  	<tr> 
 		    	<th><spring:message code = 'ezApprovalG.t1250' /></th>
-		    	<td id="SealName"> 
-		      		<iframe name="ifrm" id="ifrm" src="about:blank" style="display:none"></iframe>
+		    	<td id="SealName">
+		    		<input type="text" name="tbSealName" id="tbSealName" style="width: 140px">
+		      		<%-- <iframe name="ifrm" id="ifrm" src="about:blank" style="display:none"></iframe>
 		      		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezApprovalG/deptSealUpload.do" target="ifrm">                    
 	            		<input type="text" name="tbSealName" id = "tbSealName" />
 			            <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 0px; height: 0px; "/>
@@ -269,8 +303,16 @@
 			        </form>
 		        	<a class="imgbtn"><span onclick="return btnFileUp_onclick()"><spring:message code = 'ezApprovalG.t1251' /></span></a>
 		        	<a class="imgbtn"><span onclick="return btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
-		    	</td>
+		    	</td> --%>
 		  	</tr>
+		  	<tr>
+	            <th><spring:message code = 'ezApprovalG.t00010' /></th>
+	            <td style="vertical-align:middle;">
+	                <input type="text" readonly id="filename" style="width:180px;">
+	                <a class="imgbtn"><span onclick="return btnFileUp_onclick()"><spring:message code = 'ezApprovalG.t1251' /></span></a>
+	                <a class="imgbtn"><span onclick="return btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
+	            </td>
+	        </tr>
 		  	<tr> 
 		    	<th><spring:message code = 'ezApprovalG.t1253' /></th>
 		    	<td id="SealSize"> 
@@ -282,12 +324,22 @@
 		    	<th><spring:message code = 'ezApprovalG.t1254' /></th>
 		    	<td  id="tbRegUser"> </td>
 		  	</tr>
+		  	<tr>
+	            <td id="SIGNVIEW" colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;"></td>
+	        </tr>
 		</table>
 		
-		<div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+	    <form style="display: none;" method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
+	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" accept="image/*">
+	        <input type="hidden" name="mode" id="mode" />
+	        <input type="hidden" name="companyID" id="companyID" />
+	        <input type="hidden" name="deptID" id="deptID" />
+	    </form>
+		<!-- <div class="nobox" id="Div2" name="sealsign" style="width: 410px; margin-top: 5px">
        		<div id="SIGNVIEW" class="IMAGEVIEW" style="Width:100%; Height:180px; overflow-y:scroll;overflow-x:scroll" align=center valign=middle>
        			<img id="signimage" alt="" src="" />
        		</div>
-       	</div>	
+       	</div> -->	
 	</body>
 </html>

@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -1513,7 +1511,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String sealImageUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		MultipartFile multiFile = request.getFile("file1");
-		String companyID = request.getParameter("companyID");
+		String companyID = request.getParameter("companyID") != null ? request.getParameter("companyID") : "";
+		String deptID = request.getParameter("deptID");
 		String realPath = commonUtil.getRealPath(request);
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.SEALIMG", userInfo.getTenantId());
 		String currentDate = commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
@@ -1525,7 +1524,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         	dir.mkdirs();
         }
         
-		String fileName = companyID + "_" + currentDate + fileExt;
+		String fileName = "";
+		
+		if (deptID == null) {
+			fileName = companyID + "_" + currentDate + fileExt;
+		} else {
+			fileName = companyID + "_" + deptID + "_" + currentDate + fileExt;
+		}
 		
 		writeUploadedFile(multiFile, fileName, realPath + dirPath);
 		
@@ -1558,7 +1563,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 관인대장 관인등록 삭제 실행 함수 (등록하지 않고 종료시 파일 삭제)
+	 * 전자결재G관리 관인대장 관인등록  임시파일삭제 실행 함수 (등록하지 않고 종료시 파일 삭제)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/sealDelete.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -1573,7 +1578,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 관인대장 관인삭제 실행 함수(삭제일자만 추가, 파일삭제X) 
+	 * 전자결재G관리 관인대장 관인삭제 실행 함수(삭제일자만 추가, 파일삭제X)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/deleteSealInfo.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -1647,47 +1652,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("checkIE", checkIE);
 		
 		return "admin/ezApprovalG/apprGAddDeptSealInfo";
-	}
-	
-	/**
-	 * 전자결재G관리 부서별관인대장 직인등록 파일등록 실행 함수
-	 */
-	@RequestMapping(value = "/admin/ezApprovalG/deptSealUpload.do")
-	public String deptSealUpload (@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		MultipartFile multiFile = request.getFile("file1");
-		String deptID = request.getParameter("deptID");
-		String companyID = request.getParameter("companyID");
-		String realPath = commonUtil.getRealPath(request);
-		String dirPath = commonUtil.getUploadPath("upload_approvalG.SEALIMG", userInfo.getTenantId());
-		String currentDate = commonUtil.getTodayUTCTime("").replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "");
-		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
-		
-		File dir = new File(realPath + dirPath);
-        if (!dir.exists()) {
-        	dir.mkdirs();
-        }
-        
-        int width = 0;
-		int height = 0;
-		String fileName = companyID + "_" + deptID + "_" + currentDate + fileExt;
-		
-		writeUploadedFile(multiFile, fileName, realPath + dirPath);
-		
-		File imageFile = new File(realPath + dirPath + commonUtil.separator + fileName);
-	
-		if (imageFile.exists()) {
-			BufferedImage bi = ImageIO.read(new File(realPath + dirPath + commonUtil.separator + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
-		model.addAttribute("fileName", fileName);
-		model.addAttribute("path", dirPath + commonUtil.separator);
-		model.addAttribute("width", width);
-		model.addAttribute("height", height);
-		
-		return "json";
 	}
 	
 	/**
@@ -1784,11 +1748,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getOptionInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID;
 		String encodeInfo = "";
 		
-		File file = new File(realPath + companyPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml");
+		File fileDir = new File(realPath + companyPath);
+		
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		
+		File file = new File(realPath + companyPath + commonUtil.separator + "encodeinfo.xml");
 		encodeInfo = FileUtils.readFileToString(file);
 		
 		model.addAttribute("encodeInfo", encodeInfo);
@@ -1839,7 +1810,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 결재건수조회 메뉴 화면 호출 함수
 	 */
-	@RequestMapping("/admin/ezApprovalG/EzStatistics.do")
+	@RequestMapping("/admin/ezApprovalG/statistics.do")
 	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
@@ -1877,7 +1848,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("tempYear", tempYear);
 		model.addAttribute("tempMonth", tempMonth);
 		
-		return "admin/ezApprovalG/apprGEzStatistics";
+		return "admin/ezApprovalG/apprGStatistics";
 	}
 	
 	/**
