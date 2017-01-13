@@ -511,7 +511,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
 	public String formSelect(@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
 		if (!auth) {
@@ -2200,6 +2199,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String setContainerIDForDoc (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("setContainerIDForDoc started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
