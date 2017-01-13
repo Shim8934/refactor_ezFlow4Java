@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommunityDAO")
@@ -250,9 +251,12 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (List<CommunityMyCommunityVO>) list("EzCommunityDAO.mainPageGet6", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<String> getClubCHK(Map<String, Object> map) throws Exception {
-		return (List<String>) select("EzCommunityDAO.getClubCHK", map);
+	public Integer getClubCHKGet1(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.getClubCHKGet1", map);
+	}
+	
+	public Integer getClubCHKGet2(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityDAO.getClubCHKGet2", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1080,5 +1084,13 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	
 	public void brdDeleteBoardInsert(Map<String, Object> map) throws Exception {
 		delete("EzCommunityDAO.brdDeleteBoardInsert", map);
+	}
+
+	public String joinOkSendMailGet1(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.joinOkSendMailGet1", map);
+	}
+
+	public LoginVO joinOkSendMailGet2(Map<String, Object> map) throws Exception {
+		return (LoginVO) select("EzCommunityDAO.joinOkSendMailGet2", map);
 	}
 }

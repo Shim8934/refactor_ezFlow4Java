@@ -321,6 +321,7 @@ public class EzApprovalGarchiveController {
 	public String changeRecordInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
 		return "ezApprovalG/apprGchangeRecordInfo";
 	}
 	
@@ -374,7 +375,7 @@ public class EzApprovalGarchiveController {
         String debenturer = "";
         
         if(xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent().equals("0")){
-        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, userInfo.getTenantId());
+        	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
         }
         else{
             deptcode = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim();
@@ -383,7 +384,7 @@ public class EzApprovalGarchiveController {
             sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), false), debenturer, isdocprint, userInfo.getTenantId());
+            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), false), debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
         }
 			return result;
 	}
@@ -413,7 +414,7 @@ public class EzApprovalGarchiveController {
 	public String regRecordAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
         String susinAdmin = "";
-        String serverName = request.getServerName();
+        String serverName = userInfo.getServerName();
         String poptExt = "";
         String maxSize = "";
         String isBody = "";
@@ -556,7 +557,7 @@ public class EzApprovalGarchiveController {
 	public String ezSelectSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String susinAdmin ="";
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		String susinXML="";
 		
     	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -588,7 +589,7 @@ public class EzApprovalGarchiveController {
         logger.debug("tenantID=" + tenantID);       
 		
 		String susinAdmin ="";
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		String susinXML="";
 		String mDeptInfo="";
 		
@@ -954,7 +955,7 @@ public class EzApprovalGarchiveController {
 	public String saveCabRoleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.saveCabRoleInfo(xmlDom);
+		String result = ezApprovalGService.saveCabRoleInfo(xmlDom, userInfo.getTenantId());
 		return result;
 	}
 	
@@ -1001,7 +1002,7 @@ public class EzApprovalGarchiveController {
 	public String selectReceipts(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("pDocID");
-		String serverName = request.getServerName();
+		String serverName = userInfo.getServerName();
 		model.addAttribute("docID", docID);
 		model.addAttribute("serverName", serverName);
 		return "ezApprovalG/apprGezSelectReceipts";

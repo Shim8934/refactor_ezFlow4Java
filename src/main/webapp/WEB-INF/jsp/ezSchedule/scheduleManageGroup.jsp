@@ -226,10 +226,10 @@
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
-		        });		        
+		        });
 		    }
 					
-		    function show_groupinfo() {		
+		    function show_groupinfo() {
 		        var listview = new ListView();
 		        listview.LoadFromID("GroupListView");
 		        
@@ -239,10 +239,11 @@
 		        }
 		        var Selected = listview.GetSelectedRows();
 		        var feature = GetOpenPosition(430, 370);
-		        window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		        //window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
-		        getGroupList();
-		
+		        window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		        
+		        //getGroupList();		
 		    }
 		</script>
 	</head>

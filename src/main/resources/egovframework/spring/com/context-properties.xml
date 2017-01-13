@@ -25,6 +25,11 @@
         <property name="apb" value="${CRYPTO.apb}"/>
     </bean>
     
+    <!-- JMocha superpassword 설정 -->
+    <bean id="jspw" class="java.lang.String" factory-method="valueOf">
+    	<constructor-arg value="${config.JMochaSuperPassword}"/>
+    </bean>
+    
     <util:properties id="config" location="classpath:/egovframework/egovProps/config.properties" />
     
     <util:properties id="globals" location="classpath:/egovframework/egovProps/globals.properties" />

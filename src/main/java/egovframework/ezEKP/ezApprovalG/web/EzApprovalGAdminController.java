@@ -511,7 +511,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
 	public String formSelect(@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		boolean auth = commonUtil.checkAdmin(loginCookie);
 		
 		if (!auth) {
@@ -913,7 +912,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
 		}
 		
-		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, user.getPrimary(), user.getTenantId());
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, user.getPrimary(), user.getTenantId(), user.getOffset());
 		
 		return result;
 	}
@@ -1367,7 +1366,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String taskCode = request.getParameter("docID");
 		String companyID = request.getParameter("companyID");
 
-		String result = ezApprovalGAdminService.getTaskHistory(taskCode, companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getTaskHistory(taskCode, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -2043,7 +2042,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGService.getLineInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getLineInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -2059,7 +2058,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -2075,7 +2074,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGService.getAttachInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getAttachInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -2091,7 +2090,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGService.getOpinionInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getOpinionInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -2200,6 +2199,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String setContainerIDForDoc (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("setContainerIDForDoc started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");

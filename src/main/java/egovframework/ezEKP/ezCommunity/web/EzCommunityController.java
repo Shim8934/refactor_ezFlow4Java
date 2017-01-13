@@ -3597,8 +3597,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}
 			}
 		}
-
-//		sendMail()
+		
+		clubVO.setC_ClubNo(code);
+		ezCommunityService.joinOkSendMail(loginCookie, userInfo, clubVO);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
@@ -3727,6 +3728,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		try {
 			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId());
+//			Mail소스 만들다 말았음 추가해야함
+//			okNoSetSendMail(loginCookie, userInfo, flag.toUpperCase(), code, cID);
 			
 			result = "true";
 		} catch (Exception e) {
@@ -3734,8 +3737,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			result = "false";
 		}
-		
-//		sendMail();
 		
 		model.addAttribute("result", result);
 		model.addAttribute("postCount", postCount);
