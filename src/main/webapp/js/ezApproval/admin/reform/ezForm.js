@@ -577,11 +577,10 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     
     field = fields.Item(Recv + "AprLine");
     if (field && SignCnt > 0) {
-        
-        if (Recv != "")
-            pFormTagName[0] = "<P align=center>수</P><P align=center>신</P><P align=center>결</P><P align=center>재</P>";
+    	if (Recv != "")
+            pFormTagName[0] = "<P align=center>" + strLangyj12 + "</P><P align=center>" + strLangyj13 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
         else
-            pFormTagName[0] = "<P align=center>기</P><P align=center>안</P><P align=center>결</P><P align=center>재</P>";
+            pFormTagName[0] = "<P align=center>" + strLangyj16 + "</P><P align=center>" + strLangyj17 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
 
         pFormTagName[1] = "18";
 
@@ -596,7 +595,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                 z = SignCnt;
             }
 
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLangyj11 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {
@@ -670,7 +669,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
 
     if (field && HapyCnt > 0) {
         
-        pFormTagName[0] = "<P align=center>합</P><P align=center>의</P><P align=center>결</P><P align=center>재</P>";
+        pFormTagName[0] = "<P align=center>" + strLangyj18 + "</P><P align=center>" + strLangyj19 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
         pFormTagName[1] = "18";
 
 
@@ -684,7 +683,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                 z = HapyCnt;
             }
             
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLangyj11 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {

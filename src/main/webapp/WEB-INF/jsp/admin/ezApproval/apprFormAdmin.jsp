@@ -282,11 +282,23 @@
 		                var url = "";
 		                var HWP = "&type=HWP";
 		                var parameter = "?tCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
+		            	var ua = navigator.userAgent;
+		            	var result = false;
+
+		                if (/msie 10/i.test(ua)) {
+		                    result = true;	
+		                } else if (/msie/i.test(ua)) {
+		            		result = true;
+		            	} else if (/trident/i.test(ua)) {
+		            		result = true;
+		            	}
+
 		                if (type == "HWP") {
-		                    if (!CrossYN())
-		                        url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
-		                    else
+		                    if (result) {
+		                        url = "/admin/ezApproval/formMainOther.do";
+		                    } else {
 		                        return;
+		                    }
 		                    parameter = parameter + HWP;
 		                }
 		                else {
@@ -301,7 +313,7 @@
 		                }
 		                var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 970, "NO");
 		                Tree_setconfig();
-		                InitFormCont();
+// 		                InitFormCont();
 		            } 
 		            else {
 		                alert("<spring:message code='ezApproval.t722'/>");
@@ -339,7 +351,7 @@
 		            }
 		            var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "YES");
 		            Tree_setconfig();
-		            InitFormCont();
+// 		            InitFormCont();
 		        }
 		    }
 		

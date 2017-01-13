@@ -3360,7 +3360,7 @@
 	          	StartDate = #startDate#,
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
-	          	Attachments = #attachments#,
+	          	Attachments = #hasAttach#,
 	          	ExtensionAttribute1 = #extensionAttribute1#,
 	          	ExtensionAttribute2 = #extensionAttribute2#,
 	          	ExtensionAttribute3 = #extensionAttribute3#,

@@ -103,7 +103,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	public void createBoardGroup2(Map<String, Object> map) throws Exception{		
-		insert("EzBoardAdminDAO.createBoardGroup", map);
+		insert("EzBoardAdminDAO.createBoardGroup2", map);
 	}
 	
 	public void createBoard_I(Map<String, Object> map) throws Exception{

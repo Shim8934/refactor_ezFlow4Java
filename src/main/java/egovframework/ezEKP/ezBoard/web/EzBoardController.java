@@ -67,6 +67,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -6429,8 +6430,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/getImagePortletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginSimpleVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String pBoardType = xmlDom.getElementsByTagName("pBoardType").item(0).getTextContent();
@@ -6493,7 +6494,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getItemInfo started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
@@ -6513,7 +6514,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, HttpServletRequest request) throws Exception {
 		logger.debug("getItemAttachments started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
 		
 		boardItemVO.setTenantID(userInfo.getTenantId());
@@ -6594,7 +6595,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getItemViewNew started.");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
