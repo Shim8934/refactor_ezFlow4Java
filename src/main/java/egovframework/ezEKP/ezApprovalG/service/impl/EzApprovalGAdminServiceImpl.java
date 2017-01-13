@@ -546,7 +546,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID) throws Exception {
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
@@ -615,7 +615,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				    }
 					
 					sb.append("<ROW>");
-					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID) + "</VALUE>");
+					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
 					
 					if (j == 0) {
 						if (mode.equals("GROUP") || mode.equals("JOIN")) {
@@ -1401,7 +1401,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID) throws Exception {
+	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getTaskHistory started.");
 		StringBuilder sb = new StringBuilder();
 
@@ -1452,7 +1452,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
-				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE></CELL>");
 			}
 			sb.append("</ROW>");
 		}
@@ -2061,7 +2061,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					}
 			    }
 				
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, primary, tenantID)) + "</VALUE>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, primary, tenantID, offset)) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");

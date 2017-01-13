@@ -11,6 +11,14 @@ public class ScheduleGroupListVO {
 	private String createDate;
 	/** 그룹멤버 아이디 */
 	private String memberId;
+	/** 그룹멤버 이름 */
+	private String memberName;
+	/** 그룹멤버 이름2 */
+	private String memberName2;
+	/** 그룹멤버 상태 */
+	private String status;
+	/** 그룹멤버 응답시간 */
+	private String responseDate;
 	/** 그룹멤버 메일 */
 	private String mail;
 	/** 그룹멤버 정보 */
@@ -47,6 +55,30 @@ public class ScheduleGroupListVO {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+	public String getMemberName2() {
+		return memberName2;
+	}
+	public void setMemberName2(String memberName2) {
+		this.memberName2 = memberName2;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getResponseDate() {
+		return responseDate;
+	}
+	public void setResponseDate(String responseDate) {
+		this.responseDate = responseDate;
+	}
 	public String getMail() {
 		return mail;
 	}
@@ -59,7 +91,5 @@ public class ScheduleGroupListVO {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	
-	
 	
 }

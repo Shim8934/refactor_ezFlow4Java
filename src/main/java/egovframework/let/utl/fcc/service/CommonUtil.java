@@ -671,6 +671,20 @@ public class CommonUtil {
 		return today;
 	}
 	
+	/**
+	 * offset 시간을 분으로 변환하는 함수	 
+	 */
+	public String getMinuteUTC(String offSet) throws Exception {
+		logger.debug("getMinuteUTC started");
+		
+		String format = offSet.split("\\|")[1];
+		String cal = format.substring(0,1);
+		int min = Integer.parseInt(format.substring(1,3)) * 60 + Integer.parseInt(format.substring(4,6));
+		String time = cal + min;	
+		
+		return time;
+	}
+	
 	public String makeDate (String year, String month, String day, boolean startFlag) {
 		String result = "";
 		

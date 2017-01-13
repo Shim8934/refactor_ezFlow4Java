@@ -6326,7 +6326,6 @@
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETACCESSYNG(#v_DOCID#, #v_FLAG#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
-		
 		<isEqual property="v_FLAG" compareValue="001">
 		<![CDATA[
 			SELECT 
@@ -7026,7 +7025,7 @@
 			EZAPPROVALG_${companyID}.tbContainer
      	( CONTAINERID, 		  CONTAINERTYPEID,   CONTAINEROWNDEPID, TENANT_ID )
      	VALUES 
-     	( #v_MAXCONTAINERID#, #v_CONTAINERTYPE#, #v_DEPTID#,        #TENANT_ID# )
+     	( #v_MAXCONTAINERID#, #v_CONTAINERTYPE#, #v_DEPTID#,        #v_TENANTID# )
 	</insert>
 	
 	<select id="EzApprovalG.makeContainer" parameterClass="Map" resultClass="String">
@@ -11863,6 +11862,7 @@
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
+	
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">
 		{CALL EZAPPROVALG_${companyID}.TRANSACTIONSQL(#sqlString#)}
 	</procedure>
@@ -12659,68 +12659,185 @@
 	</procedure>
 	
 <!-- 	보류 -->
-	<procedure id="EzApprovalG.getCabinetDetailInfo" parameterClass="Map" resultClass="ApprGTaskVO">
-		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABINETINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-<!-- 	<select id="EzApprovalG.getCabinetDetailInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
-<!-- 		  SELECT  -->
-<!-- 		  		 TBCABCLS.CabinetClassNo , -->
-<!-- 	             TBCABCLS.ProcessDeptCode , -->
-<!-- 	             TBCABCLS.ProcessDeptName , -->
-<!-- 	             TBCABCLS.ProcessDeptName2 , -->
-<!-- 	             TBCABCLS.TaskCode , -->
-<!-- 	             TBCABCLS.TaskName , -->
-<!-- 	             TBCABCLS.TaskName2 , -->
-<!-- 	             TBCABCLS.Title , -->
-<!-- 	             TBCABCLS.ProductionYear , -->
-<!-- 	             TBCABCLS.RegSerialNo , -->
-<!-- 	             TBCABCLS.RecTypeCode , -->
-<!-- 	             TBCABCLS.ExpirationYear , -->
-<!-- 	             TBCABCLS.TerminateFlag , -->
-<!-- 	             TBCABCLS.KeepingPeriod , -->
-<!-- 	             TBCABCLS.KeepingMethod , -->
-<!-- 	             TBCABCLS.KeepingPlace , -->
-<!-- 	             TBCABCLS.DisplayRecFlag , -->
-<!-- 	             TBCABCLS.DisplayEndDate , -->
-<!-- 	             TBCABCLS.DisplayReason , -->
-<!-- 	             TBCABCLS.SpecialCatalogFlag , -->
-<!-- 	             TBCABCLS.OldCabinetFlag , -->
-<!-- 	             TBCABCLS.ModifyFlag , -->
-<!-- 	             GETNUMOFREC(TBCAB.CabinetID) NUMOFREC  , -->
-<!-- 	             NVL(GETNUMOFPAGE(TBCAB.CabinetID), 0) NUMOFPAGE  , -->
-<!-- 	             GETNUMOFFILE(TBCAB.CabinetID) NUMOFFILE  , -->
-<!-- 	             TBCABCLS.ConfirmFlag , -->
-<!-- 	             TBCABCLS.ConfirmYear , -->
-<!-- 	             CATALOGTRANSFERFLAG , -->
-<!-- 	             CATALOGTRANSFERYEAR , -->
-<!-- 	             DOCTRANSFERFLAG , -->
-<!-- 	             DOCTRANSFERYEAR , -->
-<!-- 	             TBCAB.CabinetID , -->
-<!-- 	             TBCAB.VolumeNo , -->
-<!-- 	             TBCAB.CreateDate , -->
-<!-- 	             TBCAB.CabinetTransferFlag , -->
-<!-- 	             TBCAB.TCabinetID , -->
-<!-- 	             TBCAB.TDeptCode , -->
-<!-- 	             TBCAB.TTaskCode , -->
-<!-- 	             TBCAB.TProduceYear , -->
-<!-- 	             TBCAB.TRegSerialNo , -->
-<!-- 	             TBCAB.TVolumeNo , -->
-<!-- 	             TBCAB.TCabinetName , -->
-<!-- 	             TBCAB.TCabinetName2 , -->
-<!-- 	             TBCAB.TDeptName , -->
-<!-- 	             TBCAB.TDeptName2 , -->
-<!-- 	             TBCAB.TTaskName , -->
-<!-- 	             TBCAB.TTaskName2 , -->
-<!-- 	             TBCAB.TransferDate , -->
-<!-- 	             TBOLD.CreateOrganName , -->
-<!-- 	             TBOLD.ClassificationNo , -->
-<!-- 	             GETCABCHARGER(TBCABCLS.CabinetClassNo) CABCHARGER   -->
-<!-- 	        FROM EZAPPROVALG_${companyID}.TBCABINETCLASS TBCABCLS -->
-<!-- 	               JOIN EZAPPROVALG_${companyID}.TBCABINET TBCAB   ON TBCABCLS.CabinetClassNo = TBCAB.CabinetClassNo -->
-<!-- 	               LEFT JOIN EZAPPROVALG_${companyID}.TBOLDCABINETEXTRAINFO TBOLD   ON TBCABCLS.CabinetClassNo = TBOLD.CabinetClassNo -->
-<!-- 	       WHERE  TBCAB.CabinetID = #v_CABINETID# -->
-<!-- 	      AND TBCAB.TENANT_ID = #v_TENANTID# -->
-<!-- 	</select> -->
+<!-- 	<procedure id="EzApprovalG.getCabinetDetailInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+<!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABINETINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzApprovalG.selectUserName" parameterClass="Map" resultClass="ApprGRecordVO">
+		SELECT 
+			UserName
+     	FROM 
+     		EZAPPROVALG_${companyID}.TBCABROLEINFO 
+    	WHERE  
+    		CabinetClassNo = #v_CABINETCLASSNO#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<select id="EzApprovalG.selectCabID" parameterClass="Map" resultClass="int">
+		SELECT 
+		 	COUNT(*)  
+     	FROM 
+     		EZAPPROVALG_${companyID}.TBRECORD 
+        JOIN 
+        	EZAPPROVALG_${companyID}.TBSEPERATEATTACH    
+        ON 
+        	TBRECORD.RecordID = TBSEPERATEATTACH.RecordID
+        AND
+        	TBRECORD.TENANT_ID = TBSEPERATEATTACH.TENANT_ID
+    	WHERE  
+    		DocID IS NOT NULL
+        AND 
+        	CabinetID = #v_CABINETID#
+       	AND
+       		TBRECORD.TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<select id="EzApprovalG.selectCabID2" parameterClass="Map" resultClass="int">
+		SELECT 
+			COUNT(*)  
+     	FROM 
+     		EZAPPROVALG_${companyID}.TBRECORD 
+        JOIN 
+        	EZAPPROVALG_${companyID}.TBSEPERATEATTACH    
+        ON 
+        	TBRECORD.RecordID = TBSEPERATEATTACH.RecordID
+        AND
+        	TBRECORD.TENANT_ID = TBSEPERATEATTACH.TENANT_ID
+        JOIN 
+        	EZAPPROVALG_${companyID}.TBENDATTACHINFO   
+        ON 
+        	TBRECORD.DocID = TBENDATTACHINFO.DocID
+        AND
+        	TBRECORD.TENANT_ID = TBENDATTACHINFO.TENANT_ID
+    	WHERE  
+    		TBRECORD.DocID IS NOT NULL
+        AND
+        	CabinetID = #v_CABINETID#
+       	AND
+       		TBRECORD.TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<select id="EzApprovalG.getCabinetDetailInfo" parameterClass="Map" resultClass="ApprGTaskVO">
+		  SELECT 
+		  		 TBCABCLS.CabinetClassNo ,
+	             TBCABCLS.ProcessDeptCode ,
+	             TBCABCLS.ProcessDeptName ,
+	             TBCABCLS.ProcessDeptName2 ,
+	             TBCABCLS.TaskCode ,
+	             TBCABCLS.TaskName ,
+	             TBCABCLS.TaskName2 ,
+	             TBCABCLS.Title ,
+	             TBCABCLS.ProductionYear ,
+	             TBCABCLS.RegSerialNo ,
+	             TBCABCLS.RecTypeCode ,
+	             TBCABCLS.ExpirationYear ,
+	             TBCABCLS.TerminateFlag ,
+	             TBCABCLS.KeepingPeriod ,
+	             TBCABCLS.KeepingMethod ,
+	             TBCABCLS.KeepingPlace ,
+	             TBCABCLS.DisplayRecFlag ,
+	             TBCABCLS.DisplayEndDate ,
+	             TBCABCLS.DisplayReason ,
+	             TBCABCLS.SpecialCatalogFlag ,
+	             TBCABCLS.OldCabinetFlag ,
+	             TBCABCLS.ModifyFlag ,
+	             (
+	             	SELECT 
+	             		COUNT(*)  
+     				FROM 
+     					EZAPPROVALG_${companyID}.TBSEPERATEATTACH 
+    				WHERE  
+    					CabinetID = #v_CABINETID#
+    				AND
+    					TBSEPERATEATTACH.TENANT_ID = #v_TENANTID# ) NUMOFREC  ,
+	             (SELECT (
+    						(
+    						  SELECT 
+    						  	CASE WHEN A IS NULL THEN 0 
+    						  	     ELSE A 
+    						  	END 
+    						  FROM (
+    						  		 SELECT 
+    						  		 	SUM(NumOfPage) A 
+     								 FROM 
+     								 	 EZAPPROVALG_${companyID}.TBSEPERATEATTACH 
+    								 WHERE  
+    								 	 CabinetID = #v_CABINETID#
+    								 AND
+    								 	TBSEPERATEATTACH.TENANT_ID = #v_TENANTID#))
+    					+
+    						(
+    						  SELECT 
+    						  	CASE WHEN B IS NULL THEN 0 
+    						  		 ELSE B 
+    						    END 
+    						  FROM (
+   									 SELECT 
+   									 	SUM(TBENDATTACHINFO.PageNum)  B
+   									 FROM 
+   									 	EZAPPROVALG_${companyID}.TBRECORD 
+            						 JOIN 
+            						 	EZAPPROVALG_${companyID}.TBSEPERATEATTACH    
+            						 ON 
+            						 	TBRECORD.RecordID = TBSEPERATEATTACH.RecordID
+            						 AND
+            						 	TBRECORD.TENANT_ID = TBSEPERATEATTACH.TENANT_ID
+            						 JOIN 
+            						 	EZAPPROVALG_${companyID}.TBENDATTACHINFO    
+            						 ON 
+            						 	TBRECORD.DocID = TBENDATTACHINFO.DocID
+            						 AND
+            						 	TBRECORD.TENANT_ID = TBENDATTACHINFO.TENANT_ID
+    								 WHERE  
+    								 	TBSEPERATEATTACH.CabinetID = #v_CABINETID#
+    								 AND
+    								 	TBRECORD.TENANT_ID = #v_TENANTID#) )) FROM DUAL) NUMOFPAGE  ,
+	             #v_cabID# NUMOFFILE  ,
+	             TBCABCLS.ConfirmFlag ,
+	             TBCABCLS.ConfirmYear ,
+	             CATALOGTRANSFERFLAG ,
+	             CATALOGTRANSFERYEAR ,
+	             DOCTRANSFERFLAG ,
+	             DOCTRANSFERYEAR ,
+	             TBCAB.CabinetID ,
+	             TBCAB.VolumeNo ,
+	             TBCAB.CreateDate ,
+	             TBCAB.CabinetTransferFlag ,
+	             TBCAB.TCabinetID ,
+	             TBCAB.TDeptCode ,
+	             TBCAB.TTaskCode ,
+	             TBCAB.TProduceYear ,
+	             TBCAB.TRegSerialNo ,
+	             TBCAB.TVolumeNo ,
+	             TBCAB.TCabinetName ,
+	             TBCAB.TCabinetName2 ,
+	             TBCAB.TDeptName ,
+	             TBCAB.TDeptName2 ,
+	             TBCAB.TTaskName ,
+	             TBCAB.TTaskName2 ,
+	             TBCAB.TransferDate ,
+	             TBOLD.CreateOrganName ,
+	             TBOLD.ClassificationNo ,
+	             #v_userName# CABCHARGER  
+	        FROM 
+	        	 EZAPPROVALG_${companyID}.TBCABINETCLASS TBCABCLS
+	        JOIN 
+	        	 EZAPPROVALG_${companyID}.TBCABINET TBCAB   
+	        ON 
+	        	 TBCABCLS.CabinetClassNo = TBCAB.CabinetClassNo
+	        AND
+	        	 TBCABCLS.TENANT_ID = TBCAB.TENANT_ID
+	        LEFT JOIN 
+	        	 EZAPPROVALG_${companyID}.TBOLDCABINETEXTRAINFO TBOLD   
+	        ON 
+	        	 TBCABCLS.CabinetClassNo = TBOLD.CabinetClassNo
+	        AND
+	        	 TBCABCLS.TENANT_ID = TBOLD.TENANT_ID
+	        WHERE  
+	       		 TBCAB.CabinetID = #v_CABINETID#
+	        AND 
+	        	 TBCAB.TENANT_ID = #v_TENANTID#
+	</select>
 <!-- 	<procedure id="EzApprovalG.getCabScInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABSCINFO(#v_CABINETID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -13215,4 +13332,166 @@
        			TENANT_ID = #v_TENANTID#;
   	END;
    </delete>
+   
+   <select id="EzApprovalG.selectHistoryCnt" parameterClass="map" resultClass="int">
+   		SELECT 
+   			CASE WHEN VERSION IS NULL THEN 1
+   				 ELSE VERSION + 1
+   			END
+   		FROM(
+	   		SELECT 
+	   			MAX(VERSION) VERSION
+	   		FROM
+	   			EZAPPROVALG_${companyID}.TBRECORDHISTORY
+	   		WHERE
+	   			RECORDID= #v_RECORDID#
+	   		AND
+	   			SeperateAttachNo= #v_SEPATTNO#
+	   		AND
+	   			TENANT_ID = #v_TENANTID#)
+   </select>
+   
+   
+   <insert id="EzApprovalG.insertHistory" parameterClass="map">
+   		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBRECORDHISTORY 
+		(Version, RecordID, SeperateAttachNo, RegisterDate, Title, NumOfPage, AprMemberTitle, AprMemberTitle2, Drafter, Drafter2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, ModifyDate, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, TENANT_ID)
+		(Select 
+			#v_HISTORYCNT#, 
+			TBSEPERATEATTACH.RecordID, 
+			TBSEPERATEATTACH.SeperateAttachNo,
+			RegisterDate, 
+			TBSEPERATEATTACH.Title, 
+			TBSEPERATEATTACH.NumOfPage, 
+			AprMemberTitle, 
+			AprMemberTitle2, 
+			DrafterName, 
+			DrafterName2, 
+			ExecuteDate, 
+			ReceiptMemberName, 
+			ReceiptMemberName2, 
+            TO_CHAR(TBSEPERATEATTACH.CreateDate,'YYYYMMDD'), 
+            NULL, 
+            NULL, 
+            NULL, 
+            NULL, 
+            '1' ,
+            TBSEPERATEATTACH.TENANT_ID
+		 From 
+		 	EZAPPROVALG_${companyID}.TBSEPERATEATTACH 
+		 Inner Join 
+		 	EZAPPROVALG_${companyID}.TBRECORD
+		 ON 
+		 	TBSEPERATEATTACH.RecordID = TBRECORD.RecordID
+		 AND
+		 	TBSEPERATEATTACH.TENANT_ID = TBRECORD.TENANT_ID
+		Where 
+			TBSEPERATEATTACH.RecordID = #v_RECORDID#
+	   	AND
+	   		TBSEPERATEATTACH.SeperateAttachNo= #v_SEPATTNO# 
+		AND
+	   		TBSEPERATEATTACH.TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+    <insert id="EzApprovalG.insertHistory2" parameterClass="map">
+   		INSERT INTO 
+			EZAPPROVALG_${companyID}.TBRECORDHISTORY 
+		(Version, RecordID, SeperateAttachNo, RegisterDate, Title, NumOfPage, AprMemberTitle, AprMemberTitle2, Drafter, Drafter2, ExecuteDate, ReceiptMemberName, ReceiptMemberName2, ModifyDate, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, TENANT_ID)
+		(Select 
+			#v_HISTORYCNT#, 
+			TBSEPERATEATTACH.RecordID, 
+			TBSEPERATEATTACH.SeperateAttachNo,
+			RegisterDate, 
+			TBSEPERATEATTACH.Title, 
+			TBSEPERATEATTACH.NumOfPage, 
+			AprMemberTitle, 
+			AprMemberTitle2, 
+			DrafterName, 
+			DrafterName2, 
+			ExecuteDate, 
+			ReceiptMemberName, 
+			ReceiptMemberName2, 
+            #v_SYSDATE#, 
+            #v_CHANGEREASON#, 
+            #v_USERID#, 
+            #v_USERNAME#, 
+            #v_USERNAME2#, 
+            '1' ,
+            TBSEPERATEATTACH.TENANT_ID
+		 From 
+		 	EZAPPROVALG_${companyID}.TBSEPERATEATTACH 
+		 Inner Join 
+		 	EZAPPROVALG_${companyID}.TBRECORD
+		 ON 
+		 	TBSEPERATEATTACH.RecordID = TBRECORD.RecordID
+		 AND
+		 	TBSEPERATEATTACH.TENANT_ID = TBRECORD.TENANT_ID
+		Where 
+			TBSEPERATEATTACH.RecordID = #v_RECORDID#
+	   	AND
+	   		TBSEPERATEATTACH.SeperateAttachNo= #v_SEPATTNO# 
+		AND
+	   		TBSEPERATEATTACH.TENANT_ID = #v_TENANTID#)
+   </insert>
+   <update id="EzApprovalG.updateModifyFlag" parameterClass="map">
+   		UPDATE 
+   			EZAPPROVALG_${companyID}.TBSEPERATEATTACH 
+   		SET 
+   			ModifyFlag = '1' 
+   		WHERE 
+   			RecordID = #v_RECORDID#
+   		AND 
+   			SEPERATEATTACHNO = #v_SEPATTNO# 
+   		AND
+	   		TENANT_ID = #v_TENANTID#
+   </update>
+   
+   <update id="EzApprovalG.updateTbRecord" parameterClass="map">
+   		UPDATE 
+   			EZAPPROVALG_${companyID}.TBRECORD 
+   		SET 
+   			SpecialRecordCode = #v_SPECIALREC#,
+			PublicityCode = #v_PUBCODE#,
+			LimitRange = #v_LIMITRANGE# 
+		WHERE 
+			RecordID = #v_RECORDID#
+		AND
+			TENANT_ID = #v_TENANTID#
+   </update>
+   
+   <update id ="EzApprovalG.updateTbExpendAprDocInfo" parameterClass="map">
+   		UPDATE 
+   			EZAPPROVALG_${companyID}.TBEXPENDAPRDOCINFO 
+   		SET 
+   			SpecialRecordCode = #v_SPECIALREC#,
+			PublicityCode = #v_PUBCODE#,
+			LimitRange = #v_LIMITRANGE# 
+        WHERE 
+        	DOCID = (	
+        				SELECT 
+        					DOCID
+        				FROM 
+        					EZAPPROVALG_${companyID}.TBRECORD 
+        				WHERE 
+        					RECORDID = #v_RECORDID#
+        				AND
+        					TENANT_ID = #v_TENANTID#)
+        AND
+        	TENANT_ID = #v_TENANTID#
+   </update>
+   <delete id ="EzApprovalG.deleteTbSpecialCatalogInfo" parameterClass="map">
+   		DELETE 
+   		FROM 
+   			EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_REC 
+   		WHERE 
+   			RECORDID = #v_RECID# 
+   		AND 
+   			SERIALNO != '000' 
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <insert id ="EzApprovalG.insertTbSpecialCatalogInfoRec" parameterClass="map">
+   		$sqlString$
+   </insert>
 </sqlMap>

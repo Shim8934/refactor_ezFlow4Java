@@ -136,8 +136,12 @@
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
 		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
-		<result property="mail"				column="MAIL"				columnIndex="2"/>
-		<result property="info"				column="INFO"				columnIndex="3"/>		
+		<result property="memberName"		column="memberName"			columnIndex="2"/>
+		<result property="memberName2"		column="memberName2"		columnIndex="3"/>
+		<result property="status"			column="status"				columnIndex="4"/>
+		<result property="responseDate"		column="responseDate"		columnIndex="5"/>
+		<result property="mail"				column="MAIL"				columnIndex="6"/>
+		<result property="info"				column="INFO"				columnIndex="7"/>		
 	</resultMap>
 
 	<resultMap class="ScheduleGmailInfoVO" id="scheduleGmailInfoVO">
@@ -260,6 +264,10 @@
 		<![CDATA[
 			 SELECT 
 			 	A.memberid,
+			 	'' as membername,
+			 	'' as membername2,
+			 	'' as status,
+			 	'' as responsedate,
              	B.mail,
              	CASE #lang#
 	                WHEN '1' THEN B.displayname || '(' || description || ')'
@@ -280,6 +288,39 @@
 		]]>
 	</select>
 	
+	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+		<![CDATA[
+			 SELECT 
+			 	memberid,
+			 	membername,
+			 	membername2,
+			 	status,
+			 	responsedate + #offSetMin#/(24*60) as responsedate,
+             	'' as mail,
+             	'' as info  
+             FROM 
+             	EZPIMS.TBLSCHEDULEGROUPMEMBER
+             WHERE
+             	groupid = #groupID#
+             AND
+             	tenant_id = #tenantID#
+		]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
+		UPDATE 
+			EZPIMS.TBLSCHEDULEGROUPMEMBER
+		SET
+			status = #status#,
+			responseDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)	
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			memberid = #memberID#	
+   		AND
+   			tenant_id = #tenantID#	
+	</update>
+	
 	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
 		DELETE 
 			EZPIMS.TBLSCHEDULEGROUP
@@ -295,6 +336,17 @@
    		WHERE  
    			groupid = #groupID#
    		AND
+   			tenant_id = #tenantID#	
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleMember" parameterClass="map">
+		DELETE 
+			EZPIMS.TBLSCHEDULEGROUPMEMBER
+   		WHERE  
+   			groupid = #groupID#
+   		AND
+   			memberid = #memberID#
+   		AND	
    			tenant_id = #tenantID#	
 	</delete>
 	

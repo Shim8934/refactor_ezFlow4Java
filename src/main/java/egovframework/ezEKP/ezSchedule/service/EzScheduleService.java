@@ -44,15 +44,21 @@ public interface EzScheduleService {
 
 	public String getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID) throws Exception;
 	
-	public List<ScheduleGroupListVO> getScheduleGroupList(String userID) throws Exception;
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userId) throws Exception;
 
-	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantId) throws Exception;
+	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId) throws Exception;
 	
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception;
 
 	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception;
 
 	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception;
+
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	int tenantId, String offSetMin) throws Exception;
+
+	public void deleteScheduleMember(String groupId, String memberId, int tenantId) throws Exception;
+
+	public void updateScheduleMember(String groupId, String memberId, String status, int tenantId) throws Exception;
 
 	
 }

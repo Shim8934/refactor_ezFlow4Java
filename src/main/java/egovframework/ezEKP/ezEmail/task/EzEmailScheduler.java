@@ -1,18 +1,15 @@
 package egovframework.ezEKP.ezEmail.task;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -46,7 +43,6 @@ import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -80,6 +76,9 @@ public class EzEmailScheduler {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Resource(name = "jspw")
+    private String jspw;
+	
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
@@ -104,7 +103,7 @@ public class EzEmailScheduler {
 			try {
 				String userEmail = vo.getUserId();
 
-				String password = config.getProperty("config.JMochaSuperPassword");
+				String password = jspw;
 				String path = vo.getPath();
 				String deleteUnread = vo.getDeleteUnread();
 				int expireTime = vo.getExpireTime();
@@ -174,7 +173,7 @@ public class EzEmailScheduler {
 			try {
 				
 				String userAccount = vo.getConnUrl();
-				String password = config.getProperty("config.JMochaSuperPassword");
+				String password = jspw;
 	
 				String realPath = config.getProperty("data_root");
 				
@@ -289,7 +288,7 @@ public class EzEmailScheduler {
                 List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
                 IMAPAccess ia = null;
                 Locale locale = Locale.getDefault();
-                String password = config.getProperty("config.JMochaSuperPassword");
+                String password = jspw;
                 String userId = null;
                 String email = null;
                 

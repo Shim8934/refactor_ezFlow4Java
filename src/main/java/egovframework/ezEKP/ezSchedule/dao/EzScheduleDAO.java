@@ -131,5 +131,18 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		delete("EzScheduleDAO.deleteScheduleGroupMember", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ScheduleGroupListVO> getGroupMemberList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getGroupMemberList", map);
+	}
+
+	public void deleteScheduleMember(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleMember", map);
+	}
+
+	public void updateScheduleMember(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleMember", map);
+	}
+
 }
 

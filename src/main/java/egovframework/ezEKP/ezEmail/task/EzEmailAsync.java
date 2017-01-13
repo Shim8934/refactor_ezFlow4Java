@@ -38,6 +38,9 @@ public class EzEmailAsync {
 	@Autowired
 	private Properties config;
 	
+	@Resource(name = "jspw")
+    private String jspw;
+	
 	@Async
 	public void cancelMailDelete(String num) {
 		try {
@@ -51,7 +54,7 @@ public class EzEmailAsync {
 			
 			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
 			
-			String password = config.getProperty("config.JMochaSuperPassword");
+			String password = jspw;
 			
 			Locale locale = Locale.getDefault();
 			
