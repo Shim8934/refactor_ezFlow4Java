@@ -42,7 +42,7 @@ public interface EzOrganService {
 	
 	public String getProxyUserInfo(String userID) throws Exception;
 	
-	public String getLastLogin(String userID) throws Exception;
+	public String getLastLogin(String userID, int tenantID) throws Exception;
 	
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	

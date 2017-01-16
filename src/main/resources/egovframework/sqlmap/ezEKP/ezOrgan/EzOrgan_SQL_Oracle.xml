@@ -795,7 +795,7 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getLastLogin" parameterClass="String" resultClass="String">
+	<select id="EzOrganDAO.getLastLogin" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				lastLogin 
@@ -803,6 +803,8 @@
 	      		ezHrmaster.TBLUSERMASTER 
 	      	WHERE  
 	      		cn = #userID#
+	      	AND
+	      		tenant_ID = #tenantID#	
 	     ]]> 
 	</select>
 </sqlMap>

@@ -1069,7 +1069,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		
 		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		
-		lastLogin = ezOrganService.getLastLogin(userInfo.getId());
+		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
 		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);

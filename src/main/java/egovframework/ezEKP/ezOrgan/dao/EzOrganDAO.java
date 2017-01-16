@@ -890,8 +890,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getEncPassword", map);
 	}
 	
-	public String getLastLogin(String userID) throws Exception{
-		return (String) select("EzOrganDAO.getLastLogin", userID);
+	public String getLastLogin(Map<String, Object> map) throws Exception{
+		return (String) select("EzOrganDAO.getLastLogin", map);
 	}
 
     private int deptSubDeptCntForJMocha(String deptID, int tenantID) throws Exception{

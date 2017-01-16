@@ -1163,8 +1163,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getLastLogin(String userID) throws Exception {
-		return ezOrganDAO.getLastLogin(userID);
+	public String getLastLogin(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getLastLogin(map);
 	}
 
 }
