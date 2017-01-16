@@ -105,7 +105,8 @@ public class OrganUserVO {
 	private String birth;
 	/** */
 	private String birthType;
-	
+	/** 현재 시간*/
+	private String nowDate;
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;	
 	
@@ -421,13 +422,16 @@ public class OrganUserVO {
 	public void setPassword(String password) {
 		this.password = password;
 	}	
-
     public int getTenantId() {
         return tenantId;
     }
-    
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
-		
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
+	}
 }

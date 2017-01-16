@@ -277,11 +277,76 @@
 		]]>
 	</select>
 	
-	<procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
+	<!-- <procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
+		<![CDATA[
+			SELECT
+				A.CN ,
+             	A.DEPTID ,
+             	A.POSITIONCD ,
+             	CASE
+             		'1'
+                WHEN
+                	'1'
+                THEN
+                	A.TITLE
+                ELSE
+                	A.TITLE2
+                END
+                	TITLE  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	C.DISPLAYNAME
+                ELSE
+                	C.DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	B.DISPLAYNAME
+                ELSE
+                	B.DISPLAYNAME2
+                END
+                	DESCRIPTION  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	B.EXTENSIONATTRIBUTE3
+                ELSE
+                	B.COMPNM2
+                END
+                	COMPANYNAME  ,
+             	A.TITLE T1  ,
+             	A.TITLE2 T2  
+        	FROM
+        		EZHRMASTER.TBLADDJOBMASTER A
+            JOIN
+            	EZHRMASTER.TBLDEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+            JOIN
+            	EZHRMASTER.TBLUSERMASTER C   ON A.CN = C.CN AND A.TENANT_ID = C.TENANT_ID
+       		WHERE
+       			A.CN = #v_CN#
+       		AND
+       			A.TENANT_ID = #v_TENANT_ID#
+       		AND
+       			B.TENANT_ID = #v_TENANT_ID#		
+       		ORDER BY
+       			B.DISPLAYNAME
+		]]>
+	</select>
 	
 	<procedure id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
 		<![CDATA[
@@ -289,41 +354,434 @@
 		]]>
 	</procedure>
 	
-	<procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
+	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(EXTENSIONATTRIBUTE1 )
+	 		FROM
+	 			EZHRMASTER.TBLUSERMASTER
+   			WHERE
+   				NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL 
+      		AND
+      			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+      		AND
+      			TENANT_ID = #v_TENANT_ID#	
+      		AND
+      			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
+	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
+		<![CDATA[
+			SELECT
+				*
+			FROM ( 	SELECT
+							CN, 
+            				CASE
+            					#v_LANGDATA#  
+                  			WHEN
+                  				'1'
+                  			THEN
+                  				DISPLAYNAME 
+                  			ELSE
+                  				DISPLAYNAME2   
+                  			END
+                  				AS DISPLAYNAME, 
+            				CASE
+            					#v_LANGDATA#  
+                  			WHEN
+                  				'1'
+                  			THEN
+                  				DESCRIPTION 
+                  			ELSE
+                  				DESCRIPTION2   
+                  			END
+                  				AS DESCRIPTION,
+            				CASE
+            					#v_LANGDATA#  
+                  			WHEN
+                  				'1'
+                  			THEN
+                  				TITLE
+                  			ELSE
+                  				TITLE2
+                  			END
+                  				AS TITLE,
+            				MAIL,
+            				TELEPHONENUMBER,
+            				CASE
+            					#v_LANGDATA#  
+                  			WHEN
+                  				'1'
+                  			THEN
+                  				COMPANY
+                  			ELSE
+                  				COMPANY2
+                  			END
+                  				AS COMPANY,
+            				EXTENSIONATTRIBUTE1 ,
+            				ROW_NUMBER() OVER (ORDER BY DISPLAYNAME) AS ROWNUM_
+        				FROM
+        					EZHRMASTER.TBLUSERMASTER 
+        				WHERE
+        					NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL
+        				AND
+        					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+        				AND
+        					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+        				AND
+        					TENANT_ID = #v_TENANT_ID#	
+      				) A
+      			WHERE
+      				ROWNUM_
+      			BETWEEN
+      				#v_PSTARTROW#
+      			AND
+      				#v_PENDROW#
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
+	<select id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(CN)TOTALCNT
+            FROM
+            	EZHRMASTER.TBLUSERMASTER_RETIRE
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_DB_GETRETIRELIST(#v_PAGE#, #v_ROWPERPAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
+	<select id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
+		<![CDATA[
+			SELECT
+				CN ,
+                DISPLAYNAME ,
+                DISPLAYNAME2 ,
+                DESCRIPTION ,
+                DESCRIPTION2 ,
+                TITLE ,
+                TITLE2 ,
+                EXTENSIONATTRIBUTE10 ,
+                EXTENSIONATTRIBUTE102 ,
+                EXTENSIONATTRIBUTE14 ,
+                REPLACE(SUBSTR(UpdateDT,1,10),'.','') UPDATEDT  
+           FROM
+           		EZHRMASTER.TBLUSERMASTER_RETIRE 
+          WHERE
+          		CN NOT IN ( 	SELECT
+          								CN 
+                              		FROM
+                              			EZHRMASTER.TBLUSERMASTER_RETIRE  
+                              		WHERE
+                              			ROWNUM <= #v_ROWPERPAGE# * (#v_PAGE# - 1) )
+           							AND
+           								ROWNUM <= #v_ROWPERPAGE#
+           							AND
+           								TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
+	<select id="EzOrganAdminDAO.restoreRetireEntry_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+           	FROM
+           		DUAL
+           	WHERE
+           		NOT EXISTS ( 	SELECT
+           								CN 
+                              		FROM
+                              			EZHRMASTER.TBLUSERMASTER 
+                              		WHERE
+                              			CN = #v_CN#
+                              		AND
+                              			TENANT_ID = #v_TENANT_ID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
+		<![CDATA[
+			 INSERT INTO
+			 	EZHRMASTER.TBLUSERMASTER
+           		( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, TENANT_ID )
+           		( 	SELECT
+           				CN ,
+                    	DISPLAYNAME ,
+                    	DISPLAYNAME2 ,
+	                    MAIL ,
+	                    MAILNICKNAME ,
+	                    UPNNAME ,
+	                    DEPARTMENT ,
+	                    DESCRIPTION ,
+	                    DESCRIPTION2 ,
+	                    DESCRIPTION3 ,
+	                    PHYSICALDELIVERYOFFICENAME ,
+	                    COMPANY ,
+	                    COMPANY2 ,
+	                    TITLE ,
+	                    TITLE2 ,
+	                    TELEPHONENUMBER ,
+	                    HOMEPHONE ,
+	                    FACSIMILETELEPHONENUMBER ,
+	                    MOBILE ,
+	                    POSTALCODE ,
+	                    STREETADDRESS ,
+	                    INFO ,
+	                    EXTENSIONATTRIBUTE1 ,
+	                    EXTENSIONATTRIBUTE2 ,
+	                    EXTENSIONATTRIBUTE3 ,
+	                    EXTENSIONATTRIBUTE4 ,
+	                    EXTENSIONATTRIBUTE5 ,
+	                    EXTENSIONATTRIBUTE6 ,
+	                    EXTENSIONATTRIBUTE7 ,
+	                    EXTENSIONATTRIBUTE8 ,
+	                    EXTENSIONATTRIBUTE9 ,
+	                    EXTENSIONATTRIBUTE10 ,
+	                    EXTENSIONATTRIBUTE102 ,
+	                    EXTENSIONATTRIBUTE11 ,
+	                    EXTENSIONATTRIBUTE12 ,
+	                    EXTENSIONATTRIBUTE13 ,
+	                    EXTENSIONATTRIBUTE14 ,
+	                    EXTENSIONATTRIBUTE15 ,
+	                    ADSPATH ,
+	                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') AS UPDATEDT,
+	                    MOBILE_ENABLE ,
+	                    MOBILE_NOTUSE ,
+	                    MOBILE_PIN ,
+	                    SIPURI,
+	                    PASSWORD,
+	                    TENANT_ID
+              			FROM
+              				EZHRMASTER.TBLUSERMASTER_RETIRE 
+              			WHERE
+              				CN = #v_CN#
+              	 )
+		]]>
+	</insert>
+	
+	<delete id="EzOrganAdminDAO.restoreRetireEntry_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				EZHRMASTER.TBLUSERMASTER_RETIRE
+   			WHERE
+   				CN = #v_CN#
+   			AND
+   				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</delete>
+	
+	<statement id="EzOrganAdminDAO.updateUserMaster" parameterClass="Map">
+		<![CDATA[
+			MERGE INTO
+				EZHRMASTER.TBLUSERMASTER 
+   			USING ( SELECT
+   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2, 
+   							TBLDEPTMASTER.EXTENSIONATTRIBUTE3, TBLDEPTMASTER.COMPNM2, TBLDEPTMASTER.EXTENSIONATTRIBUTE2
+   						FROM
+   							EZHRMASTER.TBLUSERMASTER 
+   						JOIN
+   							EZHRMASTER.TBLDEPTMASTER
+   						ON
+   							TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN
+   						AND
+   							TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID	 
+   						WHERE
+   							TBLUSERMASTER.CN = #v_CN#
+   						AND
+   							TBLUSERMASTER.TENANT_ID = #v_TENANT_ID#	) src
+   			ON ( TBLUSERMASTER.ROWID = src.row_id )
+   			WHEN
+   				MATCHED
+   			THEN
+   				UPDATE SET
+   					TBLUSERMASTER.DESCRIPTION = src.DisplayName,
+                    TBLUSERMASTER.DESCRIPTION2 = src.DisplayName2,
+                    TBLUSERMASTER.COMPANY = src.extensionAttribute3,
+                    TBLUSERMASTER.COMPANY2 = src.CompNm2,
+                    TBLUSERMASTER.PHYSICALDELIVERYOFFICENAME = src.extensionAttribute2
+		]]>
+	</statement>
+	
+	<select id="EzOrganAdminDAO.updateUserMaster_S" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				NVL(DISPLAYNAME2, ' ') ,
+          		NVL(TITLE2, ' ') ,
+          		NVL(EXTENSIONATTRIBUTE102, ' ') 
+    		FROM
+    			EZHRMASTER.TBLUSERMASTER 
+    		WHERE
+    			CN = #v_CN#
+    		AND
+    			TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
+	
+	<update id="EzOrganAdminDAO.updateUserMaster_U" parameterClass="OrganUserVO">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLUSERMASTER
+		]]>
+		<isEmpty property="displayName2">
+			<![CDATA[
+				SET DISPLAYNAME2 = #displayName#
+			]]>
+		</isEmpty>
+		<isEmpty property="title2">
+			<![CDATA[
+				SET TITLE2 = #title#
+			]]>
+		</isEmpty>
+		<isEmpty property="extensionAttribute102">
+			<![CDATA[
+				SET EXTENSIONATTRIBUTE102 = #extensionAttribute10#
+			]]>
+		</isEmpty>
+		<![CDATA[
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETUSERINFO_RETIRE(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				CN ,
+             	CASE #v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+             	DISPLAYNAME DISPLAYNAME1  ,
+             	DISPLAYNAME2 ,
+             	MAIL ,
+             	MAILNICKNAME ,
+             	DEPARTMENT ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DESCRIPTION
+                ELSE
+                	DESCRIPTION2
+                END
+                	DESCRIPTION  ,
+             	DESCRIPTION DESCRIPTION1  ,
+             	DESCRIPTION2 ,
+             	PHYSICALDELIVERYOFFICENAME ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	COMPANY
+                ELSE
+                	COMPANY2
+                END
+                	COMPANY  ,
+             	COMPANY COMPANY1  ,
+             	COMPANY2 ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	TITLE
+                ELSE
+                	TITLE2
+                END
+                	TITLE  ,
+             	TITLE TITLE1  ,
+             	TITLE2 TITLE2  ,
+             	TELEPHONENUMBER ,
+             	HOMEPHONE ,
+             	FACSIMILETELEPHONENUMBER ,
+             	MOBILE ,
+             	STREETADDRESS ,
+             	POSTALCODE ,
+             	INFO ,
+             	EXTENSIONATTRIBUTE1 ,
+             	EXTENSIONATTRIBUTE2 ,
+             	EXTENSIONATTRIBUTE3 ,
+             	EXTENSIONATTRIBUTE4 ,
+             	EXTENSIONATTRIBUTE5 ,
+	            EXTENSIONATTRIBUTE6 ,
+	            EXTENSIONATTRIBUTE7 ,
+	            EXTENSIONATTRIBUTE8 ,
+	            EXTENSIONATTRIBUTE9 ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	EXTENSIONATTRIBUTE10
+                ELSE
+                	EXTENSIONATTRIBUTE102
+                END
+                	EXTENSIONATTRIBUTE10  ,
+             	EXTENSIONATTRIBUTE10 EXTENSIONATTRIBUTE101  ,
+             	EXTENSIONATTRIBUTE102 EXTENSIONATTRIBUTE102  ,
+             	EXTENSIONATTRIBUTE11 ,
+             	EXTENSIONATTRIBUTE12 ,
+             	EXTENSIONATTRIBUTE13 ,
+             	EXTENSIONATTRIBUTE14 ,
+             	EXTENSIONATTRIBUTE15 ,
+             	ADSPATH ,
+             	UPDATEDT ,
+             	'user' TYPE  ,
+             	' ' DISPLAYNAMEPRINTABLE  
+        	FROM
+        		EZHRMASTER.TBLUSERMASTER_RETIRE 
+       		WHERE
+       			CN = #v_CN#
+       		AND
+       			TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
 
 	<select id="EzOrganAdminDAO.userCnList" resultMap="userCnList">
 		<![CDATA[
@@ -333,12 +791,12 @@
 	    		ezHrmaster.TBLUSERMASTER a 
 	    	INNER JOIN 
 	    		ezHrmaster.TBLDEPTMASTER b
-	    	ON a.department=b.cn
+	    	ON a.department=b.cn AND a.tenant_id = b.tenant_id
 	    	ORDER BY cn
 	    ]]>    		 				
 	</select>
 	
-	<select id="EzOrganAdminDAO.companyCheck" parameterClass="String" resultClass="int">
+	<select id="EzOrganAdminDAO.companyCheck" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
@@ -348,18 +806,22 @@
      					cn
      				FROM
      					ezHrmaster.TBLUSERMASTER
+     				AND
+     					tenant_id = #v_TENANT_ID#	
      				UNION
      				SELECT 
      					cn
      				FROM
      					ezHrmaster.TBLDEPTMASTER
+     				AND
+     					tenant_id = #tenantID#	
      			 )
       		WHERE  
       			cn = #cn#
 	     ]]> 
 	</select>
 
-	<select id="EzOrganAdminDAO.companyChildCheck" parameterClass="String" resultClass="int">
+	<select id="EzOrganAdminDAO.companyChildCheck" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
@@ -367,10 +829,12 @@
      			ezHrmaster.TBLDEPTMASTER 
       		WHERE  
       			extensionattribute1 = #cn#
+      		AND
+      			tenant_id = #tenantID#	
 	     ]]>
 	</select>
 
-	<select id="EzOrganAdminDAO.userCheck" parameterClass="String" resultClass="int">
+	<select id="EzOrganAdminDAO.userCheck" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
@@ -380,23 +844,29 @@
      					cn
      				FROM
      					ezHrmaster.TBLUSERMASTER
+     				AND
+     					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
      					ezHrmaster.TBLDEPTMASTER
+     				AND
+     					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
      					ezHrmaster.TBLUSERMASTER_RETIRE
+     				AND
+     					tenant_id = #tenantID#	
      			 )
       		WHERE  
       			cn = #cn#
 	     ]]>
 	</select>
 	
-	<select id="EzOrganAdminDAO.userCountCheck" parameterClass="String" resultClass="int">
+	<select id="EzOrganAdminDAO.userCountCheck" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
@@ -404,6 +874,8 @@
      			ezHrmaster.TBLUSERMASTER 
       		WHERE  
       			department = #cn#
+      		AND
+      			tenant_id = #tenantID#	
 	     ]]>
 	</select>
 	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">
@@ -411,7 +883,7 @@
 			UPDATE 
 				ezHrmaster.TBLDEPTMASTER
      		SET
-     			updatedt = sysdate 
+     			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') 
      	]]>		
 		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
 		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>     			
@@ -434,6 +906,8 @@
    		<![CDATA[     			
       		WHERE  
       			cn = #cn#
+      		AND
+      			tenant_id = #tenantId#	
       	]]>		
 	</update>
 	
@@ -442,7 +916,7 @@
 			UPDATE
 				ezHrmaster.TBLUSERMASTER
      		SET
-     			updatedt = sysdate
+     			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
      	]]>	
 		<dynamic>
 	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
@@ -470,6 +944,8 @@
 	  	<![CDATA[
       		WHERE
       			cn = #cn#
+      		AND
+      			tenant_id = #tenantId#	
       	]]>		
 	</update>
 	

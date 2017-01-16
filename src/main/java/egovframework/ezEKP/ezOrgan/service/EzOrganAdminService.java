@@ -29,7 +29,7 @@ public interface EzOrganAdminService {
 	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception;
 
-	public int companyCheck(String cn) throws Exception;
+	public int companyCheck(String cn, int tenantID) throws Exception;
 	
 	public int companyChildCheck(String cn, int tenantID) throws Exception;
 	

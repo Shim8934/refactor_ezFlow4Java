@@ -680,8 +680,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       
 	}
 
-	public int companyCheck(String cn) throws Exception{		
-		return (int) select("EzOrganAdminDAO.companyCheck", cn);
+	public int companyCheck(Map<String, Object> map) throws Exception{		
+		return (int) select("EzOrganAdminDAO.companyCheck", map);
 	}
 
     private int companyChildCheckForJMocha(String cn, int tenantID) throws Exception {
@@ -725,15 +725,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return returnValue;        
     }
 	
-    private int companyChildCheckForLocal(String cn, int tenantID) throws Exception {
-        return (int) select("EzOrganAdminDAO.companyChildCheck", cn);
+    private int companyChildCheckForLocal(Map<String, Object> map) throws Exception {
+        return (int) select("EzOrganAdminDAO.companyChildCheck", map);
     }
 	
 	public int companyChildCheck(String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return companyChildCheckForJMocha(cn, tenantID);
         } else {
-            return companyChildCheckForLocal(cn, tenantID);
+        	Map<String,Object> map = new HashMap<String, Object>();
+        	map.put("cn", cn);
+        	map.put("tenantID", tenantID);
+            return companyChildCheckForLocal(map);
         }       
 	}
 
@@ -778,15 +781,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return returnValue;             
     }
 	
-    private int userCheckForLocal(String cn, int tenantID) throws Exception{
-        return (int) select("EzOrganAdminDAO.userCheck", cn);
+    private int userCheckForLocal(Map<String, Object> map) throws Exception{
+        return (int) select("EzOrganAdminDAO.userCheck", map);
     }
 	
 	public int userCheck(String cn, int tenantID) throws Exception{
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return userCheckForJMocha(cn, tenantID);
         } else {
-            return userCheckForLocal(cn, tenantID);
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	map.put("cn", cn);
+        	map.put("tenantID", tenantID);
+            return userCheckForLocal(map);
         }       
 	}
 	
@@ -838,10 +844,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private int getPermissionListCountForLocal(Map<String, Object> map) throws Exception {
-        select("EzOrganAdminDAO.getPermissionListCount", map);
-        int ret = (int) map.get("v_pCount");
-        
-        return ret;
+        return (int) select("EzOrganAdminDAO.getPermissionListCount", map);
     }
 	
 	public int getPermissionListCount(Map<String, Object> map) throws Exception {
@@ -895,10 +898,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private int getRetireListCountForLocal(Map<String, Object> map) throws Exception {
-        select("EzOrganAdminDAO.getRetireListCount", map);
-        int ret = (int) map.get("v_pCount");
-        
-        return ret;
+        return (int)select("EzOrganAdminDAO.getRetireListCount", map);
     }
 	
 	public int getRetireListCount(Map<String, Object> map) throws Exception {
@@ -1750,15 +1750,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return returnValue;
     }
 	
-    private int userCountCheckForLocal(String cn, int tenantID) {
-        return (int) select("EzOrganAdminDAO.userCountCheck", cn);
+    private int userCountCheckForLocal(Map<String, Object> map) {
+        return (int) select("EzOrganAdminDAO.userCountCheck", map);
     }
 	
 	public int userCountCheck(String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return userCountCheckForJMocha(cn, tenantID);
         } else {
-            return userCountCheckForLocal(cn, tenantID);
+        	Map<String, Object> map = new HashMap<String, Object>();
+        	map.put("cn", cn);
+        	map.put("tenantID", tenantID);
+            return userCountCheckForLocal(map);
         }       
 	}
 	
@@ -1810,5 +1813,26 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         	setUserPrimaryMailForLocal(cn, tenantID, email);
         }
     }
-
+	
+	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.restoreRetireEntry_D", map);
+	}
+	
+	public void updateUserMaster (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateUserMaster", map);
+	}
+	
+	public OrganUserVO updateUserMaster_S (Map<String, Object> map) throws Exception {
+		return (OrganUserVO)select("EzOrganAdminDAO.updateUserMaster_S", map);
+	}
+	
+	public void updateUserMaster_U (OrganUserVO user) throws Exception {
+		update("EzOrganAdminDAO.updateUserMaster_U", user);
+	}
+	
+	public String resotreRetireEntry_S (Map<String, Object> map) throws Exception {
+		return (String)select("EzOrganAdminDAO.restoreRetireEntry_S", map);
+	}
+	
+	
 }
