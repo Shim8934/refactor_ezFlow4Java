@@ -11,6 +11,7 @@
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
 		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezResource/CalendarDataPro_Cross.js"></script>
@@ -90,7 +91,7 @@
 
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
-	        xmlhttp2 = createXMLHttpRequest();
+	       /*  xmlhttp2 = createXMLHttpRequest();
 	        var xmlDom = createXmlDom();
 	        var objNode;
 	        createNodeInsert(xmlDom, objNode, "DATA");
@@ -98,10 +99,52 @@
 
 	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do", true);
 	        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
-	        xmlhttp2.send(xmlDom);
+	        xmlhttp2.send(xmlDom); */
+	        
+	        $.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : true,
+	    		url : "/ezSchedule/scheduleGetHoliday.do",
+	    		data : {
+	    			COMPANYID  : "VIEW"		    			
+	    		},
+	    		success: function(text){
+	    			XmlNodeText = text;
+		            XmlNode = loadXMLString(XmlNodeText);
+		            
+		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+		                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+		                    var issolar;
+		                    var holiday;
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+		                        issolar = "1";
+		                    else
+		                        issolar = "2";
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+		                        holiday = true;			                    
+		                    else
+		                        holiday = false;
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+		                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                    else {                   	
+		                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+		                    }
+		                }
+		            }			            
+		            CalendarView("Calendar");
+	    		}		    		
+	        });
+	        
 	    }
 
-	    function event_schedule_get_holiday() {
+	/*     function event_schedule_get_holiday() {
 	        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
 	            return;
 	        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
@@ -135,11 +178,12 @@
 	            xmlhttp2 = null;
 	            CalendarView("Calendar");
 	        }
-	    }
+	    } */
 
 	    window.onload = function () {
 
-	        schedule_get_holiday();        if (navigator.userAgent.indexOf('Firefox') != -1) {
+	        schedule_get_holiday();     
+	        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            document.body.style.MozUserSelect = 'none';
 	            document.body.style.WebkitUserSelect = 'none';
 	            document.body.style.khtmlUserSelect = 'none';
