@@ -608,8 +608,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		StringBuilder result = new StringBuilder();
 		String realPath = commonUtil.getRealPath(request); 
 		String path = "xml" + commonUtil.separator + "ezApprovalG" + commonUtil.separator + "componentlist_admin.xml";
+		logger.debug("realPath : " + realPath);
+		logger.debug("path : " + path);
+		logger.debug("commonUtil.separator : " + commonUtil.separator);
 		path = realPath + commonUtil.separator + path;
-		
+		logger.debug("||||||||||||||||||||||||||||||");
 		logger.debug("path : " + path);
 		
 		try {
