@@ -335,7 +335,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());		
 		map.put("v_LDAPPATH", "");
 		
-		ezOrganAdminDao.insertDBData_dept(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.insertDBData_dept(map);
+        } else {
+        	//Local일때 프로시저 타는부분이 더 있어서 추가해줌.
+        	ezOrganAdminDao.insertDBData_dept(map);
+        	ezOrganAdminDao.updateDeptMaster(map);
+        }
+		
 	}
 	
 	@Override
