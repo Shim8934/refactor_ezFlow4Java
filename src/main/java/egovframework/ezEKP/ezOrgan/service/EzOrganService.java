@@ -36,7 +36,7 @@ public interface EzOrganService {
 	
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception;
 	
-	public String delProxyUserInfo(String userID) throws Exception;
+	public String delProxyUserInfo(String userID, int tenantID) throws Exception;
 	
 	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception;
 	

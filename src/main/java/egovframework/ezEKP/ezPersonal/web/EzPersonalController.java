@@ -153,7 +153,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 			
 			if (proxyInfo.split(":")[0].trim().equals("")) {
-				result = ezOrganService.delProxyUserInfo(userInfo.getId());
+				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3].replace("/", ":"), proxyInfo.split(":")[4].replace("/", ":"));
 			}

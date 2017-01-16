@@ -1104,10 +1104,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String delProxyUserInfo(String userID) throws Exception {
+	public String delProxyUserInfo(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
-		
+		map.put("v_TENANT_ID", userID);
 		try {
 			ezOrganDAO.delProxyUserInfo(map);
 			
