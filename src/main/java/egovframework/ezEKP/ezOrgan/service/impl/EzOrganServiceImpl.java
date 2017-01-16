@@ -1104,10 +1104,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String delProxyUserInfo(String userID) throws Exception {
+	public String delProxyUserInfo(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
-		
+		map.put("v_TENANT_ID", userID);
 		try {
 			ezOrganDAO.delProxyUserInfo(map);
 			
@@ -1137,9 +1137,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getProxyUserInfo(String userID) throws Exception {
+	public String getProxyUserInfo(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
+		map.put("v_TENANT_ID", tenantID);
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
 		
@@ -1163,8 +1164,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getLastLogin(String userID) throws Exception {
-		return ezOrganDAO.getLastLogin(userID);
+	public String getLastLogin(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return ezOrganDAO.getLastLogin(map);
 	}
 
 }

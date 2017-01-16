@@ -48,18 +48,75 @@
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
 	
-	<procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
+	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
+	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZHRMASTER.TBLDEPTMASTER
+     			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, TENANT_ID )
+     		VALUES
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 1,# v_CN#, #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
 												    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
 		]]>											    
-	</procedure>
+	</procedure> -->
+	
+	<insert id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZHRMASTER.TBLDEPTMASTER
+    			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID )
+     		VALUES
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_TENANT_ID# )
+		]]>
+	</insert>
+	
+	<statement id="EzOrganAdminDAO.updateDeptMaster" parameterClass="Map">
+		<![CDATA[
+			 MERGE INTO
+			 	EZHRMASTER.TBLDEPTMASTER 
+   			USING (
+   				SELECT
+   					EZHRMASTER.TBLDEPTMASTER.ROWID ROW_ID, B.COMPNM2, B.EXTENSIONATTRIBUTE2, B.EXTENSIONATTRIBUTE3, B.Dept_CD_Path || ',' || EZHRMASTER.TBLDEPTMASTER.CN AS pos_5
+   				FROM
+   					EZHRMASTER.TBLDEPTMASTER ,
+   					( SELECT
+   						B.* 
+                      FROM
+                      	EZHRMASTER.TBLDEPTMASTER A
+                      JOIN
+                      	EZHRMASTER.TBLDEPTMASTER B   ON B.CN = A.EXTENSIONATTRIBUTE1 AND A.TENANT_ID = B.TENANT_ID
+                      WHERE
+                      	A.CN = #v_CN#
+                      AND
+                      	A.TENANT_ID = #v_TENANT_ID#
+                      AND
+                      	B.TENANT_ID = #v_TENANT_ID#		 ) B 
+    			WHERE
+    				EZHRMASTER.TBLDEPTMASTER.CN = #v_CN#
+    			AND
+    				TENANT_ID = #v_TENANT_ID#	) src
+    			ON ( EZHRMASTER.TBLDEPTMASTER.ROWID = src.row_id )
+    			WHEN
+    				MATCHED
+    			THEN
+    				UPDATE SET
+    					EZHRMASTER.TBLDEPTMASTER.COMPNM2 = src.CompNm2,
+                        EZHRMASTER.TBLDEPTMASTER.EXTENSIONATTRIBUTE2 = src.extensionAttribute2,
+                        EZHRMASTER.TBLDEPTMASTER.EXTENSIONATTRIBUTE3 = src.extensionAttribute3,
+                        EZHRMASTER.TBLDEPTMASTER.DEPT_CD_PATH = pos_5
+		]]>
+	</statement>
 	
 	<procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
@@ -135,17 +192,90 @@
 		]]>
 	</select>
 	
-	<procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
+	<!-- <procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
+	<select id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				CN ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DESCRIPTION
+                ELSE
+                	DESCRIPTION2
+                END
+                	DESCRIPTION  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	TITLE
+                ELSE
+                	TITLE2
+                END
+                	TITLE  ,
+             	mail ,
+             	TelephoneNumber ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	COMPANY
+                ELSE
+                	COMPANY2
+                END
+                	COMPANY  ,
+             	EXTENSIONATTRIBUTE4 
+        	FROM
+        		EZHRMASTER.TBLUSERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
+       		AND
+       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+       		AND
+       			TENANT_ID = #v_TENANT_ID#	
+      		ORDER BY
+      			DISPLAYNAME
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
+		<![CDATA[
+			SELECT
+				* 
+      		FROM
+      			EZHRMASTER.TBLPROXYINFO 
+      		WHERE
+      			USERID = #v_USERID#
+      		AND
+      			TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
 	
 	<procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[

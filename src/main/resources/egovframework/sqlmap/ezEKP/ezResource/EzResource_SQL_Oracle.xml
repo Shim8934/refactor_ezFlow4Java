@@ -624,11 +624,11 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2  
            	FROM 
-           		EZRESOURCE.TB_Schedule A
+           		EZRESOURCE.TB_SCHEDULE A
 			JOIN
-				EZHRMASTER.TBLUSERMASTER B
+				EZHRMASTER.TBLUSERMASTER B 
 			ON
-				A.writerID = B.CN
+				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -636,7 +636,7 @@
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
-				( A.ownerID = #v_POWNERID#
+				( A.OWNERID = #v_POWNERID#
 					AND
 						PNUM = 0
                    	AND
@@ -754,12 +754,16 @@
 				EZHRMASTER.TBLUSERMASTER B   
 			ON
 				A.writerID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID	
 			JOIN
 				EZRESOURCE.TB_ScheduleRepetition C 
 			ON 
 				A.ownerID = C.ownerID
 			AND
 				A.num = C.num
+			AND
+				A.TENANT_ID = C.TENANT_ID	
 			WHERE
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -822,6 +826,8 @@
         		EZRESOURCE.TBLBRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID
+			AND
+				SCH.TENANT_ID = BRD.TENANT_ID	
         	WHERE
         		STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND 
@@ -899,6 +905,8 @@
 				EZHRMASTER.TBLUSERMASTER B  
 			ON
 				A.WRITERID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID	
         	WHERE
         		COMPANYID = #v_PCOMPANYID#
 			AND
@@ -2000,6 +2008,8 @@
 				B.ownerID = C.ownerID
 			AND
 				B.num = C.num
+			AND
+				B.TENANT_ID = C.TENANT_ID	
        		WHERE
        			B.companyID = #v_p_companyID#
 			AND
@@ -2058,6 +2068,8 @@
 				EZRESOURCE.TB_SCHEDULEREPETITION C 
 			ON
 				B.ownerID = C.ownerID
+			AND
+				B.TENANT_ID = C.TENANT_ID	
 			AND
 				( B.num = C.num
 			OR

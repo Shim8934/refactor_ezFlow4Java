@@ -1,11 +1,14 @@
 package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -954,6 +957,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private void insertDBData_companyForLocal(Map<String, Object> map) throws Exception {
+    	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	date.setTimeZone(TimeZone.getTimeZone("GMT"));
+    	String nowDate = date.format(new Date());
+    	map.put("nowDate", nowDate);
         insert("EzOrganAdminDAO.insertDBData_company", map);
     }
 	
@@ -1028,6 +1035,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private void insertDBData_deptForLocal(Map<String, Object> map) throws Exception {
+    	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	date.setTimeZone(TimeZone.getTimeZone("GMT"));
+    	String nowDate = date.format(new Date());
+    	map.put("nowDate", nowDate);
         insert("EzOrganAdminDAO.insertDBData_dept", map);
     }
 	
@@ -1182,6 +1193,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
     private void updateDBData_deptForLocal(OrganDeptVO vo) throws Exception {
         update("EzOrganAdminDAO.updateDBData_dept", vo);
+    }
+    
+    public void updateDeptMaster(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.updateDeptMaster", map);
     }
 	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
