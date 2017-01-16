@@ -2504,9 +2504,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                }
 			                	            	
 			            	//보낸편지함에 저장
-			        		Folder sendFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+			        		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			        		Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
-			        		draftFolder.copyMessages(new Message[]{draftMessage}, sendFolder);
+			        		draftFolder.copyMessages(new Message[]{draftMessage}, sentFolder);
 			        		draftMessage.setFlag(Flags.Flag.DELETED, true);
 			            }
 			            
