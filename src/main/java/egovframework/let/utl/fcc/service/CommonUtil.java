@@ -178,7 +178,7 @@ public class CommonUtil {
 		}
 	}
 	
-	public LoginSimpleVO userInfoSimple(String loginCookie){
+	public LoginSimpleVO userInfoSimple(String loginCookie) {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 

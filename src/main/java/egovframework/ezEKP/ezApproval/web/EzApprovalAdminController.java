@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -2040,11 +2041,18 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재 일반 관리자 양식등록 양식추가/수정 호출
 	 */
-	@RequestMapping(value = "/admin/ezApproval/formMain.do")
+	@RequestMapping(value = {"/admin/ezApproval/formMain.do", "/admin/ezApproval/formMainOther.do"})
 	public String formMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("formMain started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		
+		if (requestURL.indexOf("formMain.do") > -1) {
+			requestURL = "admin/ezApproval/apprFormMain";
+		} else {
+			requestURL = "admin/ezApproval/apprFormMainOther";
+		}
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "main/warning";
@@ -2123,7 +2131,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 
 		logger.debug("formMain ended");
 		
-		return "admin/ezApproval/apprFormMain";
+		return requestURL;
 	}
 	
 	/**
@@ -2323,4 +2331,13 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/admin/ezApproval/hwpEditor.do")
+	public String hwpEditor() throws Exception {
+		logger.debug("hwpEditor started");
+		logger.debug("hwpEditor ended");
+		
+		return "admin/ezApproval/apprHwpEditor";
+	}
+	
 }
