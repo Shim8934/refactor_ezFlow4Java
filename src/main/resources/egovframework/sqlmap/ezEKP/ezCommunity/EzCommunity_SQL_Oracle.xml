@@ -23,6 +23,7 @@
 	<typeAlias alias="CommunityCOutApplicationVO"		type="egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO"/>
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
+	<typeAlias alias="LoginVO"							type="egovframework.let.user.login.vo.LoginVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -2231,9 +2232,24 @@
 				EZCOMMUNITY.$v_BNAME$
 			WHERE
 				TENANT_ID = #tenantID#
-			ORDER BY
-				NO DESC
 		]]>
+		
+		<isNotEqual property="v_BNAME" compareValue="">
+			<isNotEqual property="v_BNAME" compareValue="">
+				ORDER BY REF DESC,STEP ASC
+			</isNotEqual>
+			<isEqual property="v_BNAME" compareValue="">
+				ORDER BY REF DESC,STEP ASC
+			</isEqual>
+		</isNotEqual>
+		<isEqual property="v_BNAME" compareValue="">
+			<isNotEqual property="v_BNAME" compareValue="">
+				ORDER BY REF DESC,STEP ASC
+			</isNotEqual>
+			<isEqual property="v_BNAME" compareValue="">
+				ORDER BY NO DESC
+			</isEqual>
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.copHomeBoardGet"				parameterClass="String"		resultClass="CommunityBoardInfoVO"> -->
@@ -3102,64 +3118,65 @@
 <!-- 	<procedure id="EzCommunityDAO.getClubCHK"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GETCLUB_CHK(#v_PUSERID#, #iv_PCLUBNO#, #v_PBOARDID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.getClubCHK"						parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.getClubCHKGet1"		parameterClass="Map"	resultClass="Integer">
 		<![CDATA[
 			SELECT
-				"1" as "open",
-  				"user"
+				NVL(COUNT(C_CLUBNO), 0)
 			FROM
-  				EZCOMMUNITY.C_Club
-			LEFT JOIN
-  				(	SELECT
-      					"1" as "user",
-      					C_CLUBNO
-    				FROM
-      					EZCOMMUNITY.C_CLUBUSER
-    				WHERE
-      					C_ID = #v_PUSERID#
-    				AND
-    	]]>
-    	
-    	<isEqual property="v_PBOARDID" compareValue="">
-    		RTRIM(C_ClubUser.C_CLUBNO) = #v_PCLUBNO#
-    	</isEqual>
-    	<isNotEqual property="v_PBOARDID" compareValue="">
-   			C_ClubUser.C_CLUBNO = (	SELECT
-										C_CLUBNO
-                             		FROM
-										EZCOMMUNITY.TBL_COMM_BOARDINFO
-									WHERE
-										BOARDID = #v_PBOARDID#
-									AND
-										TENANT_ID = #tenantID#
-                             	   )
-    	</isNotEqual>
-    	
-    	<![CDATA[
-				) USER
-			ON
-  				C_Club.c_CLUBNO = USER.c_CLUBNO
+				EZCOMMUNITY.C_CLUBUSER 
 			WHERE
-				C_CLUBGUBUN = '2'
-     		AND
-     			C_Club.TENANT_ID = #tenantID#
-     		AND
-    	]]>
-    	
-     	<isEqual property="v_PBOARDID" compareValue="">
-    		RTRIM(C_ClubUser.C_CLUBNO) = #v_PCLUBNO#
-    	</isEqual>
+				C_ID = #v_PUSERID#
+		]]>
+    	<isEqual property="v_PBOARDID" compareValue="">
+    		AND
+				C_CLUBNO = #v_PCLUBNO#
+		</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
-   			C_Club.C_CLUBNO = (	SELECT
-									C_CLUBNO
-								FROM
-									EZCOMMUNITY.TBL_COMM_BOARDINFO 
-								WHERE
-									BOARDID = #v_PBOARDID#
-								AND
-									TENANT_ID = #tenantID#
-                              )
+    		AND
+    			C_CLUBNO = (SELECT
+								C_CLUBNO
+							FROM
+								EZCOMMUNITY.TBL_COMM_BOARDINFO 
+							WHERE
+								BOARDID = #v_PBOARDID#
+							AND
+								TENANT_ID = #tenantID#)
 		</isNotEqual>
+		<![CDATA[
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.getClubCHKGet2"		parameterClass="Map"	resultClass="Integer">
+		<![CDATA[
+	    	SELECT
+	    		NVL(COUNT(C_CLUBNO), 0)
+			FROM
+				EZCOMMUNITY.C_CLUBUSER
+			WHERE
+				C_ID = #v_PUSERID#
+		]]>
+			
+		<isEqual property="v_PBOARDID" compareValue="">
+    		AND
+				C_CLUBNO = #v_PCLUBNO#
+		</isEqual>
+    	<isNotEqual property="v_PBOARDID" compareValue="">
+    		AND
+    			C_CLUBNO = (SELECT
+								C_CLUBNO
+							FROM
+								EZCOMMUNITY.TBL_COMM_BOARDINFO 
+							WHERE
+								BOARDID = #v_PBOARDID#
+							AND
+								TENANT_ID = #tenantID#)
+		</isNotEqual>
+		<![CDATA[
+			AND
+				TENANT_ID = #tenantID#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.commHomeGet1"					parameterClass="Map"		resultClass="String"> -->
@@ -6596,4 +6613,30 @@
 		]]>
 	</delete>
 	
+	<select id="EzCommunityDAO.joinOkSendMailGet1"				parameterClass="Map"	resultClass="String">
+		<![CDATA[
+			SELECT
+				TRIM(c_sysopID)
+			FORM
+				EZCOMMUNITY.C_CLUB
+			WHERE
+				TRIM(c_clubno) = TRIM(#code#)
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.joinOkSendMailGet2"				parameterClass="Map"	resultClass="LoginVO">
+		<![CDATA[
+			SELECT
+				displayname$v_userInfo_lang$ displayName,
+				mail email
+			FROM
+				EZHRMASTER.TBLUSERMASTER
+			WHERE
+				cn = TRIM(#clubMasterID#)
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 </sqlMap>

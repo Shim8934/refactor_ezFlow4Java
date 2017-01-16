@@ -128,13 +128,13 @@
 		        document.getElementById('progdiv').style.display = "none";
 		        window.parent.returnvalue(xhr.responseText);
 		        
-		        if (CrossYN()) {
-		            document.getElementById("file").value = "";
-		        }
-		        else {
-		            document.getElementById("file").type = "text";
-		            document.getElementById("file").type = "file";
-		        }
+// 		        if (CrossYN()) {
+// 		            document.getElementById("file").value = "";
+// 		        }
+// 		        else {
+// 		            document.getElementById("file").type = "text";
+// 		            document.getElementById("file").type = "file";
+// 		        }
 		        
 		        var strRet = "";
 		        var pBoardID = window.parent.pBoardID;

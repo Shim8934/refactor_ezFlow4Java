@@ -4,12 +4,12 @@ import java.util.List;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO;
 
 public interface EzScheduleInfo {
 	UserLocalInfoVO		GetUserLocalInfo(String pUserID);
-	List<ScheduleGroupListVO>	GetScheduleGroupList(String pUserID);
+	
 	List<ScheduleGmailInfoVO>	GetScheduleGmailInfo(String pUserID);
+	
 	ScheduleConfigVO	GetConfigInfo(String pUserID);
 }

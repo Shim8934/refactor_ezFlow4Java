@@ -2348,14 +2348,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PBOARDID", boardID);
 		map.put("tenantID", tenantID);
 		
-		List<String> list = ezCommunityDAO.getClubCHK(map);
-		
 		String result = "";
 		
-		if (list.get(0).equals("1")) {
+		int temp = ezCommunityDAO.getClubCHKGet1(map);
+		
+		if (temp != 0) {
 			result = "1";
 		} else {
-			if (list.get(1).equals("1")) {
+			temp = ezCommunityDAO.getClubCHKGet2(map);
+			
+			if (temp != 0) {
 				result = "2";
 			} else {
 				result = "3";
@@ -6862,6 +6864,54 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 	
+	@Override
+	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception {
+		logger.debug("joinOkSendMail started.");
+		
+		int tenantID = userInfo.getTenantId();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", clubVO.getC_ClubNo());
+		map.put("tenantID", tenantID);
+		
+		String clubMasterID = ezCommunityDAO.joinOkSendMailGet1(map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("clubMasterID", clubMasterID);
+		map2.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+		map2.put("tenantID", tenantID);
+		
+		LoginVO vo = ezCommunityDAO.joinOkSendMailGet2(map2);
+		
+		if (vo.getEmail() != null) {
+			String subject = "";
+			String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">";
+			if (clubVO.getC_ClubConfirmType().equals("3")) {
+				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				bodyContent += "<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t1533", userInfo.getLocale());
+			} else {
+				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+			}
+        	
+        	bodyContent += "</DIV>";
+        
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(vo.getDisplayName(), "UTF-8");
+        	to.setAddress(vo.getEmail());
+        	
+        	logger.debug("from = " + userInfo.getEmail());
+        	logger.debug("to = " + vo.getEmail());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        }
+		
+		logger.debug("joinOkSendMail ended.");
+	}
+	
 	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
 		logger.debug("commOutOkSendMail started.");
 		
@@ -6889,4 +6939,34 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         
         logger.debug("commOutOkSendMail ended.");
 	}
+
+	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {
+		/*logger.debug("okNoSetSendMail started.");
+		
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_code", code);
+        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+        map.put("tenantID", userInfo.getTenantId());
+        
+        CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
+        
+        if (vo.getEmail() != null) {
+        	String subject = "[" + vo.getC_ClubName() + "] Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
+        	String bodyContent = "[" + vo.getC_ClubName() + "] " + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(vo.getUserName(), "UTF-8");
+        	to.setAddress(vo.getEmail());
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        }
+        
+        logger.debug("okNoSetSendMail ended.");*/
+	}
+	
+	
 }

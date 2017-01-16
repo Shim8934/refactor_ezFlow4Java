@@ -1,143 +1,27 @@
-﻿var g_PropertyWidth = 140;  
-var g_XmlDoc;
+﻿var g_ctlEditInput; 
 var g_ctlSelect;    
-function btnCancel_click() {
-    var tdElement;
-    if (getNodeText(BottonTDValue[1]) == "fixRecv") {
-        pzFormProc.editor.DOM.body.removeAttribute("fixRecv");
-        document.getElementById("EditInput").value = "";
-        return;
-    }
-
-    if (pzFormProc.CurSelElement.tagName == "TABLE" || pzFormProc.CurSelElement.tagName == "SELECT" || pzFormProc.CurSelElement.tagName == "INPUT") {
-        tdElement = pzFormProc.CurSelElement;
-    }
-    else {
-        tdElement = pzFormProc.CurTDElement;
-    }
-
-    if (tdElement) {
-        tdElement.removeAttribute("classname", 0);
-        tdElement.removeAttribute("id", 0);
-        pzFormProc.SetCheckFieldForAdmin(false, tdElement);
-    }
-}
-
-function onCtlSelectChange() {
-    switch (g_ctlSelect.selectedIndex) {
-        case 2:
-        case 3:
-            document.getElementById("EditInput").disabled = false;
-            break;
-
-        default:
-            document.getElementById("EditInput").disabled = true;
-            document.getElementById("EditInput").value = "";
-            break;
-    }
-}
 
 function btnApply_click() {
-    var curElement = pzFormProc.CurSelElement;   
     switch (g_ctlSelect.selectedIndex) {
         case 0:
-            {
-                var tdElement;
-                if (pzFormProc.CurSelElement.tagName == "TABLE" || pzFormProc.CurSelElement.tagName == "SELECT" || pzFormProc.CurSelElement.tagName == "INPUT") {
-                    tdElement = pzFormProc.CurSelElement;
-                }
-                else {
-                    tdElement = pzFormProc.CurTDElement;
-                }
-
-                if (tdElement) {
-                    tdElement.className = getNodeText(BottonTDValue[0]);
-                    tdElement.id = getNodeText(BottonTDValue[1]) + EditInput.value;
-                    pzFormProc.SetCheckFieldForAdmin(true, tdElement);
-                }
-            }
+            if(pEditorType == "HWP")
+                message.SetAttribute(getNodeText(BottonTDValue[1]));
+            else
+                message.SetAttribute("INS", getNodeText(BottonTDValue[1]) + EditInput.value, "FIELD");
             break;
-
         case 1:
-            {
-                if (curElement.tagName == "SELECT") {
-                    var selectVar = getNodeText(BottonTDValue[1]);
-                    if (document.getElementById("EditInput").disabled == false) {
-                        selectVar += document.getElementById("EditInput").value
-                    }
-                    curElement.className = getNodeText(BottonTDValue[0]);
-                    curElement.id = selectVar;
-                }
-                else {
-                    var str = "<select class=";
-                    str += getNodeText(BottonTDValue[0]);
-                    str += " id=";
-                    str += getNodeText(BottonTDValue[1]);
-                    str += "></select>";
-                    pzFormProc.InnerHTML(str);
-                }
-            }
             break;
-
         case 2:
-            {
-                if (curElement.tagName == "INPUT" && curElement.type == "checkbox") {
-                    var selectVar = getNodeText(BottonTDValue[1]);
-                    if (document.getElementById("EditInput").disabled == false) {
-                        selectVar += document.getElementById("EditInput").value
-                    }
-                    curElement.className = getNodeText(BottonTDValue[0]);
-                    curElement.id = selectVar;
-                }
-                else {
-                    if (!document.getElementById("EditInput").value) {
-                        alert(strLang405);
-                        document.getElementById("EditInput").focus();
-                        return;
-                    }
-                    var str = "<INPUT type=checkbox class=";
-                    str += getNodeText(BottonTDValue[0]);
-                    str += " id=";
-                    str += getNodeText(BottonTDValue[1]);
-                    str += " value=";
-                    str += document.getElementById("EditInput").value;
-                    str += ">";
-                    pzFormProc.InnerHTML(str);
-                }
-            }
             break;
-
         case 3:
-            {
-                if (curElement.tagName == "INPUT" && curElement.type == "radio") {
-                    curElement.className = getNodeText(BottonTDValue[0]);
-                    curElement.id = getNodeText(BottonTDValue[1]) + document.getElementById("EditInput").value;
-                }
-                else {
-                    if (!document.getElementById("EditInput").value) {
-                        alert(strLang405);
-                        document.getElementById("EditInput").focus();
-                        return;
-                    }
-
-                    var str = "<INPUT type=radio class=";
-                    str += getNodeText(BottonTDValue[0]);
-                    str += " id=";
-                    str += getNodeText(BottonTDValue[1]);
-                    str += " value=";
-                    str += document.getElementById("EditInput").value;
-                    str += ">";
-                    pzFormProc.InnerHTML(str);
-                }
-            }
             break;
-
-        case 4:    
-            {
-                pzFormProc.InnerHTML("<hr>");
-            }
+        case 4:
             break;
     }
+}
+
+function btnCancel_click() {
+    message.SetAttribute("DEL", "", "");
 }
 
 var BeforeClickID = "";
@@ -145,14 +29,11 @@ function fnValueClick() {
     if (BottonTDValue.length) {
         var parentTR = window.event.srcElement.parentElement;
 
-        if (BeforeClickID == "") {
-            if(GetAttribute(parentTR.cells[0], "ID") != "")
-                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
-        }
+        if (BeforeClickID == "")
+            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
         else {
             document.getElementById(BeforeClickID).style.backgroundColor = "#fff";
-            if (GetAttribute(parentTR.cells[0], "ID") != "")
-                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
+            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
         }
 
         BeforeClickID = GetAttribute(parentTR.cells[0], "ID");
@@ -168,16 +49,16 @@ function fnValueClick() {
         }
         else {
             EditInput.disabled = true;
-
+            
             g_ctlSelect.disabled = false;
             EditInput.disabled = true;
             g_ctlSelect.selectedIndex = 0;
         }
     }
 }
-  
+
 var xmlpara = createXmlDom();
-function add_doc_maker(companyID) {
+function add_doc_maker() {
 	var result = "";
 	
 	$.ajax({
@@ -192,12 +73,13 @@ function add_doc_maker(companyID) {
 			result = text;
 		}
 	});
-
+	
     if (result != "") {
-    	xmlpara = loadXMLString(result);
+        xmlpara = loadXMLString(result);
         PROPERTY_TABLEINIT();
     }
 }
+
 function PROPERTY_TABLEINIT() {
     var ROOTTD = document.getElementById('rootTD');
     var TABLE = document.createElement("TABLE");
@@ -211,7 +93,7 @@ function PROPERTY_TABLEINIT() {
     TABLE.border = 0;
     TABLE.cellPadding = 0;
     TABLE.cellSpacing = 0;
-
+    
     TD_1.style.verticalAlign = "top";
     TD_1.style.height = "613px";
 
@@ -283,7 +165,7 @@ function createNewSubTable(newSubTd, node) {
     TABLE.width = "100%";
     TABLE.border = 0;
     TABLE.cellPadding = 0;
-    TABLE.cellSpacing = 0;
+    TABLE.cellSpacing = 0;    
     newSubTd.appendChild(TABLE);
     TABLE.appendChild(TBODY);
 
@@ -315,10 +197,10 @@ function fnMouseOut() {
     this.style.backgroundColor = "";
 }
 
-function showHideSubTable() {
+function showHideSubTable() {    
     var nextElement = window.event.srcElement.parentElement.nextSibling;
     click_TR = window.event.srcElement.parentElement.id;
-
+    
     if (nextElement.style.display == "none") {
         nextElement.style.display = "";
     }
@@ -401,7 +283,6 @@ function BottomPropertyTable(parentTD) {
     newSpan.className = "inputLayout";
     newSpan.appendChild(newEditInput);
     newEditTd2.width = "100%";
-    newEditTd2.style.textAlign = "center";
     newEditTd2.appendChild(newSpan);
 
     newEditTd1.style.textAlign = "center";
@@ -436,107 +317,20 @@ function BottomPropertyTable(parentTD) {
     rootBottom = parentTD;
 }
 
-function window_onload() {
-    var img = document.images
-    var len = img.length;
-    var i;
-
-    for (i = 0; i < len; i++) {
-        var imgItem = img(i);
-        imgItem.ondragstart = imgDragStart;
-    }
-
-    pzFormProc.setExpression("width", "fnResize()");
-    button();
-}
-
-function imgDragStart() {
-    return false;
-}
-
-var flag = false;
-function pzFormProc_DocumentComplete() {
-    if (flag == false) {
-        flag = true;
-    }
-}
-
-function pzFormProc_FPError() {
-
-}
-
-function pzFormProc_InvalidDocument() {
-    alert("This Document isn't ezFlow200-Document");
-}
-
-function fnResize() {
-    var reSize;
-    reSize = parseInt(document.body.all.TForm.width) - 10;
-
-    if (rootTD.style.display == "block") {
-        reSize -= g_PropertyWidth;
-    }
-    return reSize;
-}
-
-function pzFormProc_ElementKeyEvent(nKey) {
-}
-
-function pzFormProc_ElementChange(oldElement) {
-    if (BottonTDValue.length) {
-        var tdElement
-        var tempElement = pzFormProc.CurSelElement;
-        tdElement = pzFormProc.CurTDElement;
-
-        g_ctlSelect.disabled = true;
-
-        if (!tdElement) {
-            setNodeText(BottonTDValue[1]," ");
-            setNodeText(BottonTDValue[2]," ");
-            document.getElementById("EditInput").value = "";
-            return;
-        }
-
-        if (tdElement.className)
-            setNodeText(BottonTDValue[0],tdElement.className);
-        else
-            setNodeText(BottonTDValue[0]," ");
-
-        if (tdElement.id) {
-            setNodeText(BottonTDValue[1],tdElement.id);
-        }
-        else {
-            setNodeText(BottonTDValue[1]," ");
-        }
-
-        setNodeText(BottonTDValue[2]," ");
-
-        if (tdElement.value) {
-            document.getElementById("EditInput").value = tdElement.value;
-        }
-        else {
-            document.getElementById("EditInput").value = "";
-        }                
-        document.getElementById("EditInput").disabled = true;        
-    }
-}
-
 function DrawAutoAprLine(ret, pDraftFlag, sn) {
-
-    var SignCnt = 0; 
-    var HapyCnt = 0; 
-    var SSignCnt = 0; 
-    var SHapyCnt = 0; 
+    var SignCnt = 0;
+    var HapyCnt = 0;
+    var SSignCnt = 0;
+    var SHapyCnt = 0;
     var SignHTML = "";
     var HapyHTML = "";
     var SSignHTML = "";
     var SHapyHTML = "";
-    var pFormTagName = new Array();  
+    var pFormTagName = new Array();
     var i, j, p, k, z;
     var xmldom = createXmlDom();
     xmldom.loadXML(ret);
 
-    
     var susinSN = "1";
     var Recv = "";
 
@@ -545,7 +339,6 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
         Recv = sn + "Recv";
     }
 
-    
     var nodeName = "PROCESSOR/FLOW/APRLINES" + susinSN + "/APRLINE";
     objNodes = xmldom.selectNodes(nodeName);
     FormProc = pzFormProc.object;
@@ -555,12 +348,12 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     for (i = 0; i < count; i++) {
         var KyljeaType = getNodeText(objNodes.item(i).childNodes(1));
 
-        
+
         if (KyljeaType == "A03001" || KyljeaType == "A03003" || KyljeaType == "A03004" || KyljeaType == "A03015" || KyljeaType == "A03040") {
             SignCnt = SignCnt + 1;
         }
 
-        
+
         if (KyljeaType == "A03008" || KyljeaType == "A03009" || KyljeaType == "A03011" || KyljeaType == "A03012") {
             HapyCnt = HapyCnt + 1;
         }
@@ -574,14 +367,14 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
     var tempLen2 = parseInt(HapyCnt / 10);
     HapyLen = (HapyCnt % 10 > 0) ? tempLen2 + 1 : tempLen2;
 
-    
+
     field = fields.Item(Recv + "AprLine");
     if (field && SignCnt > 0) {
-        
+
         if (Recv != "")
-            pFormTagName[0] = "<P align=center>" + strLangyj12 + "</P><P align=center>" + strLangyj13 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
+            pFormTagName[0] = "<P align=center>수</P><P align=center>신</P><P align=center>결</P><P align=center>재</P>";
         else
-            pFormTagName[0] = "<P align=center>" + strLangyj16 + "</P><P align=center>" + strLangyj17 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
+            pFormTagName[0] = "<P align=center>기</P><P align=center>안</P><P align=center>결</P><P align=center>재</P>";
 
         pFormTagName[1] = "18";
 
@@ -596,7 +389,7 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                 z = SignCnt;
             }
 
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLangyj11 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {
@@ -613,14 +406,6 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
                             else
                                 strHTML += "&nbsp;</TD>";
                             break;
-                            
-                            
-
-                            
-                            
-                            
-                            
-                            
                         case "2":
                             strHTML += "<TD class='FIELD' id='" + sn + "sign" + j + "' vAlign='middle' align='center' width='64' height='50'>";
 
@@ -655,22 +440,22 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
 
     }
 
-    
+
     if (field && SignCnt <= 0) {
         field.TagObject.innerHTML = "&nbsp;";
     }
 
-    
+
     field = fields.Item(Recv + "AprHapuiLine");
 
-    
+
     if (field && HapyCnt <= 0) {
         field.TagObject.innerHTML = "&nbsp;";
     }
 
     if (field && HapyCnt > 0) {
-        
-        pFormTagName[0] = "<P align=center>" + strLangyj18 + "</P><P align=center>" + strLangyj19 + "</P><P align=center>" + strLangyj14 + "</P><P align=center>" + strLangyj15 + "</P>";
+
+        pFormTagName[0] = "<P align=center>합</P><P align=center>의</P><P align=center>결</P><P align=center>재</P>";
         pFormTagName[1] = "18";
 
 
@@ -683,8 +468,8 @@ function DrawAutoAprLine(ret, pDraftFlag, sn) {
             if (p >= HapyLen) {
                 z = HapyCnt;
             }
-            
-            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:" + strLangyj11 + "; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
             for (i = 1; i <= 3; i++) {
                 strHTML += "<TR>";
                 for (j = k; j <= z; j++) {

@@ -55,6 +55,7 @@
 	            
 			}
 			
+			//호출하는곳X
 			function sendMail( toMailAddr, userDispName, fromMailAddr, fromDipName ) {
 				toEmail = "\"" + userDispName + "\"" + " <" + toMailAddr + ">";
 				url = "/eoffice/owa/email/newMail.aspx?cmd=new&MsgTo=" + toEmail + "&draftpath=" + g_draftpath + "&outboxpath=" + g_outboxpath;
@@ -62,7 +63,6 @@
 				var feature = "height = 566px, width = 552px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
 				feature = feature + GetOpenPosition(552, 566);
 				toMail = window.open(url, "sendMail", feature);
-				
 			}
 			
 			function keyword_onkeydown(e) {

@@ -67,6 +67,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2742,6 +2743,12 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardItem == null) {
         	return "main/warning";
         }
+        
+        boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
+        boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
+        boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
+        
+        
         ezBoardService.setAsRead(userInfo, boardID, itemID);
         
         if (boardItem.getApprFlag() != null && boardItem.getApprFlag().equals("N")) {
@@ -2760,7 +2767,7 @@ public class EzBoardController extends EgovFileMngUtil{
             pReservedItem = "true";
         }
         if (EgovDateUtil.getDaysDiff(boardItem.getParentWriteDate().substring(0,10), boardItem.getWriteDate().substring(0,10)) < 0) {
-            boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
+            boardItem.setWriteDate(boardItem.getParentWriteDate());
         }
 
         if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
@@ -3198,8 +3205,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 
 		if (!pMode.equals("copy")) {
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
-			boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("reply")) {
+				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
+				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
+				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		} else {
 			boardListVO.setParentWriteDate(commonUtil.getTodayUTCTime(""));
 		}
@@ -6418,8 +6430,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/getImagePortletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginSimpleVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String pBoardType = xmlDom.getElementsByTagName("pBoardType").item(0).getTextContent();
@@ -6482,7 +6494,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getItemInfo started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
@@ -6502,7 +6514,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, HttpServletRequest request) throws Exception {
 		logger.debug("getItemAttachments started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
 		
 		boardItemVO.setTenantID(userInfo.getTenantId());
@@ -6526,8 +6538,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 게시알림 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendPostNotiMail.do")
-	@ResponseBody
-	public String sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public void sendPostNotiMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("sendPostNotiMail started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -6574,7 +6585,6 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 		
 		logger.debug("sendPostNotiMail ended.");
-		return "";
 	}
 	
 	/**
@@ -6585,7 +6595,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getItemViewNew started.");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
@@ -6601,7 +6611,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 답변알림 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendReplyNoticeMail.do")
-	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendReplyNoticeMail started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -6652,7 +6662,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("sendReplyNoticeMail ended");
 	}
 	
-	public void sendApprnoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	/**
+	 * 게시판 전자결재관련 메일전송 실행 Method
+	 */
+	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do")
+	public void sendApprnoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendApprnoticemail started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);

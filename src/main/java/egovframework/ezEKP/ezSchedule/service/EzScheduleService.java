@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezSchedule.service;
 
 import java.util.List;
 
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
@@ -11,22 +10,55 @@ import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 
 
 public interface EzScheduleService {
-	List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany) throws Exception;
-	ScheduleConfigVO getScheduleConfig(String userId) throws Exception;
-	ScheduleInfoVO getScheduleInfo(String scheduleId) throws Exception;
-	List<AttendantListVO> getAttendantList(String scheduleId) throws Exception;
-	List<AttachListVO> getAttachList(String scheduleId) throws Exception;
-	List<PubScheHqVO> getPublicScheduleHq(String userId) throws Exception;
-	List<PubScheSecVO> getPublicScheduleSec(String userId, String lang) throws Exception;
-	List<PubScheDeptVO> getPublicScheduleDept(String userId, String lang) throws Exception;
-	List<PubScheCumulerVO> getPublicScheduleCumuler(String userId, String lang) throws Exception;
+	
+	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany) throws Exception;
+	
+	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
+	
+	public ScheduleInfoVO getScheduleInfo(String scheduleId) throws Exception;
+	
+	public List<AttendantListVO> getAttendantList(String scheduleId) throws Exception;
+	
+	public List<AttachListVO> getAttachList(String scheduleId) throws Exception;
+	
+	public List<PubScheHqVO> getPublicScheduleHq(String userId) throws Exception;
+	
+	public List<PubScheSecVO> getPublicScheduleSec(String userId, String lang) throws Exception;
+	
+	public List<PubScheDeptVO> getPublicScheduleDept(String userId, String lang) throws Exception;
+	
+	public List<PubScheCumulerVO> getPublicScheduleCumuler(String userId, String lang) throws Exception;
+	
 	public int getNewScheduleId() throws Exception;
+	
 	public int getReceiveCount (String pUserId) throws Exception;
+	
 	public int getInviteScheduleGroupCnt (String pUserId) throws Exception;
 
 	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception;
+
+	public String getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID) throws Exception;
+	
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userId) throws Exception;
+
+	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId) throws Exception;
+	
+	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId) throws Exception;
+
+	public String getMyGroupMemberList(String groupId, String lang, int tenantId) throws Exception;
+
+	public void deleteScheduleGroup(String groupId, int tenantId) throws Exception;
+
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	int tenantId, String offSetMin) throws Exception;
+
+	public void deleteScheduleMember(String groupId, String memberId, int tenantId) throws Exception;
+
+	public void updateScheduleMember(String groupId, String memberId, String status, int tenantId) throws Exception;
+
+	
 }

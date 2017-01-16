@@ -18,11 +18,12 @@
 	        var OrderCell = "";
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
-	        var DocID, pURL, jobState = "";
+	        var DocID, pURL
+	        var jobState = "APPROVAL";
 	        var pChackYN = "FALSE";
 	        var g_tagSelectsub = "1";
-	        var NodeList2, pageSize = 10, ListViewNode, Block_Size, pTotalCnt = "";
-	        var NodeList, curpage, nowblock, totalPage, totalPages, block, p_page, p_nowblock, NodeListLen;
+	        var pageSize = 10, Block_Size, pTotalCnt = "";
+	        var curpage, totalPage, block, p_page, NodeListLen;
 	        var pageNum = "1";
 	        var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 	        var SearchCond = new Array();
@@ -39,7 +40,6 @@
 	            var height = parseInt(divList.style.height.replace('px', '')) + 200;
 	            var reheight = document.documentElement.clientHeight - parseInt(height);
 	            document.getElementById('div_AprLine').style.height = reheight + "px";
-	
 	            document.getElementById("SCompID").value = pCompanyID;
 	            GetDocList();
 	        });
@@ -81,13 +81,7 @@
 	                for (var i = 0; i < 20; i++) {
 	                    SearchCond[i] = "";
 	                }
-	                //curpage = 1;
-	                //nowblock = 0;
-	                //totalPage = 0;
 	            } else if (pChackYN == "SEARCH") {
-	                //curpage = 1;
-	                //nowblock = 0;
-	                //totalPage = 0;
 	            }
 	            
 	            $.ajax({
@@ -138,20 +132,30 @@
 	
 	                Resultxml = loadXMLString(result);
 	
-	                ListViewNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
-	                NodeList = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/ROWS/ROW");
-	                NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
-	                Haders = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/HEADERS/HEADER");
-	                NodeListLen = 0;
+	                listNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
+	                cntNode = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
+	                if (listNode == null) {
+	                	return;
+	                }
 	
-	                var lstCnt = getNodeText(NodeList2);
+	                var lstCnt = getNodeText(cntNode);
+	                if (lstCnt == "") {
+	                	lstCnt = 0;
+	                }
+	                
 	                totalPage = Math.ceil(new Number(lstCnt / pageSize));
 	                pTotalCnt = lstCnt;
 	                makePageSelPage();
 	
 	                var xmlDoc;
-	
-	                if (CrossYN()) {
+	                xmlDoc = createXmlDom();
+	                xmlDoc.appendChild(listNode);
+	                
+	                if (document.getElementById("lvtDoclist").innerHTML != "") {
+	                    document.getElementById("lvtDoclist").innerHTML = "";
+	                }
+	                
+	                /* if (CrossYN()) {
 	                    var xmlLIST = createXmlDom();
 	                    var nodeToImport = xmlLIST.importNode(ListViewNode, true);
 	                    xmlLIST.appendChild(nodeToImport);
@@ -161,12 +165,8 @@
 	                    xmlDoc.appendChild(ListViewNode);
 	                }
 	
-	                ListViewNode = xmlDoc;
-	
-	                if (document.getElementById("lvtDoclist").innerHTML != "") {
-	                    document.getElementById("lvtDoclist").innerHTML = "";
-	                }
-	
+	                ListViewNode = xmlDoc; */
+	                
 	                var DocList = new ListView();
 	                DocList.SetID("DocList");
 	                DocList.SetMulSelectable(false);
@@ -174,20 +174,38 @@
 	                DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
 	                DocList.SetUrgentFlag(true);
 	                DocList.SetSecurityFlag(false);
-	                DocList.DataSource(ListViewNode);
+	                DocList.DataSource(xmlDoc);
 	                DocList.DataBind("lvtDoclist");
 	                DocList = null;
-	                selFirstRow(Resultxml);
 	            }
 	            catch (e) {
 	            }
+	            selFirstRow2();
+	        }
+	        
+	        function selFirstRow2() {
+	            var DocList = new ListView();
+	            DocList.LoadFromID("DocList");
+	            var oArrRows = DocList.GetSelectedRows();
+	            var tr = oArrRows[0];
+
+	            if (oArrRows.length != 0) {
+	                DocID = GetAttribute(tr, "DATA1");
+	                pURL = GetAttribute(tr, "DATA2");
+	            } else {
+	                DocID = "";
+	                pURL = "";
+	            }
+
+	            getDataInfo();
 	        }
 	
 	        function DisplayLineCnt(NodeListLen) {
-	            listcount.innerText = "<spring:message code = 'ezApprovalG.t1312' />" + NodeListLen + "<spring:message code = 'ezApprovalG.t1313' />";
+	        	setNodeText(listcount , "<spring:message code = 'ezApprovalG.t1312' />" + NodeListLen + "<spring:message code = 'ezApprovalG.t1313' />");
 	        }
 
-	        function paging(p_page, p_nowblock) {
+	        //미사용
+	        /* function paging(p_page, p_nowblock) {
 	            var h, j, x_NAME, x_WIDTH, x_HEADER, x_CELL2, x_VALUE2, count;
 	
 	            if (document.getElementById("lvtDoclist").innerHTML != "") {
@@ -216,8 +234,8 @@
 	            	totalPages = totalPages + 1;
 	            }
 	
-	            document.getElementById("td_pTotalCount").innerHTML = totalPages;
-	            document.getElementById("txt_PageInputNum").value = curpage;
+	            $("#td_pTotalCount").html(totalPages);
+	            $("#txt_PageInputNum").val(curpage);
 	        }
 	        
 	        function goToPage(page) {
@@ -239,7 +257,7 @@
 	                GetDocList();
 	            } else if (page == "page") {
 	                if (event.keyCode == 13) {
-	                    var goPage = document.all.txt_PageInputNum.value;
+	                    var goPage = $("#txt_PageInputNum").val();
 	                    
 	                    if (parseInt(goPage) != goPage || parseInt(goPage) == "" || parseInt(goPage) < 1 || parseInt(goPage) > parseInt(totalPages)) {
 	                        return;
@@ -250,11 +268,11 @@
 	                    GetDocList();
 	                }
 	            }
-	        }
+	        } */
 	
 	        var BlockSize = 10;
 	        function td_Create1(strtext) {
-	            document.getElementById("tblPageRayer").innerHTML = strtext;
+	            $("#tblPageRayer").html(strtext);
 	        }
 	        
 	        function makePageSelPage() {
@@ -405,7 +423,7 @@
 	            var tr = oArrRows[0];
 	
 	            if (oArrRows.length != 0) {
-	                DocID = tr.getAttribute("DATA1");
+	                DocID = GetAttribute(tr, "DATA1");
 	            } else {
 	                DocID = "";
 	            }
@@ -423,7 +441,7 @@
 	            }
 	        }
 	
-	        function getDataInfo() {	            
+	        function getDataInfo() {
 	            var ajaxURL = "";
 	            var ajaxAsync = false;
 	            
@@ -453,6 +471,7 @@
 	            	type : "POST",
 	            	url : ajaxURL,
 	            	async : ajaxAsync,
+	            	dataType : "text",
 	            	data : {docID : DocID, flag : "APR", companyID : pCompanyID},
 	            	success : function (result) {
 	            		getdoclistSub_after(result);
@@ -482,18 +501,22 @@
 	            jobState = "APPROVAL";
 	            getDataInfo();
 	        }
+	        
 	        function Attach_onclick() {
 	            jobState = "ATTACH";
 	            getDataInfo();
 	        }
+	        
 	        function Recipent_onclick() {
 	            jobState = "RECIPENT";
 	            getDataInfo();
 	        }
+	        
 	        function Opinion_onclick() {
 	            jobState = "OPINION";
 	            getDataInfo();
 	        }
+	        
 	        function MM_swapImagesub(nSel, evt) {
 	            if (nSel != g_tagSelectsub) {
 	                g_tagSelectsub = nSel;
@@ -529,7 +552,7 @@
 	                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
-	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+	                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") { //한글양식 읽기
 	                    var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP.aspx?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL);
 	                    openLocation = openLocation + "&OpinionFlag=&docState=&ListSusin=&odoc=&isOpinion=&ListType=";
 	                } else {
@@ -596,33 +619,33 @@
 			
 			    if (tr != null && typeof (selRow.length) != "undefined" && selRow.length > 0) {
 			        if (jobState == "APPROVAL") {
-			            if (tr.getAttribute("DATA5") == "Y") {
-			                var heigth = window.screen.availHeight;
+			        	if (GetAttribute(tr, "DATA5") == "Y") {
+			        		var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
 			                var left = (parseInt(width) - 525) / 2;
 			                var top = (parseInt(heigth) - 220) / 2;
-			                window.open("../ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA3") + "&pDeptID=" + escape(tr.getAttribute("DATA4")) + "&pDocState=012", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                window.open("/myoffice/ezApprovalG/ezDocInfo/ezLineInfo.aspx?pDocID=" + GetAttribute(tr, "DATA3") + "&pDeptID=" + escape(GetAttribute(tr, "DATA4")) + "&pDocState=012", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			            } else {
-			                var heigth = window.screen.availHeight;
+			            	var heigth = window.screen.availHeight;
 			                var width = window.screen.availWidth;
 			                var left = (parseInt(width) - 420) / 2;
 			                var top = (parseInt(heigth) - 450) / 2;
-			                window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
+			                window.open("/ezCommon/showPersonInfo.do?id=" + GetAttribute(tr, "DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + left + "px, top=" + top);
 			            }
 			        } else if (jobState == "RECIPENT") {
 			            var heigth = window.screen.availHeight;
 			            var width = window.screen.availWidth;
 			            var left = (parseInt(width) - 540) / 2;
 			            var top = (parseInt(heigth) - 220) / 2;
-			            var isExtYN = tr.getAttribute("DATA3");
-//TODO 외부부서일때 isExtYN ==Y
+			            var isExtYN = GetAttribute(tr, "DATA3");  //TODO 외부부서일때 isExtYN ==Y
+
 			            if (isExtYN.toUpperCase() == "Y") {
-			                var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(tr.getAttribute("DATA1"));
+			            	var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(GetAttribute(tr, "DATA1"));
 			                var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
 			                feature = feature + GetShowModalPosition(555, 240);
 			                var ret = window.showModalDialog(url, "", feature);
 			            } else {
-			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			                window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			            }
 			        }
 			    }
@@ -649,8 +672,8 @@
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 			        }
 			    } else {
-			        var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=APR";
-			        var feature = "dialogWidth:500px;dialogHeight:280px;status:no;scroll:no;edge:sunken";
+			        var url = "/admin/ezApprovalG/search.do?ingFlag=APR";
+			        var feature = "dialogWidth:500px;dialogHeight:280px;status:no;scroll:no;edge:sunken"
 			
 			        var condition = window.showModalDialog(url, para, feature);
 			        if (condition) {
@@ -745,11 +768,11 @@
     	<div id="mainmenu">
         	<ul>
             	<b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
+	            <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-		        </SELECT><br /><br />
+		        </select><br /><br />
             	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
         	</ul>
     	</div>
@@ -777,6 +800,5 @@
         	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
         	selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
     	</script>
-	
 	</body>
 </html>

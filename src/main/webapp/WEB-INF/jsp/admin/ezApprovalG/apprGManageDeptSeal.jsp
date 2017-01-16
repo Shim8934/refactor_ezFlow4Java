@@ -18,26 +18,24 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
 		
 		<script type="text/javascript">
-			var g_xmlHTTP;
-	
 	        var OrderCell = "";
 	        var pUserID = "<c:out value = '${userInfo.id}' />";
 	        var pUserName = "<c:out value = '${userInfo.displayName1}' />";
 	        var pUserName2 = "<c:out value = '${userInfo.displayName2}' />";
 	        var pDeptID = "<c:out value = '${userInfo.deptID}' />";
-	        var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 	        var parameter = new Array();
 	        var listview = new ListView();
 	
 	        $(document).ready(function(){
-	            SCompID.value = pCompanyID;
-
 	            Tree_setconfig();
 	            InitListView();
-	            TreeViewinitialize("", pCompanyID, "", "<c:out value='${serverName}'/>");
-	            getSealList();
+	            TreeViewinitialize("", $("#ListCompany").val(), "", "<c:out value='${serverName}'/>");
 	        });
-	
+	        
+	        function pNodeDblClick() {
+
+	        }
+	        
 	        function Tree_setconfig() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
@@ -49,10 +47,8 @@
 	        }
 	
 	        function InitListView() {
-	            var xmlTree = createXmlDom();
+	        	var xmlTree = createXmlDom();
 	            xmlTree = loadXMLString(LISTHEADER.innerHTML.toUpperCase());
-	
-	            document.getElementById("lvtForm").innerText = "";
 	            listview.SetID("lvtDocForm");
 	            listview.SetMulSelectable(false);
 	            listview.SetRowOnClick("lvtForm_onSel_Changed");
@@ -66,7 +62,7 @@
 	            var treeNode = new TreeNode();
 	            treeNode.LoadFromID(TreeIdx);
 	            pDeptID = treeNode.GetNodeData("CN");
-	            document.getElementById("selDept").innerText = treeNode.GetNodeData("VALUE");
+	            setNodeText(document.getElementById("selDept"), treeNode.GetNodeData("VALUE"));
 	            getSealList();
 	        }
 	
@@ -82,7 +78,7 @@
 	                }
 	            } else {
 	                var parameter = pAlertContent;
-	                var url = "/myoffice/ezApprovalG/ezAPRALERT.aspx";
+	                var url = "/ezApprovalG/ezAprAlert.do";
 	                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	                var RtnVal = window.showModalDialog(url, parameter, feature);
 	            }
@@ -93,7 +89,10 @@
 	            	type : "POST",
 	            	url : "/admin/ezApprovalG/getDeptSealList.do",
 	            	async : false,
-	            	data : {listFlag : "ADMIN", deptID : pDeptID, companyID : pCompanyID},
+	            	data : {listFlag : "ADMIN",
+	            			deptID : pDeptID,
+	            			companyID : $("#ListCompany option:selected").val()
+	            			},
 	            	success : function(result) {
 	            		var listview = new ListView();
 	                    listview.LoadFromID("lvtDocForm");
@@ -129,7 +128,7 @@
 		    				pRegUserName : pUserName,
 		    				pRegUserName2 : pUserName2,
 		    				deptID : pDeptID,
-		    				companyID : pCompanyID
+		    				companyID : $("#ListCompany option:selected").val()
 		    		},
 		    		success : function (result) {
 		    			tempRet = result;
@@ -145,7 +144,7 @@
 		    		type : "POST",
 		    		url : "/admin/ezApprovalG/deleteDeptSealInfo.do",
 		    		async : false,
-		    		data : {pSealNum : pSealNum, deptID : pDeptID, companyID : pCompanyID},
+		    		data : {pSealNum : pSealNum, deptID : pDeptID, companyID : $("#ListCompany option:selected").val()},
 		    		success : function (result) {
 		    			tempRet = result;
 		    		}
@@ -156,6 +155,7 @@
 		    
 		    function lvtForm_onclick() {
 		    }
+		    
 		    function lvtForm_onSel_Changed() {
 		    }
 		    
@@ -165,30 +165,29 @@
 		    
 		    var ezsealinfo_dialogArguments = new Array();
 		    function btnInfo_onclick() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvtDocForm");
-		
-		        var selRow = listview.GetSelectedRows();
-
-		        if (selRow!="") {
-		            parameter[0] = selRow[0].getAttribute("DATA1");
-		            parameter[1] = selRow[0].cells[0].innerText;
-		            parameter[2] = encodeURI(selRow[0].getAttribute("DATA2"));
-		            parameter[3] = selRow[0].cells[1].innerText;
-		            parameter[4] = selRow[0].cells[2].innerText;
-		            parameter[5] = selRow[0].cells[3].innerText;
-		            parameter[6] = selRow[0].cells[4].innerText;
-		            parameter[7] = selRow[0].getAttribute("DATA3");
-		            parameter[8] = selRow[0].cells[5].innerText;
+		    	var listview = new ListView();
+	            listview.LoadFromID("lvtDocForm");
+	            var selRow = listview.GetSelectedRows();
+	            
+	            if (selRow.length > 0) {
+		        	parameter[0] = GetAttribute(selRow[0], "DATA1");
+	                parameter[1] = getNodeText(selRow[0].cells[0]);
+	                parameter[2] = escape(GetAttribute(selRow[0], "DATA2"));
+	                parameter[3] = getNodeText(selRow[0].cells[1]);
+	                parameter[4] = getNodeText(selRow[0].cells[2]);
+	                parameter[5] = getNodeText(selRow[0].cells[3]);
+	                parameter[6] = getNodeText(selRow[0].cells[4]);
+	                parameter[7] = GetAttribute(selRow[0], "DATA3")
+	                parameter[8] = getNodeText(selRow[0].cells[5]);
 		
 		            if (CrossYN()) {
 		                ezsealinfo_dialogArguments[0] = parameter;
 		
-		                var ezSealInfo = window.open("/admin/ezApprovalG/ezSealInfo.do?pDeptYN=Y", "ezSealInfo", GetOpenWindowfeature(500, 420));
+		                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do?pDeptYN=Y", "ezSealInfo", GetOpenWindowfeature(500, 420));
 		                try { ezSealInfo.focus(); } catch (e) {
 		                }
 		            } else {
-		                var url = "/admin/ezApprovalG/ezSealInfo.do?pDeptYN=Y";
+		                var url = "/admin/ezApprovalG/sealInfo.do?pDeptYN=Y";
 		                var feature = GetShowModalPosition(610, 265);
 		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
 		            }
@@ -200,16 +199,16 @@
 		        }
 		    }
 			
-		    var ezaddSeal_cross_dialogArguments = new Array();
+		    var AddDeptSealInfo_dialogArguments = new Array();
 	        function btnAdd_onclick() {
 	            var parameter = new Array();
 	            parameter[0] = pUserID;
 	            parameter[1] = pUserName;
 	            parameter[2] = pDeptID;
-	            parameter[3] = pCompanyID;
+	            parameter[3] = $("#ListCompany option:selected").val();
 	
-	            ezaddSeal_cross_dialogArguments[0] = parameter;
-	            ezaddSeal_cross_dialogArguments[1] = btnAdd_onclick_complete;
+	            AddDeptSealInfo_dialogArguments[0] = parameter;
+	            AddDeptSealInfo_dialogArguments[1] = btnAdd_onclick_complete;
 	            
 	            var url = "/admin/ezApprovalG/addDeptSealInfo.do";
 	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(430, 360));
@@ -264,10 +263,7 @@
 		    } */
 	        
 		    function selectCompanyID() {
-		        if (pCompanyID != document.getElementById("SCompID").value) {
-		            pCompanyID = document.getElementById("SCompID").value;
-		            TreeViewinitialize("", pCompanyID, "", "<c:out value='${serverName}'/>");
-		        }
+	            TreeViewinitialize("", $("#ListCompany option:selected").val(), "", "<c:out value='${serverName}'/>");
 		    }
 		</script>
 	</head>
@@ -306,14 +302,13 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
-	            <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
+	            <select id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-		        </SELECT><br /><br />
+			    </select><br /><br />
 	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>
 	            <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
-				<!-- <li><span onClick="return btnDel_onclick()" >직인삭제</span></li> -->
 	        </ul>
 	    </div>
 	
