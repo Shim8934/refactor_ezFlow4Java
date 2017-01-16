@@ -39,7 +39,7 @@ public interface EzPersonalService {
 
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
 	
-	public String getBirthUserList(String companyID, String curMon) throws Exception;
+	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception;
 	
 	public int getPollCount (String pComapnyID, int tenantID) throws Exception;
 	

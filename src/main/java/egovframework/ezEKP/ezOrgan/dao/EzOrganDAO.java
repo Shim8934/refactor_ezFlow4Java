@@ -337,8 +337,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getBirthUserList(String companyID) throws Exception{
-		return (List<OrganUserVO>) list("EzOrganDAO.getBirthUserList", companyID);
+	public List<OrganUserVO> getBirthUserList(Map<String, Object> map) throws Exception{
+		return (List<OrganUserVO>) list("EzOrganDAO.getBirthUserList", map);
 	}
 
     private OrganUserVO getTBLUserMasterForJMocha(Map<String, Object> map) throws Exception {

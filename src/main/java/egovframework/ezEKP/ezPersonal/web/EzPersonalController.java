@@ -652,7 +652,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 		}
 		
-		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon);
+		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon, userInfo.getTenantId());
 	
 		return result;
 	}

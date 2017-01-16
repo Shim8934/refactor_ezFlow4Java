@@ -528,9 +528,37 @@
 		]]>
 	</delete>
 	
-	<procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
+	<!-- <procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
 		{CALL EZHRMASTER.EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				CN ,
+             	BIRTHTYPE ,
+             	BIRTH ,
+             	DISPLAYNAME ,
+             	DISPLAYNAME2 ,
+             	TITLE ,
+             	TITLE2 ,
+             	DESCRIPTION ,
+             	DESCRIPTION2 ,
+             	EXTENSIONATTRIBUTE2 
+      		FROM
+      			EZHRMASTER.TBLUSERMASTER 
+      		WHERE
+      			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+      		AND
+      			TENANT_ID = #v_TENANT_ID#	
+      		AND
+      			NVL(BIRTH, ' ') <> ' '
+      		AND
+      			TENANT_ID = #v_TENANT_ID#	
+			ORDER BY
+				substr(birth, 8, 10)
+		]]>
+	</select>
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
