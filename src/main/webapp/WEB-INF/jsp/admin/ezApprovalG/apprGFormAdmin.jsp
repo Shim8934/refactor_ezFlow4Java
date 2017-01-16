@@ -24,7 +24,6 @@
 		    var TreeIdx;
 		    var ListIdx;
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
-		    var isHWP = false;
 		    var nodeIdx;
 		    var pEDITOR = "<c:out value = '${editor}' />";
 		    
@@ -44,8 +43,10 @@
 			
 		    $(document).ready(function(){
 		    	var ua = navigator.userAgent;
+		    	
 		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
-		    		$('#btnInsForm').hide();
+		    		$('#btnInsForm1').hide();
+		    		$('#btnInsForm2').hide();
 			    	$('#btnUpForm').hide();
 			    	$('#btnFormListView').hide();
 		    	}
@@ -295,11 +296,7 @@
 						var parameter = "?tCheck=fIns&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 						
 						if (type == "HWP") {
-							if (!CrossYN()) {
-								url = "/myoffice/ezApprovalG/manage/FormMaker/FormMain_Cross.aspx";
-							} else {
-								return;
-							}
+							url = "/admin/ezApprovalG/formMainHWP.do";
 							
 							parameter = parameter + HWP;
 						} else {

@@ -2588,7 +2588,7 @@
 	<select id="EzQuestionDAO.getUserResponseCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(*) as CNT
+				NVL(COUNT(*), 0)
 			FROM
 				EZQUESTION.TBLPOLL_RESPONSE
 			WHERE

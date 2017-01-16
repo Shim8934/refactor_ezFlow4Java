@@ -166,6 +166,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
+		logger.debug("result = " + result);
 		
 		model.addAttribute("resultXML", result);
 		
@@ -347,6 +348,61 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApprovalG/apprGFormMain";
 	}
+	
+	/**
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 화면 호출 함수 (한글기안)
+	 */
+	@RequestMapping(value="admin/ezApprovalG/formMainHWP.do")
+	public String formMainHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formMainHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
+		//관리자 권한 체크
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String formProcSpelling = config.getProperty("config.FormProcSpelling"); 
+		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
+		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String tCheck = request.getParameter("tCheck");
+		String contID = request.getParameter("contID");
+		String formID = request.getParameter("formID");
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+		String companyID = request.getParameter("companyID");
+		
+		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
+		
+		model.addAttribute("formProcSpelling", formProcSpelling);
+		model.addAttribute("topID", userInfo.getCompanyID());
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("title", title);
+		model.addAttribute("isInsUp", tCheck);
+		model.addAttribute("contID", contID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("docType", docType);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("pEditorType", "HWP");
+		
+		logger.debug("formMainHWP ended.");
+		
+		return "admin/ezApprovalG/apprGFormMainHWP";
+	}
+	
+	//여기 ///////////////////////////////////////////////////////
+	/**
+	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
+	 */
+	@RequestMapping(value="/admin/ezApprovalG/HWPEditor.do")
+	public String HWPEditor() throws Exception {
+		logger.debug("HWPEditor started.");
+		
+		logger.debug("HWPEditor ended.");
+		
+		return "admin/ezApprovalG/apprGHWPEditor";
+	}
+
 	
 	/**
 	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식기본정보 호출 함수
