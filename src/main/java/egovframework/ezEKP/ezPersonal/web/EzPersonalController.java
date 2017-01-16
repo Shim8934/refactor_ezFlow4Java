@@ -1153,4 +1153,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 			    }
 			}
 	    }
+	 
+	/**
+	 * 전자결재G 결재 문서 알림 메일 
+	 */
+	@RequestMapping(value = "/ezPersonal/getApprovNoticeMail.do")
+	@ResponseBody
+	public String getApprovNoticeMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
+
+		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getTenantId());
+		
+		return result;
+	}
+	
 }

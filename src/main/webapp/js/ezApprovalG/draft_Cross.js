@@ -2677,7 +2677,7 @@ function SaveTMPDocInfo(AutoSave) {
             createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
         }
         else {
-            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1114);
+            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
         }
 
         field = message.GetListItem(fields, "docnumber");
@@ -2771,7 +2771,7 @@ function RemoveTmpDoc(pDocID) {
 	
     var RtnVal = result;
     if (RtnVal.indexOf("TRUE") == -1) {
-        var pAlertContent = strLang1115;
+        var pAlertContent = strLang1134;
         OpenAlertUI(pAlertContent);
     }
 }

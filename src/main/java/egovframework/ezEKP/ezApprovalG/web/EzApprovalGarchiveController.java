@@ -1,11 +1,10 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -21,8 +20,11 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -57,6 +59,8 @@ public class EzApprovalGarchiveController {
 	@Autowired
 	private EgovMessageSource messageSource;
 	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	/*
 	 * 기록물대장 리스트
 	 */
@@ -192,13 +196,11 @@ public class EzApprovalGarchiveController {
 	     if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
 	    	 useIE11Browser ="CK";
 	     }
-	     Date dt = new Date();
-	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm"); 
-	     String regY=sdf.format(dt).toString().substring(0,4);
-	     String regM=sdf.format(dt).toString().substring(5,7);
-	     String regD=sdf.format(dt).toString().substring(8,10);
-	     String regH=sdf.format(dt).toString().substring(11,13);
-	     String regMi=sdf.format(dt).toString().substring(14,16);
+	     String regY = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,4);
+	     String regM = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5,7);
+	     String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
+	     String regH = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(11,13);
+	     String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
 	     model.addAttribute("userInfo", userInfo);
 	     model.addAttribute("useEditor", useEditor);
 	     model.addAttribute("regY", regY);
@@ -1061,4 +1063,65 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 메일발송 */
+	@RequestMapping(value = "/ezApprovalG/GetDocInfoMode.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String GetDocInfoMode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String docID = xmlDom.getElementsByTagName("DocID").item(0).getTextContent();
+		String mode =  xmlDom.getElementsByTagName("mode").item(0).getTextContent();
+		String fields =  xmlDom.getElementsByTagName("fields").item(0).getTextContent();
+		
+		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo.getCompanyID(), userInfo.getTenantId());
+		return result;
+	}
+	
+	/** 전자결재 G 자동 알림 메일 */
+	@RequestMapping(value = "/ezApprovalG/getMailAddress.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getMailAddress(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String proplist = "displayname;MAIL";
+		String email ="";
+		String name ="";
+		String result ="";
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String id = xmlDom.getElementsByTagName("id").item(0).getTextContent();
+		
+		if(id != ""){
+			String infoXML = ezOrganService.getPropertyList(id, proplist, userInfo.getPrimary(), userInfo.getTenantId());
+			Document doc = commonUtil.convertStringToDocument(infoXML);
+			email  = doc.getElementsByTagName("MAIL").item(0).getTextContent();
+			name = doc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent().trim();
+			 result = name +"," +email ;
+		}
+		return result;
+	}
+	
+	/** 전자결재 G 자동 알림 메일 */
+	@RequestMapping(value = "/ezApprovalG/mail_intersend.do"  ,produces="text/xml;charset=utf-8")
+	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+//		String from = request.getParameter("from");
+		String to[] = request.getParameter("to").split(",");
+		String Subject = request.getParameter("Subject");
+		String Content = request.getParameter("Content");
+		String SaveSendBoxFlag = request.getParameter("SaveSendBoxFlag");
+        StringBuilder bodyContent = new StringBuilder();
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append(Content);
+        bodyContent.append("</DIV>");
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	
+        	InternetAddress to1 = new InternetAddress();
+        	to1.setPersonal(to[0], "UTF-8");
+        	to1.setAddress(to[1]);
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString());
+
+	}
 }

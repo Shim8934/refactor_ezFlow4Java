@@ -2952,7 +2952,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String saveTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		System.out.println(xmlPara);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String realPath = commonUtil.getRealPath(request);

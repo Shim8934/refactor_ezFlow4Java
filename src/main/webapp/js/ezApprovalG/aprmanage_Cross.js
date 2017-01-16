@@ -509,7 +509,7 @@ function DisplayAprLineStat(NodeListLen) {
     }
     else if (pListTypeValue == 10)
     {
-        document.getElementById("AprManageStat").innerHTML = strLang1112 + "<b><span class='point'>" + NodeListLen + "</span></b> " + strLang445;
+        document.getElementById("AprManageStat").innerHTML = strLang1131 + "<b><span class='point'>" + NodeListLen + "</span></b> " + strLang445;
     }
 }
 
@@ -555,7 +555,7 @@ function DisplayWaitStat() {
     }
     else if (pListTypeValue == 10) 
     {
-        document.getElementById("AprManageStat").innerHTML = strLang1110;
+        document.getElementById("AprManageStat").innerHTML = strLang1148;
     }
 }
 

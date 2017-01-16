@@ -2205,13 +2205,13 @@ function InsertRecAll_Complete(_RESPONSE) {
 
         //2015-07-06 표준모듈:추가(값이 없을 경우 알려주고 return 처리) - KSK
         if (treeNode.GetNodeData("CN") == "") {
-            alert(strLang1119);
+            alert(strLang1138);
             return;
         }
 
         //2015-07-06 표준모듈:추가(값이 없을 경우 알려주고 return 처리) - KSK
         if (treeNode.GetNodeData("VALUE") == "") {
-            alert(strLang1118);
+            alert(strLang1137);
             return;
         }
 

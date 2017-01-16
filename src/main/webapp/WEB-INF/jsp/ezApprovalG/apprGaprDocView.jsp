@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="/js/ezApprovalG/attachG_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var	DocID = '${docID}';
 		    var	DocHref = '${docHref}';

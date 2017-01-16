@@ -179,7 +179,7 @@ function InitListView() {
 
         var LVData = null;
         if (result == "NOTPERMISSTION") {
-            alert(strLang1113);
+            alert(strLang1132);
             window.close();
         } else {
             LVData = createXmlDom();

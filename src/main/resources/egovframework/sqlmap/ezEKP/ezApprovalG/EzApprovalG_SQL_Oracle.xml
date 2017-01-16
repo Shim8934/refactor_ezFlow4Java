@@ -6444,9 +6444,9 @@
 	   		AND 
 	   			APRTYPE <> '015' 
 	   		AND 
-	   			 STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+	   			 STARTDATE >= $v_STARTDATE$ 
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1 
+	   			STARTDATE <= $v_ENDDATE$ 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    			]]>
@@ -6462,9 +6462,9 @@
 	   		AND 
 	   			AprType <> '015'  
 	   		AND 
-	   			STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+	   			STARTDATE >= $v_STARTDATE$  
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1
+	   			STARTDATE <= $v_ENDDATE$ 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    		]]>
@@ -6484,9 +6484,9 @@
 	   		AND 
 	   			DocState <> '017'
 	   		AND 
-	   			STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+	   			STARTDATE >= $v_STARTDATE$
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1 
+	   			STARTDATE <= $v_ENDDATE$ 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6528,15 +6528,15 @@
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
-	   		 		PROCESSDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+	   		 		PROCESSDATE >= $v_STARTDATE$ 
 	   		 	AND 
-	   		 		PROCESSDATE <= SYSDATE + 1
+	   		 		PROCESSDATE <= $v_ENDDATE$ 
 	   		 	AND	
 		   			TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		 ]]>
    		 
    		UNION ALL 
-	<!-- މܧȒ ٮܭ -->
+	<!-- 심사할 문서-->
    		 <![CDATA[
    		 	SELECT 
    		 		COUNT(TBAPRRECEIPTPROCESSINFO.DOCID) AS COUNT
@@ -6557,12 +6557,13 @@
    			AND 
    				TBAPRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
    			AND 
-   		 		PROCESSDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+   		 		PROCESSDATE >= $v_STARTDATE$ 
    		 	AND 
-   		 		PROCESSDATE <= SYSDATE + 1
+   		 		PROCESSDATE <= $v_ENDDATE$
    		 	AND	
 	   			TBAPRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		]]>
+	<!-- 직인 의뢰함 -->
    		UNION ALL
    			
 		 <![CDATA[
@@ -6587,9 +6588,9 @@
    			AND 
    				TBENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
    			AND 
-   			 	STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+   			 	STARTDATE >= $v_STARTDATE$  
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1 
+	   			STARTDATE <= $v_ENDDATE$
 	   		AND	
 	   			TBENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6616,9 +6617,9 @@
    			AND 
    				TBENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+   			 	STARTDATE >= $v_STARTDATE$  
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1  
+	   			STARTDATE <= $v_ENDDATE$
 	   		AND	
 	   			TBENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -6634,9 +6635,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+   			 	STARTDATE >= $v_STARTDATE$  
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1 
+	   			STARTDATE <= $v_ENDDATE$
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -6650,9 +6651,9 @@
    			WHERE 
    				OWNERID IN ($v_USERIDS$) 
    			AND 
-   				STARTDATE >= TO_DATE(SUBSTR(SYSDATE - INTERVAL'1' YEAR,1,10)) 
+   				STARTDATE >= $v_STARTDATE$ 
 	   		AND 
-	   			STARTDATE <= SYSDATE + 1  
+	   			STARTDATE <=  $v_ENDDATE$ 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]> 
@@ -7828,7 +7829,7 @@
 		      			TimeSep =    (
 		      							SELECT 
 		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-		            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE)||REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+		            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'))||REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
 		     							FROM (
 		     									SELECT 
 		     											Code ,
@@ -7904,7 +7905,7 @@
    						 	(
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE)||REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'))||REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
      							FROM (
      									SELECT 
      											Code ,
@@ -7980,7 +7981,7 @@
 		    		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE)||REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'))||REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
      							FROM (
      									SELECT 
      											Code ,
@@ -8055,7 +8056,7 @@
 	     		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE)||REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'))||REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
      							FROM (
      									SELECT 
      											Code ,
@@ -8132,7 +8133,7 @@
 	     		TimeSep = (
   							SELECT 
   								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-        								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE)||REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+        								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'))||REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
  							FROM (
  									SELECT 
  											Code ,
@@ -8974,7 +8975,7 @@
     				(
     					SELECT 
     							CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-           							 WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM SYSDATE) || REPLACE(EXTRACT(MONTH FROM SYSDATE), ' ', '0') FROM DUAL) end 
+           							 WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')) || REPLACE(EXTRACT(MONTH FROM TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS')), ' ', '0') FROM DUAL) end 
      					FROM (
      							SELECT 
            								Code ,
@@ -9230,9 +9231,9 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.addNewVolume" parameterClass="Map">
 		INSERT 	INTO EZAPPROVALG_${companyID}.TBCABINET ( 
-        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, CREATEDATE, CABINETTRANSFERFLAG, DELFLAG 
+        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, 		CREATEDATE, 							CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID
         )VALUES ( 
-   				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, SYSDATE,      '0',                '0' )
+   				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),      '0',                '0' , #v_TENANTID#)
 	</insert> 
 	
 <!-- 	<procedure id="EzApprovalG.aprMakeTmp2Ing" parameterClass="Map"> -->
@@ -9577,82 +9578,87 @@
 		</select>
 		<select id="EzApprovalG.transferCabinetSn" parameterClass="Map" resultClass="int">
 			SELECT 
-				MAX(RegSerialNo)  
-     		FROM 
-     			EZAPPROVALG_${companyID}.TBSERIALNUMGEN 
-    		WHERE  
-    			Type1 = ( 
-    						SELECT CASE WHEN ISUsed = 0 THEN 0
-    							   ELSE 001
-    							   END 
-    						FROM (
-		    						SELECT 
-		    							ISUsed 
-								    FROM 
-								    	(
-								    		SELECT 
-								    			Code ,
-		           								ISUsed 
-		   	  							    FROM 
-		   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
-		   	 								WHERE  
-		   	 									CodeType = '007'
-		   	 								AND
-												TENANT_ID = #v_TENANTID#)	 
-		    						WHERE  
-		    							Code = '1')	)
-            AND 
-            	Type2 = ( #v_DDeptCode#	)
-            AND 
-            	Type3 = ( 
-    						SELECT CASE WHEN ISUsed = 0 THEN 0
-    							   ELSE $v_numRows$
-    							   END 
-    						FROM (
-		    						SELECT 
-		    							ISUsed 
-								    FROM 
-								    	(
-								    		SELECT 
-								    			Code ,
-		           								ISUsed 
-		   	  							    FROM 
-		   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
-		   	 								WHERE  
-		   	 									CodeType = '007'
-		   	 								AND
-												TENANT_ID = #v_TENANTID#)	 
-		    						WHERE  
-		    							Code = '3')	)
-            AND 
-            	TimeSep = ( 
-    						SELECT CASE WHEN ISUsed = 1 THEN TO_CHAR(SYSDATE, 'YYYY')
-    							   WHEN ISUsed = 2 THEN TO_CHAR(SYSDATE, 'YYYY') || '0' || TO_CHAR(SYSDATE, 'MM')
-    							   END 
-    						FROM (
-		    						SELECT 
-		    							ISUsed 
-								    FROM 
-								    	(
-								    		SELECT 
-								    			Code ,
-		           								ISUsed 
-		   	  							    FROM 
-		   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
-		   	 								WHERE  
-		   	 									CodeType = '007'
-		   	 								AND
-												TENANT_ID = #v_TENANTID#)	 
-		    						WHERE  
-		    							Code = '4')	)
-            AND 
-            	RollbackFlag = '0'
+				CASE WHEN A IS NULL THEN 1
+				ELSE A
+				END
+			FROM (
+				SELECT 
+					MAX(RegSerialNo)  AS A
+	     		FROM 
+	     			EZAPPROVALG_${companyID}.TBSERIALNUMGEN 
+	    		WHERE  
+	    			Type1 = ( 
+	    						SELECT CASE WHEN ISUsed = 0 THEN 0
+	    							   ELSE 001
+	    							   END 
+	    						FROM (
+			    						SELECT 
+			    							ISUsed 
+									    FROM 
+									    	(
+									    		SELECT 
+									    			Code ,
+			           								ISUsed 
+			   	  							    FROM 
+			   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+			   	 								WHERE  
+			   	 									CodeType = '007'
+			   	 								AND
+													TENANT_ID = #v_TENANTID#)	 
+			    						WHERE  
+			    							Code = '1')	)
+	            AND 
+	            	Type2 = ( #v_DDeptCode#	)
+	            AND 
+	            	Type3 = ( 
+	    						SELECT CASE WHEN ISUsed = 0 THEN 0
+	    							   ELSE $v_numRows$
+	    							   END 
+	    						FROM (
+			    						SELECT 
+			    							ISUsed 
+									    FROM 
+									    	(
+									    		SELECT 
+									    			Code ,
+			           								ISUsed 
+			   	  							    FROM 
+			   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+			   	 								WHERE  
+			   	 									CodeType = '007'
+			   	 								AND
+													TENANT_ID = #v_TENANTID#)	 
+			    						WHERE  
+			    							Code = '3')	)
+	            AND 
+	            	TimeSep = ( 
+	    						SELECT CASE WHEN ISUsed = 1 THEN #v_YEAR#
+	    							   WHEN ISUsed = 2 THEN #v_YEAR# || #v_MONTH#
+	    							   END 
+	    						FROM (
+			    						SELECT 
+			    							ISUsed 
+									    FROM 
+									    	(
+									    		SELECT 
+									    			Code ,
+			           								ISUsed 
+			   	  							    FROM 
+			   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
+			   	 								WHERE  
+			   	 									CodeType = '007'
+			   	 								AND
+													TENANT_ID = #v_TENANTID#)	 
+			    						WHERE  
+			    							Code = '4')	)
+	            AND 
+	            	RollbackFlag = '0')
 		</select>
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
 			EZAPPROVALG_${companyID}.TBSERIALNUMGEN
-          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag )
-        VALUES  ( SELECT 
+          		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID )
+        VALUES  ( (SELECT 
         			CASE WHEN ISUsed = 0 THEN 0
     				ELSE 001
     				END 
@@ -9671,10 +9677,10 @@
   	 								AND
 										TENANT_ID = #v_TENANTID#)	 
    						WHERE  
-   							Code = '1'), #v_DDeptCode#, 
-		   												SELECT 
+   							Code = '1')), #v_DDeptCode#, 
+		   												(SELECT 
 		        											CASE WHEN ISUsed = 0 THEN 0
-		    							   					ELSE $v_numRows$
+		    							   					ELSE ISUsed
 		    							  					END 
 						    							FROM (
 								    						SELECT 
@@ -9687,12 +9693,14 @@
 								   	  							    FROM 
 								   	  							    	EZAPPROVALG_${companyID}.TBCABINETCODELIST 
 								   	 								WHERE  
-								   	 									CodeType = '007')	 
+								   	 									CodeType = '007'
+								   	 								AND
+																		TENANT_ID = #v_TENANTID#)	 
 								    						WHERE  
-								    							Code = '3'), 
-								    											SELECT 
-								    													CASE WHEN ISUsed = 1 THEN TO_CHAR(SYSDATE, 'YYYY')
-		    							   												WHEN ISUsed = 2 THEN TO_CHAR(SYSDATE, 'YYYY') || '0' || TO_CHAR(SYSDATE, 'MM')
+								    							Code = '3')), 
+								    											(SELECT 
+								    													CASE WHEN ISUsed = 1 THEN  #v_YEAR# 
+		    							   												WHEN ISUsed = 2 THEN  #v_YEAR# || #v_MONTH#
 													    							    END 
 													    						 FROM (
 															    						SELECT 
@@ -9708,14 +9716,14 @@
 															   	 									CodeType = '007'
 															   	 								AND
 																									TENANT_ID = #v_TENANTID#)	 
-															    						WHERE  
-															    							Code = '4'), $v_RtnSN$, 0 );
+															    								WHERE  
+															    									Code = '4')), $v_RtnSN$, 0 , #v_TENANTID#)
 		</insert>
 		<update id="EzApprovalG.updateTbSerialNumGen" parameterClass="Map">
 			UPDATE 
 				EZAPPROVALG_${companyID}.TBSERIALNUMGEN
 			SET 
-				RegSerialNo = $v_RtnSN$ + 1
+				RegSerialNo = $v_RtnSN$ + $v_numRows$
 			WHERE  
 				Type1 = (
 						  SELECT 
@@ -9765,8 +9773,8 @@
 			AND 
 				TimeSep = (
 							SELECT 
-								CASE WHEN ISUsed = 1 THEN TO_CHAR(SYSDATE, 'YYYY')
-									 WHEN ISUsed = 2 THEN TO_CHAR(SYSDATE, 'YYYY') || '0' || TO_CHAR(SYSDATE, 'MM')
+								CASE WHEN ISUsed = 1 THEN #v_YEAR# 
+									 WHEN ISUsed = 2 THEN #v_YEAR# || #v_MONTH#
 						        END 
 							 FROM (
 		 							SELECT 
@@ -9791,7 +9799,7 @@
 		INSERT INTO 
 			EZAPPROVALG_${companyID}.TBCABINETCLASS
      ( CabinetClassNo, ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, TaskName, TaskName2, Title, Title2, ProductionYear, RegSerialNo, RecTypeCode, OwnerName, OwnerName2, OwnerID, ExpirationYear, TerminateFlag, KeepingPeriod, KeepingMethod, KeepingPlace, DisplayRecFlag, DisplayEndDate, DisplayReason, SpecialCatalogFlag, OldCabinetFlag, ModifyFlag, NumOfRec, PageOfRec, NumOfElectronicDoc, ConfirmFlag, CreateDate, ConfirmYear, TransDelayFlag, ExTransYear, TransDelayReason, OwnerDeptID, OwnerTask, DelFlag, TENANT_ID )
-     ( SELECT #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE, 'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+     ( SELECT #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
               #v_DDeptCode# ,
               #v_DDeptName# ,
               #v_DDeptName2# ,
@@ -9800,8 +9808,8 @@
               #v_DTaskName2# ,
               Title ,
               Title2 ,
-              TO_CHAR(SYSDATE, 'YYYY') ,
-              REPLACE(utils.str($v_numRows$  || ($v_RtnSN$-1), 5), ' ', '0') ,
+              #v_YEAR# ,
+              REPLACE(utils.str($v_SN$  || ($v_RtnSN$-1), 5), ' ', '0') ,
               RecTypeCode ,
               #v_DeptMName# ,
               #v_DeptMName2# ,
@@ -9821,7 +9829,7 @@
               PageOfRec ,
               NumOfElectronicDoc ,
               ConfirmFlag ,
-              SYSDATE ,
+              TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
               ConfirmYear ,
               TransDelayFlag ,
               ExTransYear ,
@@ -9878,7 +9886,7 @@
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 			     WHERE  
-			     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+			     		TBCABINET.CabinetID IN ( $v_cabList$ )
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
@@ -9895,7 +9903,7 @@
      			#v_CABINETCLASSNO#  || '001' ,
               	#v_CABINETCLASSNO#  ,
               	'001' ,
-              	SYSDATE ,
+              	TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
               	'0' ,
               	'0' ,
               	$v_TENANTID$
@@ -9944,7 +9952,7 @@
     		WHERE 
     			TRIM(TBCABINETCLASS.CabinetClassNo) IN ( 
     											   SELECT 
-    													#v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') NewCabClsNo  
+    													#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') NewCabClsNo  
                                              	   FROM  (SELECT 
 											     			DISTINCT TBCABINETCLASS.CabinetClassNo ,
 											                     	 TBCABINETCLASS.ProcessDeptCode ,
@@ -9992,7 +10000,7 @@
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 													     WHERE  
-													     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+													     		TBCABINET.CabinetID IN ( $v_cabList$ )
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
@@ -10032,7 +10040,7 @@
         	( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID )
         	( SELECT 
         		 '000' ,
-                 #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# ||  #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
                 (
              		SELECT 
                 		SC1 
@@ -10109,7 +10117,7 @@
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 			     WHERE  
-			     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+			     		TBCABINET.CabinetID IN ( $v_cabList$ )
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
@@ -10119,13 +10127,14 @@
 		<insert  id="EzApprovalG.insertTbSpecialCatalogInfo2" parameterClass="Map">
 		 INSERT INTO 
 		 	EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB 
-        ( SerialNo, CabinetClassNo, SC1, SC2, SC3 )
+        ( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID )
         ( SELECT 
         		 SerialNo ,
-                 #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
                  SC1 ,
                  SC2 ,
-                 SC3 
+                 SC3 ,
+                 TENANT_ID
           FROM 
           		 EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB 
           JOIN 
@@ -10177,7 +10186,7 @@
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 			     WHERE  
-			     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+			     		TBCABINET.CabinetID IN ( $v_cabList$ )
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
@@ -10241,7 +10250,7 @@
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 													     WHERE  
-													     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+													     		TBCABINET.CabinetID IN ( $v_cabList$ )
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
@@ -10290,12 +10299,13 @@
 		<insert id="EzApprovalG.insertTbOldCabinetExtraInfo" parameterClass="Map">
 			INSERT INTO 
 				EZAPPROVALG_${companyID}.TBOLDCABINETEXTRAINFO
-     		( CabinetClassNo, CreateOrganName, CreateOrganName2, ClassificationNo )
+     		( CabinetClassNo, CreateOrganName, CreateOrganName2, ClassificationNo, TENANT_ID )
      		( SELECT 
-                 #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
               	 CreateOrganName ,
               	 CreateOrganName2 ,
-              	 ClassificationNo 
+              	 ClassificationNo ,
+              	 TBOLDCABINETEXTRAINFO.TENANT_ID
        		  FROM 
        		  	 EZAPPROVALG_${companyID}.TBOLDCABINETEXTRAINFO 
               JOIN 
@@ -10347,13 +10357,15 @@
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 			     WHERE  
-			     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+			     		TBCABINET.CabinetID IN ( $v_cabList$ )
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
 			     		ConfirmFlag ASC )  tt_tmpClassInfo  
               ON 
               	TBOLDCABINETEXTRAINFO.CabinetClassNo = tt_tmpClassInfo.CabinetClassNo
+              AND
+              	TBOLDCABINETEXTRAINFO.TENANT_ID = tt_tmpClassInfo.TENANT_ID
         	  WHERE  
         	  	ConfirmFlag = '0'
         	  AND
@@ -10362,12 +10374,12 @@
 		<insert id="EzApprovalG.insertTbCabinetInfo" parameterClass="Map">
 			INSERT INTO 
 				EZAPPROVALG_${companyID}.TBCABINET
-	     ( CabinetID, CabinetClassNo, VolumeNo, CreateDate, DelFlag, CabinetTransferFlag, TCabinetID, TDeptCode, TTaskCode, TProduceYear, TRegSerialNo, TVolumeNo, TransferDate, TCabinetName, TCabinetName2, TDeptName, TDeptName2, TTaskName, TTaskName2, CatalogTransferFlag, CatalogTransferYear, DocTransferFlag, DocTransferYear, ProdReportFlag )
+	     ( CabinetID, CabinetClassNo, VolumeNo, CreateDate, DelFlag, CabinetTransferFlag, TCabinetID, TDeptCode, TTaskCode, TProduceYear, TRegSerialNo, TVolumeNo, TransferDate, TCabinetName, TCabinetName2, TDeptName, TDeptName2, TTaskName, TTaskName2, CatalogTransferFlag, CatalogTransferYear, DocTransferFlag, DocTransferYear, ProdReportFlag, TENANT_ID )
 	     ( SELECT 
-	     		  #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') || VolumeNo ,
-	              #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+	     		  #v_DDeptCode# || #v_DTaskCode# ||#v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') || VolumeNo ,
+	              #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
 	              VolumeNo ,
-	              SYSDATE ,
+	              TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
 	              '0' ,
 	              '1' ,
 	              TBCABINET.CabinetID ,
@@ -10376,7 +10388,7 @@
 	              tt_tmpClassInfo.ProductionYear ,
 	              tt_tmpClassInfo.RegSerialNo ,
 	              VolumeNo ,
-	              SYSDATE ,
+	              TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
 	              Title ,
 	              Title2 ,
 	              ProcessDeptName ,
@@ -10387,7 +10399,8 @@
 	              CatalogTransferYear ,
 	              DocTransferFlag ,
 	              DocTransferYear ,
-	              ProdReportFlag 
+	              ProdReportFlag ,
+	              tt_tmpClassInfo.TENANT_ID
 	       FROM (
           		SELECT 
 	     			DISTINCT TBCABINETCLASS.CabinetClassNo ,
@@ -10436,7 +10449,7 @@
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 			     WHERE  
-			     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+			     		TBCABINET.CabinetID IN ( $v_cabList$ )
 			     AND
 			     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
@@ -10445,6 +10458,8 @@
 	              EZAPPROVALG_${companyID}.TBCABINET    
 	        ON 
 	        	tt_tmpClassInfo.CabinetClassNo = TBCABINET.CabinetClassNo
+	        AND
+	        	tt_tmpClassInfo.TENANT_ID = TBCABINET.TENANT_ID
 	        WHERE  
 	        	TBCABINET.VolumeNo != '001'
 	        AND 
@@ -10461,7 +10476,7 @@
 				CabClass.ProductionYear, 
 				CabClass.RegSerialNo, 
 				CabClass.VolumeNo, 
-				SYSDATE, 
+				TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), 
 				CabClass.CabinetID, 
 				CabClass.Title, 
 				CabClass.Title2, 
@@ -10476,7 +10491,7 @@
 				TBCABINET.ProdReportFlag
           	FROM ( 
           			SELECT 
-          				#v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') NCabClassNo  ,
+          				#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') NCabClassNo  ,
                  		tt_tmpClassInfo.ProcessDeptCode ,
                  		tt_tmpClassInfo.TaskCode ,
 		                tt_tmpClassInfo.ProductionYear ,
@@ -10538,7 +10553,7 @@
 						     AND
 						     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 						     WHERE  
-						     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+						     		TBCABINET.CabinetID IN ( $v_cabList$ )
 						     AND
 						     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 						     ORDER BY 
@@ -10574,7 +10589,7 @@
                 TProduceYear = #ProductionYear#,
                 TRegSerialNo = #RegSerialNo#,
                 TVolumeNo = #VolumeNo#,
-                TransferDate = SYSDATE,
+                TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
                 TCabinetID = #CabinetID#,
                 TCabinetName = #Title#,
                 TCabinetName2 = #Title2#,
@@ -10598,7 +10613,7 @@
       		SET 
       			CabinetTransferFlag = '2',
           		TDeptCode = #v_DDeptCode#,
-          		TransferDate = SYSDATE,
+          		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
     		WHERE  
@@ -10654,7 +10669,7 @@
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 													     WHERE  
-													     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+													     		TBCABINET.CabinetID IN ( $v_cabList$ )
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
@@ -10670,7 +10685,7 @@
       		SET 
       			CabinetTransferFlag = '2',
           		TDeptCode = #v_DDeptCode#,
-          		TransferDate = SYSDATE,
+          		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
     		WHERE  
@@ -10725,7 +10740,7 @@
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 													     WHERE  
-													     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+													     		TBCABINET.CabinetID IN ( $v_cabList$ )
 													     AND
 													     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
@@ -10794,7 +10809,7 @@
 															     AND
 															     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 															     WHERE  
-															     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+															     		TBCABINET.CabinetID IN ( $v_cabList$ )
 															     AND
 															     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 															     ORDER BY 
@@ -10866,7 +10881,7 @@
 															     AND
 															     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 															     WHERE  
-															     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+															     		TBCABINET.CabinetID IN ( $v_cabList$ )
 															     AND
 															     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 															     ORDER BY 
@@ -10897,7 +10912,7 @@
 				EZAPPROVALG_${companyID}.TBCABINETHISTORY
      		( CabinetClassNo, Version, Title, RecTypeCode, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyDate, ModifyReason, ModifierName, ModifierName2, ModifierID, ModifyFlag, DelFlag, TENANT_ID )
      		( SELECT 
-     				  #v_DDeptCode# || #v_DTaskCode# || TO_CHAR(SYSDATE,'YYYY') || REPLACE(utils.str($v_numRows$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+     				  #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
 		              TBCABINETHISTORY.Version ,
 		              TBCABINETHISTORY.Title ,
 		              TBCABINETHISTORY.RecTypeCode ,
@@ -10960,7 +10975,7 @@
 				     AND
 				     		TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID
 				     WHERE  
-				     		TBCABINET.CabinetID IN ( $v_CabIDList$ )
+				     		TBCABINET.CabinetID IN ( $v_cabList$ )
 				     AND
 				     		TBCABINETCLASS.TENANT_ID = #v_TENANTID#
 				     ORDER BY 
@@ -11056,7 +11071,7 @@
 	 	UPDATE 
 	 		EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
       	SET 
-      		PROCESSDATE = SYSDATE,
+      		PROCESSDATE = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
             APRSTATE = '003',
             PROCESSYN = 'Y'
     	WHERE
@@ -11222,7 +11237,7 @@
 	     UPDATE 
 	     	EZAPPROVALG_${companyID}.TBAPRRECEIPTPROCESSINFO
          SET 
-         	 PROCESSDATE = SYSDATE,
+         	 PROCESSDATE = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
              APRSTATE = '002',
              PROCESSYN = 'N'
          WHERE  
@@ -11285,8 +11300,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.updateHistoryForAttach" parameterClass="Map">
 		INSERT 	INTO  EZAPPROVALG_${companyID}.TBHISTORYATTACHINFO ( 
-					DOCID,    ATTACHFILESN, ATTACHFILENAME, ATTACHFILEDISPLAYNAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, MODIFYDATE, MODIFYSN,     MODIFYFLAG,    PAGENUM,   CHKFLAG, TENANT_ID, COMPANYID
-		)  VALUES (#v_DOCID#, $v_ATTACHSN$, #v_ATTACHNAME#, #v_ATTACHDISPNAME#,    #v_ATTACHHREF#, $v_ATTACHSIZE$, #v_USERID#,    #v_USERNAME#,   #v_USERNAME2#,   #v_USERJOBTITLE#,   #v_USERJOBTITLE2#,    #v_USERDEPTID#, #v_USERDEPTNAME#,   #v_USERDEPTNAME2#,     SYSDATE, $v_MODIFYSN$, #v_MODIFYFLAG#, $v_PAGENUM$,  ' ' , $v_TENANTID$, #companyID#)
+					DOCID,    ATTACHFILESN, ATTACHFILENAME, ATTACHFILEDISPLAYNAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERNAME2, ATTACHUSERJOBTITLE, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, ATTACHUSERDEPTNAME2, MODIFYDATE, 										MODIFYSN,     MODIFYFLAG,    PAGENUM,   CHKFLAG, TENANT_ID, COMPANYID
+		)  VALUES (#v_DOCID#, $v_ATTACHSN$, #v_ATTACHNAME#, #v_ATTACHDISPNAME#,    #v_ATTACHHREF#, $v_ATTACHSIZE$, #v_USERID#,    #v_USERNAME#,   #v_USERNAME2#,   #v_USERJOBTITLE#,   #v_USERJOBTITLE2#,    #v_USERDEPTID#, #v_USERDEPTNAME#,   #v_USERDEPTNAME2#,    TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), $v_MODIFYSN$, #v_MODIFYFLAG#, $v_PAGENUM$,  ' ' , $v_TENANTID$, #companyID#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.saveRecReadHist" parameterClass="Map"> -->
@@ -13411,7 +13426,7 @@
 			ExecuteDate, 
 			ReceiptMemberName, 
 			ReceiptMemberName2, 
-            #v_SYSDATE#, 
+            TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), 
             #v_CHANGEREASON#, 
             #v_USERID#, 
             #v_USERNAME#, 
@@ -13493,5 +13508,22 @@
    
    <insert id ="EzApprovalG.insertTbSpecialCatalogInfoRec" parameterClass="map">
    		$sqlString$
+   </insert>
+   
+   <delete id ="EzApprovalG.deleteTbCabRoleInfo" parameterClass="map">
+        DELETE FROM 
+        	EZAPPROVALG_${companyID}.TBCABROLEINFO 
+        WHERE 
+        	CABINETCLASSNO= #v_CABCLASSNO# 
+        AND 
+        	TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <insert id ="EzApprovalG.insertTbCabRoleInfo" parameterClass="map">
+   		INSERT INTO 
+   			EZAPPROVALG_${companyID}.TBCABROLEINFO
+   			 (User_ID,           UserName,         UserName2,        CabinetClassNo, TENANT_ID)
+   		VALUES
+   			 (#v_ArrayString#, #v_ArrayString1#, #v_ArrayString2#, #v_CABCLASSNO# , #v_TENANTID#)
    </insert>
 </sqlMap>
