@@ -6906,7 +6906,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	logger.debug("from = " + userInfo.getEmail());
         	logger.debug("to = " + vo.getEmail());
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
 		
 		logger.debug("joinOkSendMail ended.");
@@ -6934,7 +6934,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	to.setPersonal(vo.getUserName(), "UTF-8");
         	to.setAddress(vo.getEmail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
         
         logger.debug("commOutOkSendMail ended.");
