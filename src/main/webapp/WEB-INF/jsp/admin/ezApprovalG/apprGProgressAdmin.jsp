@@ -17,7 +17,7 @@
 			{
 				var nvista = 0;
 				nvista = i_icd.nCheckVista;
-				
+
 				if(nvista==0)
 				{	
 					i_icd.SetDocumentDisp( window.document );

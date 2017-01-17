@@ -97,6 +97,7 @@ function InitFormCont() {
 		GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
 	}
 
+	document.getElementById('divlvtForm').innerHTML = "";
     var listview = new ListView();
     listview.SetID("lvtForm");
     listview.SetMulSelectable(false);
@@ -104,7 +105,7 @@ function InitFormCont() {
     listview.SetRowOnDblClick("lvtForm_Row_Dbclick");
     listview.DataSource(xmlRtn);
     listview.DataBind("divlvtForm");
-
+    
     document.getElementById('divFromTreeView').innerHTML = "";
     var treeView = new TreeView();
     treeView.SetID("FromTreeView");

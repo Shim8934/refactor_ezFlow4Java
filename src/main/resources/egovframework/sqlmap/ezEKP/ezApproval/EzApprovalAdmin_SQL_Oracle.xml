@@ -1757,7 +1757,7 @@
 			FORMCONTID,   FORMID, FORMNAME,   FORMNAME2,   FORMDOCTYPE, FORMDESCRIPTION,   FORMFILELOCATION, 					FORMVERSION, FormConnXML, TENANT_ID,  COMPANYID 
 		)
         VALUES ( 
-        	#formContID#, #id#,   #formName#, #formName2#, #formKind#,  #formDescription#, CONCAT(#url#, CONCAT(#id#, '.mht')), '1', 		 #formConn#,  #tenantID#, #companyID# 
+        	#formContID#, #id#,   #formName#, #formName2#, #formKind#,  #formDescription#, CONCAT(#url#, CONCAT(#id#, #formFormat#)), '1', 		 #formConn#,  #tenantID#, #companyID# 
         )
 	</insert>
 	
@@ -2149,7 +2149,7 @@
              	FORMNAME2 = #formName2#,
              	FORMDOCTYPE = #formKind#,
              	FORMDESCRIPTION = #formDescription#,
-             	FORMFILELOCATION = CONCAT(#url#, CONCAT(#formID#, '.mht')),
+             	FORMFILELOCATION = CONCAT(#url#, CONCAT(#formID#, #formFormat#)),
              	FormConnXML = #formConn#
        		WHERE  
        			TENANT_ID = #tenantID#

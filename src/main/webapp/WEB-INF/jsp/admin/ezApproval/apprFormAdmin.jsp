@@ -24,6 +24,17 @@
 		    var ListIdx;
 		    var g_multiDataNum = "${multiDataNum}";
 		    var pEDITOR = "${editor}";
+        	var ua = navigator.userAgent;
+        	var isIE = false;
+
+            if (/msie 10/i.test(ua)) {
+                isIE = true;	
+            } else if (/msie/i.test(ua)) {
+        		isIE = true;
+        	} else if (/trident/i.test(ua)) {
+        		isIE = true;
+        	}
+            
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -282,19 +293,9 @@
 		                var url = "";
 		                var HWP = "&type=HWP";
 		                var parameter = "?tCheck=FIns&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + escape(companyID);
-		            	var ua = navigator.userAgent;
-		            	var result = false;
-
-		                if (/msie 10/i.test(ua)) {
-		                    result = true;	
-		                } else if (/msie/i.test(ua)) {
-		            		result = true;
-		            	} else if (/trident/i.test(ua)) {
-		            		result = true;
-		            	}
 
 		                if (type == "HWP") {
-		                    if (result) {
+		                    if (isIE) {
 		                        url = "/admin/ezApproval/formMainOther.do";
 		                    } else {
 		                        return;
@@ -337,8 +338,8 @@
 		            var HWP = "&type=HWP";
 		            var parameter = "?tCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
-		                if (!CrossYN())
-		                    url = "/myoffice/ezApproval/manage/FormMaker/FormMain_Cross.aspx";
+		                if (isIE)
+		                    url = "/admin/ezApproval/formMainOther.do";
 		                else
 		                    return;
 		                parameter = parameter + HWP;

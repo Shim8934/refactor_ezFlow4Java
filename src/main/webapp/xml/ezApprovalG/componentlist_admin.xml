@@ -31,7 +31,7 @@
 	<activex>
 		<url os="all" size="339">DOWNLOADSERVER/files/component/pzFormProc_utf8.ent</url>
 		<clsid>999C3A80-04F3-44B7-8815-36ADF2319B98</clsid>
-		<version>1,8,0,50</version>
+		<version>1,8,0,40</version>
 		<compressed>dll</compressed>
 		<type>inproc</type>
 	</activex>
@@ -45,8 +45,8 @@
 	<activex>
 		<url os="all" size="43">DOWNLOADSERVER/files/component/ezHwpProcessor.ent</url> 
 	 		<clsid>1D50E26E-E51E-4153-93DD-D08745457090</clsid> 
-	 		<version>1,0,0,36</version> 
-		<compressed>ocx</compressed>
+	 		<version>1,0,1,40</version> 
+			<compressed>ocx</compressed>
 	 		<type>inproc</type> 
 	 	</activex>
 	<activex>
