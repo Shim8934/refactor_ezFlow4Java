@@ -1,14 +1,17 @@
 ﻿function GetDocumentElement(HwpCtrl, CharName)
 {
 	var DocumentInfo = createXmlDom();
-	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
+	
+//	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0)
 	{
 	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "")
 	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0) , "<CONN></CONN>");
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+//		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0)
 		{
@@ -28,13 +31,15 @@
 function SetDocumentElement(HwpCtrl, CharName, value)
 {
 	var DocumentInfo = createXmlDom();
-	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());	
+//	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());	
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0)
 	{
 	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "")
 	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+//		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0)
 		{
@@ -211,7 +216,8 @@ function callUIASP(pconnString,pqueryString, pkeyNodes)
 	var feature	=  pconnString
 	parameter = window.showModalDialog(url,parameter,feature);
 	
-	xmlpara.loadXML(parameter)
+//	xmlpara.loadXML(parameter)
+	xmlpara = loadXMLString(parameter);
 	return xmlpara;
 }
 
@@ -227,7 +233,9 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes)
 	var feature	=  pconnString
 	parameter = window.showModalDialog(url,xmlsend,feature);
 	
-	xmlpara.loadXML(parameter)
+//	xmlpara.loadXML(parameter)
+	xmlpara = loadXMLString(parameter);
+	
 	return xmlpara;
 }
 
@@ -350,7 +358,8 @@ function chkAprLine(objNodes)
 {
 	var xmldom = createXmlDom();
 	xmldom.async = false;
-	xmldom.loadXML(TempsaveAprlineinfo);
+//	xmldom.loadXML(TempsaveAprlineinfo);
+	xmldom = loadXMLString(TempsaveAprlineinfo);
 	
 	var objLines = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");	
 	var objCheck = objNodes.selectNodes("APRLINES/APRLINE");
@@ -471,7 +480,8 @@ function makeKeyValue(pkeyNodes,flag)
 	    {
 			if(GetDocumentElement(HwpCtrl, "tblinfo") != "")
 			{ 
-				xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"))
+//				xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"))
+				xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
 				tblid = GetAttribute(pkeyNodes(i), "tableid");
 				tblObject = fields.item(tblid).TagObject;
 				listKeyRow = pkeyNodes(i).childNodes;
@@ -559,7 +569,8 @@ function setData(pobjXml, currTD)
 
 			if (GetDocumentElement(HwpCtrl, "tblinfo") != "")
 			{
-				xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"));
+//				xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"));
+				xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
 				tblinfoNodes = xmlTbl.documentElement.childNodes
 
 				fieldName = GetAttribute(row(0), "name")
@@ -851,7 +862,7 @@ function chkAprLine(objNodes)
 {
 	var xmldom = createXmlDom();
 	xmldom.async = false;
-	xmldom.loadXML(TempsaveAprlineinfo);
+	xmldom = loadXMLString(TempsaveAprlineinfo);
 	
 	var objLines = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");	
 	var objCheck = objNodes.selectNodes("APRLINES/APRLINE");
@@ -1022,7 +1033,8 @@ function ConnExist(pprocessIdx, currTD) {
         return false;
     }
 
-    xmlData.loadXML(pzFormProc.editor.DOM.all.conn.innerHTML)
+//    xmlData.loadXML(pzFormProc.editor.DOM.all.conn.innerHTML)
+    xmlData = loadXMLString(pzFormProc.editor.DOM.all.conn.innerHTML);
     if (xmlData.getElementsByTagName("CONNFILEPATH").length > 0) {
         try {
             var ConnRootText = getNodeText(xmlData.getElementsByTagName("CONNFILEPATH").item(0));

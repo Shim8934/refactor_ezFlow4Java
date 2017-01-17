@@ -45,7 +45,7 @@
 	<activex>
 		<url os="all" size="43">DOWNLOADSERVER/files/component/ezHwpProcessor.ent</url> 
 	 		<clsid>1D50E26E-E51E-4153-93DD-D08745457090</clsid> 
-	 		<version>1,0,1,40</version> 
+	 		<version>1,0,0,40</version> 
 			<compressed>ocx</compressed>
 	 		<type>inproc</type> 
 	 	</activex>
