@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -361,6 +364,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String result = "";
 
         vo.setTenantId(tenantID);
+        
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String nowDate = date.format(new Date()); 
+        vo.setNowDate(nowDate);
         
 		if (vo.getParentCn() == null) {
 			ezOrganAdminService.updateDBData_dept(vo);
@@ -835,6 +843,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    int tenantID = userInfo.getTenantId();
 	    
 	    vo.setTenantId(tenantID);
+	    
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String nowDate = date.format(new Date()); 
+        vo.setNowDate(nowDate);
 	    
 	    logger.debug("tenantID=" + tenantID);
 	    

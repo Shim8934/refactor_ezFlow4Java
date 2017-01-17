@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -1037,9 +1038,21 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return resultMap;
 	}
-
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param loginCookie 로그인 쿠키
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @param isSaved 보낸편지함에 저장 여부
+	 * @throws Exception
+	 */
 	@Override
-	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception {
+	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception {
 		logger.debug("sendMail started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1048,53 +1061,79 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String userAccount = userId + "@" + domainName;
 		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 		
-		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-				userAccount, password);
+		IMAPAccess ia = null;
 		
-		MimeMessage message = sa.createMimeMessage();
-		
-		// set from
-		logger.debug("from=" + from.getAddress());
-		message.setFrom(from);
-		
-		// set to
-		for (InternetAddress to : toArr) {
-			logger.debug("to=" + to.getAddress());
-			message.addRecipient(RecipientType.TO, to);
-		}
-		
-		// set cc
-		if (ccArr != null) {
-			for (InternetAddress cc : ccArr) {
-				logger.debug("cc=" + cc.getAddress());
-				message.addRecipient(RecipientType.CC, cc);
+		try {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			MimeMessage message = sa.createMimeMessage();
+			
+			// set from
+			logger.debug("from=" + from.getAddress());
+			message.setFrom(from);
+			
+			// set to
+			for (InternetAddress to : toArr) {
+				logger.debug("to=" + to.getAddress());
+				message.addRecipient(RecipientType.TO, to);
+			}
+			
+			// set cc
+			if (ccArr != null) {
+				for (InternetAddress cc : ccArr) {
+					logger.debug("cc=" + cc.getAddress());
+					message.addRecipient(RecipientType.CC, cc);
+				}
+			}
+			
+			// set bcc
+			if (bccArr != null) {
+				for (InternetAddress bcc : bccArr) {
+					logger.debug("bcc=" + bcc.getAddress());
+					message.addRecipient(RecipientType.BCC, bcc);
+				}
+			}
+			
+			// set subject
+			logger.debug("subject=" + subject);
+			message.setSubject(subject, "UTF-8");
+			
+			// set content
+			message.setContent(content, "text/html; charset=utf-8");
+			
+			// set sentDate
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        // set User-Agent header
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        
+	        Transport.send(message);
+	        logger.debug("Mail send success.");
+	        
+	        if (isSaved) {
+	        	//보낸편지함에 저장
+	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+	        			userAccount, password, egovMessageSource, userInfo.getLocale());
+	        	
+	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
+	    		
+	    		if (sentFolder.exists()) {
+	    			sentFolder.open(Folder.READ_WRITE);
+	    			sentFolder.appendMessages(new Message[]{message});
+	    			sentFolder.close(true);
+	    			logger.debug("Mail is successfully saved in sent folder.");
+	    		}
+	        }
+        
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
 			}
 		}
 		
-		// set bcc
-		if (bccArr != null) {
-			for (InternetAddress bcc : bccArr) {
-				logger.debug("bcc=" + bcc.getAddress());
-				message.addRecipient(RecipientType.BCC, bcc);
-			}
-		}
-		
-		// set subject
-		logger.debug("subject=" + subject);
-		message.setSubject(subject, "UTF-8");
-		
-		// set content
-		message.setContent(content, "text/html; charset=utf-8");
-		
-		// set sentDate
-        message.setSentDate(Calendar.getInstance().getTime());
-        
-        //set User-Agent header
-        message.setHeader("User-Agent", "JMocha Mail 1.0");
-        
-        Transport.send(message);
-        logger.debug("Mail send success.");
-        
         logger.debug("sendMail ended.");
 	}
 	

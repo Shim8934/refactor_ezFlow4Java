@@ -284,9 +284,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		}
 	}
 
-	public String getBirthUserList(String companyID, String curMon) throws Exception {
+	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception {
 		
-		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(companyID); 
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANT_ID", tenantID);
+		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(map); 
 		
 		String solarValue = "";
 		StringBuilder result = new StringBuilder("<DATA>");

@@ -1251,6 +1251,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertTbSpecialCatalogInfoRec", map);
 	}
 	
+	public void insertTbCabRoleInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertTbCabRoleInfo", map);
+	}
+	
 	public void setMyTaskCode(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setMytaskCode", map);
 	}
@@ -1453,6 +1457,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteTbSpecialCatalogInfo(Map<String, Object> map) {
 		delete("EzApprovalG.deleteTbSpecialCatalogInfo", map);
+	}
+	
+	public void deleteTbCabRoleInfo(Map<String, Object> map) {
+		delete("EzApprovalG.deleteTbCabRoleInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1153,7 +1153,7 @@ function ViewDoc_onclick_Complete(Rtn) {
                 left = pleftpos / 2;
                 top = ptoppos / 2;
 
-                window.open(url, strLang1116, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+                window.open(url, strLang1135, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeigth + ",width=" + wWidth + ",top=" + top + ",left = " + left);
             }
         }
         else {

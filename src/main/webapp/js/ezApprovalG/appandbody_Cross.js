@@ -208,13 +208,13 @@ function getdetail(DocID, pFlag) {
     }
     if (ret[1] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1129 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1148 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + textAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:" + strLang9 + "; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1130 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(DocID, pFlag);
         rtnVal = rtnVal + "</table>";
     }
@@ -257,13 +257,13 @@ function OpenQuestionUI_Complete(ret) {
     }
     if (ret[1] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1129 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='4'><P>" + "▶ " + strLang1148 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextAttatch;
         rtnVal = rtnVal + "</table>";
     }
     if (ret[2] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px ; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1130 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='7'><P>" + "▶ " + strLang1149 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
         rtnVal = rtnVal + "</table>";
     }

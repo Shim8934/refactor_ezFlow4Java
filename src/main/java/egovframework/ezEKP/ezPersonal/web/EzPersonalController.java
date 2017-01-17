@@ -153,7 +153,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 			
 			if (proxyInfo.split(":")[0].trim().equals("")) {
-				result = ezOrganService.delProxyUserInfo(userInfo.getId());
+				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3].replace("/", ":"), proxyInfo.split(":")[4].replace("/", ":"));
 			}
@@ -289,7 +289,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
-			result = ezOrganService.getProxyUserInfo(userInfo.getId());
+			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			
 			Document xmlDom = commonUtil.convertStringToDocument(result);
 			
@@ -652,7 +652,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 		}
 		
-		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon);
+		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon, userInfo.getTenantId());
 	
 		return result;
 	}
@@ -1153,4 +1153,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 			    }
 			}
 	    }
+	 
+	/**
+	 * 전자결재G 결재 문서 알림 메일 
+	 */
+	@RequestMapping(value = "/ezPersonal/getApprovNoticeMail.do")
+	@ResponseBody
+	public String getApprovNoticeMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
+
+		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getTenantId());
+		
+		return result;
+	}
+	
 }

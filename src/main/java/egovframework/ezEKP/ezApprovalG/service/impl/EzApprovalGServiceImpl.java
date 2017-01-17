@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -272,7 +273,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantID);
 		
-		LOGGER.debug("getOptionInfo Param : v_CODE1=" + code1 + "v_CODE2=" + code2 + "v_LANGTYPE=" + lang + "v_TENANTID= " + tenantID);
+		LOGGER.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang + " v_TENANTID= " + tenantID);
 
 		return ezApprovalGDAO.getCode2Name(map);
 	}
@@ -3057,7 +3058,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID) throws Exception{
-		String accountYear = getAccountingYear(EgovDateUtil.getToday(""), companyID, langType, tenantID);
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PDEPTCODE", processDeptCode);
@@ -3643,35 +3644,42 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if ( type2Sn == 0) {
 				deptCode = "0";
 				map.put("v_DDeptCode", deptCode);
-			}
+			} 
+				
+			map.put("v_YEAR", commonUtil.getTodayUTCTime("yyyy"));
+			map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
 			int curSN = ezApprovalGDAO.transferCabinetSn(map);
-			if(curSN == 0){
-				map.put("v_RtnSN", 1);
-				curSN=1;
-				ezApprovalGDAO.insertTbSerialNumGen(map);
-			}
 				map.put("v_RtnSN", curSN);
+				ezApprovalGDAO.insertTbSerialNumGen(map);
+			
 				ezApprovalGDAO.updateTbSerialNumGen(map);
-				map.put("v_CABINETCLASSNO", deptCode + taskCode + EgovDateUtil.getTodayTime().substring(0,4) + String.format("%06d", Integer.parseInt((numRows + Integer.toString(curSN-1)))));
+				
+				StringBuffer rowID = new StringBuffer();
 
 //				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
-				ezApprovalGDAO.insertTbCabinetClass(map);
-				ezApprovalGDAO.trigerTbCabinet(map);
-				ezApprovalGDAO.trigerTbCabRoleInfo(map);
+				for (int j=0; j<numRows; j++) {
+					String cabList[] =cabIDList.split(",");
+					map.put("v_cabList",cabList[j]);
+					map.put("v_SN", j);
+					map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt((j + Integer.toString(curSN-1)))));
+					ezApprovalGDAO.insertTbCabinetClass(map);
+					ezApprovalGDAO.trigerTbCabinet(map);
+					ezApprovalGDAO.trigerTbCabRoleInfo(map);
+				
 				List<ApprGCabinetVO> apprExistUnitList = ezApprovalGDAO.selectExistUnit(map);
-				StringBuffer rowID = new StringBuffer();
 				if(apprExistUnitList.size() > 0) {
-					for(int i =0; i< apprExistUnitList.size(); i++){
-						rowID.append(apprExistUnitList.get(i).getCabinetClassNo().trim());
+						rowID.append(apprExistUnitList.get(0).getCabinetClassNo().trim());
 						map.put("v_rowID", rowID.toString());
-						map.put("KeepingPeriod", apprExistUnitList.get(i).getKeepingPeriod());
-						map.put("KeepingMethod", apprExistUnitList.get(i).getKeepingPlace());
-						map.put("KeepingPlace", apprExistUnitList.get(i).getKeepingMethod());
-						map.put("DisplayRecFlag", apprExistUnitList.get(i).getDiplayRecFlag());
-						map.put("SpecialCatalogFlag", apprExistUnitList.get(i).getSpecialCatalogFlag());
+						map.put("KeepingPeriod", apprExistUnitList.get(0).getKeepingPeriod());
+						map.put("KeepingMethod", apprExistUnitList.get(0).getKeepingPlace());
+						map.put("KeepingPlace", apprExistUnitList.get(0).getKeepingMethod());
+						map.put("DisplayRecFlag", apprExistUnitList.get(0).getDiplayRecFlag());
+						map.put("SpecialCatalogFlag", apprExistUnitList.get(0).getSpecialCatalogFlag());
 						ezApprovalGDAO.updateExistUnit(map);
 					}
-				}
+				
 				//특수목록 입력
 				String spFlag = ezApprovalGDAO.selectTbSpecialCatalogInfo(map);
 				if(spFlag == null) {
@@ -3688,33 +3696,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				//인수 기록물철 테이블(TBCABINET)에 생성한다.
 			    //권호수가 1권이 아닐경우-> 기록물철을 생성
 				ezApprovalGDAO.insertTbCabinetInfo(map);
-
 				List<ApprGCabinetVO> apprCabinetTransferList = ezApprovalGDAO.selectCabinetTransfer(map);
 				StringBuffer rowID2 = new StringBuffer();
 				if(apprCabinetTransferList.size() > 0) {
-					for(int j =0; j< apprCabinetTransferList.size(); j++){
-						rowID2.append(apprCabinetTransferList.get(j).getCabinetID().trim());
+						rowID2.append(apprCabinetTransferList.get(0).getCabinetID().trim());
 						map.put("v_rowID2", rowID2.toString());
-						map.put("ProcessDeptCode", apprCabinetTransferList.get(j).getPublicityCode());
-						map.put("TaskCode", apprCabinetTransferList.get(j).getTaskCode());
-						map.put("ProductionYear", apprCabinetTransferList.get(j).getProductionYear());
-						map.put("RegSerialNo", apprCabinetTransferList.get(j).getRegSerialNo());
-						map.put("VolumeNo", apprCabinetTransferList.get(j).getVolumeNo());
-						map.put("CabinetID", apprCabinetTransferList.get(j).getCabinetID());
-						map.put("Title", apprCabinetTransferList.get(j).getTitle());
-						map.put("Title2", apprCabinetTransferList.get(j).getTitle2());
-						map.put("ProcessDeptName", apprCabinetTransferList.get(j).getProcessDeptName());
-						map.put("ProcessDeptName2", apprCabinetTransferList.get(j).getProcessDeptName2());
-						map.put("TaskName", apprCabinetTransferList.get(j).getTaskName());;
-						map.put("TaskName2", apprCabinetTransferList.get(j).getTaskName2());
-						map.put("CatalogTransferFlag", apprCabinetTransferList.get(j).getCatalogTransferFlag());
-						map.put("CatalogTransferYear", apprCabinetTransferList.get(j).getCatalogTransferYear());
-						map.put("DocTransferFlag", apprCabinetTransferList.get(j).getDocTransferFlag());
-						map.put("DocTransferYear", apprCabinetTransferList.get(j).getDocTransferYear());
-						map.put("ProdReportFlag", apprCabinetTransferList.get(j).getProdReportFlag());
+						map.put("ProcessDeptCode", apprCabinetTransferList.get(0).getPublicityCode());
+						map.put("TaskCode", apprCabinetTransferList.get(0).getTaskCode());
+						map.put("ProductionYear", apprCabinetTransferList.get(0).getProductionYear());
+						map.put("RegSerialNo", apprCabinetTransferList.get(0).getRegSerialNo());
+						map.put("VolumeNo", apprCabinetTransferList.get(0).getVolumeNo());
+						map.put("CabinetID", apprCabinetTransferList.get(0).getCabinetID());
+						map.put("Title", apprCabinetTransferList.get(0).getTitle());
+						map.put("Title2", apprCabinetTransferList.get(0).getTitle2());
+						map.put("ProcessDeptName", apprCabinetTransferList.get(0).getProcessDeptName());
+						map.put("ProcessDeptName2", apprCabinetTransferList.get(0).getProcessDeptName2());
+						map.put("TaskName", apprCabinetTransferList.get(0).getTaskName());;
+						map.put("TaskName2", apprCabinetTransferList.get(0).getTaskName2());
+						map.put("CatalogTransferFlag", apprCabinetTransferList.get(0).getCatalogTransferFlag());
+						map.put("CatalogTransferYear", apprCabinetTransferList.get(0).getCatalogTransferYear());
+						map.put("DocTransferFlag", apprCabinetTransferList.get(0).getDocTransferFlag());
+						map.put("DocTransferYear", apprCabinetTransferList.get(0).getDocTransferYear());
+						map.put("ProdReportFlag", apprCabinetTransferList.get(0).getProdReportFlag());
 						
 						ezApprovalGDAO.updateTbCabinetInfo(map);
-					}
 				}
 				ezApprovalGDAO.updateTbCabinetInfo2(map);
 				ezApprovalGDAO.updateTbCabinetInfo3(map);
@@ -3724,19 +3729,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				StringBuffer rowID3 = new StringBuffer();
 
 				if(apprTbSeperateAttachList.size() > 0) {
-					for(int k =0; k< apprTbSeperateAttachList.size(); k++){
-						rowID.append(apprTbSeperateAttachList.get(k).getRecordID().trim());
+				
+						rowID.append(apprTbSeperateAttachList.get(0).getRecordID().trim());
 						map.put("v_rowID3", rowID3.toString());
-						map.put("v_CABINETID", apprTbSeperateAttachList.get(k).getCabinetID());
+						map.put("v_CABINETID", apprTbSeperateAttachList.get(0).getCabinetID());
 
 						ezApprovalGDAO.updateTbSeperateAttach(map);
 					}
-				}
+				
 				ezApprovalGDAO.insertTbCabinetHistory(map);
-
+				}
 				
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
@@ -4114,7 +4120,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORGDOCID", orgDocID);
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", userInfo.getTenantId());
-		
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
 		try {
 			ezApprovalGDAO.doSendOfferApprove1(map);
 			if(gFlag.equals("G")) {
@@ -4131,6 +4138,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertTbExpAprLine(map);
 			
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -4162,6 +4170,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>TRUE</RESULT>";
 		} else {
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			ezApprovalGDAO.doSendOfferApprove2(map);
 			
 			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID, userInfo.getTenantId());
@@ -5717,6 +5726,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map1.put("v_MODIFYFLAG", modifyFlag.trim());
 			map1.put("v_PAGENUM", docXML.getElementsByTagName("PAGENUM").item(0).getTextContent());
 			map1.put("v_TENANTID", tenantID);
+			map1.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
 		
 			try {
@@ -5836,7 +5846,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String listType = "001";
 		boolean usePublicFlag = false;
 		String multiLang = commonUtil.getMultiData(lang);
-		
+		String offSetMin = commonUtil.getMinuteUTC(offset);
+
 		switch (listFlag) {
 		case "0" :	// 기록물 대장
 			listType = "001";
@@ -5919,15 +5930,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		//다국어 추가 소스 수정
 		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
-                " SELECT TBRECORD.RecordID, TBRECORD.DocID, TBRECORD.RegisterNo, TBSEPERATEATTACH.CreateDate, " +
-                "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 ?섏떊臾몄꽌 怨듬엺吏?뺥븷???덈룄濡?DocState 異붽?
+                " SELECT TBRECORD.RecordID, TBRECORD.DocID, TBRECORD.RegisterNo, TBSEPERATEATTACH.CreateDate+ '" + offSetMin +"'/(24*60) as CreateDate, " +
+                "TBENDAPRDOCINFO.DocType, TBSEPERATEATTACH.RegisterType, TBENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
                 "TBSEPERATEATTACH.CabinetID, TBSEPERATEATTACH.SeperateAttachNo , " + 
 				"TBENDAPRDOCINFO.Href, TBENDAPRDOCINFO.ContainerID, TBENDAPRDOCINFO.FormID, " + 
 				"TBENDAPRDOCINFO.WriterID, TBCABINET.ConfirmFlag, TBCABINET.CabinetClassNo, " + 
 				"TBCABINET.ProcessDeptCode AS CabDeptCode, TBCABINET.OwnerDeptID, " + 
-                "TBRECORD.RegisterDate, TBRECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBRECORD.DrafterName" + multiLang + " as DrafterName, TBRECORD.AttachFlag, " +
+                "TBRECORD.RegisterDate + '" + offSetMin +"'/(24*60) as RegisterDate, TBRECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBRECORD.DrafterName" + multiLang + " as DrafterName, TBRECORD.AttachFlag, " +
 				"TBCABINET.OwnerTask, TBRECORD.RejectFlag , TBRECORD.ReceiptMemberName" + multiLang + " as ReceiptName ";
-
+		
         fromClause = " FROM ezApprovalG_S907000.TBRECORD Left Join ezApprovalG_S907000.TBENDAPRDOCINFO " + 
 			"On TBRECORD.DocID=TBENDAPRDOCINFO.DocID AND TBRECORD.TENANT_ID=TBENDAPRDOCINFO.TENANT_ID Inner Join ezApprovalG_S907000.TBSEPERATEATTACH " +
             "On TBRECORD.RecordID=TBSEPERATEATTACH.RecordID AND TBRECORD.TENANT_ID=TBSEPERATEATTACH.TENANT_ID ";
@@ -8330,9 +8341,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String subSQL = "";
 		
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String createDate = EgovDateUtil.getTodayTime();
+		String createDate =commonUtil.getTodayUTCTime("");
 		String deptCode = xmlDom.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim();
 		String taskCode = xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent();
+		//'기록물철 분류번호: 처리과기관코드+단위업무코드+생산년도+등록일련번호
+        //수정(2007.07.26 김상건) : 회계년도가 3월 ~ 익년 2월까지이므로 RegYear 년도는 회계년도 값을 가져야 한다.
 		String regSN = formatSerialNum(getSerialNum("001", deptCode, taskCode, companyID, strLang, tenantID));
 		String produceY = getAccountingYear(createDate, companyID, strLang,tenantID);
 		String cabinetClassNO = deptCode + taskCode + produceY + regSN;
@@ -8379,6 +8392,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map1.put("v_DeptMName",  makeRightField(xmlDom.getElementsByTagName("OWNERNAME").item(0).getTextContent()));
 			map1.put("v_DeptMName2",  makeRightField(xmlDom.getElementsByTagName("OWNERNAME2").item(0).getTextContent()));
 			map1.put("v_TENANTID",  tenantID);
+			map1.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 
 			map1.put("companyID", companyID);
 			
@@ -8430,7 +8444,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CABCLASSNO", cabClassNO);
 		map.put("v_CREATEDATE", createDate);
 		map.put("v_TENANTID", tenantID);
-		
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
+
 		try {
 			ezApprovalGDAO.addNewVolume(map);
 			result = "<RESULT>TRUE</RESULT>";
@@ -8921,7 +8936,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 	private String rollbackSN(String snType1, String snType2, String snType3, String toSN, String companyID, String strLang, int tenantID) throws Exception{
-		String accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, strLang, tenantID);
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strLang, tenantID);
 		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -8931,6 +8946,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CurSN", toSN);
 		map.put("v_AccountYear", accountYear);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
 		try {
 			ezApprovalGDAO.spRollbackSN(map);
@@ -9130,10 +9146,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (processDate != null && !processDate.equals("")) {
 				accountYear = getAccountingYear(processDate, companyID, langType, tenantID);
 			} else {
-				accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, langType, tenantID);
+				accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 			}
 		} else {
-			accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, langType, tenantID);
+			accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -9143,6 +9159,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CurSN", sn);
 		map.put("v_AccountYear", accountYear);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
+		
 		try {
 			ezApprovalGDAO.spRollbackSN(map);
 			result = "TRUE";
@@ -9187,10 +9205,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (processDate != null && !processDate.equals("")) {
 				accountYear = getAccountingYear(processDate, companyID, langType, tenantID);
 			} else {
-				accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, langType, tenantID);
+				accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 			}
 		} else {
-			accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, langType, tenantID);
+			accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType, tenantID);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -9199,7 +9217,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("iv_Type3", type3);
 		map.put("v_AccountYear", accountYear);
 		map.put("v_TENANTID", tenantID);
-		
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
+
 		int result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
 		if (result == 0) {
@@ -11368,7 +11387,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getSerialNum(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID) throws Exception{
-		String accountYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, langType ,tenantID);
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType ,tenantID);
 		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -11377,6 +11396,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("iv_Type3", snType3);
 		map.put("v_AccountYear", accountYear);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
 		int result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
@@ -13147,7 +13167,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String g_Const_TransExpCabConst_Function(String companyID, int tenantID) throws Exception{
 		String strSQL = "";
-		String accountingYear = getAccountingYear(EgovDateUtil.getTodayTime(), companyID, "1", tenantID);
+		String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
 		
 		if (!accountingYear.trim().equals("")) {
 			strSQL = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
@@ -14446,7 +14466,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERFLAG", userFlag.trim().toLowerCase());
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
+		map.put("companyID", companyID);
+		map.put("v_STARTDATE", "TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS')"); 
+		map.put("v_ENDDATE", "TO_DATE('" + commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59','YYYY-MM-DD HH24:MI:SS') "); 
+
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -15927,6 +15950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			}
 			catch(Exception e){
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				return  "<RESULT>FALSE</RESULT>";
 			}
 			return "<RESULT>TRUE</RESULT>";
@@ -15995,6 +16019,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>TRUE</RESULT>";
 			
 			}catch(Exception e){
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				System.out.println(e.getMessage());
 				 return "<RESULT>FALSE</RESULT>";
 			}
@@ -16016,6 +16041,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		catch (Exception e)
 		{
+			System.out.println(e.getMessage());
 			return false;
 		}
 	}
@@ -16218,7 +16244,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		else{
-			registerDate = EgovDateUtil.getTodayTime();
+			registerDate = commonUtil.getTodayUTCTime("");
 			specialCatalogFlag = getRecordSCFlag(cabID, companyID, tenantID);
 			regSn = xmlDom.getElementsByTagName("REGSN").item(0).getTextContent().trim();
 			rejectFlag = xmlDom.getElementsByTagName("REJECTFLAG").item(0).getTextContent().trim();
@@ -16392,6 +16418,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  		String listType = "001";
  		String listTypeConst = "";
 	    String constraint = "";
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+
 		switch(listFlag)
 		{
 		case "0" :	// 기록물철 대장
@@ -16463,7 +16491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 //원본
                 //ListTypeConst = g_Const_ArrangeTargetCabConst;
 				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='0' " +
-	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId())+ "'" ;
+	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId())+ "'" ;
 				
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
                 listType = "009";
@@ -16476,7 +16504,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			case "10" :	// 종료연기 신청 대상 기록물철(업무담당자)
                 //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.//////////////
                 //ListTypeConst = "And TBCABINETCLASS.ExpirationYear=Cast(DatePart(yyyy,GetDate()) AS char(4)) "; 
-                String regYear = getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId());
+                String regYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId());
                 listTypeConst = "And TBCABINETCLASS.ExpirationYear='" + regYear + "'  ";
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
                 listType = "010";
@@ -16492,7 +16520,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 //동국대학교 수정 (2007.07.30) : 회계년도가 3월 ~ 익년 2월까지이므로 회계년도 값을 보정한다.//////////////
                 //ListTypeConst = g_Const_NotArrangedCabConst;
 				listTypeConst = " And TBCABINETCLASS.ConfirmFlag='0' " +
-	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId()) + "' And TBCABINETCLASS.TerminateFlag='0' ";
+	                    "And TBCABINETCLASS.ExpirationYear<'" + getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId()) + "' And TBCABINETCLASS.TerminateFlag='0' ";
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
                 listType = "009";
 				break;
@@ -16510,13 +16538,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				"TBCABINETCLASS.ModifyFlag, TBCABINET.CabinetTransferFlag, TBCABINETCLASS.ConfirmFlag, " +
 	            "TBCABINETCLASS.TaskCode, TBCABINETCLASS.TaskName, TBCABINETCLASS.TaskName2, TBCABINETCLASS.ProcessDeptCode, " + 
 				"TBCABINETCLASS.ProcessDeptName,TBCABINETCLASS.ProcessDeptName2, TBCABINET.CabinetClassNo, TBCABINETCLASS.RecTypeCode as RecTypeCode, " + 
-				"TBCABINETCLASS.CreateDate AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
+				"TBCABINETCLASS.CreateDate+ '" + offSetMin +"'/(24*60) AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
 				"TBCABINETCLASS.SpecialCatalogFlag, TBCABINETCLASS.TerminateFlag, " + 
 				"TBCABINETCLASS.OwnerDeptID, TBCABINETCLASS.OwnerTask, TBCABINETCLASS.TransDelayFlag ";
 		for (int i = 0; i < arrList.getElementsByTagName("SELECTFIELD").getLength(); i++) {
 			if (!makeListField(arrList.getElementsByTagName("COLNAME").item(i).getTextContent()).equals("")) {
 				if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase().trim()) < 0) {
-					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
+					if(arrList.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase().trim().indexOf("DATE")>-1){
+						String utcDate[] = arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim().split("AS");
+						extraSelectClause += "," + utcDate[0] +"+ '"+ offSetMin +"'/(12*60) AS" + utcDate[1] ;
+					} else{
+						extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
+					}
 				} else if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLALIAS").item(i).getTextContent().toUpperCase().trim()) < 0) {
 					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
 				}
@@ -16599,12 +16632,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (xmlDom.getElementsByTagName("TRANSEXPIRE").item(0) != null && xmlDom.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0){
 		   
-			 if(!(getAccountingYear(EgovDateUtil.getToday(""), companyID, userInfo.getLang(), userInfo.getTenantId()).equals(""))){
+			 if(!(getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId()).equals(""))){
 				 constraint = " And ( TBCABINETCLASS.ConfirmFlag='1' And " +
                          "( TBCABINETCLASS.DisplayRecFlag='2' And TBCABINETCLASS.TransDelayFlag='0' " +
-                         " And TBCABINETCLASS.ConfirmYear < '" + (Integer.parseInt(getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId())) - 1) + "'" +
-                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And RTRIM(DISPLAYENDDATE) <> '' AND TBCABINETCLASS.DisplayEndDate<'" + getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId()) + "') " +
-                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<'" + (Integer.parseInt(getAccountingYear(EgovDateUtil.getToday(""), companyID,  userInfo.getLang(), userInfo.getTenantId())) - 1) + "') " +
+                         " And TBCABINETCLASS.ConfirmYear < '" + (Integer.parseInt(getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId())) - 1) + "'" +
+                         " ) OR ( ( TBCABINETCLASS.DisplayRecFlag='1' And RTRIM(DISPLAYENDDATE) <> '' AND TBCABINETCLASS.DisplayEndDate<'" + getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId()) + "') " +
+                         " OR ( TBCABINETCLASS.TransDelayFlag='1' And TBCABINETCLASS.ExTransYear<'" + (Integer.parseInt(getAccountingYear(commonUtil.getTodayUTCTime(""), companyID,  userInfo.getLang(), userInfo.getTenantId())) - 1) + "') " +
                          " ) ) And TBCABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
 			 }
 			 else{
@@ -16638,7 +16671,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				"TBCABINETCLASS.ModifyFlag, TBCABINET.CabinetTransferFlag, TBCABINETCLASS.ConfirmFlag, " +
 	            "TBCABINETCLASS.TaskCode, TBCABINETCLASS.TaskName, TBCABINETCLASS.TaskName2, TBCABINETCLASS.ProcessDeptCode, " + 
 				"TBCABINETCLASS.ProcessDeptName,TBCABINETCLASS.ProcessDeptName2, TBCABINET.CabinetClassNo, TBCABINETCLASS.RecTypeCode as RecTypeCode, " + 
-				"TBCABINETCLASS.CreateDate AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
+				"TBCABINETCLASS.CreateDate + '" + offSetMin +"'/(24*60) AS ClassCreateDate, TBCABINETCLASS.OwnerID, " + 
 				"TBCABINETCLASS.SpecialCatalogFlag, TBCABINETCLASS.TerminateFlag, " + 
 				"TBCABINETCLASS.OwnerDeptID, TBCABINETCLASS.OwnerTask, TBCABINETCLASS.TransDelayFlag " + extraSelectClause + " From  ezApprovalG_S907000.TBCABINETCLASS  Inner Join " +
 	            "ezApprovalG_S907000.TBCABINET  On TBCABINETCLASS.CabinetClassNo = TBCABINET.CabinetClassNo AND TBCABINETCLASS.TENANT_ID = TBCABINET.TENANT_ID " );
@@ -16805,14 +16838,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CABINETID", cabinetID.trim());
 		map.put("v_CABINETCLASSNO", cabinetID.substring(0, cabinetID.trim().length()-3));
 		map.put("v_TENANTID", tenantID);
-		String userName = null;
+		StringBuilder userName = new StringBuilder() ;
 		List<ApprGRecordVO> userNameList = ezApprovalGDAO.selectUserName(map);
 		if ( userNameList.size() > 0 ) {
 			for(int j=0; j<userNameList.size(); j++ ) {
-				userName += userNameList.get(j).getUserName() + ",";
+				userName.append(userNameList.get(j).getUserName() + ",");
 			}
 		}
-		map.put("v_userName", userName);
+		map.put("v_userName", userName.toString().substring(0, userName.length()-1));
 		int cabID = ezApprovalGDAO.selectCabID(map);
 		int cabID2 = ezApprovalGDAO.selectCabID2(map);
 		map.put("v_cabID", cabID + cabID2);
@@ -17459,6 +17492,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CABCLASSNO", cabClassNo.trim());
+		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGRecordVO> docList = ezApprovalGDAO.getTaskCharger(map);
 		StringBuffer sb = new StringBuffer();
@@ -17495,19 +17529,42 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String nameList = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
 		String nameList2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_CABCLASSNO", cabClassNo);
+		map.put("v_TENANTID", tenantID);
+
+		ezApprovalGDAO.deleteTbCabRoleInfo(map);
+
+		String idListIndex[] = idList.split(",");
+		String nameListIndex[] = nameList.split(",");
+		String nameList2Index[] = nameList2.split(",");
 		
-        strSQL.append("Delete From TBCABROLEINFO Where CabinetClassNo= '" + cabClassNo + "' AND TENANT_ID = " + tenantID +";\n");
-        strSQL.append("Insert Into TBCABROLEINFO(User_ID,UserName, UserName2, CabinetClassNo, TENANT_ID) ");
-        strSQL.append("Select T1.Value, T1.Value1, T1.Value2, '" + cabClassNo + "', TENANT_ID" );
-        strSQL.append("From TABLE(fn_StringToTable1('" + idList + "','" + nameList + "','" + nameList2 + "',',')) T1 ;\n");
-        
-        boolean result = ExecuteTransactionSQL(strSQL , companyID);
-        if(result){
-        	return "<RESULT>TRUE</RESULT>";
-        }
-        else{
-        	return "<RESULT>FALSE</RESULT>";
-        }
+		int end = idList.indexOf(",");
+		int end2 = idList.indexOf(",");
+		int end3 = idList.indexOf(",");
+		
+		for(int i=0; i<idListIndex.length; i++) {
+			if(end <= 0) {
+				end = idList.length()+1;
+			} 
+			
+			if(end2 <= 0) {
+				end2 = nameList.length()+1;
+			} 
+			
+			if(end3 <= 0) {
+				end3 = nameList2.length()+1;
+			} 
+			
+			map.put("v_ArrayString", idListIndex[i]);
+			map.put("v_ArrayString1", nameListIndex[i]);
+			map.put("v_ArrayString2", nameList2Index[i]);
+			
+			ezApprovalGDAO.insertTbCabRoleInfo(map);
+		}
+		
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override

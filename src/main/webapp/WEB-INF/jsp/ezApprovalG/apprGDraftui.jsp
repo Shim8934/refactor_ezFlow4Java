@@ -21,6 +21,8 @@
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -628,6 +630,13 @@
 		                        OpenAlertUI(pAlertContent);
 		                        return;
 		                    }
+		                    Gyuljedate = GetDocInfoData("END", "STARTDATE");
+		                    SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
+		                } else {
+		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");
+	                        CurrentAprType = "A03001";
+	                        CurrentAprUserID = pUserID;
+	                        sendAlertMail("APR", 1, "DRAFT");
 		                }
 		                UpdateLineHistory();
 		                if (LastSignSN == 1) {

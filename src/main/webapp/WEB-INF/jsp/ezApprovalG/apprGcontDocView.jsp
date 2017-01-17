@@ -91,7 +91,7 @@
 		    }
 		    function QuitWindow() {
 // 		        OpenAlertUI(strLang929);
-				alert(strLang1120);
+				alert(strLang1139);
 		        btnClose_onclick();
 		        window.close();
 		    }

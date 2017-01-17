@@ -155,7 +155,7 @@ function RegisterRecord() {
     var xmlpara = createXmlDom();   
 
     var objRoot = createNodeInsert(xmlpara, objRoot, "DATA");   
-
+    
     var objNode, catalognode, cataloginfo, objSC, objSCNode;
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "MANUALFLAG", "1");
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DEPTCODE", arr_userinfo[4]);   

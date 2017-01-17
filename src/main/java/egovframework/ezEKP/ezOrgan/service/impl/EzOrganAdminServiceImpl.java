@@ -2,11 +2,14 @@ package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -264,8 +267,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}	
 
 	@Override
-	public int companyCheck(String cn) throws Exception {
-		return ezOrganAdminDao.companyCheck(cn);
+	public int companyCheck(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("tenantID", tenantID);
+		return ezOrganAdminDao.companyCheck(map);
 	}
 
 	@Override
@@ -335,7 +341,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());		
 		map.put("v_LDAPPATH", "");
 		
-		ezOrganAdminDao.insertDBData_dept(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.insertDBData_dept(map);
+        } else {
+        	//Local일때 프로시저 타는부분이 더 있어서 추가해줌.
+        	ezOrganAdminDao.insertDBData_dept(map);
+        	ezOrganAdminDao.updateDeptMaster(map);
+        }
+		
 	}
 	
 	@Override
@@ -505,11 +518,31 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    date.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    String nowDate = date.format(new Date()); 
+		
+		map.put("nowDate", nowDate);
 	    map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_PARENTCN", deptID);
+		map.put("temp", "");
 		
-		ezOrganAdminDao.restoreRetireEntry(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.restoreRetireEntry(map);
+	    } else {
+	    	String temp = ezOrganAdminDao.resotreRetireEntry_S(map);
+	    	
+	    	if (temp != null && temp.equals("1")) {
+	    		ezOrganAdminDao.restoreRetireEntry(map);
+	    	}
+	    	ezOrganAdminDao.restoreRetireEntry_D(map);
+	    	ezOrganAdminDao.updateUserMaster(map);
+	    	
+	    	OrganUserVO user = ezOrganAdminDao.updateUserMaster_S(map);
+	    	ezOrganAdminDao.updateUserMaster_U(user);
+	    	
+	    }  
 	}
 
 	@Override

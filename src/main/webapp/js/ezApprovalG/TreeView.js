@@ -400,12 +400,12 @@ function TreeView() {
     //트리뷰 바인딩
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang1107);
+            alert(strLang1126);
             return;
         }
 
         if (_dataSource == null) {
-            alert(strLang1108);
+            alert(strLang1127);
             return;
         }
 

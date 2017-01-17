@@ -3628,7 +3628,7 @@ function CheckProcessXML(AprLineRow)
  	    }
      	
  	    if(CheckNodes.length > 0 && CheckNodes.length < aprCount)
- 	        rtnVal = rtnVal + " "+strLang1109;
+ 	        rtnVal = rtnVal + " "+strLang1128;
      		
     }
 	return rtnVal;

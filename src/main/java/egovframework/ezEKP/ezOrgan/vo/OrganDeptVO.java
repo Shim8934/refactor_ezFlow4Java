@@ -54,6 +54,9 @@ public class OrganDeptVO {
 	/** dept*/
 	private String type;
 	
+	/** 현재 시간*/
+	private String nowDate;
+	
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
 	
@@ -221,5 +224,12 @@ public class OrganDeptVO {
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
+	}
+    
 	
 }
