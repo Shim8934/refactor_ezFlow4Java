@@ -298,17 +298,299 @@
 		]]>
 	</statement>
 	
-	<procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
+	<select id="EzOrganAdminDAO.getUserInfo_S1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+      		FROM
+      			DUAL
+      		WHERE (  	SELECT
+      							COUNT(*)  
+               				FROM
+               					EZHRMASTER.TBLPROXYINFO 
+               				WHERE
+               					PROXYUSERID = #v_CN#
+               				AND
+               					TENANT_ID = #v_TENANT_ID#	
+               				AND
+               					StartDate < to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+               				AND
+               					EndDate > to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') ) > 0
+		]]>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				CN ,
+                CASE
+                	#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+                    DISPLAYNAME DISPLAYNAME1  ,
+                    DISPLAYNAME2 ,
+                    MAIL ,
+                    MAILNICKNAME ,
+                    UPNNAME ,
+                    DEPARTMENT ,
+                    CASE
+                    	#v_LANGDATA#
+                    WHEN
+                    	'1'
+                    THEN
+                    	DESCRIPTION
+                    ELSE
+                    	DESCRIPTION2
+                    END
+                    	DESCRIPTION  ,
+                        DESCRIPTION DESCRIPTION1  ,
+                        DESCRIPTION2 ,
+                        PHYSICALDELIVERYOFFICENAME ,
+                    CASE
+                    	#v_LANGDATA#
+                    WHEN
+                    	'1'
+                    THEN
+                    	COMPANY
+                    ELSE
+                    	COMPANY2
+                    END
+                    	COMPANY  ,
+                        COMPANY COMPANY1  ,
+                        COMPANY2 ,
+                    	CASE
+                    		#v_LANGDATA#
+                        WHEN
+                        	'1'
+                        THEN
+                        	TITLE
+                        ELSE
+                        	TITLE2
+                        END
+                        	TITLE  ,
+                        	TITLE TITLE1  ,
+                        	TITLE2 TITLE2  ,
+                        	TELEPHONENUMBER ,
+                        	HOMEPHONE ,
+                        	FACSIMILETELEPHONENUMBER ,
+                        	MOBILE ,
+                        	STREETADDRESS ,
+                        	POSTALCODE ,
+                        	INFO ,
+                        	REPLACE(EXTENSIONATTRIBUTE1, 'a=0;', 'a=1;') EXTENSIONATTRIBUTE1  ,
+                        	EXTENSIONATTRIBUTE2 ,
+                        	EXTENSIONATTRIBUTE3 ,
+                        	EXTENSIONATTRIBUTE4 ,
+                        	EXTENSIONATTRIBUTE5 ,
+                        	EXTENSIONATTRIBUTE6 ,
+                        	EXTENSIONATTRIBUTE7 ,
+                        	EXTENSIONATTRIBUTE8 ,
+                        	EXTENSIONATTRIBUTE9 ,
+                        	CASE
+                        		#v_LANGDATA#
+                            WHEN
+                            	'1'
+                            THEN
+                            	EXTENSIONATTRIBUTE10
+                            ELSE
+                            	EXTENSIONATTRIBUTE102
+                            END
+                            	EXTENSIONATTRIBUTE10  ,
+                        		EXTENSIONATTRIBUTE10 EXTENSIONATTRIBUTE101  ,
+                        		EXTENSIONATTRIBUTE102 EXTENSIONATTRIBUTE102  ,
+                        		EXTENSIONATTRIBUTE11 ,
+                        		EXTENSIONATTRIBUTE12 ,
+                        		EXTENSIONATTRIBUTE13 ,
+                        		EXTENSIONATTRIBUTE14 ,
+                        		EXTENSIONATTRIBUTE15 ,
+                        		ADSPATH ,
+                        		UPDATEDT ,
+                        		'user' TYPE  ,
+                        		' ' DISPLAYNAMEPRINTABLE  ,
+                        		POSITIONCD ,
+                        		BIRTH ,
+                        		BIRTHTYPE 
+             FROM
+             	EZHRMASTER.TBLUSERMASTER 
+             WHERE
+             	CN = LOWER(#v_CN#)
+             AND
+             	TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getUserInfo_S2" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			 SELECT
+			 	CN ,
+                CASE
+                	#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+                    DISPLAYNAME DISPLAYNAME1  ,
+                    DISPLAYNAME2 ,
+                    MAIL ,
+                    MAILNICKNAME ,
+                    UPNNAME ,
+                    DEPARTMENT ,
+                    CASE
+                    	#v_LANGDATA#
+                    WHEN
+                    	'1'
+                    THEN
+                    	DESCRIPTION
+                    ELSE
+                    	DESCRIPTION2
+                    END
+                    	DESCRIPTION  ,
+                        DESCRIPTION DESCRIPTION1  ,
+                        DESCRIPTION2 ,
+                        PHYSICALDELIVERYOFFICENAME ,
+                        CASE
+                        	#v_LANGDATA#
+                        WHEN
+                        	'1'
+                        THEN
+                        	COMPANY
+                        ELSE
+                        	COMPANY2
+                        END
+                        	COMPANY  ,
+                        	COMPANY COMPANY1  ,
+                        	COMPANY2 ,
+                        CASE
+                        	#v_LANGDATA#
+                        WHEN
+                        	'1'
+                        THEN
+                        	TITLE
+                        ELSE
+                        	TITLE2
+                        END
+                        	TITLE  ,
+                        	TITLE TITLE1  ,
+                        	TITLE2 TITLE2  ,
+                        	TELEPHONENUMBER ,
+                        	HOMEPHONE ,
+                        	FACSIMILETELEPHONENUMBER ,
+                        	MOBILE ,
+                        	STREETADDRESS ,
+                        	POSTALCODE ,
+                        	INFO ,
+                        	EXTENSIONATTRIBUTE1 ,
+                        	EXTENSIONATTRIBUTE2 ,
+                        	EXTENSIONATTRIBUTE3 ,
+                        	EXTENSIONATTRIBUTE4 ,
+                        	EXTENSIONATTRIBUTE5 ,
+                        	EXTENSIONATTRIBUTE6 ,
+                        	EXTENSIONATTRIBUTE7 ,
+                        	EXTENSIONATTRIBUTE8 ,
+                        	EXTENSIONATTRIBUTE9 ,
+                        	CASE
+                        		#v_LANGDATA#
+                            WHEN
+                            	'1'
+                            THEN
+                            	EXTENSIONATTRIBUTE10
+                            ELSE
+                            	EXTENSIONATTRIBUTE102
+                            END
+                            	EXTENSIONATTRIBUTE10  ,
+                        		EXTENSIONATTRIBUTE10 EXTENSIONATTRIBUTE101  ,
+                        		EXTENSIONATTRIBUTE102 EXTENSIONATTRIBUTE102  ,
+                        		EXTENSIONATTRIBUTE11 ,
+                        		EXTENSIONATTRIBUTE12 ,
+		                        EXTENSIONATTRIBUTE13 , 
+		                        EXTENSIONATTRIBUTE14 ,
+		                        EXTENSIONATTRIBUTE15 ,
+		                        ADSPATH ,
+		                        UPDATEDT ,
+		                        'user' TYPE  ,
+		                        ' ' DISPLAYNAMEPRINTABLE  ,
+		                        POSITIONCD ,
+		                        BIRTH ,
+		                        BIRTHTYPE 
+		          FROM
+		          		EZHRMASTER.TBLUSERMASTER
+                  WHERE
+                  		CN = LOWER(#v_CN#)
+                  AND
+                  		TENANT_ID = #v_TENANT_ID#		
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLUSERMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE#
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLDEPTMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE# 
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</update>
+	
+	<statement id="EzOrganAdminDAO.updateProperty_U1" parameterClass="Map">
+		<![CDATA[
+			MERGE INTO
+				EZHRMASTER.TBLUSERMASTER 
+   			USING (	SELECT
+   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2
+          				FROM
+          					EZHRMASTER.TBLUSERMASTER 
+          				JOIN
+          					EZHRMASTER.TBLDEPTMASTER    ON TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN  AND TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID
+          				WHERE
+          					TBLDEPTMASTER.CN = #v_CN#
+          				AND
+          					TBLDEPTMASTER	) src ON ( TBLUSERMASTER.ROWID = src.ROW_ID )
+   			WHEN
+   				MATCHED
+   			THEN 
+   				UPDATE SET
+   					DESCRIPTION = src.DISPLAYNAME,
+              		DESCRIPTION2 = src.DISPLAYNAME2
+		]]>
+	</statement>
 	
 	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[

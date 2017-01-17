@@ -224,7 +224,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPVALUE", number);
 		map.put("v_FLAG", strFlag);
 		
-		ezOrganAdminDao.updateProperty(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.updateProperty(map);
+	    } else {
+	    	if (pClass.toLowerCase().equals("user")) {
+	    		ezOrganAdminDao.updateProperty(map);
+	    	} else {
+	    		ezOrganAdminDao.updateProperty_U(map);
+	    	}
+	    	if (strFlag.equals("Y")) {
+	    		ezOrganAdminDao.updateProperty_U1(map);
+	    	}
+	    }       
 	}
 
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
@@ -471,9 +482,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("v_TENANT_ID", tenantID);		
 		map.put("v_CN", cn);
-		map.put("v_LANGDATA", lang);		
+		map.put("v_LANGDATA", lang);
 		
-		return ezOrganAdminDao.getUserInfo(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			return ezOrganAdminDao.getUserInfo(map);
+		} else {
+			String temp = ezOrganAdminDao.getUserInfo_S1(map);
+    		
+    		if (temp != null && temp.equals("1")) {
+    			return ezOrganAdminDao.getUserInfo(map);
+    		} else {
+    			return ezOrganAdminDao.getUserInfo_S2(map);
+    		}
+        }
 	}
 	
 	@Override

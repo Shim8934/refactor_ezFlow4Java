@@ -1926,4 +1926,20 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.moveDBData_U3", map);
     }
 	
+	public String getUserInfo_S1 (Map<String, Object> map) throws Exception{
+		return (String)select("EzOrganAdminDAO.getUserInfo_S1",map);
+	}
+	
+	public OrganUserVO getUserInfo_S2 (Map<String, Object> map) throws Exception{
+		return (OrganUserVO)select("EzOrganAdminDAO.getUserInfo_S2",map);
+	}
+	
+	public void updateProperty_U (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateProperty_U", map);
+	}
+	
+	public void updateProperty_U1 (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateProperty_U1", map);
+	}
+	
 }
