@@ -17,6 +17,12 @@ public class OrganDeptVO {
 	private String deptNM;
 	/** 메일주소*/
 	private String mail;
+	/** 회사이름2*/
+	private String compNm2;
+	/** 부서레벨*/
+	private String deptLevel;
+	/** */
+	private String dept_Cd_Path;
 	/** 상위부서ID*/
 	private String extensionAttribute1;
 	/** 회사ID*/
@@ -216,11 +222,9 @@ public class OrganDeptVO {
 	public void setParentCn(String parentCn) {
 		this.parentCn = parentCn;
 	}
-
     public int getTenantId() {
         return tenantId;
     }
-    
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
@@ -230,6 +234,23 @@ public class OrganDeptVO {
 	public void setNowDate(String nowDate) {
 		this.nowDate = nowDate;
 	}
-    
+	public String getCompNm2() {
+		return compNm2;
+	}
+	public void setCompNm2(String compNm2) {
+		this.compNm2 = compNm2;
+	}
+	public String getDeptLevel() {
+		return deptLevel;
+	}
+	public void setDeptLevel(String deptLevel) {
+		this.deptLevel = deptLevel;
+	}
+	public String getDept_Cd_Path() {
+		return dept_Cd_Path;
+	}
+	public void setDept_Cd_Path(String dept_Cd_Path) {
+		this.dept_Cd_Path = dept_Cd_Path;
+	}
 	
 }

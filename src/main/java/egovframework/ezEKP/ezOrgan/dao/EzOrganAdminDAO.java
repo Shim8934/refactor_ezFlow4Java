@@ -1830,9 +1830,100 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateUserMaster_U", user);
 	}
 	
+	public void updateUserMaster_U1 (OrganUserVO user) throws Exception {
+		update("EzOrganAdminDAO.updateUserMaster_U1", user);
+	}
+	
+	public void updateUserMaster_U2 (OrganUserVO user) throws Exception {
+		update("EzOrganAdminDAO.updateUserMaster_U2", user);
+	}
+	
 	public String resotreRetireEntry_S (Map<String, Object> map) throws Exception {
 		return (String)select("EzOrganAdminDAO.restoreRetireEntry_S", map);
 	}
 	
+	public OrganDeptVO moveGroupUser_S (Map<String, Object> map) throws Exception {
+		return (OrganDeptVO)select("EzOrganAdminDAO.moveGroupUser_S", map);
+	}
+	
+	public void moveGroupUser_U (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.moveGroupUser_U", map);
+	}
+	
+	public void setAddJob_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.setAddJob_I", map);
+	}
+	
+	public String retireDBData_S (Map<String, Object> map) throws Exception {
+		return (String)select("EzOrganAdminDAO.retireDBData_S", map);
+	}
+	
+	public void retireDBData_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.retireDBData_I", map);
+	}
+	
+	public void retireDBData_D1(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.retireDBData_D1", map);
+    }
+	
+	public void retireDBData_D2(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.retireDBData_D2", map);
+    }
+	
+	public void retireDBData_D3(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.retireDBData_D3", map);
+    }
+	
+	public void retireDBData_U1(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.retireDBData_U1", map);
+    }
+	
+	public void retireDBData_U2(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.retireDBData_U2", map);
+    }
+	
+	public void deleteDBData_D1(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData_D1", map);
+    }
+	
+	public void deleteDBData_D2(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData_D2", map);
+    }
+	
+	public void deleteDBData_D3(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData_D3", map);
+    }
+	
+	public void deleteDBData_D4(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData_D4", map);
+    }
+	
+	public void deleteDBData_D5(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteDBData_D5", map);
+    }
+	
+	public void deleteDBData_U(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.deleteDBData_U", map);
+    }
+	
+	public OrganDeptVO moveDBData_S (Map<String, Object> map) throws Exception {
+		return (OrganDeptVO)select("EzOrganAdminDAO.moveDBData_S", map);
+	}
+	
+	public OrganDeptVO moveDBData_S1 (Map<String, Object> map) throws Exception {
+		return (OrganDeptVO)select("EzOrganAdminDAO.moveDBData_S1", map);
+	}
+	
+	public void moveDBData_U1(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.moveDBData_U1", map);
+    }
+	
+	public void moveDBData_U2(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.moveDBData_U2", map);
+    }
+	
+	public void moveDBData_U3(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.moveDBData_U3", map);
+    }
 	
 }

@@ -170,7 +170,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if(parentCn.equals(cn)){
 			result = "SAME";
 		}else{
-			
 			// skyblue0o0
 			String oldGroupAddr = "";
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -236,7 +235,38 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_CLASS", type);
 		
-		ezOrganAdminDao.moveDBData(map);
+		logger.debug("type="+type);
+		
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.moveDBData(map);
+        } else {
+        	if (type.toLowerCase().equals("group")) {
+        		logger.debug("moveDBData Start");
+        		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
+        		OrganDeptVO dept1 = ezOrganAdminDao.moveDBData_S1(map);
+        		logger.debug("dept="+dept.toString());
+        		logger.debug("dept1="+dept1.toString());
+        		map.put("v_COMPNM2", dept.getCompNm2());
+        		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
+        		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
+        		map.put("v_DEPTLEVEL", dept.getDeptLevel());
+        		map.put("v_EXTENSIONATTRIBUTE3", dept.getExtensionAttribute3());
+        		map.put("v_DEPT_CD_PATH", dept.getDept_Cd_Path());
+        		map.put("v_DEPT_CD_PATH_OLD", dept1.getDept_Cd_Path());
+        		
+        		ezOrganAdminDao.moveDBData_U1(map);
+        		ezOrganAdminDao.moveDBData_U2(map);
+        		ezOrganAdminDao.moveDBData_U3(map);
+        		logger.debug("moveDBData End");
+        	} else {
+        		OrganDeptVO dept = ezOrganAdminDao.moveGroupUser_S(map);
+    	    	map.put("v_DEPTNAME", dept.getDisplayName());
+    	    	map.put("v_DEPTNAME2", dept.getDisplayName2());
+    	    	ezOrganAdminDao.moveGroupUser_U(map);
+        	}
+        }
+		
+		
 	}
 
 	@Override
@@ -258,7 +288,29 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		
-		ezOrganAdminDao.retireDBData(map);
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		
+		map.put("nowDate", nowDate);
+		
+		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			 ezOrganAdminDao.retireDBData(map);
+	     } else {
+	    	 String temp = ezOrganAdminDao.retireDBData_S(map);
+	    	 
+	    	 if (temp != null && temp.equals("1")) {
+	    		 ezOrganAdminDao.retireDBData_I(map);
+	    	 } 
+	    	 ezOrganAdminDao.retireDBData(map);
+	    	 ezOrganAdminDao.retireDBData_D1(map);
+	    	 ezOrganAdminDao.retireDBData_D2(map);
+	    	 ezOrganAdminDao.retireDBData_D3(map);
+	    	 ezOrganAdminDao.retireDBData_U1(map);
+	    	 ezOrganAdminDao.retireDBData_U2(map);
+	     }       
+		
+		
 	}	
 
 	@Override
@@ -397,7 +449,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
 		
-		ezOrganAdminDao.deleteDBData(map);
+		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			 ezOrganAdminDao.deleteDBData(map);
+	     } else {
+	    	 if (pClass.toLowerCase().equals("group")) {
+	    		 ezOrganAdminDao.deleteDBData(map);
+	    	 } else {
+	    		 ezOrganAdminDao.deleteDBData_D1(map);
+	    		 ezOrganAdminDao.deleteDBData_D2(map);
+	    		 ezOrganAdminDao.deleteDBData_D3(map);
+	    		 ezOrganAdminDao.deleteDBData_D4(map);
+	    		 ezOrganAdminDao.deleteDBData_U(map);
+	    		 ezOrganAdminDao.deleteDBData_D5(map);
+	    	 }
+	     }
 	}
 
 	@Override
@@ -467,7 +532,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DELFLAG", delFlag);
                     
             		try {
-            		    ezOrganAdminDao.setAddJob(map);
+            			 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            				 	ezOrganAdminDao.setAddJob(map);
+            		        } else {
+            		        	
+            		        	if (delFlag !=null && delFlag.equals("1")) {
+            		        		ezOrganAdminDao.setAddJob(map);
+            		        	}
+            		        	
+            		        	if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
+            		        		ezOrganAdminDao.setAddJob_I(map);
+            		        	}
+            		        }       
+            		    
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
@@ -540,7 +617,25 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	ezOrganAdminDao.updateUserMaster(map);
 	    	
 	    	OrganUserVO user = ezOrganAdminDao.updateUserMaster_S(map);
-	    	ezOrganAdminDao.updateUserMaster_U(user);
+	    	user.setCn(cn);
+	    	user.setTenantId(tenantID);
+	    	
+	    	if (user.getDisplayName2() == null || user.getDisplayName2().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U(user);
+	    	}
+	    	
+	    	if (user.getTitle2() == null || user.getTitle2().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U1(user);
+	    	}
+	    	
+	    	if (user.getExtensionAttribute102() == null || user.getExtensionAttribute102().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U2(user);
+	    	}
+	    	
+	    	OrganDeptVO dept = ezOrganAdminDao.moveGroupUser_S(map);
+	    	map.put("v_DEPTNAME", dept.getDisplayName());
+	    	map.put("v_DEPTNAME2", dept.getDisplayName2());
+	    	ezOrganAdminDao.moveGroupUser_U(map);
 	    	
 	    }  
 	}
