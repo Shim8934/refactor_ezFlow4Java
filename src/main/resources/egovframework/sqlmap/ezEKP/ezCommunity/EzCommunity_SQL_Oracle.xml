@@ -6268,7 +6268,7 @@
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_INSERT1()} -->
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.commMakeOkInsert1"				parameterClass="Integer">
-		INSERT INTO TBL_ClubID
+		INSERT INTO EZCOMMUNITY.TBL_CLUBID
 			(ClubID, TENANT_ID)
 		VALUES
 			('0', #tenantID#)
