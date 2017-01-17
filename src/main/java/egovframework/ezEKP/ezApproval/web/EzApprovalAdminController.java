@@ -2335,6 +2335,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 Hwp양식등록 에디터 호출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/hwpEditor.do")
 	public String hwpEditor() throws Exception {
 		logger.debug("hwpEditor started");
@@ -2343,6 +2346,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprHwpEditor";
 	}
 	
+	/**
+	 * 전자결재 일반 관리자 Hwp양식등록 저장 표출
+	 */
 	@RequestMapping(value = "/admin/ezApproval/formSaveHwp.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String formSaveHwp(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {

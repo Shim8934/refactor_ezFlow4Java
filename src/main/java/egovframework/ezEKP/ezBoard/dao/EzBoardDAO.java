@@ -310,8 +310,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.brdCheckIfHasReply", map);
 	}
 	
-	public int checkBackGroundImage(String boardID) throws Exception{
-		return (int) select("EzBoardDAO.checkBackGroundImage", boardID);
+	public int checkBackGroundImage(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.checkBackGroundImage", map);
 	}
 
 	public int getCheckApprUserList(Map<String, Object> map) throws Exception{

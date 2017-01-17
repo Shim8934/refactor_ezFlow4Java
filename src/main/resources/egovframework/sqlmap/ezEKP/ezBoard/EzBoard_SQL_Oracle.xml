@@ -146,10 +146,10 @@
 				BOARDGROUPID 
         	FROM 
         		EZBOARDSTD.TBL_Board_BoardInfo 
-       		WHERE  
-       			BOARDID = #v_REDIRECTBOARDID#
-       		AND 
-       			TENANT_ID = #v_TENANTID#
+       		WHERE
+       			TENANT_ID = #v_TENANTID#  
+       		AND
+       			BOARDID = #v_REDIRECTBOARDID# 
 		]]>
 	</select>
 
@@ -701,7 +701,9 @@
 		   						FROM 
 		   							EZBOARDSTD.TBL_BOARD_ITEM 
 		   						WHERE 
-		   							ITEMID = #itemID#)
+		   							TENANT_ID = #tenantID#
+		   						AND
+		   							ITEMID = #itemID# )
 		   	ORDER BY 
 		   		ReadDate DESC
 		]]>
@@ -897,6 +899,8 @@
       			  AND
       			  	A.BOARDID = P.BOARDID
       			  AND 
+      			  	A.TENANT_ID = #tenantID#
+      			  AND
       			  	(A.APPRFLAG = 'Y' 
       			     OR A.APPRFLAG IS NULL)
       			  AND 
@@ -1598,6 +1602,8 @@
    				  AND 
    				  	A.ITEMID = D.ITEMID
    				WHERE 
+   					A.TENANT_ID = #v_TENANTID#
+   				AND
    					A.BOARDID = #v_PBOARDID#
    				AND 
    					B.MAIN_FLAG = 'Y' 
@@ -1665,9 +1671,9 @@
 	   			  AND
 	   			  	A.ITEMID = D.ITEMID
 	   			  WHERE  
-	   			  	$v_PWHEREBOARD$ 
-	   			  AND
 	   			  	A.TENANT_ID = #v_TENANTID#
+	   			  AND
+	   			  	$v_PWHEREBOARD$ 
 	   			  AND 
 	   			  	B.MAIN_FLAG = 'Y'
 	   			  AND 
@@ -2276,10 +2282,6 @@
 		</isEqual>
 	</select>
 	
-<!-- 	<procedure id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CHECKBOARDFORM(#v_PBOARDID#, #v_PMODE#,  #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		<isEqual property="v_PMODE" compareValue="Y">
 			<![CDATA[
@@ -2320,6 +2322,8 @@
         	FROM 
         		EZBOARDSTD.TBL_Board_Item 
        		WHERE  
+       			tenant_id = #v_TENANTID#
+       		AND
        			UpperItemIDTree LIKE '%' || #itemID# || '%'
             AND 
             	ItemID <> #itemID#
@@ -2974,9 +2978,6 @@
 		]]>
 	</update>
 	
-<!-- 	<procedure id="EzBoardDAO.setBoardList_Config" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_SETBOARDLIST_CONFIG(#v_PUSERID#, #v_PLISTCNT#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)} -->
-<!-- 	</procedure> -->
 
 	<select id="EzBoardDAO.getBoardConfig" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -3064,30 +3065,30 @@
 		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
 			<![CDATA[
 				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, LISTCOUNT, PREVIEW, PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+					USERID, 	LISTCOUNT, 	 PREVIEW,   	  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
 				)
                 VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 50, 50, 50, #v_TENANTID# 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 50, 		   50, 				#v_TENANTID# 
                 )
 			]]>
 		</isEqual>
 		<isEqual property="v_PREVIEWMODE" compareValue="W">
 			<![CDATA[
 				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, LISTCOUNT, PREVIEW, PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
 				)
                 VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, #v_CONTENT#, 50, 50, #v_TENANTID# 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, 	#v_CONTENT#, 	 50, 		   50, 				#v_TENANTID# 
                 )
 			]]>
 		</isEqual>
 		<isEqual property="v_PREVIEWMODE" compareValue="H">
 			<![CDATA[
 				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, LISTCOUNT, PREVIEW, PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
 				)
                 VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 50, #v_LIST#, #v_CONTENT#, #v_TENANTID# 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 #v_LIST#, 	   #v_CONTENT#, 	#v_TENANTID# 
                 )
 			]]>
 		</isEqual>
@@ -3235,17 +3236,13 @@
 	<insert id="EzBoardDAO.setBoardConfig2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO ezBoardSTD.TBL_Board_Configuration ( 
-				UserID, ListCount, PreView, tenant_id
+				UserID, 	ListCount, 	   PreView, 	tenant_id
 			)
       		VALUES ( 
       			#v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# 
       		)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzBoardDAO.updateMoveItem" parameterClass="Map"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_MOVEITEM(#v_PITEMID#, #v_PORGITEMID#)} -->
-<!-- 	</procedure> -->
 	
 	<update id="EzBoardDAO.updateMoveItem" parameterClass="Map">
 		<![CDATA[
@@ -3707,13 +3704,15 @@
         ]]>	
 	</select>
 	
-	<select id="EzBoardDAO.checkBackGroundImage" resultClass="Integer">
+	<select id="EzBoardDAO.checkBackGroundImage" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
 				COUNT(boardid)
 	        FROM 
 	        	ezBoardSTD.TBL_BOARD_BOARDINFO 
 	        WHERE  
+	        	tenant_id = #tenantID#
+	        AND
 	       		boardid = #boardID#
 			AND 
 				background = 'Y'
@@ -3893,7 +3892,7 @@
 				boardid, 	itemid, 	imageid, 	filepath, 	filecontent, 	writedate, 	 writerdeptid, 	 writerid, 	 writername,   imagename, 	 main_flag, tenant_id
 			)
         	VALUES(
-        	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N', #tenantID#
+        	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N', 		#tenantID#
         	)
 		]]>
 	</insert>
@@ -3971,13 +3970,13 @@
 				FROM
 					ezBoardSTD.TBL_BOARD_BOARDMANAGE
 				WHERE
+					tenant_id = #tenantID#
+				AND
 					boardid = #boardID#
 				AND
 					boardadmin_fg = 'true'
 				AND
 					postnotice = 'true'
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="primary" compareValue="1">
@@ -3988,13 +3987,13 @@
 				FROM
 					ezBoardSTD.TBL_BOARD_BOARDMANAGE
 				WHERE
+					tenant_id = #tenantID#
+				AND
 					boardid = #boardID#
 				AND
 					boardadmin_fg = 'true'
 				AND
 					postnotice = 'true'
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isNotEqual>
 	</select>
@@ -4005,11 +4004,11 @@
 		FROM
 			ezBoardSTD.TBL_BOARD_ITEM
 		WHERE
+			tenant_id = #tenantID#
+		AND
 			boardid = #boardID#
         AND
         	itemid = #itemID#
-        AND
-        	tenant_id = #tenantID#
 	</select>
 </sqlMap>
 

@@ -1251,7 +1251,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public String checkBackGroundImage(String boardID, int tenantID) throws Exception {
 		String check = "";
-		int checkCnt = ezBoardDAO.checkBackGroundImage(boardID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		
+		int checkCnt = ezBoardDAO.checkBackGroundImage(map);
 		
 		if (checkCnt > 0) {
 			check = "TRUE";

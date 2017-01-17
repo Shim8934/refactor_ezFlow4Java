@@ -12,8 +12,11 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 
 import com.ibm.icu.text.SimpleDateFormat;
@@ -28,6 +31,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -42,6 +46,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminServiceImpl.class);
 
 	@Override
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int tenantID) throws Exception{
@@ -549,8 +555,47 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 	
 	@Override
-	public void saveAttribute(BoardAttributeVO boardAttributeVO) throws Exception {		
+	public String saveAttribute(Document doc, LoginVO userInfo, BoardAttributeVO boardAttributeVO) throws Exception {
+		String rtnValue = "";
+		
+		try {
+			String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+			deleteAttribute(boardID, userInfo.getTenantId());
+			
+			int colSize = doc.getElementsByTagName("COLNAME1").getLength();
+			String attributeYN = "N";
+			boardAttributeVO.setBoardID(boardID);
+			boardAttributeVO.setTenantID(userInfo.getTenantId());
+			
+			for (int i = 0; i < colSize; i++) {
+				boardAttributeVO.setTableCol(doc.getElementsByTagName("TABLECOL").item(i).getTextContent());
+				boardAttributeVO.setSn(i + "");
+				boardAttributeVO.setColName1(doc.getElementsByTagName("COLNAME1").item(i).getTextContent());
+				boardAttributeVO.setColName2(doc.getElementsByTagName("COLNAME2").item(i).getTextContent());
+				boardAttributeVO.setValue(doc.getElementsByTagName("VALUE").item(i).getTextContent());
+				boardAttributeVO.setColType(doc.getElementsByTagName("COLTYPE").item(i).getTextContent());
+				boardAttributeVO.setMust(doc.getElementsByTagName("MUST").item(i).getTextContent());
+				
+				ezBoardAdminDAO.saveAttribute(boardAttributeVO);
+			}
+			
+			if (colSize > 0) {
+				attributeYN = "Y";
+			}
+			
+			boardAttributeVO.setValue(attributeYN);
+			
+			updateAttribute(boardAttributeVO);
+			
+			rtnValue = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = "ERROR";
+			logger.error("EzBoardAdmin :: saveAttribute");
+		}
 		ezBoardAdminDAO.saveAttribute(boardAttributeVO);
+		
+		return rtnValue;
 	}
 	
 	@Override
@@ -568,8 +613,38 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public void saveHeader(BoardListHeaderVO boardListHeaderVO)	throws Exception {
-		ezBoardAdminDAO.saveHeader(boardListHeaderVO);
+	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception {
+		String rtnValue = "";
+		
+		try {
+			String boardID = doc.getElementsByTagName("BOARDID").item(0).getTextContent();
+			deleteHeader(boardID, userInfo.getTenantId());
+			
+			int colSize = doc.getElementsByTagName("NAME1").getLength();
+			boardListHeaderVO.setBoardID(boardID);
+			boardListHeaderVO.setTenantID(userInfo.getTenantId());
+			
+			for (int i = 0; i < colSize; i++) {
+				boardListHeaderVO.setSn(i + "");
+				boardListHeaderVO.setName1(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+				boardListHeaderVO.setName2(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				boardListHeaderVO.setName3(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+				boardListHeaderVO.setName4(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				boardListHeaderVO.setColName(doc.getElementsByTagName("COLNAME").item(i).getTextContent());
+				boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
+				boardListHeaderVO.setName("Y");
+				
+				ezBoardAdminDAO.saveHeader(boardListHeaderVO);
+			}
+			
+			rtnValue = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = "ERROR";
+			logger.error("EzBoardAdmin :: saveHeader :: " + e.getMessage());
+		}
+		
+		return rtnValue;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardAdminService {
 	
@@ -77,11 +78,11 @@ public interface EzBoardAdminService {
 		
 	public void updateAttribute(BoardAttributeVO boardAttributeVO) throws Exception;
 
-	public void saveAttribute(BoardAttributeVO boardAttributeVO) throws Exception;
+	public String saveAttribute(Document doc, LoginVO userInfo, BoardAttributeVO boardAttributeVO) throws Exception;
 
 	public void deleteHeader(String boardID, int tenantID) throws Exception;
 
-	public void saveHeader(BoardListHeaderVO boardListHeaderVO) throws Exception;
+	public String saveHeader(Document doc, LoginVO userInfo, BoardListHeaderVO boardListHeaderVO) throws Exception;
 
 	public void saveACL(Map<String, Object> map) throws Exception;
 

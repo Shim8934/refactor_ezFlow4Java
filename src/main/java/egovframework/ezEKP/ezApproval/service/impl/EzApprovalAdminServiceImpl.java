@@ -3223,7 +3223,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 	}
 
 	private void mhtToHtmlReform(String saveReFileName, String formID, String companyID, String realPath, int tenantID, Locale locale) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO 리폼은 나중에
 		logger.debug("mhtToHtmlReform started");
 
 		String mhtImagePath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + config.getProperty("upload_common.MHTIMAGE");
@@ -3240,7 +3240,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 
 	@Override
 	public String saveFormInfoReform(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO 리폼은 나중에
 		logger.debug("saveFormInfoReform started");
 
 		String path = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval.ROOT");

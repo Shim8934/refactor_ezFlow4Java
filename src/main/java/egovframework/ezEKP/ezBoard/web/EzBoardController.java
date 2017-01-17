@@ -6581,7 +6581,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	to.setPersonal(vo.getAccessName(), "UTF-8");
         	to.setAddress(AccessUserInfo.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
 		
 		logger.debug("sendPostNotiMail ended.");
@@ -6656,7 +6656,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	to.setPersonal(vo.getWriterName(), "UTF-8");
         	to.setAddress(vo.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
 
 		logger.debug("sendReplyNoticeMail ended");
@@ -6707,7 +6707,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	to.setPersonal(vo.getDisplayName(), "UTF-8");
         	to.setAddress(vo.getEmail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
         
 		logger.debug("sendApprnoticemail ended");

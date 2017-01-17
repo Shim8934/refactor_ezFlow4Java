@@ -270,7 +270,7 @@
           	FROM 
           		DUAL
           	WHERE 
-         		EXISTS ( 	SELECT 
+         		EXISTS (	SELECT 
          						BOARDID ,
          						SN ,
          						NAME1 ,
@@ -338,10 +338,6 @@
             	SN
 		]]>
 	</select>
-	
-<!-- 	<procedure id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer"> -->
-<!-- 		{CALL EZBOARDSTD.EZSP_CHECKIFLEAFBOARD(#v_PBOARDID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	
 	<select id="EzBoardAdminDAO.checkIfLeafBoard" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
