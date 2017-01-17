@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApproval.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2959,8 +2961,10 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		if (apprFormInfoVO.getFormWorkFlow() != null && !apprFormInfoVO.getFormWorkFlow().equals("")) {
 			xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormWorkFlow());
 			
-			apprFormInfoVO.setValidations(xmlDom.getElementsByTagName("VALIDATIONS").item(0).getTextContent());
-			apprFormInfoVO.setStatus(xmlDom.getElementsByTagName("STATUS").item(0).getTextContent());
+//			apprFormInfoVO.setValidations(xmlDom.getElementsByTagName("VALIDATIONS").item(0).getTextContent());
+//			apprFormInfoVO.setStatus(xmlDom.getElementsByTagName("STATUS").item(0).getTextContent());
+			apprFormInfoVO.setValidations("");
+			apprFormInfoVO.setStatus("");
 		}
 		
 		boolean isUpdate = false;
@@ -2997,6 +3001,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		}
 		
 		apprFormInfoVO.setYear(commonUtil.getTodayUTCTime("yyyy"));
+		apprFormInfoVO.setFormFormat(".mht");
 		
 		String url = commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval.ROOT") + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator;
 		apprFormInfoVO.setUrl(url);
@@ -3082,9 +3087,9 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 					apprReceiveGroupVO = new ApprReceiveGroupVO();
 					
 					apprReceiveGroupVO.setFormID(apprFormInfoVO.getFormID());
-					apprReceiveGroupVO.setDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
-					apprReceiveGroupVO.setDeptSN(doc.getElementsByTagName("DEPTSN").item(0).getTextContent());
-					apprReceiveGroupVO.setUserID(doc.getElementsByTagName("USERID").item(0).getTextContent());
+					apprReceiveGroupVO.setDeptID(doc.getElementsByTagName("DEPTID").item(k).getTextContent());
+					apprReceiveGroupVO.setDeptSN(doc.getElementsByTagName("DEPTSN").item(k).getTextContent());
+					apprReceiveGroupVO.setUserID(doc.getElementsByTagName("USERID").item(k).getTextContent());
 					apprReceiveGroupVO.setTenantID(apprFormInfoVO.getTenantID());
 					apprReceiveGroupVO.setCompanyID(apprFormInfoVO.getCompanyID());
 					
@@ -3371,6 +3376,13 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			int tempDel = ezApprovalAdminDAO.deleteForm(apprFormInfoVO);
 			ezApprovalAdminDAO.deleteFavoriteForm(apprFormInfoVO);
 			
+			ApprReceiveGroupVO apprReceiveGroupVO = new ApprReceiveGroupVO();
+			apprReceiveGroupVO.setTenantID(apprFormInfoVO.getTenantID());
+			apprReceiveGroupVO.setCompanyID(apprFormInfoVO.getCompanyID());
+			apprReceiveGroupVO.setFormID(apprFormInfoVO.getFormID());
+			
+			ezApprovalAdminDAO.deleteFormRecv(apprReceiveGroupVO);
+			
 			if (tempDel == 1) {
 				rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
 			} else {
@@ -3441,6 +3453,240 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		logger.debug("setFormOrder ended");
 		
 		return rtnValue;
+	}
+
+	@Override
+	public String saveHwpFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception {
+		logger.debug("saveHwpFormInfo started");
+
+		String path = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval.ROOT");
+		Document xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormInfo());
+
+		apprFormInfoVO.setFormName(xmlDom.getElementsByTagName("FormName").item(0).getTextContent());
+		apprFormInfoVO.setFormName2(xmlDom.getElementsByTagName("FormName2").item(0).getTextContent());
+		apprFormInfoVO.setFormDescription(xmlDom.getElementsByTagName("FormDescript").item(0).getTextContent());
+		apprFormInfoVO.setFormKind(xmlDom.getElementsByTagName("FormKind").item(0).getTextContent());
+		apprFormInfoVO.setUseFlag(xmlDom.getElementsByTagName("USEFLAG").item(0).getTextContent());
+		apprFormInfoVO.setKeepPeriod(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent());
+		apprFormInfoVO.setSecurityLevel(xmlDom.getElementsByTagName("SECURITYLEVEL").item(0).getTextContent());
+		apprFormInfoVO.setIsPublic(xmlDom.getElementsByTagName("ISPUBLIC").item(0).getTextContent());
+		apprFormInfoVO.setTbItemCode(xmlDom.getElementsByTagName("TBITEMCODE").item(0).getTextContent());
+		apprFormInfoVO.setTbItemName(xmlDom.getElementsByTagName("TBITEMNAME").item(0).getTextContent());
+		apprFormInfoVO.setTbItemName2(xmlDom.getElementsByTagName("TBITEMNAME2").item(0).getTextContent());
+		apprFormInfoVO.setKeepPeriodCode(xmlDom.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent());
+		
+		if (apprFormInfoVO.getFormConn() != null && !apprFormInfoVO.getFormConn().equals("")) {
+			xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormConn());
+			
+			apprFormInfoVO.setFormConnXML(xmlDom.getElementsByTagName("CONNXML").item(0).getTextContent());
+		}
+		
+		if (apprFormInfoVO.getFormWorkFlow() != null && !apprFormInfoVO.getFormWorkFlow().equals("")) {
+			xmlDom = commonUtil.convertStringToDocument(apprFormInfoVO.getFormWorkFlow());
+			
+			apprFormInfoVO.setValidations(xmlDom.getElementsByTagName("VALIDATIONS").item(0).getTextContent());
+			apprFormInfoVO.setStatus(xmlDom.getElementsByTagName("STATUS").item(0).getTextContent());
+		}
+		
+		boolean isUpdate = false;
+		String isUpdateFormVersion = "N";
+		String strBeforeMHT = "";
+		String saveFileName = "";
+		
+		if (!apprFormInfoVO.getFormID().equals("") && !apprFormInfoVO.getFormMHT().equals("")) {
+			isUpdate = true;
+			
+			saveFileName = path + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".hwp";
+			
+			try {
+				File file = new File(saveFileName);
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				} else {
+					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+				}
+				
+				FileOutputStream fileOutputStream = new FileOutputStream(file);
+				byte[] tempByte = Base64.decodeBase64(apprFormInfoVO.getFormMHT());
+				
+				for (int k = 0; k < tempByte.length; k++) {
+					fileOutputStream.write(tempByte[k]);
+				}
+				
+				fileOutputStream.close();
+				
+				isUpdateFormVersion = "Y";
+			} catch (Exception e) {
+				isUpdateFormVersion = "N";
+				
+				return egovMessageSource.getMessage("ezApproval.hyj13", locale) + e.getMessage();
+			} 
+		} else {
+			isUpdateFormVersion = "N";
+		}
+		
+		apprFormInfoVO.setYear(commonUtil.getTodayUTCTime("yyyy"));
+		apprFormInfoVO.setFormFormat(".hwp");
+		apprFormInfoVO.setFormAutoRule("");
+		apprFormInfoVO.setFormAutoRuleLine("");
+		
+		String url = commonUtil.separator + "fileroot" + commonUtil.separator + apprFormInfoVO.getTenantID() + config.getProperty("upload_approval.ROOT") + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator;
+		apprFormInfoVO.setUrl(url);
+		
+		
+		//formID가 비어있으면 추가 존재하면 수정
+		if (apprFormInfoVO.getFormID() == null || apprFormInfoVO.getFormID().equals("")) {
+			String formID = ezApprovalAdminDAO.insertFormData(apprFormInfoVO);
+			
+			apprFormInfoVO.setFormID(formID);
+			
+			ezApprovalAdminDAO.setAutoDocNum(apprFormInfoVO);
+			
+			if (apprFormInfoVO.getFormAutoRule() != null && !apprFormInfoVO.getFormAutoRule().equals("") && !apprFormInfoVO.getFormAutoRule().equals("<DATA></DATA>")) {
+				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRule());
+				List<ApprAutoRuleVO> apprAutoRuleVOs = new ArrayList<ApprAutoRuleVO>();
+				ApprAutoRuleVO apprAutoRuleVO = null;
+				
+				for (int k = 0; k < doc.getElementsByTagName("ROW").getLength(); k++) {
+					apprAutoRuleVO = new ApprAutoRuleVO();
+					
+					apprAutoRuleVO.setFormID(apprFormInfoVO.getFormID());
+					apprAutoRuleVO.setAutoRuleSN(doc.getElementsByTagName("AUTORULESN").item(k).getTextContent());
+					apprAutoRuleVO.setAutoRuleGUID(doc.getElementsByTagName("AUTORULEGUID").item(k).getTextContent());
+					apprAutoRuleVO.setCheckFieldType(doc.getElementsByTagName("CHECKFIELDTYPE").item(k).getTextContent());
+					apprAutoRuleVO.setCheckField(doc.getElementsByTagName("CHECKFIELD").item(k).getTextContent());
+					apprAutoRuleVO.setOperatorType(doc.getElementsByTagName("OPERATORTYPE").item(k).getTextContent());
+					apprAutoRuleVO.setOperator(doc.getElementsByTagName("OPERATOR").item(k).getTextContent());
+					apprAutoRuleVO.setCondType(doc.getElementsByTagName("CONDTYPE").item(k).getTextContent());
+					apprAutoRuleVO.setCondValue(doc.getElementsByTagName("CONDVALUE").item(k).getTextContent());
+					apprAutoRuleVO.setCondValueDeptID(doc.getElementsByTagName("CONDVALUEDEPTID").item(k).getTextContent());
+					apprAutoRuleVO.setDocType(doc.getElementsByTagName("DOCTYPE").item(k).getTextContent());
+					apprAutoRuleVO.setTenantID(apprFormInfoVO.getTenantID());
+					apprAutoRuleVO.setCompanyID(apprFormInfoVO.getCompanyID());
+					
+					apprAutoRuleVOs.add(k, apprAutoRuleVO);
+				}
+				
+				ezApprovalAdminDAO.insertAutoRule(apprAutoRuleVOs);
+			}
+			
+			if (apprFormInfoVO.getFormAutoRuleLine() != null && !apprFormInfoVO.getFormAutoRuleLine().equals("") && !apprFormInfoVO.getFormAutoRuleLine().equals("<DATA></DATA>")) {
+				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormAutoRuleLine());
+				List<ApprAutoRuleVO> apprAutoRuleVOs = new ArrayList<ApprAutoRuleVO>();
+				ApprAutoRuleVO apprAutoRuleVO = null;
+				
+				for (int k = 0; k < doc.getElementsByTagName("ROW").getLength(); k++) {
+					apprAutoRuleVO = new ApprAutoRuleVO();
+					
+					apprAutoRuleVO.setFormID(apprFormInfoVO.getFormID());
+					apprAutoRuleVO.setAutoRuleGUID(doc.getElementsByTagName("AUTORULEGUID").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberSN(doc.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
+					apprAutoRuleVO.setAprType(doc.getElementsByTagName("APRTYPE").item(k).getTextContent());
+					apprAutoRuleVO.setAprState(doc.getElementsByTagName("APRSTATE").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberID(doc.getElementsByTagName("APRMEMBERID").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberIsDeptYN(doc.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberName(doc.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberName2(doc.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberJobTitle(doc.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberJobTitle2(doc.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberDeptID(doc.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberDeptName(doc.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberDeptName2(doc.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent());
+					apprAutoRuleVO.setAprMemberLdapPath(doc.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent());
+					apprAutoRuleVO.setReasonDoNotApprov(doc.getElementsByTagName("REASONDONOTAPPROV").item(k).getTextContent());
+					apprAutoRuleVO.setIsProposerYN(doc.getElementsByTagName("ISPROPOSERYN").item(k).getTextContent());
+					apprAutoRuleVO.setIsBriefUserYN(doc.getElementsByTagName("ISBRIEFUSERYN").item(k).getTextContent());
+					apprAutoRuleVO.setTenantID(apprFormInfoVO.getTenantID());
+					apprAutoRuleVO.setCompanyID(apprFormInfoVO.getCompanyID());
+					
+					apprAutoRuleVOs.add(k, apprAutoRuleVO);
+				}
+				
+				ezApprovalAdminDAO.insertAutoRuleLine(apprAutoRuleVOs);
+			}
+			
+			if (apprFormInfoVO.getFormRecevGroup() != null && !apprFormInfoVO.getFormRecevGroup().equals("")) {
+				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormRecevGroup());
+				List<ApprReceiveGroupVO> apprReceiveGroupVOs = new ArrayList<ApprReceiveGroupVO>();
+				ApprReceiveGroupVO apprReceiveGroupVO = null;
+				
+				for (int k = 0; k < doc.getElementsByTagName("DATA").getLength(); k++) {
+					apprReceiveGroupVO = new ApprReceiveGroupVO();
+					
+					apprReceiveGroupVO.setFormID(apprFormInfoVO.getFormID());
+					apprReceiveGroupVO.setDeptID(doc.getElementsByTagName("DEPTID").item(k).getTextContent());
+					apprReceiveGroupVO.setDeptSN(doc.getElementsByTagName("DEPTSN").item(k).getTextContent());
+					apprReceiveGroupVO.setUserID(doc.getElementsByTagName("USERID").item(k).getTextContent());
+					apprReceiveGroupVO.setTenantID(apprFormInfoVO.getTenantID());
+					apprReceiveGroupVO.setCompanyID(apprFormInfoVO.getCompanyID());
+					
+					apprReceiveGroupVOs.add(k, apprReceiveGroupVO);
+				}
+				
+				ezApprovalAdminDAO.insertFormRecv(apprReceiveGroupVOs);
+			}
+			
+			if (isUpdateFormVersion.equals("Y")) {
+				ezApprovalAdminDAO.updateFormVersion(apprFormInfoVO);
+			}
+		} else {
+			ezApprovalAdminDAO.updateFormData(apprFormInfoVO);
+			ezApprovalAdminDAO.setAutoDocNum(apprFormInfoVO);
+			
+			if (apprFormInfoVO.getFormRecevGroup() != null && !apprFormInfoVO.getFormRecevGroup().equals("")) {
+				Document doc = commonUtil.convertStringToDocument(apprFormInfoVO.getFormRecevGroup());
+				List<ApprReceiveGroupVO> apprReceiveGroupVOs = new ArrayList<ApprReceiveGroupVO>();
+				ApprReceiveGroupVO apprReceiveGroupVO = null;
+				
+				for (int k = 0; k < doc.getElementsByTagName("DATA").getLength(); k++) {
+					apprReceiveGroupVO = new ApprReceiveGroupVO();
+					
+					apprReceiveGroupVO.setFormID(apprFormInfoVO.getFormID());
+					apprReceiveGroupVO.setDeptID(doc.getElementsByTagName("DEPTID").item(k).getTextContent());
+					apprReceiveGroupVO.setDeptSN(doc.getElementsByTagName("DEPTSN").item(k).getTextContent());
+					apprReceiveGroupVO.setUserID(doc.getElementsByTagName("USERID").item(k).getTextContent());
+					apprReceiveGroupVO.setTenantID(apprFormInfoVO.getTenantID());
+					apprReceiveGroupVO.setCompanyID(apprFormInfoVO.getCompanyID());
+					
+					apprReceiveGroupVOs.add(k, apprReceiveGroupVO);
+				}
+				
+				ezApprovalAdminDAO.deleteFormRecv(apprReceiveGroupVO);
+				ezApprovalAdminDAO.insertFormRecv(apprReceiveGroupVOs);
+			}
+			
+			if (isUpdateFormVersion.equals("Y")) {
+				ezApprovalAdminDAO.updateFormVersion(apprFormInfoVO);
+			}
+		}
+		
+		if (!isUpdate) {
+			if (!apprFormInfoVO.getFormMHT().equals(""))	 {
+				saveFileName = path + commonUtil.separator + apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".hwp";
+				
+				File file = new File(saveFileName);
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				} else {
+					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+				}
+				
+				FileOutputStream fileOutputStream = new FileOutputStream(file);
+				byte[] tempByte = Base64.decodeBase64(apprFormInfoVO.getFormMHT());
+				
+				for (int k = 0; k < tempByte.length; k++) {
+					fileOutputStream.write(tempByte[k]);
+				}
+				
+				fileOutputStream.close();
+			}
+		}
+
+		logger.debug("saveHwpFormInfo ended");
+		
+		return apprFormInfoVO.getFormID();
 	}
 	
 }

@@ -220,7 +220,6 @@ function SaveFormInfo() {
 			SaveFormInfo_after(text);
 		}
 	});
-
 }
 
 function MakeFormInfoXML() {

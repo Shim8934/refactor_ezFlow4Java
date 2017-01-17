@@ -226,12 +226,10 @@
 		    	});
 		    }
 		
-		    function SaveFormInfo_after() {
-		        if (xmlhttp == null || xmlhttp.readyState != 4) return;
-		
+		    function SaveFormInfo_after(text) {
 		        try {
 		            var resultXML = createXmlDom();
-		            resultXML = loadXMLString(xmlhttp.responseText);
+		            resultXML = loadXMLString(text);
 		
 		            var result = getNodeText(SelectNodes(resultXML, "DATA")[0]);
 		            if (result == "OK") {
@@ -242,9 +240,11 @@
 		            }
 		
 		            try {
+		            	window.close();
 		                window.opener.refreshFormList();
 		            }
 		            catch (ee) {
+		            	alert("SaveFormInfo_after error :: " + ee);
 		            }
 		        }
 		        catch (e) {
@@ -572,7 +572,7 @@
 		
 		        itemcode_dialogArgument[0] = "";
 		        itemcode_dialogArgument[1] = btnItemCode_Complete;
-		        var url = "/admin/ezApproval/docnumUI.do";
+		        var url = "/admin/ezApproval/docNumUI.do";
 		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
 		    }
 		
@@ -617,37 +617,33 @@
 		    				prop     : "department;displayName;description;title",
 		    				type 	 : "user"
 		    				},
-		    		success: function(xml){
-		    			result = xml;
+		    		success: function(result){
+		    			var retXml = createXmlDom();
+		    			
+			            if (document.getElementById("UserList").innerHTML != "")
+			                document.getElementById("UserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            if (result != "") {
+			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
+			                headerData.documentElement.appendChild(xmlRtn);
+			            }
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvUserList");
+			            pUserList.SetRowOnClick("list_onSel_Click");
+			            pUserList.SetRowOnDblClick("list_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("UserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
 		    		}        			
 		    	});
-		    	
-		        if (result == "OK") {
-		            var retXml = createXmlDom();
-		
-		            if (document.getElementById("UserList").innerHTML != "")
-		                document.getElementById("UserList").innerHTML = "";
-		
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-		            if (result != "") {
-		                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
-		                headerData.documentElement.appendChild(xmlRtn);
-		            }
-		            var pUserList = new ListView();
-		            pUserList.SetID("lvUserList");
-		            pUserList.SetRowOnClick("list_onSel_Click");
-		            pUserList.SetRowOnDblClick("list_onSel_DBclick");
-		            pUserList.SetSelectFlag(false);
-		            pUserList.SetHeightFree(true);
-		            pUserList.DataSource(headerData);
-		            pUserList.DataBind("UserList");
-		
-		            var userRows = pUserList.GetDataRows();
-		            if (userRows.length <= 0) {
-		                OpenAlertUI(linealt1);
-		            }
-		        }
 		    }
 		
 		    function displayUserList2(pDeptID) {
@@ -664,37 +660,33 @@
 		    				prop     : "department;displayName;description;title",
 		    				type 	 : "user"
 		    				},
-		    		success: function(xml){
-		    			result = xml;
+		    		success: function(result){
+		                var retXml = createXmlDom();
+		        		
+			            if (document.getElementById("LineUserList").innerHTML != "")
+			                document.getElementById("LineUserList").innerHTML = "";
+			
+			            var headerData = createXmlDom();
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+			            if (result != "") {
+			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
+			                headerData.documentElement.appendChild(xmlRtn);
+			            }
+			            var pUserList = new ListView();
+			            pUserList.SetID("lvLineUserList");
+			            pUserList.SetRowOnClick("list2_onSel_Click");
+			            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+			            pUserList.SetSelectFlag(false);
+			            pUserList.SetHeightFree(true);
+			            pUserList.DataSource(headerData);
+			            pUserList.DataBind("LineUserList");
+			
+			            var userRows = pUserList.GetDataRows();
+			            if (userRows.length <= 0) {
+			                OpenAlertUI(linealt1);
+			            }
 		    		}        			
 		    	});
-		    	
-		        if (result == "OK") {
-		            var retXml = createXmlDom();
-		
-		            if (document.getElementById("LineUserList").innerHTML != "")
-		                document.getElementById("LineUserList").innerHTML = "";
-		
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-		            if (result != "") {
-		                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
-		                headerData.documentElement.appendChild(xmlRtn);
-		            }
-		            var pUserList = new ListView();
-		            pUserList.SetID("lvLineUserList");
-		            pUserList.SetRowOnClick("list2_onSel_Click");
-		            pUserList.SetRowOnDblClick("list2_onSel_DBclick");
-		            pUserList.SetSelectFlag(false);
-		            pUserList.SetHeightFree(true);
-		            pUserList.DataSource(headerData);
-		            pUserList.DataBind("LineUserList");
-		
-		            var userRows = pUserList.GetDataRows();
-		            if (userRows.length <= 0) {
-		                OpenAlertUI(linealt1);
-		            }
-		        }
 		    }
 		    function list_onSel_Click() {
 		
@@ -821,12 +813,12 @@
              </h2>
              <table class="content" style="width:100%;">                
                 <tr>                
-                    <th style="width:100px; text-align:center">${primaryLang}</th>
+                    <th style="width:100px; text-align:center">${langPrimary}</th>
                     <td style="width:40%;">
                         <input type="text" id="tbFormName" name="tbFormName" maxlength="50" style="width:100%">
                         <input type="text" id="tbFormID" name="tbFormID" style="display: none" readonly>
                     </td>
-                    <th style="width:100px; text-align:center">${secondaryLang}</th>
+                    <th style="width:100px; text-align:center">${langSecondary}</th>
                     <td style="width:40%;" colspan="5">
                         <input type="text" id="tbFormName2" name="tbFormName2" maxlength="50" style="width:100%" >
                     </td>        

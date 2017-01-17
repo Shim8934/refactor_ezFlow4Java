@@ -149,4 +149,6 @@ public interface EzApprovalAdminService {
 
 	public String setFormOrder(ApprFormContVO apprFormContVO) throws Exception;
 
+	public String saveHwpFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
+
 }

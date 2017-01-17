@@ -95,7 +95,7 @@
                 i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
                 i_icd2.CheckVersion();
                 var nCount = i_icd2.nNeedDownload;
-				
+
                 if (nCount) {
                     if_Progress.StartOn();
                 }
@@ -120,7 +120,7 @@
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
         <c:if test="${IsJMochaStandAlone != 'YES'}">
-		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,14" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
         </c:if>
 		<form method="post">
 			<h1 title="logo"></h1>

@@ -128,39 +128,33 @@ function OpenAlertUI(pAlertContent) {
 
 var xmlhttp = createXMLHttpRequest();
 function SaveFormInfo() {
-    var xmlpara = createXmlDom();
     var xmlRtn = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMCONTID", contID);
-    createNodeAndInsertText(xmlpara, objNode, "FORMID", formID);
-
+    
     var arrFormInfo = MakeFormInfoXML();
     if (arrFormInfo[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMINFO", arrFormInfo[1]);
+        formInfo = arrFormInfo[1];
     }
     else {
         OpenAlertUI(arrFormInfo[2]);
         document.getElementById("1tab1").click();
         return;
     }
-
+    
     var arrFormMHT = MakeFormMHTXML();
-    if (arrFormMHT[0] == "TRUE") {       
-        createNodeAndInsertText(xmlpara, objNode, "FORMMHT", arrFormMHT[1]);
+    if (arrFormMHT[0] == "TRUE") {
+        formMHT = arrFormMHT[1];
     }
     else {
         OpenAlertUI(arrFormMHT[2]);
         document.getElementById("1tab2").click();
         return;
     }
-
+    
     var arrFormConn = "";
     arrFormConn = MakeFormConnXML();
     if (arrFormConn[0] == "TRUE") {
-        if (arrFormConn[1] != "") {
-            createNodeAndInsertText(xmlpara, objNode, "FORMCONN", arrFormConn[1]);
+        if (arrFormConn[1] != "") { 
+            formConn = arrFormConn[1];
         }
     }
     else {
@@ -173,43 +167,59 @@ function SaveFormInfo() {
     arrFormWorkFlow = MakeFormWorkFlow();
     if (arrFormWorkFlow[0] == "TRUE") {
         if (arrFormWorkFlow[1] != "") {
-            createNodeAndInsertText(xmlpara, objNode, "FORMWORKFLOW", arrFormWorkFlow[1]);
+            formWorkFlow = arrFormWorkFlow[1];
         }
-    }
-    else {
+    } else {
         OpenAlertUI(arrFormWorkFlow[2]);
         document.getElementById("1tab4").click();
         return;
     }
-
-
     var arrFormAutoRule = MakeFormAutoRuleXML();
     if (arrFormAutoRule[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULE", arrFormAutoRule[1]);
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULELINE", arrFormAutoRule[2]);
+        formAutoRule = arrFormAutoRule[1];
+        formAutoRuleLine = arrFormAutoRule[2];
+    } else {
+        formAutoRule = "";
+        formAutoRuleLine = "";
     }
-    else {
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULE", "");
-        createNodeAndInsertText(xmlpara, objNode, "FORMAUTORULELINE", "");
-    }
-
     var arrFormRecevGroup = MakeFormRecevGroupXML();
     if (arrFormRecevGroup[0] == "TRUE") {
-        createNodeAndInsertText(xmlpara, objNode, "FORMRECEVGROUP", arrFormRecevGroup[1]);
+        formRecevGroup = arrFormRecevGroup[1];
     }
     else {
         OpenAlertUI(arrFormRecevGroup[2]);
         document.getElementById("1tab5").click();
         return;
-    }    
-
-    if(pEditorType == "HWP")
-        xmlhttp.open("POST", "/myoffice/ezApproval/manage/FormMaker/aspx/FormSaveHwp.aspx", true);
-    else
-        xmlhttp.open("POST", "/admin/ezApproval/formSave.do", true);
-
-    xmlhttp.onreadystatechange = SaveFormInfo_after;
-    xmlhttp.send(xmlpara);
+    }
+    
+    var yoonURL = "";
+    
+    if(pEditorType == "HWP") {
+    	yoonURL = "/admin/ezApproval/formSaveHwp.do";
+    } else {
+    	yoonURL = "/admin/ezApproval/formSave.do";
+    }
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : yoonURL,
+		data : {
+			companyID  : companyID,
+			formContID : contID,
+			formID     : formID,
+			formInfo   : formInfo,
+			formMHT    : formMHT,
+			formConn   : formConn,
+			formAutoRule     : formAutoRule,
+			formAutoRuleLine : formAutoRuleLine,
+			formRecevGroup   : formRecevGroup
+		},
+		success: function(text){
+			SaveFormInfo_after(text);
+		}
+	});
 }
 
 function MakeFormInfoXML() {
@@ -242,6 +252,7 @@ function MakeFormInfoXML() {
         retValue[1] = "";
         retValue[2] = pErrorMsg;
     }
+    
     return retValue;
 }
 
@@ -320,6 +331,7 @@ function MakeFormMHTXML() {
     retValue[0] = "TRUE";
     retValue[1] = MakeFormMHTXML_Detail();
     retValue[2] = "";
+    
     return retValue;
 }
 

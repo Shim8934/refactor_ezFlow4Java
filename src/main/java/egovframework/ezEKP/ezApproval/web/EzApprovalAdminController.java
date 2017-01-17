@@ -1888,7 +1888,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		String strJSInfo = "";
 
 		if (reFormJSURL != null) {
-			String tempPath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator + reFormJSURL;
+			String tempPath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.ROOT") + commonUtil.separator + reFormJSURL;
 			File file = new File(tempPath);
 			
 			if (file.exists()) {
@@ -2145,6 +2145,9 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
 		String resultXML = "";
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		
 		String rtnValue = ezApprovalAdminService.saveFormInfo(apprFormInfoVO, realPath, userInfo.getLocale());
 		
 		if (rtnValue.indexOf("ERROR") > 0) {
@@ -2232,7 +2235,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		String result = ezApprovalAdminService.deleteForm(apprFormInfoVO);
 		
 		if (result.equals("<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>")) {
-			String saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator +
+			String saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.ROOT") + commonUtil.separator +
 					apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".mht";
 			
 			File file = new File(saveFileName);
@@ -2240,7 +2243,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 			if (file.exists()) {
 				deleteFile(saveFileName);
 			} else {
-				saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval") + commonUtil.separator +
+				saveFileName = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + userInfo.getTenantId() + config.getProperty("upload_approval.ROOT") + commonUtil.separator +
 						apprFormInfoVO.getCompanyID() + commonUtil.separator + "Form" + commonUtil.separator + apprFormInfoVO.getFormID() + ".hwp";
 				
 				File file2 = new File(saveFileName);
@@ -2340,4 +2343,27 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		return "admin/ezApproval/apprHwpEditor";
 	}
 	
+	@RequestMapping(value = "/admin/ezApproval/formSaveHwp.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSaveHwp(@CookieValue("loginCookie") String loginCookie, ApprFormInfoVO apprFormInfoVO, HttpServletRequest request) throws Exception {
+		logger.debug("formSaveHwp started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		String resultXML = "";
+		
+		apprFormInfoVO.setTenantID(userInfo.getTenantId());
+		
+		String rtnValue = ezApprovalAdminService.saveHwpFormInfo(apprFormInfoVO, realPath, userInfo.getLocale());
+		
+		if (rtnValue.indexOf("ERROR") > 0) {
+			resultXML = "<DATA>" + rtnValue + "</DATA>";
+		} else {
+			resultXML = "<DATA>OK</DATA>";
+		}
+
+		logger.debug("formSaveHwp ended");
+		
+		return resultXML;
+	}
 }
