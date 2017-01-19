@@ -778,7 +778,6 @@ function SendMailToCancel(DocID) {
     var MemberList = createXmlDom();
     MemberList = loadXMLString(linelist);
 
-alert(linelist);
     var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
     var i;
 

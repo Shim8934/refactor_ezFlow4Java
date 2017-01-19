@@ -216,7 +216,6 @@
 		    
 		      function ForcecancelYN_after(xml) {
 			        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
-			        alert(RtnVal);
 		            if (RtnVal == "TRUE") {
 		                document.getElementById("tbtnforcecallback").style.display = "";
 
