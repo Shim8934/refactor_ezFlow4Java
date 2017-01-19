@@ -166,13 +166,336 @@
 		]]>
 	</select>
 	
-	<procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+	<!-- <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+	<select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+		<isEqual property="v_CLASS" compareValue="user">
+			<![CDATA[
+				SELECT
+					* 
+                FROM ( 	SELECT
+                				CN ,
+                       			CASE
+                       				#v_LANGDATA#
+                       			WHEN
+                       				'1'
+                       			THEN
+                       				DISPLAYNAME
+                       			ELSE
+                       				DISPLAYNAME2
+                       			END
+                       				DISPLAYNAME  ,
+                       			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       			'user' TYPE  
+                       		FROM
+                       			EZHRMASTER.TBLUSERMASTER 
+                       		WHERE
+                       			DEPARTMENT = #v_CN#
+                       		AND
+                       			TENANT_ID = #v_TENANT_ID#	
+                       	UNION ALL 
+                       		SELECT
+                       			A.CN ,
+                       			CASE
+                       				#v_LANGDATA#
+                       			WHEN
+                       				'1'
+                       			THEN
+                       				DISPLAYNAME
+                       			ELSE
+                       				DISPLAYNAME2
+                       			END
+                       				DISPLAYNAME  , SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       			'user' TYPE  
+                  			FROM
+                  				EZHRMASTER.TBLADDJOBMASTER B
+                  			JOIN
+                  				EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                  			WHERE
+                  				B.DEPTID = #v_CN#
+                  			AND
+                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+                  			ORDER BY
+                  				EXTENSIONATTRIBUTE15 ASC,
+                  			DISPLAYNAME ASC
+			]]>
+		</isEqual>
+		<isNotEqual property="v_CLASS" compareValue="user">
+			<isEqual property="v_CLASS" compareValue="group">
+				<![CDATA[
+					SELECT
+						CN ,
+                      	CASE
+                      		#v_LANGDATA#
+                      	WHEN
+                      		'1'
+                      	THEN
+                      		DISPLAYNAME
+                      	ELSE
+                      		DISPLAYNAME2
+                      	END
+                      		DISPLAYNAME  ,
+                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      	'dept' TYPE  
+                    FROM
+                    	EZHRMASTER.TBLDEPTMASTER 
+                   	WHERE
+                   		EXTENSIONATTRIBUTE1 = #v_CN#
+                   	AND
+                   		TENANT_ID = #v_TENANT_ID#	
+                    ORDER BY
+                    	EXTENSIONATTRIBUTE15
+				]]>
+			</isEqual>
+			<isNotEqual property="v_CLASS" compareValue="group">
+				<![CDATA[
+					SELECT
+						* 
+                    FROM ( 	SELECT
+                    				CN ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                           			'user' TYPE  
+                          		FROM
+                          			EZHRMASTER.TBLUSERMASTER 
+                          		WHERE
+                          			DEPARTMENT = #v_CN#
+                          		AND
+                          			TENANT_ID = #v_TENANT_ID#	
+                          	UNION ALL 
+                          		SELECT
+                          			A.CN ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			'user' TYPE  
+                          		FROM
+                          			EZHRMASTER.TBLADDJOBMASTER B
+                          		JOIN
+                          			EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                          		WHERE
+                          			B.DEPTID = #v_CN#
+                          		AND
+                          			B.TENANT_ID = #v_TENANT_ID#	
+                          	UNION ALL 
+                          		SELECT
+                          			CN ,
+                          			CASE
+                          				#v_LANGDATA#
+                          			WHEN
+                          				'1'
+                          			THEN
+                          				DISPLAYNAME
+                          			ELSE
+                          				DISPLAYNAME2
+                          			END
+                          				DISPLAYNAME  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                           			'dept' TYPE  
+                          		FROM
+                          			EZHRMASTER.TBLDEPTMASTER 
+                          		WHERE
+                          			EXTENSIONATTRIBUTE1 = #v_CN#
+                          		AND
+                          			TENANT_ID = #v_TENANT_ID#	 ) AA
+                          		ORDER BY
+                          			TYPE DESC,
+                          			EXTENSIONATTRIBUTE15,
+                          			DISPLAYNAME ASC
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
+	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+		<isEqual property="v_CLASS" compareValue="user">
+			<![CDATA[
+				SELECT
+					* 
+                FROM ( 	SELECT
+                				ROW_NUMBER() OVER ( ORDER BY EXTENSIONATTRIBUTE15 ASC, DISPLAYNAME ASC  ) ROWNUM_  ,
+                               	CN ,
+                               	DISPLAYNAME ,
+                               	EXTENSIONATTRIBUTE15 ,
+                               	TYPE 
+                        	FROM ( 	SELECT
+                        					CN ,
+                                      		CASE #v_LANGDATA#
+                                            WHEN
+                                            	'1'
+                                            THEN
+                                            	DISPLAYNAME
+                                            ELSE
+                                            	DISPLAYNAME2
+                                            END
+                                            	DISPLAYNAME  ,
+                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		'USER' TYPE  
+                               			FROM
+                               				EZHRMASTER.TBLUSERMASTER 
+                                		WHERE
+                                			DEPARTMENT = #v_CN#
+                                		AND
+                                			TENANT_ID = #v_TENANT_ID#	
+	                               UNION ALL 
+                               			SELECT
+                               				A.CN ,
+                                      		CASE
+                                      			#v_LANGDATA#
+                                            WHEN
+                                            	'1'
+                                            THEN
+                                            	DISPLAYNAME
+                                            ELSE
+                                            	DISPLAYNAME2
+                                            END
+                                            	DISPLAYNAME  ,
+                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		'USER' TYPE  
+                               			FROM
+                               				EZHRMASTER.TBLADDJOBMASTER B
+                               			JOIN
+                               				EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                              			WHERE
+                              				B.DEPTID = #v_CN#
+                              			AND
+                              				B.TENANT_ID = #v_TENANT_ID#	 ) AA ) BB
+                  			WHERE
+                  				ROWNUM_ >= #v_STARTROW#
+                  			AND
+                  				ROWNUM_ < #v_ENDROW#
+                  			ORDER BY
+                  				EXTENSIONATTRIBUTE15 ASC,
+                           		DISPLAYNAME ASC
+			]]>
+		</isEqual>
+	
+		<isEqual property="v_CLASS" compareValue="group">
+			<![CDATA[
+				SELECT
+					CN ,
+                    CASE
+                    	#v_LANGDATA#
+					WHEN
+						'1'
+					THEN
+						DISPLAYNAME
+                    ELSE
+                    	DISPLAYNAME2
+                    END
+                    	DISPLAYNAME  ,
+                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                        'DEPT' TYPE  
+            	FROM
+            		EZHRMASTER.TBLDEPTMASTER 
+                WHERE
+                	EXTENSIONATTRIBUTE1 = #v_CN#
+                AND
+                	TENANT_ID = #v_TENANT_ID#	
+				ORDER BY
+					EXTENSIONATTRIBUTE15
+			]]>
+		</isEqual>
+		
+		<isEqual property="v_CLASS" compareValue="all">
+			<![CDATA[
+				SELECT
+					* 
+				FROM ( 	SELECT
+								CN ,
+                                CASE
+                                	#v_LANGDATA#
+                                WHEN
+                                	'1'
+                                THEN
+                                	DISPLAYNAME
+                                ELSE
+                                	DISPLAYNAME2
+                                END
+                                	DISPLAYNAME  ,
+                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                    'USER' TYPE  
+                           FROM
+                           		EZHRMASTER.TBLUSERMASTER 
+                           WHERE
+	                           	DEPARTMENT = #v_CN#
+	                       AND
+	                       		TENANT_ID = #v_TENANT_ID#    	
+						UNION ALL 
+                        	SELECT
+                        		A.CN ,
+                                CASE
+                                	#v_LANGDATA#
+                                WHEN
+                                	'1'
+                                THEN
+                                	DISPLAYNAME
+                                ELSE
+                                	DISPLAYNAME2
+                                END
+                                	DISPLAYNAME  ,
+                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                    'USER' TYPE  
+                             FROM
+                             	EZHRMASTER.TBLADDJOBMASTER B
+                             JOIN
+                             	EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                             WHERE
+                             	B.DEPTID = #v_CN#
+                             AND
+                             	B.TENANT_ID = #v_TENANT_ID#	
+                         UNION ALL 
+                           	SELECT
+                           		CN ,
+                                CASE
+                                	#v_LANGDATA#
+                                WHEN
+                                	'1'
+                                THEN
+                                	DISPLAYNAME
+                                ELSE
+                                	DISPLAYNAME2
+                                END
+                                	DISPLAYNAME  ,
+                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                'DEPT' TYPE  
+                            FROM
+                            	EZHRMASTER.TBLDEPTMASTER 
+                            WHERE
+                            	EXTENSIONATTRIBUTE1 = #v_CN#
+                            AND
+                            	TENANT_ID = #v_TENANT_ID#	 ) AA
+                  ORDER BY
+                  	TYPE DESC,
+                    EXTENSIONATTRIBUTE15,
+                    DISPLAYNAME ASC
+			]]>
+		</isEqual>	
+	
+	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -461,9 +784,115 @@
 		]]>
 	</select>
 	
-	<procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+	<!-- <procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				CN ,
+                CASE
+                	#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
+                    DISPLAYNAME DISPLAYNAME1  ,
+                    DISPLAYNAME2 ,
+                    MAIL ,
+                    MAILNICKNAME ,
+                    UPNNAME ,
+                    DEPARTMENT ,
+                    CASE
+                    	#v_LANGDATA#
+                    WHEN
+                    	'1'
+                    THEN
+                    	DESCRIPTION
+                    ELSE
+                    	DESCRIPTION2
+                    END
+                    	DESCRIPTION  ,
+                        DESCRIPTION DESCRIPTION1  ,
+                        DESCRIPTION2 ,
+                        PHYSICALDELIVERYOFFICENAME ,
+                    CASE
+                    	#v_LANGDATA#
+                    WHEN
+                    	'1'
+                    THEN
+                    	COMPANY
+                    ELSE
+                    	COMPANY2
+                    END
+                    	COMPANY  ,
+                        COMPANY COMPANY1  ,
+                        COMPANY2 ,
+                    	CASE
+                    		#v_LANGDATA#
+                        WHEN
+                        	'1'
+                        THEN
+                        	TITLE
+                        ELSE
+                        	TITLE2
+                        END
+                        	TITLE  ,
+                        	TITLE TITLE1  ,
+                        	TITLE2 TITLE2  ,
+                        	TELEPHONENUMBER ,
+                        	HOMEPHONE ,
+                        	FACSIMILETELEPHONENUMBER ,
+                        	MOBILE ,
+                        	STREETADDRESS ,
+                        	POSTALCODE ,
+                        	INFO ,
+                        	REPLACE(EXTENSIONATTRIBUTE1, 'a=0;', 'a=1;') EXTENSIONATTRIBUTE1  ,
+                        	EXTENSIONATTRIBUTE2 ,
+                        	EXTENSIONATTRIBUTE3 ,
+                        	EXTENSIONATTRIBUTE4 ,
+                        	EXTENSIONATTRIBUTE5 ,
+                        	EXTENSIONATTRIBUTE6 ,
+                        	EXTENSIONATTRIBUTE7 ,
+                        	EXTENSIONATTRIBUTE8 ,
+                        	EXTENSIONATTRIBUTE9 ,
+                        	CASE
+                        		#v_LANGDATA#
+                            WHEN
+                            	'1'
+                            THEN
+                            	EXTENSIONATTRIBUTE10
+                            ELSE
+                            	EXTENSIONATTRIBUTE102
+                            END
+                            	EXTENSIONATTRIBUTE10  ,
+                        		EXTENSIONATTRIBUTE10 EXTENSIONATTRIBUTE101  ,
+                        		EXTENSIONATTRIBUTE102 EXTENSIONATTRIBUTE102  ,
+                        		EXTENSIONATTRIBUTE11 ,
+                        		EXTENSIONATTRIBUTE12 ,
+                        		EXTENSIONATTRIBUTE13 ,
+                        		EXTENSIONATTRIBUTE14 ,
+                        		EXTENSIONATTRIBUTE15 ,
+                        		ADSPATH ,
+                        		UPDATEDT ,
+                        		'user' TYPE  ,
+                        		' ' DISPLAYNAMEPRINTABLE  ,
+                        		POSITIONCD ,
+                        		BIRTH ,
+                        		BIRTHTYPE 
+             FROM
+             	EZHRMASTER.TBLUSERMASTER 
+             WHERE
+             	CN = LOWER(#v_CN#)
+             AND
+             	TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
 		{CALL EZHRMASTER.EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -505,13 +934,109 @@
 		]]>
 	</select>
 	
-	<procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
+	<!-- <procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
 		{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
-	</procedure>
+	</procedure> -->
 	
-	<procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
+	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLUSERMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE#
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</update>
+	
+	<update id="EzOrganDAO.updateProperty_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLDEPTMASTER
+			SET
+				$v_PROPNAME$ = #v_PROPVALUE# 
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</update>
+	
+	<statement id="EzOrganDAO.updateProperty_U1" parameterClass="Map">
+		<![CDATA[
+			MERGE INTO
+				EZHRMASTER.TBLUSERMASTER 
+   			USING (	SELECT
+   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2
+          				FROM
+          					EZHRMASTER.TBLUSERMASTER 
+          				JOIN
+          					EZHRMASTER.TBLDEPTMASTER    ON TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN  AND TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID
+          				WHERE
+          					TBLDEPTMASTER.CN = #v_CN#
+          				AND
+          					TBLDEPTMASTER.TENANT_ID = #v_TENANT_ID#	
+          				AND
+          					TBLDEPTMASTER	) src ON ( TBLUSERMASTER.ROWID = src.ROW_ID )
+   			WHEN
+   				MATCHED
+   			THEN 
+   				UPDATE SET
+   					DESCRIPTION = src.DISPLAYNAME,
+              		DESCRIPTION2 = src.DISPLAYNAME2
+		]]>
+	</statement>
+	
+	<!-- <procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
+	
 		{CALL EZHRMASTER.EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
-	</procedure>
+	</procedure> -->
+	
+	<select id="EzOrganDAO.setProxyUserInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+          	FROM
+          		DUAL
+          	WHERE ( SELECT
+          				 	COUNT(*)  
+                   		FROM
+                   			EZHRASTER.TBLPROXYINFO 
+                  		WHERE
+                  			USERID = #v_USERID#
+                  		AND
+                  			TENANT_ID = #v_TENANT_ID#	 ) > 0
+		]]>
+	</select>
+	
+	<update id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				EZHRMASTER.TBLPROXYINFO
+            SET
+            	PROXYUSERID = #v_PROXYUSERID#,
+                PROXYUSERNAME = #v_PROXYUSERNAME#,
+                PROXYUSERDEPTID = #v_PROXYUSERDEPTID#,
+                STARTDATE = TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+           WHERE
+           		USERID = #v_USERID#
+           	AND
+           		TENANT_ID = #v_TENANT_ID#
+		]]>
+	</update>
+	
+	<insert id="EzOrganDAO.setProxyUserInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZHRMASTER.TBLPROXYINFO
+            	( USERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERDEPTID, STARTDATE, ENDDATE, TENANT_ID )
+            VALUES
+            	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
+		]]>
+	</insert>
 	
 	<!-- <procedure id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		{CALL EZHRMASTER.EZSP_DELPROXYUSERINFO(#v_USERID#)}
@@ -568,7 +1093,7 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER A $strSQL$
+	    		ezHrmaster.TBLUSERMASTER A $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -578,7 +1103,7 @@
 	      		'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
-				ezHrmaster.TBLUSERMASTER B INNER JOIN ezHrmaster.TBLADDJOBMASTER A ON A.CN = B.CN $strSQL$
+				ezHrmaster.TBLUSERMASTER B INNER JOIN ezHrmaster.TBLADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID $strSQL$
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -589,7 +1114,7 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					ezHrmaster.TBLDEPTMASTER $strSQL$	
+					ezHrmaster.TBLDEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
 			</isEqual>	      				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
@@ -599,7 +1124,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		ezHrmaster.TBLDEPTMASTER $strSQL$
+	    		ezHrmaster.TBLDEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
@@ -621,7 +1146,7 @@
                 '' as extensionAttribute15,
                 'user' as type 
              FROM  
-             	ezHrmaster.TBLUSERMASTER A   $strSQL$ 
+             	ezHrmaster.TBLUSERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
        
        UNION ALL
             
@@ -635,9 +1160,9 @@
          INNER JOIN 
          	ezHrmaster.TBLADDJOBMASTER A  
          ON  
-         	a.cn = b.cn  $strSQL$ )  A)  
+         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
               <![CDATA[
-              B where RNUM >= $startRow$ and RNUM < $endRow$
+              B where RNUM >= $startRow$ and RNUM < $endRow$ and tenant_id = #v_TENANT_ID#
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
@@ -648,7 +1173,7 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER A $strSQL$ $strSize$
+	    		ezHrmaster.TBLUSERMASTER A $strSQL$ $strSize$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -662,7 +1187,7 @@
 			INNER JOIN 
 				ezHrmaster.TBLADDJOBMASTER A 
 			ON 
-				A.CN = B.CN $strSQL$
+				A.CN = B.CN $strSQL$ AND A.TENANT_ID = B.TENANT_ID
 				
 			UNION ALL
 				
@@ -672,7 +1197,7 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					ezHrmaster.TBLDEPTMASTER $strSize$	
+					ezHrmaster.TBLDEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
           </isEqual>
 		  <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -681,7 +1206,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		ezHrmaster.TBLDEPTMASTER $strSQL$ $strSize$
+	    		ezHrmaster.TBLDEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
 	      </isEqual>
 	</select>
 	<select id="EzOrganDAO.getSearchListCount" parameterClass="Map" resultClass="int">
@@ -692,7 +1217,7 @@
 			SELECT 
 				CN 
 			FROM  
-				ezHrmaster.TBLUSERMASTER  A  $strSQL$ 
+				ezHrmaster.TBLUSERMASTER  A  $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
             
             UNION ALL 
             
@@ -702,9 +1227,9 @@
             	ezHrmaster.TBLUSERMASTER B   
             INNER JOIN  ezHrmaster.TBLAddJobMaster A   
             ON 
-            	a.cn = b.cn $strSQL$) A
+            	a.cn = b.cn $strSQL$ and a.tenant_id = b.tenant_id) A
 	</select>
-	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="String" resultClass="int">
+	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(cn)
@@ -712,10 +1237,12 @@
      			ezHrmaster.TBLDeptmaster 
       		WHERE  
       			extensionattribute1 = #deptID#
+      		AND
+      			tenant_id = #tenantId#	
 	     ]]> 
 	</select>
 	
-	<select id="EzOrganDAO.getDeptFullPath" parameterClass="String" resultClass="String">
+	<select id="EzOrganDAO.getDeptFullPath" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				'top,Top,' || dept_cd_path 
@@ -723,6 +1250,8 @@
 	      		ezHrmaster.TBLDEPTMASTER 
 	      	WHERE  
 	      		cn = #deptID#
+	      	AND
+	      		tenant_id = #tenantId#	
 	     ]]> 
 	</select>
 
@@ -770,6 +1299,8 @@
 				ezHrmaster.TBLDEPTMASTER 
 			WHERE  
 				cn = #userID#
+			AND
+				tenant_id = #v_TENANT_ID#	
 		]]>
 	</select>
 	
@@ -781,10 +1312,12 @@
 				ezHrmaster.TBLUSERMASTER
 			WHERE
 				cn = #userID#
+			AND
+				tenant_id = #tenantID#	
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getCNByEmail"	parameterClass="String" resultClass="String">
+	<select id="EzOrganDAO.getCNByEmail"	parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				cn
@@ -792,6 +1325,8 @@
 				ezHrmaster.TBLUSERMASTER
 			WHERE
 				mail = #email#
+			AND
+				tenant_id = #tenantID#	
 		]]>
 	</select>
 	

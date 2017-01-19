@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -875,7 +876,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private String getDeptFullPathForLocal(String deptID, int tenantID) throws Exception{
-        return (String) select("EzOrganDAO.getDeptFullPath", deptID);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("deptID", deptID);
+    	map.put("tenantId", tenantID);
+        return (String) select("EzOrganDAO.getDeptFullPath", map);
     }
 	
 	public String getDeptFullPath(String deptID, int tenantID) throws Exception{
@@ -936,7 +940,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private int deptSubDeptCntForLocal(String deptID, int tenantId) throws Exception{
-        return (int) select("EzOrganDAO.deptSubDeptCnt", deptID);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("deptID", deptID);
+    	map.put("tenantId", tenantId);
+        return (int) select("EzOrganDAO.deptSubDeptCnt", map);
     }
 	
 	public int deptSubDeptCnt(String deptID, int tenantId) throws Exception{
@@ -1245,7 +1252,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private String getCNByEmailForLocal(String email, int tenantID) throws Exception{
-        return (String) select("EzOrganDAO.getCNByEmail", email);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("email", email);
+    	map.put("tenantID", tenantID);
+        return (String) select("EzOrganDAO.getCNByEmail", map);
     }
 	
 	public String getCNByEmail(String email, int tenantID) throws Exception{
@@ -1255,10 +1265,28 @@ public class EzOrganDAO extends EgovAbstractDAO {
             return getCNByEmailForLocal(email, tenantID);
         }                       
 	}
+	
+	public void updateProperty_U (Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.updateProperty_U", map);
+	}
+	
+	public void updateProperty_U1 (Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.updateProperty_U1", map);
+	}
+	
+	public String setProxyUserInfo_S (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.setProxyUserInfo_S", map);
+	}
+	
+	public void setProxyUserInfo_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganDAO.setProxyUserInfo_I", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getDeptReceipterIDs(Map<String, Object> map) {
 		 return (List<OrganUserVO>) list("EzOrganDAO.getDeptReceipterIDs", map);
 	}
+
+	
 
 }

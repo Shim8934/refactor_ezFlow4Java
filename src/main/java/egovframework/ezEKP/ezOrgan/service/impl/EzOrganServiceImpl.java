@@ -312,6 +312,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_PAGE", pPage);
 		map.put("v_TENANT_ID", tenantID);
+		map.put("v_STARTROW", (Integer.parseInt(pPage) -1) * 50 + 1);
+		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
 		
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
@@ -909,9 +911,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getEncPassword(String dUserID) throws Exception {
+	public String getEncPassword(String dUserID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", dUserID);
+		map.put("tenantID", tenantID);
 		
 		return ezOrganDAO.getEncPassword(map);
 	}
@@ -1095,12 +1098,27 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PROPVALUE", propValue);
 		map.put("v_FLAG", strFlag);
 		
-		try {
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganDAO.updateProperty(map);
+			return "OK";
+	    } else {
+	    	if (pClass.toLowerCase().equals("user")) {
+	    		ezOrganDAO.updateProperty(map);
+	    	} else {
+	    		ezOrganDAO.updateProperty_U(map);
+	    	}
+	    	if (strFlag.equals("Y")) {
+	    		ezOrganDAO.updateProperty_U1(map);
+	    	}
+	    	return "OK";
+	    }  
+		
+		/*try {
 			ezOrganDAO.updateProperty(map);
 			return "OK";
 		} catch (Exception e) {
 			return e.getMessage();
-		}
+		}*/
 	}
 
 	@Override
@@ -1118,22 +1136,36 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception {
+	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_PROXYUSERID", proxyUserID);
 		map.put("v_PROXYUSERNAME", proxyUserName);
 		map.put("v_PROXYUSERDEPTID", proxyUserDeptID);
-		map.put("v_STARTDATE", startDate);
+		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true));
 		map.put("v_ENDDATE", endDate);
 		
-		try {
-			ezOrganDAO.setProxyUserInfo(map);
+		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			 ezOrganDAO.setProxyUserInfo(map);
+			 return "OK";
+	     } else {
+	    	 String temp = ezOrganDAO.setProxyUserInfo_S(map);
+	    	 
+	    	 if (temp != null && temp.equals("1")) {
+	    		 ezOrganDAO.setProxyUserInfo(map);
+	    	 } else {
+	    		 ezOrganDAO.setProxyUserInfo_I(map);
+	    	 }
+	    	 return "OK";
+	     }        
+		
+		/*try {
+			
 			
 			return "OK";
 		} catch (Exception e) {
 			return "";
-		}
+		}*/
 	}
 
 	@Override
