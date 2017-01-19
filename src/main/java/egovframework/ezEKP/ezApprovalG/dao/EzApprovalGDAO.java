@@ -1039,7 +1039,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.selectCabID2", map);
 	}
 	
-	public int selectHistoryCnt(Map<String, Object> map) {
+	public int selectHistoryCnt(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectHistoryCnt", map);
 	}
 	
@@ -1087,31 +1087,31 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.aprMakeTmp2Ing", map);
 	}
 	
-	public void aprMakeTmp2Ing2(Map<String, Object> map) {
+	public void aprMakeTmp2Ing2(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing2", map);
 	}
 	
-	public void aprMakeTmp2Ing3(Map<String, Object> map) {
+	public void aprMakeTmp2Ing3(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing3", map);
 	}
 	
-	public void aprMakeTmp2Ing4(Map<String, Object> map) {
+	public void aprMakeTmp2Ing4(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing4", map);
 	}
 	
-	public void aprMakeTmp2Ing5(Map<String, Object> map) {
+	public void aprMakeTmp2Ing5(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing5", map);
 	}
 	
-	public void aprMakeTmp2Ing6(Map<String, Object> map) {
+	public void aprMakeTmp2Ing6(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing6", map);
 	}
 	
-	public void aprMakeTmp2Ing7(Map<String, Object> map) {
+	public void aprMakeTmp2Ing7(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing7", map);
 	}
 	
-	public void aprMakeTmp2Ing8(Map<String, Object> map) {
+	public void aprMakeTmp2Ing8(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing8", map);
 	}
 	
@@ -1123,7 +1123,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.createNewDoc", map);
 	}
 	
-	public void createNewDoc2(Map<String, Object> map) {
+	public void createNewDoc2(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.createNewDoc2", map);
 	}
 	
@@ -1159,7 +1159,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRecordHistory2", map);
 	}
 	
-	public void insertTbSerialNumGen(Map<String, Object> map) {
+	public void insertTbSerialNumGen(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbSerialNumGen", map);
 	}
 	
@@ -1167,59 +1167,59 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertTbCabinetClass", map);
 	}
 	
-	public void insertTbSpecialCatalogInfo(Map<String, Object> map) {
+	public void insertTbSpecialCatalogInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbSpecialCatalogInfo", map);
 	}
 	
-	public void insertTbSpecialCatalogInfo2(Map<String, Object> map) {
+	public void insertTbSpecialCatalogInfo2(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbSpecialCatalogInfo2", map);
 	}
 	
-	public void insertTbOldCabinetExtraInfo(Map<String, Object> map) {
+	public void insertTbOldCabinetExtraInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbOldCabinetExtraInfo", map);
 	}
 	
-	public void insertTbCabinetInfo(Map<String, Object> map) {
+	public void insertTbCabinetInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbCabinetInfo", map);
 	}
 	
-	public void insertTbAprAttachInfo(Map<String, Object> map) {
+	public void insertTbAprAttachInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbAprAttachInfo", map);
 	}
 	
-	public void insertTbAprDocAttachInfo(Map<String, Object> map) {
+	public void insertTbAprDocAttachInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbAprDocAttachInfo", map);
 	}
 	
-	public void insertTbAprLineInfo(Map<String, Object> map) {
+	public void insertTbAprLineInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbAprLineInfo", map);
 	}
 	
-	public void insertTbExpAprLine(Map<String, Object> map) {
+	public void insertTbExpAprLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbExpAprLine", map);
 	}
 	
-	public void insertReceiptInfo(Map<String, Object> map) {
+	public void insertReceiptInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertReceiptInfo", map);
 	}
 	
-	public void trigerTbCabinet(Map<String, Object> map1) {
+	public void trigerTbCabinet(Map<String, Object> map1) throws Exception{
 		insert("EzApprovalG.trigerTbCabinet", map1);
 	}
 	
-	public void trigerTbCabRoleInfo(Map<String, Object> map1) {
+	public void trigerTbCabRoleInfo(Map<String, Object> map1) throws Exception{
 		insert("EzApprovalG.trigerTbCabRoleInfo", map1);
 	}
 	
-	public void insertTbCabinetHistory(Map<String, Object> map) {
+	public void insertTbCabinetHistory(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbCabinetHistory", map);
 	}
 	
-	public void insertSignInfoAprSN(Map<String, Object> map1) {
+	public void insertSignInfoAprSN(Map<String, Object> map1)throws Exception{
 		insert("EzApprovalG.insertSignInfoAprSN", map1);
 	}
 	
-	public void insertTbSpecialCatalogInfo_Cab(Map<String, Object> map) {
+	public void insertTbSpecialCatalogInfo_Cab(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbSpecialCatalogInfo_Cab", map);
 	}
 	
@@ -1227,34 +1227,40 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertTbSpecialCatalogInfo_Cab2", map);
 	}
 	
-	public void insertTbAprReceiptProcessInfo(Map<String, Object> map1) {
+	public void insertTbAprReceiptProcessInfo(Map<String, Object> map1) throws Exception{
 		insert("EzApprovalG.insertTbAprReceiptProcessInfo", map1);
 	}
 	
-	public void insertTbContainer(Map<String, Object> map) {
+	public void insertTbContainer(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbContainer", map);
 	}
 	
-	public void jiJungInsertReceiptProInfo(Map<String, Object> map) {
+	public void jiJungInsertReceiptProInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.jiJungInsertReceiptProInfo", map);
 	}
 
-	public void insertHistory(Map<String, Object> map) {
+	public void insertHistory(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertHistory", map);
 	}
 	
-	public void insertHistory2(Map<String, Object> map) {
+	public void insertHistory2(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertHistory2", map);
 	}
 	
-	public void insertTbSpecialCatalogInfoRec(Map<String, Object> map) {
+	public void insertTbSpecialCatalogInfoRec(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbSpecialCatalogInfoRec", map);
 	}
 	
-	public void insertTbCabRoleInfo(Map<String, Object> map) {
+	public void insertTbCabRoleInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbCabRoleInfo", map);
 	}
 	
+	public void insertStrSql(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertStrSql", map);
+	}
+	public void insertStrSql1(Map<String, Object> map) {
+		insert("EzApprovalG.insertStrSql1", map);
+	}
 	public void setMyTaskCode(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setMytaskCode", map);
 	}
@@ -1487,5 +1493,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) {
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+
+
 
 }

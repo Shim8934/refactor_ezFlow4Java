@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1101,27 +1102,45 @@ public class EzApprovalGarchiveController {
 	
 	/** 전자결재 G 자동 알림 메일 */
 	@RequestMapping(value = "/ezApprovalG/mail_intersend.do"  ,produces="text/xml;charset=utf-8")
-	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+	public void mailInterSend(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse res ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 //		String from = request.getParameter("from");
 		String to[] = request.getParameter("to").split(",");
 		String Subject = request.getParameter("Subject");
 		String Content = request.getParameter("Content");
 		String SaveSendBoxFlag = request.getParameter("SaveSendBoxFlag");
-        StringBuilder bodyContent = new StringBuilder();
+        boolean flag;
+		StringBuilder bodyContent = new StringBuilder();
+        
         bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
         bodyContent.append(Content);
         bodyContent.append("</DIV>");
-        	InternetAddress from = new InternetAddress();
-        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-        	from.setAddress(userInfo.getEmail());
-        	
-        	
-        	InternetAddress to1 = new InternetAddress();
-        	to1.setPersonal(to[0], "UTF-8");
-        	to1.setAddress(to[1]);
-        	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString());
-
+    	InternetAddress from = new InternetAddress();
+    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+    	from.setAddress(userInfo.getEmail());
+    	
+    	InternetAddress to1 = new InternetAddress();
+    	to1.setPersonal(to[0], "UTF-8");
+    	to1.setAddress(to[1]);
+    	
+    	if(SaveSendBoxFlag.equals("Y")) {
+    		flag = true;
+    	} else {
+    		flag = false;
+    	}
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString(),flag);
 	}
+	
+	/** 전자결재 G 자동 알림 메일 */
+	@RequestMapping(value = "ezApprovalG/getReceiverList.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String getReceiverList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String result ="";
+		String deptID = request.getParameter("receiveDeptID");
+		result = ezOrganService.getDeptReceipterIDs(deptID, userInfo.getTenantId());
+		return result;
+	}
+	
+	
 }

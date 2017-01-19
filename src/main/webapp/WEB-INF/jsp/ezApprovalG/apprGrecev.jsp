@@ -488,6 +488,7 @@
 			
 			                    }
 			                    else {
+			                    	 sendAlertMail("APR", "1", "RECEV");
 			                    }
 			                    pAlertContent = "<spring:message code='ezApprovalG.t1494'/>";
 			                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
@@ -552,8 +553,10 @@
 			                        RollbackNum();
 			                        return;
 			                    }
+			                    sendAlertMail("END", "1", "RECEV");
 			                }
 			                else {
+			                	sendAlertMail("APR", "1", "RECEV");
 			                }
 			                pAlertContent = "<spring:message code='ezApprovalG.t1496'/>";
 			                OpenAlertUI(pAlertContent, OpenAlertUI_Close);

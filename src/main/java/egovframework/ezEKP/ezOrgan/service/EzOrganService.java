@@ -50,5 +50,7 @@ public interface EzOrganService {
 
 	public String getCNByEmail(String email, int tenantID) throws Exception;
 
+	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
+
  
 }

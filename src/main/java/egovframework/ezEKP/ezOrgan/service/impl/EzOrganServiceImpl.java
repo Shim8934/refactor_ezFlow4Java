@@ -1171,6 +1171,24 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return ezOrganDAO.getLastLogin(map);
 	}
 
+	@Override
+	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptID);
+		map.put("TENANTID", tenantID);
+		List<OrganUserVO> organProxyVOList = ezOrganDAO.getDeptReceipterIDs(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < organProxyVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(organProxyVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
 }
 
 

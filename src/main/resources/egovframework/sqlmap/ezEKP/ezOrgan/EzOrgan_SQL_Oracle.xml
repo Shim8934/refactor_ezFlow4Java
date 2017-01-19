@@ -807,4 +807,16 @@
 	      		tenant_ID = #tenantID#	
 	     ]]> 
 	</select>
+	<select id="EzOrganDAO.getDeptReceipterIDs" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT 
+			CN , TENANT_ID tenantId
+        FROM 
+        	ezHrmaster.TBLUserMaster 
+       	WHERE  
+       		TENANT_ID = #TENANTID#
+       	AND
+       		DEPARTMENT = #v_DEPTID#
+       	AND 
+       		EXTENSIONATTRIBUTE1 LIKE '%a=1;%'
+	</select>
 </sqlMap>

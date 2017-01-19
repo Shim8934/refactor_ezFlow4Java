@@ -57,11 +57,6 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     MDrafttitle = pdrafttitle
     MdraftName = pdraftname
     Mdraftdate = pdrafdate   
-    alert(aprLineList);
-    alert(aprsn);
-    alert(pdrafttitle);
-    alert(pdraftname);
-    alert(pdrafdate);
     var objNodes = SelectNodes(aprLineList, "LISTVIEWDATA/ROWS/ROW");     
     var nextID = "";
     var sn = objNodes.length - aprsn - 1;
@@ -84,8 +79,8 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
 }
 
 function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
-    var dosend = GetNoticeMail(to, type);    
-    if (!dosend && isCheck == undefined)
+    var dosend = GetNoticeMail(to, type);  
+        if (!dosend && isCheck == undefined)
         return;
     var to = getmailaddress(to);
     var from = "\"" + arr_userinfo[2] + "\" <" + arr_userinfo[8] + ">\ ";
@@ -141,54 +136,8 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     }
 
     Content = "<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>" + Content + "</td></tr></table>";
-    
-//    var xmlDoc = createXmlDom();
-//
-//    var rootNode = xmlDoc.createElement("DATA");
-//    xmlDoc.appendChild(rootNode);
-//    MakeXmlNode(xmlDoc, rootNode, "ORIGIURL", "");
-//    MakeXmlNode(xmlDoc, rootNode, "ORGCMD", "");
-//    MakeXmlNode(xmlDoc, rootNode, "DLMAIL", "");
-//    MakeXmlNode(xmlDoc, rootNode, "URL", "");
-//    MakeXmlNode(xmlDoc, rootNode, "CONNURL", "/exchange/" + g_szUserID);
-//    MakeXmlNode(xmlDoc, rootNode, "ORGURL", "");
-//    MakeXmlNode(xmlDoc, rootNode, "CMD", "SEND" );
-//    MakeXmlNode(xmlDoc, rootNode, "MAILCMD", "NEW");
-//    MakeXmlNode(xmlDoc, rootNode, "AUTHOR", g_szAuthor);
-//    MakeXmlNode(xmlDoc, rootNode, "SUBJECT", Subject);
-//    MakeXmlNode(xmlDoc, rootNode, "TO", to);
-//    MakeXmlNode(xmlDoc, rootNode, "CC", "");
-//    MakeXmlNode(xmlDoc, rootNode, "BCC", "");
-//    MakeXmlNode(xmlDoc, rootNode, "TEXTBODY", "");
-//    MakeXmlNode(xmlDoc, rootNode, "FROM", from);
-//    MakeXmlNode(xmlDoc, rootNode, "SENSITIVITY", "0");
-//    MakeXmlNode(xmlDoc, rootNode, "REPLYSENDTIME", "0");
-//    MakeXmlNode(xmlDoc, rootNode, "REPLYREADTIME", "0");
-//    MakeXmlNode(xmlDoc, rootNode, "IMPORTANCE", "1");
-//    MakeXmlNode(xmlDoc, rootNode, "EXTRAHEADERNAME", "comment");
-//    MakeXmlNode(xmlDoc, rootNode, "EXTRAHEADERVALUE", g_senderinfo); 
-//    MakeXmlNode(xmlDoc, rootNode, "SENDUSINGEXCHANGE", "1");
-//    MakeXmlNode(xmlDoc, rootNode, "CHARSET", "UTF-8");
-//    MakeXmlNode(xmlDoc, rootNode, "CONTENT-TRANSFER-ENCODING", "BASE64");
-//    MakeXmlNode(xmlDoc, rootNode, "SIMPLE-MIME", "0");
-//    MakeXmlNode(xmlDoc, rootNode, "SIMPLE-MIME-CONTENT-TRANSFER-ENCODING", "7bit");
-//    MakeXmlNode(xmlDoc, rootNode, "SHOW-DISPLAYNAME", "");
-//    MakeXmlNode(xmlDoc, rootNode, "DELAYSENDTIME", "");
-//    MakeXmlNode(xmlDoc, rootNode, "HTMLBODY", Content);
-//    MakeXmlNode(xmlDoc, rootNode, "SENTBOXOPTION", SaveSendBoxFlag); 
-//    MakeXmlNode(xmlDoc, rootNode, "ISEACHMAIL", "false");
-    
+
     try {
-//        var g_saveHttp = createXMLHttpRequest();
-//
-//            g_saveHttp.open("POST", "/ezApprovalG/mail_intersend.do", false);
-//            if(!CrossYN())
-//            {            
-//                g_saveHttp.setRequestHeader("Content-Type:", "text/xml");
-//                g_saveHttp.setRequestHeader("Accept-Language:", navigator.Language);
-//            }
-//            g_saveHttp.send(xmlDoc);
-//            xmlDoc = null;
             var Result = "";
 	        $.ajax({
 	    		type : "POST",
@@ -236,7 +185,6 @@ function GetNoticeMail(UserID, type) {
 
     if (type == "daeree")
         return true
-
 
 
     var xmlhttp = createXMLHttpRequest();
@@ -464,17 +412,22 @@ function sendmailBusu(deptid, Method) {
 }
 
 function receiverIDList(preceiveDeptID) {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");  
-    createNodeAndInsertText(xmlpara, objNode, "receiveDeptID", preceiveDeptID);
 
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/aspx/GetReceiverList.aspx", false);
-    xmlhttp.send(xmlpara);
-
+	var RtnVal = "";
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getReceiverList.do",
+		data : {
+			receiveDeptID : preceiveDeptID
+				},
+		success: function(xml){
+			RtnVal = xml;
+		}
+	});
     var xmlDocument = createXmlDom();
-    xmlDocument = loadXMLString(xmlhttp.responseText);
+    xmlDocument = loadXMLString(RtnVal);
 
     if (xmlDocument.documentElement.childNodes.length <= 0)
         return "";
@@ -488,7 +441,7 @@ function receiverIDList(preceiveDeptID) {
     
     if (objNodes.length != "0") {
         for (var sn = 0; sn < objNodes.length; sn++) {
-            receiverID = getNodeText(objNodes[0]);
+            receiverID = getNodeText(GetElementsByTagName(xmlDocument, "CN").item(sn));
             receiverlist += receiverID + ";";
         }
     }
@@ -742,19 +695,22 @@ function SendSihangMail(title) {
 
 
 function getreceiveDeptIDlist(DocID) {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");  
-    createNodeAndInsertText(xmlpara, objNode, "DocID", DocID);
-    createNodeAndInsertText(xmlpara, objNode, "Flag", "END");
- 
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/aspx/getreceiptinfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
- 
+	var RtnVal = "";
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getReceiptinfo.do",
+		data : {
+				docID : DocID,
+				mode  :  "END"
+				},
+		success: function(xml){
+			RtnVal = xml;
+		}
+	});
     var xmlDocument = createXmlDom();
-    xmlDocument = loadXMLString(xmlhttp.responseText);
+    xmlDocument = loadXMLString(RtnVal);
 
     var objNodes =  SelectNodes(xmlDocument, "LISTVIEWDATA/ROWS/ROW");
     
@@ -773,7 +729,6 @@ function getreceiveDeptIDlist(DocID) {
             }
         }
     }
-
     return receiveDeptIDlist;
 }
 
@@ -823,7 +778,7 @@ function SendMailToCancel(DocID) {
     var MemberList = createXmlDom();
     MemberList = loadXMLString(linelist);
 
-
+alert(linelist);
     var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
     var i;
 
@@ -891,20 +846,22 @@ function getHapyuitype(pSelectedRow, orgid) {
 
 
 function getOpinionInfo(docid, Flag) {
-
-    var xmlpara = createXmlDom();
-    
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");  
-    createNodeAndInsertText(xmlpara, objNode, "DocID", docid);
-    createNodeAndInsertText(xmlpara, objNode, "Flag", Flag);
-
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/getOpinionInfo.aspx", false);
-    xmlhttp.send(xmlpara);
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getOpinionInfo.do",
+		data : {
+				docID : docid,
+				mode  : Flag
+				},
+		success: function(xml){
+			RtnVal = xml;
+		}
+	});
 
     var xmlDocument = createXmlDom();
-    xmlDocument = loadXMLString(xmlhttp.responseText);
+    xmlDocument = loadXMLString(RtnVal);
 
     var str = "No."
     var TitleList = SelectNodes(xmlDocument, "LISTVIEWDATA/HEADERS/HEADER");
@@ -937,7 +894,7 @@ function getOpinionInfo(docid, Flag) {
          txtRtn = "";  
     }
 
-    valueOpinion = txtRtn
+    valueOpinion = txtRtn;
 
 }
 

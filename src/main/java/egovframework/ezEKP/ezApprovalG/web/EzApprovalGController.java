@@ -353,7 +353,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 if (listType.equals("10")) {
                 	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
                 } else {
-                	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	returnQuery += " AND STARTDATE >= TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
                 }
             }
             
@@ -3519,6 +3519,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isOpinion = request.getParameter("isOpinion");
 		String listType = request.getParameter("listType");
 		String mode = "VIE";
+		String callBackType = request.getParameter("CallBackType");
 		
 		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
 			mode = "VIE";
@@ -3596,7 +3597,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isOpinion", isOpinion);
 		model.addAttribute("listType", listType);
 		model.addAttribute("mode", mode);
-		
+		model.addAttribute("callBackType", callBackType);
+
 		return "ezApprovalG/apprGaprDocView";
 	}
 	

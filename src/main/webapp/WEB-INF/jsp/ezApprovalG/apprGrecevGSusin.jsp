@@ -21,6 +21,8 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = '${docID}';
@@ -841,6 +843,7 @@
 		                hesongok = setCabinetHeSong(temppDocSN);
 		
 		            if (hesongok) {
+		            	 SendMailToDrafter_Hesong();
 		                hesongok = setHeSongDocInfo();
 		            }
 		        }

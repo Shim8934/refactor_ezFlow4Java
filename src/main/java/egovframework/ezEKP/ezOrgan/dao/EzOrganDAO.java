@@ -1256,4 +1256,9 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }                       
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getDeptReceipterIDs(Map<String, Object> map) {
+		 return (List<OrganUserVO>) list("EzOrganDAO.getDeptReceipterIDs", map);
+	}
+
 }
