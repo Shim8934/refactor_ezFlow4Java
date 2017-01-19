@@ -272,3 +272,11 @@ function SetFormProc_SetLineStyle(obj) {
         // <style title=\"ezform_style_1\">P {LINE-HEIGHT: 1.2; MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm} div {LINE-HEIGHT: 1.2; MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm}</style>
     } catch (e) { }
 }
+
+function utcDate(offset){
+	var today = new Date();
+	today.setTime(today.getTime()+(1000*60*offset));
+	var utcTime = new Date(today).toISOString().substring(0,10);
+	
+	return utcTime;
+}
