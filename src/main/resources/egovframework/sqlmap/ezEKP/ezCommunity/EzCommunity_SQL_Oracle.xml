@@ -23,7 +23,6 @@
 	<typeAlias alias="CommunityCOutApplicationVO"		type="egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO"/>
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
-	<typeAlias alias="LoginVO"							type="egovframework.let.user.login.vo.LoginVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -1405,7 +1404,7 @@
 	<select id="EzCommunityDAO.commOutGet"						parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				USERNAME$v_USERINFO_LANG$
+				USERNAME$v_USERINFO_LANG$ userName
 			FROM
 				EZCOMMUNITY.C_MEMBERINFO
 			WHERE
@@ -3125,15 +3124,15 @@
 			FROM
 				EZCOMMUNITY.C_CLUBUSER 
 			WHERE
-				C_ID = #v_PUSERID#
+				RTRIM(C_ID) = #v_PUSERID#
 		]]>
     	<isEqual property="v_PBOARDID" compareValue="">
     		AND
-				C_CLUBNO = #v_PCLUBNO#
+				RTRIM(C_CLUBNO) = #v_PCLUBNO#
 		</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
     		AND
-    			C_CLUBNO = (SELECT
+    			RTRIM(C_CLUBNO) = (SELECT
 								C_CLUBNO
 							FROM
 								EZCOMMUNITY.TBL_COMM_BOARDINFO 
@@ -3153,18 +3152,18 @@
 	    	SELECT
 	    		NVL(COUNT(C_CLUBNO), 0)
 			FROM
-				EZCOMMUNITY.C_CLUBUSER
+				EZCOMMUNITY.C_CLUB
 			WHERE
-				C_ID = #v_PUSERID#
+				C_CLUBGUBUN = '2'
 		]]>
 			
 		<isEqual property="v_PBOARDID" compareValue="">
     		AND
-				C_CLUBNO = #v_PCLUBNO#
+				RTRIM(C_CLUBNO) = #v_PCLUBNO#
 		</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
     		AND
-    			C_CLUBNO = (SELECT
+    			RTRIM(C_CLUBNO) = (SELECT
 								C_CLUBNO
 							FROM
 								EZCOMMUNITY.TBL_COMM_BOARDINFO 
@@ -6617,7 +6616,7 @@
 		<![CDATA[
 			SELECT
 				TRIM(c_sysopID)
-			FORM
+			FROM
 				EZCOMMUNITY.C_CLUB
 			WHERE
 				TRIM(c_clubno) = TRIM(#code#)
