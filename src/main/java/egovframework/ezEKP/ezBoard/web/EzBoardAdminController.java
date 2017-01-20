@@ -1022,35 +1022,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardID = request.getParameter("boardID");
 		String serverName = request.getServerName();
-		/*
-		 * 2016-03-31 장진혁 현재 사용되지 않아서 주석처리
-		String strLang = config.getProperty("config.primary");
-		String use_editor = config.getProperty("config.EDITOR");
-		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
-		String pRootBoardID = "top";
-		String pExcludeBoardID = " ";
-        String pSubFlag = "0";
-        
-        int pSelectBy = 0;
-        int pMode = 0;        
-        
-		loginVO = commonUtil.userInfo(loginCookie);
-		String pUserID = loginVO.getId();
-		String pDeptID = loginVO.getDeptID();
-		String pCompanyID = loginVO.getCompanyID();
-		String pRollInfo = loginVO.getRollInfo();
-        
-        String BoardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID);
-        
-        if (BoardGroupAdmin_FG == "OK" || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1) {
-            pMode = 0;
-        } else {
-            pMode = 1;
-        }
-        
-        String resultXML = ezBoardController.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang));
-        */
-        
+		
         model.addAttribute("boardID", boardID);
         model.addAttribute("serverName", serverName);
         model.addAttribute("parentBoardID", parentBoardID);

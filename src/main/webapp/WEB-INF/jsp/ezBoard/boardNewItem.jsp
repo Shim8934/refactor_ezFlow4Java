@@ -293,10 +293,9 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-		        var NowDate2 = new Date();
-		        NowDate2.setMonth(NowDate2.getMonth() + 1);
+		        
 		        $("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker2").datepicker('setDate', NowDate2);
+		        $("#Sdatepicker2").datepicker('setDate', getDatePickerTime("${userInfo.offset}"));
 		    });
 		    if("${userInfo.lang}" == "1"){
 		        $(function () {

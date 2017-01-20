@@ -25,6 +25,8 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunity_SQL_Oracle.xml"/>
 	<!-- 전자결재G -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalG_SQL_Oracle.xml"/>
+	<!-- 전자결재S -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApproval/EzApproval_SQL_Oracle.xml"/>
 	<!-- 스케쥴 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzSchedule_SQL_Oracle.xml"/>
 	<!-- 포탈 -->
@@ -40,7 +42,7 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Oracle.xml"/>
 	<!-- 전자결재G 관리자-->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGAdmin_SQL_Oracle.xml"/>
-	<!-- 전자결재일반 관리자-->
+	<!-- 전자결재S 관리자-->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezApproval/EzApprovalAdmin_SQL_Oracle.xml"/>
 	<!-- 자원관리 관리자-->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResourceAdmin_SQL_Oracle.xml"/>

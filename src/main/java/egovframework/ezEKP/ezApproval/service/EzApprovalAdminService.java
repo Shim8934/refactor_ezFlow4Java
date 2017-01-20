@@ -8,7 +8,6 @@ import org.w3c.dom.Document;
 import egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO;
-import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocItemVO;
 import egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO;
 import egovframework.ezEKP.ezApproval.vo.ApprFormContVO;
@@ -18,19 +17,6 @@ import egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalAdminService {
-
-	public List<ApprContInfoVO> getUseContInfo(ApprContInfoVO apprContInfoVO) throws Exception;
-
-	public List<ApprDocInfoVO> getCodeContainer(LoginVO userInfo) throws Exception;
-
-	public String getUserContTree(LoginVO userInfo, String parentContID) throws Exception;
-
-	public String getListContainer(LoginVO userInfo) throws Exception;
-
-	public String getDeptContTree(LoginVO userInfo, String parentContID) throws Exception;
-
-	public List<ApprContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
-
 	public String getDocType(String selected, LoginVO userInfo) throws Exception;
 
 	public String getContainerInfoManage(String deptID, String mode, String companyID, LoginVO userInfo) throws Exception;
@@ -150,5 +136,7 @@ public interface EzApprovalAdminService {
 	public String setFormOrder(ApprFormContVO apprFormContVO) throws Exception;
 
 	public String saveHwpFormInfo(ApprFormInfoVO apprFormInfoVO, String realPath, Locale locale) throws Exception;
+
+	public String getCode2Name(String code1, String code2, String companyID, String lang, int tenantID) throws Exception;
 
 }

@@ -34,4 +34,5 @@
     
     <util:properties id="globals" location="classpath:/egovframework/egovProps/globals.properties" />
     
+    <util:properties id="apprCode" location="classpath:/egovframework/egovProps/apprCode.properties" />
 </beans>	
