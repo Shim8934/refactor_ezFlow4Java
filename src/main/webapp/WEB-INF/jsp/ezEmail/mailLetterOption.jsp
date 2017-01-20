@@ -25,8 +25,7 @@
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript">
 	
-			var g_timezone = "${userTimeSet}";
-		    var nowDateTime = "${setLocalTime}";
+			var offsetMin = "${offsetMin}";
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -36,11 +35,11 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-		        var NowDate = new Date();
+		        var NowDate = utcDate2(offsetMin);
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
 		        $('#Stimepicker').timepicker();
-		        $('#Stimepicker').timepicker('setTime', new Date());
+		        $('#Stimepicker').timepicker('setTime', utcDate2(offsetMin));
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 		    
@@ -241,7 +240,7 @@
 	            }
 		
 		        if (deliverySend.checked == true) {
-		            var now = new Date();
+		            var now = utcDate2(offsetMin);
 		            var nowmonth = now.getMonth() + 1;
 		            var pTime = now.getFullYear() + "/" + nowmonth + "/" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes();
 		            if (GetStartDate() != "" && Date.parse(GetStartDate()) < Date.parse(pTime)) {

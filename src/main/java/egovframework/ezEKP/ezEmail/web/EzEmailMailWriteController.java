@@ -3075,12 +3075,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userTimeSet = userInfo.getOffset();
-		String setLocalTime = "";
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		boolean outMailReadCheck = false;
 		
-		model.addAttribute("userTimeSet", userTimeSet);
-		model.addAttribute("setLocalTime", setLocalTime);
+		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		

@@ -1268,6 +1268,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String offset = userInfo.getOffset();
 		
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
 		if (!gOofState.equals("scheduled")) {
 			//get UTC time
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1292,6 +1294,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("gOofState=" + gOofState + ",gStartDate=" + gStartDate + ",gEndDate=" + gEndDate
 				 + ",gExternalAudience=" + gExternalAudience + ",gInternal=" + gInternal + ",gExternal=" + gExternal);
 		
+		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("gOofState", gOofState);
 		model.addAttribute("gStartDate", gStartDate);
 		model.addAttribute("gEndDate", gEndDate);

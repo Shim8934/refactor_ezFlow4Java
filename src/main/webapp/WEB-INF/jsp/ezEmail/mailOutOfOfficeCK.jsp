@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	    <script type="text/javascript">
+	    	var offsetMin = "${offsetMin}";
 		    var g_oofstate = "${gOofState}";
 		    var g_startdate = "${gStartDate}";
 		    var g_enddate = "${gEndDate}";
@@ -42,9 +43,9 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-		        var NowDate = new Date();
+		        var NowDate = utcDate2(offsetMin);
 		        NowDate.setHours(NowDate.getHours() + 1);
-		        var NowDate2 = new Date();
+		        var NowDate2 = utcDate2(offsetMin);
 		        NowDate2.setHours(NowDate2.getHours() + 1);
 		        //NowDate2.setMinutes(NowDate2.getMinutes() + 30);
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -225,7 +226,7 @@
 		
 		        var dateStart = new Date(pstartdate.substring(0, 4), (pstartdate.substring(5, 7) - 1), pstartdate.substring(8, 10), pstartdate.substring(11, 13), pstartdate.substring(14, 16), 0, 0);
 		        var dateEnd = new Date(penddate.substring(0, 4), (penddate.substring(5, 7) - 1), penddate.substring(8, 10), penddate.substring(11, 13), penddate.substring(14, 16), 0, 0);
-		        var now = new Date();
+		        var now = utcDate2(offsetMin);
 		
 		        var poofstate = "disabled";
 		        if (document.getElementById("SetRadio0").checked == true)

@@ -29,6 +29,7 @@
 	var importanceColor = "#ff0000";
 	var g_userLang = "${userLang}";
 	var g_timezone = "${userTimeSet}";
+	var offsetMin = "${offsetMin}";
     var checkval = "f";
     var m_strColorSelect = "#DBE1E7";
     var m_strColorOver = "#f4f5f5";
@@ -57,7 +58,7 @@
             buttonImage: "/images/ImgIcon/calendar-month.gif",
             buttonImageOnly: true
         });
-        var NowDate = new Date();
+        var NowDate = utcDate2(offsetMin);
         $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
         $("#Sdatepicker").datepicker('setDate', NowDate);
         $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
