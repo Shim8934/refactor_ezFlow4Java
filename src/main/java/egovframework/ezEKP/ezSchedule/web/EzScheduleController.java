@@ -197,12 +197,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+System.out.println("=========================================================start");		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		String startDate = request.getParameter("STARTDATE");
-		String endDate = request.getParameter("ENDDATE");
+		String endDate = request.getParameter("ENDDATE");		
+		String pidList = "'" + userInfo.getId() + "'," + "'" + userInfo.getDeptID() + "'," + "'" + userInfo.getCompanyID() + "'";
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
@@ -237,16 +239,29 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 		} else {
 			
-		}*/
+		}*/		
 		
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(startDate, endDate, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), "", "", offSetMin);
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId());
+		
+		for(int i = 0; i < gList.size(); i++){
+			if(i == 0){
+				pidList += ",";
+			}			
+			ScheduleGroupListVO data = gList.get(i);			
+			pidList += "'" + data.getGroupId() + "'";
+			
+			if(i != gList.size()-1){
+				pidList += ",";
+			}	
+		}
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", startDate, endDate, "", offSetMin);
 		
 		for(int j = 0; j < sList.size(); j++){			
 			ScheduleInfoVO data = sList.get(j);			
 			sb.append(commonUtil.getQueryResult(data));
 		}
 		sb.append("</DATA>");
-		
+System.out.println(sb.toString());		
 		return sb.toString();
 	}
 
@@ -703,7 +718,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String keyword = request.getParameter("keyword");
 		String startDate = request.getParameter("sdate");
 		String endDate = request.getParameter("edate");
-		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());		
+		String pidList = "'" + loginVO.getId() + "'," + "'" + loginVO.getDeptID() + "'," + "'" + loginVO.getCompanyID() + "'";
 		
 		if (filter != null && !filter.equals("")) {			
 			String utcStartTime = "";
@@ -713,7 +729,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			if (startDate == null) startDate = "";
 			if (endDate == null) endDate = "";			
 			
-			if (startDate == null || startDate.equals("")) {
+			if (startDate == null || startDate.equals("") || endDate == null || endDate.equals("")) {
 				String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date now = sdf.parse(utcTime);
@@ -731,9 +747,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 			utcStartTime = commonUtil.getDateStringInUTC(startDate + " 00:00:00", loginVO.getOffset(), true);
 			utcEndTime = commonUtil.getDateStringInUTC(endDate + " 23:59:59", loginVO.getOffset(), true);
 			
-			sList = ezScheduleService.getScheduleList(utcStartTime, utcEndTime, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), filter.trim(), keyword.trim(), offSetMin);			
-		}
-		
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId());
+			
+			for(int i = 0; i < gList.size(); i++){
+				if(i == 0){
+					pidList += ",";
+				}			
+				ScheduleGroupListVO data = gList.get(i);			
+				pidList += "'" + data.getGroupId() + "'";
+				
+				if(i != gList.size()-1){
+					pidList += ",";
+				}	
+			}									
+			sList = ezScheduleService.getScheduleList(pidList, filter.trim(), utcStartTime, utcEndTime, keyword.trim(), offSetMin);			
+		}		
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
 		model.addAttribute("keyword", keyword);
@@ -758,9 +786,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String nameList = request.getParameter("namelist");
 		String startDate = request.getParameter("sdate");
 		String endDate = request.getParameter("edate");
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		
-		if (idList != null && !idList.equals("")) {
-			String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		if (idList != null && !idList.equals("")) {			
 			String utcStartTime = "";
 			String utcEndTime = "";
 			
@@ -768,22 +796,29 @@ public class EzScheduleController extends EgovFileMngUtil {
 			if (startDate == null) startDate = "";
 			if (endDate == null) endDate = "";			
 			
-			if (startDate == null || startDate.equals("")) {
-				utcStartTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");							
-				startDate = commonUtil.getDateStringInUTC(utcStartTime, loginVO.getOffset(), false).substring(0, 10);
-				
-				utcEndTime = utcStartTime;
-				
-				
-			} else {				
-				utcStartTime = commonUtil.getDateStringInUTC(startDate + " 00:00:00", loginVO.getOffset(), true);
-				utcEndTime = commonUtil.getDateStringInUTC(endDate + " 23:59:59", loginVO.getOffset(), true);
-			}			
+			if (startDate == null || startDate.equals("") || endDate == null || endDate.equals("")) {
+				String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");					
+				startDate = commonUtil.getDateStringInUTC(utcTime, loginVO.getOffset(), false).substring(0, 10);
+				endDate = startDate;				
+			}
+			utcStartTime = commonUtil.getDateStringInUTC(startDate + " 00:00:00", loginVO.getOffset(), true);
+			utcEndTime = commonUtil.getDateStringInUTC(endDate + " 23:59:59", loginVO.getOffset(), true);
 			
-			//sList = ezScheduleService.getScheduleList(utcStartTime, utcEndTime, loginVO.getId(), loginVO.getDeptID(), loginVO.getCompanyID(), filter.trim(), keyword.trim(), offSetMin);			
-		}
-		/*model.addAttribute("filter", filter);
-		model.addAttribute("keyword", keyword);*/
+			String[] idArr = idList.split(",");
+			String userIDList = "";
+			
+			for (int i=0; i < idArr.length; i++) {
+				userIDList += "'" + idArr[i] +"'";
+				
+				if (i < idArr.length-1) {
+					userIDList += ",";
+				}
+			}			
+			sList = ezScheduleService.getScheduleList(userIDList, "IsPublic", utcStartTime, utcEndTime, "Y", offSetMin);
+		}		
+		model.addAttribute("offSetMin", offSetMin);
+		model.addAttribute("idList", idList);
+		model.addAttribute("nameList", nameList);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("lang", loginVO.getLang());
@@ -791,6 +826,35 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("scheduleList", sList);
 		
 		return "/ezSchedule/schedulePublicSearch";
+	}
+	
+	/**
+	 * 공개일정검색 > 대상자선택
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleSelectEntity.do")
+	public String scheduleSelectEntity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		String title = request.getParameter("title");
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String pSearchString = request.getParameter("searchString");
+				    		
+		if (title == null) title = "";
+		if (startTime == null) startTime = "";
+		if (endTime == null) endTime = "";
+		if (pSearchString == null) pSearchString = "";
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+		
+		model.addAttribute("title", title);
+		model.addAttribute("startTime", startTime);
+		model.addAttribute("endTime", endTime);				
+		model.addAttribute("pSearchString", pSearchString);
+		model.addAttribute("use_ocs", use_ocs);
+		model.addAttribute("userID", loginVO.getId());
+		model.addAttribute("deptID", loginVO.getDeptID());
+		
+		return "/ezSchedule/scheduleSelectEntity";
 	}
 	
 	/**
