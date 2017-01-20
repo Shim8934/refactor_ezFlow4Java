@@ -290,7 +290,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else if ("mail".equals(req.getParameter("mode"))) {
 			mainUrl = "/ezEmail/mailMain.do?funCode=1";
 		} else if ("approval".equals(req.getParameter("mode"))) {
-			mainUrl = "/myoffice/ezApproval/index_approval.aspx";
+			mainUrl = "/ezApproval/apprMain.do";
 		} else if (!useStartPageURL.trim().equals("NO")) {
 			mainUrl = useStartPageURL;
 		} else {

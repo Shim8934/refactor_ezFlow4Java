@@ -778,4 +778,12 @@ public class CommonUtil {
 		
 		return returnValue;
 	}
+	
+	public String makeListField(String orgStr) {
+		if (orgStr == null || orgStr.equals("NULL")) {
+			return "";
+		} else {
+			return orgStr;
+		}
+	}
 }

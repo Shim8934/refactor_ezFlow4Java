@@ -883,14 +883,18 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 슬라이드이미지 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectImage.do")
-	public String selectImage(HttpServletRequest request, Model model) throws Exception {
+	public String selectImage(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = "";
 		
 		if (request.getParameter("item") != null) {
 			sliderID = request.getParameter("item");
 		}
 		
+		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		model.addAttribute("sliderID", sliderID);
+		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
 		return "admin/ezPersonal/personalSelectImage";
 	}
