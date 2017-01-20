@@ -280,3 +280,9 @@ function utcDate(offset){
 	
 	return utcTime;
 }
+
+function utcDate2(offset){
+	var today = new Date();
+	today.setTime(today.getTime()+(1000*60*offset));
+	return new Date(today.toUTCString().replace(" GMT", ""));
+}
