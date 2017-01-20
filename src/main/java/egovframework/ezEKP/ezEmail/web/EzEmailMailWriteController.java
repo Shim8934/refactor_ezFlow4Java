@@ -213,7 +213,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
 		
+		if (request.getParameter("docID") != null) {
+			docID = request.getParameter("docID").trim();
+		} 
 		
+		if (request.getParameter("docHref") != null) {
+			docHref = request.getParameter("docHref").trim();
+		} 
+		
+		if (request.getParameter("imagCnt") != null) {
+			docImagCnt = request.getParameter("imagCnt").trim();
+		} 
+		
+		if (request.getParameter("target") != null) {
+			docTarget = request.getParameter("target").trim();
+		} 
+
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
