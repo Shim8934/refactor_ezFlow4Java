@@ -13247,7 +13247,6 @@
         ]]> 
    </select>
    <select id="EzApprovalG.aprDeleteDocInfoFlag" parameterClass="map" resultClass="String">
-   		<isNotEqual property="v_MODE" compareValue="MUST">
    		<![CDATA[
    			SELECT 
    				CASE WHEN FLAGCOUNT > 0 THEN 'Y' 
@@ -13279,7 +13278,6 @@
        								AND
        									TENANT_ID = #v_TENANTID#)))
        		]]>
-   		</isNotEqual>
    </select>
    <delete id="EzApprovalG.aprDeleteDocInfo" parameterClass="map">
      DECLARE BEGIN

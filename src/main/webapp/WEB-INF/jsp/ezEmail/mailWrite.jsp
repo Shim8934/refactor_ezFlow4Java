@@ -100,7 +100,7 @@
 	    var inMailColor = "${inMailColor}";
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
-	    
+	    var pDocID = "${docID}";
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -717,7 +717,7 @@
 	                GetUpmooItemInfo_New("${itemID}", "${docHref}")
 	            }
 	            else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc")
-	                GetDocumentInfo("${docID}", "${docHref}", "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
 	        }
@@ -980,7 +980,7 @@
 	                            <%-- } --%>
 	                        </td>
 	                    </tr>
-	                    <!-- <asp:PlaceHolder ID="HolderDocSend" runat="server" Visible="false">
+<!--                      <asp:PlaceHolder ID="HolderDocSend" runat="server" Visible="false">  -->
 	                        <tr>
 	                            <td style="height:150px;">
 	                                <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
@@ -988,7 +988,7 @@
 	                                </div>
 	                            </td>
 	                        </tr>
-	                    </asp:PlaceHolder> -->
+<!--                     </asp:PlaceHolder>   -->
 	                </table>
 	            </td>
 	        </tr>

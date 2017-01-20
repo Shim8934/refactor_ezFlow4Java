@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -18,7 +19,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -2531,7 +2536,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String pwdType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId());
 				
 				if (pwdType.equals("L")) {
-					orgPassword = ezOrganService.getEncPassword(dUserID);
+					orgPassword = ezOrganService.getEncPassword(dUserID, userInfo.getTenantId());
 					
 					if (orgPassword.trim().equals(password)) {
 						result = "1";
@@ -2544,14 +2549,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			} else {
-				orgPassword = ezOrganService.getEncPassword(dUserID);
+				orgPassword = ezOrganService.getEncPassword(dUserID, userInfo.getTenantId());
 				
 				if (orgPassword.trim().equals(password)) {
 					result = "1";
 				}
 			}
 		} else {
-			orgPassword = ezOrganService.getEncPassword(dUserID);
+			orgPassword = ezOrganService.getEncPassword(dUserID, userInfo.getTenantId());
 			
 			if (orgPassword.trim().equals(password)) {
 				result = "1";
@@ -5168,14 +5173,51 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 메일보내기 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/sendToMailApproval.do")
-	public String sendToMailApproval(HttpServletRequest request) throws Exception{
+	public String sendToMailApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
 		String docHref = request.getParameter("docHref");
 		String cmd = request.getParameter("cmd");
 		String docID = request.getParameter("docID");
 		String strImgCount = "";
 		//TODO 결재문서 ezCommon 경로에 이미지 저장하는 부분 제외 아직까지 사용하는부분 없어서... 모바일쪽에서 사용할지도 
 		
+         
 		return "redirect:/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+	}
+	
+	/**
+	 * 전자결재G 메일보내기 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/createMailImg.do")
+	public ModelAndView createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		ModelAndView mav = new ModelAndView(); mav.setViewName("jsonView"); 
+		String docID = request.getParameter("docID");
+		
+		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getTodayUTCTime("yyyyMMdd") ;
+		FileOutputStream stream = null;
+		File file = new File(strPath);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		String data = request.getParameter("imgUrl");
+		
+	     if(data == null || data=="") {
+	         throw new Exception();    
+	     }
+	     data = data.replaceAll("data:image/png;base64,", "");
+	     byte[] file2 = Base64.decodeBase64(data);
+	     
+	    
+//	     stream = new FileOutputStream("E:\\test2\\aaaaa.png");
+	     stream = new FileOutputStream(strPath+commonUtil.separator+docID+".png");
+	     stream.write(file2);
+	     stream.close();
+	     
+	     mav.addObject("msg","ok");
+	     return mav;
 	}
 	
 	/**
