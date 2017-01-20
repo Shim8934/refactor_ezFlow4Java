@@ -213,7 +213,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
 		
+		if (request.getParameter("docID") != null) {
+			docID = request.getParameter("docID").trim();
+		} 
 		
+		if (request.getParameter("docHref") != null) {
+			docHref = request.getParameter("docHref").trim();
+		} 
+		
+		if (request.getParameter("imagCnt") != null) {
+			docImagCnt = request.getParameter("imagCnt").trim();
+		} 
+		
+		if (request.getParameter("target") != null) {
+			docTarget = request.getParameter("target").trim();
+		} 
+
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
@@ -3075,12 +3090,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userTimeSet = userInfo.getOffset();
-		String setLocalTime = "";
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		boolean outMailReadCheck = false;
 		
-		model.addAttribute("userTimeSet", userTimeSet);
-		model.addAttribute("setLocalTime", setLocalTime);
+		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
 		

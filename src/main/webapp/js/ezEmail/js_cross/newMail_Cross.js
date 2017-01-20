@@ -1619,13 +1619,13 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         }
         else {
             if (DocHref.toLowerCase().indexOf(".mht") > -1) {
-                var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(DocHref);
+                var fullPath = encodeURI(DocHref);
                 var tempXML = createXmlDom();
                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
                 tempStr = ConvertMHTtoHTML(fullPath);
-                tempXML = loadXMLString(tempStr)
+                tempXML = loadXMLString(tempStr);
                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
                 var htmlData = getNodeText(XmlBodyDATA);
@@ -1638,11 +1638,10 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     var xmlpara = createXmlDom();
     var xmlstring = "<DocID>" + DocID + "</DocID>";
     xmlpara = loadXMLString(xmlstring);
-
     if (Target == "APPROVALG")
-        xmlHTTP.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/aprattachMail.aspx", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
     else
-        xmlHTTP.open("POST", "/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+        xmlHTTP.open("POST", "/ezApprovalG/aprAttachMail.do", false);
     xmlHTTP.send(xmlpara);
 
     if (xmlHTTP.status == 200) {

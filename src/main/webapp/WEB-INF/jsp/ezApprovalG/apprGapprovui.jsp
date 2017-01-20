@@ -19,6 +19,8 @@
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -979,19 +981,40 @@
 		    
 		    function btnConn_onclick() {
 		    }
+		    
 		    function btnMail_onclick() {
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        //기존
-		        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
-		        //수정
-// 		        var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
-		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        newwin.focus();
+		    	var imgUrl="";
+		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
+		    	background:'#fff',onrendered: function(canvas) {
+				    $.ajax({
+                        type:     "post",
+                        data : {
+                        	imgUrl : canvas.toDataURL("image/png"),
+                        	docID: pDocID
+                        },
+                        url:     "/ezApprovalG/createMailImg.do",
+                        success: function (data) {
+                            try{
+                            }catch(e){                
+                                alert('server Error!!');
+                            }
+                        }
+                    });
+		    		  }
+		    		});
+	        var pheight = window.screen.availHeight;
+	        var conHeight = pheight * 0.8;
+	        var pwidth = window.screen.availWidth;
+	        var pTop = (pheight - conHeight) / 2;
+	        var pLeft = (pwidth - 890) / 2;
+	        //기존
+	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
+	        //수정
+//		        var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
+	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	        newwin.focus();
 		    }
+		    
 		    var tempSecurity = "";
 		    var tempKeep = "";
 		    var tempUrgent = "N";

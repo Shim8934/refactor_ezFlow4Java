@@ -444,7 +444,35 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTHTYPE", vo.getBirthType());
 		map.put("v_PASS", vo.getPassword());
 		
-		ezOrganAdminDao.insertDBData_user(map);
+		SimpleDateFormat date = new SimpleDateFormat();
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
+		
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			ezOrganAdminDao.insertDBData_user(map);
+        } else {
+        	ezOrganAdminDao.insertDBData_user(map);
+        	
+        	ezOrganAdminDao.updateUserMaster(map);
+	    	
+	    	OrganUserVO user = ezOrganAdminDao.updateUserMaster_S(map);
+	    	user.setCn(vo.getCn());
+	    	user.setTenantId(vo.getTenantId());
+	    	
+	    	if (user.getDisplayName2() == null || user.getDisplayName2().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U(user);
+	    	}
+	    	
+	    	if (user.getTitle2() == null || user.getTitle2().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U1(user);
+	    	}
+	    	
+	    	if (user.getExtensionAttribute102() == null || user.getExtensionAttribute102().equals("")) {
+	    		ezOrganAdminDao.updateUserMaster_U2(user);
+	    	}
+        }       
+		
 	}
 
 	@Override

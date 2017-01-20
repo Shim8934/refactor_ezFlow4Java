@@ -1543,6 +1543,37 @@ function MACSAFARIYN() {
     }
     return result;
 }
+
+/**
+ * DatePicker에서 현재날짜 구할때 사용하면 좋다.
+ * @param offset UserInfo에 있는 offset 사용
+ * @returns yyyy-mm-dd 형식의 offset적용된 현재날짜
+ */
+function getDatePickerTime(offset, type) {
+	var returnDate = "";
+	var pOffset = offset.split("|")[1];
+	var pOffsetHour = pOffset.split(":")[0];
+	var pOffsetMinute = pOffset.split(":")[1];
+	var tempDate = new Date();
+	
+	tempDate.setUTCHours(Number(tempDate.getUTCHours()) + Number(pOffsetHour), Number(tempDate.getUTCMinutes()) + Number(pOffsetMinute), tempDate.getUTCSeconds());
+	
+	var rYear = tempDate.getFullYear();
+	var rMonth = addzero(tempDate.getMonth() + 1);
+	var rDate = addzero(tempDate.getDate());
+	var rHour = addzero(tempDate.getHours());
+	var rMin = addzero(tempDate.getMinutes());
+	var rSec = addzero(tempDate.getSeconds());
+	
+	if (type) {
+		returnDate = rYear + "-" + rMonth + "-" + rDate + " " + rHour + ":" + rMin + ":" + rSec;
+	} else {
+		returnDate = rYear + "-" + rMonth + "-" + rDate;
+	}
+	
+	return returnDate;
+}
+
 //UTC Time -> Real Time(Offset)
 function GetLocalTime(Offset , pDateTime)
 {
@@ -1565,7 +1596,7 @@ function GetLocalTime(Offset , pDateTime)
 	ibjD.setHours(szHr ,szMin , szSec );
 	
 	var rYear = ibjD.getFullYear();
-	var rMonth = addzero(ibjD.getMonth()+1);
+	var rMonth = addzero(ibjD.getMonth() + 1);
 	var rDate = addzero(ibjD.getDate());
 	var rHour = addzero(ibjD.getHours());
 	var rMin = addzero(ibjD.getMinutes());

@@ -521,7 +521,7 @@
 						if ("<%=userApprovalG%>" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
-							window.open("/myoffice/ezApproval/index_approval.aspx?listType=" + listType, "main");
+							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
 						break;
 					case "aprnum" : 
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
@@ -530,7 +530,7 @@
 						if ("<%=userApprovalG%>" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
-							window.open("/myoffice/ezApproval/index_approval.aspx?listType=" + listType, "main");
+							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
 						break;
 						
 					// 표준모듈 (2007.03.23) 수정 : 메모보고 

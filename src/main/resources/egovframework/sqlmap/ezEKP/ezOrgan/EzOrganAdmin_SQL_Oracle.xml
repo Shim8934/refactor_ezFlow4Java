@@ -118,13 +118,23 @@
 		]]>
 	</statement>
 	
-	<procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
+	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
 			{CALL EZHRMASTER.EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
 													#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
 													#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
 		]]>
-	</procedure>
+	</procedure> -->
+	
+	<insert id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				EZHRMASTER.TBLUSERMASTER
+   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID )
+   			VALUES
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID# )
+		]]>
+	</insert>
 	
 	<!-- <procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		<![CDATA[
@@ -766,7 +776,8 @@
                     CASE #lang#
                     	WHEN '1' THEN DISPLAYNAME2
                         ELSE DISPLAYNAME   
-                        END DISPLAYNAME2               
+                        END DISPLAYNAME2,
+                  SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15                    
                	  FROM 
                	  	EZHRMASTER.TBLDeptmaster 
                	  WHERE

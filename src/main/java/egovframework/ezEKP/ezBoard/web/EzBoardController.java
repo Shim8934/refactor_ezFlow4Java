@@ -126,7 +126,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 메인화면 호출 Method
 	 */
-	@RequestMapping(value="/ezBoard/boardMain.do")
+	@RequestMapping(value = "/ezBoard/boardMain.do")
 	public String boardMain(HttpServletRequest req, Model model) {
 		String func = "";
 		String subFunc = "";

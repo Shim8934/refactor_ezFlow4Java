@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,12 +45,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
-import javax.mail.search.BodyTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -295,22 +296,69 @@ public class EzEmailUtil {
         
         if (subject != null && !subject.equals("")) {
             String[] rawHeaders = message.getHeader("subject");
-            String rawHeader = rawHeaders[0];
-            
+            String rawHeader = rawHeaders[0].trim();
+                        
             // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
             if (!isPureAscii(rawHeader)) {
                 byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
                 
                 subject = decodeNonAsciiBytes(rawBytes);
             } else {
-                // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-                // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
-                if (rawHeader.startsWith("=?ks_c_5601-1987")) {
-                    rawHeader = rawHeader.replace("ks_c_5601-1987", "ms949");
+                if (rawHeader.startsWith("=?")) {
+                    int secondQuestionPos = rawHeader.indexOf("?", 2);
+                    int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+                    String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
+                    String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
                     
-                    logger.debug("changed ks_c_5601-1987 to ms949.");
+                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서) 
+                    // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
+                    // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+                    if (subject.contains("�")
+                            && encoding.equalsIgnoreCase("B")) {
+                        String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+                        
+                        if (sequences.length > 2) {
+                            logger.debug("broken multiple sequences. combining them...");
+                            logger.debug("original rawHeader:" + rawHeader);
+                            
+                            StringBuilder combined = new StringBuilder();                        
+                            combined.append(charSetAndEncoding);
+                            
+                            ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
+                            
+                            for (int i = 1; i < sequences.length; i++) {
+                                String sequence = sequences[i].trim();
+                                
+                                logger.debug("sequence[" + i + "]:" + sequence);
+                                
+                                sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+                                combinedBytes.write(Base64.decodeBase64(sequence));                            
+                            }
+                            
+                            combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
+                            combined.append("?=");
+                            rawHeader = combined.toString();
+                            
+                            logger.debug("combined rawHeader:" + rawHeader);
+                            
+                            subject = MimeUtility.decodeText(rawHeader);
+                            
+                            logger.debug("subject=" + subject);
+                        }
+                    }
+                
+                    // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+                    // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
+                    String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
                     
-                    subject = MimeUtility.decodeText(rawHeader);
+                    if (charSet.equals("ks_c_5601-1987")) {
+                        rawHeader = rawHeader.replace(charSet, "ms949");
+                        
+                        logger.debug("changed ks_c_5601-1987 to ms949.");
+                        
+                        subject = MimeUtility.decodeText(rawHeader);
+                    }                        
                 }
             }
         }

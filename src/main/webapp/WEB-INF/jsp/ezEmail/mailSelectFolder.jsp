@@ -17,7 +17,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script>
-	        var lang = "${userinfo.lang}";
+	        var lang = "${userInfo.lang}";
 	        var ReturnFunction;
 	        var CancelFunction;
 	        document.onselectstart = function () {
@@ -104,37 +104,36 @@
 	        }
 	        function add_onclick_Complete(szName) {
 	            DivPopUpHidden_sub();
-	            if (typeof (szName) == "undefined" || ReplaceText(szName, " ", "") == "")
-	                return;
-	
-	            if (checkBadFolderName(szName))
-	                return;
-	
-	            var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            var result = make_folder_2010(szURL, szName);
-	            if (result != true) {
-	                if (result == 405)
-	                    alert("<spring:message code='ezEmail.t456' />");
-	                else
-	                    alert("<spring:message code='ezEmail.t457' />");
+	            if (typeof (szName) == "undefined" || szName.trim() == "") {
 	                return;
 	            }
-	            var childXML = "<node imgidx='1' caption=\"" + MakeRightField(szName) + "\" ";
-	            childXML += ("href='" + szURL + "/' ");
-	            childXML += "/>";
-	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false)
-	            PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
+	            else if (checkBadFolderName(szName)) {
+	                return;
+	            }
+	
+	            var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+	            var result = mail_make_folder("NEW", szURL, "", szName);
+	            
+	            if (result != "OK") {
+		            if (result == "ALREADY_EXISTS") {
+		                alert("<spring:message code='ezEmail.t456' />");
+		            } else {
+		                alert("<spring:message code='ezEmail.t457' />");
+		            }
+		            return;
+		        }
+	            
+	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
+                PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
 	        }
+	        
 	        function LoadAddressTree(SelectIndex) {
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
 	            PostTreeView.update();
-	            if (SelectIndex <= 5)
-	                PostTreeView.toggle(SelectIndex);
-	            else
-	                PostTreeView.toggle(1);
-	
+	            PostTreeView.toggle(SelectIndex);
 	        }
+	        
 	        function checkBadFolderName(szName) {
 	            var szBadChars = /[\<\>\~\#\%\&\*\+\|\\\.\/]/g;
 	            var szChangedName = szName.replace(szBadChars, "");
@@ -146,44 +145,27 @@
 	
 	            return false;
 	        }
-	        function make_folder(szURL) {
-	            return make_folder_2010(szURL, szName);
-	
-	            var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-	
-	
-	            xmlHTTP.open("MKCOL", szURL, false);
-	            xmlHTTP.setRequestHeader("Overwrite:", "F");
-	            xmlHTTP.setRequestHeader("Content-type", "text/xml");
-	            xmlHTTP.setRequestHeader("Translate", "f");
-	            xmlHTTP.send();
-	
-	            if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
-	                return true;
-	            else
-	                return xmlHTTP.status;
-	        }
-	
-	        function make_folder_2010(szURL, szName) {
-	            var xmlHTTP = createXMLHttpRequest();
-	            var xmlDOM = createXmlDom();
-	
-	            var objNode;
-	            createNodeInsert(xmlDOM, objNode, "DATA");
-	            createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
-	            createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
-	            createNodeAndInsertText(xmlDOM, objNode, "CMD", "NEW");
-	
-	
-	            xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
-	
-	            xmlHTTP.send(xmlDOM);
-	
-	            if (xmlHTTP.status >= 200 && xmlHTTP.status < 300)
-	                return true;
-	            else
-	                return xmlHTTP.status;
-	        }
+	        
+	        function mail_make_folder(szCMD, szURL, destURL, szName) {
+		    	var xmlHTTP = createXMLHttpRequest();
+		        var xmlDOM = createXmlDom();
+		        var objNode;
+		        createNodeInsert(xmlDOM, objNode, "DATA");
+		        createNodeAndInsertText(xmlDOM, objNode, "CMD", szCMD);
+		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
+		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
+		        
+		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
+		        xmlHTTP.send(xmlDOM);
+		        
+		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
+		            return xmlHTTP.responseText;
+		        } else {
+		            return "ERROR";
+		        }
+		    }
+	        
 	        function ReplaceText(orgStr, findStr, replaceStr) {
 	            var re = new RegExp(findStr, "gi");
 	            return orgStr.replace(re, replaceStr);

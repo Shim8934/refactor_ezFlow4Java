@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
+import egovframework.ezEKP.ezApproval.service.EzApprovalService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -35,6 +36,9 @@ public class EzApprovalController {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private Properties apprCode;
+	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
@@ -47,10 +51,30 @@ public class EzApprovalController {
 	@Autowired
 	private EzApprovalAdminService ezApprovalAdminService;
 	
+	@Autowired
+	private EzApprovalService ezApprovalService;
+	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalController.class);
+	
+	@RequestMapping(value = "/ezApproval/apprMain.do")
+	public String approvalMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("approvalMain started");
+		
+		String listType = request.getParameter("listType");
+		
+		if (listType == null) {
+			listType = "1";
+		}
+		
+		model.addAttribute("listType", listType);
+
+		logger.debug("approvalMain ended");
+		
+		return "ezApproval/apprMain";
+	}
 
 	@RequestMapping(value = "/ezApproval/apprLeft.do")
 	public String apprLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
@@ -78,8 +102,8 @@ public class EzApprovalController {
 		apprContInfoVO.setTenantID(userInfo.getTenantId());
 		apprContInfoVO.setLang(userInfo.getLang());
 		
-		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminService.getUseContInfo(apprContInfoVO);
-		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalAdminService.getCodeContainer(userInfo);
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalService.getUseContInfo(apprContInfoVO);
+		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalService.getCodeContainer(userInfo);
 		
 		if (userInfo.getRollInfo().indexOf("c=1") >= 0 || userInfo.getRollInfo().indexOf("k=1") >= 0 || userInfo.getRollInfo().indexOf("g=1") >= 0) {
 			holdAdmin = "YES";
@@ -98,13 +122,13 @@ public class EzApprovalController {
 		}
 		
 		//개인 문서함 관련
-		String strXML3 = ezApprovalAdminService.getUserContTree(userInfo, "ROOT");
+		String strXML3 = ezApprovalService.getUserContTree(userInfo, "ROOT");
 		//결재 대장, 반송 대장 관련한 ContainerID 모음 던져주기
-		String strXML4 = ezApprovalAdminService.getListContainer(userInfo);
+		String strXML4 = ezApprovalService.getListContainer(userInfo);
 		//부서 문서함 관련
-		String strXML5 = ezApprovalAdminService.getDeptContTree(userInfo, "ROOT");
+		String strXML5 = ezApprovalService.getDeptContTree(userInfo, "ROOT");
 		
-		List<ApprContInfoVO> apprContInfoVOs2 = ezApprovalAdminService.getSpecialContTree(userInfo);
+		List<ApprContInfoVO> apprContInfoVOs2 = ezApprovalService.getSpecialContTree(userInfo);
 		
 		List<Object> referenceTemp = new ArrayList<Object>();
 		referenceTemp.add(subTitleString);
