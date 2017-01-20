@@ -27,6 +27,8 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    window.onload = window_onload;
 		    var Resultxml = createXmlDom();
@@ -687,7 +689,6 @@
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
 		            DocID_Complete = DocID;
-		
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");

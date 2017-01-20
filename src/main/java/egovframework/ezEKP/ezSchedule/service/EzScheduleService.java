@@ -42,7 +42,7 @@ public interface EzScheduleService {
 
 	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception;
 
-	public String getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID) throws Exception;
+	public List<ScheduleInfoVO> getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID, String filter, String keyword, String offSetMin) throws Exception;
 	
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userId) throws Exception;
 
@@ -59,6 +59,12 @@ public interface EzScheduleService {
 	public void deleteScheduleMember(String groupId, String memberId, int tenantId) throws Exception;
 
 	public void updateScheduleMember(String groupId, String memberId, String status, int tenantId) throws Exception;
+
+	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
+
+	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId) throws Exception;
+
+	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId) throws Exception;
 
 	
 }

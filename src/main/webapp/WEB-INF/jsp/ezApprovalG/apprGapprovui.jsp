@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -695,6 +696,13 @@
 		                        setMenuDisable("btnApprove", false);
 		                        return;
 		                    }
+		                    getOpinionInfo(pDocID, "END");
+		                    SendMailToDrafter();
+		                    SendMailToReceiveDept_Approv();
+		                } else {
+		                	 CurrentAprType = pAprLineType;
+		                     CurrentAprUserID = pUserID;
+		                     sendAlertMail("APR", pAprMemberSN, "APPROV");
 		                }
 		            }
 		            else {
@@ -819,8 +827,9 @@
 		                if (!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
 		                    OpenAlertUI(pAlertContent);
-		                    return;
+      						return;
 		                }
+		                SendMailBansongtoDrafter();
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
 		            }

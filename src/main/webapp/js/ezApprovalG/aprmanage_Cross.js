@@ -880,7 +880,9 @@ function openForm_Complete(ret) {
     }
 }
 
-function openViewDocInfo() {
+function openViewDocInfo(type) {
+	 if (type == undefined)
+	        type = "";
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
@@ -947,6 +949,7 @@ function openViewDocInfo() {
         openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
         openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
+        openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -2117,7 +2120,7 @@ function getSimsaDocList() {
 
 function doCancel(pDocID, tempListType) {
 	var result = "";
-	
+
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -2143,7 +2146,8 @@ function doCancel(pDocID, tempListType) {
             var pAlertContent = strLang893 + "<br> " + strLang894;
             OpenAlertUI(pAlertContent, "", "OPEN");
         }
-        getDocList();
+        SendMailToCancel(pDocID); 
+        openergetDocInfo();
 
         try {
             parent.frames["left"].getAprCount();

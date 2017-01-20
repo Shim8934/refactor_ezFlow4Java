@@ -2,9 +2,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<HTML>
-	<HEAD>
+<!DOCTYPE html>
+<html>
+	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>schedule_main</title>
         <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
@@ -1060,7 +1060,7 @@
 	
 	</script>
 		
-	</HEAD>
+	</head>
 	<body class="mainbody"  style=" overflow: auto">
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu"  >

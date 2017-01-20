@@ -135,7 +135,7 @@
 		        
 		        //var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/files/upload_portal"));
 		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
-		        
+
 		        var item;
 		        var mode;
 		        

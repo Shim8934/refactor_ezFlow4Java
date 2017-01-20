@@ -16,6 +16,8 @@
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
+		
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var	DocID = '${docID}';
@@ -56,6 +58,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    pUserID = arr_userinfo[1];
+		    
+	        var callBackType = "${callBackType}";
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
@@ -77,8 +81,150 @@
 		                pOpinionType = "";
 		            }
 		            LoadpzFormDocInfo();
+		            SignCheck();
+		            cancelYN();
 		        }
 		    }
+		    
+		    function SignCheck() {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getSignInfo.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		        var SignXML = createXmlDom();
+		        
+		        if (result == "") {
+		            return;
+		        }
+		        result = loadXMLString(result);
+		        var NodeList;
+		        NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+		        if (NodeList.length <= 0) {
+		            return;
+		        }
+		        SignXML = result;
+		        var rtnVal = putSignXML(SignXML);
+		    }
+		    
+		    function putSignXML(SignXML) {
+		        var retVal = false;
+		        try {
+		            var NodeList;
+		            var fields = message.GetFieldsList();
+		            var field;
+		            NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
+		            if (NodeList.length > 0) {
+		                for (i = 0; i < NodeList.length; i++) {
+		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
+		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
+		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
+		                    var field = GetListItem(fields, SignName);
+		                    if (field) {
+		                        retVal = true;
+		                        if (SignType == "TEXT" ) {
+		                            field.textContent = SignCont;
+		                        }
+		                        else if (SignType == "HTML") {
+		                            field.innerHTML = SignCont;
+		                        }
+		                        else {
+		                            var img = SignCont.split("::");
+		                            var signWidth = parseInt(field.offsetWidth) - 4 - 15;
+		                            var signHeight = parseInt(field.offsetHeight) - 4;
+		                            signWidth = 50;
+		                            signHeight = 28;
+		
+		                            var strimg;
+		                            if (img.length >= 1) {
+		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+		                                strimg = strimg + " width=" + signWidth;
+		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                message.BodySetAttribute(SignName, img[0]);
+		                            }
+		                            if (img.length >= 2 && img[1] != "") {
+		                                field.innerHTML = img[1] + "<br>" + strimg;
+		                            }
+		                            else {
+		                                field.innerHTML = strimg;
+		                            }
+		                        }
+		                    }
+		                }
+		            }
+		        } catch (e) {
+		            alert("putSignXML : " + e.description);
+		            return false;
+		        }
+		        return retVal;
+		    }
+		    
+		    var temppDocID;
+		    function cancelYN() {
+		        temppDocID = pDocID;
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezApprovalG/doCanCelYN.do",
+		    		data : {
+		    			docID : pDocID,
+		    			userID : pUserID
+		    		},
+		    		success: function(xml){
+		    			cancelYN_after(loadXMLString(xml));
+		    		}
+		    	});
+		    }
+		    function cancelYN_after(xml) {
+		        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
+		        if (RtnVal == "CANCEL" || RtnVal == "CALLBACK") {
+		            document.getElementById("tbtncallback").style.display = "";
+		         if (callBackType == "CALLBACK") {
+		        	 btncallback_onclick();
+		         }
+		        }
+		        else {
+		        	var result = "";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/doForceCancelYN.do",
+		        		data : {
+		        			docID : temppDocID,
+		        			userID : pUserID
+		        		},
+		        		success: function(xml){
+		        			
+		        			ForcecancelYN_after(loadXMLString(xml));
+		        		}
+		        	});
+		        }
+		    }
+		    
+		      function ForcecancelYN_after(xml) {
+			        var RtnVal =  getNodeText(GetChildNodes(xml)[0]);
+		            if (RtnVal == "TRUE") {
+		                document.getElementById("tbtnforcecallback").style.display = "";
+
+		                if (callBackType == "FORCECALLBACK") {
+		                    btncallback_onclick();
+		                }
+		            }
+		        }
+		    
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "ING");
@@ -162,6 +308,125 @@
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    function btncallback_onclick() {
+	            OpenInformationUI("<spring:message code='ezApprovalG.t815'/>", btncallback_onclick_Complete);
+	        }
+	        function btncallback_onclick_Complete(ans) {
+	            if (ans && ConnExist("DRAFT_CALLBACK", "")) {
+	                var RtnVal = ExcuteInfo("DRAFT_CALLBACK", "")
+	                if (RtnVal) {
+	                    doCancel();
+	                }
+	            }
+	            else
+	                doCancel();
+	        }
+	        function doCancel() {
+	            var GetCurrentlinelist = getAprLinefor("APR", DocID);
+	        	var result = "";
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/doCancel.do",
+	        		data : {
+	        			docID : pDocID,
+	        			userID : pUserID
+	        		},
+	        		success: function(xml){
+	        			result = xml;
+	        		}
+	        	});
+	            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+	            if (RtnVal == "TRUE") {
+	            	SendMailToCancel_Function(GetCurrentlinelist);
+                    var pAlertContent = strLang891 + "<br> " + strLang892;
+                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	            }
+	            else if (RtnVal == "ERR01") {
+	                var pAlertContent = strLang483;
+	                OpenAlertUI(pAlertContent);
+	            }
+	            else if (RtnVal == "ERR02") {
+	                var pAlertContent = strLang484;
+	                OpenAlertUI(pAlertContent);
+	            }
+	            else if (RtnVal == "ERR03") {
+	                var pAlertContent = strLang485;
+	                OpenAlertUI(pAlertContent);
+	            }
+	            else {
+	                var pAlertContent = strLang486;
+	                OpenAlertUI(pAlertContent);
+	            }
+	        }
+	        
+	        function SendMailToCancel_Function(GetCurrentlinelist) {
+	            var MemberList = loadXMLString(GetCurrentlinelist)
+	            var pDocTitle = GetDocTitleInfoData("APR", "DOCTITLE");
+	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            g_szUserID = pUserID;
+	            g_senderinfo = "";
+	            for (i = 0; i < objNodes.length; i++) {
+	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
+	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
+	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
+	                if (nowstate == "002" || nowstate == "003") {
+	                    if (LineSN != "1") {
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                    }
+	                }
+
+	            }
+	        }
+	        
+	        function GetDocTitleInfoData(mode, filed) {
+	            try {
+	                var value = "";
+	                var xmlpara = createXmlDom();
+	                var objNode;
+	                
+	                createNodeInsert(xmlpara, objNode, "PARAMETER");
+	                createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
+	                createNodeAndInsertText(xmlpara, objNode, "mode", mode);
+	                createNodeAndInsertText(xmlpara, objNode, "fields", filed);
+
+	                var xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("Post", "/ezApprovalG/GetDocInfoMode.do", false);
+	                xmlhttp.send(xmlpara);
+
+	                var xmlDocument = createXmlDom();
+	                xmlDocument = loadXMLString(xmlhttp.responseText);
+
+	                var objNodes = GetChildNodes(xmlDocument.documentElement);
+
+	                if (objNodes) {
+	                    if (objNodes.length > 0) {
+	                        value = getNodeText(objNodes[0]);
+	                    }
+	                }
+	                return value;
+	            }
+	            catch (e) { }
+	        }
+	        
+	        function js_yyyy_mm_dd_hh_mm_ss() {
+	            now = new Date();
+	            year = "" + now.getFullYear();
+	            month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+	            day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+	            hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+	            minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+	            second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+	            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	        }
+	        
+	        function RemoveDoc_Complete() {
+	            try { window.opener.getDocList(); } catch (e) { }
+	            window.close();
+	        }
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -176,6 +441,8 @@
 		          <li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
+                  <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">

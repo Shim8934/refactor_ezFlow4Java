@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
@@ -142,6 +143,19 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 
 	public void updateScheduleMember(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateScheduleMember", map);
+	}
+
+	public void insertScheduleGroupMember(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleGroupMember", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getDeptMemberList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzScheduleDAO.getDeptMemberList", map);
+	}
+
+	public void insertScheduleGroup(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleGroup", map);
 	}
 
 }

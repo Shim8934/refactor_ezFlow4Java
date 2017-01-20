@@ -30,7 +30,7 @@ public interface EzOrganService {
 	
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
-	public String getEncPassword(String dUserID) throws Exception;
+	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
 	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID) throws Exception;
 	
@@ -38,7 +38,7 @@ public interface EzOrganService {
 	
 	public String delProxyUserInfo(String userID, int tenantID) throws Exception;
 	
-	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate) throws Exception;
+	public String setProxyUserInfo(String userID, String proxyUserID, String proxyUserName, String proxyUserDeptID, String startDate, String endDate, int tenantID, String offset) throws Exception;
 	
 	public String getProxyUserInfo(String userID, int tenantID) throws Exception;
 	
@@ -49,6 +49,8 @@ public interface EzOrganService {
 	public boolean checkSearchField(String pFieldName) throws Exception;
 
 	public String getCNByEmail(String email, int tenantID) throws Exception;
+
+	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
  
 }

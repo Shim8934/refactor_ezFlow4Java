@@ -337,12 +337,12 @@
 		                LoadAddressTree();
 		                break;
 
-		            case 5:		// Adress
+		            case 5:		// schedule group management 
 		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
 		                break;
 
-		            case 6:		// Search calendar
-		                window.open("/myoffice/ezSchedule/schedule_search_Cross.aspx", "right")
+		            case 6:		// schedule search
+		                window.open("/ezSchedule/scheduleSearch.do", "right")
 		                break;
 
 		            case 7:		// Search Task
@@ -354,8 +354,8 @@
 		                window.open("/myoffice/ezAddress/address_search_Cross.aspx", "right");
 		                break;
 
-		            case 10:	// Search public calendar
-		                window.open("/myoffice/ezSchedule/schedule_public_search_Cross.aspx", "right");
+		            case 10:	// Search public search
+		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
 		                window.open("/MyOffice/ezSchedule/PIMS_config_Cross.aspx", "right");

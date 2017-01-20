@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
@@ -36,8 +36,7 @@
 				        if (CrossYN()) {
 				            var xmlLIST = createXmlDom();
 				            var nodeToImport = xmlLIST.importNode(listNode, true);
-				            xmlLIST.appendChild(nodeToImport);
-				
+				            xmlLIST.appendChild(nodeToImport);				
 				            xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
 				        }
 				        else {
@@ -175,15 +174,15 @@
 		
 		    var schedule_group_write_dialogArguments = new Array();
 		    function add_group() {
-		        if (CrossYN()) {
+		        if (!CrossYN()) {		        	
 		            schedule_group_write_dialogArguments[0] = "";
 		            schedule_group_write_dialogArguments[1] = add_group_Complete;
-		            var OpenWin = window.open("/myoffice/ezSchedule/schedule_group_write.aspx", "schedule_group_write", GetOpenWindowfeature(950, 680));
+		            var OpenWin = window.open("/ezSchedule/scheduleGroupWrite.do", "schedule_group_write", GetOpenWindowfeature(980, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var feature = GetShowModalPosition(950, 680);
-		            var rtn = window.showModalDialog("schedule_group_write.aspx", "", "dialogHeight:680px; dialogWidth:950px; status:no; scroll:no; help:no; edge:sunken" + feature);
+		            var rtn = window.showModalDialog("scheduleGroupWrite.do", "", "dialogHeight:670px; dialogWidth:980px; status:no; scroll:no; help:no; edge:sunken" + feature);
 		            if (typeof (rtn) != "undefined")
 		                getGroupList();
 		        }
@@ -199,12 +198,6 @@
 		            alert("<spring:message code='ezSchedule.t253' />");
 		            return;
 		        }
-		
-		        var xmlDom = createXmlDom();
-		        var xmlHTTP = createXMLHttpRequest();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "GROUPID", strListInfo);
 		
 		        var count = strListInfo.split(';').length - 1;
 		
@@ -247,25 +240,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody">
-		<xml id="listviewheader" style="display:none">
-			<LISTVIEWDATA>
-				<HEADERS>
-					<HEADER>
-						<NAME>CHECK</NAME>
-						<WIDTH>10%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezSchedule.t159' /></NAME>
-						<WIDTH>60%</WIDTH>
-					</HEADER>    	
-					<HEADER>
-						<NAME><spring:message code='ezSchedule.t00002' /></NAME>
-						<WIDTH>40%</WIDTH>
-					</HEADER>				
-				</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
+	<body class="mainbody">		
 	    <h1><spring:message code='ezSchedule.t252' /></h1><br /><br />
 	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00005' /></span><br />
 	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00006' /></span><br />

@@ -352,6 +352,35 @@ public class CommonUtil {
 		}		
 	}
 	
+	public boolean isLoginCookieExists(HttpServletRequest request) {
+        boolean isCookie = false;     
+        Cookie[] cookies = request.getCookies();
+        
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if("loginCookie".equals(cookie.getName())){
+                    //접속한 클라이언트 IP
+                    String ip = ClientUtil.getClientIP(request);
+                    String cValue = "";
+                    try {
+                        //쿠기에 저장되어 있는 IP
+                        cValue = egovFileScrty.decryptAES(cookie.getValue());
+
+                        if(cValue.split("///")[3].equals(ip)){                  
+                            isCookie = true;
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        //e.printStackTrace();
+                    }
+                }
+            }
+        }
+	    
+        
+        return isCookie;
+	}
+	
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		

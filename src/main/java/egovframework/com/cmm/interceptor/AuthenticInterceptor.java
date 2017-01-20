@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
@@ -40,6 +41,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
     @Resource(name="crypto")
     private EgovFileScrty egovFileScrty;
     
+    @Autowired
+    private CommonUtil commonUtil;
+    
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AuthenticInterceptor.class);
 
@@ -49,33 +53,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
-		String isCookie = null;		
-		Cookie[] cookies = request.getCookies();
-		
-//		logger.debug("=========================================== Interface Check ============================================");
-
-    	if (cookies != null) {
-    		for (Cookie cookie : cookies) {
-    			if("loginCookie".equals(cookie.getName())){
-    				//접속한 클라이언트 IP
-    				String ip = ClientUtil.getClientIP(request);
-					String cValue = "";
-					try {
-						//쿠기에 저장되어 있는 IP
-						cValue = egovFileScrty.decryptAES(cookie.getValue());
-
-	    				if(cValue.split("///")[3].equals(ip)){    				
-	    					isCookie = "Y";
-	    				}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						//e.printStackTrace();
-					}
-    	        }
-    	    }
-    	}
-		
-		if (isCookie != null) {
+		if (commonUtil.isLoginCookieExists(request)) {
 			return true;
 		} else {
 			ModelAndView modelAndView = new ModelAndView("redirect:/user/login/login.do");

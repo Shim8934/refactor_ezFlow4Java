@@ -13526,4 +13526,8 @@
    		VALUES
    			 (#v_ArrayString#, #v_ArrayString1#, #v_ArrayString2#, #v_CABCLASSNO# , #v_TENANTID#)
    </insert>
+   
+   <insert id ="EzApprovalG.insertStrSql" parameterClass="map">
+    	$sqlString$
+   </insert>
 </sqlMap>
