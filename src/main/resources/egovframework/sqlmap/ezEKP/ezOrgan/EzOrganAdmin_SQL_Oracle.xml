@@ -776,7 +776,8 @@
                     CASE #lang#
                     	WHEN '1' THEN DISPLAYNAME2
                         ELSE DISPLAYNAME   
-                        END DISPLAYNAME2               
+                        END DISPLAYNAME2,
+                  SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15                    
                	  FROM 
                	  	EZHRMASTER.TBLDeptmaster 
                	  WHERE

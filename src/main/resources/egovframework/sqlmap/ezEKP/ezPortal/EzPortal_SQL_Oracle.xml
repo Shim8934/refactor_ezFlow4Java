@@ -571,6 +571,8 @@
 							  	TENANT_ID = #tenantID#	 ) )
              		  AND
              		  	A.UID_ = B.ParentUID
+             		  AND
+             		  	A.TENANT_ID = B.TENANT_ID	
                       AND
                       	A.UseFlag = #v_pUSERFLAG#
 					  AND
@@ -582,7 +584,9 @@
 					  AND
 					  	B.CreatorID = #v_pUSERID#
 					  AND 
-					  	B.TENANT_ID = #tenantID#	 )
+					  	B.TENANT_ID = #tenantID#
+					  AND
+					  	A.TENANT_ID = #tenantID#		 )
 		]]>
 	</select>
 	

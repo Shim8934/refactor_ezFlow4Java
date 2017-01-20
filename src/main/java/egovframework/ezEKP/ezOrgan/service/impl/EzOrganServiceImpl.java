@@ -43,7 +43,24 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
 		
-		return ezOrganDAO.getPropertyValue(map);
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			return ezOrganDAO.getPropertyValue(map);
+        } else {
+        	String temp = ezOrganDAO.getPropertyValue_S1(map);
+        	
+        	if (temp != null && temp.equals("1")) {
+        		String temp1 = ezOrganDAO.getPropertyValue_S2(map);
+        		if (temp1 != null && temp1.equals("1")) {
+        			return ezOrganDAO.getPropertyValue_S3(map);
+        		} else {
+        			return ezOrganDAO.getPropertyValue_S4(map);
+        		}
+        	} else {
+        		return ezOrganDAO.getPropertyValue_S5(map);
+        	}
+        }    
+		
+		
 	}
 
 	@Override
@@ -182,6 +199,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception{
+		logger.debug("getTreeNodeInfo started");
+
 		StringBuilder nodeInfo = new StringBuilder();
 		
 		nodeInfo.append("<NODE>");
@@ -203,7 +222,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			}
 		}
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId());
-		
+		logger.debug("cnt="+cnt);
 		if (cnt > 0){
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
 		}else{
@@ -234,6 +253,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 	    nodeInfo.append("</NODE>");
 
+	    logger.debug("nodeInfo="+nodeInfo.toString());
+		logger.debug("getTreeNodeInfo ended");;
+		
 	    return nodeInfo.toString();
 	}
 

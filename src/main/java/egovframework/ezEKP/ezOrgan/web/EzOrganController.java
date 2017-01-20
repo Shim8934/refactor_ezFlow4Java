@@ -88,6 +88,7 @@ public class EzOrganController {
 	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptSubTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("getDeptSubTreeInfo started");
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 				
@@ -96,7 +97,10 @@ public class EzOrganController {
         
         String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
+        logger.debug("deptSubInfo="+deptInfo);
+        logger.debug("getDeptSubTreeInfo ended");
 		return deptInfo;
+	
 	}
 	
 	/**

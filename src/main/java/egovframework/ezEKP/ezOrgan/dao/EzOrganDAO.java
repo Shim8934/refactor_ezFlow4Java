@@ -1286,7 +1286,26 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getDeptReceipterIDs(Map<String, Object> map) {
 		 return (List<OrganUserVO>) list("EzOrganDAO.getDeptReceipterIDs", map);
 	}
-
+	
+	public String getPropertyValue_S1 (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getPropertyValue_S1", map);
+	}
+	
+	public String getPropertyValue_S2 (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getPropertyValue_S2", map);
+	}
+	
+	public String getPropertyValue_S3 (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getPropertyValue_S3", map);
+	}
+	
+	public String getPropertyValue_S4 (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getPropertyValue_S4", map);
+	}
+	
+	public String getPropertyValue_S5 (Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getPropertyValue_S5", map);
+	}
 	
 
 }
