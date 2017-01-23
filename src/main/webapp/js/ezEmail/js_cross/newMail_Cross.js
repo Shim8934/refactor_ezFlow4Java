@@ -1593,6 +1593,7 @@ function GetDateFormatString() {
     return year + "" + month + "" + day;
 }
 
+//TODO: 최신꺼 보면서 수정하기
 var AttachFlag = false;
 function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     AttachFlag = true;
@@ -1752,9 +1753,9 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     }
 }
 
-
+//TODO: 하던중임
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
-    AttachFlag = true;
+	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
     xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
     xmlHTTP.send("");
@@ -1797,7 +1798,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
         var pstrXML = "";
 
-
+        //첨부파일이 있을 경우
         if (AttachRows.length > 0) {
             pstrXML += "<LISTVIEWDATA><HEADERS>";
             pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
@@ -1825,7 +1826,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
             pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
             pstrXML += "</CELL></ROW>";
         }
-
         if (pstrXML != "") {
             pstrXML += "</ROWS></LISTVIEWDATA>";
             objXML = loadXMLString(pstrXML);
@@ -1838,19 +1838,21 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
                 else
                     Rtnxml = loadXMLString(getXmlString(pAttachListXml));
 
-                GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
                 for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
                     var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
-                    if (CrossYN())
-                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
-                    else
+//                    if (CrossYN())
+//                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//                    else
                         GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
                 }
                 pAttachListXml = Rtnxml;
             }
-            if (DragDropAttachObjetLoading)
-                AppendFileAttachInfo(pAttachListXml);
+            if (DragDropAttachObjetLoading) {
+//            	AppendFileAttachInfo(pAttachListXml);
+            	dadiframe.fileupload2(pAttachListXml);
+            }
         }
+        
         eSubject.value = strLang121 + eSubject.value;
         Subject_ReApply();
     }
@@ -2130,6 +2132,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
                     var strTarget = "target='_blank'";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
+                    var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
@@ -2138,12 +2141,25 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }
-
+                    
+                    if (fileSize / 1024 / 1024 / 1024 > 1) {
+                        fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
+                    }
+                    else if (fileSize / 1024 / 1024 > 1) {
+                        fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+                    }
+                    else if (fileSize / 1024 > 1) {
+                        fileSize = parseInt(fileSize / 1024) + "KB";
+                    }
+                    else {
+                        fileSize = fileSize + "B";
+                    }
+                    
                     var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + folderDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
-                                "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + "</a></td>" +
+                                "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
                 }
             }

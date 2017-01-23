@@ -1259,17 +1259,129 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
 		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
+		int bigMaxSize = Integer.parseInt(bigMaxSizeStr);
+		
+		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
+		int changeSize = Integer.parseInt(changeSizeStr);
+		
+		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		
+//		System.out.println("tempFolderName=" + tempFolderName);
+//		System.out.println("isBigYN=" + isBigYN);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String uploadMailRootPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
+		String realPath = commonUtil.getRealPath(request);
+		
+		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
+//		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
+		String useExtension = config.getProperty("config.USE_FileExtension");
 		
+		int fileCnt = doc.getElementsByTagName("ROW").getLength();
+		String[] fileName = new String[fileCnt];
+		String[] filePath = new String[fileCnt];
+		long[] fileSize = new long[fileCnt];
+		String[] fileExt = new String[fileCnt];
+		String[] newFileName = new String[fileCnt];
 		
+		int totalFileSize = 0;
+		
+		for (int i=0; i<fileCnt; i++) {
+			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(0).getTextContent();
+			
+			File f = new File(filePath[i]);
+			
+			if (f.exists()) {
+				fileName[i] = doc.getElementsByTagName("DATA1").item(0).getTextContent();
+				
+				if (fileName[i].lastIndexOf(".") > -1) {
+					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+				} else {
+					fileExt[i] = "";
+				}
+				
+				newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
+				
+				fileSize[i] = f.length();
+				totalFileSize += fileSize[i];
+			} else {
+				filePath[i] = "NO FILE";
+			}
+		}
+		
+		//max size 넘었는지 체크
+		if (totalFileSize > bigMaxSize) {
+			//TODO: 첨부 불가. 리턴.
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ROOT><NODES>");
+		
+		if (totalFileSize > changeSize) { //대용량첨부
+			//TODO
+			
+		} else { //일반첨부
+			for (int i=0; i<fileCnt; i++) {
+				if (filePath[i].equals("NO FILE")) {
+					continue;
+				}
+				
+				FileInputStream fin = null;
+				FileOutputStream fout = null;
+				
+				try {
+					File f = new File(filePath[i]);
+					
+					if (f.exists()) {
+						fin = new FileInputStream(f);
+						fout = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName);
+						
+						int data = 0;
+						while ((data = fin.read()) != -1) {
+							fout.write(data);
+						}
+					}
+					
+					String resultUpload = "";
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+	                    resultUpload = "denied";
+	                } else {
+	                    resultUpload = "true";
+	                }
+					
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (fout != null) {
+						try { fout.close(); } catch(Exception e){}
+					}
+					if (fin != null) {
+						try { fin.close(); } catch(Exception e){}
+					}
+				}
+			}
+			
+		}
+		
+		sb.append("</NODES></ROOT>");
+		
+		//TODO: templist에 txt파일 만들기
 		
 		logger.debug("mailInterUploadCopy ended.");
 		
-		return "";
+		return sb.toString();
 	}
 
 	/**

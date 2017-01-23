@@ -161,6 +161,10 @@
 	        }
 	        SelMailSign.value = "${mailSignSel}";
 	        
+	        if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
+	        	document.getElementById("HolderDocSend").style.display = "";
+	        }
+	        
 			Simple_Choice();		
 			var pSaveTime = "${pAutoSaveTime}";
 			var pSaveInterval = parseInt(pSaveTime) * 1000;
@@ -980,15 +984,13 @@
 	                            <%-- } --%>
 	                        </td>
 	                    </tr>
-<!--                      <asp:PlaceHolder ID="HolderDocSend" runat="server" Visible="false">  -->
-	                        <tr>
-	                            <td style="height:150px;">
-	                                <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
-	                                    <div id="docContent" style="height: 100%; margin:auto;width:620px;border:none;text-align:center;" ></div>
-	                                </div>
-	                            </td>
-	                        </tr>
-<!--                     </asp:PlaceHolder>   -->
+                        <tr id="HolderDocSend" style="display:none">
+                            <td style="height:150px;">
+                                <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
+                                    <div id="docContent" style="height: 100%; margin:auto;width:620px;border:none;text-align:center;" ></div>
+                                </div>
+                            </td>
+                        </tr>
 	                </table>
 	            </td>
 	        </tr>
