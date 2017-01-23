@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApproval.dao.EzApprovalAdminDAO;
 import egovframework.ezEKP.ezApproval.dao.EzApprovalDAO;
 import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.service.EzApprovalService;
@@ -36,9 +36,6 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 	
 	@Autowired
 	private Properties apprCode;
-	
-	@Autowired
-	private EzApprovalAdminDAO ezApprovalAdminDAO;
 	
 	@Autowired
 	private EzApprovalDAO ezApprovalDAO;
@@ -66,17 +63,16 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		List<ApprContInfoVO> apprContInfoVOs = new ArrayList<ApprContInfoVO>();
 		
 		if (apprContInfoVO.getOwnFlag().equals("1")) {
-			apprContInfoVOs = ezApprovalAdminDAO.getUserContInfo(apprContInfoVO); 
+			apprContInfoVOs = ezApprovalDAO.getUserContInfo(apprContInfoVO); 
 		} else {
-			apprContInfoVOs = ezApprovalAdminDAO.getUserContInfo1(apprContInfoVO); 
+			apprContInfoVOs = ezApprovalDAO.getUserContInfo1(apprContInfoVO); 
 		}
 		
 		if (apprContInfoVO.getOwnFlag().equals("2")) {
-			List<ApprContInfoVO> tempApprContInfoVOs = ezApprovalAdminDAO.getUserContInfo(apprContInfoVO);
+			List<ApprContInfoVO> tempApprContInfoVOs = ezApprovalDAO.getUserContInfo(apprContInfoVO);
 			
 			for (int k = 0; k < tempApprContInfoVOs.size(); k++) {
-				tempApprContInfoVOs.get(k).setContainerTypeName(commonUtil.makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName", apprContInfoVO.getTenantID())) + "_" + commonUtil.makeListField(tempApprContInfoVOs.get(k).getContainerTypeName()));
-				tempApprContInfoVOs.get(k).setContainerTypeName2(commonUtil.makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName2", apprContInfoVO.getTenantID())) + "_" + commonUtil.makeListField(tempApprContInfoVOs.get(k).getContainerTypeName2()));
+				tempApprContInfoVOs.get(k).setContainerTypeName(commonUtil.makeListField(ezOrganService.getPropertyValue(tempApprContInfoVOs.get(k).getContainerOwnDepID(), "displayName" + apprContInfoVO.getLang(), apprContInfoVO.getTenantID())) + "_" + commonUtil.makeListField(tempApprContInfoVOs.get(k).getContainerTypeName()));
 				
 				apprContInfoVOs.add(tempApprContInfoVOs.get(k));
 			}
@@ -91,7 +87,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 	public List<ApprDocInfoVO> getCodeContainer(LoginVO userInfo) throws Exception {
 		logger.debug("getCodeContainer started");
 		
-		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalAdminDAO.getCodeContainer(userInfo);
+		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalDAO.getCodeContainer(userInfo);
 		
 		for (int k = 0; k < apprDocInfoVOs.size(); k++) {
 			apprDocInfoVOs.get(k).setItemName(commonUtil.cleanValue(apprDocInfoVOs.get(k).getItemName()));
@@ -114,7 +110,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("userID", userInfo.getId());
 		
-		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getUserContTree(map);
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalDAO.getUserContTree(map);
 		
 		if (parentContID.equals("ROOT")) {
 			rtnXML.append("<TREEVIEWDATA>");
@@ -189,7 +185,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		apprContInfoVO.setTenantID(userInfo.getTenantId());
 		
 		try {
-			String maxContainerID = ezApprovalAdminDAO.createUserCont(apprContInfoVO);
+			String maxContainerID = ezApprovalDAO.createUserCont(apprContInfoVO);
 			
 			rtnValue = maxContainerID;
 		} catch (Exception e) {
@@ -211,7 +207,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		apprContInfoVO.setTenantID(tenantID);
 		
 		try {
-			int leafCount = ezApprovalAdminDAO.getUserContTreeLeaf(apprContInfoVO);
+			int leafCount = ezApprovalDAO.getUserContTreeLeaf(apprContInfoVO);
 			
 			if (leafCount > 0) {
 				isLeaf = "FALSE";
@@ -241,7 +237,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("deptID", userInfo.getDeptID());
 		
-		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getDeptContTree(map);
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalDAO.getDeptContTree(map);
 		
 		if (parentContID.equals("ROOT")) {
 			rtnXML.append("<TREEVIEWDATA>");
@@ -322,7 +318,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		apprContInfoVO.setTenantID(userInfo.getTenantId());
 		
 		try {
-			String maxContainerID = ezApprovalAdminDAO.createDeptCont(apprContInfoVO);
+			String maxContainerID = ezApprovalDAO.createDeptCont(apprContInfoVO);
 			
 			rtnValue = maxContainerID;
 		} catch (Exception e) {
@@ -344,7 +340,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		apprContInfoVO.setTenantID(tenantID);
 		
 		try {
-			int leafCount = ezApprovalAdminDAO.getDeptContTreeLeaf(apprContInfoVO);
+			int leafCount = ezApprovalDAO.getDeptContTreeLeaf(apprContInfoVO);
 			
 			if (leafCount > 0) {
 				isLeaf = "FALSE";
@@ -365,7 +361,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 	public List<ApprContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception {
 		logger.debug("getSpecialContTree started");
 		
-		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getSpecialContTree(userInfo);
+		List<ApprContInfoVO> apprContInfoVOs = ezApprovalDAO.getSpecialContTree(userInfo);
 		
 //		for (int k = 0; k < apprContInfoVOs.size(); k++) {
 //			apprContInfoVOs.get(k).setContType("SC" + apprContInfoVOs.get(k).getContType());
@@ -390,7 +386,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		map.put("deptID", userInfo.getDeptID());
 		map.put("tenantID", userInfo.getTenantId());
 		
-		List<String> containerIDList = ezApprovalAdminDAO.getListContainerCont(map);
+		List<String> containerIDList = ezApprovalDAO.getListContainerCont(map);
 		
 		for (int k = 0; k < containerIDList.size(); k++) {
 			if (k == 0) {
@@ -402,7 +398,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		
 		map.put("staDSBansong", apprCode.getProperty("appr.staDSBansong"));
 		
-		containerIDList = ezApprovalAdminDAO.getListContainer(map);
+		containerIDList = ezApprovalDAO.getListContainer(map);
 		
 		for (int k = 0; k < containerIDList.size(); k++) {
 			if (k == 0) {
@@ -415,6 +411,69 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		logger.debug("getListContainer ended");
 		
 		return "<CONTAINER><APPRCONT>" + apprCont + "</APPRCONT><RETNCONT>" + retCont + "</RETNCONT></CONTAINER>";
+	}
+
+	@Override
+	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String susinAdmin, String subQuery) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getWebPartList started");
+
+		String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+		String userIDs = "'" + userInfo.getId() + "'";
+		String proxyOption = "";
+		
+		if (listType.equals("1")) {
+			proxyOption = getIsUse("A23", "001", userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			if (proxyOption.equals("1")) {
+				userIDs = getProxyUser(userInfo.getId(), userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+			}
+		}
+		
+		logger.debug("getWebPartList ended");
+		
+		return null;
+	}
+
+	private String getProxyUser(String userID, String lang, String offset, int tenantID) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getProxyUser started");
+
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayName", "displayName;extensionAttribute5", "user", 5, commonUtil.getPrimaryData(lang), tenantID);
+		Document xmlDom = commonUtil.convertStringToDocument(rtnXML);
+		
+		int nodeLength = xmlDom.getElementsByTagName("DATA2").getLength();
+		boolean chkFirst = false;
+		String rtnVal = "";
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), offset, false);
+		
+		if (nodeLength > 0) {
+			for (int k = 0; k < nodeLength; k++) {
+				String bujaeInfo = xmlDom.getElementsByTagName("DATA4").item(k).getTextContent();
+				String[] bujae = bujaeInfo.split(":");
+				
+			}
+		}
+
+		logger.debug("getProxyUser ended");
+		
+		return null;
+	}
+
+	private String getIsUse(String code1, String code2, String companyID, int tenantID) throws Exception {
+		logger.debug("getIsUse started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code1", code1);
+		map.put("code2", code2);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		String rtnValue = ezApprovalDAO.getIsUse(map);
+
+		logger.debug("getIsUse ended");
+		
+		return rtnValue;
 	}
 	
 }

@@ -184,9 +184,9 @@
 	                             OR accessid = #v_pCompanyID# ) 
 	                     ) B   
 	                ON 
-	                	a.boardid = b.boardid
-	                AND
 	                	a.TENANT_ID = b.TENANT_ID
+	                AND
+	                	a.boardid = b.boardid
 	              	ORDER BY 
 	              		A.treevieworder ASC
 				]]>
@@ -215,10 +215,10 @@
 	                      	EZBOARDSTD.TBL_Board_BoardManage C
 	                      LEFT JOIN 
 	                      	EZBOARDSTD.TBL_Board_BoardInfo D   
-	                      ON 
-	                      	C.BoardID = D.BoardID
+	                      ON
+	                      	C.TENANT_ID = D.TENANT_ID 
 	                      AND
-	                      	C.TENANT_ID = D.TENANT_ID
+	                      	C.BoardID = D.BoardID
 	                      WHERE
 	                      	C.TENANT_ID = #v_TENANTID#
 	                      AND
@@ -230,9 +230,9 @@
 	                      AND 
 	                      	D.ParentBoardID = #v_pRootBoardID# ) B   
 	                ON 
-	                	A.BoardID = B.BOARDID
-	                AND
 	                	A.TENANT_ID = B.TENANT_ID
+	                AND
+	                	A.BoardID = B.BOARDID
 	                ORDER BY 
 	                	A.TreeViewOrder ASC
 	        	]]>

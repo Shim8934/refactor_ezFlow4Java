@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -26,6 +27,18 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+/** 
+ * @Description [Controller] 사용자 - 전자결재S
+ * @author 오픈솔루션팀 황윤진
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2017.01.19    황윤진         신규작성
+ *
+ * @see
+ */
 
 @Controller
 public class EzApprovalController {
@@ -59,6 +72,10 @@ public class EzApprovalController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalController.class);
 	
+	/**
+	 * 전자결재S 메인화면 호출 Method
+	 */
+	
 	@RequestMapping(value = "/ezApproval/apprMain.do")
 	public String approvalMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("approvalMain started");
@@ -76,6 +93,9 @@ public class EzApprovalController {
 		return "ezApproval/apprMain";
 	}
 
+	/**
+	 * 전자결재S LEFT화면 호출 Method
+	 */
 	@RequestMapping(value = "/ezApproval/apprLeft.do")
 	public String apprLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("apprLeft started");
@@ -83,9 +103,14 @@ public class EzApprovalController {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String userInfoEnforce = ezCommonService.getTenantConfig("UserInfo_Enforce", userInfo.getTenantId());
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
+		
+		logger.debug("userInfoEnforce :: " + userInfoEnforce + " || viewLeftCount :: " + viewLeftCount);
+		
 		String listType = "";
 		String holdAdmin = "";
 		String firstContainerID = "";
+		String aprListCont = "";
+		String rtnListCont = "";
 		StringBuilder containers = new StringBuilder();
 		String subTitleString = "";
 		boolean isSubTitle = false;
@@ -100,7 +125,7 @@ public class EzApprovalController {
 		apprContInfoVO.setUseDeptID(userInfo.getDeptID());
 		apprContInfoVO.setOwnFlag("2");
 		apprContInfoVO.setTenantID(userInfo.getTenantId());
-		apprContInfoVO.setLang(userInfo.getLang());
+		apprContInfoVO.setLang(commonUtil.getMultiData(userInfo.getLang()));
 		
 		List<ApprContInfoVO> apprContInfoVOs = ezApprovalService.getUseContInfo(apprContInfoVO);
 		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalService.getCodeContainer(userInfo);
@@ -128,7 +153,29 @@ public class EzApprovalController {
 		//부서 문서함 관련
 		String strXML5 = ezApprovalService.getDeptContTree(userInfo, "ROOT");
 		
+		Document doc = commonUtil.convertStringToDocument(strXML4);
+		
+		if (doc.getElementsByTagName("APPRCONT").getLength() > 0) {
+			aprListCont = doc.getElementsByTagName("APPRCONT").item(0).getTextContent();
+		} else {
+			aprListCont = "0000000000";
+		}
+		
+		if (doc.getElementsByTagName("RETNCONT").getLength() > 0) {
+			rtnListCont = doc.getElementsByTagName("RETNCONT").item(0).getTextContent();
+		} else {
+			rtnListCont = "0000000000";
+		}
+		
 		List<ApprContInfoVO> apprContInfoVOs2 = ezApprovalService.getSpecialContTree(userInfo);
+		
+		int subContCount = 0;
+		
+		for (int k = 0; k < apprContInfoVOs2.size(); k++) {
+			if (!apprContInfoVOs2.get(k).getContType().equals("005")) { //심사할 문서만 제외
+				subContCount += 1;
+			}
+		}
 		
 		List<Object> referenceTemp = new ArrayList<Object>();
 		referenceTemp.add(subTitleString);
@@ -139,6 +186,7 @@ public class EzApprovalController {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strXML3", strXML3);
 		model.addAttribute("strXML5", strXML5);
+		model.addAttribute("subContCount", subContCount);
 		model.addAttribute("specialContTreeList", apprContInfoVOs2);
 		model.addAttribute("specialContTreeCount", apprContInfoVOs2.size());
 		model.addAttribute("codeContainerList", apprDocInfoVOs);
@@ -151,10 +199,12 @@ public class EzApprovalController {
 		model.addAttribute("viewLeftCount", viewLeftCount);
 		model.addAttribute("isSubTitle", isSubTitle);
 		model.addAttribute("subTitleString", subTitleString);
+		model.addAttribute("aprListCont", aprListCont);
+		model.addAttribute("rtnListCont", rtnListCont);
 		
 		logger.debug("apprLeft ended");
 		
-		return "admin/ezApproval/apprLeft";
+		return "ezApproval/apprLeft";
 	}
 	
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
@@ -229,5 +279,36 @@ public class EzApprovalController {
         referenceTemp.set(1, isSubTitle);
         
         logger.debug("getUserSubTitle ended");
+	}
+	
+	/**
+	 * 전자결재S Left화면 게시글갯수 Method
+	 */
+	@RequestMapping(value = "/ezApproval/getListCount.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getListCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getListCount started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String listType = request.getParameter("listType");
+		String subQuery = request.getParameter("subQuery");
+		String mode = request.getParameter("mode");
+		String susinAdmin = "user";
+		String result = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "admin";
+		}
+		
+		if (mode != null) {
+			result = ezApprovalService.getWebPartList(listType, userInfo, "", "LEFT", susinAdmin, subQuery);
+		} else {
+			result = ezApprovalService.getWebPartList(listType, userInfo, "", "COUNT", susinAdmin, subQuery);
+		}
+
+		logger.debug("getListCount ended");
+		
+		return "";
 	}
 }

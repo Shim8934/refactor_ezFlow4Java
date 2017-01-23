@@ -8,16 +8,18 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalService {
 
-	public String getUserContTree(LoginVO userInfo, String string) throws Exception;
+	public String getUserContTree(LoginVO userInfo, String parentContID) throws Exception;
 
 	public String getListContainer(LoginVO userInfo) throws Exception;
 
-	public String getDeptContTree(LoginVO userInfo, String string) throws Exception;
+	public String getDeptContTree(LoginVO userInfo, String parentContID) throws Exception;
 
 	public List<ApprContInfoVO> getUseContInfo(ApprContInfoVO apprContInfoVO) throws Exception;
 
 	public List<ApprDocInfoVO> getCodeContainer(LoginVO userInfo) throws Exception;
 
 	public List<ApprContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
+
+	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String susinAdmin, String subQuery) throws Exception;
 
 }

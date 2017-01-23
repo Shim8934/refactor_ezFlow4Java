@@ -85,6 +85,7 @@
 		
 		    function getBoardList() {
 		        starttime = new Date().getTime();
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",

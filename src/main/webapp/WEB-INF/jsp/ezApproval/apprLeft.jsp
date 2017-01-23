@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO" %>
+<%@ page import="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -35,15 +38,15 @@
 	        var ContainerID;
 	        var PageSize = 10;
 	        var Containers = "${containers}";
-	        var AprListCont = "<%=AprListCont%>";
-	        var RtnListCont = "<%=RtnListCont%>";
-	        var SubContCount = "<%=SCont.GetElementsByTagName("SC001").Count + SCont.GetElementsByTagName("SC002").Count + SCont.GetElementsByTagName("SC003").Count + SCont.GetElementsByTagName("SC004").Count + SCont.GetElementsByTagName("SC006").Count%>";
+	        var AprListCont = "${aprListCont}";
+	        var RtnListCont = "${rtnListCont}";
+	        var SubContCount = "${subContCount}";
 	        var presentValue = 0;
 	        var tmpValue = "";
 	        var nodeIdx;
-	        var ViewLeftCount = "<%=ViewLeftCount%>";
+	        var ViewLeftCount = "${viewLeftCount}";
 	        $(function () {
-	            if ("<%=isSubTitle %>" == "True")
+	            if ("${isSubTitle}" == "True")
 	                $("#SubTitle_obj").selectbox();
 	            $(".sbHolder").each(function (index) {
 	                $(this).addClass('instance');
@@ -63,10 +66,11 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	            var idx = "4", navigation_info = "<%=RM.GetString("t824")%>";
+	            var idx = "4", navigation_info = "<spring:message code='ezApproval.t824'/>";
 	            Tree_setconfig();
 	            var xmlDom2 = createXmlDom();
-	            xmlDom2 = loadXMLString("<%=strXML3%>");
+	            xmlDom2 = loadXMLString("${strXML3}");
+	            
 	            var treeView = new TreeView();
 	            treeView.SetID("UserContTree");
 	            treeView.SetUseAgency(true);
@@ -74,8 +78,10 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDom2);
 	            treeView.DataBind("divUserContTree");
+	            
 	            var xmlDom3 = createXmlDom();
-	            xmlDom3 = loadXMLString("<%=strXML5%>");
+	            xmlDom3 = loadXMLString("${strXML5}");
+	            
 	            var treeView = new TreeView();
 	            treeView.SetID("DeptContTree");
 	            treeView.SetUseAgency(true);
@@ -84,34 +90,34 @@
 	            treeView.DataSource(xmlDom3);
 	            treeView.DataBind("divDeptContTree");
 	            if (pListTypeValue == "1") {
-	                setPresentValue("<%=RM.GetString("t837")%>");
+	                setPresentValue("<spring:message code='ezApproval.t837'/>");
 	                document.getElementById('APPROVAL1').parentElement.onclick();
 	                document.getElementById('APPROVAL1').onclick();
 	                
 	            }
 	            else if (pListTypeValue == "3") {
-	                setPresentValue("<%=RM.GetString("t791")%>");
+	                setPresentValue("<spring:message code='ezApproval.t791'/>");
 	                document.getElementById('APPROVAL2').parentElement.onclick();
 	                document.getElementById('APPROVAL2').onclick();
 	                
 	            }
 	            else if (pListTypeValue == "2") {
-	                setPresentValue("<%=RM.GetString("t838")%>");
+	                setPresentValue("<spring:message code='ezApproval.t838'/>");
 	                document.getElementById('APPROVAL3').parentElement.onclick();
 	                document.getElementById('APPROVAL3').onclick();
 	                
 	            }
 	            else if (pListTypeValue == "4") {
-	                setPresentValue("<%=RM.GetString("t796")%>");
+	                setPresentValue("<spring:message code='ezApproval.t796'/>");
 	                document.getElementById('APPROVAL4').parentElement.onclick();
 	                document.getElementById('APPROVAL4').onclick();
 	                
 	            }
 	            else if (pListTypeValue == "6") {
-	                setPresentValue("<%=RM.GetString("t839")%>");
+	                setPresentValue("<spring:message code='ezApproval.t839'/>");
 	            }
 	            else if (pListTypeValue == "9") {
-	                setPresentValue("<%=RM.GetString("t920")%>");
+	                setPresentValue("<spring:message code='ezApproval.t920'/>");
 	                document.getElementById('APPROVAL9').parentElement.onclick();
 	                document.getElementById('APPROVAL9').onclick();
 	                
@@ -128,7 +134,7 @@
 			}
 			function Tree_setconfig() {
 			    var xmlHTTP = createXMLHttpRequest();
-			    xmlHTTP.open("GET", "/myoffice/ezApproval/control_Cross/conttree_config.xml", false);
+			    xmlHTTP.open("GET", "/xml/ezApproval/conttree_config.xml", false);
 			    xmlHTTP.send();
 			
 			    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -142,10 +148,10 @@
 			            case "APPROVAL":
 			                break;
 			            case "MYCONT":
-			                cmdOK_onclick('', '<%=RM.GetString("t840")%>', '');
+			                cmdOK_onclick('', '<spring:message code='ezApproval.t840'/>', '');
 			                break;
 			            case "MYCONTWHO":
-			                cmdOK_onclick('', '<%=RM.GetString("t841")%>', "TBENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
+			                cmdOK_onclick('', '<spring:message code='ezApproval.t841'/>', "TBENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
 			                break;
 			            case "MYDRAFTCONT":
 			                cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:EXACT")
@@ -208,7 +214,7 @@
 			        } catch (e) { }
 			    }
 			}
-			var primaryStr = "<%=primaryStr%>";
+			var primaryStr = "${userInfo.primary}";
 	        function cmdOK_onclick2(ContainerID, ContainerName, ContName) {
 	            if (primaryStr == "1") {
 	                if (PresentOpen != "CONTAINER") {
@@ -254,20 +260,26 @@
 	        var xmlhttp_total = createXMLHttpRequest();
 	        function getAprTotalCount() {
 	            if (ViewLeftCount == "YES") {
-	                var strQuery = "<DATA><LISTTYPE>1</LISTTYPE></DATA>";
-	                xmlhttp_total = null;
-	                xmlhttp_total = createXMLHttpRequest();
-	                xmlhttp_total.open("POST", "/myoffice/ezApproval/aspx/getListCount.aspx?mode=LEFT", true);
-	                xmlhttp_total.onreadystatechange = getAprTotalCount_after;
-	                xmlhttp_total.send(strQuery);
+	            	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : true,
+						url : "/ezApproval/getListCount.do",
+						data : { 
+								mode : "LEFT",
+								listType : 1
+								},
+						success: function(text){
+							getAprTotalCount_after(text);
+						}        			
+					});	
 	            }
 	        }
-	        function getAprTotalCount_after() {
-	            if (xmlhttp_total == null || xmlhttp_total.readyState != 4) return;
+	        function getAprTotalCount_after(text) {
 	            try {
-	                if (xmlhttp_total.responseText == "") return;
+	                if (text == "") return;
 	                var ResultXML = "";
-	                ResultXML = loadXMLString(xmlhttp_total.responseText);
+	                ResultXML = loadXMLString(text);
 	
 	                var tempListTypeValue = window.parent.frames["right"].pListTypeValue;
 	
@@ -301,7 +313,7 @@
 	                }
 	                
 	                if (tempListTypeValue != "6") {
-	                    if ("<%=_UserInfo_Enforce%>" == "2") {
+	                    if ("${userInfoEnforce}" == "2") {
 	                        if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) > 0)
 	                            document.getElementById('count6').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")</b>";
 	                        else
@@ -319,31 +331,38 @@
 	                    document.getElementById('count7').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(6)) + ")</b>";
 	                else
 	                    document.getElementById('count7').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(6)) + ")";
-	            } catch (e) { }
+	            } catch (e) { alert("getAprTotalCount_after error");}
 	        }
 	        var xmlhttp_temp = createXMLHttpRequest();
 	        function getAprCountTemp() {
 	            if (ViewLeftCount == "YES") {
 	                if (presentValue < SubContCount) {
-	                    var strQuery = "<DATA><LISTTYPE>" + GetAttribute(document.getElementById("countsub" + presentValue), "type") + "</LISTTYPE><SUBQUERY>" + GetAttribute(document.getElementById("countsub" + presentValue),"subquery") + "</SUBQUERY></DATA>";
-	                    xmlhttp_temp = null;
-	                    xmlhttp_temp = createXMLHttpRequest();
-	                    xmlhttp_temp.open("POST", "/myoffice/ezApproval/aspx/getListCount.aspx", true);
-	                    xmlhttp_temp.onreadystatechange = getAprCount_temp;
-	                    xmlhttp_temp.send(strQuery);
+	                	$.ajax({
+							type : "POST",
+							dataType : "text",
+							async : true,
+							url : "/ezApproval/getListCount.do",
+							data : { 
+									mode : "LEFT",
+									listType : GetAttribute(document.getElementById("countsub" + presentValue), "type"),
+									subQuery : GetAttribute(document.getElementById("countsub" + presentValue),"subquery")
+									},
+							success: function(text){
+								getAprCount_temp(text);
+							}        			
+						});
 	                }
 	            }
 	        }
-	        function getAprCount_temp() {
-	            if (xmlhttp_temp == null || xmlhttp_temp.readyState != 4) return;
+	        function getAprCount_temp(text) {
 	            try {
-	                if (xmlhttp_temp.responseText == "") {
+	                if (text == "") {
 	                    presentValue++;
 	                    getAprCountTemp();
 	                }
 	                else {
 	                    var tempString = "";
-	                    ResultXML = loadXMLString(xmlhttp_temp.responseText);
+	                    ResultXML = loadXMLString(text);
 	                    var dataNodes = GetChildNodes(ResultXML);
 	                    var count = getNodeText(dataNodes[0]);
 	                    if (count > 0)
@@ -626,7 +645,7 @@
 	        var arr_userinfo = new Array();
 	        function ChangeSubtitle(obj) {
 	            var UseSelectTitle = GetAttribute(obj,"href").split("#")[1].split("|")
-	            if ("<%=userinfo.DeptID%>" != UseSelectTitle[0]) {
+	            if ("${userInfo.deptID}" != UseSelectTitle[0]) {
 	                arr_userinfo[4] = UseSelectTitle[0];
 	                arr_userinfo[5] = UseSelectTitle[1];
 	                arr_userinfo[3] = UseSelectTitle[2];
@@ -641,106 +660,121 @@
 	        }
 	    </script>
 	</head>
+	 <%
+	 	int SubContCount = (Integer)request.getAttribute("subContCount");
+	 	List<ApprContInfoVO> specialContTreeList = (List<ApprContInfoVO>)request.getAttribute("specialContTreeList");
+	 	List<ApprContInfoVO> useContInfoList = (List<ApprContInfoVO>)request.getAttribute("useContInfoList");
+	 	List<ApprDocInfoVO> codeContainerList = (List<ApprDocInfoVO>)request.getAttribute("codeContainerList");
+	 	int specialContTreeCount = (Integer)request.getAttribute("specialContTreeCount");
+	 %>
 	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
 	    <span style="display: none" id="presentcell"></span>
 	    <div id="left">
-	
-	        <div class="left_appr" title="<%=RM.GetString("t824")%>"></div>
-	        <% if (isSubTitle)
-	           { %>
-	        <select name="SubTitle_obj" id="SubTitle_obj" tabindex="1">
-	            <%=pSubTitleString %>
-	        </select>
-	        <%} %>
-	        <h2><span style="width: 100%; display: inline-block;" id="APPROVAL" onclick="Open_Func(this);setPresentValue('<%=RM.GetString("t837")%>');convMain('1', '');"><%=RM.GetString("t824")%></span></h2>
+	        <div class="left_appr" title="<spring:message code='ezApproval.t824'/>"></div>
+	        <c:if test="${isSubTitle}">
+		        <select name="SubTitle_obj" id="SubTitle_obj" tabindex="1">
+		            ${subTitleString}
+		        </select>
+	        </c:if>
+	        <h2><span style="width: 100%; display: inline-block;" id="APPROVAL" onclick="Open_Func(this);setPresentValue('<spring:message code='ezApproval.t837'/>');convMain('1', '');"><spring:message code='ezApproval.t824'/></span></h2>
 	        <ul id="iconul">
-	            <li><span style="width: 100%; display: inline-block;" id="APPROVAL1" onclick="setPresentValue('<%=RM.GetString("t837")%>');convMain('1', '')">
-	                <img src="../../images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><%=RM.GetString("t837")%><span id="count1"></span></span></li>
-	            <% for (i = 0; i < SCont.GetElementsByTagName("SC001").Count; i++)
-	               {%>
-	            <li><span style="margin-left: 15px; width: 90%; display: inline-block;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC001").Item(i).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');convMain('1', '<%=SCont.GetElementsByTagName("SC001").Item(i).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">-&nbsp;<%=SCont.GetElementsByTagName("SC001").Item(i).ChildNodes.Item(0).InnerText.Trim()%><span id="countsub<%=SubContCount++%>" type='1' subquery="<%=SCont.GetElementsByTagName("SC001").Item(i).ChildNodes.Item(1).InnerText.Trim()%>"></span></span></li>
-	            <% }%>
-	            <li><span style="width: 100%; display: inline-block;" id="APPROVAL2" onclick="setPresentValue('<%=RM.GetString("t791")%>');convMain('3', '')">
-	                <img src="../../images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><%=RM.GetString("t791")%><span id="count3"></span></span></li>
-	            <% for (i = 0; i < SCont.GetElementsByTagName("SC003").Count; i++)
-	               { %>
-	            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC003").Item(i).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');convMain('3', '<%=SCont.GetElementsByTagName("SC003").Item(i).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">-&nbsp;<%=SCont.GetElementsByTagName("SC003").Item(i).ChildNodes.Item(0).InnerText.Trim()%><span id="Span1" type='3' subquery="<%=SCont.GetElementsByTagName("SC003").Item(i).ChildNodes.Item(1).InnerText.Trim()%>"></span></span></li>
-	            <% }%>
-	            <li><span style="width: 100%; display: inline-block; cursor: pointer;" id="APPROVAL3" onclick="setPresentValue('<%=RM.GetString("t838")%>');convMain('2', '')">
-	                <img src="../../images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><%=RM.GetString("t838")%><span id="count2"></span></span></li>
-	            <% for (i = 0; i < SCont.GetElementsByTagName("SC002").Count; i++)
-	               { %>
-	            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC002").Item(i).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');convMain('2', '<%=SCont.GetElementsByTagName("SC002").Item(i).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">-&nbsp;<%=SCont.GetElementsByTagName("SC002").Item(i).ChildNodes.Item(0).InnerText.Trim()%><span id="Span2" type='2' subquery="<%=SCont.GetElementsByTagName("SC002").Item(i).ChildNodes.Item(1).InnerText.Trim()%>"></span></span></li>
-	            <%}%>
-	            <li><span style="width: 100%; display: inline-block;" id="APPROVAL4" onclick="setPresentValue('<%=RM.GetString("t796")%>');convMain('4', '')">
-	                <img src="../../images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><%=RM.GetString("t796")%><span id="count4"></span></span></li>
-	            <% for (i = 0; i < SCont.GetElementsByTagName("SC004").Count; i++)
-	               { %>
-	            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC004").Item(i).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');convMain('4', '<%=SCont.GetElementsByTagName("SC004").Item(i).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">-&nbsp;<%=SCont.GetElementsByTagName("SC004").Item(i).ChildNodes.Item(0).InnerText.Trim()%><span id="Span3" type='4' subquery="<%=SCont.GetElementsByTagName("SC004").Item(i).ChildNodes.Item(1).InnerText.Trim()%>"></span></span></li>
-	            <%}%>
-	            <%if (_UserInfo_Enforce == "2")
-	              {%>
-	            <li><span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<%=RM.GetString("t839")%>');convMain('6', '')">
-	                <img src="../../images/ImgIcon/icon_inspection.gif" width="16" height="16" class="icon"><%=RM.GetString("t839")%><span id="count6"></span></span></li>
-	            <% for (i = 0; i < SCont.GetElementsByTagName("SC005").Count; i++)
-	               {%>
-	            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC005").Item(i).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');convMain('6', '<%=SCont.GetElementsByTagName("SC005").Item(i).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">-&nbsp;<%=SCont.GetElementsByTagName("SC005").Item(i).ChildNodes.Item(0).InnerText.Trim()%><span id="Span4" type='6' subquery="<%=SCont.GetElementsByTagName("SC005").Item(i).ChildNodes.Item(1).InnerText.Trim()%>"></span></span></li>
-	            <%}%>
-	            <%}%>
-	            <li><span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=RM.GetString("t841")%>');Open_Func(this)">
-	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><%=RM.GetString("t841")%><span id="countWHO"></span></span></li>
-	            <li><span id="APPROVAL9" style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=RM.GetString("t920")%>');convMain('9', '')">
-	                <img src="../../images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><%=RM.GetString("t920")%><span id="count7"></span></span></li>
+	            <li>
+	            	<span style="width: 100%; display: inline-block;" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApproval.t837'/>');convMain('1', '')">
+	                <img src="../../images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t837'/><span id="count1"></span></span>
+	            </li>
+	            <% for (int k = 0; k < specialContTreeCount; k++) { %> 
+	            	<% if (specialContTreeList.get(k).getContType().equals("001")) { %>
+		            	<li><span style="margin-left: 15px; width: 90%; display: inline-block;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');convMain('1', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="countsub<%=SubContCount++%>" type='1' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } %>
+	            <li>
+	            	<span style="width: 100%; display: inline-block;" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApproval.t791'/>');convMain('3', '')">
+                	<img src="../../images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t791'/><span id="count3"></span></span>
+                </li>
+                <% for (int k = 0; k < specialContTreeCount; k++) { %>
+					<% if (specialContTreeList.get(k).getContType().equals("003")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');convMain('3', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span1" type='3' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } %>
+	            <li>
+	            	<span style="width: 100%; display: inline-block; cursor: pointer;" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApproval.t838'/>');convMain('2', '')">
+                	<img src="../../images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t838'/><span id="count2"></span></span>
+                </li>
+                <% for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("002")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');convMain('2', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span2" type='2' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } %>
+	            <li>
+	            	<span style="width: 100%; display: inline-block;" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApproval.t796'/>');convMain('4', '')">
+                	<img src="../../images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t796'/><span id="count4"></span></span>
+                </li>
+                <% for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("004")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');convMain('4', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span3" type='4' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } %>
+	            <c:if test="${userInfoEnforce == '2'}">
+	            	<li>
+	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
+	                	<img src="../../images/ImgIcon/icon_inspection.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t839'/><span id="count6"></span></span>
+	               	</li>
+	            <% for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("005")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');convMain('6', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span4" type='6' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } %>
+	            </c:if>
+	            
+	            <li>
+	            	<span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.t841'/>');Open_Func(this)">
+	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t841'/><span id="countWHO"></span></span>
+	            </li>
+	            <li>
+	            	<span id="APPROVAL9" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.t920'/>');convMain('9', '')">
+	                <img src="../../images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t920'/><span id="count7"></span></span>
+	            </li>
 	        </ul>
-	        <h2><span id="MYCONT" onclick=";Open_Func(this)" style="width: 100%; display: inline-block;"><%=RM.GetString("t618")%></span><ul></ul></h2>
-	        <h2><span id="MYDEPTCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><%=RM.GetString("t587")%></span></h2>
+	        <h2><span id="MYCONT" onclick=";Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t618'/></span><ul></ul></h2>
+	        <h2><span id="MYDEPTCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t587'/></span></h2>
 	        <ul>
-	            <% if (resultXML.GetElementsByTagName("VALUE").Count > 0)
-	               { %>
-	            <% for (i = 0; i < resultXML.GetElementsByTagName("VALUE").Count; i++)
-	               { %>
-	            <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=resultXML.GetElementsByTagName("VALUE").Item(i).InnerText.Trim()%>');cmdOK_onclick('\'<%=resultXML.GetElementsByTagName("DATA1").Item(i).InnerText%>\'', '<%=resultXML.GetElementsByTagName("VALUE").Item(i).InnerText%>', '')"><%=resultXML.GetElementsByTagName("VALUE").Item(i).InnerText.Trim()%></span></li>
-	            <% for (k = 0; k < SCont.GetElementsByTagName("SC" + resultXML.GetElementsByTagName("DATA2").Item(i).InnerText.Trim()).Count; k++)
-	               { %>
-	            <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=SCont.GetElementsByTagName("SC" + resultXML.GetElementsByTagName("DATA2").Item(i).InnerText.Trim()).Item(k).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>');cmdOK_onclick('<%=resultXML.GetElementsByTagName("DATA1").Item(i).InnerText%>', '<%=SCont.GetElementsByTagName("SC" + resultXML.GetElementsByTagName("DATA2").Item(i).InnerText.Trim()).Item(k).ChildNodes.Item(0).InnerText.Replace("'", "\\'").Trim()%>', '<%=SCont.GetElementsByTagName("SC" + resultXML.GetElementsByTagName("DATA2").Item(i).InnerText.Trim()).Item(k).ChildNodes.Item(1).InnerText.Replace("'", "\\'").Trim()%>')">&nbsp;-&nbsp;<%=SCont.GetElementsByTagName("SC" + resultXML.GetElementsByTagName("DATA2").Item(i).InnerText.Trim()).Item(k).ChildNodes.Item(0).InnerText.Trim()%></span></li>
-	            <% } %>
-	
-	            <% } %>
-	            <% }
-	               else
-	               { %>
-	            <li><span><%=RM.GetString("t843")%></span></li>
+	            <% if (useContInfoList.size() > 0) { %>
+		            <% for (int i = 0; i < useContInfoList.size(); i++) { %>
+		            	<li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=useContInfoList.get(i).getContainerTypeName()%>');cmdOK_onclick('\'<%=useContInfoList.get(i).getContainerID()%>\'', '<%=useContInfoList.get(i).getContainerTypeName()%>', '')"><%=useContInfoList.get(i).getContainerTypeName()%></span></li>
+		            	<% for (int k = 0; k < specialContTreeCount; k++) { %>
+		            		<% if (specialContTreeList.get(k).getContType().equals(useContInfoList.get(i).getContainerTypeID())) { %>
+					            <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName()%>');cmdOK_onclick('<%=useContInfoList.get(i).getContainerID()%>', '<%=specialContTreeList.get(k).getContName()%>', '<%=specialContTreeList.get(k).getSubQuery().trim()%>')">&nbsp;-&nbsp;<%=specialContTreeList.get(k).getContName()%></span></li>
+				            <% } %>
+			            <% } %>
+		            <% } %>
+	            <% } else { %>
+	            	<li><span><spring:message code='ezApproval.t843'/></span></li>
 	            <% } %>
 	        </ul>
-	        <h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><%=RM.GetString("t844")%></span></h2>
+	        <h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 	        <ul>
-	            <% if (objXML.DocumentElement.ChildNodes.Count > 0)
-	               { %>
-	            <% for (i = 0; i < objXML.DocumentElement.ChildNodes.Count; i++)
-	               { %>
-	            <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[1].InnerText%>(<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[0].InnerText.Trim()%>)');cmdOK_onclick2('<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[0].InnerText%>', '<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[1].InnerText%>', '<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[1].InnerText%>(<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[0].InnerText%>)') "><%=objXML.DocumentElement.ChildNodes[i].ChildNodes[1].InnerText.Trim()%>(<%=objXML.DocumentElement.ChildNodes[i].ChildNodes[0].InnerText%>)</span></li>
-	            <% } %>
-	            <% }
-	               else
-	               { %>
-	            <li><span><%=RM.GetString("t843")%></span></li>
+	            <% if (codeContainerList.size() > 0) { %>
+		            <% for (int i = 0; i < codeContainerList.size(); i++) { %>
+		            	<li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('<%=codeContainerList.get(i).getItemName()%>(<%=codeContainerList.get(i).getItemCode()%>)');cmdOK_onclick2('<%=codeContainerList.get(i).getItemCode()%>', '<%=codeContainerList.get(i).getItemName()%>', '<%=codeContainerList.get(i).getItemName()%>(<%=codeContainerList.get(i).getItemCode()%>)') "><%=codeContainerList.get(i).getItemName()%>(<%=codeContainerList.get(i).getItemCode()%>)</span></li>
+		            <% } %>
+		        <% } else { %>
+	            	<li><span><spring:message code='ezApproval.t843'/></span></li>
 	            <% } %>
 	        </ul>
 	
-	        <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><%=RM.GetString("t848")%></span></h2>
+	        <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
 	        <ul>
 	            <div class="tree" id="divUserContTree" style="margin-left: 4px; height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #e6e6e6;"></div>
-	            <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><%=RM.GetString("t316")%></span></h3>
+	            <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
 	        </ul>
-	        <h2><span id="DEPTCONT" onclick="Open_Func(this)"><%=RM.GetString("t849")%></span></h2>
+	        <h2><span id="DEPTCONT" onclick="Open_Func(this)"><spring:message code='ezApproval.t849'/></span></h2>
 	        <ul>
 	            <div class="tree" id="divDeptContTree" style="height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #e6e6e6;"></div>
-	            <%if (_HoldAdmin == "YES")
-	              {%>
-	            <h3><span id="MNGDEPTCONT" onclick="MngDeptOnclick()" style="width: 100%; display: inline-block;"><%=RM.GetString("t298")%></span></h3>
-	            <% } %>
+	            <c:if test="${holdAdmin == 'YES'}">
+		            <h3><span id="MNGDEPTCONT" onclick="MngDeptOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t298'/></span></h3>
+	            </c:if>
 	        </ul>
-	        <h3><span style="width: 100%; display: inline-block;" id="ApprovalConfig" onclick="Open_Func(this)"><%=RM.GetString("t1504")%></span></h3>
+	        <h3><span style="width: 100%; display: inline-block;" id="ApprovalConfig" onclick="Open_Func(this)"><spring:message code='ezApproval.t1504'/></span></h3>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

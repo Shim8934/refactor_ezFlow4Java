@@ -2,4 +2,352 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApproval">
+	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
+	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
+	
+	<select id="EzApprovalDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<isEqual property="ownFlag" compareValue="1">
+			<![CDATA[
+				SELECT 
+					A.ContainerID ,
+                	B.ContainerTypeName$lang$ ContainerTypeName,
+                	B.ContainerTypeID 
+           		FROM 
+           			tbContainer A
+               	JOIN 
+               		tbContainerType B    
+               	ON 
+               		A.tenant_id = B.tenant_id
+               	AND
+               		A.ContainerTypeID = B.ContainerTypeID
+                JOIN 
+                	tbContainerUseDep C
+                ON 
+                	A.tenant_id = C.tenant_id
+                AND    
+                	A.ContainerID = C.ContainerID
+          		WHERE
+          			A.tenant_id = #tenantID#
+          		AND  
+          			C.UseDepID = #myDeptID#
+                AND 
+                	A.ContainerOwnDepID = #useDeptID#
+           		ORDER BY 
+           			B.ContainerTypeID
+			]]>
+		</isEqual>
+		<isEqual property="ownFlag" compareValue="2">
+			<![CDATA[
+				SELECT 
+					A.ContainerID ,
+                   	B.ContainerTypeName$lang$ ContainerTypeName,
+                   	B.ContainerTypeID ,
+                   	A.ContainerOwnDepID 
+              	FROM 
+              		tbContainer A
+                JOIN 
+                	tbContainerType B    
+                ON 
+                	A.tenant_id = B.tenant_id
+                AND
+                	A.ContainerTypeID = B.ContainerTypeID
+                JOIN 
+                	tbContainerUseDep C    
+                ON 
+                	A.tenant_id = C.tenant_id
+                AND
+                	A.ContainerID = C.ContainerID
+             	WHERE  
+             		A.tenant_id = #tenantID#
+             	AND
+             		C.UseDepID = #myDeptID#
+                AND 
+                	A.ContainerOwnDepID <> #myDeptID#
+              	ORDER BY 
+              		A.ContainerOwnDepID,
+                    B.ContainerTypeID
+			]]>
+		</isEqual>
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContInfo1" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				A.ContainerID ,
+             	B.ContainerTypeName$lang$ ContainerTypeName ,
+             	B.ContainerTypeID 
+        	FROM 
+        		tbContainer A,
+             	tbContainerType B 
+       		WHERE  
+       			A.tenant_id = B.tenant_id
+       		AND
+       			A.ContainerTypeID = B.ContainerTypeID
+            AND
+            	A.tenant_id = #tenantID#
+            AND 
+            	A.ContainerOwnDepID = #myDeptID#
+        	ORDER BY 
+        		B.ContainerTypeID
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getCodeContainer" parameterClass="UserInfo" resultClass="ApprDocInfoVO">
+		SELECT 
+			B.ItemCode ,
+			<isEqual property="lang" compareValue="1">
+	            D.itemname itemname
+			</isEqual>
+			<isNotEqual property="lang" compareValue="1">
+	            D.itemname itemname2
+			</isNotEqual>
+        <![CDATA[
+        FROM 
+        	TBENDAPRDOCINFO A
+        JOIN 
+        	TBEXPENDAPRDOCINFO B    
+        ON 
+        	A.tenant_id = B.tenant_id
+        AND
+        	A.DocID = B.DocID
+        JOIN 
+        	tbContainer C
+        ON 
+        	A.tenant_id = C.tenant_id
+        AND
+        	A.ContainerID = C.ContainerID
+        JOIN 
+        	TBDOCNUM_ITEM D   
+        ON 
+        	B.tenant_id = D.tenant_id
+        AND
+        	B.ItemCode = D.itemcode
+        WHERE  
+        	A.tenant_id = #tenantId#
+        AND
+        	B.DelFlag IS NULL
+        AND 
+        	( B.ItemCode IS NOT NULL )
+        AND 
+        	( B.ItemCode <> '' )
+        AND 
+        	( A.ContainerID IN ( SELECT 
+									F.ContainerID 
+	                              FROM 
+	                              		tbContainer F
+	                              LEFT JOIN 
+	                              		tbContainerUseDep E   
+	                              ON 
+	                              		F.tenant_id = E.tenant_id
+	                              AND
+	                              		F.ContainerID = E.ContainerID
+	                              WHERE
+	                              		F.tenant_id = #tenantId#
+	                              AND  
+	                              		( F.ContainerOwnDepID = #deptID# )
+	                              OR 
+	                              		( E.UseDepID = #deptID# ) )
+                  )
+        ]]>  
+        <isEqual property="lang" compareValue="1">
+	        GROUP BY 
+	        	B.ItemCode,
+	        	D.itemname
+		</isEqual>
+		<isNotEqual property="lang" compareValue="1">
+	        GROUP BY 
+	        	B.ItemCode,
+	        	D.itemname2
+		</isNotEqual>
+        ORDER BY 
+        	B.ItemCode
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContTree" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				USERCONTID ,
+             	USERCONTNAME ,
+             	DESCRIPTION 
+        	FROM 
+        		TBUSERCONT
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			PARENTCONTID = #parentContID#
+            AND 
+            	OWNUSERID = #userID#
+        	ORDER BY 
+        		USERCONTNAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getDeptContTree" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTCONTID ,
+             	DEPTCONTNAME ,
+             	DESCRIPTION ,
+             	SN ,
+             	MANAGEUSERID 
+        	FROM 
+        		TBDEPTCONT 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			PARENTCONTID = #parentContID#
+            AND 
+            	OWNDEPTID = #deptID#
+        	ORDER BY 
+        		SN,
+                DEPTCONTNAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContTreeLeaf" parameterClass="ApprContInfoVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				count(*)
+        	FROM 
+        		TBUSERCONT 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			PARENTCONTID = #userID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getDeptContTreeLeaf" parameterClass="ApprContInfoVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		TBDEPTCONT 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			PARENTCONTID = #deptContID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getListContainerCont" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONTAINERID 
+			FROM 
+				TBCONTAINER A
+   			INNER JOIN 
+   				TBCONTAINERTODOCSTATE B  
+   			ON 
+   				A.TENANT_ID = B.TENANT_ID
+   			AND
+   				A.CONTAINERTYPEID = B.CONTAINERTYPEID
+   			WHERE 
+   				A.TENANT_ID = #tenantID#
+   			AND
+   				B.DOCUMENTSTATE IN (#staDSPumYui#, #staDSBalSin#)        
+   			AND 
+   				CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getListContainer" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONTAINERID 
+        	FROM 
+        		tbContainer A
+            JOIN 
+            	TBCONTAINERTODOCSTATE B    
+            ON 
+            	A.tenant_id = B.tenant_id
+            AND
+            	A.ContainerTypeID = B.ContainerTypeID
+       		WHERE
+       			A.TENANT_ID = #tenantID#
+       		AND  
+       			B.DocumentState = #staDSBansong#
+            AND 
+            	CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getSpecialContTree" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+             	CONTTYPE ,
+             	SN ,
+             	CONTNAME ,
+             	SUBQUERY 
+        	FROM 
+        		TBSPECIALCONTAINERINFO 
+       		WHERE
+       			TENANT_ID = #tenantId#
+       		AND 
+       			DEPTID = #deptID#
+        	ORDER BY 
+        		CONTTYPE,
+                SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getIsUse" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ISUSE 
+        	FROM 
+        		TBCODELIST 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			CODE1 = #code1#
+            AND 
+            	CODE2 = #code2#
+		]]>
+	</select>
+	
+	<insert id="EzApprovalDAO.createUserCont" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="maxContainerID" resultClass="String">
+			<![CDATA[
+				SELECT
+					NVL(MAX(usercontid), '0000000000') + 1
+				FROM 
+					TBUSERCONT
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBUSERCONT ( 
+				USERCONTID, 	  USERCONTNAME,   PARENTCONTID,   DESCRIPTION,   OWNUSERID, TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #userContName#, #parentContID#, #description#, #userID#, 	#tenantID# 
+	     	)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalDAO.createDeptCont" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="maxContainerID" resultClass="String">
+			<![CDATA[
+				SELECT
+					 NVL(MAX(deptcontid), '0000000000') + 1
+				FROM 
+					TBDEPTCONT
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBDEPTCONT ( 
+				DEPTCONTID, 	  DEPTCONTNAME,   PARENTCONTID,   SN,   DESCRIPTION,   OWNDEPTID, MANAGEUSERID,   TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #deptContName#, #parentContID#, #sn#, #description#, #deptID#,  #manageUserID#, #tenantID# 
+	     	)
+		]]>
+	</insert>
 </sqlMap>
