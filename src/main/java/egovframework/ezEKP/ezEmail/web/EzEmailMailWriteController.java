@@ -1258,6 +1258,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
+		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
@@ -1268,15 +1269,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
-//		System.out.println("tempFolderName=" + tempFolderName);
-//		System.out.println("isBigYN=" + isBigYN);
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
-		
 		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
-//		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
+		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
 		String useExtension = config.getProperty("config.USE_FileExtension");
 		
@@ -1288,6 +1285,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] newFileName = new String[fileCnt];
 		
 		int totalFileSize = 0;
+		
+		if (tempFolderName.equals("")) {
+			logger.debug("tempFolderName is EMPTY. Return NODATA.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "NODATA";
+		}
+		if (fileCnt == 0) {
+			logger.debug("fileCnt is 0. Return NOFILE.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "NOFILE";
+		}
 		
 		for (int i=0; i<fileCnt; i++) {
 			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(0).getTextContent();
@@ -1312,18 +1320,94 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		//max size 넘었는지 체크
+		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
 		if (totalFileSize > bigMaxSize) {
-			//TODO: 첨부 불가. 리턴.
+			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "OVERFLOW";
 		}
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROOT><NODES>");
 		
-		if (totalFileSize > changeSize) { //대용량첨부
-			//TODO
+		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+			// 현재 날짜의 폴더가 없으면 생성한다.
+			String folderDate = EgovDateUtil.getToday("");
+			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+            File file = new File(bigAttachFolderPath);
+            
+            if (!file.exists()) {
+            	file.mkdirs();
+            }
+            
+            for (int i=0; i<fileCnt; i++) {
+            	if (filePath[i].equals("NO FILE")) {
+					continue;
+				}
+            	
+            	FileInputStream fin = null;
+				FileOutputStream fout = null;
+				
+                try {
+                	// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+                	file = new File(filePath[i]);
+					
+					if (file.exists()) {
+						fin = new FileInputStream(file);
+						fout = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						
+						int data = 0;
+						while ((data = fin.read()) != -1) {
+							fout.write(data);
+						}
+						
+						fout.close(); fout = null;
+						fin.close(); fin = null;
+						
+						// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
+	                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+	                	
+	                	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+	                	fout = new FileOutputStream(file);
+	                	fout.write(base64OrgFileName.getBytes("ISO-8859-1"));
+	                	
+	                	//첨부파일 정보를 XML data로 만든다.
+	                    String resultUpload = "";
+	    				if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+	                        resultUpload = "denied";
+	                    } else {
+	                        resultUpload = "true";
+	                    }
+	    				
+	    				sb.append("<NODE>");
+	    				sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+	    				sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+	    				sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+	    				sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+	    				sb.append("<FILELOCATION><![CDATA[" + folderDate + "|!|" + newFileName[i] + "]]></FILELOCATION>");
+	    				sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
+	    				sb.append("</NODE>");
+					}
+					
+                } catch(Exception e) {
+                	e.printStackTrace();
+                } finally {
+                	if (fout != null) {
+                		try { fout.close(); } catch(Exception e) {}
+                	}
+                	if (fin != null) {
+                		try { fin.close(); } catch(Exception e) {}
+                	}
+                }
+                
+            }
+            
+		} else { // 일반첨부의 경우
+			File file = new File(pTempFileUploadPath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
 			
-		} else { //일반첨부
 			for (int i=0; i<fileCnt; i++) {
 				if (filePath[i].equals("NO FILE")) {
 					continue;
@@ -1333,33 +1417,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				FileOutputStream fout = null;
 				
 				try {
-					File f = new File(filePath[i]);
+					file = new File(filePath[i]);
 					
-					if (f.exists()) {
-						fin = new FileInputStream(f);
-						fout = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName);
+					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
+					if (file.exists()) {
+						fin = new FileInputStream(file);
+						fout = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
 						
 						int data = 0;
 						while ((data = fin.read()) != -1) {
 							fout.write(data);
 						}
+						
+						//첨부파일 정보를 XML data로 만든다.
+						String resultUpload = "";
+						if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+		                    resultUpload = "denied";
+		                } else {
+		                    resultUpload = "true";
+		                }
+						
+						sb.append("<NODE>");
+						sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+						sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+						sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+						sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+						sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
+						sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+						sb.append("</NODE>");
 					}
-					
-					String resultUpload = "";
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
-	                    resultUpload = "denied";
-	                } else {
-	                    resultUpload = "true";
-	                }
-					
-					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
-					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
-					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
-					sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
-					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
-					sb.append("</NODE>");
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1377,10 +1463,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		sb.append("</NODES></ROOT>");
 		
-		//TODO: templist에 txt파일 만들기
+		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
+        File f = new File(pTempListPath);
+        if (!f.exists()) {
+			f.mkdirs();
+        }
+        
+        f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+		OutputStreamWriter outWrite = null;
+		
+    	try {
+    		outWrite = new OutputStreamWriter(new FileOutputStream(f));
+    		outWrite.write(sb.toString());
+    		String crlf = System.getProperty("line.separator");
+    		outWrite.append(crlf+crlf);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	} finally {
+    		if (outWrite != null) {
+    			try { outWrite.close(); } catch (Exception e) {}
+    		}
+    	}
 		
 		logger.debug("mailInterUploadCopy ended.");
-		
 		return sb.toString();
 	}
 
