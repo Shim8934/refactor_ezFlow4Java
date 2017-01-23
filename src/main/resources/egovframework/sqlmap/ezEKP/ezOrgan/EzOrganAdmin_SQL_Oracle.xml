@@ -1519,21 +1519,21 @@
      					cn
      				FROM
      					ezHrmaster.TBLUSERMASTER
-     				AND
+     				WHERE
      					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
      					ezHrmaster.TBLDEPTMASTER
-     				AND
+     				WHERE
      					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
      					ezHrmaster.TBLUSERMASTER_RETIRE
-     				AND
+     				WHERE
      					tenant_id = #tenantID#	
      			 )
       		WHERE  

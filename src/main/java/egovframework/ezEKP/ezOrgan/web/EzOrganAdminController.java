@@ -904,7 +904,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 하고 Exception을 발생시킨다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
-							
+							e.printStackTrace();
 							result = "EMAIL_ERROR";
 						}
 					} else {
