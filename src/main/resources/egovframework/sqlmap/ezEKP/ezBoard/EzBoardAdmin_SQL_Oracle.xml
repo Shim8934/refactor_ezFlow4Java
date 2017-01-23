@@ -358,7 +358,7 @@
 				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
 			)
          	( SELECT 
-         		v_PUSERID ,
+         		#v_PUSERID# USERID ,
               	BOARDID ,
                 BOARDNAME ,
                 BOARDNAME2 ,
