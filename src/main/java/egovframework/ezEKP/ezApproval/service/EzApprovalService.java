@@ -20,6 +20,6 @@ public interface EzApprovalService {
 
 	public List<ApprContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
-	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String susinAdmin, String subQuery) throws Exception;
+	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String userFlag, String subQuery) throws Exception;
 
 }

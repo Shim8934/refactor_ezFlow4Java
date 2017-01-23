@@ -73,4 +73,17 @@ public class EzApprovalDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalDAO.getIsUse", map);
 	}
 
+	public int getAprDocCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalDAO.getAprDocCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception {
+		return (List<String>) select("EzApprovalDAO.getLeftDocCount", map);
+	}
+
+	public void getWebPartList(Map<String, Object> map) throws Exception {
+		list("EzApprovalDAO.getWebPartList", map);
+	}
+
 }
