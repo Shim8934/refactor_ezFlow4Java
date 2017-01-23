@@ -100,9 +100,11 @@
             WHERE ( SELECT
             			 	COUNT(*)  
                          FROM
-                         	EZHRMASTER.TBLPROXYINFO 
+                         	EZHRMASTER.TBLPROXYINFO
                          WHERE
                          	PROXYUSERID = #v_CN#
+                         AND
+                         	TENANT_ID = #v_TENANT_ID#	
                          AND
                          	StartDate < #nowDate#
                          AND
@@ -110,18 +112,32 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getPropertyValue_S3" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			REPLACE(#v_FIELD#, 'EXTENSIONATTRIBUTE1', 'REPLACE(EXTENSIONATTRIBUTE1, 'a=0;','a=1;')  as EXTENSIONATTRIBUTE1')
-			SELECT
-				$v_QUERY$
-			FROM
-				EZHRMASTER.TBLUSERMASTER
-			WHERE
-				CN = #v_CN#
-			AND
-				TENANT_ID = #v_TENANT_ID#	
-		]]>
+	<select id="EzOrganDAO.getPropertyValue_S3" parameterClass="Map" resultClass="String" remapResults="true">
+		<isEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+				SELECT
+        			REPLACE(EXTENSIONATTRIBUTE1, 'a=0;','a=1;')  as EXTENSIONATTRIBUTE1
+				FROM
+					EZHRMASTER.TBLUSERMASTER
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+				SELECT
+					$v_FIELD$
+				FROM
+					EZHRMASTER.TBLUSERMASTER
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#	
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String" remapResults="true">

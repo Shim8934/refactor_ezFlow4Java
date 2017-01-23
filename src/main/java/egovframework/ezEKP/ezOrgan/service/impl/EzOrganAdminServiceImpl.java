@@ -444,7 +444,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTHTYPE", vo.getBirthType());
 		map.put("v_PASS", vo.getPassword());
 		
-		SimpleDateFormat date = new SimpleDateFormat();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
