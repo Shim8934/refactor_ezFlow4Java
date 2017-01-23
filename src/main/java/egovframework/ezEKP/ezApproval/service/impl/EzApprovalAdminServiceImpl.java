@@ -2779,8 +2779,8 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 	private void mhtToHtmlReform(String saveReFileName, String formID, String companyID, String realPath, int tenantID, Locale locale) throws Exception {
 		// TODO 리폼은 나중에
 		logger.debug("mhtToHtmlReform started");
-
-		String mhtImagePath = realPath + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + config.getProperty("upload_common.MHTIMAGE");
+		
+		String mhtImagePath = realPath + commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID);
 		File mhtFile = new File(mhtImagePath);
 		
 		if (!mhtFile.exists()) {
