@@ -52,7 +52,7 @@
 					    parent.frames["bottom"].location.href = "/admin/ezCommunity/communityMain.do";
 						break;
 					case "menu08":		
-					    parent.frames["bottom"].location.href = "index_schedule.aspx";
+					    parent.frames["bottom"].location.href = "/admin/ezSchedule/scheduleMain.do";
 						break;
 					case "menu09":						
 					    parent.frames["bottom"].location.href = "/ezStatistics/statisticsMain.do";				

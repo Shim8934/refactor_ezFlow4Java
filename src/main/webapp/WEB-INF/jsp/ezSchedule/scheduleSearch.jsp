@@ -62,11 +62,8 @@
 		            SDate = new Date(startdate);
 		            EDate = new Date(enddate);
 		        } else {
-		            SDate = utcDate(offSetMin);		            
-		            EDate = utcDate(offSetMin);
-		            /* var today = new Date();
-		  			today.setTime(today.getTime()+(1000*60*-540));
-		  			var utcTime = new Date(today).toISOString(); */
+		            SDate = utcDate(offSetMin);
+		            EDate = utcDate(offSetMin);		            
 		        }
 		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
