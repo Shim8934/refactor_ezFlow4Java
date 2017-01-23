@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.SimpleFormatter;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +62,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 스케쥴
- * @author 오픈솔루션팀 지정석
+ * @author 오픈솔루션팀 장진혁
  * @Modification Information
  *
  *    수정일        수정자         수정내용
@@ -71,6 +70,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *    2016.05.19	지정석	신규작성
  *    2016.08.10	김경식	scheduleMain 추가
  *    2016.08.30	김경식	scheduleWrite 추가
+ *    2017.01.10	장진혁 개발
  *
  * @see
  */
@@ -197,7 +197,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
-System.out.println("=========================================================start");		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
@@ -261,7 +260,7 @@ System.out.println("=========================================================sta
 			sb.append(commonUtil.getQueryResult(data));
 		}
 		sb.append("</DATA>");
-System.out.println(sb.toString());		
+		
 		return sb.toString();
 	}
 
@@ -855,6 +854,28 @@ System.out.println(sb.toString());
 		model.addAttribute("deptID", loginVO.getDeptID());
 		
 		return "/ezSchedule/scheduleSelectEntity";
+	}
+	
+	/**
+	 * 공통 > 공유자 지정 팝업
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleSelectSecretary.do")
+	public String scheduleSelectSecretary(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);		
+		model.addAttribute("deptID", loginVO.getDeptID());
+		
+		return "/ezSchedule/scheduleSelectSecretary";
+	}
+	
+	/**
+	 * 공통 > 공유부서 지정 팝업
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleSelectShareDept.do")
+	public String scheduleSelectShareDept(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);		
+		model.addAttribute("deptID", loginVO.getDeptID());
+		
+		return "/ezSchedule/scheduleSelectShareDept";
 	}
 	
 	/**

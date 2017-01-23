@@ -216,7 +216,7 @@
 		        }
 		        var result = "";
 		        var xmlDom = createXmlDom();
-		        
+alert(1);		        
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
