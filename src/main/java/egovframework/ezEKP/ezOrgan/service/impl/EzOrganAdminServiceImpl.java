@@ -444,7 +444,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTHTYPE", vo.getBirthType());
 		map.put("v_PASS", vo.getPassword());
 		
-		SimpleDateFormat date = new SimpleDateFormat();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
@@ -581,22 +581,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DELFLAG", delFlag);
                     
             		try {
-            			 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            				 	ezOrganAdminDao.setAddJob(map);
-            		        } else {
-            		        	
-            		        	if (delFlag !=null && delFlag.equals("1")) {
-            		        		ezOrganAdminDao.setAddJob(map);
-            		        	}
-            		        	
-            		        	if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
-            		        		ezOrganAdminDao.setAddJob_I(map);
-            		        	}
-            		        }       
-            		    
+            			if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            				ezOrganAdminDao.setAddJob(map);
+            			} else {
+
+            				if (delFlag !=null && delFlag.equals("1")) {
+            					ezOrganAdminDao.setAddJob(map);
+            				}
+
+            				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
+            					ezOrganAdminDao.setAddJob_I(map);
+            				}
+            			}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
+                } else {
+                	throw new Exception("Adding the user '" + mailAddr + "' to the specified group email '" + groupAddr + "' failed.");
                 }
             }
         }

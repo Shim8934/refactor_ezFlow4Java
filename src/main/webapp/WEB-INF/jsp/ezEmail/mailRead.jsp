@@ -48,6 +48,7 @@
 		    var pisDelete = "${isDelete}";
 		    var pContentClass = "${pContentClass}";
 		    var pNoneActiveX = "${NoneActiveX}";
+		    var jMochaStandAlone = "${jMochaStandAlone}";
 		    window.onresize = window_onresize;
 			function window_onload()
 			{
@@ -87,6 +88,9 @@
 		            document.getElementById("HolderElse").style.display = "";
 		        }
 		        
+		        if (jMochaStandAlone.toUpperCase() == "YES") {
+		        	document.getElementById("BoardItem").style.display = "none";
+		        }
 		        
 		        try{
 		            if(ReadCountCheck=="N")
@@ -369,7 +373,7 @@
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li><span id="btnDelete" onClick="delete_mail()"><spring:message code="ezEmail.t95" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <li><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+		                    <li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          

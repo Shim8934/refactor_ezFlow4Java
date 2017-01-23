@@ -497,7 +497,9 @@
                              		 FROM 
                              		 	EZPORTAL.TBL_TOPMENU_ITEMS 
                               		 WHERE
-                              		 	UID_ = A.UID_ ) )
+                              		 	UID_ = A.UID_
+                              		 AND
+                              		 	TENANT_ID = #tenantID#	 ) )
 			AND
 				A.UID_ = B.UID_
 			AND
@@ -660,7 +662,9 @@
             AND
             	B.GubunFlag = '$v_pGUBUNFLAG$'
             AND
-            	A.TENANT_ID = $tenantID$	
+            	A.TENANT_ID = $tenantID$
+            AND
+            	B.TENANT_ID = $tenantID$		
 		]]>
 	</select>
 	

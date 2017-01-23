@@ -100,9 +100,11 @@
             WHERE ( SELECT
             			 	COUNT(*)  
                          FROM
-                         	EZHRMASTER.TBLPROXYINFO 
+                         	EZHRMASTER.TBLPROXYINFO
                          WHERE
                          	PROXYUSERID = #v_CN#
+                         AND
+                         	TENANT_ID = #v_TENANT_ID#	
                          AND
                          	StartDate < #nowDate#
                          AND
@@ -110,21 +112,35 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getPropertyValue_S3" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			REPLACE(#v_FIELD#, 'EXTENSIONATTRIBUTE1', 'REPLACE(EXTENSIONATTRIBUTE1, 'a=0;','a=1;')  as EXTENSIONATTRIBUTE1')
-			SELECT
-				$v_QUERY$
-			FROM
-				EZHRMASTER.TBLUSERMASTER
-			WHERE
-				CN = #v_CN#
-			AND
-				TENANT_ID = #v_TENANT_ID#	
-		]]>
+	<select id="EzOrganDAO.getPropertyValue_S3" parameterClass="Map" resultClass="String" remapResults="true">
+		<isEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+				SELECT
+        			REPLACE(EXTENSIONATTRIBUTE1, 'a=0;','a=1;')  as EXTENSIONATTRIBUTE1
+				FROM
+					EZHRMASTER.TBLUSERMASTER
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_FIELD" compareValue="EXTENSIONATTRIBUTE1">
+			<![CDATA[
+				SELECT
+					$v_FIELD$
+				FROM
+					EZHRMASTER.TBLUSERMASTER
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#	
+			]]>
+		</isNotEqual>
 	</select>
 	
-	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String">
+	<select id="EzOrganDAO.getPropertyValue_S4" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
 				$v_FIELD$
@@ -154,11 +170,11 @@
 		{CALL EZHRMASTER.EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
-	 <procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
+	 <!-- <procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
 		{CALL EZHRMASTER.EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> 
+	</procedure> --> 
 	
-	<!-- <select id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
+	 <select id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
 		<![CDATA[
 			SELECT
 				A.* 
@@ -205,13 +221,13 @@
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15
 		]]>
-	</select> -->
+	</select> 
 	
-	 <procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
+	 <!-- <procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
 		{CALL EZHRMASTER.EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> 
+	</procedure> --> 
 	
-<!-- 	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
+ 	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
 		<![CDATA[
 			SELECT
 				A.CN ,
@@ -241,13 +257,13 @@
         	ORDER BY
         		A.EXTENSIONATTRIBUTE15
 		]]>
-	</select> -->
+	</select> 
 	
-	 <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+	 <!-- <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> 
+	</procedure> --> 
 	
-	<!-- <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
 				SELECT
@@ -401,7 +417,7 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-	</select> -->
+	</select> 
 	
 	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
