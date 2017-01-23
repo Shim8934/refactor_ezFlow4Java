@@ -3,14 +3,14 @@
 
 <sqlMap namespace="ezOrgan">
 
-	<typeAlias alias="OrganDeptVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias alias="OrganDeptVO"							type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
-		<result property="cn" 									column="cn" 							columnIndex="1"/>
-		<result property="displayName" 							column="displayName" 					columnIndex="2"/>
-		<result property="extensionAttribute15" 				column="extensionAttribute15"			columnIndex="3"/>
-		<result property="type" 								column="type" 							columnIndex="4"/>		
+		<result property="cn" 									column="cn" 							  columnIndex="1"/>
+		<result property="displayName" 					column="displayName" 			  columnIndex="2"/>
+		<result property="extensionAttribute15" 			column="extensionAttribute15"	  columnIndex="3"/>
+		<result property="type" 								column="type" 						  columnIndex="4"/>		
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
