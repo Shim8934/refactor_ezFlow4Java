@@ -886,16 +886,16 @@
           			<div style="vertical-align:top;height:390px;overflow:auto;width:425px;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
-                  				<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
+                  				<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>
           				<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="Search_txtlist_table" class="mainlist" > 
               				<tr>
-                  				<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
+                  				<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>
