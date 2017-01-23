@@ -401,7 +401,7 @@
     	            var rgParams = new Array();
         	        rgParams["addrBook"] = xmlDOM;
             	    rgParams["deptid"] = "";
-                	var feature = GetShowModalPosition(609, 352);
+                	var feature = GetShowModalPosition(600, 320);
                 	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
                 	if (rgParams["deptid"] != "") {
 	                    bSearch = true;

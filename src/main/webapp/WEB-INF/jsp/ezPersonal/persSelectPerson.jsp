@@ -255,14 +255,14 @@
 		            
 		            rgParams["addrBook"] = xmlDom;
 		            rgParams["deptid"] = "";
-		            var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-		            feature = feature + GetShowModalPosition(540, 460);
+		            var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+		            feature = feature + GetShowModalPosition(600, 320);
 		
 		
 		            if (CrossYN()) {
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(540, 460));
+		                var OpenWin = window.open("/ezPersonal/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {

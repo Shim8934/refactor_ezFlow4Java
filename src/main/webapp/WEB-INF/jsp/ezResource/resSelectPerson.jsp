@@ -267,8 +267,8 @@
 		            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
 		                DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
 		            } else {
-		                var feature =  GetShowModalPosition(609, 352);
-		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken;"+feature);
+		                var feature =  GetShowModalPosition(600, 320);
+		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken;"+feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();

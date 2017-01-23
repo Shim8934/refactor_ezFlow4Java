@@ -774,8 +774,8 @@
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }else{
-		                var feature = "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken";
-		                feature = feature + GetShowModalPosition(600, 340);
+		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(600, 320);
 		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
