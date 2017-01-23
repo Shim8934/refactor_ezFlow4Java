@@ -382,6 +382,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", parentCn);
 		map.put("v_LDAPPATH", ldapPath);
 		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
+		
 		ezOrganAdminDao.insertDBData_company(map);
 	}
 
@@ -403,6 +408,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());		
 		map.put("v_LDAPPATH", "");
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
 		
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			ezOrganAdminDao.insertDBData_dept(map);
