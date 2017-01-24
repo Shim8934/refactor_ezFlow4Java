@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezCommon.dao;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -425,6 +423,11 @@ public class EzCommonDAO extends EgovAbstractDAO{
         } else {
             return getTenantListForLocal();
         }               
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
+		return (Map<String, Object>) map("EzCommonDAO.getTenantConfigs", tenantID, "PROPERTY_NAME", "PROPERTY_VALUE");
 	}
 	
 }

@@ -88,6 +88,18 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.getTenantConfigs" parameterClass="Integer" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				property_name,
+				property_value
+			FROM
+				EZHRMASTER.TBLTENANT_CONFIG
+			WHERE
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMON.TBLUSERLOCALINFO (

@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.service.EzApprovalService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -440,7 +441,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("listType", listType);
-			map.put("strLang", commonUtil.getMultiData(userInfo.getLang()));
+			map.put("strLang", strMultiData);
 			map.put("listCount", listCount);
 			map.put("userDeptID", userInfo.getDeptID());
 			map.put("userID", userInfo.getId());
@@ -456,8 +457,17 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 			map.put("staASBaeBu", apprCode.getProperty("appr.staASBaeBu"));
 			map.put("subQuery", subQuery);
 			
-			ezApprovalDAO.getWebPartList(map);
+			List<ApprDocViewVO> apprDocViewVOs = ezApprovalDAO.getWebPartList(map);
 			
+			StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < apprDocViewVOs.size(); i++) {
+				sb.append(commonUtil.getQueryResult(apprDocViewVOs.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			resultXML = sb.toString();
 		}
 		
 		logger.debug("getWebPartList ended");

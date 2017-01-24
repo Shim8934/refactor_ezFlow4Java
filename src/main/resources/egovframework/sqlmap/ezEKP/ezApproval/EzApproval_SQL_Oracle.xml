@@ -4,6 +4,7 @@
 <sqlMap namespace="ezApproval">
 	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
 	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
+	<typeAlias  alias="ApprDocViewVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocViewVO"/>
 	
 	<select id="EzApprovalDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
 		<isEqual property="ownFlag" compareValue="1">
@@ -479,7 +480,7 @@
 		</isNotEmpty>
 	</select>
 	
-	<select id="EzApprovalDAO.getLeftDocCount" parameterClass="Map" resultClass="Integer">
+	<select id="EzApprovalDAO.getLeftDocCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				COUNT(DOCID) AS COUNT 
@@ -549,13 +550,13 @@
    			AND
    				A.COMPANYID = #companyID#
    			AND 
-   				A.PROCESSYN <> ''Y'' 
+   				A.PROCESSYN <> 'Y' 
    			AND 
    				(((A.PROCESSORID = #userID#)     
    					AND 
    				(A.APRSTATE = #staASJiJung# 
 		   			OR 
-		   		A.APRSTATE = #staASWheSong))
+		   		A.APRSTATE = #staASWheSong#))
 		]]>
 		<isEqual property="userFlag" compareValue="admin" prepend="OR">
 			<![CDATA[
@@ -668,7 +669,7 @@
 		]]>
 	</select>
   
-    <select id="EzApprovalDAO.getWebPartList" parameterClass="Map" resultClass="">
+    <select id="EzApprovalDAO.getWebPartList" parameterClass="Map" resultClass="ApprDocViewVO">
           <isEqual property="listType" compareValue="1">
               <![CDATA[
                 SELECT 
