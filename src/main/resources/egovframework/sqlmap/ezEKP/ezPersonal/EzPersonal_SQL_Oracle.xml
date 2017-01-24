@@ -572,6 +572,8 @@
             	EZHRMASTER.TBLUSERMASTER B
             ON
             	A.CN = B.CN
+            AND
+                A.TENANT_ID = B.TENANT_ID  
        		WHERE
        			TERM = #v_PTERM#
        		AND
