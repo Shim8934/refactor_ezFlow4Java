@@ -4323,10 +4323,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			if (itemVO != null) {
 				sb.append("<NODE>");
 				sb.append("<ItemID>" + itemVO.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + itemVO.getWriterID() + "</WriterID>");
+				sb.append("<WriterID>" + ( itemVO.getWriterID() == null ? "" : itemVO.getWriterID() ) + "</WriterID>");
 				sb.append("<WriterName>" + itemVO.getWriterName() + "</WriterName>");
-				sb.append("<WriterDeptName>" + itemVO.getWriterDeptName() + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + itemVO.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriterDeptName>" + ( itemVO.getWriterDeptName() == null ? "" : itemVO.getWriterDeptName() ) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + ( itemVO.getWriterCompanyName() == null ? "" : itemVO.getWriterCompanyName() ) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + itemVO.getWriteDate() + "</WriteDate>");
 				sb.append("<ParentWriteDate>" + itemVO.getParentWriteDate() + "</ParentWriteDate>");
 				sb.append("<Importance>" + itemVO.getImportance() + "</Importance>");
@@ -4341,7 +4341,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<copiedItem>" + itemVO.getCopiedItem() + "</copiedItem>");
 				sb.append("<ExtensionAttribute1>" + itemVO.getExtensionAttribute1() + "</ExtensionAttribute1>");
 				sb.append("<ExtensionAttribute2>" + itemVO.getExtensionAttribute2() + "</ExtensionAttribute2>");
-				sb.append("<ExtensionAttribute3>" + itemVO.getExtensionAttribute3() + "</ExtensionAttribute3>");
+				sb.append("<ExtensionAttribute3>" + ( itemVO.getExtensionAttribute3() == null ? "" : itemVO.getExtensionAttribute3() ) + "</ExtensionAttribute3>");
 				sb.append("<ExtensionAttribute4>" + itemVO.getExtensionAttribute4() + "</ExtensionAttribute4>");
 				sb.append("<ExtensionAttribute5>" + itemVO.getExtensionAttribute5() + "</ExtensionAttribute5>");
 				sb.append("</NODE>");

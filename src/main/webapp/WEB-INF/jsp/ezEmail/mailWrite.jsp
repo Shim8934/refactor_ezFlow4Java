@@ -101,6 +101,7 @@
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
 	    var pDocID = "${docID}";
+	    var uploadCommonPath = "${uploadCommonPath}";
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -160,10 +161,6 @@
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
 	        }
 	        SelMailSign.value = "${mailSignSel}";
-	        
-	        if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
-	        	document.getElementById("HolderDocSend").style.display = "";
-	        }
 	        
 			Simple_Choice();		
 			var pSaveTime = "${pAutoSaveTime}";
@@ -984,13 +981,14 @@
 	                            <%-- } --%>
 	                        </td>
 	                    </tr>
-                        <tr id="HolderDocSend" style="display:none">
+                		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리
+                		<tr id="HolderDocSend" style="display:none">
                             <td style="height:150px;">
                                 <div id="docContentBorder" style="border: #B6B6B6 1px solid; background-color: white;margin-top: 5px;overflow:auto;text-align:center;">
                                     <div id="docContent" style="height: 100%; margin:auto;width:620px;border:none;text-align:center;" ></div>
                                 </div>
                             </td>
-                        </tr>
+                        </tr> -->
 	                </table>
 	            </td>
 	        </tr>

@@ -174,12 +174,15 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
-		
+		        
 		        if (xhr.responseText == "OVERFLOW") {
 		            alert(strLang167);
 		        }
 		        else if (xhr.responseText == "NODATA") {
 		            alert(strLang223);
+		        }
+				else if (xhr2.responseText == "NOFILE") {
+		        	alert(2);
 		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr.responseText);
@@ -198,9 +201,10 @@
 		            AttatchReturnValue = null;
 		            window.parent.returnvalue(xhr.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
-		            isfileup = false;
 		            FileUpdataAfterComplete();
 		        }
+		        
+		        isfileup = false;
 		    }
 			
 		    //TODO: 맞게 수정하기
@@ -212,8 +216,14 @@
 		        if (xhr2.responseText == "OVERFLOW") {
 		            alert(strLang167);
 		        }
+				else if (xhr2.responseText == "OVERSIZE") {
+		        	
+		        }
 		        else if (xhr2.responseText == "NODATA") {
 		            alert(strLang223);
+		        }
+		        else if (xhr2.responseText == "NOFILE") {
+		        	
 		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr2.responseText);
@@ -232,9 +242,10 @@
 		            AttatchReturnValue = null;
 		            window.parent.returnvalue(xhr2.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr2.responseText);
-		            isfileup = false;
 		            FileUpdataAfterComplete();
 		        }
+		        
+		        isfileup = false;
 		    }
 		
 		    function FileUpdataAfterComplete() {
@@ -265,10 +276,12 @@
 		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
 		    }
 		    function uploadFailed(evt) {
+		        isfileup = false;
 		        alert("There was an error attempting to upload the file.");
 		    }
 		
 		    function uploadCanceled(evt) {
+		        isfileup = false;
 		        alert("The upload has been canceled by the user or the browser dropped the connection.");
 		    }
 		
@@ -337,6 +350,8 @@
 		    }
 		
 		    function fileupload() {
+		    	isfileup = true;
+		    	
 		        var fd = new FormData();
 		
 		        for (var i = 0; i < filelist.length; i++) {
@@ -352,7 +367,6 @@
 		        fd.append("txtName", window.parent.filedate);
 		        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
 		
-		        isfileup = true;
 		        xhr.upload.addEventListener("progress", uploadProgress, false);
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
@@ -366,13 +380,13 @@
 		    function fileupload2(fileXml) {
 		    	isfileup = true;
 				
-		        if (!filesizecheck(fileXml))
+		        if (!filesizecheck(fileXml)) {
 		            return;
+		        }
 		        
 		        var objNode;
 		        
-		        //TODO: 필요없는거 지우기
-		        // 10메가 넘을 경우 자동으로 대용량으로 넘어가도록.
+		        // TODO : test - 10메가 넘을 경우 자동으로 대용량으로 넘어가도록.
 		        createNodeAndInsertText(fileXml, objNode, "MAXSIZE", window.parent.FtotSizeAttachSize);
 		        createNodeAndInsertText(fileXml, objNode, "CNT", window.parent.bigtrue);
 		        createNodeAndInsertText(fileXml, objNode, "NEWID", window.parent.g_newid);
@@ -387,7 +401,7 @@
 		        if (xhr2.status >= 200 && xhr2.status < 300) {
 		        	uploadComplete2();
 		        } else {
-		        	//TODO: alert 띄우기
+		        	uploadFailed();
 		        }
 		    }
 		    

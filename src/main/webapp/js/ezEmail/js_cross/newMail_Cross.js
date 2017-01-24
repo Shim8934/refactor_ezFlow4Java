@@ -1593,26 +1593,24 @@ function GetDateFormatString() {
     return year + "" + month + "" + day;
 }
 
-//TODO: 최신꺼 보면서 수정하기
 var AttachFlag = false;
 function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     AttachFlag = true;
-    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(DocHref);
     var docAttach = "";
 
     if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
         if (DocHref == "IMAGE") {
             var HtmlBody = "<div class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
             if (ImagCnt == "") {
-                HtmlBody = HtmlBody + "<img src='" + document.location.protocol + "//" + document.location.hostname + "/Upload_Common/" + GetDateFormatString() + "/" + DocID + ".png' embedding='1'/>";
+                HtmlBody = HtmlBody + "<img src='" + uploadCommonPath + "/" + GetDateFormatString() + "/" + DocID + ".png' embedding='1'/>";
             }
             else {
                 for (var i = 1; i <= parseInt(ImagCnt) ; i++) {
 
                     if (i != 1)
-                        HtmlBody = HtmlBody + "<br><img style='margin-top:-6px;' src='" + document.location.protocol + "//" + document.location.hostname + "/Upload_Common/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
+                        HtmlBody = HtmlBody + "<br><img style='margin-top:-6px;' src='" + uploadCommonPath + "/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
                     else
-                        HtmlBody = HtmlBody + "<img src='" + document.location.protocol + "//" + document.location.hostname + "/Upload_Common/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
+                        HtmlBody = HtmlBody + "<img src='" + uploadCommonPath + "/" + GetDateFormatString() + "/" + DocID + "_" + i + ".png' embedding='1'/>";
                 }
             }
             HtmlBody = HtmlBody + "</div></div>";
@@ -1740,20 +1738,21 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
                 GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
                 for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
                     var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
-                    if (CrossYN())
-                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
-                    else
+//                  if (CrossYN())
+//                     var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//                  else
                         GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
                 }
                 pAttachListXml = Rtnxml;
             }
-            if (DragDropAttachObjetLoading)
-                AppendFileAttachInfo(pAttachListXml);
+            if (DragDropAttachObjetLoading) {
+//            	AppendFileAttachInfo(pAttachListXml);
+            	dadiframe.fileupload2(pAttachListXml);            	
+            }
         }
     }
 }
 
-//TODO: 하던중임
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
 	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
@@ -1809,7 +1808,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
             var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
-            var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize");
+            var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
             pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
@@ -1867,17 +1866,17 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
     if (xmlHTTP.status == 200) {
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var Rurl = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ContentLocation")[0]);
-        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(Rurl);
+        var fullPath = Rurl;
         var tempXML = createXmlDom();
         var XmlBodyATT = createXmlDom();
         var XmlBodyDATA = createXmlDom();
         var tempStr = "";
         tempStr = ConvertMHTtoHTML(fullPath);
-        tempXML = loadXMLString(tempStr)
+        tempXML = loadXMLString(tempStr);
         XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
-
+        
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
@@ -1909,9 +1908,8 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
             var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
-            var filepath = "/Upload_BoardSTD/" + filepath;
-            var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize");
-
+            var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
+            
             pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";
             pstrXML += "<DATA1>" + filename + "</DATA1>";
             pstrXML += "<DATA2>" + filepath + "</DATA2>";
@@ -1948,8 +1946,10 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
                 }
                 pAttachListXml = Rtnxml;
             }
-            if (DragDropAttachObjetLoading)
-                AppendFileAttachInfo(pAttachListXml);
+            if (DragDropAttachObjetLoading) {
+//              AppendFileAttachInfo(pAttachListXml);
+            	dadiframe.fileupload2(pAttachListXml);
+            }
         }
         eSubject.value = strLang121 + eSubject.value;
         Subject_ReApply();
