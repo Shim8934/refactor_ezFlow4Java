@@ -334,9 +334,9 @@
     		}
     		function menuQst_List() {
         		if(CrossYN()) {
-            		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
+            		var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		} else {
-            		var szUrl = "/ezQuestion/qstList.do?brd_ID=5"
+            		var szUrl = "/ezQuestion/qstList.do?brdID=5"
         		}
         		window.location.href = szUrl;	
     		}
@@ -532,7 +532,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" name="frmCreate" id="frmCreate" action="qstList.do?brd_id=5">
+		<form method="post" name="frmCreate" id="frmCreate" action="qstList.do?brdID=5">
 			<h1><spring:message code="ezQuestion.t436" /></h1>
 			<div id="Main_List">
         		<div id="mainmenu">

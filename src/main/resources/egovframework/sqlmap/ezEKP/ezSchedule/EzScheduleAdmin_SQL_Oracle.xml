@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezScheduleAdmin">
+	<typeAlias  alias="ScheduleShareVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO"/>
+	
+	<resultMap class="ScheduleShareVO" id="scheduleShareVO">
+		<result property="rowIndex"			column="ROWINDEX"			columnIndex="1"/>
+		<result property="rowCount"			column="ROWCOUNT"			columnIndex="2"/>
+		<result property="idx"				column="IDX"				columnIndex="3"/>
+		<result property="userName"			column="USERNAME"			columnIndex="4"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="5"/>
+		<result property="deptName"			column="DEPTNAME"			columnIndex="6"/>		
+	</resultMap>
+					
+	<select id="EzScheduleAdminDAO.scheduleGetShareManage" parameterClass="map" resultMap="scheduleShareVO">
+		<![CDATA[
+			SELECT 
+				rowindex,
+				rowcount,
+				idx,
+				username,
+				description,
+				deptname	 
+        	FROM ( 
+        			SELECT 
+        				ROW_NUMBER() OVER ( ORDER BY A.idx DESC  ) rowindex,
+                    	COUNT(A.idx) OVER ( ) rowcount,
+                      	A.idx,
+                      	CASE #v_LANGDATA#
+                        	WHEN '1' THEN username
+                            WHEN '2' THEN username2
+                      		ELSE username2
+                      	END username  ,
+                      	CASE #v_LANGDATA#
+	                        WHEN '1' THEN B.description
+                            WHEN '2' THEN B.description2
+                      		ELSE B.description2
+                      	END description,
+                      	CASE #v_LANGDATA#
+							WHEN '1' THEN departmentname
+                            WHEN '2' THEN departmentname2
+                      		ELSE departmentname2
+                      	END deptname  
+               		FROM 
+               			EZPIMS.TBLSCHEDULE_PUBLIC_DEPARTMENT A INNER JOIN EZHRMASTER.TBLUSERMASTER B ON A.usercn = B.cn 
+			) PUBLIC_DEPARTMEN
+		]]>
+	</select>
+	
+	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
+		INSERT INTO EZPIMS.TBLSCHEDULE_PUBLIC_DEPARTMENT(
+			USERCN, 		USERNAME, 		USERNAME2, 		DEPARTMENTCN, 	DEPARTMENTNAME, 	DEPARTMENTNAME2 
+		) VALUES (
+			#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#			
+		)		
+	</insert>
+	
+	<delete id="EzScheduleAdminDAO.scheduleDelShareDept" parameterClass="map">
+		DELETE FROM
+			EZPIMS.TBLSCHEDULE_PUBLIC_DEPARTMENT
+		WHERE
+			idx = #v_ID#
+	</delete>
+
+</sqlMap>
+

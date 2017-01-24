@@ -809,7 +809,7 @@
 	    	}
 		    
 		    function keyword_Clear() {
-		        document.getElementsByName('keyword').item(0).value = "";
+		        document.getElementById("keyword").value = "";
 		    }
 
 		    function infoview_click() {
@@ -1359,8 +1359,8 @@
 		    }
 		</script>
 	</head>
-	<body class="popup">		
-		<form method="post" runat="server">			
+	<body class="popup" style="overflow:hidden">		
+		<form method="post">			
 			<h1><spring:message code='ezSchedule.t191' /></h1>
 			<table class="popuplist" width="100%">
 				<tr> 
@@ -1415,15 +1415,15 @@
 		                            </div>
 		                            <table style="margin-top: 3px;">
 		                                <tr>
-		                                    <td class="box" style="border-right:0px">
-		                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                    <td class="box" style="border-right:0px;">		                                    			                                    	
+		                                        <div style="width: 220px; height: 465px; margin-top:5px;overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 426px" id="orglistView">
 		                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 		                                            <tr>
 		                                                <th style="white-space:normal">
-		                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+		                                                    <span id="SelectDeptNM" style="font-weight: bold; width: 300px;height:30px;text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 		                                                    <span style="float:right;">
 		                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 		                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1434,16 +1434,16 @@
 		                                        <div style="vertical-align: top; height: 408px; overflow: auto; width: 440px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-		                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
+		                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
+		                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
 		                                                </tr>
 		                                            </table>
 		                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
+		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
 		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-		                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
+		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
 		                                                </tr>
 		                                            </table>

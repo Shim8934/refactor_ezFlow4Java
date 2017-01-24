@@ -192,10 +192,10 @@
 			    try {
 			        if (PresentOpen != "APPROVAL") {
 			            PresentOpen = "APPROVAL";
-			            window.parent.frames.right.document.location.href = "/myoffice/ezApproval/AprManage_B.aspx?listType=" + listtype + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+			            window.parent.frames.right.document.location.href = "/ezApproval/aprManage.do?listType=" + listtype + "&subQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 			        }
 			        else {
-			            window.parent.frames.right.document.location.href = "/myoffice/ezApproval/AprManage_B.aspx?listType=" + listtype + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+			            window.parent.frames.right.document.location.href = "/ezApproval/aprManage.do?listType=" + listtype + "&subQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 			        }
 			    } catch (e) { }
 			}

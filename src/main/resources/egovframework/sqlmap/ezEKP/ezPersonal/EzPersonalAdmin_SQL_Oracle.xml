@@ -160,7 +160,7 @@
                          	POLLTITLE ,
                          	POLLTITLE2 ,
                          	STARTDATE ,
-                         	NVL(ENDDATE, '1900-01-01') EndDate  
+                         	NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
            				FROM
            					EZPERSONAL.TBLLIGHTPOLL 
           				WHERE
@@ -188,7 +188,7 @@
                                   						POLLTITLE ,
                                   						POLLTITLE2 ,
                                   						STARTDATE ,
-                                  						NVL(ENDDATE, '1900-01-01') EndDate  
+                                  						NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
                   									FROM
                   										EZPERSONAL.TBLLIGHTPOLL 
                    									WHERE
@@ -449,7 +449,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" resultClass="PersonalQuickLinkVO">
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST"  parameterClass="Map" resultClass="PersonalQuickLinkVO">
 		<![CDATA[
 			SELECT
 				QUICKLINKID ,
@@ -471,7 +471,11 @@
             ON
             	Q.RegUserID = U.CN
             AND
-            	Q.TENANT_ID = U.TENANT_ID	
+            	Q.TENANT_ID = U.TENANT_ID
+            WHERE
+                Q.TENANT_ID = #tenantID#
+            AND
+                U.TENANT_ID = #tenantID#      	
 		]]>
 	</select>
 	
@@ -797,11 +801,15 @@
                  	JOIN
                  		EZHRMASTER.TBLUSERMASTER B
                  	ON
-                 		A.CN = B.CN
+                 		A.CN = B.CN 
+                    AND
+                      A.TENANT_ID = B.TENANT_ID
                  	JOIN
                  		EZHRMASTER.TBLDEPTMASTER C
                  	ON
                  		A.DEPTID = C.CN
+                    AND
+                        A.TENANT_ID = C.TENANT_ID
            			WHERE
            				B.CN = #v_pUserID#
                     AND

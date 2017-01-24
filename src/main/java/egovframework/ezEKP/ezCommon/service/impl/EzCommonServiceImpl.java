@@ -1014,6 +1014,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
+		logger.debug("getTenantConfigs started");
+
+		Map<String, Object> map = ezCommonDAO.getTenantConfigs(tenantID);
+
+		logger.debug("getTenantConfigs ended");
+		
+		return map;
+	}
+
+	@Override
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		

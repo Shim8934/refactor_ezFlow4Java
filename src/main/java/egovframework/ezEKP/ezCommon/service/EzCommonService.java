@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommon.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +32,8 @@ public interface EzCommonService {
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception;
 	
 	public String getTenantConfig(String property, int tenantID) throws Exception;
+	
+	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception;
 	
 	public List<TenantVO> getTenantList() throws Exception;
 	

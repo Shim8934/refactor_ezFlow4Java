@@ -1257,44 +1257,40 @@ userInfo = commonUtil.userInfo(loginCookie);
 		String displayName = "";
 		String title = "";
 		String description = "";
+	
+		Calendar cal = Calendar.getInstance();
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		try {
-			Calendar cal = Calendar.getInstance();
-			String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
-			
-			
-			PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
-			
-			if (result != null) {
-				if (result.getFilePath() != null && !result.getFilePath().equals("")) {
-					//<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>
-					//filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
-					//filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
-					filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + result.getFilePath();
-				} else {
-					filePath = "/images/default_pic.jpg";
-				}
-				
-				if (userInfo.getLang().equals("2")) {
-					displayName = result.getDisplayName2();
-					title = result.getTitle2();
-					description = result.getDescription2();
-				} else {
-					displayName = result.getDisplayName();
-					title = result.getTitle();
-					description = result.getDescription();
-				}
+		
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
+		
+		if (result != null) {
+			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
+				//<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>
+				//filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
+				//filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + result.getFilePath();
+			} else {
+				filePath = "/images/default_pic.jpg";
 			}
 			
-			model.addAttribute("displayName", displayName);
-			model.addAttribute("title", title);
-			model.addAttribute("description", description);
-			model.addAttribute("filePath", filePath);
-			model.addAttribute("result", result);
-			return "/ezPortal/portalWpNewSide";
-		} catch (Exception e) {
-			return "";
+			if (userInfo.getLang().equals("2")) {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
+			} else {
+				displayName = result.getDisplayName();
+				title = result.getTitle();
+				description = result.getDescription();
+			}
 		}
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("title", title);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", result);
+		return "/ezPortal/portalWpNewSide";
 	}
 	
 	/**

@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezApproval.service.EzApprovalAdminService;
 import egovframework.ezEKP.ezApproval.service.EzApprovalService;
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -414,13 +415,14 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 	}
 
 	@Override
-	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String susinAdmin, String subQuery) throws Exception {
+	public String getWebPartList(String listType, LoginVO userInfo, String listCount, String mode, String userFlag, String subQuery) throws Exception {
 		// TODO Auto-generated method stub
 		logger.debug("getWebPartList started");
 
 		String strMultiData = commonUtil.getMultiData(userInfo.getLang());
 		String userIDs = "'" + userInfo.getId() + "'";
 		String proxyOption = "";
+		String resultXML = "";
 		
 		if (listType.equals("1")) {
 			proxyOption = getIsUse("A23", "001", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -430,13 +432,144 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 			}
 		}
 		
+		if (mode.equals("COUNT")) {
+			int totalCount = getAprDocCount(listType, userInfo, userIDs, userFlag, subQuery, null);
+			
+			resultXML = "<RESULT>" + totalCount + "</RESULT>";
+		} else if (mode.equals("LEFT")) {
+			resultXML = getAprLeftCount(listType, userInfo, userIDs, userFlag, subQuery);
+		} else {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("listType", listType);
+			map.put("strLang", strMultiData);
+			map.put("listCount", listCount);
+			map.put("userDeptID", userInfo.getDeptID());
+			map.put("userID", userInfo.getId());
+			map.put("userIDs", userIDs);
+			map.put("userFlag", userFlag);
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("tenantID", userInfo.getTenantId());
+			map.put("staASBangSong", apprCode.getProperty("appr.staASBanSong"));
+			map.put("staASJinHang", apprCode.getProperty("appr.staASJinHang"));
+			map.put("staASJiJung", apprCode.getProperty("appr.staASJiJung"));
+			map.put("staASWheSong", apprCode.getProperty("appr.staASWheSong"));
+			map.put("staASDoJak", apprCode.getProperty("appr.staASDoJak"));
+			map.put("staASBaeBu", apprCode.getProperty("appr.staASBaeBu"));
+			map.put("subQuery", subQuery);
+			
+			List<ApprDocViewVO> apprDocViewVOs = ezApprovalDAO.getWebPartList(map);
+			
+			StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < apprDocViewVOs.size(); i++) {
+				sb.append(commonUtil.getQueryResult(apprDocViewVOs.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			resultXML = sb.toString();
+		}
+		
 		logger.debug("getWebPartList ended");
 		
-		return null;
+		return resultXML;
+	}
+
+	private String getAprLeftCount(String listType, LoginVO userInfo, String userIDs, String userFlag, String subQuery) throws Exception {
+		logger.debug("getAprLeftCount started");
+		
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String lastDate = nowDate.substring(0, 10) + " 00:00:01";
+		nowDate = nowDate.substring(0, 10) + " 23:59:59";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userDeptID", userInfo.getDeptID());
+		map.put("userID", userInfo.getId());
+		map.put("userIDs", userIDs);
+		map.put("userFlag", userFlag);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("staASBangSong", apprCode.getProperty("appr.staASBanSong"));
+		map.put("staASJinHang", apprCode.getProperty("appr.staASJinHang"));
+		map.put("staASJiJung", apprCode.getProperty("appr.staASJiJung"));
+		map.put("staASWheSong", apprCode.getProperty("appr.staASWheSong"));
+		map.put("staASDoJak", apprCode.getProperty("appr.staASDoJak"));
+		map.put("staASBaeBu", apprCode.getProperty("appr.staASBaeBu"));
+		map.put("subQuery", subQuery);
+		map.put("lastDate", commonUtil.getDateStringInUTC(lastDate, userInfo.getOffset(), true));
+		map.put("nowDate", commonUtil.getDateStringInUTC(nowDate, userInfo.getOffset(), true));
+		
+		List<String> leftCounts = ezApprovalDAO.getLeftDocCount(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < leftCounts.size(); i++) {
+			sb.append(commonUtil.getQueryResult(leftCounts.get(i)));
+		}
+		sb.append("</DATA>");
+
+		logger.debug("getAprLeftCount ended");
+		
+		return sb.toString();
+	}
+
+	private int getAprDocCount(String listType, LoginVO userInfo, String userIDs, String userFlag, String subQuery, Document queryData) throws Exception {
+		logger.debug("getAprDocCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userDeptID", userInfo.getDeptID());
+		map.put("userID", userInfo.getId());
+		map.put("userIDs", userIDs);
+		map.put("userFlag", userFlag);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("staASBangSong", apprCode.getProperty("appr.staASBanSong"));
+		map.put("staASJinHang", apprCode.getProperty("appr.staASJinHang"));
+		map.put("staASJiJung", apprCode.getProperty("appr.staASJiJung"));
+		map.put("staASWheSong", apprCode.getProperty("appr.staASWheSong"));
+		map.put("staASDoJak", apprCode.getProperty("appr.staASDoJak"));
+		map.put("staASBaeBu", apprCode.getProperty("appr.staASBaeBu"));
+		map.put("subQuery", subQuery);
+		
+		if (queryData != null) {
+			if (queryData.getElementsByTagName("DOCNO").item(0) != null) {
+				map.put("docNO", queryData.getElementsByTagName("DOCNO").item(0).getTextContent());
+			} else {
+				map.put("docNO", "");
+			}
+			if (queryData.getElementsByTagName("DOCTITLE").item(0) != null) {
+				map.put("docTitle", queryData.getElementsByTagName("DOCTITLE").item(0).getTextContent());
+			} else {
+				map.put("docTitle", "");
+			}
+			if (queryData.getElementsByTagName("WRITERNAME").item(0) != null) {
+				map.put("writerName", queryData.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+			} else {
+				map.put("writerName", "");
+			}
+			if (queryData.getElementsByTagName("WRITERDEPTNAME").item(0) != null) {
+				map.put("writerDeptName", queryData.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent());
+			} else {
+				map.put("writerDeptName", "");
+			}
+			if (queryData.getElementsByTagName("KEYWORD").item(0) != null) {
+				map.put("keyWord", queryData.getElementsByTagName("KEYWORD").item(0).getTextContent());
+			} else {
+				map.put("keyWord", "");
+			}
+		}
+		
+		int rtnValue = ezApprovalDAO.getAprDocCount(map);
+
+		logger.debug("getAprDocCount ended");
+		
+		return rtnValue;
 	}
 
 	private String getProxyUser(String userID, String lang, String offset, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getProxyUser started");
 
 		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayName", "displayName;extensionAttribute5", "user", 5, commonUtil.getPrimaryData(lang), tenantID);
@@ -452,12 +585,31 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 				String bujaeInfo = xmlDom.getElementsByTagName("DATA4").item(k).getTextContent();
 				String[] bujae = bujaeInfo.split(":");
 				
+				if (bujae.length >= 5) {
+					//TODO: 눈으로 확인바람
+					if (bujae[3].replace("/", ":").substring(0, 16).compareTo(nowDate) <= 0 && bujae[4].replace("/", ":").substring(0, 16).compareTo(nowDate) >= 0 ) {
+						if (!chkFirst) {
+							rtnVal = "'" + xmlDom.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+							chkFirst = true;
+						} else {
+							rtnVal += ",'" + xmlDom.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
+						}
+					}
+				}
 			}
+			
+			if (!chkFirst) {
+				rtnVal = "'" + userID + "'";
+			} else {
+				rtnVal += ",'" + userID + "'";
+			}
+		} else {
+			rtnVal = "'" + userID + "'";
 		}
 
 		logger.debug("getProxyUser ended");
 		
-		return null;
+		return rtnVal;
 	}
 
 	private String getIsUse(String code1, String code2, String companyID, int tenantID) throws Exception {

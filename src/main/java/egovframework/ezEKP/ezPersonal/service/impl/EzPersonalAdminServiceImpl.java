@@ -144,7 +144,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Override
 	public String getQuickLinkList(LoginVO userInfo) throws Exception {
 		StringBuilder result = new StringBuilder();
-		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", userInfo.getTenantId());
+		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
 		
 		result.append("<LISTVIEWDATA>");
 		result.append("<ROWS>");

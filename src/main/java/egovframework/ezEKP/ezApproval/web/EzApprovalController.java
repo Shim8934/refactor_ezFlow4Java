@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezApproval.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -309,6 +311,42 @@ public class EzApprovalController {
 
 		logger.debug("getListCount ended");
 		
-		return "";
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApproval/aprManage.do")
+	public String aprManage(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("aprManage started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Map<String, Object> map = ezCommonService.getTenantConfigs(userInfo.getTenantId());
+		
+		String viewLeftCount = (String) map.get("APPROVLEFTCOUNT");
+		String useEditor = (String) map.get("EDITOR");
+		String useOcs = (String) map.get("USE_OCS");
+		String useAdditionalRole = (String) map.get("USE_AdditionalROle");
+		String useMobile = (String) map.get("Use_Mobile");
+		String openYear = (String) map.get("Site_OpenYear");
+		String emailDomain = "";
+		String userInfoEnforce = (String) map.get("UserInfo_Enforce");
+		String susinAdmin = "";
+		
+		if (useOcs.equals("YES")) {
+			String userEmail = userInfo.getEmail();
+			String[] tempEmailDomain = userEmail.split("@");
+			
+			emailDomain = tempEmailDomain[1];
+		}
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+
+		logger.debug("aprManage ended");
+		
+		return "ezApproval/apprAprManage";
 	}
 }

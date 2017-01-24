@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO;
+import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -71,6 +72,20 @@ public class EzApprovalDAO extends EgovAbstractDAO{
 
 	public String getIsUse(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalDAO.getIsUse", map);
+	}
+
+	public int getAprDocCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalDAO.getAprDocCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalDAO.getLeftDocCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprDocViewVO> getWebPartList(Map<String, Object> map) throws Exception {
+		return (List<ApprDocViewVO>) list("EzApprovalDAO.getWebPartList", map);
 	}
 
 }

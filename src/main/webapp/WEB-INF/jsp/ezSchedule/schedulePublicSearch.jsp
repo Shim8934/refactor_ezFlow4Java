@@ -23,6 +23,7 @@
 		var enddate = "<c:out value='${endDate}' />";
 		var idlist = "<c:out value='${idList}' />";
 		var namelist = "<c:out value='${nameList}' />";
+		var offSetMin = "<c:out value='${offSetMin}' />";
 		
 	    document.onselectstart = function () { return false; };
 	    window.onload = function () {
@@ -33,6 +34,7 @@
 	            document.body.style.oUserSelect = 'none';
 	            document.body.style.UserSelect = 'none';
 	        }
+	        
 	        if (idlist != "") {
 	            var list1 = idlist.split(",");
 	            var list2 = namelist.split(",");
@@ -71,14 +73,15 @@
 	        });
 	        var SDate;
 	        var EDate;
+	        
 	        if (startdate != "") {
 	            SDate = new Date(startdate);
 	            EDate = new Date(enddate);
+	        } else {
+	        	SDate = utcDate(offSetMin);
+	            EDate = utcDate(offSetMin);
 	        }
-	        else {
-	            SDate = new Date();
-	            EDate = new Date();
-	        }
+	        
 	        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        $("#Sdatepicker").datepicker('setDate', SDate);
 
@@ -136,24 +139,22 @@
 	        var namelist = "";
 
 	        for (var i = 0; i < g_entity["id"].length; i++) {
-	            if (i == 0) {
-	                idlist = g_entity["id"][i];
-	                namelist = g_entity["name"][i];
+	            idlist += g_entity["id"][i];
+	            namelist += g_entity["name"][i];
+	            
+	            if (i < g_entity["id"].length-1) {
+	                idlist += ",";
+	                namelist += ",";
 	            }
-	            else {
-	                idlist += "," + g_entity["id"][i];
-	                namelist += "," + g_entity["name"][i];
-	            }
-	        }
-
-	        window.location.href = "schedule_public_search_Cross.aspx?sdate=" + sdate + "&edate=" + edate + "&idlist=" + idlist + "&namelist=" + escape(namelist);
+	        }       
+	        window.location.href = "/ezSchedule/schedulePublicSearch.do?sdate=" + sdate + "&edate=" + edate + "&idlist=" + idlist + "&namelist=" + encodeURIComponent(namelist);
 	    }
 
 	    var schedule_select_entity_dialogArguments = new Array();
 	    function select_entity() {
 	        schedule_select_entity_dialogArguments[0] = g_entity;
 	        schedule_select_entity_dialogArguments[1] = select_entity_Complete;
-	        var OpenWin = GetOpenWindow("/myoffice/ezSchedule/schedule_select_entity.aspx?title=" + encodeURI("<spring:message code='ezSchedule.t288' />"), "schedule_select_entity", 970, 655);
+	        var OpenWin = GetOpenWindow("/ezSchedule/scheduleSelectEntity.do?title=" + encodeURIComponent("<spring:message code='ezSchedule.t288' />"), "scheduleSelectEntity", 970, 655);
 	        try { OpenWin.focus(); } catch (e) { }
 	    }
 
@@ -200,7 +201,7 @@
 
 	    
 	    function RefreshView() {
-	        window.location.href = "schedule_public_search_Cross.aspx?sdate=" + startdate + "&edate=" + enddate + "&idlist=" + idlist + "&namelist=" + escape(namelist);
+	        window.location.href = "/ezSchedule/schedulePublicSearch.do?sdate=" + startdate + "&edate=" + enddate + "&idlist=" + idlist + "&namelist=" + encodeURIComponent(namelist);
 	    }
 		
 	    function onmouseOver(elem) {
@@ -226,7 +227,7 @@
 			    		</a>
 			    	</td>
 			        <td style="border-left:none">
-			        	<div id="searchlist" style="OVERFLOW-Y: auto;"></div>
+			        	<div id="searchlist" style="OVERFLOW-Y: auto;padding-left:3px"></div>
 			        </td>
 			  	</tr>
 			  	<tr>
@@ -241,9 +242,9 @@
 				</tr>		
 			</table>
 			<br/>
-			<h2 class="h2_dot"><spring:message code='ezSchedule.t295' />
-				<span class="point"></span><span id="resultCount"></span><spring:message code='ezSchedule.t296' />
-			</h2>
+			<h2 class="h2_dot">
+		 		<spring:message code='ezSchedule.t295'/>&nbsp;<span class="point">${fn:length(scheduleList)}</span>&nbsp;<span id="resultCount"></span><spring:message code='ezSchedule.t296'/>
+		    </h2>
 			<table class="mainlist" style="table-layout:fixed;width:100%"> 
 				<tr>
 			    	<th colspan=2 style="padding:0 2px; width:30px"><img src="/images/i_important.gif"></th>      
@@ -255,37 +256,45 @@
 			    	<th style="width:140px"><spring:message code='ezSchedule.t274' /></th>
 			    	<th style="width:140px"><spring:message code='ezSchedule.t275' /></th>
 			  	</tr>
-			  <%-- <asp:Repeater ID="ListSchedule" Runat="server">
-			    <ItemTemplate>
-			      <tr style="cursor:pointer;padding:0" onClick="open_schedule('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SCHEDULEID").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("REPEATCOUNT").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("STARTDATE").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SCHEDULETYPE").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("OWNERID").InnerText %>' ,'<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("DATETYPE").InnerText %>')">
-			        <td colspan=2 style="padding:0 2px; white-space:nowrap"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("IMPORTANCE").InnerText %> </td>          
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("SCHEDULETYPE").InnerText %> </td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;">
-			        <%if(userinfo.primary == "1") { %>
-			        <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("OWNERNAME").InnerText) %> 
-			        <% } else%>
-			        <%{ %>
-			          <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("OWNERNAME2").InnerText) %> 
-			        <%} %>
-			        </td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;">
-			        <%if(userinfo.primary == "1"){ %>
-			          <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("CREATORNAME").InnerText) %>
-			          <%} else%>
-			        <%{ %>
-			          <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("CREATORNAME2").InnerText) %>
-			        <%} %>
-			         </td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText) %></td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("LOCATION").InnerText) %> </td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("STARTDATE").InnerText %> </td>
-			        <td style="white-space:nowrap;overflow:hidden; text-overflow:ellipsis;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ENDDATE").InnerText %> </td>
-			      </tr>
-			    </ItemTemplate>
-			  </asp:Repeater> --%>			  
-			    <tr>
-			      <td colspan="9" style="text-align:center"><spring:message code='ezSchedule.t297' /></td>
-			    </tr>			  
+			  	<c:forEach var="item" items="${scheduleList}">
+		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','REPEATCOUNT','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
+		    		<td colspan=2 style="padding:0 2px;width:30px">
+		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
+		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>
+		    			<c:if test="${item.importance == '3'}"><img src='/images/calendar/i_h.png' width='13' height='13'/></c:if>
+		    		</td>
+		    		<td style="width:50px">
+		    			<c:if test="${item.scheduleType == '1'}"><spring:message code='ezSchedule.t281'/></c:if>
+		    			<c:if test="${item.scheduleType == '2'}"><spring:message code='ezSchedule.t12'/></c:if>
+		    			<c:if test="${item.scheduleType == '3'}"><spring:message code='ezSchedule.t11'/></c:if>
+		    			<c:if test="${item.scheduleType == '4'}"><spring:message code='ezSchedule.t282'/></c:if>
+		    			<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282'/></c:if>		    			
+		    		</td>
+		    		<c:if test="${primary == '1'}">
+		    			<td style="width:80px">${item.ownerName}</td> 
+		              	<td style="width:80px">${item.creatorName}</td>
+		    		</c:if>
+		    		<c:if test="${primary != '1'}">
+		    			<td style="width:80px">${item.ownerName2}</td> 
+		            	<td style="width:80px">${item.creatorName2}</td>
+		    		</c:if>
+		    		<td style="width:60%">${item.title}</td> 
+	          		<td style="width:140px">${item.location}</td>		         
+	            	<td style="width:140px">	            		
+	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
+	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>	            		
+	            	</td> 
+	            	<td style="width:140px">
+	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
+	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>	
+	            	</td>
+		    	</tr>
+		    	</c:forEach>
+		    	<c:if test="${fn:length(scheduleList) == 0}">
+		    	<tr> 
+		        	<td colspan="9" style="text-align:center"><spring:message code='ezSchedule.t297'/></td> 
+		      	</tr>
+		      	</c:if>
 			</table>		
 		</form> 
 	</body>

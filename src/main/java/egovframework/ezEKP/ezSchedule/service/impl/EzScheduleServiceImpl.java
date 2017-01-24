@@ -132,24 +132,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String startDate, String endDate, String userID, String deptID, String companyID, String filter, String keyword, String offSetMin) throws Exception {			
-		String pidList = "'" + userID + "'," + "'" + deptID + "'," + "'" + companyID + "'";
-				
-		List<ScheduleGroupListVO> gList = getScheduleGroupList(userID);
-		
-		for(int i = 0; i < gList.size(); i++){			
-			if(i == 0){
-				pidList += ",";
-			}
-			
-			ScheduleGroupListVO data = gList.get(i);			
-			pidList += "'" + data.getGroupId() + "'";
-			
-			if(i != gList.size()-1){
-				pidList += ",";
-			}	
-		}
-				
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin) throws Exception {						
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);
