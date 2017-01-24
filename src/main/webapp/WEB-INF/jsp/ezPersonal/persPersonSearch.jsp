@@ -567,13 +567,13 @@
 	        	} else {
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
-	            	var feature = "dialogHeight:372px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-	            	feature = feature + GetShowModalPosition(540, 460);
+	            	var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+	            	feature = feature + GetShowModalPosition(600, 320);
 	            	
 	            	if (CrossYN()) {
 		                checkname2_cross_dialogArguments[0] = rgParams;
 	                	checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(540, 460));
+	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
 	             	    OpenWin.focus();
 	            	} else {
 	                	window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
@@ -886,16 +886,16 @@
           			<div style="vertical-align:top;height:390px;overflow:auto;width:425px;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
-                  				<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
+                  				<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>
           				<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="Search_txtlist_table" class="mainlist" > 
               				<tr>
-                  				<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
+                  				<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   				<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  				<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  				<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
                   				<td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               				</tr>
           				</table>

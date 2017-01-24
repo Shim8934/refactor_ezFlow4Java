@@ -442,8 +442,8 @@
 		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
 		                try { checkName2_Cross.focus(); } catch (e) { }
 		            }else{
-		                var feature = "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken";
-		                feature = feature + GetShowModalPosition(609, 352);
+		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(600, 320);
 		                window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {

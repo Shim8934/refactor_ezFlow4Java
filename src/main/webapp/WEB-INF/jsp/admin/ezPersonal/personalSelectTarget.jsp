@@ -601,13 +601,13 @@
 		            var rgParams = new Array();
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
-		            window.showModalDialog("checkName2_Cross.aspx", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(609, 352));
+		            window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(600, 320));
 		
 		            if (rgParams["deptid"] != "") {
 		                bSearch = true;
 		                g_xmlHTTP = createXMLHttpRequest();
 		                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
-		                g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptTreeInfo.aspx", true);
+		                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                g_xmlHTTP.send(strQuery);
 		            }

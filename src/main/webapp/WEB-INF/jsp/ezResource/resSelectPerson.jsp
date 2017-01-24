@@ -267,8 +267,8 @@
 		            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
 		                DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
 		            } else {
-		                var feature =  GetShowModalPosition(609, 352);
-		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken;"+feature);
+		                var feature =  GetShowModalPosition(600, 320);
+		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken;"+feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();
@@ -841,16 +841,16 @@
           		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
           			<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="txtlist_table" class="mainlist" > 
               			<tr>
-                  			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-                  			<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+                  			<td style="width:170px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
+                  			<td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
                   			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
               			</tr>
           			</table>
           			<table style="width:100%;border:1px solid #B6B6B6;display:none;" id="Search_txtlist_table" class="mainlist" > 
               			<tr>
-                  			<td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
+                  			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
                   			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-                  			<td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
                   			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
               			</tr>
           			</table>
