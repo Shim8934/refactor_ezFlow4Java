@@ -1218,7 +1218,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 첨부파일 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getItemAttachments.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/getItemAttachments.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
