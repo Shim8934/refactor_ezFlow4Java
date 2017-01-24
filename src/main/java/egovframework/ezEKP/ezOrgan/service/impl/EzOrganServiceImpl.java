@@ -472,7 +472,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, int tenantID) throws Exception {
-		pLangCode = commonUtil.convertLangCode(pLangCode);	
+		logger.debug("getSearchList started");
+		
+pLangCode = commonUtil.convertLangCode(pLangCode);	
 		
         String[] searchParemeta = null;
         String[] searchList;
@@ -503,8 +505,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 
                 if (i == 0){
                     // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                    searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-                    
+                    //searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                	
+                	//수정(2017-01-23)
+                	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
+                	searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]");
+                	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
                             strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i] + "')";
@@ -569,6 +575,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
         
+        logger.debug("strSQL="+strSQL);
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
@@ -605,7 +612,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 			}			
 		}
 		memberlist2.append("</ROWS></LISTVIEWDATA>");
-        
+
+		logger.debug("getSearchList ended");
+		
 		return memberlist2.toString();
 	}
 	

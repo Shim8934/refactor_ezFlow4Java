@@ -293,10 +293,10 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
 
-		                DivPopUpShow(610, 372, "/admin/ezOrgan/checkName2.do");
+		                DivPopUpShow(600, 320, "/admin/ezOrgan/checkName2.do");
 		            } else {
-		                var feature = GetShowModalPosition(610, 372);
-		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:372px; dialogWidth:610px; status:no;scroll:no; help:no; edge:sunken" + feature);
+		                var feature = GetShowModalPosition(600, 320);
+		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken" + feature);
 
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();

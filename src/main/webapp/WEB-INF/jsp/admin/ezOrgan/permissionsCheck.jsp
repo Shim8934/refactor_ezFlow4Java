@@ -733,8 +733,8 @@
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }else{
-		                var feature = "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken";
-		                feature = feature + GetShowModalPosition(600, 340);
+		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(600, 320);
 		                window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
@@ -1043,16 +1043,16 @@
 	                            <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                <table style="width:100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+	                                        <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
+	                                        <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
 	                                    </tr>
 	                                </table>
 	                                <table style="width:100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                    <tr>
-	                                        <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
+	                                        <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
 	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-	                                        <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
+	                                        <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
 	                                        <td class="td_gray" style="font-weight: bold;"><spring:message code='ezOrgan.t97'/></td>
 	                                    </tr>
 	                                </table>

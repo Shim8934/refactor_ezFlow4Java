@@ -3,14 +3,14 @@
 
 <sqlMap namespace="ezOrgan">
 
-	<typeAlias alias="OrganDeptVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias alias="OrganDeptVO"							type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
-		<result property="cn" 									column="cn" 							columnIndex="1"/>
-		<result property="displayName" 							column="displayName" 					columnIndex="2"/>
-		<result property="extensionAttribute15" 				column="extensionAttribute15"			columnIndex="3"/>
-		<result property="type" 								column="type" 							columnIndex="4"/>		
+		<result property="cn" 									column="cn" 							  columnIndex="1"/>
+		<result property="displayName" 					column="displayName" 			  columnIndex="2"/>
+		<result property="extensionAttribute15" 			column="extensionAttribute15"	  columnIndex="3"/>
+		<result property="type" 								column="type" 						  columnIndex="4"/>		
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -1223,45 +1223,44 @@
 	</select>
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
-		
-	 SELECT 
-	 	* 
-	 FROM
-	 	(SELECT 
-		 	ROW_NUMBER() OVER(order by CN) as RNUM, 
-			cn, 
-			displayName,
-			extensionAttribute15, 
-			type 
-          FROM 
-          	(SELECT  
-             	cn, 
-                department as displayName, 
-                '' as extensionAttribute15,
-                'user' as type 
-             FROM  
-             	ezHrmaster.TBLUSERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-       
-       UNION ALL
-            
-        SELECT
-        	a.cn  , 
-            deptid as displayName , 
-            '' as extensionAttribute15,
-            'user' as type  
-         FROM 
-         	ezHrmaster.TBLUserMaster b   
-         INNER JOIN 
-         	ezHrmaster.TBLADDJOBMASTER A  
-         ON  
-         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
-              <![CDATA[
-              B where RNUM >= $startRow$ and RNUM < $endRow$ and tenant_id = #v_TENANT_ID#
+			<![CDATA[
+				 SELECT 
+				 	* 
+				 FROM
+				 	(SELECT 
+					 	ROW_NUMBER() OVER(order by CN) as RNUM, 
+						cn, 
+						displayName,
+						extensionAttribute15, 
+						type 
+			          FROM 
+			          	(SELECT  
+			             	cn, 
+			                department as displayName, 
+			                '' as extensionAttribute15,
+			                'user' as type 
+			             FROM  
+			             	ezHrmaster.TBLUSERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+			       
+			       UNION ALL
+			            
+			        SELECT
+			        	a.cn  , 
+			            deptid as displayName , 
+			            '' as extensionAttribute15,
+			            'user' as type  
+			         FROM 
+			         	ezHrmaster.TBLUserMaster b   
+			         INNER JOIN 
+			         	ezHrmaster.TBLADDJOBMASTER A  
+			         ON  
+			         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
+	              	B where RNUM >= $startRow$ and RNUM < $endRow$
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
-        
-			SELECT 
+          	<![CDATA[
+				SELECT 
 				cn,
 				department as displayName,
 				'' as extensionAttribute15,
@@ -1292,19 +1291,22 @@
 					'group' as type
 				FROM
 					ezHrmaster.TBLDEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
+			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
-	    	SELECT
+		  	<![CDATA[
+				SELECT
 	    		cn,
 	    		'' as displayName,
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
 	    		ezHrmaster.TBLDEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
+			]]>
 	      </isEqual>
 	</select>
 	<select id="EzOrganDAO.getSearchListCount" parameterClass="Map" resultClass="int">
-	
+		<![CDATA[
 			SELECT 
 				COUNT(*) AS TOTALCOUNT 
 			FROM (
@@ -1322,6 +1324,8 @@
             INNER JOIN  ezHrmaster.TBLAddJobMaster A   
             ON 
             	a.cn = b.cn $strSQL$ and a.tenant_id = b.tenant_id) A
+		]]>
+			
 	</select>
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="Map" resultClass="int">
 		<![CDATA[
