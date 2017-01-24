@@ -21,8 +21,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PersonalQuickLinkVO> getQuickLinkList() throws Exception {
-		return (List<PersonalQuickLinkVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINKLIST");
+	public List<PersonalQuickLinkVO> getQuickLinkList(Map<String, Object> map) throws Exception {
+		return (List<PersonalQuickLinkVO>) list("EzPersonalAdmin.EZSP_GETQUICKLINKLIST", map);
 	}
 	
 	@SuppressWarnings("unchecked")

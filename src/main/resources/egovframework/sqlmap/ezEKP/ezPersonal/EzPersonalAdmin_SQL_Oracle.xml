@@ -449,7 +449,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" resultClass="PersonalQuickLinkVO">
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST"  parameterClass="Map" resultClass="PersonalQuickLinkVO">
 		<![CDATA[
 			SELECT
 				QUICKLINKID ,
@@ -471,7 +471,11 @@
             ON
             	Q.RegUserID = U.CN
             AND
-            	Q.TENANT_ID = U.TENANT_ID	
+            	Q.TENANT_ID = U.TENANT_ID
+            WHERE
+                Q.TENANT_ID = #tenantID#
+            AND
+                U.TENANT_ID = #tenantID#      	
 		]]>
 	</select>
 	
