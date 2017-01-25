@@ -1407,15 +1407,15 @@
 	<select id="EzCommunityDAO.commOutGet"						parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				USERNAME$v_USERINFO_LANG$ userName
+				username$v_USERINFO_LANG$ userName
 			FROM
 				EZCOMMUNITY.C_MEMBERINFO
 			WHERE
-				RTRIM(USERID) = #v_C_SYSOPID#
+				RTRIM(userid) = #v_C_SYSOPID#
 			AND
-				COMPANYID = #v_COMPANYID#
+				companyid = #v_COMPANYID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1472,9 +1472,9 @@
 			FROM
 				EZCOMMUNITY.C_MEMBERINFO
 			WHERE
-				USERID = #v_RECORD_C_SYSOPID#
+				userid = #v_RECORD_C_SYSOPID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1484,15 +1484,15 @@
 	<select id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				C_LOGO,
-				C_CLUBBANNER,
-				C_CLUBNAME$v_USERINFO_LANG$
+				c_logo,
+				c_clubbanner,
+				c_clubname$v_USERINFO_LANG$
 			FROM
 				EZCOMMUNITY.C_CLUB 
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1503,18 +1503,18 @@
 		<isEqual property="v_POSITION" compareValue="ALL">
 			<![CDATA[
 				SELECT
-					BOARDNAME$v_LANG$ AS BOARDNAME,
-					BOARDID
+					boardname$v_LANG$ AS BOARDNAME,
+					boardid
 				FROM
 					EZCOMMUNITY.TBL_COMM_BOARDINFO
 				WHERE
-					RTRIM(C_CLUBNO) = #v_CODE#
+					RTRIM(c_clubno) = #v_CODE#
 				AND
-					(SHOWPOSITION = ' ' OR SHOWPOSITION IS NULL)
+					(showposition = ' ' OR showposition IS NULL)
 				AND
-					PARENTBOARDID != 'TOP'
+					parentboardid != 'TOP'
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		
@@ -1522,16 +1522,16 @@
 			<isEqual property="v_POSITION" compareValue="LEFT">
 				<![CDATA[
 					SELECT
-						BOARDNAME$v_LANG$ AS BOARDNAME,
-						BOARDID
+						boardname$v_LANG$ AS BOARDNAME,
+						boardid
 					FROM
 						EZCOMMUNITY.TBL_COMM_BOARDINFO
 					WHERE
-						RTRIM(C_CLUBNO) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND
-						SHOWPOSITION =  '1'
+						showposition =  '1'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY
 						SN
 				]]>
@@ -1540,16 +1540,16 @@
 			<isNotEqual property="v_POSITION" compareValue="LEFT">
 				<![CDATA[
 					SELECT
-						BOARDNAME$v_LANG$ AS BOARDNAME,
-						BOARDID
+						boardname$v_LANG$ AS BOARDNAME,
+						boardid
 					FROM
 						EZCOMMUNITY.TBL_COMM_BOARDINFO
 					WHERE
-						RTRIM(C_CLUBNO) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND
-						SHOWPOSITION = '2'
+						showposition = '2'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY
 						SN
 				]]>
@@ -1563,22 +1563,22 @@
 	<select id="EzCommunityDAO.adminOuterListGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO">
 		<![CDATA[
 			SELECT
-				A.USERID,
-				A.OUTDATE,
-				A.OUTREASON,
-				B.USERNAME$v_USERINFO_LANG$ userName
+				A.userid,
+				A.outdate,
+				A.outreason,
+				B.username$v_USERINFO_LANG$ userName
 			FROM
 				EZCOMMUNITY.C_OUTAPPLICATION A 
 			INNER JOIN
 				EZCOMMUNITY.C_MEMBERINFO B
 			ON
-				A.USERID = B.USERID
+				A.userid = B.userid
 			AND
-				A.TENANT_ID = B.TENANT_ID 
+				A.tenant_id = B.tenant_id 
 			WHERE
-				RTRIM(A.C_CLUBNO) = #v_CODE#
+				RTRIM(A.c_clubno) = #v_CODE#
 			AND
-				A.TENANT_ID = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1589,72 +1589,72 @@
 		<isEqual property="v_FLAG" compareValue="ID">
 			<![CDATA[
 				SELECT
-					A.C_ID,
-					A.COMPANYID,
-					B.USERNAME$v_USERINFO_LANG$
+					A.c_id,
+					A.companyid,
+					B.username$v_USERINFO_LANG$
 				FROM
 					EZCOMMUNITY.C_CLUBUSER A
 				INNER JOIN
 					EZCOMMUNITY.C_MEMBERINFO B
 				ON
-					RTRIM(A.C_ID) = RTRIM(B.USERID)
+					RTRIM(A.c_id) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					RTRIM(C_CLUBNO) = #v_CODE#
+					RTRIM(c_clubno) = #v_CODE#
 				AND
-					PERMIT != 0
+					permit != 0
 				AND
-					A.C_ID LIKE '%' || #v_SER# || '%'
+					A.c_id LIKE '%' || #v_SER# || '%'
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="ID">
 			<isEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						A.C_ID,
-						A.COMPANYID,
-						B.USERNAME$v_USERINFO_LANG$
+						A.c_id,
+						A.companyid,
+						B.username$v_USERINFO_LANG$
 					FROM
 						EZCOMMUNITY.C_CLUBUSER A
 					INNER JOIN
 						EZCOMMUNITY.C_MEMBERINFO B
 					ON
-						RTRIM(A.C_ID) = RTRIM(B.USERID)
+						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
-						A.TENANT_ID = B.TENANT_ID
+						A.tenant_id = B.tenant_id
 					WHERE
-						RTRIM(C_CLUBNO) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND
-						PERMIT != 0
+						permit != 0
 					AND
-						B.USERNAME$v_USERINFO_LANG$  LIKE '%' || #v_SER# || '%'
+						B.username$v_USERINFO_LANG$  LIKE '%' || #v_SER# || '%'
 					AND
-						A.TENANT_ID = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						A.C_ID,
-						A.COMPANYID,
-						B.USERNAME$v_USERINFO_LANG$
+						A.c_id,
+						A.companyid,
+						B.username$v_USERINFO_LANG$
 					FROM
 						EZCOMMUNITY.C_CLUBUSER A
 					INNER JOIN
 						EZCOMMUNITY.C_MEMBERINFO B
 					ON
-						RTRIM(A.C_ID) = RTRIM(B.USERID)
+						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
-						A.TENANT_ID = B.TENANT_ID
+						A.tenant_id = B.tenant_id
 					WHERE
-						RTRIM(C_CLUBNO) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND
-						PERMIT != 0
+						permit != 0
 					AND
-						A.TENANT_ID = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -1670,13 +1670,13 @@
 			FROM
 				EZCOMMUNITY.C_CLUBUSER
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(C_ID) = #v_C_ID#
+				RTRIM(c_id) = #v_C_ID#
 			AND
-				COMPANYID = #v_COMPANYID#
+				companyid = #v_COMPANYID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1686,16 +1686,16 @@
 	<select id="EzCommunityDAO.joinOkGet3"						parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				C_CLUBGUBUN,
-				C_CLUBNAME$v_USERINFO_LANG$,
-				C_MEMBERCNT,
-				C_CLUBCONFIRMTYPE
+				c_clubgubun,
+				c_clubname$v_USERINFO_LANG$,
+				c_membercnt,
+				c_clubconfirmtype
 			FROM
 				EZCOMMUNITY.C_CLUB
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1709,11 +1709,11 @@
 			FROM
 				EZCOMMUNITY.C_MEMBERINFO
 			WHERE
-				COMPANYID = #v_USERINFO_COMPANYID#
+				companyid = #v_USERINFO_COMPANYID#
 			AND
-				RTRIM(USERID) = #v_USERINFO_USERID#
+				RTRIM(userid) = #v_USERINFO_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1723,24 +1723,24 @@
 	<select id="EzCommunityDAO.adminMemPermitGet2"				parameterClass="Map"		resultClass="CommunityCClubUserVO">
 		<![CDATA[
 			SELECT
-				A.C_ID,
-				A.COMPANYID,
-				A.C_INDATE,
-				B.USERNAME$v_USERINFO_LANG$
+				A.c_id,
+				A.companyid,
+				A.c_indate,
+				B.username$v_USERINFO_LANG$
 			FROM
 				EZCOMMUNITY.C_CLUBUSER A
 			INNER JOIN
 				EZCOMMUNITY.C_MEMBERINFO B
 			ON
-				RTRIM(A.C_ID) = RTRIM(B.USERID)
+				RTRIM(A.c_id) = RTRIM(B.userid)
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = B.tenant_id
 			WHERE
-				RTRIM(A.C_CLUBNO) = #v_CODE#
+				RTRIM(A.c_clubno) = #v_CODE#
 			AND
-				PERMIT = '0'
+				permit = '0'
 			AND
-				A.TENANT_ID = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -3109,7 +3109,7 @@
 	<select id="EzCommunityDAO.commMakeOkGet3"					parameterClass="Integer"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(CLUBID), 0)
+				NVL(MAX(clubid), 0)
 			FROM
 				EZCOMMUNITY.TBL_CLUBID
 			WHERE
@@ -4339,7 +4339,7 @@
 	<select id="EzCommunityDAO.commMakeOkGet4"					parameterClass="Integer"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(CLUBID), 0)
+				NVL(COUNT(clubid), 0)
 			FROM
 				EZCOMMUNITY.TBL_CLUBID
 			WHERE
@@ -4778,9 +4778,9 @@
 			UPDATE
 				EZCOMMUNITY.TBL_CLUBID
       		SET
-      			CLUBID = #v_TMP_CLUBID#
+      			clubid = #v_TMP_CLUBID#
       		WHERE
-      			TENANT_ID = #tenantID#
+      			tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -6286,7 +6286,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.commMakeOkInsert1"				parameterClass="Integer">
 		INSERT INTO EZCOMMUNITY.TBL_CLUBID
-			(ClubID, TENANT_ID)
+			(clubid, tenant_id)
 		VALUES
 			('0', #tenantID#)
 	</insert>
@@ -6300,7 +6300,7 @@
 			FROM
 				EZCOMMUNITY.TBL_COMM_TREECACHE
 			WHERE
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -6311,11 +6311,11 @@
 			FROM 
 	        	EZCOMMUNITY.TBL_COMM_BOARDMANAGE
 			WHERE  
-	       		BOARDID = #v_pBoardID# 
+	       		boardid = #v_pBoardID# 
 			AND 
-	       		ACCESSID = #v_pAccessID#
+	       		accessid = #v_pAccessID#
 	       	AND
-	       		TENANT_ID = #tenantID#
+	       		tenant_id = #tenantID#
 			AND 
 	       		rownum <= 1
 		]]>
@@ -6328,13 +6328,13 @@
 			FROM 
 	        	EZCOMMUNITY.C_POLLRESPONSE
 			WHERE  
-	       		QUESTIONID = #v_QUESTIONID#
+	       		questionid = #v_QUESTIONID#
 	       	AND
-	       		RTRIM(USERID) = #v_USERINFO_USERID#
+	       		RTRIM(userid) = #v_USERINFO_USERID#
 	       	AND
-	       		COMPANYID = #v_USERINFO_COMPANYID#
+	       		companyid = #v_USERINFO_COMPANYID#
 	       	AND
-	       		TENANT_ID = #tenantID#
+	       		tenant_id = #tenantID#
 		]]>
 	</select>
 	

@@ -6464,7 +6464,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_LOGO", logo);
 		map.put("v_LOGO_THUMBNAIL", logo);
 		map.put("v_BANNER", banner);
-		map.put("v_USERINFO_COMPANYNAME", companyName1);
+		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertClub(map);
