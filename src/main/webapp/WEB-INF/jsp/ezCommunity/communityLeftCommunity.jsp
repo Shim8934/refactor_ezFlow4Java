@@ -18,7 +18,7 @@
 			var ResultString;
 	        var code = "<c:out value='${code}'/>";
 	        var UserLevel = "<c:out value='${userLevel}'/>";
-	        var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
+// 	        var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 	        var newmember_confirmtype = "<c:out value='${newmemberConfirmType}'/>";
 	        var ch_CheckSysop = "<c:out value='${checkSysop}'/>";
 	        var lang = "<c:out value='${lang}'/>";
@@ -308,7 +308,7 @@
 	                var dropdown = document.goMyCommForm.MyCommunityList;
 	                var index = document.goMyCommForm.MyCommunityList.selectedIndex;
 	            }
-	            if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+	            if (UserLevel == "0" || UserLevel == "9") {
 	                switch (btn.id) {
 	                    case "btn_QsPoll": 
 	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -428,7 +428,7 @@
                     window.frames.location.href = window.frames.location.href;
                 }
                 else {
-                    var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&userLevel=1";
+                    var url = "/ezCommunity/checkCommHome.do?communityCD=" + code;
                     var wWeight = "1300";
                     var wHeight = "900";
 

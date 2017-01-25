@@ -117,94 +117,96 @@
 			<isEqual property="v_pSelectBy" compareValue="3">
 				<![CDATA[
  					SELECT
- 						DISTINCT A.BoardID BoardID,
- 					    A.BoardName BoardName,
- 					    A.BoardName2 BoardName2,
- 					    A.TreeViewOrder TreeViewOrder,
- 					    A.BoardColor BoardColor,
- 					    A.C_ClubNo C_ClubNo,
- 					    A.Gubun 
+ 						DISTINCT A.boardid BoardID,
+ 					    A.boardname BoardName,
+ 					    A.boardname2 BoardName2,
+ 					    A.treevieworder TreeViewOrder,
+ 					    A.boardcolor BoardColor,
+ 					    A.c_clubno C_ClubNo,
+ 					    A.gubun 
  					FROM
  						EZCOMMUNITY.TBL_COMM_BOARDINFO A
  					JOIN 
  						(SELECT
-							BoardID ,
-					        AccessID ,
-					        ACCESS_ 
+							boardid,
+					        accessid,
+					        access_,
+					        tenant_id
 						FROM
 							EZCOMMUNITY.TBL_COMM_BOARDMANAGE
 						WHERE
-							RTRIM(ParentBoardID) = UPPER(#v_pRootBoardID#)
+							RTRIM(parentboardid) = UPPER(#v_pRootBoardID#)
 						AND
-							ACCESS_ = 1
+							access_ = 1
 						AND
-							write_FG = 'TRUE'
+							write_fg = 'TRUE'
 						AND
-							boardID <> #v_pExcludeBoardID#
-						AND (	AccessID = #v_pUserID#
+							boardid <> #v_pExcludeBoardID#
+						AND (	accessid = #v_pUserID#
 					    	OR
-						    	AccessID = #v_pDeptID#
+						    	accessid = #v_pDeptID#
 						    OR
-						    	AccessID = #v_pCompanyID#
+						    	accessid = #v_pCompanyID#
 						    OR
-						    	AccessID = 'EVERYONE') 
+						    	accessid = 'EVERYONE') 
  						) B
  					ON
- 						A.BoardID = B.BoardID
+ 						A.boardid = B.boardid
  					AND
- 						A.TENANT_ID = B.TENANT_ID
+ 						A.tenant_id = B.tenant_id
  					WHERE
- 						RTRIM(A.C_ClubNo) = #v_pClubNo#
+ 						RTRIM(A.c_clubno) = #v_pClubNo#
  					AND
- 						A.TENANT_ID = #tenantID#
+ 						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.TreeViewOrder ASC
+ 						A.treevieworder ASC
  				]]>
             </isEqual>
             
             <isNotEqual property="v_pSelectBy" compareValue="3">
 	            <![CDATA[
  	            	SELECT
- 	            		DISTINCT A.BoardID BoardID,
- 						A.BoardName BoardName,
- 	       				A.BoardName2 BoardName2,
- 						A.TreeViewOrder TreeViewOrder,
- 	                    A.BoardColor BoardColor,
- 	                    A.C_ClubNo C_ClubNo,
- 	                    A.Gubun 
+ 	            		DISTINCT A.boardid BoardID,
+ 						A.boardname BoardName,
+ 	       				A.boardname2 BoardName2,
+ 						A.treevieworder TreeViewOrder,
+ 	                    A.boardcolor BoardColor,
+ 	                    A.c_clubno C_ClubNo,
+ 	                    A.gubun 
  					FROM
  						EZCOMMUNITY.TBL_COMM_BOARDINFO A
  					JOIN
  						(SELECT
-							BoardID,
-	                        AccessID,
-	                        ACCESS_
+							boardid,
+	                        accessid,
+	                        access_,
+	                        tenant_id
 	                    FROM
 	                    	EZCOMMUNITY.TBL_COMM_BOARDMANAGE 
 	                    WHERE
-	                    	RTRIM(ParentBoardID) = #v_pRootBoardID#
+	                    	RTRIM(parentboardid) = #v_pRootBoardID#
 						AND
-							ACCESS_ = 1
+							access_ = 1
 						AND
-	                   		boardID <> #v_pExcludeBoardID#
-						AND (	AccessID = #v_pUserID#
+	                   		boardid <> #v_pExcludeBoardID#
+						AND (	accessid = #v_pUserID#
 							OR
-								AccessID = #v_pDeptID#
+								accessid = #v_pDeptID#
 							OR
-								AccessID = #v_pCompanyID#
+								accessid = #v_pCompanyID#
 	                        OR
-	                        	AccessID = 'EVERYONE')
+	                        	accessid = 'EVERYONE')
  						) B
  					ON
- 						A.BoardID = B.BoardID
+ 						A.boardid = B.boardid
  					AND
- 						A.TENANT_ID = B.TENANT_ID
+ 						A.tenant_id = B.tenant_id
  					WHERE
- 						RTRIM(A.C_ClubNo) = #v_pClubNo#
+ 						RTRIM(A.c_clubno) = #v_pClubNo#
 					AND
- 						A.TENANTID_ID = #tenantID#
+ 						A.tenant_id = #tenantID#
  					ORDER BY
- 						A.TreeViewOrder ASC
+ 						A.treevieworder ASC
  				]]>
             </isNotEqual>
 		</isEqual>
@@ -212,25 +214,25 @@
 		<isNotEqual property="v_pMode" compareValue="1">
 			<![CDATA[
  				SELECT
- 					DISTINCT A.BoardID,
- 					A.BoardName,
- 					A.BoardName2,
- 	                A.TreeViewOrder,
- 	                A.BoardColor BoardColor,
- 	                A.C_ClubNo C_ClubNo,
- 	            	A.Gubun
+ 					DISTINCT A.boardid,
+ 					A.boardname,
+ 					A.boardname2,
+ 	                A.treevieworder,
+ 	                A.boardcolor BoardColor,
+ 	                A.c_clubno C_ClubNo,
+ 	            	A.gubun
  				FROM
  					EZCOMMUNITY.TBL_COMM_BOARDINFO A
  	            WHERE
- 	            	RTRIM(ParentBoardID) = #v_pRootBoardID#
+ 	            	RTRIM(parentboardid) = #v_pRootBoardID#
  	            AND
- 	            	A.BoardID <> #v_pExcludeBoardID#
+ 	            	A.boardid <> #v_pExcludeBoardID#
  	            AND
- 	            	RTRIM(A.C_ClubNo) = #v_pClubNo#
+ 	            	RTRIM(A.c_clubno) = #v_pClubNo#
  	            AND
- 	            	A.TENANT_ID = #tenantID#
+ 	            	A.tenant_id = #tenantID#
  	            ORDER BY
- 	            	A.TreeViewOrder ASC
+ 	            	A.treevieworder ASC
  	        ]]>
    		</isNotEqual>
 	</select>
