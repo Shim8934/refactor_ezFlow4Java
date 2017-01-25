@@ -96,7 +96,7 @@
     			
 				$('.imgbtn').prop("onclick","");
     			
-    			setTimeout(function(){
+    			setTimeout(function(){ 
     					$('.imgbtn').prop("onclick","fun_OK()");
     					},3000)
 
