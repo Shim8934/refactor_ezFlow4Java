@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 		<script type="text/javascript">
-			var index = -1;
+			var index = -1; 
 			var flgClose= true;
 			var surveyState = "";
 			var WinRef;
