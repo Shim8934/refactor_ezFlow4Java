@@ -6107,7 +6107,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pSize > 1048576) {
 			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
 		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4)) + " KB";
+			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
 		} else {
 			return Integer.toString(pSize) + " Byte";
 		}
