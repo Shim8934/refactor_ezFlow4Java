@@ -51,7 +51,7 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 메인화면 호출함수
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleMain.do")
-	public String  scheduleAdminMain() throws Exception {			
+	public String  scheduleAdminMain() throws Exception {
 		return "/admin/ezSchedule/scheduleMain";
 	}
 	
@@ -64,7 +64,7 @@ public class EzScheduleAdminController {
 	}
 	
 	/**
-	 * 관리자 일정관리 일정공유관리 화면 호출함수
+	 * 관리자 일정관리 일정공유관리 화면
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
 	public String  scheduleAdminShareManage() throws Exception {			
@@ -136,7 +136,21 @@ public class EzScheduleAdminController {
 
 		ezScheduleAdminService.scheduleSaveShareDept(userID, userName, userName2, deptID, deptName, deptName2);
 	}
-
-
+	
+	/**
+	 * 관리자 일정관리 기념일관리
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayManage.do")	
+	public String scheduleAdminHolidayManage(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, OrganDeptVO organDeptVO, HttpServletRequest request) throws Exception {
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+System.out.println(auth);		
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		
+		
+		return "/admin/ezSchedule/scheduleAdminHolidayManage";
+	}
 	
 }
