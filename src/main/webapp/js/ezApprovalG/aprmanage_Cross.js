@@ -716,7 +716,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = "";
     }
   
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {        
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
 
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -724,8 +724,15 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
     }
     else {
-        alert(strLang1103);
-        return;
+    	if (!isIE()) {
+            alert(strLang1103);
+            return;
+        }
+        else {
+            openLocation = "/ezApprovalG/ezDraftUI_HWP.do?formURL=" + encodeURI(pArgument[1]) + "&DraftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&DocState=" + encodeURI(pArgument[5]) + "&ListType=" + encodeURI(pListTypeValue) + "&AprState=" + encodeURI(pArgument[6]);
+            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7])
+        }
     }
 
     openwindow(openLocation, "", 890, 560);

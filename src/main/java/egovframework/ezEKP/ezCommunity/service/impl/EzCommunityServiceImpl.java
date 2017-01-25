@@ -3977,6 +3977,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		
+		logger.debug("commViewMemberGet2");
+		logger.debug("v_CODE="+map.get("v_CODE"));
+		logger.debug("v_USERINFO_LANG="+map.get("v_USERINFO_LANG"));
+		logger.debug("v_KEYWORD="+map.get("v_KEYWORD"));
+		logger.debug("v_S_RADIO="+map.get("v_S_RADIO"));
+		
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		
 		logger.debug("commViewMemberGet2 ended. result="+result);
