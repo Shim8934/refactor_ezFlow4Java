@@ -82,7 +82,7 @@ public class EzEmailScheduler {
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
-	@Scheduled(cron = "00 00 05 * * *")
+	//@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
@@ -150,7 +150,7 @@ public class EzEmailScheduler {
 	/**
 	 * 메일 예약발송 스케줄러
 	 */
-	@Scheduled(cron = "30 0/10 * * * *")
+	//@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
@@ -248,7 +248,7 @@ public class EzEmailScheduler {
     /**
      * Processes Mail Statistics Logs.
      */
-    @Scheduled(cron = "30 01 00 * * *")
+    //@Scheduled(cron = "30 01 00 * * *")
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
@@ -345,7 +345,7 @@ public class EzEmailScheduler {
 	/**
 	 * delete garbage files
 	 */
-	@Scheduled(cron = "30 02 00 * * *")
+	//@Scheduled(cron = "30 02 00 * * *")
 	public void dailyFileManage() throws Exception{
 		logger.debug("dailyFileManage scheduler started.");
 		
@@ -370,6 +370,7 @@ public class EzEmailScheduler {
 		for (TenantVO tenantVO : tenantList) {
 			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "tempFileUpload");
 			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "templist");
+			directoryList.add(commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantVO.getTenantId()));
 		}
 		
 		int dayLimit = 2;
