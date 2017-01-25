@@ -22,7 +22,7 @@ public interface EzApprovalGService {
 
 	public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet) throws Exception;
 
-	public String getProxyUser(String id, String lang, int tenantID) throws Exception;
+	public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
 	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID) throws Exception;
 	
@@ -42,7 +42,7 @@ public interface EzApprovalGService {
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
-	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID) throws Exception;
+	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String getDocType(String selected, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -223,7 +223,7 @@ public interface EzApprovalGService {
 	
 	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String id, String displayName1, String displayName2, String companyID, int tenantID) throws Exception;
 	
-	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID) throws Exception;
+	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String registerCabinet(Document xmlDom, String strLang, int tenantID) throws Exception;
 	
@@ -325,7 +325,7 @@ public interface EzApprovalGService {
 
 	public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 	
-	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID) throws Exception;
+	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID, String offset) throws Exception;
 
 	public String getRecordHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
@@ -339,7 +339,7 @@ public interface EzApprovalGService {
 
 	public String getNewID(String companyID, int tenantID) throws Exception;
 
-	public String registerRecord(Document xmlDom, int tenantID)throws Exception;
+	public String registerRecord(Document xmlDom, int tenantID, String offset)throws Exception;
 
 	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 
@@ -375,6 +375,6 @@ public interface EzApprovalGService {
 	
 	public String makeContainer(String deptID, String containerType, String companyID, int tenantID) throws Exception;
 	
-	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID) throws Exception;
+	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
 }
