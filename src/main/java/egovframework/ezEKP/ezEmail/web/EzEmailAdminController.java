@@ -86,19 +86,17 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value="/admin/ezEmail/mailDistributionList.do")
 	public String mailDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		LoginVO user = commonUtil.userInfo(loginCookie);		
-		
 		//관리자 권한체크
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		if (!auth) {
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
 		
 		StringBuilder listCompany = new StringBuilder();
 		for (OrganDeptVO vo : list) {
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
 				listCompany.append("<option value='" + vo.getCn() + "'>");
 				listCompany.append(vo.getDisplayName());
 				listCompany.append("</option>");
@@ -121,8 +119,8 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 		
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 		
@@ -131,8 +129,7 @@ public class EzEmailAdminController {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 		
 		try {
 			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
@@ -198,14 +195,12 @@ public class EzEmailAdminController {
 	@RequestMapping(value="/admin/ezEmail/mailAddDistributionList.do")
 	public String mailAddDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
-	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
 		
-		String deptID = user.getDeptID();
+		String deptID = auth.getDeptID();
 		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
 		String textName = request.getParameter("name") == null ? "" : request.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
@@ -228,8 +223,8 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 		
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 		
@@ -240,8 +235,7 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 		
 		int reasonCode = -100;
 		String result = "ERROR";
@@ -425,16 +419,15 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 		
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 		
 		String result = "ERROR";
 		
@@ -472,8 +465,8 @@ public class EzEmailAdminController {
 	@RequestMapping(value="/admin/ezEmail/mailConfigColor.do")
 	public String mailConfigColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 	    
@@ -486,8 +479,8 @@ public class EzEmailAdminController {
 	@RequestMapping(value="/admin/ezEmail/mailColor.do")
 	public String mailColor(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 	    
@@ -498,9 +491,7 @@ public class EzEmailAdminController {
 		try {
 			MailColorVO mailColor = null;
 			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			
-			mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
+			mailColor = ezEmailService.getMailColor(auth.getTenantId());
 			
 			if (mailColor != null) {
 				importanceColor = mailColor.getImportanceColor();
@@ -531,8 +522,8 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 		
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        if (auth == null) {
             return "cmm/error/adminDenied";
         }
 		
@@ -544,8 +535,7 @@ public class EzEmailAdminController {
 			String inColor = doc.getElementsByTagName("INCOLOR").item(0).getTextContent();
 			String outColor = doc.getElementsByTagName("OUTCOLOR").item(0).getTextContent();
 			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			int tenantId = userInfo.getTenantId();
+			int tenantId = auth.getTenantId();
 			
 			ezEmailService.setMailColor(tenantId, importanceColor, inColor, outColor);
 			
