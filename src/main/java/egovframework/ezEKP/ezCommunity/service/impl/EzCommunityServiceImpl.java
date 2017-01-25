@@ -240,6 +240,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logo = "default_logo_type1.jpg";
 		String banner = "default_banner.jpg";
 		int isIn = 0, boardNo = 0;
+		int tenantID = userInfo.getTenantId();
 		
 		if (request.getParameter("hiddenClubName2") != null) {
 			clubName2 = request.getParameter("hiddenClubName2");
@@ -281,7 +282,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			cCateC = "0";
 		}
 		
-		clubVO = commMakeOkGet1(clubName, cCateA, cCateB, cCateC, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+		clubVO = commMakeOkGet1(clubName, cCateA, cCateB, cCateC, commonUtil.getMultiData(userInfo.getLang()), tenantID);
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -296,15 +297,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return;
 		}
 		
-		boardNo = commMakeOkGet2(userInfo.getTenantId());
+		boardNo = commMakeOkGet2(tenantID);
 		boardNo += 1;
 		
-		if (commMakeOkGet4(userInfo.getTenantId()) == 0) {
-			ezCommunityDAO.commMakeOkInsert1(userInfo.getTenantId());
+		if (commMakeOkGet4(tenantID) == 0) {
+			ezCommunityDAO.commMakeOkInsert1(tenantID);
 		}
 		
 		int clubNo = 0;
-		clubNo = ezCommunityDAO.commMakeOkGet3(userInfo.getTenantId());
+		clubNo = ezCommunityDAO.commMakeOkGet3(tenantID);
 		clubNo ++ ;
 		
 		String code = "C_"+clubNo;
@@ -316,7 +317,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int openSex = 1;
 		int openBirth = 0;
 		
-		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), userInfo.getTenantId());
+		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, banner, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
 		
 		//TODO 2016-05-03 이효진 Email부분 
 /*		ezCommunityService.commMakeOkGet5()
@@ -371,7 +372,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     }
                 }*/
 		
-		if (commMakeOkGet6(userInfo.getCompanyID(), userInfo.getId(), userInfo.getTenantId()) == null) {
+		if (commMakeOkGet6(userInfo.getCompanyID(), userInfo.getId(), tenantID) == null) {
 			String companyID = userInfo.getCompanyID();
 			String userID = userInfo.getId();
 			String userName = userInfo.getDisplayName1();
@@ -390,7 +391,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String birthDay = "";
 			String gender = "";
 			
-			joinOkInsert(companyID, userID, userName, userName2, companyName, companyName2, companyZip, companyAddress, deptName, deptName2, companyTel, companyFax, homeTel, handPhone, eMail, birthDay, gender, userInfo.getTenantId());
+			joinOkInsert(companyID, userID, userName, userName2, companyName, companyName2, companyZip, companyAddress, deptName, deptName2, companyTel, companyFax, homeTel, handPhone, eMail, birthDay, gender, tenantID);
 		}
 		
 		String fileName = "", attachFile = "", onlyFileName = "", extName = "";

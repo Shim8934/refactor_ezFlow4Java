@@ -4778,7 +4778,8 @@
 			UPDATE
 				EZCOMMUNITY.TBL_CLUBID
       		SET
-      			CLUBID = #v_TMP_CLUBID#,
+      			CLUBID = #v_TMP_CLUBID#
+      		WHERE
       			TENANT_ID = #tenantID#
 		]]>
 	</update>
