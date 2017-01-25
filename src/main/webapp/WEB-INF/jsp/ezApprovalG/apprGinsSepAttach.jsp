@@ -450,6 +450,7 @@
 		        rtnVal[1] = GetListXml();
 		
 		        if (ReturnFunction != null) {
+		        	alert(ReturnFunction);
 		            ReturnFunction(rtnVal);
 		        }
 		        else {

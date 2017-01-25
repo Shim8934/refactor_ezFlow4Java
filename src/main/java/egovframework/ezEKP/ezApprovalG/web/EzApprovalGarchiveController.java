@@ -408,7 +408,7 @@ public class EzApprovalGarchiveController {
 	public String registerRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.registerRecord(xmlDom, userInfo.getTenantId());
+		String result=ezApprovalGService.registerRecord(xmlDom, userInfo.getTenantId(), userInfo.getOffset());
 		return result;
 	}
 	
@@ -1142,5 +1142,48 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 전자결재 G 한글 양식 기안*/
+	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do"  ,produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String ezDraftUI_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String result ="";
+//		  NoneActiveX = GetSystemConfigValue("NONEACTIVEX").ToString();
+//          _HwpToolbar = GetSystemConfigValue("UserInfo_HWPToolbar").ToString();
+//          Use_Editor = GetSystemConfigValue("EDITOR").ToString();
+//          
+//          if (userinfo.RollInfo.IndexOf("a=1") > -1)
+//              _pSusinAdmin = "YES";
+//          else
+//              _pSusinAdmin = "NO";
 
+          String formURL = request.getParameter("formURL");
+          String DraftFlag = request.getParameter("DraftFlag");
+          String formDocType = request.getParameter("formDocType");
+          String susinSN = request.getParameter("susinSN");
+//          if (Request.QueryString["DocState"] != null)
+//              _DocState = ReplaceXSS(Request.QueryString["DocState"]);
+//          if (Request.QueryString["ListType"] != null)
+//              _ListType = ReplaceXSS(Request.QueryString["ListType"]);
+//          if (Request.QueryString["AprState"] != null)
+//              _AprState = ReplaceXSS(Request.QueryString["AprState"]);
+//          if (Request.QueryString["isTmpDoc"] != null)
+//              _isTmpDoc = ReplaceXSS(Request.QueryString["isTmpDoc"]);
+//          if (_ListType == "21")
+//          {
+//              if (Request.QueryString["DocSN"] != null)
+//                  _DocSN = ReplaceXSS(Request.QueryString["DocSN"]);
+//          }
+//          
+//          _dirpath = "/Upload_ApprovalG/" + userinfo.CompanyID + "/doc/" + DateTime.Now.Year.ToString() + "/";
+//
+//          ezApprovalG.ezDoc ezAPI = new ezApprovalG.ezDoc();
+//          _optSignDateFormat = ezAPI.getOptionInfo("A15", "002", userinfo.CompanyID, "CODE", userinfo.Lang);
+//          _optisSplit = ezAPI.getOptionInfo("A33", "001", userinfo.CompanyID, "CODE", userinfo.Lang);
+//          _optSplitKind = ezAPI.getOptionInfo("A33", "002", userinfo.CompanyID, "CODE", userinfo.Lang);
+//          _sihangURL = ezAPI.getOptionInfo("A36", "004", userinfo.CompanyID, "CODE", userinfo.Lang);
+//
+//          ezAPI = null;
+		return result;
+	}
 }

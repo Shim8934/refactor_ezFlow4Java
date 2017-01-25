@@ -1629,11 +1629,12 @@ function SaveDraftDocInfo_ilban(pState) {
 
         var g_SepAttachLVXml = "";
         g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
-        if (!g_SepAttachLVXml)
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
-        else
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
-
+        if (!g_SepAttachLVXml){
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
+        }
+        else{
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
+        }
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
 
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
@@ -2732,9 +2733,9 @@ function SaveTMPDocInfo(AutoSave) {
         var g_SepAttachLVXml = "";
         g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
         if (!g_SepAttachLVXml)
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);
