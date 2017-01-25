@@ -847,97 +847,100 @@
 	<select id="EzCommunityDAO.adminSearchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
 		<![CDATA[
 			SELECT
-	            A.ITEMID,
-	            A.BOARDID,
-	            B.BOARDNAME$v_strLang$,
-	            A.WRITERID,
-	            A.WRITERNAME$v_strLang$,
-	            A.WRITERDEPTNAME$v_strLang$,
-	            A.WRITERCOMPANYNAME$v_strLang$,
-	            A.PARENTWRITEDATE,
-	            A.WRITEDATE,
-	            A.STARTDATE,
-	            A.IMPORTANCE,
-	            A.TITLE,
-	            A.READCOUNT,
-	            A.ATTACHMENTS,
-	            A.ITEMLEVEL,
-	            A.ABSTRACT,
-            	CASE WHEN D.TOTALCOUNT IS NULL THEN 0 ELSE D.TOTALCOUNT END READFLAG
+				*
 			FROM
-				EZCOMMUNITY.TBL_COMM_ITEM A
-            INNER JOIN
-            	(SELECT
-            		BOARDID,
-           			BOARDNAME$v_STRLANG$,
-           			TENANT_ID
+				(SELECT
+		            A.itemid,
+		            A.boardid,
+		            B.boardname$v_strLang$,
+		            A.writerid,
+		            A.writername$v_strLang$,
+		            A.writerdeptname$v_strLang$,
+		            A.writercompanyname$v_strLang$,
+		            A.parentwritedate,
+		            A.writedate,
+		            A.startdate,
+		            A.importance,
+		            A.title,
+		            A.readcount,
+		            A.attachments,
+		            A.itemlevel,
+		            A.abstract,
+	            	CASE WHEN D.totalcount IS NULL THEN 0 ELSE D.totalcount END readflag
 				FROM
-					EZCOMMUNITY.TBL_COMM_BOARDINFO
-				WHERE
-					BOARDID LIKE #v_PBOARDID#
-				) B
-			ON
-				A.BOARDID = B.BOARDID
-			AND
-				A.TENANT_ID = B.TENANT_ID
-            LEFT OUTER JOIN
-            	(SELECT
-            		NVL(COUNT(USERID), 0) AS TOTALCOUNT,
-            		ITEMID,
-            		TENANT_ID
-				FROM
-					EZCOMMUNITY.TBL_COMM_ITEM_READ
-				WHERE
-					RTRIM(USERID) = #v_PUSERID#
+					EZCOMMUNITY.TBL_COMM_ITEM A
+	            INNER JOIN
+	            	(SELECT
+	            		boardid,
+	           			boardname$v_strLang$,
+	           			tenant_id
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO
+					WHERE
+						boardid LIKE #v_pBoardID#
+					) B
+				ON
+					A.boardid = B.boardid
 				AND
-					TENANT_ID = #tenantID#
-				GROUP BY
-					ITEMID,
-					TENANT_ID
-				) D
-			ON
-				A.ITEMID = D.ITEMID
-			AND
-				A.TENANT_ID = D.TENANT_ID
-            WHERE
-            	A.BOARDID = #v_PBOARDID#
-            AND
-            	ENDDATE > #v_pNow#
+					A.tenant_id = B.tenant_id
+	            LEFT OUTER JOIN
+	            	(SELECT
+	            		NVL(COUNT(userid), 0) AS totalcount,
+	            		itemid,
+	            		tenant_id
+					FROM
+						EZCOMMUNITY.TBL_COMM_ITEM_READ
+					WHERE
+						RTRIM(userid) = #v_pUserID#
+					AND
+						tenant_id = #tenantID#
+					GROUP BY
+						itemid,
+						tenant_id
+					) D
+				ON
+					A.itemid = D.itemid
+				AND
+					A.tenant_id = D.tenant_id
+	            WHERE
+	            	A.boardid = #v_pBoardID#
+	            AND
+	            	enddate > #v_pNow#
 		]]>
 		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
-				TITLE LIKE '%' ||#v_pTitle#|| '%'
+				title LIKE '%' ||#v_pTitle#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				WRITERNAME$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
+				writername$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
-				ABSTRACT LIKE '%' ||#v_pAbstract#|| '%'
+				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				STARTDATE > #v_pStartDate#
+				startdate > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				EndDate > #v_pEndDate#
+				enddate > #v_pEndDate#
 		</isNotEqual>
 		
 		<![CDATA[
 				ORDER BY
-					A.PARENTWRITEDATE DESC,
-					TO_CHAR(A.UPPERITEMIDTREE) DESC,
-					A.STARTDATE ASC
+					A.parentwritedate DESC,
+					TO_CHAR(A.upperitemidtree) DESC,
+					A.startdate ASC
 				)
 			WHERE
-				ROWNUM <= #v_pEndRow#
+				rownum <= #v_pEndRow#
 		]]>
 	</select>
 	
@@ -4104,7 +4107,9 @@
 						FROM
 							EZCOMMUNITY.C_CLUB
 						WHERE
-							RTRIM(C_CLUBNO) = #v_CODE#)
+							RTRIM(C_CLUBNO) = #v_CODE#
+						AND
+							TENANT_ID = #tenantID#)
 			AND
 				C_CAT='a'
 			AND
@@ -4127,7 +4132,9 @@
 						FROM
 							EZCOMMUNITY.C_CLUB
 						WHERE
-							RTRIM(C_CLUBNO) = #v_CODE#)
+							RTRIM(C_CLUBNO) = #v_CODE#
+						AND
+							TENANT_ID = #tenantID#)
 			AND
 				C_CAT='b'
 			AND

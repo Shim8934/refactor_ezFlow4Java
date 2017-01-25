@@ -412,7 +412,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			File file = new File(logoPath + fileName + "_logo" + "." + extName);
 			cClubLogo.transferTo(file);
 			
-			
 			BufferedImage inputImage = ImageIO.read(file);
 			BufferedImage outputImage = null;
 			Graphics2D saveImage = null;

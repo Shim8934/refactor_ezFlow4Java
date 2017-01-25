@@ -241,7 +241,7 @@
 				}
 			}
 			
-			function Open_Func(cnt){	
+			function Open_Func(){	
 			    // 직위
 			    if (cnt == "0") {
 				    SelectedBoardGroupID ="";
@@ -292,6 +292,7 @@
 					case 9:
 						url = "/ezCommunity/adminCommClose.do?code=${code}";
 					    break;
+					    
 				    case 10:
 				        url = "/ezCommunity/adminHomeBoard.do?code=${code}";
 				        break;
@@ -324,7 +325,7 @@
 			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
 	        <h2><span onClick="goPage(10)" id="goPage_10" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
-			<h2><span onClick="Open_Func('${cnt}')" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
+			<h2><span onClick="Open_Func()" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
 			
 			<ul id = "treeUL"></ul>
 			
@@ -333,16 +334,7 @@
 			<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
 			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>	
-			
-			<c:choose>
-				<c:when test="${userInfo.lang != 3 }">
-					<h2><span onClick="goPage(9)" style="display:inline-block;width:100%">Cop <spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
-				</c:when>
-				
-				<c:otherwise>
-					<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
-				</c:otherwise>
-			</c:choose>
+			<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
 		       
 		</div>
 		
