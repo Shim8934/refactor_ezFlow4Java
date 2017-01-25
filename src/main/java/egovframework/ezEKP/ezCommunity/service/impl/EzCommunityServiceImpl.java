@@ -4299,6 +4299,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("createBoardGroup started.");
 		
 		int boardNo = ezCommunityDAO.createBoardGroupSelect(userInfo.getTenantId());
+		int tenantID = userInfo.getTenantId();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -4308,11 +4309,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_USERID", userInfo.getId());
 		map.put("v_ACCESSNAME", userInfo.getDisplayName1() + "(" + userInfo.getCompanyName1() + ", " + userInfo.getDeptName1() + ")");
 		map.put("v_BOARDNO", boardNo);
-		map.put("tenantID", userInfo.getTenantId());
+		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.createBoardGroupInsert1(map);
 		ezCommunityDAO.createBoardGroupInsert2(map);
 		ezCommunityDAO.createBoardGroupInsert3(map);
+		ezCommunityDAO.truncateCommTreeCache(tenantID);
 		
 		logger.debug("createBoardGroup ended.");
 	}

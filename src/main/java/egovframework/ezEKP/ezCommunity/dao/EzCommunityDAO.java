@@ -801,6 +801,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		insert("EzCommunityDAO.createBoardGroupInsert3", map);
 	}
 	
+	public void truncateCommTreeCache(int tenantID) throws Exception {
+		delete("EzCommunityDAO.truncateCommTreeCache", tenantID);
+	}
+	
 	public void createBoardInsertInsert1(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.createBoardInsertInsert1", map);
 	}
