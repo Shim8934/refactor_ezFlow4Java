@@ -1636,7 +1636,7 @@
 		            USER_EMAIL = #v_pUserEmail#,
 		            TITLE = #v_pTitle#,
 		            CONTENT = #v_pContent#,
-		            POST_DATE = #v_pPostDate#,
+		            POST_DATE = to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'),
 		            POST_TERM = #v_pPostTerm#,
 		            ITEM_IMP = #v_pItemImp#,
 		            HASATTACH = '0',
@@ -1659,7 +1659,7 @@
 					EZQUESTION.TBLPOLL_ITEM
         			( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID )
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
+        			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
 			]]>
 		</isNotEqual>
 		
