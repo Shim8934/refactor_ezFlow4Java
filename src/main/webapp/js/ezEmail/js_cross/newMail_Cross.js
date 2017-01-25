@@ -1911,7 +1911,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
             
             pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";
             pstrXML += "<DATA1>" + filename + "</DATA1>";
-            pstrXML += "<DATA2>" + filepath + "</DATA2>";
+            pstrXML += "<DATA2>" + uploadCommunityPath + "/" + filepath + "</DATA2>";
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>BOARD</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";
