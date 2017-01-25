@@ -969,6 +969,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			return "NODATA";
 		}
 		
+		if (multiFile == null) {
+			return "NODATA";
+		}
+		
 		if (request.getParameter("isbigyn") != null) {
 			isBigYN = request.getParameter("isbigyn");
 		}
@@ -976,10 +980,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useExtension = "";
 		if (config.getProperty("config.USE_FileExtension") != null) {
 			useExtension = config.getProperty("config.USE_FileExtension");
-		}
-		
-		if (multiFile == null) {
-			return "NOFILE";
 		}
 		
 		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
@@ -1217,11 +1217,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			logger.debug("tempFolderName is EMPTY. Return NODATA.");
 			logger.debug("mailInterUploadCopy ended.");
 			return "NODATA";
-		}
-		if (fileCnt == 0) {
-			logger.debug("fileCnt is 0. Return NOFILE.");
-			logger.debug("mailInterUploadCopy ended.");
-			return "NOFILE";
 		}
 		
 		for (int i=0; i<fileCnt; i++) {

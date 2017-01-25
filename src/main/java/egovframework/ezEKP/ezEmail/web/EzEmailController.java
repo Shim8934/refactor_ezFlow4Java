@@ -54,11 +54,12 @@ public class EzEmailController {
 	
     @RequestMapping(value="/ezEmail/mailAloneTop.do")
     public String showMailAloneTop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
         
-        model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
-        model.addAttribute("lang", userInfo.getLang());
+        String checkAdmin = auth == null ? "false" : "true";
+        
+        model.addAttribute("checkAdmin", checkAdmin);
+        model.addAttribute("lang", auth.getLang());
         
         return "ezEmail/mailAloneTop";
     }
