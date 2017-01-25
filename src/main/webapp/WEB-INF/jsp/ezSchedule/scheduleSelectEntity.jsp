@@ -196,7 +196,7 @@
 	        	createNodeInsert(xmlpara, objNode, "DATA");
 	        	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
-	        	xmlHTTP.open("POST", "/ezOrgan/getDeptsubTreeInfo.do", false);
+	        	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	        	xmlHTTP.send(xmlpara);
 	        	xmlRtn = loadXMLString(xmlHTTP.responseText);
 	        	if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {

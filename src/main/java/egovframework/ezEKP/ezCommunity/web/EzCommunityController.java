@@ -110,7 +110,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezCommunity/communityMain.do")
 	public String  main() {
-		return "/ezCommunity/communityMain";
+		return "ezCommunity/communityMain";
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("communityLeftCommunity ended.");
 		
-		return "/ezCommunity/communityLeftCommunity";
+		return "ezCommunity/communityLeftCommunity";
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		return "/ezCommunity/communityCommMake";
+		return "ezCommunity/communityCommMake";
 	}
 	
 	/**
@@ -389,7 +389,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("checkCommHome ended.");
 		
-		return "/ezCommunity/communityCheckCommHome";
+		return "ezCommunity/communityCheckCommHome";
 	}
 	
 	/**
@@ -476,7 +476,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("popupCommHome ended.");
 		
-		return "/ezCommunity/communityPopupCommHome";
+		return "ezCommunity/communityPopupCommHome";
 	}
 	
 	/**
@@ -563,7 +563,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("boarditemList ended.");
 		
-		return "/ezCommunity/communityBoardItemList";
+		return "ezCommunity/communityBoardItemList";
 	}
 	
 	/**
@@ -651,7 +651,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("searchEnd", searchEnd);
         model.addAttribute("pPage", pPage);
         
-		return "/ezCommunity/communitySearchBoardItem";
+		return "ezCommunity/communitySearchBoardItem";
 	}
 	
 	/**
@@ -709,7 +709,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("searchBoardItemPrint ended");
 		
-		return "/ezCommunity/communitySearchBoardItemPrint";
+		return "ezCommunity/communitySearchBoardItemPrint";
 	}
 	/**
 	 * 게시물 읽음표시 실행함수
@@ -799,7 +799,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		return "/ezCommunity/communityNewBoardItem";
+		return "ezCommunity/communityNewBoardItem";
 	}
 	
 	/**
@@ -1089,7 +1089,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("boardItemView ended.");
 		
-		return "/ezCommunity/communityBoardItemView";
+		return "ezCommunity/communityBoardItemView";
 	}
 	
 	/**
@@ -1116,7 +1116,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("checkPassword ended.");
 		
-		return "/ezCommunity/communityCheckPassword";
+		return "ezCommunity/communityCheckPassword";
 	}
 	
 	/**
@@ -1212,7 +1212,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		
-		return "/ezCommunity/communityCheckReplyPassword";
+		return "ezCommunity/communityCheckReplyPassword";
 	}
 	
 	/**
@@ -1286,7 +1286,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalPage", totalPage);
 		
-		return "/ezCommunity/communityBoardReservedItemList";
+		return "ezCommunity/communityBoardReservedItemList";
 	}
 	
 	/**
@@ -1323,7 +1323,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("readList", readList);
 		
-		return "/ezCommunity/communityItemReadList";
+		return "ezCommunity/communityItemReadList";
 	}
 	
 	/**
@@ -1347,7 +1347,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("Use_Editor", useEditor);
 		model.addAttribute("Use_IE11Browser", useIE11Browser);
 		
-		return "/ezCommunity/communityBoardItemPreview";
+		return "ezCommunity/communityBoardItemPreview";
 	}
 	
 	/**
@@ -1362,7 +1362,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("itemIDList", pItemIDList);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
-		return "/ezCommunity/communityCopyBoardItem";
+		return "ezCommunity/communityCopyBoardItem";
 	}
 	
 	/**
@@ -1518,7 +1518,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("bbsList ended.");
 		
-		return "/ezCommunity/communityBbsList";
+		return "ezCommunity/communityBbsList";
 	}
 	
 	/**
@@ -1627,7 +1627,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("bbsViewNew ended.");
 		
-		return "/ezCommunity/communityBbsViewNew";
+		return "ezCommunity/communityBbsViewNew";
 	}
 	
 	/**
@@ -1730,7 +1730,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("bbsEditNew ended.");
 		
-		return "/ezCommunity/communityBbsEditNew";
+		return "ezCommunity/communityBbsEditNew";
 	}
 	
 	/**
@@ -1759,7 +1759,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("pMode", pMode);
 		
-		return "/ezCommunity/CKEditor";
+		return "ezCommunity/CKEditor";
 	}
 	
 	/**
@@ -1852,7 +1852,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("guestOne ended.");
 		
-		return "/ezCommunity/communityGuestOne";
+		return "ezCommunity/communityGuestOne";
 	}
 	
 	/**
@@ -1887,7 +1887,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("item", item);
 		model.addAttribute("bIsMyContent", bIsMyContent);
 		
-		return "/ezCommunity/communityGuestEdit";
+		return "ezCommunity/communityGuestEdit";
 	}
 	
 	/**
@@ -1915,7 +1915,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("guestEditOk ended. ");
 		
-		return "/ezCommunity/communityGuestEditOk";
+		return "ezCommunity/communityGuestEditOk";
 	}
 
 	/**
@@ -1947,7 +1947,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strXML", strXML);
 		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		
-		return "/ezCommunity/communityPollMain";
+		return "ezCommunity/communityPollMain";
 	}
 	
 	/**
@@ -2006,7 +2006,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("endDate", pEndDate);
 		model.addAttribute("pSubject", pSubject);
 		
-		return "/ezCommunity/communityPollAdd";
+		return "ezCommunity/communityPollAdd";
 	}
 	
 	/**
@@ -2056,7 +2056,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("subject", subject);
 		model.addAttribute("idSpanValue", strXML);
 		
-		return "/ezCommunity/communityPollAddOk";
+		return "ezCommunity/communityPollAddOk";
 	}
 	
 	/**
@@ -2100,7 +2100,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("pollState", pollState);
 		
-		return "/ezCommunity/communityPollRes";
+		return "ezCommunity/communityPollRes";
 	}
 	
 	/**
@@ -2150,7 +2150,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("pollEdit ended.");
 		
-		return "/ezCommunity/communityPollEdit";
+		return "ezCommunity/communityPollEdit";
 	}
 	
 	/**
@@ -2189,7 +2189,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("pollETCView ended.");
 		
-		return "/ezCommunity/communityPollETCView";
+		return "ezCommunity/communityPollETCView";
 	}
 	
 	/**
@@ -2211,7 +2211,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("pollETCTableGet ended.");
 		
-		return "/ezCommunity/communityPollETCTable";
+		return "ezCommunity/communityPollETCTable";
 	}
 	
 	/**
@@ -2261,7 +2261,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
 		
-		return "/ezCommunity/communityCommViewMember";
+		return "ezCommunity/communityCommViewMember";
 	}
 	
 	/**
@@ -2293,7 +2293,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("sysopName", sysopName);
 		model.addAttribute("str_category_print", strCategoryPrint);
 		
-		return "/ezCommunity/communityCommOut";
+		return "ezCommunity/communityCommOut";
 	}
 	
 	/**
@@ -2335,7 +2335,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminIndex ended.");
 		
-		return "/ezCommunity/communityAdminIndex";
+		return "ezCommunity/communityAdminIndex";
 	}
 	
 	/**
@@ -2379,6 +2379,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		
+		logger.debug("xmlret = " + retXML);
+		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")){
             retXML = "<RESULT>ERROR</RESULT>";
 		}
@@ -2394,7 +2396,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminLeft ended.");
 		
-		return "/ezCommunity/communityAdminLeft";
+		return "ezCommunity/communityAdminLeft";
 	}
 	
 	/**
@@ -2441,7 +2443,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminBasic ended.");
 		
-		return "/ezCommunity/communityAdminBasic";
+		return "ezCommunity/communityAdminBasic";
 	}
 	
 	/**
@@ -2460,7 +2462,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("sysopCheck", sysopCheck);
 		
-		return "/ezCommunity/communityAdminBasicOk";
+		return "ezCommunity/communityAdminBasicOk";
 	}
 	
 	/**
@@ -2490,7 +2492,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("clubVO", clubVO);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		return "/ezCommunity/communityAdminLogo";
+		return "ezCommunity/communityAdminLogo";
 	}
 	
 	/**
@@ -2565,7 +2567,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		
-		return "/ezCommunity/communityAdminLogoOk";
+		return "ezCommunity/communityAdminLogoOk";
 	}
 	
 	/**
@@ -2582,7 +2584,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		
-		return "/ezCommunity/communityAdminLogoOk";
+		return "ezCommunity/communityAdminLogoOk";
 	}
 	
 	/**
@@ -2618,7 +2620,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("listHeader3", listHeader3);
 		
 		
-		return "/ezCommunity/communityAdminHomeBoard";
+		return "ezCommunity/communityAdminHomeBoard";
 	}
 	
 	/**
@@ -2715,7 +2717,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminBoardProperty ended.");
 		
-		return "/ezCommunity/communityAdminBoardProperty";
+		return "ezCommunity/communityAdminBoardProperty";
 	}
 	
 	/**
@@ -2751,7 +2753,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
-		return "/ezCommunity/communityAdminBoardGroupCreate";
+		return "ezCommunity/communityAdminBoardGroupCreate";
 	}
 	
 	/**
@@ -2794,7 +2796,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("upperBoardID", parentBoardID);
 		model.addAttribute("boardName", boardInfo.getBoardName());
 
-		return "/ezCommunity/communityAdminBoardOrder";
+		return "ezCommunity/communityAdminBoardOrder";
 	}
 	
 	/**
@@ -2868,7 +2870,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("lang_Secondary", langSecondary);
 		model.addAttribute("parentBoardName", boardInfo.getBoardName());
 		
-		return "/ezCommunity/communityAdminBoardCreate";
+		return "ezCommunity/communityAdminBoardCreate";
 	}
 	
 	/**
@@ -2915,7 +2917,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("boardName", boardInfo.getBoardName());
 		
-		return "/ezCommunity/communityAdminBoardMove";
+		return "ezCommunity/communityAdminBoardMove";
 	}
 	
 	/**
@@ -2923,7 +2925,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/boardMoveSelect.do")
 	public String boardMoveSelect() throws Exception {
-		return "/ezCommunity/communityAdminBoardMoveSelect";
+		return "ezCommunity/communityAdminBoardMoveSelect";
 	}
 	
 	/**
@@ -2973,7 +2975,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardName", boardInfo.getBoardName());
 		model.addAttribute("xmlret", strXML);
 		
-		return "/ezCommunity/communityAdminBoardDelete";
+		return "ezCommunity/communityAdminBoardDelete";
 	}
 	
 	/**
@@ -3078,7 +3080,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstract", abstracts);
         
-		return "/ezCommunity/communityAdminSearchBoardItem";
+		return "ezCommunity/communityAdminSearchBoardItem";
 	}
 	
 	/**
@@ -3090,7 +3092,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("code", code);
 		
-		return "/ezCommunity/communityBoardSelect";
+		return "ezCommunity/communityBoardSelect";
 	}
 	
 	/**
@@ -3113,7 +3115,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
 		
-		return "/ezCommunity/communityAdminOuterList";
+		return "ezCommunity/communityAdminOuterList";
 	}
 	
 	/**
@@ -3134,7 +3136,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		
-		return "/ezCommunity/communityAdminOuterOkNo";
+		return "ezCommunity/communityAdminOuterOkNo";
 	}
 	
 	/**
@@ -3174,7 +3176,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminMemberList ended.");
 		
-		return "/ezCommunity/communityAdminMemberList";
+		return "ezCommunity/communityAdminMemberList";
 	}
 	
 	/** 
@@ -3250,7 +3252,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userMode", userMode);
 		model.addAttribute("existOutList", existOutList);
 		
-		return "/ezCommunity/communityAdminMemberListOk";
+		return "ezCommunity/communityAdminMemberListOk";
 	}
 	
 	/** 
@@ -3314,7 +3316,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("adminCommClose ended.");
 		
-		return "/ezCommunity/communityAdminCommClose";
+		return "ezCommunity/communityAdminCommClose";
 	}
 	
 	/**
@@ -3382,7 +3384,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("mainPage ended.");
 		
-		return "/ezCommunity/communityMainPage";
+		return "ezCommunity/communityMainPage";
 	}
 	
 	/**
@@ -3441,7 +3443,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("join1 ended.");
 		
-		return "/ezCommunity/communityJoin1";
+		return "ezCommunity/communityJoin1";
 	}
 	
 	/**
@@ -3461,7 +3463,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("join2 ended.");
 		
-		return "/ezCommunity/communityJoin2";
+		return "ezCommunity/communityJoin2";
 	}
 	
 	/**
@@ -3489,7 +3491,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("agreeOk ended.");
 		
-		return "/ezCommunity/communityAgreeOk";
+		return "ezCommunity/communityAgreeOk";
 	}
 	
 	/**
@@ -3516,7 +3518,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		logger.debug("join ended.");
 		
-		return "/ezCommunity/communityJoin";
+		return "ezCommunity/communityJoin";
 	}
 	
 	/**
@@ -3610,7 +3612,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("joinOk ended.");
 		
-		return "/ezCommunity/communityJoinOk";
+		return "ezCommunity/communityJoinOk";
 	}
 	
 	/**
@@ -3651,7 +3653,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/ezAprAlert.do")
 	public String ezAprAlert () {
-		return "/ezCommunity/communityAprAlert";
+		return "ezCommunity/communityAprAlert";
 	}
 	
 	/**
@@ -3661,7 +3663,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String ezAPROPINION () throws Exception {
 		logger.debug("ezAPROPINION started.");
 		logger.debug("ezAPROPINION ended.");
-		return "/ezCommunity/communityAprOption";
+		return "ezCommunity/communityAprOption";
 	}
 	
 	/**
@@ -3705,7 +3707,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
-		return "/ezCommunity/communityAdminMemPermit";
+		return "ezCommunity/communityAdminMemPermit";
 	}
 	
 	/**
@@ -3983,7 +3985,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", pPage);
 		
-		return "/ezCommunity/communityBoardItemListPhoto";
+		return "ezCommunity/communityBoardItemListPhoto";
 	}
 	
 	/**
@@ -4078,7 +4080,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
-		return "/ezCommunity/communityNewBoardItemPhoto";
+		return "ezCommunity/communityNewBoardItemPhoto";
 	}
 	
 	/**
@@ -4252,7 +4254,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gWidth", gWidth);
 		model.addAttribute("gHeight", gHeight);
 		
-		return "/ezCommunity/communityBoardItemViewPhoto";
+		return "ezCommunity/communityBoardItemViewPhoto";
 	}
 	
 	/**
@@ -4290,7 +4292,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("item", item);
 		
-		return "/ezCommunity/communityBoardItemViewPrint";
+		return "ezCommunity/communityBoardItemViewPrint";
 	}
 
 	/**
@@ -4298,7 +4300,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/colorPicker.do")
 	public String colorPicker() {
-		return "/ezCommunity/communityColorPicker";
+		return "ezCommunity/communityColorPicker";
 	}
 	
 	/**
@@ -4356,6 +4358,25 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getItemInfo ended.");
 		
 		return sb.toString();
+	}
+	
+	/*
+	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
+	 */
+	@RequestMapping(value = "/ezCommunity/adminNoticeMail.do")
+	public String adminNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminNoticeMail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		model.addAttribute("code", code);
+		model.addAttribute("sysopCheck", sysopCheck);
+		
+		logger.debug("adminNoticeMail ended.");
+		
+		return "ezCommunity/communityAdminNoticeMail";
 	}
 }
 
