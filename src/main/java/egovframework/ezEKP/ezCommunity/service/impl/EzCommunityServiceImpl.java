@@ -3044,7 +3044,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + attach.getItemID() + "</ItemID>");
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
-			sb.append("<FilePath>" + attach.getFilePath() + "</FilePath>");
+			sb.append("<FileName><![CDATA[" + attach.getFileName() + "]]></FileName>");
+			sb.append("<FilePath><![CDATA[" + attach.getFilePath() + "]]></FilePath>");
 			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");

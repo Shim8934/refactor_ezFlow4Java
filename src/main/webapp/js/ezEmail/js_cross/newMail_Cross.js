@@ -1906,8 +1906,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         }
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
-            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+            var filename = SelectSingleNodeValue(AttachRows[i], "FileName");
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
             
             pstrXML += "<ROW><CELL><VALUE>" + filename + "</VALUE>";

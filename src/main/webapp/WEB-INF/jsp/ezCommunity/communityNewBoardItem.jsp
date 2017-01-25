@@ -308,12 +308,9 @@
 	            str += "<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezCommunity.t1135' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezCommunity.t1136'/></NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
 			
 	            for(i=0;i<xmldomNodes.length;i++) {
-	                filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
-	                filename = filepath.substr(89, filepath.length - 88);
-	                filepath = "/upload_community/" + filepath;
 	                str += "<ROW><CELL>";	
-	                str += "<VALUE>" + filename + "</VALUE>";
-	                str += "<DATA1>" + filepath + "</DATA1>";
+	                str += "<VALUE>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</VALUE>";
+	                str += "<DATA1>" + SelectSingleNodeValue(xmldomNodes[i], "FileName") + "</DATA1>";
 	                str += "<DATA2>" + SelectSingleNodeValue(xmldomNodes[i], "FilePath") + "</DATA2>";
 	                str += "<DATA3></DATA3>";
 	                str += "<DATA4></DATA4>";

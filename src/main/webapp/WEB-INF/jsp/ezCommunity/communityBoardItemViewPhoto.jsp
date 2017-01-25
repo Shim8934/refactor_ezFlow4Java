@@ -290,11 +290,7 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
-	                filename = filepath.substr(89, filepath.length - 88);
-	                filename = ReplaceText(filename, "%2b", "+");
-	                filename = ReplaceText(filename, "%3b", ";");
-
-	                filepath = "/upload_community/" + filepath;
+	                filename = SelectSingleNodeValue(xmldomNodes[i], "FileName");
 	                filesize = SelectSingleNodeValue(xmldomNodes[i], "FileSize");
 
 	                var target = "_blank";
