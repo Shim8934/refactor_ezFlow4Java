@@ -1275,12 +1275,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertCabinetHistory2", map);
 	}
 	
-	public void insertCabinetHistory_CAB(Map<String, Object> map) {
+	public void insertCabinetHistory_CAB(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertCabinetHistory_CAB", map);
 	}
 	
-	public void insertStringSql(Map<String, Object> map2) {
+	public void insertStringSql(Map<String, Object> map2) throws Exception{
 		insert("EzApprovalG.insertStringSql", map2);
+	}
+	
+	public void insertAprGetNewID(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertAprGetNewID", map);
 	}
 	
 	public void setMyTaskCode(Map<String, Object> map) throws Exception{
@@ -1532,4 +1536,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+
 }

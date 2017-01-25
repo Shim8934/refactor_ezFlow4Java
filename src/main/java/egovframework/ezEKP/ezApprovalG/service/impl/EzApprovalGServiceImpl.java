@@ -14497,6 +14497,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		rtnVal= ezApprovalGDAO.selectAprGetNewID(map);
+		if(rtnVal == null) {
+			ezApprovalGDAO.insertAprGetNewID(map);
+		}
+		
 		ezApprovalGDAO.aprGetNewID(map);
 		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
 		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
@@ -18277,6 +18283,10 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 						}
 						
 						map.put("company", strReceiptCompanyID);
+						String maxDoc = ezApprovalGDAO.selectAprGetNewID(map);
+						if(maxDoc == null) {
+							System.out.println("aaa");
+						}
 						ezApprovalGDAO.aprGetNewID(map);
 						String newID = ezApprovalGDAO.selectAprGetNewID(map);
 						int tmplen=20;
