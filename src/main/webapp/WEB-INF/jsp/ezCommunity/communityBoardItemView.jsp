@@ -475,6 +475,8 @@
 	            window.open("/myoffice/main/common/get_userinfo.aspx?id=" + pUserID, "", feature);
 	        }
 	        
+	        
+	        //이효진 버튼 IE일때만 뜨게
 	        <%-- function btn_SaveToPC_Onclick() {
 	            var fPath;
 	            var objMHT = new ActiveXObject("MhtFormat.Convert");
