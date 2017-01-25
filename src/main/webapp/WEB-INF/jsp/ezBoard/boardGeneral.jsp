@@ -117,33 +117,40 @@
 	                        			<option value='50' >50</option>
                     				</c:when>
                     				<c:when test="${boardListConfig.listCount eq '20'}">
-                    					<option value='10'   >10</option>
+                    					<option value='10' >10</option>
 										<option value='20' selected>20</option>
 	                        			<option value='30' >30</option>
 	                        			<option value='40' >40</option>
 	                        			<option value='50' >50</option>
                     				</c:when>
                     				<c:when test="${boardListConfig.listCount eq '30'}">
-                    					<option value='10'   >10</option>
+                    					<option value='10' >10</option>
 										<option value='20' >20</option>
 	                        			<option value='30' selected>30</option>
 	                        			<option value='40' >40</option>
 	                        			<option value='50' >50</option>
                     				</c:when>
                     				<c:when test="${boardListConfig.listCount eq '40'}">
-                    					<option value='10'   >10</option>
+                    					<option value='10' >10</option>
 										<option value='20' >20</option>
 	                        			<option value='30' >30</option>
 	                        			<option value='40' selected>40</option>
 	                        			<option value='50' >50</option>
                     				</c:when>
                     				<c:when test="${boardListConfig.listCount eq '50'}">
-                    					<option value='10'   >10</option>
+                    					<option value='10' >10</option>
 										<option value='20' >20</option>
 	                        			<option value='30' >30</option>
 	                        			<option value='40' >40</option>
 	                        			<option value='50' selected>50</option>
                     				</c:when>
+                    				<c:otherwise>
+                    					<option value='10'  selected >10</option>
+										<option value='20' >20</option>
+	                        			<option value='30' >30</option>
+	                        			<option value='40' >40</option>
+	                        			<option value='50' >50</option>
+                    				</c:otherwise>
                       		</c:choose>                        
                     	</select>
                     <spring:message code="ezBoard.t00019" />

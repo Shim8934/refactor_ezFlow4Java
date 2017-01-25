@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -331,6 +332,12 @@ public class EzApprovalController {
 		String emailDomain = "";
 		String userInfoEnforce = (String) map.get("UserInfo_Enforce");
 		String susinAdmin = "";
+		String listType = request.getParameter("listType");
+		String subQuery = request.getParameter("subQuery");
+		String tmpValue = request.getParameter("tmpValue");
+		String selMenu = "all";
+		String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isIEBrowser = browser.indexOf("IE") > -1 ? true : false;
 		
 		if (useOcs.equals("YES")) {
 			String userEmail = userInfo.getEmail();
@@ -344,6 +351,43 @@ public class EzApprovalController {
 		} else {
 			susinAdmin = "NO";
 		}
+		
+		if (listType == null) {
+			listType = "1";
+		}
+		
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document docXML = commonUtil.convertStringToDocument(result);
+		
+		String deptInfo = docXML.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+		String bujaeInfo = docXML.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
+		
+		if (bujaeInfo != null && !bujaeInfo.equals("")) {
+			if (bujaeInfo.split(":").length >= 5) {
+				//TODO: 아이체크 바람
+				bujaeInfo = bujaeInfo.split(":")[0] + ":" + bujaeInfo.split(":")[1] + ":" + bujaeInfo.split(":")[2] + ":" + commonUtil.getDateStringInUTC(bujaeInfo.split(":")[3].replace("/", ":"), userInfo.getOffset(), false) + ":" + commonUtil.getDateStringInUTC(bujaeInfo.split(":")[4].replace("/", ":"), userInfo.getOffset(), false);
+			}
+		}
+		
+		model.addAttribute("isIEBrowser", isIEBrowser);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("bujaeInfo", bujaeInfo);
+		model.addAttribute("listType", listType);
+		model.addAttribute("selMenu", selMenu);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("subQuery", subQuery);
+		model.addAttribute("deptInfo", deptInfo);
+		model.addAttribute("useAdditionalRole", useAdditionalRole);
+		model.addAttribute("viewLeftCount", viewLeftCount);
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("useMobile", useMobile);
+		model.addAttribute("userInfoEnforce", userInfoEnforce);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("emailDomain", emailDomain);
+		model.addAttribute("tmpValue", tmpValue);
 
 		logger.debug("aprManage ended");
 		
