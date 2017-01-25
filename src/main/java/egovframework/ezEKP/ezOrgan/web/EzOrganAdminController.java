@@ -513,19 +513,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/userInfo.do")	
 	public String userInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
+		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String lang = userInfo.getPrimary();		
 		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
 		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
-		
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
