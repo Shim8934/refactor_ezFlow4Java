@@ -100,12 +100,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNotice.do")
 	public String manageNotice (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -129,14 +124,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
 		String companyID = request.getParameter("id");
 		int currentPage = Integer.parseInt(request.getParameter("page"));
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
 		
 		StringBuilder result = new StringBuilder();
 		int pageSize = 12;
@@ -278,11 +269,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
 	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie) {
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -383,12 +370,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/managePoll.do")
 	public String managePoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -599,14 +581,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/managePopup.do")
 	public String managePopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		
-		if (!auth) {
-			return "cmm/error/adminDenied";
-		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
