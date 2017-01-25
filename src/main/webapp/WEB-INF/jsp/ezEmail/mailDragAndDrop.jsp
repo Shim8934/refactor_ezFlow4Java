@@ -181,9 +181,6 @@
 		        else if (xhr.responseText == "NODATA") {
 		            alert(strLang223);
 		        }
-				else if (xhr2.responseText == "NOFILE") {
-		        	alert(2);
-		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr.responseText);
 		            var filecnt = document.getElementById("filelist").childNodes.length;
@@ -207,7 +204,6 @@
 		        isfileup = false;
 		    }
 			
-		    //TODO: 맞게 수정하기
 		    function uploadComplete2(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
@@ -217,13 +213,14 @@
 		            alert(strLang167);
 		        }
 				else if (xhr2.responseText == "OVERSIZE") {
-		        	
+					if ("${ userInfo.lang }" == "2") {
+		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
+					} else {
+		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
+					}
 		        }
 		        else if (xhr2.responseText == "NODATA") {
 		            alert(strLang223);
-		        }
-		        else if (xhr2.responseText == "NOFILE") {
-		        	
 		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr2.responseText);
@@ -386,7 +383,6 @@
 		        
 		        var objNode;
 		        
-		        // TODO : test - 10메가 넘을 경우 자동으로 대용량으로 넘어가도록.
 		        createNodeAndInsertText(fileXml, objNode, "MAXSIZE", window.parent.FtotSizeAttachSize);
 		        createNodeAndInsertText(fileXml, objNode, "CNT", window.parent.bigtrue);
 		        createNodeAndInsertText(fileXml, objNode, "NEWID", window.parent.g_newid);
