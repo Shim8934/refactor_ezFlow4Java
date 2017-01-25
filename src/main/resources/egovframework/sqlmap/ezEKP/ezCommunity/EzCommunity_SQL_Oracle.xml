@@ -1322,7 +1322,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commViewMemberGet1"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_VIEW_MEMBER_GET1(#v_CODE#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.commViewMemberGet1"				parameterClass="Map"		resultClass="CommunityCClubUserVO">
+	<select id="EzCommunityDAO.commViewMemberGet1"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
 		<isEqual property="v_s_radio" compareValue="ID">
 			<![CDATA[
 				SELECT
@@ -1330,15 +1330,15 @@
 				FROM
 					EZCOMMUNITY.C_CLUBUSER 
 				WHERE
-					RTRIM(C_CLUBNO) = #v_code#
+					RTRIM(c_clubno) = #v_code#
 				AND
-					C_ID LIKE  '%'||#v_keyword# ||'%' 
+					c_id LIKE  '%'||#v_keyword# ||'%' 
 				AND
-					PERMIT IN (1,4)
+					permit IN (1,4)
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 				ORDER BY
-					C_VISITED DESC
+					c_visited DESC
 			]]>
 		</isEqual>
 		
@@ -1347,20 +1347,21 @@
 				SELECT
 					*
 				FROM
-					EZCOMMUNITY.C_CLUBUSER,
-					EZCOMMUNITY.C_MEMBERINFO 
+					EZCOMMUNITY.C_CLUBUSER
+				JOIN
+					EZCOMMUNITY.C_MEMBERINFO
+				ON
+					C_MEMBERINFO.userid = RTRIM(C_CLUBUSER.c_id)
 				WHERE
-					RTRIM(C_CLUBUSER.C_CLUBNO) = #v_code#
+					RTRIM(C_CLUBUSER.c_clubno) = #v_code#
 				AND
-					C_MEMBERINFO.USERID = RTRIM(C_CLUBUSER.C_ID)
+					C_MEMBERINFO.username$v_userInfo_lang$ LIKE '%'||#v_keyword#||'%'
 				AND
-					C_MEMBERINFO.USERNAME$v_userInfo_lang$ LIKE '%'||#v_keyword#||'%'
+					C_CLUBUSER.permit IN (1,4)
 				AND
-					PERMIT IN (1,4)
-				AND
-					TENANT_ID = #tenantID#
+					C_CLUBUSER.tenant_id = #tenantID#
 				ORDER BY
-					C_VISITED DESC
+					C_CLUBUSER.c_visited DESC
 			</isEqual>
 			
 			<isNotEqual property="v_s_radio" compareValue="NAME">
@@ -1370,13 +1371,13 @@
 					FROM
 						EZCOMMUNITY.C_CLUBUSER
 					WHERE
-						RTRIM(C_CLUBNO) = #v_code#
+						RTRIM(c_clubno) = #v_code#
 					AND
-						PERMIT IN ( 1,4 )
+						permit IN ( 1,4 )
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY
-						C_VISITED DESC
+						c_visited DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -3564,55 +3565,56 @@
 <!-- 	<procedure id="EzCommunityDAO.commViewMemberGet2"			parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_VIEW_MEMBER_GET2(#v_CODE#, #v_USERINFO_LANG#, #v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.commViewMemberGet2"				parameterClass="Map"		resultClass="Integer">
+	<select id="EzCommunityDAO.commViewMemberGet2"				parameterClass="Map"		resultClass="Integer" remapResults="true">
 		<isEqual property="v_S_RADIO" compareValue="ID">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(C_CLUBNO), 0)  
+					NVL(COUNT(c_clubno), 0)
 				FROM
 					EZCOMMUNITY.C_CLUBUSER 
 				WHERE
-					RTRIM(C_CLUBNO) = #v_CODE#
+					RTRIM(c_clubno) = #v_CODE#
 				AND
-					RTRIM(C_ID) LIKE '%'|| #v_KEYWORD# ||'%'
+					RTRIM(c_id) LIKE '%'|| #v_KEYWORD# ||'%'
 				AND
-					PERMIT IN (1,4)
+					permit IN (1,4)
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="ID">
 			<isEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						NVL(COUNT(C_CLUBUSER.C_CLUBNO), 0)
+						NVL(COUNT(C_CLUBUSER.c_clubno), 0)
 					FROM
-						EZCOMMUNITY.C_CLUBUSER,
+						EZCOMMUNITY.C_CLUBUSER
+					JOIN
 						EZCOMMUNITY.C_MEMBERINFO
+					ON
+						RTRIM(C_MEMBERINFO.userid) = RTRIM(C_CLUBUSER.c_id)
 					WHERE
-						RTRIM(C_CLUBUSER.C_CLUBNO) = #v_CODE#
-					AND
-						RTRIM(C_MEMBERINFO.USERID) = RTRIM(C_CLUBUSER.C_ID)
+						RTRIM(C_CLUBUSER.c_clubno) = #v_CODE#
 					AND 
-						C_MEMBERINFO.USERNAME$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'  
+						C_MEMBERINFO.username$v_USERINFO_LANG$ LIKE '%'|| #v_KEYWORD# ||'%'
 					AND
-						PERMIT IN (1,4)
+						C_CLUBUSER.permit IN (1,4)
 					AND
-						C_CLUBUSER.TENANT_ID = #tenantID#
+						C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isEqual>
-			<isNotEqual  property="v_S_RADIO" compareValue="NAME">
+			<isNotEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						NVL(COUNT(C_CLUBNO), 0)  
+						NVL(COUNT(c_clubno), 0)
 					FROM
 						EZCOMMUNITY.C_CLUBUSER
 					WHERE
-						RTRIM(C_CLUBNO) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND
-						PERMIT IN (1,4)
+						permit IN (1,4)
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
