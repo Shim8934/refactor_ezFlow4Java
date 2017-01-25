@@ -55,12 +55,12 @@ public class EzStatisticsMailUserController {
 	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
 	public String statisticsMailUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		if (!auth) {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
 		return "ezStatistics/statisticsMailUser";
@@ -75,15 +75,14 @@ public class EzStatisticsMailUserController {
 	@ResponseBody
 	public String getMailUser(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
         //관리자 권한체크
-        boolean auth = commonUtil.checkAdmin(loginCookie);
-        if (!auth) {
-            return "cmm/error/adminDenied";
-        }
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
         	    
 		logger.debug("getMailUser started");		
 		logger.debug("bodyData=" + bodyData);
-		
-		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String sDate = doc.getElementsByTagName("SDATE").item(0).getTextContent();

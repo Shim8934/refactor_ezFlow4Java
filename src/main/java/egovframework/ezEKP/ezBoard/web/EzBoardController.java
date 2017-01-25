@@ -311,6 +311,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardListConfig.setPreviewWList(50);
 			boardListConfig.setPreviewWContent(50);
 		}
+		
 		model.addAttribute("boardListConfig", boardListConfig);
 		
 		return "ezBoard/boardGeneral";

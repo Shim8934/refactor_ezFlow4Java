@@ -68,10 +68,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsApprMain.do")
 	public String statisticsApprMain(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		 LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -135,10 +134,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMonForm.do")
 	public String statisticsMonForm(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -200,10 +198,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsTimeDept.do")
 	public String statisticsTimeDept(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -234,10 +231,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMonDept.do")
 	public String statisticsMonDept(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -291,10 +287,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMonUser.do")
 	public String statisticsMonUser(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -325,10 +320,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsTimeForm.do")
 	public String statisticsTimeForm(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -359,10 +353,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsTimeUser.do")
 	public String statisticsTimeUser(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -393,10 +386,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsForm.do")
 	public String statisticsForm(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -442,10 +434,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsDept.do")
 	public String statisticsDept(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -476,10 +467,9 @@ public class EzStatisticsApprController {
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsUser.do")
 	public String statisticsUser(@CookieValue("loginCookie") String loginCookie, Model model) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		

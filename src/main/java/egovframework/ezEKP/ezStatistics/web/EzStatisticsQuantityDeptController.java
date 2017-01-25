@@ -55,12 +55,12 @@ public class EzStatisticsQuantityDeptController {
 	@RequestMapping(value="/ezStatistics/statisticsQuantityDept.do")
 	public String statisticsQuantityDept(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
-		boolean auth = commonUtil.checkAdmin(loginCookie);
-		if (!auth) {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
 		return "ezStatistics/statisticsQuantityDept";
