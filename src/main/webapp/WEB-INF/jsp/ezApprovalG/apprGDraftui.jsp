@@ -1020,7 +1020,6 @@
 		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
 		            }
 		        }
-		        alert(getXmlString(rtnXml));
 		        return getXmlString(rtnXml);
 		    }
 		    function btnhistory_onclick() {
