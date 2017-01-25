@@ -6684,6 +6684,7 @@
 	    WHERE
 	    	TENANT_ID = #v_TENANTID#
 	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABINETCODE2NAME(#v_CODETYPE#, #v_CODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -13644,5 +13645,15 @@
    
    <insert id ="EzApprovalG.insertStrSql" parameterClass="map">
     	$sqlString$
+   </insert>
+   
+   <!-- 기안문 제일 처음 작성시 DOCID 초기 설정 -->
+   <insert id="EzApprovalG.insertAprGetNewID" parameterClass="map">
+   	  INSERT INTO 
+   	  	  EZAPPROVALG_${companyID}.TBLastDocID
+   	  	  (LASTDOCID, TENANT_ID)
+   	  VALUES
+   	  	  (0, #v_TENANTID#)
+   	  	  
    </insert>
 </sqlMap>
