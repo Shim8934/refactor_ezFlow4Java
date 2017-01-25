@@ -82,7 +82,7 @@ public class EzEmailScheduler {
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
-	//@Scheduled(cron = "00 00 05 * * *")
+	@Scheduled(cron = "00 00 05 * * *")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
@@ -150,7 +150,7 @@ public class EzEmailScheduler {
 	/**
 	 * 메일 예약발송 스케줄러
 	 */
-	//@Scheduled(cron = "30 0/10 * * * *")
+	@Scheduled(cron = "30 0/10 * * * *")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
@@ -160,7 +160,6 @@ public class EzEmailScheduler {
 			logger.debug("reservedMailSend scheduler ended.");
 			return;
 		}
-		
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved2();
 		
@@ -248,7 +247,7 @@ public class EzEmailScheduler {
     /**
      * Processes Mail Statistics Logs.
      */
-    //@Scheduled(cron = "30 01 00 * * *")
+    @Scheduled(cron = "30 01 00 * * *")
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
@@ -345,7 +344,7 @@ public class EzEmailScheduler {
 	/**
 	 * delete garbage files
 	 */
-	//@Scheduled(cron = "30 02 00 * * *")
+	@Scheduled(cron = "30 02 00 * * *")
 	public void dailyFileManage() throws Exception{
 		logger.debug("dailyFileManage scheduler started.");
 		
@@ -458,49 +457,53 @@ public class EzEmailScheduler {
 		
 		boolean isSchedulerServer = false;
 		
-		try {
-			//set SchedulerServer
-			String server = config.getProperty("config.SchedulerServer");
-			
-			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
-			
-			String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
-			String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
-			
-			String inputParams = schedulerParam + "&" + serverParam;
-			logger.debug("inputParams=" + inputParams);
-			
-			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
-			logger.debug("response=" + response);
-			
-			//sleep 20 seconds
-			logger.debug(scheduler + " is sleeping...");
-			Thread.sleep(20000);
-			
-			//get SchedulerServer
-			requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
-			
-			inputParams = schedulerParam;
-			logger.debug("inputParams=" + inputParams);
-			
-			response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-			logger.debug("response=" + response);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(response);
-	        
-	        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
-	        	String schedulerServer = (String)object.get("result");
-	        	
-	        	if (schedulerServer.equals(server)) {
-	        		isSchedulerServer = true;
-	        	}
-	        } else {
-	        	logger.error("Cannot get SchedulerServer.");
-	        }
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (config.getProperty("config.Run_Scheduler").equals("YES")) {
+			try {
+				//set SchedulerServer
+				String server = config.getProperty("config.SchedulerServer");
+				
+				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
+				
+				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
+				String serverParam = "server=" + URLEncoder.encode(server, "UTF-8");
+				
+				String inputParams = schedulerParam + "&" + serverParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);		
+				logger.debug("response=" + response);
+				
+				//sleep 20 seconds
+				logger.debug(scheduler + " is sleeping...");
+				Thread.sleep(20000);
+				
+				//get SchedulerServer
+				requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getSchedulerServer";
+				
+				inputParams = schedulerParam;
+				logger.debug("inputParams=" + inputParams);
+				
+				response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+				logger.debug("response=" + response);
+				
+				JSONParser parser = new JSONParser();
+				JSONObject object = (JSONObject)parser.parse(response);
+		        
+		        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+		        	String schedulerServer = (String)object.get("result");
+		        	
+		        	if (schedulerServer.equals(server)) {
+		        		isSchedulerServer = true;
+		        	}
+		        } else {
+		        	logger.error("Cannot get SchedulerServer.");
+		        }
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			logger.debug("config.Run_Scheduler property is not YES.");
 		}
 		
 		logger.debug("betSchedulerServer ended.");
