@@ -93,6 +93,14 @@
         		}
     		}
     		function fun_OK() {
+    			
+				$('.imgbtn').prop("onclick","");
+    			
+    			setTimeout(function(){
+    					$('.imgbtn').prop("onclick","fun_OK()");
+    					},3000)
+
+    			
         		var Qlen = frmCreate.selQues.length;
         		if( Qlen == 0 ) {
             		alert("<spring:message code='ezQuestion.t456' />");
