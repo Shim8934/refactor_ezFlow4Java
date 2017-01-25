@@ -56,7 +56,7 @@ public class EzEmailController {
     public String showMailAloneTop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         
-        String checkAdmin = auth == null ? "false" : "true";
+        boolean checkAdmin = auth == null ? false : true;
         
         model.addAttribute("checkAdmin", checkAdmin);
         model.addAttribute("lang", auth.getLang());

@@ -184,9 +184,11 @@
 	                             OR accessid = #v_pCompanyID# ) 
 	                     ) B   
 	                ON 
-	                	a.TENANT_ID = b.TENANT_ID
+	                	A.TENANT_ID = B.TENANT_ID
 	                AND
-	                	a.boardid = b.boardid
+	                	A.boardid = B.boardid
+	                WHERE
+	                	A.TENANT_ID = #v_TENANTID#
 	              	ORDER BY 
 	              		A.treevieworder ASC
 				]]>
@@ -233,6 +235,8 @@
 	                	A.TENANT_ID = B.TENANT_ID
 	                AND
 	                	A.BoardID = B.BOARDID
+	                WHERE
+	                	A.TENANT_ID = #v_TENANTID#
 	                ORDER BY 
 	                	A.TreeViewOrder ASC
 	        	]]>
