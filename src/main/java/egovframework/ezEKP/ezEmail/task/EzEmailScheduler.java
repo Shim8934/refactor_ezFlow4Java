@@ -87,8 +87,7 @@ public class EzEmailScheduler {
 		logger.debug("autoDelete scheduler started.");
 		
 		//choose scheduler running server
-		if (!betSchedulerServer("autoDelete")) {
-			logger.debug("no SchedulerServer.");
+		if (!preScheduler("autoDelete")) {
 			logger.debug("autoDelete scheduler ended.");
 			return;
 		}
@@ -155,8 +154,7 @@ public class EzEmailScheduler {
 		logger.debug("reservedMailSend scheduler started.");
 		
 		//choose scheduler running server
-		if (!betSchedulerServer("reservedMailSend")) {
-			logger.debug("no SchedulerServer.");
+		if (!preScheduler("reservedMailSend")) {
 			logger.debug("reservedMailSend scheduler ended.");
 			return;
 		}
@@ -252,8 +250,7 @@ public class EzEmailScheduler {
         logger.debug("processMailStatLogs scheduler started.");
         
         //choose scheduler running server
-        if (!betSchedulerServer("processMailStatLogs")) {
-            logger.debug("no SchedulerServer.");
+        if (!preScheduler("processMailStatLogs")) {
             logger.debug("processMailStatLogs scheduler ended.");
             return;
         }
@@ -349,8 +346,7 @@ public class EzEmailScheduler {
 		logger.debug("dailyFileManage scheduler started.");
 		
 		//choose scheduler running server
-		if (!betSchedulerServer("dailyFileManage")) {
-			logger.debug("no SchedulerServer.");
+		if (!preScheduler("dailyFileManage")) {
 			logger.debug("dailyFileManage scheduler ended.");
 			return;
 		}
@@ -452,12 +448,13 @@ public class EzEmailScheduler {
 		return path.delete();
 	}
 	
-	private boolean betSchedulerServer(String scheduler) {
-		logger.debug("betSchedulerServer started.");
+	private boolean preScheduler(String scheduler) {
+		logger.debug("preScheduler started.");
 		
 		boolean isSchedulerServer = false;
 		
 		if (config.getProperty("config.Run_Scheduler").equals("YES")) {
+			logger.debug("Elect scheduler server.");
 			try {
 				//set SchedulerServer
 				String server = config.getProperty("config.SchedulerServer");
@@ -494,6 +491,9 @@ public class EzEmailScheduler {
 		        	
 		        	if (schedulerServer.equals(server)) {
 		        		isSchedulerServer = true;
+		        		logger.debug("This is elected as a scheduler server.");
+		        	} else {
+		        		logger.debug("This is not elected.");
 		        	}
 		        } else {
 		        	logger.error("Cannot get SchedulerServer.");
@@ -506,7 +506,7 @@ public class EzEmailScheduler {
 			logger.debug("config.Run_Scheduler property is not YES.");
 		}
 		
-		logger.debug("betSchedulerServer ended.");
+		logger.debug("preScheduler ended.");
 		
 		return isSchedulerServer;
 	}
