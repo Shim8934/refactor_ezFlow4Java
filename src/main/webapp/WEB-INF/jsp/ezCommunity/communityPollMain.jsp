@@ -13,7 +13,7 @@
 		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
-			var ch_CommunityAdmin = "${chCommunityAdmin}";
+// 			var ch_CommunityAdmin = "${chCommunityAdmin}";
 		    var UserLevel = "<c:out value ='${userLevel}' />";
 		    
 		    document.onselectstart = function () { return false; };
@@ -52,7 +52,7 @@
 			}
 			
 		    function movepage(code, itemno, pollstate) {
-		        if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+		        if (UserLevel == "0" || UserLevel == "9") {
 		            alert("<spring:message code='ezCommunity.t1102' />");
 		            return;
 		        }

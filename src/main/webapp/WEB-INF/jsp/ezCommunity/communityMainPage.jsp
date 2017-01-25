@@ -1181,7 +1181,7 @@
 	            if (code == "0") {
 	                window.frames.location.href = window.frames.location.href;
 	            } else {
-	                var url = "/ezCommunity/checkCommHome.do?communityCD=" + code + "&userLevel=1";
+	                var url = "/ezCommunity/checkCommHome.do?communityCD=" + code;
 	                var wWeight = "1300";
 	                var wHeight = "900";
 

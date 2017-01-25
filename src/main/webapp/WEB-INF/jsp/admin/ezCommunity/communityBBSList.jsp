@@ -272,7 +272,7 @@
 						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
 					</c:when>
 					
-					<c:when test="${(fn:indexOf(rollInfo, 'k=1') > -1 && fn:indexOf(rollInfo, 't=1') > -1) && bName == 'c_notice'}">
+					<c:when test="${fn:indexOf(rollInfo, 'k=1') > -1 && bName == 'c_notice'}">
 						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
 					</c:when>
 				</c:choose>

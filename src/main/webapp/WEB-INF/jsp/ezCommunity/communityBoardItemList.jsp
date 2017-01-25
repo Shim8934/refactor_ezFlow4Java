@@ -47,7 +47,7 @@
     		var gubun = "<c:out value='${boardInfo.gubun}' />";
     		var UserLevel = "<c:out value='${userLevel}' />";
     		var code = "<c:out value='${code}' />";
-    		var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
+//     		var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
     		var ListInfo = "";
     		
     		$(function () {
@@ -129,12 +129,12 @@
     		}
     		
     		function NewItem_onclick() {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
 				    alert("<spring:message code='ezCommunity.t896' />");
 				    return;
 				}
     			    
-				if (ch_CommunityAdmin < 0 && Write_FG != "true") {
+				if (Write_FG != "true") {
 				    alert("<spring:message code='ezCommunity.t897' />");
 				    return;
 				}
@@ -149,12 +149,12 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+   				if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t899' />");
     				return;
     			}
     				
-    			if(ch_CommunityAdmin < 0 && Read_FG != "true") {
+    			if(Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t423' />");
     				return;
     			}
@@ -200,7 +200,7 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {	
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t900' />");
     				return;
     			}
@@ -219,12 +219,12 @@
     				}
     			}
 
-    			if(ch_CommunityAdmin < 0 && Delete_FG != "true") {
+    			if(Delete_FG != "true") {
     				alert("<spring:message code='ezCommunity.t901' />");
     				return;
     			}
     			
-    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && ch_CommunityAdmin < 0) {
+    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     		        if (gubun == "2") {
     		            var pItemInfo = strListInfo.split(";")[0];
     		            var pItemID = pItemInfo.split(",")[0];
@@ -526,7 +526,7 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t905' />");
     				return;
     			}
@@ -536,7 +536,7 @@
     				return;
     			}
 
-    			if(ch_CommunityAdmin < 0 && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+    			if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -566,12 +566,12 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t899' />");
     				return;
     			}
     					
-    			if(ch_CommunityAdmin < 0 && Read_FG != "true") {
+    			if(Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t423' />");
     				return;
     			}
@@ -611,7 +611,7 @@
     		}
 
     		function MemberInfo_onclick(pUserID) {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t906' />");
     				return;
     			}
@@ -625,7 +625,7 @@
     		}
 
     		function ReservationItem_onclick() {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t907' />");
     				return;
     			}
@@ -640,7 +640,7 @@
     		};
 
     		function search_onclick() {
-    			if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+    			if (UserLevel == "0" || UserLevel == "9") {
     				alert("<spring:message code='ezCommunity.t908' />");
     				return;
     			}
