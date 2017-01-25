@@ -847,97 +847,100 @@
 	<select id="EzCommunityDAO.adminSearchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
 		<![CDATA[
 			SELECT
-	            A.ITEMID,
-	            A.BOARDID,
-	            B.BOARDNAME$v_strLang$,
-	            A.WRITERID,
-	            A.WRITERNAME$v_strLang$,
-	            A.WRITERDEPTNAME$v_strLang$,
-	            A.WRITERCOMPANYNAME$v_strLang$,
-	            A.PARENTWRITEDATE,
-	            A.WRITEDATE,
-	            A.STARTDATE,
-	            A.IMPORTANCE,
-	            A.TITLE,
-	            A.READCOUNT,
-	            A.ATTACHMENTS,
-	            A.ITEMLEVEL,
-	            A.ABSTRACT,
-            	CASE WHEN D.TOTALCOUNT IS NULL THEN 0 ELSE D.TOTALCOUNT END READFLAG
+				*
 			FROM
-				EZCOMMUNITY.TBL_COMM_ITEM A
-            INNER JOIN
-            	(SELECT
-            		BOARDID,
-           			BOARDNAME$v_STRLANG$,
-           			TENANT_ID
+				(SELECT
+		            A.itemid,
+		            A.boardid,
+		            B.boardname$v_strLang$,
+		            A.writerid,
+		            A.writername$v_strLang$,
+		            A.writerdeptname$v_strLang$,
+		            A.writercompanyname$v_strLang$,
+		            A.parentwritedate,
+		            A.writedate,
+		            A.startdate,
+		            A.importance,
+		            A.title,
+		            A.readcount,
+		            A.attachments,
+		            A.itemlevel,
+		            A.abstract,
+	            	CASE WHEN D.totalcount IS NULL THEN 0 ELSE D.totalcount END readflag
 				FROM
-					EZCOMMUNITY.TBL_COMM_BOARDINFO
-				WHERE
-					BOARDID LIKE #v_PBOARDID#
-				) B
-			ON
-				A.BOARDID = B.BOARDID
-			AND
-				A.TENANT_ID = B.TENANT_ID
-            LEFT OUTER JOIN
-            	(SELECT
-            		NVL(COUNT(USERID), 0) AS TOTALCOUNT,
-            		ITEMID,
-            		TENANT_ID
-				FROM
-					EZCOMMUNITY.TBL_COMM_ITEM_READ
-				WHERE
-					RTRIM(USERID) = #v_PUSERID#
+					EZCOMMUNITY.TBL_COMM_ITEM A
+	            INNER JOIN
+	            	(SELECT
+	            		boardid,
+	           			boardname$v_strLang$,
+	           			tenant_id
+					FROM
+						EZCOMMUNITY.TBL_COMM_BOARDINFO
+					WHERE
+						boardid LIKE #v_pBoardID#
+					) B
+				ON
+					A.boardid = B.boardid
 				AND
-					TENANT_ID = #tenantID#
-				GROUP BY
-					ITEMID,
-					TENANT_ID
-				) D
-			ON
-				A.ITEMID = D.ITEMID
-			AND
-				A.TENANT_ID = D.TENANT_ID
-            WHERE
-            	A.BOARDID = #v_PBOARDID#
-            AND
-            	ENDDATE > #v_pNow#
+					A.tenant_id = B.tenant_id
+	            LEFT OUTER JOIN
+	            	(SELECT
+	            		NVL(COUNT(userid), 0) AS totalcount,
+	            		itemid,
+	            		tenant_id
+					FROM
+						EZCOMMUNITY.TBL_COMM_ITEM_READ
+					WHERE
+						RTRIM(userid) = #v_pUserID#
+					AND
+						tenant_id = #tenantID#
+					GROUP BY
+						itemid,
+						tenant_id
+					) D
+				ON
+					A.itemid = D.itemid
+				AND
+					A.tenant_id = D.tenant_id
+	            WHERE
+	            	A.boardid = #v_pBoardID#
+	            AND
+	            	enddate > #v_pNow#
 		]]>
 		
 		<isNotEqual property="v_pTitle" compareValue="">
 			AND
-				TITLE LIKE '%' ||#v_pTitle#|| '%'
+				title LIKE '%' ||#v_pTitle#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pWriterName" compareValue="">
 			AND
-				WRITERNAME$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
+				writername$v_strLang$ LIKE '%' ||#v_pWriterName#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pAbstract" compareValue="">
 			AND
-				ABSTRACT LIKE '%' ||#v_pAbstract#|| '%'
+				abstract LIKE '%' ||#v_pAbstract#|| '%'
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
 			AND
-				STARTDATE > #v_pStartDate#
+				startdate > #v_pStartDate#
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
 			AND
-				EndDate > #v_pEndDate#
+				enddate > #v_pEndDate#
 		</isNotEqual>
 		
 		<![CDATA[
 				ORDER BY
-					A.PARENTWRITEDATE DESC,
-					TO_CHAR(A.UPPERITEMIDTREE) DESC,
-					A.STARTDATE ASC
+					A.parentwritedate DESC,
+					TO_CHAR(A.upperitemidtree) DESC,
+					A.startdate ASC
 				)
 			WHERE
-				ROWNUM <= #v_pEndRow#
+				rownum <= #v_pEndRow#
 		]]>
 	</select>
 	
@@ -4104,7 +4107,9 @@
 						FROM
 							EZCOMMUNITY.C_CLUB
 						WHERE
-							RTRIM(C_CLUBNO) = #v_CODE#)
+							RTRIM(C_CLUBNO) = #v_CODE#
+						AND
+							TENANT_ID = #tenantID#)
 			AND
 				C_CAT='a'
 			AND
@@ -4127,7 +4132,9 @@
 						FROM
 							EZCOMMUNITY.C_CLUB
 						WHERE
-							RTRIM(C_CLUBNO) = #v_CODE#)
+							RTRIM(C_CLUBNO) = #v_CODE#
+						AND
+							TENANT_ID = #tenantID#)
 			AND
 				C_CAT='b'
 			AND
@@ -5572,13 +5579,13 @@
 	<insert id="EzCommunityDAO.createBoardGroupInsert1"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDINFO
-				(C_CLUBNO,
-				BOARDID,
-				BOARDNAME,
-				BOARDNAME2,
-				PARENTBOARDID,
-				BOARDNO,
-				TENANT_ID)
+				(c_clubno,
+				boardid,
+				boardname,
+				boardname2,
+				parentboardid,
+				boardno,
+				tenant_id)
 			VALUES
 				(#v_CODE#,
 				#v_BOARDGROUPID#,
@@ -5589,17 +5596,18 @@
 				#tenantID#)
 		]]>
 	</insert>
+	
 	<insert id="EzCommunityDAO.createBoardGroupInsert2"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDMANAGE
-				(BOARDID,
-				ACCESSID,
-				ACCESSNAME,
-				ACCESSLEVEL,
-				ACCESS_,
-				PARENTBOARDID,
-				BOARDADMIN_FG,
-				TENANT_ID)
+				(boardid,
+				accessid,
+				accessname,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				tenant_id)
 		VALUES
 			(#v_BOARDGROUPID#,
 			#v_USERINFO_USERID#,
@@ -5611,17 +5619,18 @@
 			#tenantID#)
 		]]>
 	</insert>
+	
 	<insert id="EzCommunityDAO.createBoardGroupInsert3"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDMANAGE
-				(BOARDID,
-				ACCESSID,
-				ACCESSNAME,
-				ACCESSLEVEL,
-				ACCESS_,
-				PARENTBOARDID,
-				LISTVIEW_FG,
-				TENANT_ID)
+				(boardid,
+				accessid,
+				accessname,
+				accesslevel,
+				access_,
+				parentboardid,
+				listview_fg,
+				tenant_id)
 			VALUES
 				(#v_BOARDGROUPID#,
 				'EVERYONE',
@@ -5634,13 +5643,22 @@
 		]]>
 	</insert>
 	
+	<delete id="EzCommunityDAO.truncateCommTreeCache"				parameterClass="Integer">
+		<![CDATA[
+			DELETE FROM EZCOMMUNITY.TBL_COMM_TREECACHE
+			WHERE
+				tenant_id = #tenantID#
+			
+		]]>
+	</delete>
+	
 <!-- 	<procedure id="EzCommunityDAO.createBoardInsert"			parameterClass="Map"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_CREATEBOARD_INSERT(#v_CODE#, #v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_PARENTBOARDID#, #v_BOARDGROUPID#, #v_COMATT#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME#, #v_USERINFO_COMPANYNAME#, #v_USERINFO_DEPTNAME#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.createBoardInsertSelect"			parameterClass="Integer"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(BOARDNO) , 0) + 1
+				NVL(MAX(boardno) , 0) + 1
 			FROM
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			WHERE
@@ -5650,16 +5668,16 @@
 	<insert id="EzCommunityDAO.createBoardInsertInsert1"		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDINFO
-				(C_CLUBNO,
-				BOARDID,
-				BOARDNAME,
-				BOARDNAME2,
-				PARENTBOARDID,
-				BOARDGROUPID,
-				ITEMEXPIRES,
-				ATTACHSIZELIMIT,
-				BOARDNO,
-				TENANT_ID)
+				(c_clubno,
+				boardid,
+				boardname,
+				boardname2,
+				parentboardid,
+				boardgroupid,
+				itemexpires,
+				attachsizelimit,
+				boardno,
+				tenant_id)
 			VALUES
 				(#v_CODE#,
 				#v_BOARDID#,
@@ -5676,20 +5694,20 @@
 	<insert id="EzCommunityDAO.createBoardInsertInsert2"		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDMANAGE
-				(BOARDID,
-				ACCESSID,
-				ACCESSNAME,
-				ACCESSLEVEL,
-				ACCESS_,
-				PARENTBOARDID,
-				BOARDADMIN_FG,
-				LISTVIEW_FG,
-				READ_FG,
-				WRITE_FG,
-				REPLY_FG,
-				DELETE_FG,
-				INHERIT_FG,
-				TENANT_ID)
+				(boardid,
+				accessid,
+				accessname,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				tenant_id)
 			VALUES
 				(#v_BOARDID#,
 				#v_USERINFO_USERID#,
@@ -5710,20 +5728,20 @@
 	<insert id="EzCommunityDAO.createBoardInsertInsert3"		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.TBL_COMM_BOARDMANAGE
-				(BOARDID,
-				ACCESSID,
-				ACCESSNAME,
-				ACCESSLEVEL,
-				ACCESS_,
-				PARENTBOARDID,
-				BOARDADMIN_FG,
-				LISTVIEW_FG,
-				READ_FG,
-				WRITE_FG,
-				REPLY_FG,
-				DELETE_FG,
-				INHERIT_FG,
-				TENANT_ID)
+				(boardid,
+				accessid,
+				accessname,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				tenant_id)
 			VALUES
 				(#v_BOARDID#,
 				'EVERYONE',
@@ -5760,12 +5778,12 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			SET
-				ParentBoardID = #v_pNewParentBoardID#,
-				BoardGroupID = #v_pNewBoardGroupID#
+				parentboardid = #v_pNewParentBoardID#,
+				boardgroupid = #v_pNewBoardGroupID#
 			WHERE
-				BoardID = #v_pOrgBoardID#
+				boardid = #v_pOrgBoardID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5774,11 +5792,11 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_BOARDMANAGE
 			SET
-				ParentBoardID = #v_pNewParentBoardID#
+				parentboardid = #v_pNewParentBoardID#
 			WHERE
-				BoardID = #v_pOrgBoardID#
+				boardid = #v_pOrgBoardID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5790,11 +5808,11 @@
 			DELETE
 				EZCOMMUNITY.C_CLUBUSER
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(C_ID) = #v_USERID#
+				RTRIM(c_id) = #v_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -5803,11 +5821,11 @@
 			DELETE
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(USERID) = #v_USERID#
+				RTRIM(userid) = #v_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -5816,11 +5834,11 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUB
 			SET
-				C_MEMBERCNT = C_MEMBERCNT - 1
+				c_membercnt = c_membercnt - 1
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5832,23 +5850,22 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			SET
-				BoardDescription = #v_pDescription#,
-				ItemExpires = #v_pExpires#,
-				AttachsizeLimit = #v_pAttachMax#,
-				URL = #v_pURL#,
-				ReplyNotify = #v_pReplyNotify#,
-				Gubun = #v_pGubun#,
-				BoardName = #v_pBoardName#,
-				BoardName2 = #v_pBoardName2#,
-				DeleteAfter = #v_pDeleteAfter#,
-				BoardColor = #v_pBoardColor#,
-				VersionUse = #v_pVersionUse#
-				,
-				CheckUse = #v_pCheckUse#
+				boarddescription = #v_pDescription#,
+				itemexpires = #v_pExpires#,
+				attachsizelimit = #v_pAttachMax#,
+				url = #v_pURL#,
+				replynotify = #v_pReplyNotify#,
+				gubun = #v_pGubun#,
+				boardname = #v_pBoardName#,
+				boardname2 = #v_pBoardName2#,
+				deleteafter = #v_pDeleteAfter#,
+				boardcolor = #v_pBoardColor#,
+				versionuse = #v_pVersionUse#,
+				checkuse = #v_pCheckUse#
 			WHERE
-				BoardID = #v_pBoardID#
+				boardid = #v_pBoardID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5857,11 +5874,11 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_MYBOARDS
 			SET
-				BOARDNAME = #v_pBoardName#
+				boardname = #v_pBoardName#
 			WHERE
-				BoardID = #v_pBoardID#
+				boardid = #v_pBoardID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5873,11 +5890,11 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUB
 			SET
-				C_SYSOPID = #v_C_ID#
+				c_sysopid = #v_C_ID#
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5890,15 +5907,15 @@
 			JOIN
 				EZCOMMUNITY.TBL_COMM_BOARDMANAGE B
 			ON
-				A.BOARDID = B.BOARDID
+				A.boardid = B.boardid
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = B.tenant_id
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				ACCESSID <> 'EVERYONE'
+				accessid <> 'EVERYONE'
 			AND
-				A.TENANT_ID = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -5907,12 +5924,12 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_BOARDMANAGE
 			SET
-				ACCESSID = #v_C_ID#,
-				ACCESSNAME = #v_C_NM#
+				accessid = #v_C_ID#,
+				accessname = #v_C_NM#
 			WHERE
-				ROWID = #v_rowID#
+				rowid = #v_rowID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5921,11 +5938,11 @@
 			DELETE
 				EZCOMMUNITY.C_CLUBUSER
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(C_ID) = #v_C_ID#
+				RTRIM(c_id) = #v_C_ID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -5934,11 +5951,11 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUB
 			SET
-				C_MEMBERCNT = C_MEMBERCNT - 1
+				c_membercnt = c_membercnt - 1
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -5947,11 +5964,11 @@
 			DELETE
 				EZCOMMUNITY.C_OUTAPPLICATION
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(USERID) = #v_C_ID#
+				RTRIM(userid) = #v_C_ID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -5961,15 +5978,15 @@
 	<insert id="EzCommunityDAO.adminCommCloseOkInsert"				parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.C_COMCLOSE
-				(C_CLUBNO,
-				C_CLUBNAME,
-				C_CLUBNAME2,
-				C_SYSOPID,
-				COMPANYNAME,
-				APPLICATIONDATE,
-				CLOSEREASON,
-				CLOSESTATE,
-				TENANT_ID)
+				(c_clubno,
+				c_clubname,
+				c_clubname2,
+				c_sysopid,
+				companyname,
+				applicationdate,
+				closereason,
+				closestate,
+				tenant_id)
 			VALUES
 				(#v_CODE#,
 				#v_COMMNAME#,
@@ -5991,25 +6008,25 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUB
 			SET
-				C_MEMBERCNT = C_MEMBERCNT + 1
+				c_membercnt = c_membercnt + 1
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
 	<insert id="EzCommunityDAO.joinOkSet1Insert"					parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZCOMMUNITY.C_CLUBUSER
-     			(C_CLUBNO,
-     			C_ID,
-     			C_INDATE,
-     			C_LASTDATE,
-     			COMPANYID,
-     			PERMIT,
-     			C_VISITED,
-     			TENANT_ID)
+     			(c_clubno,
+     			c_id,
+     			c_indate,
+     			c_lastdate,
+     			companyid,
+     			permit,
+     			c_visited,
+     			tenant_id)
      		VALUES
      			(#v_CODE#,
      			#v_USERINFO_USERID#,
@@ -6030,19 +6047,19 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUBUSER
 			SET
-				C_EMAIL = #v_OPENEMAIL#,
-				C_HPHONE = #v_OPENHP#,
-				C_COMPANY = #v_OPENCOMP#,
-				C_HOUSE = #v_OPENHOUSE#,
-				C_BIRTH = #v_OPENBIRTH#,
-				C_SEX = #v_OPENSEX#,
-				C_INTRO = #v_C_INTRO#
+				c_email = #v_OPENEMAIL#,
+				c_hphone = #v_OPENHP#,
+				c_company = #v_OPENCOMP#,
+				c_house = #v_OPENHOUSE#,
+				c_birth = #v_OPENBIRTH#,
+				c_sex = #v_OPENSEX#,
+				c_intro = #v_C_INTRO#
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(C_ID) = #v_USERINFO_USERID#
+				RTRIM(c_id) = #v_USERINFO_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -6054,21 +6071,21 @@
 			UPDATE
 				EZCOMMUNITY.C_CLUBUSER
 			SET
-				C_EMAIL = #v_OPENEMAIL#,
-				C_HPHONE = #v_OPENHP#,
-				C_COMPANY = #v_OPENCOMP#,
-				C_HOUSE = #v_OPENHOUSE#,
-				C_JOB = #v_OPENJOB#,
-				C_BIRTH = #v_OPENBIRTH#,
-				C_SEX = #v_OPENSEX#,
-				C_INTRO = #v_C_INTRO#,
-				PERMIT = '0'
+				c_email = #v_OPENEMAIL#,
+				c_hphone = #v_OPENHP#,
+				c_company = #v_OPENCOMP#,
+				c_house = #v_OPENHOUSE#,
+				c_job = #v_OPENJOB#,
+				c_birth = #v_OPENBIRTH#,
+				c_sex = #v_OPENSEX#,
+				c_intro = #v_C_INTRO#,
+				permit = '0'
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(C_ID) = #v_USERINFO_USERID#
+				RTRIM(c_id) = #v_USERINFO_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
