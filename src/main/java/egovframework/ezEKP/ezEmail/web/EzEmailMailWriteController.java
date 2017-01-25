@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -791,81 +793,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
         }
         
-//        else if (_url.equals("") && (_cmd.equals("board") || _cmd.equals("Community")))
-//        {
-//            mailMessageBoard();
-//        }
-//        else if (_url.equals("") && _cmd.equals("docsend"))
-//        {
-//            mailMessageDoc();
-//        }
-//        else if (_url.equals("") && _cmd.equals("AccessNO"))
-//        {
-//            mailMessageNone();
-//        }
-//        else if (_url.equals("") && _cmd.equals("report"))
-//        {
-//            mailMessageReport();
-//        }
-//        else if (!_url.equals(""))
-//        {
-//            ExchangeService esb = apiesb.getexchangeservice(userinfo.UserID);
-//            ExtendedPropertyDefinition pagehtml = new ExtendedPropertyDefinition(0x1013, MapiPropertyType.Binary);
-//            ExtendedPropertyDefinition codepagehtml = new ExtendedPropertyDefinition(0x3FDE, MapiPropertyType.Integer);
-//            PropertySet properts = new PropertySet(BasePropertySet.FirstClassProperties, pagehtml, codepagehtml);
-//            EmailMessage orgmesg = EmailMessage.Bind(esb, new ItemId(url), properts);
-//            if (orgmesg.IsDraft)
-//            {
-//                //임시보관함에 있는 메일일경우 처리
-//                bool isDraft = false;
-//                Folder folderid = Folder.Bind(esb, WellKnownFolderName.Drafts);
-//                if (orgmesg.ParentFolderId.UniqueId == folderid.Id.UniqueId)
-//                {
-//                    folderpath = "Draft";
-//                    isDraft = true;
-//                }
-//                else
-//                {
-//                    Folder draft = Folder.Bind(esb, WellKnownFolderName.Drafts);
-//                    if (draft.Id.UniqueId == orgmesg.ParentFolderId.UniqueId)
-//                    {
-//                        folderpath = "Draft";
-//                        isDraft = true;
-//                    }
-//                    if (!isDraft)
-//                    {
-//                        FindFoldersResults findfolders = esb.FindFolders(WellKnownFolderName.Drafts, new FolderView(100));
-//                        foreach (Folder folder in findfolders)
-//                        {
-//                            if (folder.Id.UniqueId == orgmesg.ParentFolderId.UniqueId)
-//                            {
-//                                folderpath = "Draft";
-//                                isDraft = true;
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//                if (!isDraft)
-//                {
-//                    MailMessage_Send(_cmd, _url, _attach, esb, orgmesg);
-//                    return;
-//                }
-//            }
-//            if ((_cmd == "EDIT" || _cmd == "RESEND") && msgto != "")
-//            {
-//                resendMail(_cmd, _url, _attach, msgto, esb, orgmesg); return;
-//            }
-//            if (_url != "" && _cmd == "EDIT")
-//            {
-//                MailMessage_Edit(_cmd, _url, _attach, esb, orgmesg); return;
-//            }
-//            if (_url != "")
-//            {
-//                MailMessage_Send(_cmd, _url, _attach, esb, orgmesg); return;
-//            }
-//        }
-
+        String browser = ClientUtil.getClientInfo(request, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+        
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -926,10 +856,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("outMailColor", outMailColor);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("serverName", serverName);
-		
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
+		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		logger.debug("mailWrite ended.");
@@ -1258,18 +1185,257 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
+		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
+		int bigMaxSize = Integer.parseInt(bigMaxSizeStr);
+		
+		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
+		int changeSize = Integer.parseInt(changeSizeStr);
+		
+		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String uploadMailRootPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
-		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
+		String realPath = commonUtil.getRealPath(request);
+		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
+		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
+		String useExtension = config.getProperty("config.USE_FileExtension");
 		
+		int fileCnt = doc.getElementsByTagName("ROW").getLength();
+		String[] fileName = new String[fileCnt];
+		String[] filePath = new String[fileCnt];
+		long[] fileSize = new long[fileCnt];
+		String[] fileExt = new String[fileCnt];
+		String[] newFileName = new String[fileCnt];
 		
+		int totalFileSize = 0;
+		
+		if (tempFolderName.equals("")) {
+			logger.debug("tempFolderName is EMPTY. Return NODATA.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "NODATA";
+		}
+		if (fileCnt == 0) {
+			logger.debug("fileCnt is 0. Return NOFILE.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "NOFILE";
+		}
+		
+		for (int i=0; i<fileCnt; i++) {
+			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(i).getTextContent();
+			
+			File f = new File(filePath[i]);
+			
+			if (f.exists()) {
+				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
+				
+				if (fileName[i].lastIndexOf(".") > -1) {
+					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+				} else {
+					fileExt[i] = "";
+				}
+				
+				newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
+				
+				fileSize[i] = f.length();
+				totalFileSize += fileSize[i];
+			} else {
+				filePath[i] = "NOFILE";
+			}
+		}
+		
+		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
+		if (totalFileSize > bigMaxSize) {
+			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			logger.debug("mailInterUploadCopy ended.");
+			return "OVERSIZE";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ROOT><NODES>");
+		
+		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+			logger.debug("In case of big attachment.");
+			// 현재 날짜의 폴더가 없으면 생성한다.
+			String folderDate = EgovDateUtil.getToday("");
+			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+            File file = new File(bigAttachFolderPath);
+            
+            if (!file.exists()) {
+            	file.mkdirs();
+            }
+            
+            for (int i=0; i<fileCnt; i++) {
+            	if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+            	
+            	FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+                
+				try {
+                	// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					bos.close(); bos = null;
+					bis.close(); bis = null;
+					fos.close(); fos = null;
+					fis.close(); fis = null;
+					
+					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
+                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
+                	
+                	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+                	fos = new FileOutputStream(file);
+                	fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+                	
+                	//첨부파일 정보를 XML data로 만든다.
+                    String resultUpload = "";
+    				if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+                        resultUpload = "denied";
+                    } else {
+                        resultUpload = "true";
+                    }
+    				
+    				sb.append("<NODE>");
+    				sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+    				sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+    				sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+    				sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+    				sb.append("<FILELOCATION><![CDATA[" + folderDate + "|!|" + newFileName[i] + "]]></FILELOCATION>");
+    				sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
+    				sb.append("</NODE>");
+					
+                } catch(Exception e) {
+                	e.printStackTrace();
+                } finally {
+                	if (bos != null) {
+                		try { bos.close(); } catch(Exception e) {}
+                	}
+                	if (bis != null) {
+                		try { bis.close(); } catch(Exception e) {}
+                	}
+                	if (fos != null) {
+                		try { fos.close(); } catch(Exception e) {}
+                	}
+                	if (fis != null) {
+                		try { fis.close(); } catch(Exception e) {}
+                	}
+                }
+                
+            }
+            
+		} else { // 일반첨부의 경우
+			logger.debug("In case of common attachment.");
+			File file = new File(pTempFileUploadPath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			for (int i=0; i<fileCnt; i++) {
+				if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+				
+				FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+				
+				try {
+					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					//첨부파일 정보를 XML data로 만든다.
+					String resultUpload = "";
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+	                    resultUpload = "denied";
+	                } else {
+	                    resultUpload = "true";
+	                }
+					
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (bos != null) {
+                		try { bos.close(); } catch(Exception e) {}
+                	}
+                	if (bis != null) {
+                		try { bis.close(); } catch(Exception e) {}
+                	}
+					if (fos != null) {
+						try { fos.close(); } catch(Exception e){}
+					}
+					if (fis != null) {
+						try { fis.close(); } catch(Exception e){}
+					}
+				}
+			}
+			
+		}
+		
+		sb.append("</NODES></ROOT>");
+		
+		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
+        File f = new File(pTempListPath);
+        if (!f.exists()) {
+			f.mkdirs();
+        }
+        
+        f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+		OutputStreamWriter outWrite = null;
+		
+    	try {
+    		outWrite = new OutputStreamWriter(new FileOutputStream(f));
+    		outWrite.write(sb.toString());
+    		String crlf = System.getProperty("line.separator");
+    		outWrite.append(crlf+crlf);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	} finally {
+    		if (outWrite != null) {
+    			try { outWrite.close(); } catch (Exception e) {}
+    		}
+    	}
 		
 		logger.debug("mailInterUploadCopy ended.");
-		
-		return "";
+		return sb.toString();
 	}
 
 	/**

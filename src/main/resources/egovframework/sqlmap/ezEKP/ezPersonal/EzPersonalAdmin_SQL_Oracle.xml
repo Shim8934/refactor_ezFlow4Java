@@ -801,11 +801,15 @@
                  	JOIN
                  		EZHRMASTER.TBLUSERMASTER B
                  	ON
-                 		A.CN = B.CN
+                 		A.CN = B.CN 
+                    AND
+                      A.TENANT_ID = B.TENANT_ID
                  	JOIN
                  		EZHRMASTER.TBLDEPTMASTER C
                  	ON
                  		A.DEPTID = C.CN
+                    AND
+                        A.TENANT_ID = C.TENANT_ID
            			WHERE
            				B.CN = #v_pUserID#
                     AND

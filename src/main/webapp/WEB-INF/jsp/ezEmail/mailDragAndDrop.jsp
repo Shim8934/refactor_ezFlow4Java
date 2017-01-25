@@ -83,7 +83,7 @@
 		            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
 		
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
-		            if("${ userinfo.lang }" == "2")
+		            if("${ userInfo.lang }" == "2")
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
 		            else
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
@@ -93,7 +93,7 @@
 		        }
 		
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		            if ("${ userinfo.lang }" == "2")
+		            if ("${ userInfo.lang }" == "2")
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
 		            else
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
@@ -174,12 +174,15 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
-		
+		        
 		        if (xhr.responseText == "OVERFLOW") {
 		            alert(strLang167);
 		        }
 		        else if (xhr.responseText == "NODATA") {
 		            alert(strLang223);
+		        }
+				else if (xhr2.responseText == "NOFILE") {
+		        	alert(2);
 		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr.responseText);
@@ -198,11 +201,13 @@
 		            AttatchReturnValue = null;
 		            window.parent.returnvalue(xhr.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
-		            isfileup = false;
 		            FileUpdataAfterComplete();
 		        }
+		        
+		        isfileup = false;
 		    }
-		
+			
+		    //TODO: 맞게 수정하기
 		    function uploadComplete2(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
@@ -211,8 +216,14 @@
 		        if (xhr2.responseText == "OVERFLOW") {
 		            alert(strLang167);
 		        }
+				else if (xhr2.responseText == "OVERSIZE") {
+		        	
+		        }
 		        else if (xhr2.responseText == "NODATA") {
 		            alert(strLang223);
+		        }
+		        else if (xhr2.responseText == "NOFILE") {
+		        	
 		        }
 		        else {
 		            var tempxmldom = loadXMLString(xhr2.responseText);
@@ -231,9 +242,10 @@
 		            AttatchReturnValue = null;
 		            window.parent.returnvalue(xhr2.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr2.responseText);
-		            isfileup = false;
 		            FileUpdataAfterComplete();
 		        }
+		        
+		        isfileup = false;
 		    }
 		
 		    function FileUpdataAfterComplete() {
@@ -264,10 +276,12 @@
 		    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
 		    }
 		    function uploadFailed(evt) {
+		        isfileup = false;
 		        alert("There was an error attempting to upload the file.");
 		    }
 		
 		    function uploadCanceled(evt) {
+		        isfileup = false;
 		        alert("The upload has been canceled by the user or the browser dropped the connection.");
 		    }
 		
@@ -336,6 +350,8 @@
 		    }
 		
 		    function fileupload() {
+		    	isfileup = true;
+		    	
 		        var fd = new FormData();
 		
 		        for (var i = 0; i < filelist.length; i++) {
@@ -351,7 +367,6 @@
 		        fd.append("txtName", window.parent.filedate);
 		        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
 		
-		        isfileup = true;
 		        xhr.upload.addEventListener("progress", uploadProgress, false);
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
@@ -363,29 +378,31 @@
 		
 		    var xhr2 = new XMLHttpRequest();
 		    function fileupload2(fileXml) {
-		        var fd = new FormData();
-		        isfileup = true;
+		    	isfileup = true;
 				
-		        if (!filesizecheck(fileXml))
+		        if (!filesizecheck(fileXml)) {
 		            return;
+		        }
 		        
-		        var newid = window.parent.g_newid;
-		        fd.append("maxsize", window.parent.FtotSizeAttachSize);
-		        fd.append("cnt", window.parent.bigtrue);
-		        fd.append("newid", newid);
-		        fd.append("bigmaxsize", window.parent.FtotBigSizeAttachSize);
-		        fd.append("changesize", window.parent.FBigSizeAttachSize);
-		        fd.append("txtName", window.parent.filedate);
-		        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
-		        fd.append("fileXml", fileXml);
-		
-		        xhr2.upload.addEventListener("progress", uploadProgress, false);
-		        xhr2.addEventListener("load", uploadComplete2, false);
-		        xhr2.addEventListener("error", uploadFailed, false);
-		        xhr2.addEventListener("abort", uploadCanceled, false);
-		        xhr2.open("POST", "../ezEmail/remote/mail_interUploadCopyX_CK.aspx?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn);
-		        xhr2.send(fd);
-		        document.getElementById('progdiv').style.display = "inline-block";
+		        var objNode;
+		        
+		        // TODO : test - 10메가 넘을 경우 자동으로 대용량으로 넘어가도록.
+		        createNodeAndInsertText(fileXml, objNode, "MAXSIZE", window.parent.FtotSizeAttachSize);
+		        createNodeAndInsertText(fileXml, objNode, "CNT", window.parent.bigtrue);
+		        createNodeAndInsertText(fileXml, objNode, "NEWID", window.parent.g_newid);
+		        createNodeAndInsertText(fileXml, objNode, "BIGMAXSIZE", window.parent.FtotBigSizeAttachSize);
+		        createNodeAndInsertText(fileXml, objNode, "CHANGESIZE", window.parent.FBigSizeAttachSize);
+		        createNodeAndInsertText(fileXml, objNode, "TXTNAME", window.parent.filedate);
+		        createNodeAndInsertText(fileXml, objNode, "ENDDAY", window.parent.BigSizeMailAttachDelDay);
+		        
+		        xhr2.open("POST", "/ezEmail/mailInterUploadCopyXCK.do?STATUS=" + window.parent.filedate + "&isbigyn=" + isbigyn, false);
+		        xhr2.send(fileXml);
+		        
+		        if (xhr2.status >= 200 && xhr2.status < 300) {
+		        	uploadComplete2();
+		        } else {
+		        	uploadFailed();
+		        }
 		    }
 		    
 		    function filesizecheck(fileXml) {
@@ -416,7 +433,7 @@
 		            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
 
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
-		            if ("${ userinfo.lang }" == "2")
+		            if ("${ userInfo.lang }" == "2")
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
 		            else
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
@@ -424,7 +441,7 @@
 		        }
 
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		            if ("${ userinfo.lang }" == "2")
+		            if ("${ userInfo.lang }" == "2")
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
 		            else
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
