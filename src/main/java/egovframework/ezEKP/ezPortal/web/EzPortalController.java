@@ -1107,8 +1107,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("userPhoto="+userPhoto);
 		
 		//새로고침 시간 컨피그화
-		//임시 주석(2017-01-25)
-		//String refreshSecond = config.getProperty("refreshSecond");
+		String refreshSecond = config.getProperty("refreshSecond");
 		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
@@ -1125,7 +1124,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userPhoto", userPhoto);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useEditor", useEditor);
-		//model.addAttribute("refreshSecond", refreshSecond);
+		model.addAttribute("refreshSecond", refreshSecond);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
