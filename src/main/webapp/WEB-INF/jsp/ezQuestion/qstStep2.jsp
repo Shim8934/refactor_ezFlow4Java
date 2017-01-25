@@ -698,7 +698,7 @@
 			</form>
 			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
     			<div id="AttachFile" style="width:1px; height:1px;">
-        			<input type="file" name="cmuds" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
+        			<input type="file" name="cmuds" hidden="true" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
     			</div>
 			</form>
 		<iframe name="ifrm_TempLoad_Safari" src="about:blank" style="display:none"></iframe>
