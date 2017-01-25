@@ -143,13 +143,7 @@ public class CommonUtil {
 			user.setSkinNum("1");
 			user.setRootPage(false);
 			
-			String primaryLang = "";
-			
-			if (!tenantIdStr.equals("-1")) {
-				primaryLang = ezCommonService.getTenantConfig("PrimaryLang", Integer.parseInt(tenantIdStr)); 
-			}
-			
-			if (primaryLang.equals(lang)) {
+			if (user.getPrimary().equals(lang)) {
 				user.setPrimary("1");
 			} else {
 				user.setPrimary("2");
@@ -165,8 +159,7 @@ public class CommonUtil {
 				user.setDeptName(user.getDeptName2());
 				user.setDisplayName(user.getDisplayName2());
 				user.setCompanyName(user.getCompanyName2());
-			}
-			
+			}			
 			user.setLocale(new Locale(locale));
 			user.setOffset(timeZone);
 			
@@ -262,32 +255,17 @@ public class CommonUtil {
 		}
 	}
 	
-	public boolean checkAdmin(String loginCookie){
+	public LoginVO checkAdmin(String loginCookie){
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
-			String[] decDataArray = decData.split("///");
-			String userID = decDataArray[1];
-			
-            String tenantIdStr = "0";
-            
-            if (decDataArray.length >= 9) {
-                tenantIdStr = decDataArray[8];  
-            }
-			
-			LoginVO login = new LoginVO();
-			login.setId(userID);
-			login.setDn("NOPASSWORD");
-			login.setTenantId(Integer.parseInt(tenantIdStr));
-	
-			LoginVO user = loginService.selectUser(login);
+			LoginVO user = userInfo(loginCookie);
 	
 			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
-				return false;
+				return null;
 			}else{
-				return true;
+				return user;
 			}
 		}catch(Exception e){
-			return false;
+			return null;
 		}
 	}
 	
