@@ -3585,9 +3585,9 @@
 			<isEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						NVL(COUNT(C_CLUBNO), 0)
+						NVL(COUNT(C_CLUBUSER.C_CLUBNO), 0)
 					FROM
-						EZCOMUNITY.C_CLUBUSER,
+						EZCOMMUNITY.C_CLUBUSER,
 						EZCOMMUNITY.C_MEMBERINFO
 					WHERE
 						RTRIM(C_CLUBUSER.C_CLUBNO) = #v_CODE#
