@@ -269,6 +269,19 @@ public class CommonUtil {
 		}
 	}
 	
+	public LoginVO aprCheckAdmin(String loginCookie){
+		try{
+			LoginVO user = aprUserInfo(loginCookie);
+	
+			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+				return null;
+			}else{
+				return user;
+			}
+		}catch(Exception e){
+			return null;
+		}
+	}
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
