@@ -1222,7 +1222,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		for (int i=0; i<fileCnt; i++) {
 			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(i).getTextContent();
-			
 			File f = new File(filePath[i]);
 			
 			if (f.exists()) {
@@ -1239,6 +1238,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				fileSize[i] = f.length();
 				totalFileSize += fileSize[i];
 			} else {
+				logger.debug("Cannot find the file : " + filePath[i]);
 				filePath[i] = "NOFILE";
 			}
 		}

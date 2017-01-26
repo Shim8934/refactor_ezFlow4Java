@@ -6510,7 +6510,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 메일보내기 첨부파일 표출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/getItemAttachments.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezBoard/getItemAttachmentsMail.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, BoardItemVO boardItemVO, HttpServletRequest request) throws Exception {
 		logger.debug("getItemAttachments started");
@@ -6531,7 +6531,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("getItemAttachments ended");
-		
 		return result;
 	}
 	
