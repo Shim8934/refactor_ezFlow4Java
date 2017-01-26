@@ -3142,14 +3142,14 @@
 		</isEqual>
     	<isNotEqual property="v_PBOARDID" compareValue="">
     		AND
-    			RTRIM(c_clubno) = (SELECT
+    			RTRIM(c_clubno) = RTRIM((SELECT
 									c_clubno
 								FROM
 									EZCOMMUNITY.TBL_COMM_BOARDINFO 
 								WHERE
 									boardid = #v_PBOARDID#
 								AND
-									tenant_id = #tenantID#)
+									tenant_id = #tenantID#))
 		</isNotEqual>
 		<![CDATA[
 			AND
