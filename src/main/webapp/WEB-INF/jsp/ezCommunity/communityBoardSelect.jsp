@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
@@ -100,12 +101,21 @@
 	        }
 	
 	        function DisplayTopBoard() {
-	            xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=TOP&subFlag=0&classID=" + code, false);
-	            xmlhttp.send();
-	
-	            if (xmlhttp.responseText != "ERROR") {
-	                MakeTopBoardView(xmlhttp.responseText);
-	            }
+	        	$.ajax({
+		    		type : "POST",
+		    		async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : 'TOP',
+								subFlag : 0,
+								classID : code
+							},
+					success: function(result){
+						if (result.result.indexOf("ERROR") == -1) {
+							MakeTopBoardView(loadXMLString(result.result));
+				    	}
+					}
+		    	});
 	        }
 	
 	        function TopBoard_onclick(obj, ID, items) {
@@ -132,15 +142,30 @@
 	        }
 	        
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
-	            xmlhttp.open("POST", "/ezCommunity/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=3&pExcludeBoardID=" + BoardID + "&classID=" + code, false);
-	            xmlhttp.send();
-	            return xmlhttp.responseXML;
+	        	var xmlRtn;
+	        	$.ajax({
+		    		type : "POST",
+		    		async : false,
+					url : "/ezCommunity/getSubBoards.do",
+					dataType : "json",
+					data : {	rootBoardID : pRootBoardID,
+								subFlag : pSubFlag,
+								selectFlag : 3,
+								pExcludeBoardID : BoardID,
+								classID : code
+							},
+					success: function(result){
+						if (result.result.indexOf("ERROR") == -1) {
+							xmlRtn = loadXMLString(result.result);
+				    	}
+					}
+		    	});
+	        	
+	            return xmlRtn;
 	        }
 
-	        function MakeTopBoardView(strXML) {
-	            var xmldom = createXmlDom();
+	        function MakeTopBoardView(xmldom) {
 	            var strHTML = "";
-	            xmldom = loadXMLString(strXML);
 	            strHTML = "<table id='TopBoards' width=100% border=0>"
 	            var xmldomNodes = SelectNodes(xmldom, "TREEVIEWDATA/NODE");
 	            var items = xmldomNodes.length;
