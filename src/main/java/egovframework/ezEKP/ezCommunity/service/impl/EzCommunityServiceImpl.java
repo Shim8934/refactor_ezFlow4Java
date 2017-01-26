@@ -4335,19 +4335,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
 		String pBoardIDList = xmlDoc.getElementsByTagName("BOARDIDLIST").item(0).getTextContent().trim();
-		int pBoardListCount = pBoardIDList.split(";").length;
+		String[] boardIDList = pBoardIDList.split(";");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardIDList", pBoardIDList);
-		map.put("v_pBoardListCount", pBoardListCount);
 		map.put("tenantID", tenantID);
 		
 		try {
-			for (int i = 0; i <= pBoardListCount; i ++) {
-				map.put("v_count", i);
+			for (int i = 0; i < boardIDList.length; i ++) {
+				map.put("v_pBoardID", boardIDList[i]);
+				map.put("v_count", i+1);
 				
 				ezCommunityDAO.saveBoardOrder(map);
-				i ++;
 			}
 			
 			logger.debug("saveBoardOrder ended.");

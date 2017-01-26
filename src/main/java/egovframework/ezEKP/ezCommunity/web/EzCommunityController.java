@@ -2835,14 +2835,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/saveBoardOrder.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveBoardOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("saveBoardOrder started.");
+		logger.debug("xmlData = " + xmlData);
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ret = ezCommunityService.saveBoardOrder(xmlData, userInfo.getTenantId());
 		
 		ezCommunityService.deleteBoard(userInfo.getTenantId());
 		
 		ret = "<RESULT>" + ret + "</RESULT>";
 
+		logger.debug("saveBoardOrder started.");
+		
 		return ret;
 	}
 	
