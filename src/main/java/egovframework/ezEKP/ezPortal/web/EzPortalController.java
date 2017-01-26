@@ -380,13 +380,22 @@ public class EzPortalController extends EgovFileMngUtil {
 
 			if (mode.equals("edit")) {
 				//관리자 권한체크
-				boolean auth = commonUtil.checkAdmin(loginCookie);
+			/*	boolean auth = commonUtil.checkAdmin(loginCookie);
 				if (!auth) {
 					resp.setCharacterEncoding("UTF-8");
 					resp.setContentType("text/html; charset=UTF-8");
 					resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t264", locale));
 					resp.getWriter().flush();
+				}*/
+				LoginVO auth = commonUtil.checkAdmin(loginCookie);
+				
+				if (auth == null) {
+					resp.setCharacterEncoding("UTF-8");
+					resp.setContentType("text/html; charset=UTF-8");
+					resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t264", locale));
+					resp.getWriter().flush();
 				}
+				
 			}
 				
 			if (mode.equals("edit")) {
@@ -548,8 +557,15 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			//jgw 관리자체크
-			boolean checkAdmin = commonUtil.checkAdmin(loginCookie);
-			model.addAttribute("checkAdmin", String.valueOf(checkAdmin));
+			/*boolean checkAdmin = commonUtil.checkAdmin(loginCookie);*/
+			/*model.addAttribute("checkAdmin", String.valueOf(checkAdmin));*/
+			
+			LoginVO checkAdmin = commonUtil.checkAdmin(loginCookie);
+			if (checkAdmin != null) {
+				model.addAttribute("checkAdmin", "true");
+			} else {
+				model.addAttribute("checkAdmin", "false");
+			}
 			
 			//브라우저체크
 			String browser = ClientUtil.getClientInfo(req, "browser");
@@ -1030,7 +1046,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpTotalSection started");
 
-userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
 		String useEditor = config.getProperty("config.EDITOR");
@@ -1090,6 +1106,9 @@ userInfo = commonUtil.userInfo(loginCookie);
 		}
 		logger.debug("userPhoto="+userPhoto);
 		
+		//새로고침 시간 컨피그화
+		String refreshSecond = config.getProperty("refreshSecond");
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1105,6 +1124,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userPhoto", userPhoto);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("refreshSecond", refreshSecond);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

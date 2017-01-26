@@ -2100,11 +2100,13 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/timeDupCheck.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String timeDupCheck(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("timeDupCheck started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String ret = "";
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-			
+		
 		boolean isRep = xmlDom.getElementsByTagName("recurrence").getLength() != 0;
 		String resID = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
 		String sTime = xmlDom.getElementsByTagName("STIME").item(0).getTextContent();
@@ -2113,7 +2115,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String cmd = xmlDom.getElementsByTagName("CMD").item(0).getTextContent();
 		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
-			
+		
 		//반복예약시
 		String frequency = xmlDom.getElementsByTagName("frequency").getLength() == 0 ? "" : xmlDom.getElementsByTagName("frequency").item(0).getTextContent();
 		String selType = xmlDom.getElementsByTagName("selType").getLength() == 0 ? "" : xmlDom.getElementsByTagName("selType").item(0).getTextContent();
@@ -2126,11 +2128,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		String byPosition = xmlDom.getElementsByTagName("byPosition").getLength() == 0 ? "" : xmlDom.getElementsByTagName("byPosition").item(0).getTextContent();
 		String daysOfMonth = xmlDom.getElementsByTagName("daysOfMonth").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfMonth").item(0).getTextContent();
 		String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
-			
+		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
 		StringBuilder strSQL = new StringBuilder();
-			
+		
 		if (cmd.toLowerCase().equals("add")) {
 			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
 			strSQL.append("FROM TB_Schedule");
@@ -2163,35 +2165,40 @@ public class EzResourceController extends EgovFileMngUtil {
 			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
 			strSQL.append("              )");
 		}
-			
+		
 		boolean isDupRep = false;
 		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
 		//반복예약 데이터가 있을 때
 		if (isRep) {
+			logger.debug("===반복예약 데이터가 있을 때===");
 			if (cmd.equals("add")) {
 				num = null;
 			}
 			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 		}
-			
+		
 		//반복예약 데이터가 없을 때
 		if (!isRep) {
+			logger.debug("===반복예약 데이터가 없을 때===");
 			if (cmd.equals("add")) {
 				num = null;
 			}
-					
+			
 			if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
 				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			} else {
 				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			}
 		}
-			
+		
 		if (isDupRep) {
 			ret = "True";
 		} else {
 			ret = "False";
 		}
+		
+
+		logger.debug("timeDupCheck ended");
 		return ret;
 	}
 	

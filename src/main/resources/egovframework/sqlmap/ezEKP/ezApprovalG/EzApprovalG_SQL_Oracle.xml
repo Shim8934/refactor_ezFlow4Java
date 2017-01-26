@@ -40,35 +40,35 @@
 		<isEqual property="v_LANGTYPE" compareValue="1">
 			<![CDATA[
 				SELECT 
-					NAME, 
-					WIDTH, 
-					COLNAME
+					name, 
+					width, 
+					colname
 		      	FROM 
 		      		EZAPPROVALG_${companyID}.TBLISTOPTION 
 		      	WHERE 
-		      		TENANT_ID = #v_TENANTID#
+		      		tenant_id = #v_TENANTID#
 		      	AND
-		      		LISTTYPE = #v_LISTTYPE#
+		      		listtype = #v_LISTTYPE#
 		      	AND 
-		      		DTYPE IS NULL
-		      	ORDER BY SN 
+		      		dtype IS NULL
+		      	ORDER BY sn 
 			]]>
 		</isEqual>
 		<isNotEqual property="v_LANGTYPE" compareValue="1">
 			<![CDATA[
 				SELECT 
-					NAME$v_LANGTYPE$ AS NAME, 
-					WIDTH, 
-					COLNAME
+					name$v_LANGTYPE$ AS name, 
+					width, 
+					colname
 		      	FROM 
 		      		EZAPPROVALG_${companyID}.TBLISTOPTION 
 		      	WHERE 
-		      		TENANT_ID = #v_TENANTID#
+		      		tenant_id = #v_TENANTID#
 		      	AND
-		      		LISTTYPE = #v_LANGTYPE# 
+		      		listtype = #v_LANGTYPE# 
 		      	AND 
-		      		DTYPE IS NULL
-		      	ORDER BY SN 
+		      		dtype IS NULL
+		      	ORDER BY sn 
 			]]>
 		</isNotEqual>
 	</select>
@@ -94,11 +94,11 @@
 										FROM 
 											EZAPPROVALG_${companyID}.VAPRDOINGDOCLIST 
 					      				WHERE 
-					      					APRMEMBERID IN ($v_USERIDS$) 
+					      					aprmemberid IN ($v_USERIDS$) 
 					      				AND 
-					      					APRTYPE <> '015'  
+					      					aprtype <> '015'  
 					      				AND 
-					      					TENANT_ID = #v_TENANTID# 
+					      					tenant_id = #v_TENANTID# 
 	      		]]>
 				      		<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		AND 
@@ -114,15 +114,15 @@
 								</isNotEqual>
 							</isGreaterEqual>
 							<isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="9">
-										ORDER BY $v_ORDEROPTION$, STARTDATE $v_BASICORDER$					
+										ORDER BY $v_ORDEROPTION$, startdate $v_BASICORDER$					
 							</isLessThan>
 							</isNotEmpty>
 							<isEmpty property="v_ORDEROPTION"> 
 								<isEqual property="v_LISTTYPE" compareValue="10">
-									ORDER BY ReceivedDate $v_BASICORDER$
+									ORDER BY receiveddate $v_BASICORDER$
 								</isEqual>
 								<isNotEqual property="v_LISTTYPE" compareValue="10">
-			         				ORDER BY STARTDATE $v_BASICORDER$
+			         				ORDER BY startdate $v_BASICORDER$
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
@@ -134,19 +134,19 @@
 										ORDER BY $v_ORDEROPTION2$
 								</isEqual>
 								<isNotEqual property="v_ORDEROPTION2VALUE" compareValue="startdate">
-										ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$					
+										ORDER BY $v_ORDEROPTION2$, startdate $v_BASICORDER2$					
 								</isNotEqual>
 							</isGreaterEqual>
 							<isLessThan property="v_ORDEROPTION2LENGTH"  compareValue="9">
-										ORDER BY $v_ORDEROPTION2$, STARTDATE $v_BASICORDER2$
+										ORDER BY $v_ORDEROPTION2$, startdate $v_BASICORDER2$
 							</isLessThan>
 							</isNotEmpty>
 							<isEmpty property="v_ORDEROPTION2"> 
 								<isEqual property="v_LISTTYPE" compareValue="10">
-									ORDER BY ReceivedDate $v_BASICORDER2$
+									ORDER BY receiveddate $v_BASICORDER2$
 								</isEqual>
 								<isNotEqual property="v_LISTTYPE" compareValue="10">
-			         				ORDER BY STARTDATE $v_BASICORDER2$
+			         				ORDER BY startdate $v_BASICORDER2$
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
@@ -6684,6 +6684,7 @@
 	    WHERE
 	    	TENANT_ID = #v_TENANTID#
 	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_GETCABINETCODE2NAME(#v_CODETYPE#, #v_CODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -11882,6 +11883,10 @@
 		{CALL EZAPPROVALG_${companyID}.TRANSACTIONSQL(#sqlString#)}
 	</procedure>
 	
+<!-- 	<insert id="EzApprovalG.insertStringSql" parameterClass="Map"> -->
+<!-- 		$sqlString$ -->
+<!-- 	</insert> -->
+	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.EZSP_MOVERECORD(#v_RECORDID#, #v_SEPATTNO#, #v_CABINETID# ,#v_FLAG#)} -->
 <!-- 	</procedure> -->
@@ -12932,7 +12937,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             UTILS.CONVERT_TO_SMALLDATETIME(MODIFYDATE,p_style=>111) MODIFYDATE  ,
+             TO_DATE(MODIFYDATE) MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -13057,6 +13062,119 @@
 	 	Values 
 	 		(#v_CABINETCLASSNO#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_TENANTID#)
 	</insert>
+	
+<!-- 	<delete id="EzApprovalG.deleteTbSpecialCatalogInfo_Cab" parameterClass="Map" >  -->
+<!-- 	 	DELETE FROM  -->
+<!-- 	 		EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB  -->
+<!-- 	 	WHERE  -->
+<!-- 	 		CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 	 	AND  -->
+<!-- 	 		SerialNo = #v_SERIALNO# -->
+<!-- 	 	AND -->
+<!-- 	 	 	TENANT_ID = #v_TENANTID# -->
+	
+<!-- 	</delete> -->
+	
+<!-- 	<select id="EzApprovalG.cabinetHistory" parameterClass="Map" resultClass="int"> -->
+<!-- 		SELECT  -->
+<!--  			CASE WHEN VERSION IS NULL THEN 1 -->
+<!--  				 ELSE VERSION + 1 -->
+<!--  			END -->
+<!--    		FROM( -->
+<!-- 			Select  -->
+<!-- 				max(Version) VERSION -->
+<!-- 			From  -->
+<!-- 				EZAPPROVALG_${companyID}.TBCABINETHISTORY  -->
+<!-- 			Where  -->
+<!-- 				CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 			AND -->
+<!-- 		 	 	TENANT_ID = #v_TENANTID#) -->
+<!-- 	</select> -->
+	
+<!-- 	<insert id="EzApprovalG.insertCabinetHistory" parameterClass="Map"> -->
+<!-- 		INSERT INTO  -->
+<!-- 			EZAPPROVALG_${companyID}.TBCABINETHISTORY  -->
+<!-- 			(Version, 		CabinetClassNo, Title, RecTypeCode, 	ModifyDate, 				KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID)  -->
+<!-- 		(Select  -->
+<!-- 			#v_NewVersion#, CabinetClassNo, Title, RecTypeCode, TO_CHAR(CreateDate,'YYYYMMDD'), KeepingPeriod, DisplayEndDate, DisplayReason, 		NULL, 	 OwnerID, 	 OwnerName, 	OwnerName2, 	#v_MODIFYFLAG#, 	   '0' ,  TENANT_ID  -->
+<!-- 		FROM  -->
+<!-- 			EZAPPROVALG_${companyID}.TBCABINETCLASS   -->
+<!-- 		WHERE  -->
+<!-- 			TBCABINETCLASS.CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 		AND -->
+<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="EzApprovalG.insertCabinetHistory2" parameterClass="Map"> -->
+<!-- 		INSERT INTO  -->
+<!-- 			EZAPPROVALG_${companyID}.TBCABINETHISTORY  -->
+<!-- 			(Version, 								CabinetClassNo, Title, RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID)  -->
+<!-- 		(SELECT -->
+<!--         	( -->
+<!--         	  SELECT  -->
+<!-- 	 			CASE WHEN VERSION IS NULL THEN 1 -->
+<!-- 	 				 ELSE VERSION + 1 -->
+<!-- 	 			END -->
+<!--    			  FROM( -->
+<!-- 					SELECT  -->
+<!-- 						max(Version) VERSION -->
+<!-- 					FROM  -->
+<!-- 						EZAPPROVALG_${companyID}.TBCABINETHISTORY  -->
+<!-- 					WHERE  -->
+<!-- 						CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 					AND -->
+<!-- 				 	 	TENANT_ID = #v_TENANTID#)), CabinetClassNo,  Title, RecTypeCode, #v_SYSDATE#, KeepingPeriod, DisplayEndDate, DisplayReason, #v_changeReason#, #v_userID# , #v_usreName#, #v_usreName2#, #v_MODIFYFLAG#, '0' , TENANT_ID  -->
+<!-- 		 FROM  -->
+<!-- 		 	EZAPPROVALG_${companyID}.TBCABINETCLASS   -->
+<!-- 		 WHERE  -->
+<!-- 		 	TBCABINETCLASS.CabinetClassNo = #v_CABINETCLASSNO# -->
+<!-- 		 AND -->
+<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
+		
+
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="EzApprovalG.insertCabinetHistory_CAB" parameterClass="Map"> -->
+<!-- 		INSERT INTO  -->
+<!-- 			EZAPPROVALG_${companyID}.TBSCHISTORY_CAB  -->
+<!-- 			(Version, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID)  -->
+<!-- 		(Select  -->
+<!-- 			#v_NewVersion#, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID  -->
+<!-- 		 From  -->
+<!-- 		 	EZAPPROVALG_${companyID}.TBSPECIALCATALOGINFO_CAB   -->
+<!-- 		 WHERE  -->
+<!-- 			TBSPECIALCATALOGINFO_CAB.CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 		 AND -->
+<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
+<!-- 	</insert> -->
+	
+<!-- 	<update id="EzApprovalG.updateCabinetClass" parameterClass="Map"> -->
+<!-- 		UPDATE  -->
+<!-- 			EZAPPROVALG_${companyID}.TBCABINETCLASS  -->
+<!-- 		SET  -->
+<!-- 			TITLE = #v_TITLE#, -->
+<!-- 			RECTYPECODE =#v_RECTYPECODE# , -->
+<!-- 			MODIFYFLAG = '1'  -->
+<!-- 	   WHERE  -->
+<!-- 			CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 		AND -->
+<!-- 		 	TENANT_ID = #v_TENANTID# -->
+	
+<!-- 	</update> -->
+	
+<!-- 	<update id="EzApprovalG.updateCabinetClass2" parameterClass="Map"> -->
+<!-- 		UPDATE  -->
+<!-- 			EZAPPROVALG_${companyID}.TBCABINETCLASS  -->
+<!-- 		SET  -->
+<!-- 			KeepingPeriod = #v_KEEPPERIOD#, -->
+<!-- 			DisplayEndDate = #v_ENDDATE# , -->
+<!-- 			DisplayReason = #v_REASON# , -->
+<!-- 			MODIFYFLAG = '1'  -->
+<!-- 	   WHERE  -->
+<!-- 			CABINETCLASSNO = #v_CABINETCLASSNO# -->
+<!-- 		AND -->
+<!-- 		 	TENANT_ID = #v_TENANTID# -->
+<!-- 	</update> -->
 	
 	<update id="EzApprovalG.updateTbAprReceiptProcessInfo" parameterClass="Map">
 		$sqlString$
@@ -13527,5 +13645,15 @@
    
    <insert id ="EzApprovalG.insertStrSql" parameterClass="map">
     	$sqlString$
+   </insert>
+   
+   <!-- 기안문 제일 처음 작성시 DOCID 초기 설정 -->
+   <insert id="EzApprovalG.insertAprGetNewID" parameterClass="map">
+   	  INSERT INTO 
+   	  	  EZAPPROVALG_${companyID}.TBLastDocID
+   	  	  (LASTDOCID, TENANT_ID)
+   	  VALUES
+   	  	  (0, #v_TENANTID#)
+   	  	  
    </insert>
 </sqlMap>

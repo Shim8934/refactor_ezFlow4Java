@@ -53,7 +53,7 @@
 	        var cadmin = "<c:out value='${cAdmin}' />";
 	        var gcadmin = "<c:out value='${gcAdmin}' />";
 	        var code = "<c:out value='${code}' />";
-	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
+// 	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
 	        var userinfo_lang = "<c:out value='${strUserLang}' />";
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
@@ -229,7 +229,7 @@
 	        
 
 			function btn_Reply_Onclick() {
-			    if (ch_CommunityAdmin < 0 && Write_FG != "true") {
+			    if (Write_FG != "true") {
 			        alert("<spring:message code='ezCommunity.t431'/>");
 				    return;
 				}

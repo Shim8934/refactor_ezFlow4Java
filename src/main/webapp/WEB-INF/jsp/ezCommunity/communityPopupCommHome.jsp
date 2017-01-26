@@ -20,7 +20,7 @@
 			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
-			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
+// 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
@@ -406,7 +406,7 @@
 		    
 		    var tempmenuid = "";
 		    function go_menu(btn) {
-		        if (chCommunityAdmin < 0 && (userLevel == "0" || userLevel == "9")) {
+		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
 		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";

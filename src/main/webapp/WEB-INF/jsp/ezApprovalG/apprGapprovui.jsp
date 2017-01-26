@@ -1108,14 +1108,13 @@
 		            sepLVXml = loadXMLString(g_SepAttachLVXml);
 		            var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
 		            for (i = 0; i < rows.length; i++) {
-		                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-		                var Cell = GetElementsByTagName(rows[i], "CELL");
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "CABINETID", SelectSingleNodeValue(Cell[0], "DATA1"));
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "TITLE", SelectSingleNodeValue(Cell[1], "VALUE"));
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "NUMOFPAGE", SelectSingleNodeValue(Cell[4], "VALUE"));
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "REGTYPE", SelectSingleNodeValue(Cell[0], "DATA2"));
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "SUMMARY", SelectSingleNodeValue(Cell[6], "VALUE"));
-		                createNodeAndAppandNodeText(sepLVXml, root, sepAtt, "AVTYPE", SelectSingleNodeValue(Cell[0], "DATA3"));
+		            	    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0], "DATA1"));
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
+			                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
 		            }
 		        }
 		        return getXmlString(rtnXml);

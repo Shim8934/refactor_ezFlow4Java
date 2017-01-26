@@ -566,10 +566,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 양식이동화면 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
-	public String formSelect(@CookieValue("loginCookie") String loginCookie) throws Exception {
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+	public String formSelect(@CookieValue ("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.aprCheckAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1775,10 +1775,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSendInfo.do")
 	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -1874,10 +1873,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping("/admin/ezApprovalG/statistics.do")
 	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -2021,10 +2019,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
 	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2163,11 +2160,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forDoc.do")
 	public String forDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		boolean auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
+		
 		String useEditor = config.getProperty("config.EDITOR");
 		
-		if (!auth) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		

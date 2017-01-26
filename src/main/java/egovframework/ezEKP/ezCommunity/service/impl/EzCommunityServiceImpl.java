@@ -879,7 +879,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
-            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+//            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0) {
             	cAdmin = "admin";
             }
             
@@ -3541,7 +3542,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String bbsDelOk(LoginVO userInfo, HttpServletRequest request, CommunityCBoardVO board, String itemNo, String goToPage, String bName, int adminCheck, int tenantID) throws Exception {
 		String folder = "", strFile = "";
 		
-		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			String fileName = board.getFileName();
 			
 			if (fileName != null) {
@@ -3977,6 +3979,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
+		
+		logger.debug("commViewMemberGet2");
+		logger.debug("v_CODE="+map.get("v_CODE"));
+		logger.debug("v_USERINFO_LANG="+map.get("v_USERINFO_LANG"));
+		logger.debug("v_KEYWORD="+map.get("v_KEYWORD"));
+		logger.debug("v_S_RADIO="+map.get("v_S_RADIO"));
 		
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		

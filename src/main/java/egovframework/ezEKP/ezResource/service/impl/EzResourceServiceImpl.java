@@ -3157,7 +3157,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean isDup = false;
 			
 		if (retobj != null) {
-		isDup = chkTable(dt1,retobj,null,dtResult); // 일반예약 체크
+		isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
 		}
 			
 		if (isDup) {
@@ -3188,66 +3188,72 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 	//일반예약일때
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
+		logger.debug("getRepResource started");
+		logger.debug("===일반예약일때===");
 		
 		String startDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
 		String endDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
 		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? null : strPcmd;
-			
+		
 		ResRecParamVO recParam = new ResRecParamVO();
 		recParam.setRecStartDateTime(startDateTime);
 		recParam.setRecEndDateTime(endDateTime);
-			
+		
 		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
-
+		
 		List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
-			
+		
 		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
-			
+		
 		boolean isDup = false;
-			
+		
 		if (retobj != null && retobj.isEmpty() == false) {
-			isDup = chkTable(dt1,retobj,null,dtResult); // 일반예약 체크
+			isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
 		}
-			
+		
 		if (isDup) {
 			return isDup;
 		}
-			
+		
 		logger.debug("getRecStartDateTime="+recParam.getRecStartDateTime());
 		String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 		logger.debug("firstStartDateTime="+firstStartDateTime);
 		//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
-			
+		
 		String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
 		ResRecDurationVO recDuration = new ResRecDurationVO();
 		recDuration.setFirstStartDateTime(firstStartDateTime);
 		recDuration.setLastStartDateTime(lastStartDateTime);
-			
+		
 		List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		 for (ResGetRepResourceRepeatVO dr : retobjTable1) {
-			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
-			 if (dt2 == null || dt2.size() == 0) {
-				 continue;
-			 }
-			 isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult);
-				 
-			 if (isDup) {
-				 break;
-			 }
-		 }
+		for (ResGetRepResourceRepeatVO dr : retobjTable1) {
+			List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
+			if (dt2 == null || dt2.size() == 0) {
+				continue;
+			}
+			isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult);
+			
+			if (isDup) {
+				break;
+			}
+		}
+		
+
+		logger.debug("getRepResource ended");
 			
 		return isDup;
 	}
 	
 	@SuppressWarnings("deprecation")
-	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetRepResourceVO> dtT, List<ResGetRepResourceVO> dtTd, List<ResMakeDupResultVO> dtResult) throws Exception {
+	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetRepResourceVO> dtT, List<ResGetRepResourceVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
 		logger.debug("chkTable Start");
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
 		
 		if (dtT == null) {
+			logger.debug("drt == null");
 			return false;
 		}
 			
@@ -3275,10 +3281,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		for (ResMakeDupResultVO drS : dtS) {
 			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-
+			logger.debug("sStartDate="+sStartDate);
+			logger.debug("sEndDate="+sEndDate);
 			for (ResGetRepResourceVO drT : dtT) {
-				String tStartDate = EgovDateUtil.convertDate(drT.getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tEndDate = EgovDateUtil.convertDate(drT.getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				logger.debug("tStartDate="+tStartDate);
+				logger.debug("tEndDate="+tEndDate);
 				int tAllDay = Integer.parseInt(drT.getAllDay());
 					
 				isDel = false;
@@ -3756,13 +3765,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@SuppressWarnings("deprecation")
 	public List<ResMakeDupResultVO> chkDupReway51 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
+		logger.debug("chkDupReway51 started");
+
 		int recLoop = 0;
 		int recLoopOffset = 0;
 		int recMondayOffset = 1-datePartLeftShift(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
 		int recMondayOffsetAdd = 0;
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
+		
 		if (recParam.getRecEndFlag() == 1) {
 			while (recLoop < recParam.getRecReCount()) {
 				//주에서 월,화,수,목,금,토,일
@@ -3771,7 +3782,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						recMondayOffsetAdd++;
 						continue;
 					}
-
+					
 					//구하고
 					String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 7), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsStartDateTime, (recMondayOffset + recMondayOffsetAdd), "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
@@ -3795,15 +3806,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + month + day+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-
-
+					
+					
 					//비교한 다음
 					String compare1 = dsStartDateTime;
 					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
 					Date day1 = date.parse(compare1);
 					Date day2 = date.parse(compare2);
 					int compare = day1.compareTo(day2);
-
+					
 					if (compare < 0) {
 						recMondayOffsetAdd++;
 						continue;
@@ -3823,48 +3834,79 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		//종료일지정
 		if (recParam.getRecEndFlag() == 2) {
-			String dsStartDateTimeLoop = "";
+			logger.debug("endFlag=2");
+			////2017-01-24
+			//date형식변경
+			String dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
+			logger.debug("dsStartDateTimeLoop="+dsStartDateTimeLoop);
 			String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-			String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
+			compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+			String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
+			compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 			Date day1 = date.parse(compare1);
 			Date day2 = date.parse(compare2);
 			int compare = day1.compareTo(day2);
 			
+			logger.debug("compare="+compare);
+			
 			while (compare <= 0) {
 				//주에서 월,화,수,목,금,토,일
-				while (recMondayOffset < 7) {
-					if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
+				logger.debug("recMondayOffsetAdd="+recMondayOffsetAdd);
+				while (recMondayOffsetAdd < 7) {
+					logger.debug("recMondayOffsetAdd1="+recMondayOffsetAdd);
+					if (recParam.getRecReYoil().replace("0,", "7,").indexOf((recMondayOffsetAdd+1)+",") == -1) {
 						recMondayOffsetAdd++;
+						logger.debug("recMondayOffsetAdd2="+recMondayOffsetAdd);
 						continue;
 					}
 					
 					// 구하고
 					String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 7), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsStartDateTime, (recMondayOffset + recMondayOffsetAdd), "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+					dsStartDateTimeLoop = dsStartDateTime;
+					logger.debug("dsStartDateTimeLoop1="+dsStartDateTimeLoop);
 					String tempMonth = "";
 					String month = "";
 					tempMonth = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getMonth()+1);
+					
 					if ((date1.parse(recParam.getRecStartDateTime()).getMonth()+1) < 10) {
 						month = "0"+tempMonth;
 					} else {
 						month = tempMonth;
 					}
+					
 					String tempDay = "";
 					String day = "";
 					tempDay = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getDate());
+					
 					if ((date1.parse(recParam.getRecStartDateTime()).getDate()) < 10) {
 						day = "0"+tempDay;
 					} else {
 						day = tempDay;
 					}
-					String dsEndDateTime = String.valueOf(date.parse(recParam.getRecStartDateTime()).getYear()+1900) + month + day+ String.valueOf(date.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date.parse(recParam.getRecEndDateTime()).getMinutes());
+					
+					logger.debug("recParam StartDate="+recParam.getRecStartDateTime());
+					logger.debug("recParam EndDate="+recParam.getRecEndDateTime());
+					String recStartDateTime = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+					String recEndDateTime = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+					//2017-01-25 
+					//데이트형식 yyyy-MM-dd HH:mm:ss 에서 yyyy-MM-dd aa h:mm:ss로 변경
+					String dsEndDateTime = String.valueOf(date.parse(recStartDateTime).getYear()+1900) + month + day+ String.valueOf(date.parse(recEndDateTime).getHours()) + String.valueOf(date.parse(recEndDateTime).getMinutes());
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					// 비교한다음
 					String compare3 = dsStartDateTime;
-					String compare4 = recParam.getRecStartDateTime();
+					compare3 = EgovDateUtil.convertDate(compare3, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					//String compare4 = recParam.getRecStartDateTime();
+					String compare4 = recStartDateTime;
 					String compare5 = getYearMonthDay(dsStartDateTime);
-					String compare6 = getYearMonthDay(recParam.getRecEndDateTime());
+					compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare6 = getYearMonthDay(recEndDateTime);
+					compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					logger.debug("compare3="+compare3);
+					logger.debug("compare4="+compare4);
+					logger.debug("compare5="+compare5);
+					logger.debug("compare6="+compare6);
 					Date day3 = date.parse(compare3);
 					Date day4 = date.parse(compare4);
 					Date day5 = date.parse(compare5);
@@ -3872,10 +3914,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					int secondCompare = day3.compareTo(day4);
 					int thirdCompare = day5.compareTo(day6);
 					
+					logger.debug("recMondayOffsetAdd Start="+recMondayOffsetAdd);
 					if (secondCompare < 0 || thirdCompare > 0) {
 						recMondayOffsetAdd++;
+						logger.debug("recMondayOffsetAdd Ing="+recMondayOffsetAdd);
 						continue;
 					}
+					logger.debug("recMondayOffsetAdd End="+recMondayOffsetAdd);
 					
 					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
 					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
@@ -3888,7 +3933,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				recLoop++;
 			}
 		}
-		
+
+		logger.debug("chkDupReway51 ended");
 
 		return dt;
 	}
@@ -3931,10 +3977,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		//종료일지정
 		if (recParam.getRecEndFlag() == 2) {
-			String dsStartDateTimeLoop = "";
+			String dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
 			
 			String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-			String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
+			compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+			String compare2 = getYearMonthDay(recParam.getRecEndDateTime());
+			compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 			Date day1 = date.parse(compare1);
 			Date day2 = date.parse(compare2);
 			int compare = day1.compareTo(day2);
@@ -5132,9 +5180,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@SuppressWarnings("deprecation")
 	public String getYearMonthDay(String strSource) throws Exception {
+		logger.debug("getYearMonthDay started");
+		logger.debug("strSource="+strSource);
+		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
+		
 		int tempMonth = date.parse(strSource).getMonth()+1;
 		String month = "";
+		
 		if (tempMonth < 10) {
 			month = "0"+String.valueOf(date.parse(strSource).getMonth()+1);
 		} else {
@@ -5143,12 +5196,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		int tempDay = date.parse(strSource).getDate();
 		String day = "";
+		
 		if (tempDay < 10) {
 			day = "0"+String.valueOf(date.parse(strSource).getDate());
 		} else {
 			day = String.valueOf(date.parse(strSource).getDate());
 		}
 		String result = String.valueOf(date.parse(strSource).getYear()+1900) + month + day;
+		logger.debug("result="+result);
+		logger.debug("getYearMonthDay ended");
 		return result;
 	}
 	

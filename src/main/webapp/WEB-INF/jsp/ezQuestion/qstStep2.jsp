@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
 		<script type="text/javascript">
-			var index = -1;
+			var index = -1; 
 			var flgClose= true;
 			var surveyState = "";
 			var WinRef;
@@ -93,6 +93,14 @@
         		}
     		}
     		function fun_OK() {
+    			
+				$('.imgbtn').prop("onclick","");
+    			
+    			setTimeout(function(){ 
+    					$('.imgbtn').prop("onclick","fun_OK()");
+    					},3000)
+
+    			
         		var Qlen = frmCreate.selQues.length;
         		if( Qlen == 0 ) {
             		alert("<spring:message code='ezQuestion.t456' />");
@@ -690,7 +698,7 @@
 			</form>
 			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
     			<div id="AttachFile" style="width:1px; height:1px;">
-        			<input type="file" name="cmuds" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
+        			<input type="file" name="cmuds" hidden="true" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
     			</div>
 			</form>
 		<iframe name="ifrm_TempLoad_Safari" src="about:blank" style="display:none"></iframe>
