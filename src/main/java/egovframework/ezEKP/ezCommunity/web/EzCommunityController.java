@@ -1303,10 +1303,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pFileName = request.getParameter("fileName");
 		String pFilePath = request.getParameter("filePath");
 		pFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + pFilePath;
+		String realPath = commonUtil.getRealPath(request);
 		logger.debug("fileName : " + pFileName);
 		logger.debug("filePath : " + pFilePath);
 		
-		ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+		downFile(request, response, realPath + pFilePath, pFileName);
 		
 		logger.debug("getCommunityAttachInfo ended.");
 	}

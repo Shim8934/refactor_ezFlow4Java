@@ -6282,7 +6282,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String itemID = item.getItemID();
 		String boardID = item.getBoardID();
 		String thumbPath = item.getExtensionAttribute5();
-		String fileName = item.getExtensionAttribute4();
+		String fileName = "";
 
 		logger.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
 		
@@ -6291,18 +6291,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				attachments += ";";
 			}
 			
-			for (int i = 0; i < attachments.split(";").length; i++) {
+			
+			String[] attachmentsArr = attachments.split(";");
+			for (int i = 0; i < attachmentsArr.length; i++) {
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
 				
-				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
+				File file = new File(realPath + pUploadFilePath + attachmentsArr[i]);
 				fileSize = Integer.toString((int) file.length());
-				filePath = attachments.split(";")[i];
+				filePath = attachmentsArr[i];
 				
-				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachments.split(";")[i].replace("tempUploadFile", ""));
+				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachmentsArr[i].replace("tempUploadFile", ""));
 					FileUtils.moveFile(file, destFile);
-					filePath = attachments.split(";")[i].replace("tempUploadFile", "");
+					filePath = attachmentsArr[i].replace("tempUploadFile", "");
 				}
 				
 				if (!thumbPath.equals("")) {
@@ -6320,13 +6322,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					ezCommunityDAO.updateAttachInfo(map);
 				}
 				
+				//get fileName from attachments string
+				fileName = attachmentsArr[i];
+				if (fileName.indexOf("/") > -1) {
+					fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+				}
+				if (fileName.indexOf("}_") > -1) {
+					fileName = fileName.substring(fileName.indexOf("}_") + 2);
+				}
+				
 				map = new HashMap<String, Object>();
 				map.put("itemID", itemID);
 				map.put("fileSize", fileSize);
 				map.put("fileName", fileName);
 				map.put("tenantID", tenantID);
 				
-				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
+				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
 					map.put("filePath", boardID + commonUtil.separator + "uploadFile" + filePath);
 					ezCommunityDAO.insertAttachInfo(map);
 				} else {
