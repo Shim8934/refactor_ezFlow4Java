@@ -3045,7 +3045,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + attach.getItemID() + "</ItemID>");
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
-			sb.append("<FilePath>" + attach.getFilePath() + "</FilePath>");
+			sb.append("<FileName><![CDATA[" + attach.getFileName() + "]]></FileName>");
+			sb.append("<FilePath><![CDATA[" + attach.getFilePath() + "]]></FilePath>");
 			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");
@@ -6114,7 +6115,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pSize > 1048576) {
 			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
 		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4)) + " KB";
+			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
 		} else {
 			return Integer.toString(pSize) + " Byte";
 		}

@@ -116,8 +116,7 @@
 			    
 			    for (i = 0; i < xmldomNodes.length; i++) {
 			        filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-			        filename = filepath.substr(89, filepath.length - 88);
-			        filepath = "/upload_Community/" + filepath;		
+			        filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 			        filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 			        var strTarget ="target='_blank'"; 
 			        var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();

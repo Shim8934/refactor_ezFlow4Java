@@ -349,10 +349,7 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = filepath.substr(89, filepath.length - 88);
-	                filename = ReplaceText(filename, "%2b", "+");
-	                filename = ReplaceText(filename, "%3b", ";");
-	                filepath = filepath;
+	                filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();

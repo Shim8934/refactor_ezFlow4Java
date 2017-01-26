@@ -857,6 +857,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
+		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		logger.debug("mailWrite ended.");
