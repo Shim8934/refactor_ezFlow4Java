@@ -2100,7 +2100,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pResult = null;
 		IMAPAccess ia = null;
 		boolean retryFlag = false;
-		int retryCount = 3; //메일 발송 실패 시 재시도 횟수
+		int retryCount = 1; //메일 발송 실패 시 재시도 횟수
 		long draftUID = 0;
 		
 		do {
