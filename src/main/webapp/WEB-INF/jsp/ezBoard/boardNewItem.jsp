@@ -1621,7 +1621,7 @@
 	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
 	                img.width = 108;
 	                img.height = 30;
-	                img.src = "<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")' />" + "/S_" + filepath;
+	                img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
 	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	                img.style.cursor = "pointer";
 	
@@ -1690,7 +1690,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
+		                    Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
@@ -1903,8 +1903,8 @@
              					<c:choose>
              						<c:when test="${boardAttributeVO.colType == 'radio'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${fn:length(boardAttributeVO.value.split('@')) - 1}" step="1" varStatus="status">
-							                    <input type="radio" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('@')[status.index]}" />${boardAttributeVO.value.split('@')[status.index]}
+						                	<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
+							                    <input type="radio" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" />${fn:split(boardAttributeVO.value, '|')[status.index]}
 						                	</c:forEach>
 						                </td>
              						</c:when>
@@ -1915,15 +1915,15 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${fn:length(boardAttributeVO.value.split('@')) - 1}" step="1" varStatus="status">
-							                    <input type="checkbox" name="${boardAttributeVO.tableCol}" value="${boardAttributeVO.value.split('@')[status.index]}" />${boardAttributeVO.value.split('@')[status.index]}
+						                	<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
+							                    <input type="checkbox" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" />${fn:split(boardAttributeVO.value, '|')[status.index]}
 						                	</c:forEach>
 						                </td>
              						</c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
-	          <!-- 추가 항목이 있을 경우 끝-->
+	          <!-- 추가 항목이 있을 경우 끝--> 
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">

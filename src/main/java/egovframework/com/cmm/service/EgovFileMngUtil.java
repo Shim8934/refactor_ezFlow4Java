@@ -178,7 +178,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    File cFile = new File(stordFilePathReal);
 	
 		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdir();
+				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
@@ -339,7 +339,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    File cFile = new File(stordFilePath);
 	
 		    if (!cFile.isDirectory())
-			cFile.mkdir();
+			cFile.mkdirs();
 	
 		    bos = new FileOutputStream(stordFilePath + File.separator + newName);
 	

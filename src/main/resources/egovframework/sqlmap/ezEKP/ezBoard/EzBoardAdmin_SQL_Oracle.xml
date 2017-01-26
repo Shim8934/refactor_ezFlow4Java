@@ -1281,7 +1281,7 @@
 		]]>			
 	</delete>
 	
-	<delete id="EzBoardAdminDAO.deleteHeader" parameterClass="java.lang.String">
+	<delete id="EzBoardAdminDAO.deleteHeader" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
 				ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		

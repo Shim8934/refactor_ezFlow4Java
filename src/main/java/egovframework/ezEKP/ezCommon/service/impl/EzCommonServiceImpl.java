@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -634,7 +634,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         m_strMHT.append(commonUtil.CRLF);
         
         byte[] arr = strHtml.getBytes("UTF-8");
-        String strMhtBase64 = Base64.encodeBase64String(arr);
+        String strMhtBase64 = Base64.getMimeEncoder().encodeToString(arr);
         
         m_strMHT.append(strMhtBase64 + commonUtil.CRLF);
         m_strMHT.append("--" + m_strBoundary);
@@ -700,7 +700,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             
             
             byte[] imageByte = byteOutStream.toByteArray();
-            String strImageData = new String(Base64.encodeBase64String(imageByte));
+            String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
             
             in.close();
             byteOutStream.close();
@@ -747,7 +747,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
             
             byte[] imageByte = byteOutStream.toByteArray();
-            String strImageData = Base64.encodeBase64String(imageByte);
+            String strImageData = Base64.getMimeEncoder().encodeToString(imageByte);
             
             in.close();
             byteOutStream.close();
@@ -861,7 +861,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
 	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
-		byte[] imageBytes = Base64.decodeBase64(strImageMht);
+		byte[] imageBytes = Base64.getDecoder().decode(strImageMht);
 		
 		String strImageName = UUID.randomUUID() + ".tmp";
         String SfilePath = m_strSPath + strImageName;
@@ -883,7 +883,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 mht디코딩 표출 Method
 	 */
 	private String doMHTDecoding(String strMht, String m_strHTML) {
-		byte[] arr = Base64.decodeBase64(strMht);
+		byte[] arr = Base64.getDecoder().decode(strMht);
 		
 		try {
 			m_strHTML = new String(arr, "utf-8");

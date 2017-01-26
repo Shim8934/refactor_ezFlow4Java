@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -327,7 +328,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 배경이미지 관리 메뉴화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardBackGround.do")
-	public String boardBackGround() throws Exception {
+	public String boardBackGround(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("boardBackGround started");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("tenantID", userInfo.getTenantId());
+
+		logger.debug("boardBackGround ended");
+		
 		return "admin/ezBoard/boardBackGround";
 	}
 
@@ -457,7 +466,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				response.getWriter().write(filePath + "," + fileName + "," + width + "/" + height);
 			}
 		} catch (Exception e) {
-
+			logger.debug("uploadBackGroundImage error");
 		}
 	}
 
@@ -669,7 +678,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getMust() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getColType() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.makeListField(obj.getValue()) + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}
 		}
@@ -691,7 +700,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		sb.append("<ROWS>");
 
 		if (list != null) {
-			for (int i = 0; i < list.size(); i++) {
+			for (int i = 1; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
 				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");

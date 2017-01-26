@@ -146,7 +146,6 @@
 		                        RetValue["window"].opener.top.organview = g_xmlHTTP.responseText;
 		                    } catch (e) { }
 		                }
-
 		                var xmlDom = loadXMLFile("/xml/common/organtree_config3.xml");
 		                document.getElementById('TreeView').innerHTML = "";
 
@@ -431,7 +430,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayname;mail', prop : 'department', type : 'user'},
+		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;

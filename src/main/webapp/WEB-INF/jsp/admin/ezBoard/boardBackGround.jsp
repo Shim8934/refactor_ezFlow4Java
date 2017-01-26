@@ -138,7 +138,7 @@
 		        document.getElementById("imagediv").style.display = "";
 		        var width = document.getElementById(filepath).getAttribute("imgwidth");
 		        var height = document.getElementById(filepath).getAttribute("imgheight");
-		        var filepath = "<spring:eval expression='@config.getProperty(\"upload_board.BOARDBACKGROUND\")' />" + "/S_" + filepath;
+		        var filepath = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${tenantID}\")' />" + "/S_" + filepath;
 		        document.getElementById("ContentDescription").innerHTML = "<img id='backimage' src = '" + filepath + "' width = '" + width + "' height = '" + height + "' />";
 		    }
 		    

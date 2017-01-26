@@ -89,15 +89,14 @@
 		            
 			        if (gubun == "2") {
 			            if(OneLineReplyFlag == "1")
-			                document.getElementById("message").style.height = (document.documentElement.clientHeight - 290) + "PX";
+			            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
 			            else
-			                document.getElementById("message").style.height = (document.documentElement.clientHeight - 210) + "PX";
+			            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
 			        }
 			        else {
 			            var trHeight = AtttributeCount * 30;
 			            if (OneLineReplyFlag == "1") {
 			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-			            	
 			            } else {
 			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
 			            }
@@ -163,9 +162,9 @@
 		    window.onresize = function () {
 		        if (gubun == "2") {
 		            if(OneLineReplyFlag == "1")
-		                document.getElementById("message").style.height = (document.documentElement.clientHeight - 290) + "PX";
+		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
 		            else
-		                document.getElementById("message").style.height = (document.documentElement.clientHeight - 210) + "PX";
+		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
 		        }
 		        else {
 		            var trHeight = AtttributeCount * 30;
@@ -914,7 +913,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden; height:98%;">
+	<body class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="height:100%">
 		  <tr>
 		    <td style="vertical-align: top; height: 20px;">
