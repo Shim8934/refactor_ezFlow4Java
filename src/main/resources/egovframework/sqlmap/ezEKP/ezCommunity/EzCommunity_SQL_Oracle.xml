@@ -4399,9 +4399,9 @@
 			UPDATE
 				EZCOMMUNITY.TBL_COMM_BOARDINFO
 			SET
-				treevieworder = #v_count# + 1
+				treevieworder = #v_count#
 			WHERE
-				boardid = SUBSTR(#v_pBoardIDList#, #v_count# * 39 + 1, 38)
+				boardid = #v_pBoardID#
 			AND
 				tenant_id = #tenantID#
 		]]>
