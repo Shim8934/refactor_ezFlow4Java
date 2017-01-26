@@ -1622,3 +1622,17 @@ function addzero(arg)
 	return arg
 
 }
+
+function isIE(){
+	var ua = navigator.userAgent;
+  	var isIE = false;
+
+    if (/msie 10/i.test(ua)) {
+        isIE = true;	
+    } else if (/msie/i.test(ua)) {
+		isIE = true;
+	} else if (/trident/i.test(ua)) {
+		isIE = true;
+	}
+    return isIE;
+}

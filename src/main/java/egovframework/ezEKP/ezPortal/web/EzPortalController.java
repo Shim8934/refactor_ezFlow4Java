@@ -1046,7 +1046,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpTotalSection started");
 
-userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
 		String useEditor = config.getProperty("config.EDITOR");
@@ -1106,6 +1106,9 @@ userInfo = commonUtil.userInfo(loginCookie);
 		}
 		logger.debug("userPhoto="+userPhoto);
 		
+		//새로고침 시간 컨피그화
+		String refreshSecond = config.getProperty("refreshSecond");
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1121,6 +1124,7 @@ userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userPhoto", userPhoto);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("refreshSecond", refreshSecond);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

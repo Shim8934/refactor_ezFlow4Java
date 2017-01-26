@@ -2013,7 +2013,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + boardItemVO.getTitle() + fileExtension;
 			long mhtSize = file.length();
 			
-			FileUtils.copyFile(file, new File(newFilePath));
+			FileUtils.copyFile(file, new File(boardItemVO.getFilePath() + newFilePath));
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
@@ -2026,9 +2026,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for (int k = 0; k < boardAttachVOs.size(); k++) {
 			String filePath = boardAttachVOs.get(k).getFilePath();
 			String newFilePath = filePath.split("/")[filePath.split("/").length - 1];
-			
 			newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) +
-					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.lastIndexOf("_"), newFilePath.length() - newFilePath.lastIndexOf("_"));
+					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.indexOf("_"));
 			
 			FileUtils.copyFile(new File(boardItemVO.getFilePath() + filePath), new File(boardItemVO.getFilePath() + newFilePath));
 			

@@ -200,8 +200,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
-				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
-				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") || tempStr.equals("RESEND"))) {
+				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND") || tempStr.equals("RESEND")
+				/* 아직 이 값으로는 받는 부분 없음
+				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
+			)) {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
 
@@ -214,22 +216,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (tempStr.indexOf("<") >= 0 && tempStr.indexOf(">") >= 0 && tempStr.indexOf("SCRIPT") >= 0) {
 			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
 		}
-		
-		if (request.getParameter("docID") != null) {
-			docID = request.getParameter("docID").trim();
-		} 
-		
-		if (request.getParameter("docHref") != null) {
-			docHref = request.getParameter("docHref").trim();
-		} 
-		
-		if (request.getParameter("imagCnt") != null) {
-			docImagCnt = request.getParameter("imagCnt").trim();
-		} 
-		
-		if (request.getParameter("target") != null) {
-			docTarget = request.getParameter("target").trim();
-		} 
 
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -374,7 +360,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
         
         
-        //in case of new
+        // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
         }
@@ -383,6 +369,36 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	boardID = request.getParameter("boardID") == null ? "" : request.getParameter("boardID");
         	itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
         	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
+        }
+        // in case of approvalG
+        else if (_url == "" && _cmd.equals("docsend")) {
+    		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
+    		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
+    		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
+    		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+    		
+    		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
+    		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
+    		if (this._DocHref.ToLower().IndexOf(".doc") == this._DocHref.Length - 4 || this._DocHref.ToLower().IndexOf(".hwp") == this._DocHref.Length - 4)
+            {
+                _cmd = "docsenddoc";
+            }
+            else
+            {
+                this.HolderDocSend.Visible = true;
+            }
+            if (_DocHref.Equals("IMAGE"))
+                this.HolderDocSend.Visible = false;
+
+            if (!_DocHref.Equals("IMAGE"))
+            {
+                FileInfo fi = new FileInfo(Server.MapPath(_DocHref));
+                if (fi.Exists)
+                {
+                    docfilesize = fi.Length;
+                }
+            }*/
+        
         }
         // when _url is passed in from the client
         else if (!_url.equals("")) {
@@ -857,6 +873,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
+		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		logger.debug("mailWrite ended.");
@@ -1221,7 +1238,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		for (int i=0; i<fileCnt; i++) {
 			filePath[i] = realPath + doc.getElementsByTagName("DATA2").item(i).getTextContent();
-			
 			File f = new File(filePath[i]);
 			
 			if (f.exists()) {
@@ -1238,6 +1254,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				fileSize[i] = f.length();
 				totalFileSize += fileSize[i];
 			} else {
+				logger.debug("Cannot find the file : " + filePath[i]);
 				filePath[i] = "NOFILE";
 			}
 		}
@@ -2099,7 +2116,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pResult = null;
 		IMAPAccess ia = null;
 		boolean retryFlag = false;
-		int retryCount = 3; //메일 발송 실패 시 재시도 횟수
+		int retryCount = 1; //메일 발송 실패 시 재시도 횟수
 		long draftUID = 0;
 		
 		do {

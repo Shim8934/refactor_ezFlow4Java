@@ -237,13 +237,9 @@
 		        str += "<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code = 'ezCommunity.t1135' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code = 'ezCommunity.t1136' /></NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
 				
 		        for(i=0;i<xmldomNodes.length;i++) {
-		            filepath = SelectSingleNodeValue(xmldomNodes[i], "FilePath");
-		            filename = MakeXMLString(filepath.substr(89, filepath.length - 88));
-		            filepath = MakeXMLString("/upload_Community/" + filepath);
-		            
 		            str += "<ROW><CELL>";	
-		            str += "<VALUE>" + "<c:out value = '${item.extensionAttribute4}' />" + "</VALUE>";
-		            str += "<DATA1>" + "<c:out value = '${item.extensionAttribute4}' />" + "</DATA1>";
+		            str += "<VALUE>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</VALUE>";
+		            str += "<DATA1>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName")) + "</DATA1>";
 		            str += "<DATA2>" + MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FilePath")) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";

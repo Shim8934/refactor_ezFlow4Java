@@ -443,7 +443,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_FAX", vo.getFacsimileTelephoneNumber());
 		map.put("v_MOBILE", vo.getMobile());
 		map.put("v_POSTALCODE", vo.getPostalCode());
-		map.put("v_ADDRESS", vo.getStreetAddress());		
+		map.put("v_ADDRESS", vo.getStreetAddress());
+		if (vo.getExtensionAttribute1() == null || vo.getExtensionAttribute1().equals("")) {
+			map.put("v_EXTATTR1", "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;");
+		} else {
+			map.put("v_EXTATTR1", vo.getExtensionAttribute1());
+			
+		}
 		map.put("v_EXTATTR6", vo.getExtensionAttribute6());
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
 		map.put("v_EXTATTR102", vo.getExtensionAttribute102());
@@ -453,6 +459,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_BIRTH", vo.getBirth());		
 		map.put("v_BIRTHTYPE", vo.getBirthType());
 		map.put("v_PASS", vo.getPassword());
+		
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));

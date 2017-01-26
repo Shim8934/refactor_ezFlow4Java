@@ -326,7 +326,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 
-		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+//		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			pMode = 0;
 		} else {
 			pMode = 1;
@@ -372,7 +373,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("communityCD");
-		String userLevel = request.getParameter("userLevel");
+		String userLevel = "";
 		
 		if (!code.equals("")) {
 			String vPermit = ezCommunityService.leftCommunityGet1(code, userInfo.getId(), userInfo.getTenantId());
@@ -387,6 +388,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		
+		logger.debug("userLevel = " + userLevel);
 		logger.debug("checkCommHome ended.");
 		
 		return "ezCommunity/communityCheckCommHome";
@@ -429,7 +431,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int mode = 0;
 		
-		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+//		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			mode = 0;
 		} else {
 			mode = 1;
@@ -1083,7 +1086,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
 		model.addAttribute("boardInfo", boardInfo);
-		model.addAttribute("ch_CommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
+//		model.addAttribute("ch_CommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		
@@ -1300,10 +1303,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pFileName = request.getParameter("fileName");
 		String pFilePath = request.getParameter("filePath");
 		pFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + pFilePath;
+		String realPath = commonUtil.getRealPath(request);
 		logger.debug("fileName : " + pFileName);
 		logger.debug("filePath : " + pFilePath);
 		
-		ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+		downFile(request, response, realPath + pFilePath, pFileName);
 		
 		logger.debug("getCommunityAttachInfo ended.");
 	}
@@ -1781,7 +1785,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
-		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			logger.debug("bbsDelOk ended.");
 			
 			return ezCommunityService.bbsDelOk(userInfo, request, board, itemNo, goToPage, bName, adminCheck, userInfo.getTenantId());
@@ -1945,7 +1950,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("disable", disable);
 		model.addAttribute("strXML", strXML);
-		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
+//		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		
 		return "ezCommunity/communityPollMain";
 	}
@@ -2831,14 +2836,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/saveBoardOrder.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveBoardOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("saveBoardOrder started.");
+		logger.debug("xmlData = " + xmlData);
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ret = ezCommunityService.saveBoardOrder(xmlData, userInfo.getTenantId());
 		
 		ezCommunityService.deleteBoard(userInfo.getTenantId());
 		
 		ret = "<RESULT>" + ret + "</RESULT>";
 
+		logger.debug("saveBoardOrder started.");
+		
 		return ret;
 	}
 	

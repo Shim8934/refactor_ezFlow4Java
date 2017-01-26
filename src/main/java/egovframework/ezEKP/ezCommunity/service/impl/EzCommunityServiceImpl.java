@@ -879,7 +879,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
-            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+//            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
+            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0) {
             	cAdmin = "admin";
             }
             
@@ -2509,7 +2510,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {	
+		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -3044,7 +3045,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + attach.getItemID() + "</ItemID>");
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
-			sb.append("<FilePath>" + attach.getFilePath() + "</FilePath>");
+			sb.append("<FileName><![CDATA[" + attach.getFileName() + "]]></FileName>");
+			sb.append("<FilePath><![CDATA[" + attach.getFilePath() + "]]></FilePath>");
 			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");
@@ -3540,7 +3542,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String bbsDelOk(LoginVO userInfo, HttpServletRequest request, CommunityCBoardVO board, String itemNo, String goToPage, String bName, int adminCheck, int tenantID) throws Exception {
 		String folder = "", strFile = "";
 		
-		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			String fileName = board.getFileName();
 			
 			if (fileName != null) {
@@ -3977,6 +3980,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		
+		logger.debug("commViewMemberGet2");
+		logger.debug("v_CODE="+map.get("v_CODE"));
+		logger.debug("v_USERINFO_LANG="+map.get("v_USERINFO_LANG"));
+		logger.debug("v_KEYWORD="+map.get("v_KEYWORD"));
+		logger.debug("v_S_RADIO="+map.get("v_S_RADIO"));
+		
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		
 		logger.debug("commViewMemberGet2 ended. result="+result);
@@ -4326,19 +4335,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
 		String pBoardIDList = xmlDoc.getElementsByTagName("BOARDIDLIST").item(0).getTextContent().trim();
-		int pBoardListCount = pBoardIDList.split(";").length;
+		String[] boardIDList = pBoardIDList.split(";");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardIDList", pBoardIDList);
-		map.put("v_pBoardListCount", pBoardListCount);
 		map.put("tenantID", tenantID);
 		
 		try {
-			for (int i = 0; i <= pBoardListCount; i ++) {
-				map.put("v_count", i);
+			for (int i = 0; i < boardIDList.length; i ++) {
+				map.put("v_pBoardID", boardIDList[i]);
+				map.put("v_count", i+1);
 				
 				ezCommunityDAO.saveBoardOrder(map);
-				i ++;
 			}
 			
 			logger.debug("saveBoardOrder ended.");
@@ -6106,7 +6113,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (pSize > 1048576) {
 			return Integer.toString((int) (pSize / 1024 / 102.4) / 10) + " MB";
 		} else if (pSize > 1024) {
-			return Integer.toString((int) (pSize / 102.4)) + " KB";
+			return Integer.toString((int) (pSize / 102.4) / 10) + " KB";
 		} else {
 			return Integer.toString(pSize) + " Byte";
 		}
@@ -6275,7 +6282,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String itemID = item.getItemID();
 		String boardID = item.getBoardID();
 		String thumbPath = item.getExtensionAttribute5();
-		String fileName = item.getExtensionAttribute4();
+		String fileName = "";
 
 		logger.debug("attachments : + " + attachments + ", itemID : " + itemID + ", boardID : " + boardID + ", thumbPath : " + thumbPath + ", fileName : " + fileName);
 		
@@ -6284,18 +6291,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				attachments += ";";
 			}
 			
-			for (int i = 0; i < attachments.split(";").length; i++) {
+			
+			String[] attachmentsArr = attachments.split(";");
+			for (int i = 0; i < attachmentsArr.length; i++) {
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
 				
-				File file = new File(realPath + pUploadFilePath + attachments.split(";")[i]);
+				File file = new File(realPath + pUploadFilePath + attachmentsArr[i]);
 				fileSize = Integer.toString((int) file.length());
-				filePath = attachments.split(";")[i];
+				filePath = attachmentsArr[i];
 				
-				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachments.split(";")[i].replace("tempUploadFile", ""));
+				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachmentsArr[i].replace("tempUploadFile", ""));
 					FileUtils.moveFile(file, destFile);
-					filePath = attachments.split(";")[i].replace("tempUploadFile", "");
+					filePath = attachmentsArr[i].replace("tempUploadFile", "");
 				}
 				
 				if (!thumbPath.equals("")) {
@@ -6313,13 +6322,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					ezCommunityDAO.updateAttachInfo(map);
 				}
 				
+				//get fileName from attachments string
+				fileName = attachmentsArr[i];
+				if (fileName.indexOf("/") > -1) {
+					fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+				}
+				if (fileName.indexOf("}_") > -1) {
+					fileName = fileName.substring(fileName.indexOf("}_") + 2);
+				}
+				
 				map = new HashMap<String, Object>();
 				map.put("itemID", itemID);
 				map.put("fileSize", fileSize);
 				map.put("fileName", fileName);
 				map.put("tenantID", tenantID);
 				
-				if (attachments.split(";")[i].indexOf("tempUploadFile") > -1) {
+				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
 					map.put("filePath", boardID + commonUtil.separator + "uploadFile" + filePath);
 					ezCommunityDAO.insertAttachInfo(map);
 				} else {

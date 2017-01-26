@@ -102,6 +102,7 @@
 	    var pUse_Editor = "${useEditor}";
 	    var pDocID = "${docID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
+	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;

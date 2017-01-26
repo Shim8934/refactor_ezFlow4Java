@@ -53,7 +53,7 @@
 	        var cadmin = "<c:out value='${cAdmin}' />";
 	        var gcadmin = "<c:out value='${gcAdmin}' />";
 	        var code = "<c:out value='${code}' />";
-	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
+// 	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
 	        var userinfo_lang = "<c:out value='${strUserLang}' />";
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
@@ -116,7 +116,7 @@
 
 	        var checkpassword_dialogArguments = new Array();
 	        function btn_Delete_Onclick() {
-	            if (Delete_FG != "true") {
+	        	if (Delete_FG != "true") {
 	                alert("<spring:message code='ezCommunity.t901'/>");
 				    return;
 				}
@@ -168,33 +168,21 @@
 	                	return;
 	                }
 	            } else {
-	            	if (gubun == "2") {
-	                	if(CrossYN()) {
-	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
-	                        try {
-	                        	OpenWin.focus();
-	                        } catch (e) { }
-	                	} else {
-	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
-
-	                		if (typeof (ret) == "undefined") {
-		                        alert("<spring:message code = 'ezCommunity.t901' />");
-		                        return;
-		                    }
-
-	                		 if (ret != "OK") {
-	                             alert("<spring:message code = 'ezCommunity.t921' />");
-	                             return
-		                    } else if (ret == "cancel") {
-		    	            	alert("<spring:message code='ezCommunity.t60'/>");
-		    	                return;
-		    	            }
-	                	}
-
-	                }
+	            	if (!confirm("<spring:message code='ezCommunity.t426'/>")) {
+	            		return;
+                    }
+                    
+                    var xmlhttp = createXMLHttpRequest();
+	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	 			    xmlhttp.send();
+	 			    xmlhttp = null;
+	 			    
+	 			    try {
+	 			    	window.opener.location.reload(true);
+	 			    } catch (e) {
+	 			    }
+	 			    
+	 			    window.close();
                 }
 	        }
 	        
@@ -229,7 +217,7 @@
 	        
 
 			function btn_Reply_Onclick() {
-			    if (ch_CommunityAdmin < 0 && Write_FG != "true") {
+			    if (Write_FG != "true") {
 			        alert("<spring:message code='ezCommunity.t431'/>");
 				    return;
 				}
@@ -361,10 +349,7 @@
 
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = filepath.substr(89, filepath.length - 88);
-	                filename = ReplaceText(filename, "%2b", "+");
-	                filename = ReplaceText(filename, "%3b", ";");
-	                filepath = filepath;
+	                filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	                var strTarget = "target='_blank'";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -398,8 +383,8 @@
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + filename + "&filePath=" + filepath  + "\">";
-	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + filename + "&filePath=" + filepath + ">";
+	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filename) + "&filePath=" + encodeURIComponent(filepath) + ">";
 	                strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 	            }
 	            document.getElementById('lstAttachLink').innerHTML = strAttach;
@@ -816,18 +801,18 @@
 	                    		<c:when test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 	                    			<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
 	                    			
-	                    			<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li>
-	                    			</c:if>
+<%-- 	                    			<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
+<%-- 	                    			</c:if> --%>
 	                    		</c:when>
 	                    		
 	                    		<c:when test="${pReservedItem == 'true' }">
 									<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 			                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 			                        
-			                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
- 	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li>
- 	                    			</c:if>
+<%-- 			                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%--  	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
+<%--  	                    			</c:if> --%>
 								</c:when>
 								
 								<c:otherwise>
@@ -838,9 +823,9 @@
 					                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 					                        <li id='btn_Move'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
 					                        
-					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li>
-					                        </c:if>
+<%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
+<%-- 					                        </c:if> --%>
 					                        
 					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
 										</c:when>
@@ -856,9 +841,9 @@
 					                        
 					                        <li id='btn_Move'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
 					                        
-					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li>
-					                        </c:if>
+<%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
+<%-- 					                        </c:if> --%>
 					                        
 					                        <c:if test="${boardInfo.gubun != '2' }">
 					                        	<li id='btn_Move'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
@@ -876,9 +861,9 @@
 				                        	</c:if>
 			                        		
 					                        <c:if test="${boardInfo.gubun != '2' }">
-					                        	<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-					                        		<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li>
-					                        	</c:if>
+<%-- 					                        	<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 					                        		<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
+<%-- 					                        	</c:if> --%>
 					                        </c:if>	
 					                        
 				                        	<li id='btn_Move'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
@@ -1011,14 +996,14 @@
 	        <tr>
 	            <td class="pad1" style="height:300px">
 	            
-	            	<c:choose>
-	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID=${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	            		</c:when>
-	            		<c:otherwise>
+<%-- 	            	<c:choose> --%>
+<%-- 	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID=${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe> --%>
+<%-- 	            		</c:when> --%>
+<%-- 	            		<c:otherwise> --%>
 	            			<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	            		</c:otherwise>
-	            	</c:choose>
+<%-- 	            		</c:otherwise> --%>
+<%-- 	            	</c:choose> --%>
 	                
 	            </td>
 	        </tr>
@@ -1078,15 +1063,15 @@
 			                            <div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
 			                        </td>
 			                        
-			                        <c:choose>
-			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td>
-			                        	</c:when>
+<%-- 			                        <c:choose> --%>
+<%-- 			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td> --%>
+<%-- 			                        	</c:when> --%>
 			                        	
-			                        	<c:otherwise>
+<%-- 			                        	<c:otherwise> --%>
 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp&nbsp&nbsp</span></a> </td>
-			                        	</c:otherwise>
-			                        </c:choose>
+<%-- 			                        	</c:otherwise> --%>
+<%-- 			                        </c:choose> --%>
 			                        
 			                        <td id="ItemLevel" style="display: none"></td>
 			                    </tr>
@@ -1103,15 +1088,15 @@
 			                        <th><spring:message code='ezCommunity.t141'/></th>
 			                        <td class="pos1"><div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div></td>
 			                        
-			                        <c:choose>
-			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}">
-			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td>
-			                        	</c:when>
+<%-- 			                        <c:choose> --%>
+<%-- 			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
+<%-- 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td> --%>
+<%-- 			                        	</c:when> --%>
 			                        	
-			                        	<c:otherwise>
+<%-- 			                        	<c:otherwise> --%>
 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp</span></a> </td>
-			                        	</c:otherwise>
-			                        </c:choose>
+<%-- 			                        	</c:otherwise> --%>
+<%-- 			                        </c:choose> --%>
 			                        
 			                        <td id="ItemLevel" style="display: none"></td>
 			                    </tr>

@@ -71,7 +71,7 @@
 	        var ShowAdjacent = "<c:out value = '${showAdjacent}' />";
 	        var gubun = "<c:out value = '${ boardInfo.gubun }' />";
 	        var PageHref = "boardItemList_Photo.aspx?BoardID=<c:out value = '${pBoardID}' />&Page=<c:out value = '${pPage}' />&SortBy=<c:out value = '${pSortBy}' />";
-	        var ch_CommunityAdmin = "<c:out value = '${chCommunityAdmin}' />";
+// 	        var ch_CommunityAdmin = "<c:out value = '${chCommunityAdmin}' />";
 	        var UserLevel = "<c:out value = '${userLevel}' />";
 	        var pUse_Editor = "<c:out value = '${useEditor}' />";
 	        var pUse_IE11Browser = "<c:out value = '${useIE11Browser}' />";
@@ -139,12 +139,12 @@
 	        if (url != "") window.location.href = url;
 	        
 	    	function NewItem_onclick() {
-	            if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+	            if (UserLevel == "0" || UserLevel == "9") {
 					alert("<spring:message code = 'ezCommunity.t896' />");
 	               	return;
 	           	}
 	            
-	           	if (ch_CommunityAdmin < 0 && Write_FG != "true") {
+	           	if (Write_FG != "true") {
 					alert("<spring:message code = 'ezCommunity.t897' />");
 			        return;
 			    }
@@ -166,12 +166,12 @@
 	        }
 	
 			function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-	            if (ch_CommunityAdmin < 0 && (UserLevel == "0" || UserLevel == "9")) {
+	            if (UserLevel == "0" || UserLevel == "9") {
 	            	alert("<spring:message code = 'ezCommunity.t899' />");
 	                return;
 	           	}
 	
-	           	if (ch_CommunityAdmin < 0 && Read_FG != "true") {
+	           	if (Read_FG != "true") {
 	            	alert("<spring:message code = 'ezCommunity.t423' />");
 				    return;
 				}

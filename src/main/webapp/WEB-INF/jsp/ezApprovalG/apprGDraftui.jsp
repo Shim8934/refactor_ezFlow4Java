@@ -1012,12 +1012,12 @@
 		            var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
 		            for (i = 0; i < rows.length; i++) {
 		                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0], "DATA1"));
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
-		                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0], "DATA1"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
+		                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
 		            }
 		        }
 		        return getXmlString(rtnXml);

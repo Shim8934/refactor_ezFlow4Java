@@ -301,7 +301,7 @@ function ItemPreviewRead(obj) {
         xmlhttp.onreadystatechange = event_ItemPreviewRead;
         xmlhttp.send();
         xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pitemid, true);
+        xmlhttp2.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pitemid, true);
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
     }
