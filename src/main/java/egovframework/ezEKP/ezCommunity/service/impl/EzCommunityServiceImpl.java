@@ -2510,7 +2510,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {	
+		} else if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
