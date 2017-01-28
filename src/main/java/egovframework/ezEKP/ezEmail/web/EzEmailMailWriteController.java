@@ -101,7 +101,6 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
-import oracle.net.aso.f;
 
 /** 
  * @Description [Controller] 메일 쓰기
