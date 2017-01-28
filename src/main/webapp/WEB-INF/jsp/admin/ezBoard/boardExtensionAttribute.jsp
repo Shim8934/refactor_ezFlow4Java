@@ -7,9 +7,9 @@
 		<title><spring:message code="ezBoard.t999029"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css" />	        
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">
 			var pBoardID = "";
 		    var pGubun = "";
@@ -55,32 +55,24 @@
 		        	data : {boardID : pBoardID},
 		        	success : function(result){
 		        		if (document.getElementById("SelectList").innerHTML != "")
-			                document.getElementById("SelectList").innerHTML = "";
-		        		
-		        		var headerData = createXmlDom();
-			            headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
+		                    document.getElementById("SelectList").innerHTML = "";
 
-			            if (result != "") {
-			            	result = loadXMLString(result);
-			                if (CrossYN()) {			                	
-			                    var xmlRtn = result.getElementsByTagName("ROWS")[0];
-			                    var Node = headerData.importNode(xmlRtn, true);
-			                    headerData.documentElement.appendChild(Node);
-			                }
-			                else {
-			                    var xmlRtn = result.getElementsByTagName("ROWS")[0];       
-			                    headerData.documentElement.appendChild(xmlRtn);
-			                }
-			            }
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
 
-			            var pSelectList = new ListView();
-			            pSelectList.SetID("lvSelectList");
-			            pSelectList.SetMulSelectable(false);
-			            pSelectList.SetHeightFree(true);
-			            pSelectList.SetRowOnClick("OnSelChange_onclick");
-			            pSelectList.SetSelectFlag(false);
-			            pSelectList.DataSource(headerData);
-			            pSelectList.DataBind("SelectList");
+		                if (result != "") {
+		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
+		                    headerData.documentElement.appendChild(xmlRtn);
+		                }
+
+		                var pSelectList = new ListView();
+		                pSelectList.SetID("lvSelectList");
+		                pSelectList.SetMulSelectable(false);
+		                pSelectList.SetHeightFree(true);
+		                pSelectList.SetRowOnClick("OnSelChange_onclick");
+		                pSelectList.SetSelectFlag(false);
+		                pSelectList.DataSource(headerData);
+		                pSelectList.DataBind("SelectList");
 		        	}
 		        });		      
 		    }
@@ -92,33 +84,25 @@
 		        	url : "/admin/ezBoard/getBoardHeader.do",
 		        	data : {colType : pGubun, boardID : boardid},
 		        	success : function(result){
-						if (document.getElementById("HeaderList").innerHTML != "")
-						    document.getElementById("HeaderList").innerHTML = "";
-						
-						var headerData = createXmlDom();
-						headerData = loadXMLString(XmlHeader.innerHTML.toUpperCase());
-						
-						if (result != "") {
-							result = loadXMLString(result);
-						    if (CrossYN()) {
-						        var xmlRtn = result.getElementsByTagName("ROWS")[0];
-						        var Node = headerData.importNode(xmlRtn, true);
-						        headerData.documentElement.appendChild(Node);
-						    }
-						    else {
-						        var xmlRtn = result.getElementsByTagName("ROWS")[0];
-						        headerData.documentElement.appendChild(xmlRtn);
-						    }
-						}
-						
-						var pSelectList = new ListView();
-						pSelectList.SetID("lvXmlHeader");
-						pSelectList.SetMulSelectable(false);
-						pSelectList.SetHeightFree(true);
-						pSelectList.SetRowOnClick("OnSelChange_onclick2");
-						pSelectList.SetSelectFlag(false);
-						pSelectList.DataSource(headerData);
-						pSelectList.DataBind("HeaderList");	
+		        		if (document.getElementById("HeaderList").innerHTML != "")
+		                    document.getElementById("HeaderList").innerHTML = "";
+
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(XmlHeader.innerHTML.toUpperCase());
+
+		                if (result != "") {
+		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
+		                    headerData.documentElement.appendChild(xmlRtn);
+		                }
+
+		                var pSelectList = new ListView();
+		                pSelectList.SetID("lvXmlHeader");
+		                pSelectList.SetMulSelectable(false);
+		                pSelectList.SetHeightFree(true);
+		                pSelectList.SetRowOnClick("OnSelChange_onclick2");
+		                pSelectList.SetSelectFlag(false);
+		                pSelectList.DataSource(headerData);
+		                pSelectList.DataBind("HeaderList");
 		        	}
 		        });
 		    }
@@ -130,80 +114,59 @@
 		        var tr = listview.GetSelectedRows();
 
 		        if (tr.length != 0) {
-		            if (CrossYN()) {
-		                document.getElementById("txtNameKor").value = ConvMakeXMLString(tr[0].cells[0].textContent);
-		                document.getElementById("txtNameEng").value = ConvMakeXMLString(tr[0].cells[1].textContent);
+		            document.getElementById("txtNameKor").value = ConvMakeXMLString(getNodeText(tr[0].cells[0]));
+		            document.getElementById("txtNameEng").value = ConvMakeXMLString(getNodeText(tr[0].cells[1]));
 
-		                if (tr[0].cells[2].textContent == "Y")
-		                    document.getElementById("chkRequired").checked = true;
-		                else
-		                    document.getElementById("chkRequired").checked = false;
+		            if (getNodeText(tr[0].cells[2]) == "Y")
+		                document.getElementById("chkRequired").checked = true;
+		            else
+		                document.getElementById("chkRequired").checked = false;
 
-		                radioType_onClick(tr[0].cells[3].textContent);
-		                SetRadioVal("Type", tr[0].cells[3].textContent);
-		                SetGubunList(tr[0].cells[4].textContent);
-		            }
-		            else {
-		                document.getElementById("txtNameKor").value = ConvMakeXMLString(tr[0].cells[0].innerText);
-		                document.getElementById("txtNameEng").value = ConvMakeXMLString(tr[0].cells[1].innerText);
-
-		                if (tr[0].cells[2].innerText == "Y")
-		                    document.getElementById("chkRequired").checked = true;
-		                else
-		                    document.getElementById("chkRequired").checked = false;
-
-		                radioType_onClick(tr[0].cells[3].innerText);
-		                SetRadioVal("Type", tr[0].cells[3].innerText);
-		                SetGubunList(tr[0].cells[4].innerText);
-		            }
+		            radioType_onClick(getNodeText(tr[0].cells[3]));
+		            SetRadioVal("Type", getNodeText(tr[0].cells[3]));
+		            SetGubunList(getNodeText(tr[0].cells[4]));
 		        }
 		    }
 
 		    function SetGubunList(pCassNo) {
-		        document.getElementById("AddDel").style.display = "none";
+		    	document.getElementById("AddDel").style.display = "none";
 		        document.getElementById("Gubun").innerHTML = "";
 
 		        if (pCassNo.trim() != "") {
 		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
 		            document.getElementById("AddDel").style.display = "";
 
-		            for (var i = 1; i < (pCassNo.split("@").length + 1) ; i++) {
+		            for (var i = 1; i < (pCassNo.split("|").length + 1) ; i++) {
 		                if (i > 1) {
 		                    oRow = document.getElementById("CAS_NO_LIST").insertRow(-1);
 		                    oRow.style.backgroundColor = "#FFFFFF";
 		                    oCell01 = oRow.insertCell(-1);
 		                    oCell01.align = "left";
 		                    oCell01.valign = "middle";
-		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" value= " + pCassNo.split("@")[(i - 1)] + " name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />"
+		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" value= " + pCassNo.split("|")[(i - 1)] + " name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />"
 		                }
 		                else {
-		                    document.getElementById("cas_no1").value = pCassNo.split("@")[(0)];
+		                    document.getElementById("cas_no1").value = pCassNo.split("|")[(0)];
 		                }
 		            }
-		            document.getElementById("cnt").value = pCassNo.split("@").length;
+		            document.getElementById("cnt").value = pCassNo.split("|").length;
 		        }
 		    }
 
 		    function OnSelChange_onclick2() {
-		        var listview = new ListView();
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvXmlHeader");
 
 		        var tr = listview.GetSelectedRows();
 
 		        if (tr.length != 0) {
-		            if (CrossYN()) {
-		                document.getElementById("HeadName").innerHTML = tr[0].cells[0].textContent;
-		                document.getElementById("HeadWidth").value = tr[0].cells[2].textContent;
-		            }
-		            else {
-		                document.getElementById("HeadName").innerText = tr[0].cells[0].innerText;
-		                document.getElementById("HeadWidth").value = tr[0].cells[2].innerText;
-		            }
+		            document.getElementById("HeadName").innerHTML = getNodeText(tr[0].cells[0]);
+		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[2]);
 		        }
 		    }
 
 		    function radioType_onClick(pValue) {
-		        if (pValue == "text") {
+		    	if (pValue == "text") {
 		            document.getElementById("AddDel").style.display = "none";
 		            document.getElementById("Gubun").innerHTML = "";
 		        }
@@ -280,11 +243,11 @@
 		        for (var i = 1; i < (cnt + 1) ; i++) {
 		            if (document.getElementById("cas_no" + i)) {
 		                if (document.getElementById("cas_no" + i).value.trim() != "") {
-		                    if (document.getElementById("cas_no" + i).value.indexOf("@") > -1) {
+		                    if (document.getElementById("cas_no" + i).value.indexOf("|") > -1) {
 		                        ret = "false ";
 		                        break;
 		                    }
-		                    ret += document.getElementById("cas_no" + i).value.trim() + "@";
+		                    ret += document.getElementById("cas_no" + i).value.trim() + "|";
 		                }
 		            }
 		        }
@@ -311,7 +274,7 @@
 		    }
 
 		    function btn_Update() {
-		        var listview = new ListView();
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
 
 		        var tr = listview.GetSelectedRows();
@@ -329,30 +292,17 @@
 
 		        EditHeader(tr[0].cells[0].innerHTML);
 
-		        if (CrossYN()) {
-		            tr[0].cells[0].textContent = document.getElementById("txtNameKor").value;
-		            tr[0].cells[1].textContent = document.getElementById("txtNameEng").value;
+		        setNodeText(tr[0].cells[0], document.getElementById("txtNameKor").value);
+		        setNodeText(tr[0].cells[1], document.getElementById("txtNameEng").value);
 
-		            if (document.getElementById("chkRequired").checked == true)
-		                tr[0].cells[2].textContent = "Y";
-		            else
-		                tr[0].cells[2].textContent = "N";
+		        if (document.getElementById("chkRequired").checked == true)
+		            setNodeText(tr[0].cells[2], "Y");
+		        else
+		            setNodeText(tr[0].cells[2], "N");
 
-		            tr[0].cells[3].textContent = GetRadioVal("Type");
-		            tr[0].cells[4].textContent = txtGubun;
-		        }
-		        else {
-		            tr[0].cells[0].innerText = document.getElementById("txtNameKor").value;
-		            tr[0].cells[1].innerText = document.getElementById("txtNameEng").value;
+		        setNodeText(tr[0].cells[3], GetRadioVal("Type"));
+		        setNodeText(tr[0].cells[4], txtGubun);
 
-		            if (document.getElementById("chkRequired").checked == true)
-		                tr[0].cells[2].innerText = "Y";
-		            else
-		                tr[0].cells[2].innerText = "N";
-
-		            tr[0].cells[3].innerText = GetRadioVal("Type");
-		            tr[0].cells[4].innerText = txtGubun;
-		        }
 		        ChangedAdd = true;
 		        alert("<spring:message code='ezBoard.t999054'/>");
 		    }
@@ -369,7 +319,6 @@
 		    }
 
 		    function btn_add() {
-
 		        var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
 		        var tr = listview.GetSelectedRows();
@@ -494,7 +443,7 @@
 		    }
 
 		    function EditHeader(pHeader) {
-		        var listview = new ListView();
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvXmlHeader");
 
 		        var tr = listview.GetDataRows();
@@ -502,14 +451,8 @@
 		        for (var i = 0; i < tr.length; i++) {
 		            if (tr[i].cells[0].innerHTML == pHeader) {
 		                ChangedHeader = true;
-		                if (CrossYN()) {
-		                    tr[i].cells[0].textContent = document.getElementById("txtNameKor").value;
-		                    tr[i].cells[1].textContent = document.getElementById("txtNameEng").value;
-		                }
-		                else {
-		                    tr[i].cells[0].innerText = document.getElementById("txtNameKor").value;
-		                    tr[i].cells[1].innerText = document.getElementById("txtNameEng").value;
-		                }
+		                setNodeText(tr[i].cells[0], document.getElementById("txtNameKor").value);
+		                setNodeText(tr[i].cells[1], document.getElementById("txtNameEng").value);
 		            }
 		        }
 		    }
@@ -548,19 +491,13 @@
 		            return;
 		        }
 
-		        if (CrossYN()) {
-		            tr[0].cells[2].textContent = document.getElementById("HeadWidth").value;
-		        }
-		        else {
-		            tr[0].cells[2].innerText = document.getElementById("HeadWidth").value;
-		        }
+		        setNodeText(tr[0].cells[2], document.getElementById("HeadWidth").value);
 
 		        ChangedHeader = true;
 		        alert("<spring:message code='ezBoard.t999054'/>");
 		    }
 
 		    function btn_AddHeader() {
-
 		        var listview2 = new ListView();
 		        listview2.LoadFromID("lvSelectList");
 
@@ -582,16 +519,9 @@
 		        }
 
 		        var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
-		        if (CrossYN()) {
-		            pparsingXML += "<CELL><VALUE><![CDATA[" + tr2[0].cells[0].textContent + "]]></VALUE><DATA1>" + tr2[0].getAttribute("DATA1") + "</DATA1></CELL>"; //항목명(한글)
-		            pparsingXML += "<CELL><VALUE><![CDATA[" + tr2[0].cells[1].textContent + "]]></VALUE></CELL>"; //항목명(영어)
-		            pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; //기본 width 80
-		        }
-		        else {
-		            pparsingXML += "<CELL><VALUE><![CDATA[" + tr2[0].cells[0].innerText + "]]></VALUE><DATA1>" + tr2[0].getAttribute("DATA1") + "</DATA1></CELL>"; //항목명(한글)
-		            pparsingXML += "<CELL><VALUE><![CDATA[" + tr2[0].cells[1].innerText + "]]></VALUE></CELL>"; //항목명(영어)
-		            pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; //기본 width 80
-		        }
+		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[0]) + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>"; 
+		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>"; 
+		        pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; 
 		        pparsingXML += "</ROW></ROWS></LISTVIEWDATA>";
 
 		        var Resultxml = loadXMLString(pparsingXML);
@@ -661,20 +591,12 @@
 		            createNodeAndInsertText(xmlpara, objRoot, "BOARDID", pBoardID);
 
 		            for (var i = 0; i < tr.length; i++) {
-		                if (CrossYN()) {
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(tr[i].cells[0].textContent));
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(tr[i].cells[1].textContent));
-		                    createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(tr[i].cells[4].textContent));
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", tr[i].cells[3].textContent);
-		                    createNodeAndInsertText(xmlpara, objRoot, "MUST", tr[i].cells[2].textContent);
-		                } else {
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(tr[i].cells[0].innerText));
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(tr[i].cells[1].innerText));
-		                    createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(tr[i].cells[4].innerText));
-		                    createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", tr[i].cells[3].innerText);
-		                    createNodeAndInsertText(xmlpara, objRoot, "MUST", tr[i].cells[2].innerText);
-		                }
-		                createNodeAndInsertText(xmlpara, objRoot, "TABLECOL", tr[i].getAttribute("DATA1"));
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(getNodeText(tr[i].cells[0])));
+		                createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(getNodeText(tr[i].cells[1])));
+		                createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(getNodeText(tr[i].cells[4])));
+		                createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", getNodeText(tr[i].cells[3]));
+		                createNodeAndInsertText(xmlpara, objRoot, "MUST", getNodeText(tr[i].cells[2]));
+		                createNodeAndInsertText(xmlpara, objRoot, "TABLECOL", GetAttribute(tr[i],"DATA1"));
 		            }
 
 		            xmlhttp.open("POST", "/admin/ezBoard/saveAttribute.do", false);
@@ -715,24 +637,16 @@
 		        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
 		        createNodeAndInsertText(xmlpara, objRoot, "BOARDID", pBoardID);
 
-		        //ITEMID는 필수.
-// 		        createNodeAndInsertText(xmlpara, objRoot, "NAME1", "CHECK");
-// 		        createNodeAndInsertText(xmlpara, objRoot, "NAME2", "CHECK");
-// 		        createNodeAndInsertText(xmlpara, objRoot, "WIDTH", "20");
-// 		        createNodeAndInsertText(xmlpara, objRoot, "COLNAME", "ITEMID");
-
+		        createNodeAndInsertText(xmlpara, objRoot, "NAME1", "CHECK");
+		        createNodeAndInsertText(xmlpara, objRoot, "NAME2", "CHECK");
+		        createNodeAndInsertText(xmlpara, objRoot, "WIDTH", "20");
+		        createNodeAndInsertText(xmlpara, objRoot, "COLNAME", "ITEMID");
+		        
 		        for (var i = 0; i < tr.length; i++) {
-		            if (CrossYN()) {
-		                createNodeAndInsertText(xmlpara, objRoot, "NAME1", MakeXMLString(tr[i].cells[0].textContent));
-		                createNodeAndInsertText(xmlpara, objRoot, "NAME2", MakeXMLString(tr[i].cells[1].textContent));
-		                createNodeAndInsertText(xmlpara, objRoot, "WIDTH", MakeXMLString(tr[i].cells[2].textContent));
-		            }
-		            else {
-		                createNodeAndInsertText(xmlpara, objRoot, "NAME1", MakeXMLString(tr[i].cells[0].innerText));
-		                createNodeAndInsertText(xmlpara, objRoot, "NAME2", MakeXMLString(tr[i].cells[1].innerText));
-		                createNodeAndInsertText(xmlpara, objRoot, "WIDTH", MakeXMLString(tr[i].cells[2].innerText));
-		            }
-		            createNodeAndInsertText(xmlpara, objRoot, "COLNAME", tr[i].getAttribute("DATA1"));
+		        	createNodeAndInsertText(xmlpara, objRoot, "NAME1", MakeXMLString(getNodeText(tr[i].cells[0])));
+		            createNodeAndInsertText(xmlpara, objRoot, "NAME2", MakeXMLString(getNodeText(tr[i].cells[1])));
+		            createNodeAndInsertText(xmlpara, objRoot, "WIDTH", MakeXMLString(getNodeText(tr[i].cells[2])));
+		            createNodeAndInsertText(xmlpara, objRoot, "COLNAME", GetAttribute(tr[i],"DATA1"));
 		        }
 
 		        xmlhttp.open("POST", "/admin/ezBoard/saveHeader.do", false);
@@ -742,14 +656,14 @@
 		    }
 
 		    function CheckExtensionList() {
-		        var listview = new ListView();
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
 		        var tr = listview.GetDataRows();
 
 		        var TableCols = "";
 		        var Retval = true;
 		        for (var i = 0; i < tr.length; i++) {
-		            if (tr[i].getAttribute("DATA1") == "") {
+		            if (GetAttribute(tr[i],"DATA1") == "") {
 		                Retval = false
 		                break;
 		            }
@@ -757,7 +671,7 @@
 		                Retval = false
 		                break;
 		            }
-		            TableCols = tr[i].getAttribute("DATA1") + "@";
+		            TableCols = GetAttribute(tr[i],"DATA1") + "|";
 		        }
 		        return Retval;
 		    }
@@ -921,7 +835,7 @@
 					        <th style="width:25%"><spring:message code='ezBoard.t999031'/></th>
 			                <td style="width:25%" id="HeadName"></td>
 					        <th style="width:25%">WIDTH</th>
-			                <td style="width:25%"><input id="HeadWidth" style="width:95%" /></td>
+			                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>
 				        </tr>
 			        </table>
 			        </td>

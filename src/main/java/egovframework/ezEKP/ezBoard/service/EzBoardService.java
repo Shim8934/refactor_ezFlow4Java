@@ -189,7 +189,7 @@ public interface EzBoardService {
 	
 	public void setMainImageID(String mainImageID, String itemID, String type, int tenantID) throws Exception;
 	
-	public void setNotiOrder(String itemID, int tenantID, int sn) throws Exception;
+	public String setNotiOrder(String itemID, int tenantID) throws Exception;
 	
 	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName, int tenantID) throws Exception;
 
@@ -220,6 +220,5 @@ public interface EzBoardService {
 	public List<BoardListVO> getReplyNoticeMail(String boardID, String itemTreeID, String lang, int tenantID) throws Exception;
 
 	public List<LoginVO> getSendApprMailList(String boardID, String lang, int tenantID) throws Exception;
-
 
 }

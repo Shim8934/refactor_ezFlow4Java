@@ -2376,6 +2376,10 @@ public class EzBoardController extends EgovFileMngUtil{
                     	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
                     }
                     
+                    if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+                    	fieldValue = "";
+    				}
+                    
                     resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                     
                     if (i == 0) {
@@ -2469,7 +2473,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
                 if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
                 	fieldValue = "";
-				}		
+				}
                 
                 resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
@@ -4567,20 +4571,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/saveNotiOrder.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String saveNotiOrder(@RequestBody String itemID, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String saveNotiOrder(@RequestBody String itemID, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		String rtnValue = "";
-		
-		try {
-			for (int k = 0; k < itemID.split(";").length; k++) {
-				ezBoardService.setNotiOrder(itemID, userInfo.getTenantId(), k + 1);
-			}
-			
-			rtnValue = "OK";
-		} catch (Exception e) {
-			rtnValue = "ERROR";
-		}
+		String rtnValue = ezBoardService.setNotiOrder(itemID, userInfo.getTenantId());
 		
 		return rtnValue;
 	}

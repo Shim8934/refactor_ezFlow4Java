@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -374,13 +375,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void setNotiOrder(String itemID, int tenantID, int sn) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("itemID", itemID);
-		map.put("tenantID", tenantID);
-		map.put("sn", sn);
+	public String setNotiOrder(String itemID, int tenantID) throws Exception {
+		String rtnValue = "";
 		
-		ezBoardDAO.setNotiOrder(map);
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantID);
+			
+			for (int k = 0; k < itemID.split(";").length; k++) {
+				map.put("itemID", itemID.split(";")[k]);
+				map.put("sn", k + 1);
+				
+				ezBoardDAO.setNotiOrder(map);
+			}
+			
+			rtnValue = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = "ERROR";
+		}
+		
+		return rtnValue;
 	}
 
 	@Override

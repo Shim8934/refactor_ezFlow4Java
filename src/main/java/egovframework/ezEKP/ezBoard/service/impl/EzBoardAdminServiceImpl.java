@@ -593,7 +593,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			rtnValue = "ERROR";
 			logger.error("EzBoardAdmin :: saveAttribute");
 		}
-		ezBoardAdminDAO.saveAttribute(boardAttributeVO);
 		
 		return rtnValue;
 	}
