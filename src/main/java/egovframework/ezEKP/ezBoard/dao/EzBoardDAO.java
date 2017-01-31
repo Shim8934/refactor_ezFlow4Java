@@ -470,12 +470,12 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		update("EzBoardDAO.setBoardList_Config", map);
 	}
 	
-	public void setMainImageID(Map<String, Object> map) throws Exception{
-		update("EzBoardDAO.setMainImageID", map);
+	public int setMainImageID(Map<String, Object> map) throws Exception{
+		return update("EzBoardDAO.setMainImageID", map);
 	}
 	
-	public void setMainImageID2(Map<String, Object> map) throws Exception{
-		update("EzBoardDAO.setMainImageID2", map);
+	public String setMainImageID2(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.setMainImageID2", map);
 	}
 
 	public void photoListAlbumEdit(Map<String, Object> map) throws Exception{

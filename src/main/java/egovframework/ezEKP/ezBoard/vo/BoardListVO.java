@@ -136,6 +136,8 @@ public class BoardListVO {
 	private String realPath;
 	/** tenantID*/
 	private int tenantID;
+	/** 메인이미지*/
+	private String mainImageID;
 	
 	public int getrNum() {
 		return rNum;
@@ -538,6 +540,12 @@ public class BoardListVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getMainImageID() {
+		return mainImageID;
+	}
+	public void setMainImageID(String mainImageID) {
+		this.mainImageID = mainImageID;
 	}
 	
 }

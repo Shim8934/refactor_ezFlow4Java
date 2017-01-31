@@ -124,15 +124,17 @@
 		        window.location.href = "/ezBoard/boardReservedItemList.do?page=" + CurPage + "&sortBy=" + SortBy + "&boardType=" + "${boardType}" + "&orgBoardParameters=" + ReplaceString(pOrgBoardParameters);
 		    }
 		    function BoardItemList() {
-		        if ("${boardType}" == "0" || "${boardType}" == "1" || "${boardType}" == "2"){
+		        if ("${boardType}" == "0" || "${boardType}" == "1" || "${boardType}" == "2") {
+		            window.location.href = "/ezBoard/boardItemList.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
+		        } else if ("${boardType}" == "3") {
+		            window.location.href = "/ezBoard/BoardItemListPhoto.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
+		        } else if ("${boardType}" == "4") {
+		              window.location.href = "/ezBoard/boardItemListThumbnail.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
+		        } else if ("${boardType}" == "N") {
+		            window.location.href = "/ezBoard/boardItemList_new.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
+		        } else {
 		            window.location.href = "/ezBoard/boardItemList.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
 		        }
-		        else if ("${boardType}" == "3")
-		            window.location.href = "/ezBoard/BoardItemListPhoto.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
-		          else if ("${boardType}" == "4")
-		              window.location.href = "/ezBoard/boardItemListThumbnail.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
-		        else if ("${boardType}" == "N")
-		            window.location.href = "/ezBoard/boardItemList_new.do?" + ReplaceString(pOrgBoardParameters) + "&adminType=" + pAdminType;
 		    }
 		
 		    var BlockSize = 10;

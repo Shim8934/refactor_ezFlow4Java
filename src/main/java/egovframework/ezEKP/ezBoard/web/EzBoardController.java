@@ -2,10 +2,8 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -2969,6 +2967,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		} else {
         			boardListVO.setEndDate(commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false).split(" ")[0]);
         		}
+        		
         		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
         	} else {
         		if (expireDays.equals("-1")) {
@@ -3205,16 +3204,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
 		if (pMode.equals("reply")) {
-			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
+			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + ezBoardService.getReverseDateNow() + boardListVO.getItemID());
 		}
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 
 		if (!pMode.equals("copy")) {
-			if (pMode.equals("reply")) {
-				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
+			
+			if (pMode.equals("reply") || pMode.equals("modify")) {
 				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			} else {
-				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
 				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 			}
 		} else {
@@ -3275,7 +3274,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (!pMode.equals("copy")) {
-			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
+			saveMHTResult = ezBoardService.saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if (saveMHTResult == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
 			}
@@ -3300,7 +3299,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
+			if (!ezBoardService.saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}
 			boardListVO.setHasAttach("1");
@@ -3309,144 +3308,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		return "OK";
-	}
-
-	/**
-	 * 게시판 mht저장 실행 Method
-	 */
-	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
-		String docPath = "";
-		String mhtFilePath = "";
-		boolean ret = true;
-		
-        if (strType.equals("BOARD")) {
-            strHTML = strHTML.replace("'", "''");
-        }
-        
-		docPath = strFilePath + commonUtil.separator + strBoardID;
-		mhtFilePath = strMHTFilename + ".mht";
-		
-		String stordFilePathReal = docPath + commonUtil.separator + "doc";
-		
-		File file = new File(realPath + stordFilePathReal);
-		
-		if (!file.exists()) {
-			boolean _flag = file.mkdirs();
-			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
-			file.mkdirs();
-			
-			if (!_flag) {
-			    throw new IOException("Directory creation Failed ");
-			}
-		}
-		
-		InputStream stream = null;
-		OutputStream bos = null;
-		
-		try {
-			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
-			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
-			}
-			
-			ret = true;
-		} catch (Exception e) {
-			ret = false;
-		} finally {
-			bos.close();
-			stream.close();
-		}
-		
-		return ret;
-	}
-
-	/**
-	 * 게시판 9999년도부터 뒤로 날짜계산 표출 Method
-	 */
-	public String getReverseDateNow() {
-		StringBuilder reverseDate = new StringBuilder();
-		Calendar cal = Calendar.getInstance();
-		
-		reverseDate.append(9999 - cal.get(Calendar.YEAR));
-		reverseDate.append(21 - cal.get(Calendar.MONTH));
-		reverseDate.append(41 - cal.get(Calendar.DATE));
-		reverseDate.append(33 - cal.get(Calendar.HOUR));
-		reverseDate.append(69 - cal.get(Calendar.MINUTE));
-		reverseDate.append(69 - cal.get(Calendar.SECOND));
-		
-		return reverseDate.toString();
-	}
-	
-	/**
-	 * 게시판 게시물 첨부파일저장 실행 Method
-	 * @param tenantID 
-	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
-        long fileSize = 0;
-        String filePath = "";
-        String filePath2 = "";
-        String fileName = "";
-        String[] temp = null;
-        
-        if (!strAttachments.substring(strAttachments.length() - 1).equals(";")) {
-        	strAttachments += ";";
-        }
-        for (int i = 0; i < strAttachments.split(";").length; i++) {
-            if (strType.equals("BOARD")) {
-            	
-            	if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-            		filePath = strAttachments.split(";")[i];
-            	} else {
-            		filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
-            	}
-                File file = new File(realPath + filePath);
-                fileSize = file.length();
-                
-                if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-                    filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
-                    File fileinfo = new File(realPath + filePath2);
-                    
-                    if (!fileinfo.exists()) {
-                    	FileUtils.moveFile(file, fileinfo);
-                    }
-                } else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-                	filePath2 = strAttachments.split(";")[i];
-                } else {
-                	filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
-                }
-                file = null;
-            } else {
-                File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
-                fileSize = file.length();
-                
-                filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
-                	
-                File fileinfo = new File(realPath + filePath2);
-                
-                if (!fileinfo.exists()) {
-                	FileUtils.moveFile(file, fileinfo);
-                	file.delete();
-                }
-                file = null;
-            }
-            temp = strAttachments.split(";")[i].split("}_");
-            
-            for (int j = 1; j < temp.length; j++) {
-                if (j == 1) {
-                	fileName = temp[j];
-                }
-            }
-            
-            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName, tenantID);
-            temp = null;
-        }
-        
-        return true;
 	}
 	
 	/**
@@ -5274,6 +5135,7 @@ public class EzBoardController extends EgovFileMngUtil{
         filePath = pSignatureDir + commonUtil.separator + fileName;
         
         if (filePath != null && !filePath.equals("")) {
+        	logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
     		ezCommonService.responseAttach(filePath, fileName, false, request, response);
         }
 	}
@@ -5286,6 +5148,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String saveItemPhoto(HttpServletRequest request, @RequestBody String resultXML, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String result = "";
 		String mode = request.getParameter("mode");
 		String guBun = request.getParameter("guBun");
         String itemIDs = "";
@@ -5304,7 +5167,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			itemID = itemIDs.split(";");
 		}
 		
-		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + "23:59:59");
+		doc.getElementsByTagName("ENDDATE").item(0).setTextContent(doc.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 10) + " 23:59:59");
 		doc.getElementsByTagName("CONTENT").item(0).setTextContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace(System.lineSeparator(), "<br>"));
 		
 		if (!mode.equals("temp")) {
@@ -5313,135 +5176,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemID[0]);
 		doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID[0]);
 		
-		String result = "";
-		result = newItemPhoto(doc, mode, realPath, userInfo);
-		
-		if (result.equals("OK")) {
-			ezBoardService.setMainImageID(mainImageID, doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "1", userInfo.getTenantId());
-		}
+		result = ezBoardService.newItemPhoto(doc, mode, realPath, userInfo, mainImageID);
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}
 
-	/**
-	 * 게시판 포토게시물저장 실행 표출 Method
-	 */
-	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo) throws Exception{
-		BoardListVO boardListVO = new BoardListVO();
-
-		boolean saveMHTResult = false;
-		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
-		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
-		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
-		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
-		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
-		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
-		boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
-		boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
-		boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
-		boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
-		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
-		boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
-		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
-		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
-		boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
-		boardListVO.setRealPath(realPath);
-		boardListVO.setTenantID(userInfo.getTenantId());
-		
-		if (mode.equals("copy")) {
-			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
-		} else {
-			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
-		}
-		
-		boardListVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		
-		if (boardListVO.getStartDate() != null && boardListVO.getStartDate().equals("")) {
-			boardListVO.setStartDate(boardListVO.getWriteDate());
-		}
-		
-		boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
-		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
-		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
-		
-		if (mode.equals("reply")) {
-			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
-		}
-		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
-		
-		if (!mode.equals("copy")) {
-			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
-			boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		} else {
-			boardListVO.setParentWriteDate(boardListVO.getWriteDate());
-		}
-		
-		if (boardListVO.getParentWriteDate().equals("")) {
-			boardListVO.setParentWriteDate(boardListVO.getStartDate());
-		}
-
-		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
-			boardListVO.setExtensionAttribute1("0");
-		} else {
-			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
-		}
-		
-		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
-			boardListVO.setExtensionAttribute2("0");
-		} else {
-			boardListVO.setExtensionAttribute2(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
-		}
-		
-		boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
-		boardListVO.setExtensionAttribute32(doc.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
-		boardListVO.setExtensionAttribute4(doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
-		boardListVO.setExtensionAttribute5(doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
-		boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
-		
-		if (!mode.equals("copy")) {
-			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath);
-			if (saveMHTResult == false) {
-				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
-			}
-		}
-		
-		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			boardListVO.setHasAttach("1");
-		} else {
-			boardListVO.setHasAttach("0");
-		}
-		
-		if (boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")) {
-			boardListVO.setItemLevel("0");
-		}
-		
-		boardListVO.setImageCount(Integer.parseInt(doc.getElementsByTagName("IMAGE_COUNT").item(0).getTextContent()));
-		boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
-		boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
-		boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
-		
-		if (mode.equals("modify")) {
-			ezBoardService.brdUpdateItem(boardListVO, "PHOTO");
-		} else if (mode.equals("temp")) {
-			ezBoardService.brdNewItemTempPhoto(boardListVO);
-		} else {
-			ezBoardService.brdNewItemPhoto(boardListVO);
-		}
-		
-		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId())) {
-				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
-			}
-			boardListVO.setHasAttach("1");
-		} else {
-			boardListVO.setHasAttach("0");
-		}
-		
-		return "OK";
-	}
-	
 	/**
 	 * 게시판 승인유저리스트 표출 Method
 	 */
@@ -5558,61 +5297,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/saveImageItem.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String saveImageItem(@RequestBody String requestXML, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		Document doc = commonUtil.convertStringToDocument(requestXML);
-		BoardListVO boardListVO = new BoardListVO();
-		
-		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
-		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
-		boardListVO.setImageID(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
-		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
-		boardListVO.setFileContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
-		boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
-		boardListVO.setWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
-		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
-		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-		boardListVO.setTenantID(userInfo.getTenantId());
-		
-		int savecount = 0;
-        String[] imageIDs = boardListVO.getImageID().split(";");
-        String[] filePaths = boardListVO.getFilePath().split(";");
-        String[] fileContents = boardListVO.getFileContent().split(";:;");
-        String[] imageName = boardListVO.getImageNames().split(";");
-        String uploadFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
-        
-        savecount = boardListVO.getImageID().split(";").length;
-        boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
-        
-        for (int k = 0; k < savecount; k++) {
-        	File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
-            if (file.exists()) {
-            	boardListVO.setFilePath(uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", ""));
-            }
-            FileUtils.copyFile(file, new File(boardListVO.getFilePath()));
-            FileUtils.deleteQuietly(file);
+	public String saveImageItem(@RequestBody String requestXML, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("saveImageItem started");
 
-            File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
-            if (file2.exists()) {
-            	filePaths[k] = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
-            }
-            FileUtils.copyFile(file2, new File(filePaths[k]));
-            FileUtils.deleteQuietly(file2);
-            
-            boardListVO.setImageID(imageIDs[k].trim());
-            boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
-            
-            if (fileContents.length == 0) {
-            	boardListVO.setFileContent("");
-            } else {
-            	boardListVO.setFileContent(fileContents[k]);
-            }
-            boardListVO.setImageNames(imageName[k].trim());
-            
-            ezBoardService.photoListInsert(boardListVO);
-        }
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String uploadFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String result = ezBoardService.saveImageItem(requestXML, uploadFilePath, userInfo);
+
+		logger.debug("saveImageItem ended");
         
-		return "OK";
+		return result;
 	}
 	
 	/**
@@ -5651,7 +5345,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
         		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.replace("s_", "").split("/")[5] + ";";
+        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7].replace("s_", "") + ";";
         		mainFg = photoViewList.get(k).getFlag();
         	}
         }
@@ -5770,7 +5464,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	return "OK";
         } else {
-        	ezBoardService.setMainImageID(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), doc.getElementsByTagName("ITEMID").item(0).getTextContent(), "1", userInfo.getTenantId());
+        	ezBoardService.setMainImageID(doc.getElementsByTagName("IMAGEID").item(0).getTextContent(), doc.getElementsByTagName("ITEMID").item(0).getTextContent(), userInfo.getTenantId());
         	
         	return "OK";
         }
@@ -5801,7 +5495,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[5] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + ";";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			mainFg += photoViewList.get(k).getFlag().trim() + ";";
@@ -5851,17 +5545,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[5] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + ";";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
 			if (photoViewList.get(k).getImageName().split("/").length > 1) {
 				fileName += photoViewList.get(k).getImageName().split("/")[3] + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[5]).replace("s_", "") +
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[7]).replace("s_", "") +
                         "&attID=" + photoViewList.get(k).getImageName().split("/")[3] + ";";
 			} else {
 				fileName += photoViewList.get(k).getImageName() + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[5]).replace("s_", "") +
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[7]).replace("s_", "") +
                         "&attID=" + photoViewList.get(k).getImageName() + ";";
 			}
 		}
@@ -6517,7 +6211,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String result = "";
 		
-		if (boardItemVO.getMode().equals("boardContent") || boardItemVO.getMode().equals("boardAttach")) {
+		if (boardItemVO.getMode() != null && (boardItemVO.getMode().equals("boardContent") || boardItemVO.getMode().equals("boardAttach"))) {
 			boardItemVO.setTitle(commonUtil.cleanValue(boardItemVO.getTitle()));
 			result = ezBoardService.getItemAttachmentXMLRetrans(boardItemVO);
 		} else {
@@ -6525,6 +6219,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("getItemAttachments ended");
+		
 		return result;
 	}
 	
