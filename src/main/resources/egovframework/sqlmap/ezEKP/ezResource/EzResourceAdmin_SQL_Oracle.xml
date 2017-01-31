@@ -116,7 +116,7 @@
 				EZRESOURCE.RESACL
    				( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
     		VALUES
-    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#, #tenantID#) )
+    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#), #tenantID#)
 		]]>
 	</insert>
 	
