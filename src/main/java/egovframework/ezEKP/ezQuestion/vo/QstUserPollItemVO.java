@@ -57,6 +57,8 @@ public class QstUserPollItemVO {
 	int responseCnt;
 	/** 종료여부*/
 	String completeFlag;
+	/** 테넌트아이디*/
+	int tenantID;
 	
 	public int getBrdID() {
 		return brdID;
@@ -226,4 +228,11 @@ public class QstUserPollItemVO {
 	public void setCompleteFlag(String completeFlag) {
 		this.completeFlag = completeFlag;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
 }

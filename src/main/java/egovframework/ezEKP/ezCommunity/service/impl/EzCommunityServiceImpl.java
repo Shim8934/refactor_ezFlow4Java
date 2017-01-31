@@ -722,13 +722,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 	item.setAbsTract("");
                 	item.setTitle(item.getTitle());
                 } else if (pMode.equals("modify")) {
-                	if (item.getEndDate().substring(0, 4).equals("9999")) {
+                	//이효진 사용하는곳 없음
+                	/*if (item.getEndDate().substring(0, 4).equals("9999")) {
                         if (expireDays.equals("-1")) {
                         	item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         } else {
                             item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         }
-                    }
+                    } else {
+                    	item.setEndDate(item.getEndDate().substring(0, 4));
+                    }*/
                 	
                 	if (boardInfo.getGubun() != null) {
 	                	if (boardInfo.getGubun().equals("2")) {

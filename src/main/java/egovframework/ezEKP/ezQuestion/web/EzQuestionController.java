@@ -197,7 +197,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		for(QstListVO qst : list){
 			startDate=formatter.parse(qst.getPostDate());
-			endDate=formatter.parse(qst.getPollEndDate());
+			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), loginVO.getOffset(), false));
 			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
 			strbuilder = new StringBuilder();
@@ -227,14 +227,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/pollOpen.do", produces="text/xml; charset=utf-8")
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
-		 
+		logger.debug("pollOpen started");
+
 		String receve = "brdID=" + request.getParameter("brdID") +
-						"&itemNo=" + request.getParameter("itemNo") +
-		                "&title=" + commonUtil.cleanValue(request.getParameter("title")) +
-		                "&responseRange=" + request.getParameter("responseRange") +
-		                "&postDate=" + request.getParameter("postDate") +
-		                "&pollEndDate=" + request.getParameter("pollEndDate") +
-		                "&currPage=" + request.getParameter("currPage");
+				"&itemNo=" + request.getParameter("itemNo") +
+				"&title=" + commonUtil.cleanValue(request.getParameter("title")) +
+				"&responseRange=" + request.getParameter("responseRange") +
+				"&postDate=" + request.getParameter("postDate") +
+				"&pollEndDate=" + request.getParameter("pollEndDate") +
+				"&currPage=" + request.getParameter("currPage");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
 		/**UserPollItem*/
@@ -251,12 +252,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
 		/**ResponseCnt*/
 		int responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO,userID, loginVO.getTenantId());
+		logger.debug("responseCnt="+responseCnt);
 		/** 날짜계산*/
 		boolean endPoll = false;
 		Date sysDate=new Date();
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		if(formatter.parse(qstUserPollItemVO.getPollEndDate()).compareTo(sysDate)<0){
+		if(formatter.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)).compareTo(sysDate)<0){
 			endPoll = true;
 		}
 		if(qstUserPermissionVO.getEndFlg().equals('1')){
@@ -266,7 +268,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean adminYN = false;
 		String rsUserID = qstUserPollItemVO.getUserID();
 		String userIDAdmin = ezQuestionService.getUserIDAdmin(Integer.parseInt(request.getParameter("brdID")));
-
+		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");		
 		
@@ -358,6 +360,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}
 		}
+		
+		logger.debug("pollOpen ended"); 
 	}
 	
 	/**
@@ -800,6 +804,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(itemNo));
 		qstUserPollItemVO = ezQuestionService.getUserPollItem(qstUserPollItemVO, loginVO.getTenantId());
+		qstUserPollItemVO.setPollStartDate(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false));
+		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
 		
 		/** EZSP_UPDATEREADCNT*/
 		if (qstUserPollItemVO.getUserID() != userID){

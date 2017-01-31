@@ -461,7 +461,7 @@
 	        }
 	        
 	        
-	        //이효진 버튼 IE일때만 뜨게
+	        //이효진
 	        <%-- function btn_SaveToPC_Onclick() {
 	            var fPath;
 	            var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -1023,8 +1023,7 @@
 					                    </tr>
 					                    <tr>
 					                        <th><spring:message code='ezCommunity.t961'/></th>
-					                        <td class="pos1">
-					                            <input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
+					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()">&nbsp&nbsp&nbsp&nbsp<spring:message code='ezCommunity.t958'/>&nbsp&nbsp&nbsp&nbsp</span></a></td>
 					                    </tr>
 					                </table>
@@ -1041,11 +1040,9 @@
 					                    </tr>
 					                    <tr>
 					                        <th><spring:message code='ezCommunity.t961'/></th>
-					                        <td class="pos1">
-					                            <input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
+					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td>
 					                        <th><spring:message code='ezCommunity.t1175'/></th>
-					                        <td>
-					                            <input type="password" id="txtPassWord" style="WIDTH: 80px" maxlength="15"></td>
+					                        <td><input type="password" id="txtPassWord" style="WIDTH: 80px" maxlength="15"></td>
 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()">&nbsp&nbsp&nbsp&nbsp<spring:message code='ezCommunity.t958'/>&nbsp&nbsp&nbsp&nbsp</span></a></td>
 					                    </tr>
 					                </table>
@@ -1062,17 +1059,7 @@
 			                        <td class="pos1">
 			                            <div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
 			                        </td>
-			                        
-<%-- 			                        <c:choose> --%>
-<%-- 			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td> --%>
-<%-- 			                        	</c:when> --%>
-			                        	
-<%-- 			                        	<c:otherwise> --%>
-			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp&nbsp&nbsp</span></a> </td>
-<%-- 			                        	</c:otherwise> --%>
-<%-- 			                        </c:choose> --%>
-			                        
+		                        	<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp&nbsp&nbsp</span></a></td>			                        
 			                        <td id="ItemLevel" style="display: none"></td>
 			                    </tr>
 			                </table>
@@ -1087,17 +1074,7 @@
 			                    <tr>
 			                        <th><spring:message code='ezCommunity.t141'/></th>
 			                        <td class="pos1"><div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div></td>
-			                        
-<%-- 			                        <c:choose> --%>
-<%-- 			                        	<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download()"><spring:message code='ezCommunity.t20'/></span></a> </td> --%>
-<%-- 			                        	</c:when> --%>
-			                        	
-<%-- 			                        	<c:otherwise> --%>
-			                        		<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp</span></a> </td>
-<%-- 			                        	</c:otherwise> --%>
-<%-- 			                        </c:choose> --%>
-			                        
+									<td class="pos2"><a class="imgbtn"><span onclick="attach_SelectAll()"><spring:message code='ezCommunity.t962'/></span></a><br><a class="imgbtn"><span onclick="attach_Download_Cross()">&nbsp&nbsp<spring:message code='ezCommunity.t20'/>&nbsp&nbsp</span></a> </td>
 			                        <td id="ItemLevel" style="display: none"></td>
 			                    </tr>
 			                </table>
@@ -1113,23 +1090,12 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezCommunity.t190'/></th>
-		                        
-		                        <c:choose>
-		                        	<c:when test="${previousItemID == '' }">
-		                        		<td style="width:100%">
-		                        	</c:when>
-		                        	
-		                        	<c:otherwise>
-		                        		<td style="width:100%">
-		                        	</c:otherwise>
-		                        </c:choose>
-		                        
+                        		<td style="width:100%">
 		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')"><c:out value='${previousTitle}' /></div>
 		                        </td>
 		                    </tr>
 		                    <tr>
 		                        <th><spring:message code='ezCommunity.t192'/></th>
-		                        
 		                        <td>
 		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')"><c:out value='${nextTitle}' /></div>
 		                        </td>

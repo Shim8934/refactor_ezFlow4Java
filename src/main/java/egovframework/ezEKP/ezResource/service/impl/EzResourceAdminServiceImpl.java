@@ -151,6 +151,8 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public void chgClsOrder(String sourceID, String targetID, String companyID, int tenantID) throws Exception {
+		logger.debug("chgClsOrder started");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_P_SourceID", sourceID);
 		map.put("v_P_TargetID", targetID);
@@ -159,11 +161,15 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		int sourceStep = ezResourceAdminDAO.chgClsOrder_S1(map);
 		int targetStep = ezResourceAdminDAO.chgClsOrder_S2(map);
+		logger.debug("sourceStep="+sourceStep);
+		logger.debug("targetStep="+targetStep);
 		
-		map.put("v_SourceStep", sourceStep);
-		map.put("v_TargetStep", targetStep);
+		map.put("v_SourceStep", targetStep);
+		map.put("v_TargetStep", sourceStep);
 		ezResourceAdminDAO.chgClsOrder_U1(map);
 		ezResourceAdminDAO.chgClsOrder_U2(map);
+
+		logger.debug("chgClsOrder ended");
 		//ezResourceAdminDAO.chgClsOrder(map);
 	}
 
