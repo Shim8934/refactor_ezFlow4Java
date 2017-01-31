@@ -60,6 +60,7 @@
 		<result property="pollEndDate"			column="POLL_ENDDATE"			columnIndex="26"/>
 		<result property="responseCnt"			column="RES_CNT"						columnIndex="27"/>
 		<result property="completeFlag"		column="COMPLETE_FLAG"			columnIndex="28"/>
+        <result property="tenantID"               column="TENANT_ID"                  columnIndex="29"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPermissionVO" id="qstUserPermissionVO">
