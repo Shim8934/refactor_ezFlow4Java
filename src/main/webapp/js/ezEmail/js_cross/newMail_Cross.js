@@ -950,13 +950,6 @@ function MailSend_Hidden_Progress() {
 
 function event_SaveonClick() {
     if (g_saveHttp != null && g_saveHttp.readyState == 4) {
-    	if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
-        	alert(strLang367);
-            MailSend_Hidden_Progress();
-            g_saveHttp = null;
-            MailStatus = "NO";
-            return false;
-        }
     	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
@@ -965,174 +958,150 @@ function event_SaveonClick() {
         }
         else if (CrossYN()) {
         	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
-//        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(1).textContent;
         }
         
-        if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
-            alert(strLang241);
-            MailSend_Hidden_Progress();
-            g_saveHttp = null;
-            MailStatus = "NO";
-        }
-        else if (pRtnMessage != "FULL") {
-            if (g_saveHttp.status < 200 || g_saveHttp.status > 300 || pRtnMessage.substr(0, 5) == "ERROR") {
-                var result = "";
-                if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-                    result = strLang105;
-                }
-                else {
-                    result = pRtnMessage;
-                }
+        //메일 발송인 경우
+        if (event_SaveonClick.savemode == "sendsave") {
+        	// status code가 200~300이 아닐 경우
+        	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
+        		alert(strLang105);
+        		MailSend_Hidden_Progress();
                 g_saveHttp = null;
-                if (event_SaveonClick.savemode == "sendsave") {
-                    if (result.lastIndexOf("not be created.") > 0) {
-                        alert(strLang363);
-                    }
-                    else {
-                        if (pRtnMessage == "XSS")
-                            alert(strLang250);
-                        else
-                            alert(result);
-                    }
-                    if (Org_cmd == "docsend")
-                        MailSend_Hidden_Progress();
-                    else
-                        MailSend_Hidden_Progress();
-
-                    MailStatus = "NO";
-                }
-                else {
-                    if (!isAutoSave) {
-                        MailSend_Hidden_Progress();
-                        isAutoSave = false;
-                    }
-                    
-                    if (result.indexOf("ERROR") == 0) {
-                        if (result.lastIndexOf("not be created.") > 0) {
-                            alert(strLang363);
-                        }
-                        else
-                            alert(result.substr(6, result.length));
-                    }
-                    else {
-                        alert(strLang107 + result);
-                    }
-                }
+                MailStatus = "NO";
             }
-            else {
-                g_bDirty = false;
+            // 메일쓰기 도중 로그아웃된 경우
+            else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
+	        	alert(strLang367);
+	        	MailSend_Hidden_Progress();
+	            g_saveHttp = null;
+	            MailStatus = "NO";
+            }
+        	// 비정상적으로 처리된 경우
+        	else if (pRtnMessage != "OK") {
+        		// 편지함 용량 초과한 경우(처음부터 초과)
+                if (pRtnMessage.indexOf("OVERQUOTA") > -1) {
+                	alert(strLang363);
+                }
+            	// 편지함 용량 초과한 경우(도중에 초과)
+                else if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
+                    alert(strLang363);
+                }
+                // 그 외
+                else {
+            		alert(pRtnMessage);
+                }
+                
+                MailSend_Hidden_Progress();
+                g_saveHttp = null;
+                MailStatus = "NO";
+        	}
+        	// 정상적으로 처리된 경우
+        	else {
+        		g_bDirty = false;
                 g_originalHTML = message.GetEditorContent();
                 g_bSended = true;
 
                 var result = pRtnMessage;
                 var xmlID = "";
                 xmlID = loadXMLString(g_saveHttp.responseText);
-
-                if (result != "OK") {
-                    if (event_SaveonClick.savemode == "tempsave") {
-                        if (!CrossYN()) {
-                            g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
-                        }
-                        else if (CrossYN()) {
-                        	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
-//                          g_url = xmlID.childNodes.item(0).childNodes.item(3).textContent;
-                        }
-                        g_orgurl = g_url;
-                        g_saveHttp = null;
-                        g_cmd = "EDIT";
-                        if (!isAutoSave) {
-                            MailSend_Hidden_Progress();
-                            alert(strLang108);
-                            isAutoSave = false;
-                        }
-
-                        try {
-                        	window.opener.MailListRefreshByTimeout();
-                        } catch (e) { }
-                    }
-                    else {
-                    	if (result.lastIndexOf("not be created.") > 0) {
-                            alert(strLang363);
-                        }
-                        else {
-
-                            if (pRtnMessage == "XSS") {
-                                alert(strLang250);
-                            }
-                            else
-                                alert(result);
-                        }
-                        if (Org_cmd == "docsend")
-                            MailSend_Hidden_Progress();
-                        else
-                            MailSend_Hidden_Progress();
-                    }
-                    MailStatus = "NO";
+                
+                var tempUrl = "";
+                if (!CrossYN()) {
+                    tempUrl = xmlID.childNodes.item(0).childNodes.item(1).text;
                 }
-                else {
-                    if (event_SaveonClick.savemode == "tempsave") {
-                        var prevUrl = g_url;
-                        
-                        if (!CrossYN()) {
-                            g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
-                        }
-                        else if (CrossYN()) {
-                        	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
-                        }
-
-                        if (Org_cmd == "EDIT") {
-                            // 메시지가 새롭게 생성되었으므로 새 메시지의 UID로 인라인 다운로드 링크를 변경한다.
-                            var curValue = "&amp;uid=" + prevUrl + "&amp;"
-                            var newValue = "&amp;uid=" + g_url + "&amp;"
-                            var re = new RegExp(curValue, "g");
-                            g_originalHTML = g_originalHTML.replace(re, newValue);
-                            message.SetEditorContent(g_originalHTML);
-                        }
-                        
-                        g_orgurl = g_url;
-                        g_saveHttp = null;
-                        g_cmd = "EDIT";
-                        if (!isAutoSave) {
-                            MailSend_Hidden_Progress();
-                            alert(strLang108);
-                            isAutoSave = false;
-                        }
-                        g_saveHttp = null;
-                        try {
-                        	window.opener.MailListRefreshByTimeout();
-                        } catch (e) { }
-                    }
-                    else {
-                        var tempUrl = "";
-                        if (!CrossYN()) {
-                            tempUrl = xmlID.childNodes.item(0).childNodes.item(1).text;
-                        }
-                        else if (CrossYN()) {
-                        	tempUrl = xmlID.childNodes.item(0).childNodes.item(1).textContent;
-//                          tempUrl = xmlID.childNodes.item(0).childNodes.item(3).textContent;
-                        }
-
-                        if (g_url = tempUrl) {
-                            g_url = tempUrl;
-                            g_orgurl = g_url;
-                        }
-                        g_saveHttp = null;
-                        try {
-                        	window.opener.MailListRefreshByTimeout();
-                        } catch (e) { }
-                        window.close();
-                    }
-                    MailStatus = "NO";
+                else if (CrossYN()) {
+                	tempUrl = xmlID.childNodes.item(0).childNodes.item(1).textContent;
                 }
-            }
+
+                if (g_url = tempUrl) {
+                    g_url = tempUrl;
+                    g_orgurl = g_url;
+                }
+                
+                g_saveHttp = null;
+                MailStatus = "NO";
+                
+                try {
+                	window.opener.MailListRefreshByTimeout();
+                } catch (e) { }
+                
+                window.close();
+        	}
         }
+        //메일 저장 or 자동임시저장인 경우
         else {
-            alert(strLang364);
-            MailSend_Hidden_Progress();
-            g_saveHttp = null;
-            MailStatus = "NO";
+        	// status code가 200~300이 아닐 경우
+        	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
+        		alert(strLang105);
+            }
+            // 메일쓰기 도중 로그아웃된 경우
+            else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
+	        	alert(strLang367);
+            }
+        	// 비정상적으로 처리된 경우
+        	else if (pRtnMessage != "OK") {
+        		// 편지함 용량 초과한 경우(처음부터 초과)
+                if (pRtnMessage.indexOf("OVERQUOTA") > -1) {
+                	alert(strLang241);
+                }
+            	// 편지함 용량 초과한 경우(도중에 초과)
+                else if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
+                    alert(strLang241);
+                }
+                // 그 외
+                else {
+            		alert(pRtnMessage);
+                }
+        	}
+        	// 정상적으로 처리된 경우
+        	else {
+        		g_bDirty = false;
+                g_originalHTML = message.GetEditorContent();
+                g_bSended = true;
+
+                var result = pRtnMessage;
+                var xmlID = "";
+                xmlID = loadXMLString(g_saveHttp.responseText);
+        		
+        		var prevUrl = g_url;
+                
+                if (!CrossYN()) {
+                    g_url = xmlID.childNodes.item(0).childNodes.item(1).text;
+                }
+                else if (CrossYN()) {
+                	g_url = xmlID.childNodes.item(0).childNodes.item(1).textContent;
+                }
+
+                if (Org_cmd == "EDIT") {
+                    // 메시지가 새롭게 생성되었으므로 새 메시지의 UID로 인라인 다운로드 링크를 변경한다.
+                    var curValue = "&amp;uid=" + prevUrl + "&amp;"
+                    var newValue = "&amp;uid=" + g_url + "&amp;"
+                    var re = new RegExp(curValue, "g");
+                    g_originalHTML = g_originalHTML.replace(re, newValue);
+                    message.SetEditorContent(g_originalHTML);
+                }
+                
+                g_orgurl = g_url;
+                g_cmd = "EDIT";
+                
+                if (!isAutoSave) {
+                	alert(strLang108);
+                }
+                
+                try {
+                	window.opener.MailListRefreshByTimeout();
+                } catch (e) { }
+        	}
+        	
+        	if (!isAutoSave) {
+        		MailSend_Hidden_Progress();
+        	}
+        	
+        	g_saveHttp = null;
         }
+        
     }
+    
 }
 
 function on_keydown(e) {
