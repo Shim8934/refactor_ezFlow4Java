@@ -1778,6 +1778,7 @@
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_SUB
 				(mainid,
+				subid,
 				deptid,
 				deptname,
 				deptname2,
@@ -1785,6 +1786,10 @@
 				TENANT_ID)
 			VALUES 
 				(#v_MAINID#,
+				(SELECT
+					MAX(subid) + 1
+				FROM
+					EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_SUB),
 				#v_DEPTID#,
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
@@ -1841,10 +1846,17 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_MAIN
-				(mainname,
+				(mainid,
+				mainname,
 				TENANT_ID)
 			VALUES
-				(#v_MAINNAME#,
+				((SELECT
+					MAX(mainid) + 1
+				FROM
+					EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_MAIN
+				WHERE
+					tenant_ID = #tenantID#),
+				#v_MAINNAME#,
 				#tenantID#)
 		]]>
 	</insert>
