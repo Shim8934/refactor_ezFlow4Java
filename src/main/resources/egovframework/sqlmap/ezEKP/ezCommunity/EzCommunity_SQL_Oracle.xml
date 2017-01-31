@@ -1164,8 +1164,9 @@
 					A.WRITERID = #v_pUserID#
 				AND
 					A.STARTDATE > #v_pNow#
+				AND
+					A.TENANT_ID = #tenantID#
 		]]>
-		
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO"> -->
