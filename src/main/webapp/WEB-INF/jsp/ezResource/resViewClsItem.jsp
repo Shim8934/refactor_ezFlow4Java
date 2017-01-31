@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html style="height:95%;">
 	<head>
 		<title><spring:message code="ezResource.t142"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -23,7 +23,7 @@
 			}
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" style="height:100%">
 		<table class="layout">
   			<tr>
     			<td height="20">
@@ -74,7 +74,7 @@
       			</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px"><textarea name="Brd_Explain" style="width:440; height: 1000; resize:none" readonly> ${brdExplain}</textarea></td>
+    			<td style="padding-bottom:1px; height:100%; padding-right:12px"><textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly> ${brdExplain}</textarea></td>
   			</tr>
 		</table>
 	</body>
