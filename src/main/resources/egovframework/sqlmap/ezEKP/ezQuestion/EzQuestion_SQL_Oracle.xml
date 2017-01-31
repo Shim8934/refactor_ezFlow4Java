@@ -2798,7 +2798,7 @@
 				BRD_ID,			ITEM_NO,		QUESTION_NO,	RESPONSENO,	ANSWER_OBJECTIVITY, RESPONSEUSER_ID,	RESPONSEUSER_NAME,	RESPONSEUSER_NAME2,	RESPONSEUSER_EMAIL,	RESPONSEUSER_DEPT_ID,	RESPONSEUSER_DEPT_NAME,	RESPONSEUSER_DEPT_NAME2,	RESPONSEUSER_POSITION,	RESPONSEUSER_POSITION2,	RESPONSEUSER_JIKGUB,	RESPONSEUSER_JIKGUB2,	RESPONSEUSER_GENDER,	RESPONSEUSER_AGE,	RESPONSE_DATE,	RESPONSEUSER_IP, TENANT_ID 
 			)
 			VALUES (
-				#v_pstrBrdID#,	#v_pItemNo#,	#v_pQuesNo#,	#v_pResNo#,	#v_pAobj#,			#v_pUserID#,		#v_pUserNM#,		#v_pUserNM2#,		#v_pEmail#,			#v_pDeptID#,			#v_pDeptNM#,			#v_pDeptNM2#,				#v_pPos#,				#v_pPos2#,				#v_pJikGub#,			#v_pJikGub2#,			#v_pGender#,			#v_pAge#,			#v_pResDate#,	#v_pResUserIP#, #tenantID#
+				#v_pstrBrdID#,	#v_pItemNo#,	#v_pQuesNo#,	#v_pResNo#,	#v_pAobj#,			#v_pUserID#,		#v_pUserNM#,		#v_pUserNM2#,		#v_pEmail#,			#v_pDeptID#,			#v_pDeptNM#,			#v_pDeptNM2#,				#v_pPos#,				#v_pPos2#,				#v_pJikGub#,			#v_pJikGub2#,			#v_pGender#,			#v_pAge#,			to_date(#v_pResDate#, 'yyyy-MM-dd HH24:MI:SS'),	#v_pResUserIP#, #tenantID#
 			)
 		]]>
 	</insert>
