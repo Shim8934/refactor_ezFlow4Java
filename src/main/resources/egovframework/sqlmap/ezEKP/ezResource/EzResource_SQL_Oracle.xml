@@ -1828,7 +1828,7 @@
                 REFLAG = RTRIM(#v_P_reFlag#),
                 GRESFLAG = RTRIM(#v_P_gresFlag#),
                 ALLDAY = RTRIM(#v_P_allDay#),
-                WRITEDAY = #nowDate#,
+                WRITEDAY = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
                 ENTRYLIST = RTRIM(#v_P_entryList#),
                 ATTACHFLAG = RTRIM(#v_P_attachFlag#),
                 CHARACTERID = RTRIM(#v_P_characterID#),
