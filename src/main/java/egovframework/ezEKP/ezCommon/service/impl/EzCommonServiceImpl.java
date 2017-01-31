@@ -861,7 +861,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
 	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath) throws Exception{
-		byte[] imageBytes = Base64.getDecoder().decode(strImageMht);
+		byte[] imageBytes = Base64.getMimeDecoder().decode(strImageMht);
 		
 		String strImageName = UUID.randomUUID() + ".tmp";
         String SfilePath = m_strSPath + strImageName;
@@ -883,7 +883,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 * html -> mht 변환 mht디코딩 표출 Method
 	 */
 	private String doMHTDecoding(String strMht, String m_strHTML) {
-		byte[] arr = Base64.getDecoder().decode(strMht);
+		byte[] arr = Base64.getMimeDecoder().decode(strMht);
 		
 		try {
 			m_strHTML = new String(arr, "utf-8");

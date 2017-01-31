@@ -1127,7 +1127,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			String tempWriterID = ezBoardDAO.getWriterID(map);
 			
-			if (tempWriterID.equals(userInfo.getId())) {
+			if (tempWriterID == null || !tempWriterID.equals(userInfo.getId())) {
 				ezBoardDAO.setAsRead2(map);
 			}
 		}
