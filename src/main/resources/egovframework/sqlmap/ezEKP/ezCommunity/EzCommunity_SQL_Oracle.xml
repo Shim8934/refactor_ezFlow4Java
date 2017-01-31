@@ -446,7 +446,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commMakeOkGet1"				parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_MAKE_OK_GET1(#v_CLUBNAME#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.commMakeOkGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
+	<select id="EzCommunityDAO.commMakeOkGet1"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				c_clubno
@@ -700,7 +700,7 @@
 <!-- 	<procedure id="EzCommunityDAO.boardItemListGet2"			parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_GET2(#v_USERINFO_LANG#, #v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.boardItemListGet2"				parameterClass="Map"		resultClass="CommunityBoardListVO">
+	<select id="EzCommunityDAO.boardItemListGet2"				parameterClass="Map"		resultClass="CommunityBoardListVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -757,7 +757,7 @@
 <!-- 	<procedure id="EzCommunityDAO.searchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_SEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PUSERID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.searchItemXML"					parameterClass="Map"		resultClass="CommunityBoardListVO">
+	<select id="EzCommunityDAO.searchItemXML"					parameterClass="Map"		resultClass="CommunityBoardListVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -848,7 +848,7 @@
 <!-- 	<procedure id="EzCommunityDAO.adminSearchItemXML"			parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMINSEARCHITEMXML(#v_PENDROW#, #v_STRLANG#, #v_PBOARDID#, #v_PTITLE#, #v_PWRITERNAME#, #v_PABSTRACT#, #v_PSTARTDATE#, #v_PENDDATE#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminSearchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO">
+	<select id="EzCommunityDAO.adminSearchItemXML"				parameterClass="Map"		resultClass="CommunityBoardListVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -1185,7 +1185,7 @@
 <!-- 	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_READONELINEREPLY(#v_USERINFO_LANG#, #v_PBOARDID#, #v_PITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO">
+	<select id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				REPLYID,
@@ -1263,7 +1263,7 @@
 <!-- 	<procedure id="EzCommunityDAO.guestOneGet2"					parameterClass="Map"		resultMap="CommunityCClubGuest"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET2(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.guestOneGet2"					parameterClass="Map"		resultMap="CommunityCClubGuest">
+	<select id="EzCommunityDAO.guestOneGet2"					parameterClass="Map"		resultMap="CommunityCClubGuest" remapResults="true">
 		<isEqual property="v_s_radio" compareValue="TITLECONTENT">
 			<![CDATA[
 				SELECT
@@ -1317,7 +1317,7 @@
 <!-- 	<procedure id="EzCommunityDAO.guestEditGet"					parameterClass="Map"		resultClass="CommunityCClubGuestVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GUEST_EDIT_GET(#v_CODE#, #v_USERINFO_LANG#, #v_DOG#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.guestEditGet"					parameterClass="Map"		resultClass="CommunityCClubGuestVO">
+	<select id="EzCommunityDAO.guestEditGet"					parameterClass="Map"		resultClass="CommunityCClubGuestVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				ID,
@@ -1461,7 +1461,7 @@
 <!-- 	<procedure id="EzCommunityDAO.commOutOkGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_COMM_OUT_OK_GET2(#v_CODE#, #v_USERINFO_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->	
-	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO">
+	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
@@ -1486,7 +1486,7 @@
 <!-- 	<procedure id="EzCommunityDAO.aspCommInfoGet2"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET2(#v_USERINFO_LANG#, #v_RECORD_C_SYSOPID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
+	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				USERNAME$v_USERINFO_LANG$
@@ -1502,7 +1502,7 @@
 <!-- 	<procedure id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_LOGO_GET(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO">
+	<select id="EzCommunityDAO.adminLogoGet"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				c_logo,
@@ -1581,7 +1581,7 @@
 <!-- 	<procedure id="EzCommunityDAO.adminOuterListGet2"			parameterClass="Map"		resultMap="communityCOutApplicationVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_OUTER_LIST_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminOuterListGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO">
+	<select id="EzCommunityDAO.adminOuterListGet2"				parameterClass="Map"		resultMap="communityCOutApplicationVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				A.userid,
@@ -1606,7 +1606,7 @@
 <!-- 	<procedure id="EzCommunityDAO.adminMemberListGet3"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEMBERLIST_GET3(#v_CODE#, #v_FLAG#, #v_USERINFO_LANG#, #v_SER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminMemberListGet3"				parameterClass="Map"		resultClass="CommunityCClubUserVO">
+	<select id="EzCommunityDAO.adminMemberListGet3"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="ID">
 			<![CDATA[
 				SELECT
@@ -1704,7 +1704,7 @@
 <!-- 	<procedure id="EzCommunityDAO.joinOkGet3"					parameterClass="Map"		resultClass="CommunityClubVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_JOIN_OK_GET3(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.joinOkGet3"						parameterClass="Map"		resultClass="CommunityClubVO">
+	<select id="EzCommunityDAO.joinOkGet3"						parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				c_clubgubun,
@@ -1741,7 +1741,7 @@
 <!-- 	<procedure id="EzCommunityDAO.adminMemPermitGet2"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_ADMIN_MEM_PERMIT_GET2(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminMemPermitGet2"				parameterClass="Map"		resultClass="CommunityCClubUserVO">
+	<select id="EzCommunityDAO.adminMemPermitGet2"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				A.c_id,
@@ -2026,7 +2026,7 @@
 <!-- 	<procedure id="EzCommunityDAO.boardItemListPhotoGet2"		parameterClass="Map"		resultClass="CommunityBoardItemVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_BOARDITEMLIST_PHOTO_GET2(#v_PUSERID#, #v_PBOARDID#, #v_PSORTBY#, #v_USERINFO_LANG#, #v_PENDROW#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.boardItemListPhotoGet2"			parameterClass="Map"		resultClass="CommunityBoardItemVO">
+	<select id="EzCommunityDAO.boardItemListPhotoGet2"			parameterClass="Map"		resultClass="CommunityBoardItemVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -2309,34 +2309,33 @@
 			SELECT
 				*
 			FROM
-				( 
-					SELECT 
-              			TBL_COMM_BOARDINFO.boardid,
-						itemid,
-						title,
-						writedate,
-						gubun,
-						extensionattribute5 
-					FROM
-						EZCOMMUNITY.TBL_COMM_BOARDINFO
-					JOIN
-						EZCOMMUNITY.TBL_COMM_ITEM
-              		ON
-              			TBL_COMM_BOARDINFO.boardid = TBL_COMM_ITEM.boardid
-              		AND
-              			TBL_COMM_BOARDINFO.tenant_id = TBL_COMM_ITEM.tenant_id
-					WHERE
-						TBL_COMM_ITEM.boardid = #v_pBoardID#
-					AND
-						TBL_COMM_BOARDINFO.tenant_id = #tenantID#
-					AND
-						startdate <= #v_pNow#
-					AND
-						enddate > #v_pNow#
-					ORDER BY 
-						parentwritedate DESC,
-						TO_CHAR(upperitemidtree) DESC,
-						startdate ASC
+				(SELECT 
+             		TBL_COMM_BOARDINFO.boardid,
+					itemid,
+					title,
+					writedate,
+					gubun,
+					extensionattribute5 
+				FROM
+					EZCOMMUNITY.TBL_COMM_BOARDINFO
+				JOIN
+					EZCOMMUNITY.TBL_COMM_ITEM
+				ON
+					TBL_COMM_BOARDINFO.boardid = TBL_COMM_ITEM.boardid
+				AND
+					TBL_COMM_BOARDINFO.tenant_id = TBL_COMM_ITEM.tenant_id
+				WHERE
+					TBL_COMM_ITEM.boardid = #v_pBoardID#
+				AND
+					TBL_COMM_BOARDINFO.tenant_id = #tenantID#
+				AND
+					startdate <= #v_pNow#
+				AND
+					enddate > #v_pNow#
+				ORDER BY 
+					parentwritedate DESC,
+					TO_CHAR(upperitemidtree) DESC,
+					startdate ASC
 				)
         	WHERE
         		ROWNUM <= 5
@@ -2673,7 +2672,7 @@
 <!-- 	<procedure id="EzCommunityDAO.mainPageGet6"					parameterClass="String"		resultClass="CommunityMyCommunityVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_MAIN_PAGE_GET6(#v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.mainPageGet6"					parameterClass="Map"		resultClass="CommunityMyCommunityVO">
+	<select id="EzCommunityDAO.mainPageGet6"					parameterClass="Map"		resultClass="CommunityMyCommunityVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -3064,7 +3063,7 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet2"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET2(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.bbsEditOkGet2"					parameterClass="Map"		resultClass="Integer">
+	<select id="EzCommunityDAO.bbsEditOkGet2"					parameterClass="Map"		resultClass="Integer" remapResults="true">
 		<![CDATA[
 			SELECT
 				NVL(MAX($v_MAXIDFIELDNAME$),0) 
@@ -3085,7 +3084,7 @@
 <!-- 	<procedure id="EzCommunityDAO.bbsEditOkGet3"				parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP__BBS_EDIT_OK_GET3(#v_MAXIDFIELDNAME#, #v_BNAME#, #v_CODE#, #v_STRMAXNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.bbsEditOkGet3"					parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.bbsEditOkGet3"					parameterClass="Map"		resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT 
 				filename
@@ -3471,7 +3470,7 @@
 <!-- 	<procedure id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GUEST_ONE_GET1(#v_S_RADIO#, #v_KEYWORD#, #v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="Integer">
+	<select id="EzCommunityDAO.guestOneGet1"					parameterClass="Map"		resultClass="Integer" remapResults="true">
 		<isEqual property="v_S_RADIO" compareValue="TITLECONTENT">
 			<![CDATA[
 				SELECT
@@ -3569,7 +3568,7 @@
 <!-- 	<procedure id="EzCommunityDAO.pollResGet4"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_POLL_RES_GET4(#v_POLLREGUSER#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.pollResGet4"						parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.pollResGet4"						parameterClass="Map"		resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
 				username$v_USERINFO_LANG$
@@ -4593,8 +4592,6 @@
 				charfilename,
 			</isEqual>
 		</isNotEqual>
-		
-		
 		
 		<![CDATA[
 			$v_MAXIDFIELDNAME$,
@@ -6177,9 +6174,9 @@
 	<update id="EzCommunityDAO.bbsViewNewUpdate"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMUNITY.$v_BNAME$ 
+				EZCOMMUNITY.$v_BNAME$
 			SET
-				readnum = READNUM + 1 
+				readnum = READNUM + 1
 			WHERE
 				no = TO_NUMBER(#v_NO#)
 			AND
@@ -6665,7 +6662,7 @@
 		]]>
 	</select>
 	
-	<select id="EzCommunityDAO.joinOkSendMailGet2"				parameterClass="Map"	resultClass="LoginVO">
+	<select id="EzCommunityDAO.joinOkSendMailGet2"				parameterClass="Map"	resultClass="LoginVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				displayname$v_userInfo_lang$ displayName,
