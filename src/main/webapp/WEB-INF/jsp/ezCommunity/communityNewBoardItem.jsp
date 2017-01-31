@@ -407,9 +407,7 @@
 		        newID = "{" + GetGUID().toUpperCase() + "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
-							
-	
-	
+		        
 		        var objNode, objSubNode, objDataNode;
 		        objNode = createNodeInsert(xmlDom, objNode, "NODES");
 		        objSubNode = createNodeAndAppandNode(xmlDom, objNode,objSubNode, "NODE");
@@ -527,8 +525,8 @@
 		            }
 		        }
 		        
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);	
-	
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
+		        
 		        if (gubun == "2") {
 		        	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
 		        } else {
@@ -538,7 +536,6 @@
 		        xmlhttp.open("POST", "/ezCommunity/saveItem.do?mode="+ pMode , false);
 		        xmlhttp.send(xmlDom);
 		        
-
 		        if (xmlhttp.responseText == "OK") {
 		            xmlhttp = null;
 		            xmldom = null;
@@ -568,7 +565,7 @@
 		            } catch(e) {
 		            }
 		            
-		            window.close();		
+		            window.close();
 		        } else {
 		            alert("<spring:message code='ezCommunity.t283'/> " + xmlhttp.responseText);
 		        }
@@ -726,7 +723,7 @@
                     pBoardID = ret;
                     GetBoardInfo();
                     InitializeSettings();
-		
+                    
                     if (loadXMLString(xmlHTTP.responseText).getElementsByTagName("ATTACHMENT").length > 0) {
 						var attachHTTP = createXMLHttpRequest();
 						var filefullpath = "";
@@ -823,7 +820,7 @@
 			        gubun = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "GUBUN")[0]);
 			    }
 			
-			    xmlhttp_boardinfo = null;			
+			    xmlhttp_boardinfo = null;
 			}
 						
             function InitializeSettings() {
