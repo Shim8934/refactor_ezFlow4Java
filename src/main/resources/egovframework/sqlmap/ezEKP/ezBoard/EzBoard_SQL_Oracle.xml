@@ -2820,17 +2820,17 @@
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
-				IMAGEID = #v_PIMAGEID#
+				IMAGEID = #v_pIMAGEID#
 		]]>
 	</delete>
 	
 	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZBOARDSTD.TBL_Photo_ImageItem ( 
-				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 tenant_id 
+				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
 			)
      		VALUES ( 
-     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, #v_TENANTID# 
+     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
      		)
 		]]>
 	</insert>
@@ -3198,7 +3198,10 @@
 		<![CDATA[
 			UPDATE EZBOARDSTD.TBL_Photo_ImageItem
         	SET 
-        		main_Flag = 'N'
+        		main_Flag = CASE
+        					WHEN imageID = #v_IMAGEID# THEN 'Y'
+        					ELSE 'N'
+        					END
         	WHERE
         		tenant_id = #v_TENANTID#
         	AND  
@@ -3206,19 +3209,32 @@
 		]]>
 	</update>
 	
-	<update id="EzBoardDAO.setMainImageID2" parameterClass="Map">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Photo_ImageItem
-        	SET 
-        		main_Flag = 'Y'
-        	WHERE  
-        		TENANT_ID = #v_TENANTID#
-        	AND
-        		ImageID = #v_IMAGEID#
-        	AND 
-        		ItemID = #v_ITEMID#
-		]]>
-	</update>
+	<select id="EzBoardDAO.setMainImageID2" parameterClass="Map" resultClass="String">
+		SELECT
+			main_flag
+		FROM
+			EZBOARDSTD.TBL_Photo_ImageItem
+		WHERE
+       		tenant_id = #v_TENANTID#
+       	AND  
+       		imageID = #v_IMAGEID#
+       	AND
+       		ItemID = #v_ITEMID#
+	</select>
+	
+<!-- 	<update id="EzBoardDAO.setMainImageID2" parameterClass="Map"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			UPDATE EZBOARDSTD.TBL_Photo_ImageItem -->
+<!--         	SET  -->
+<!--         		main_Flag = 'Y' -->
+<!--         	WHERE   -->
+<!--         		TENANT_ID = #v_TENANTID# -->
+<!--         	AND -->
+<!--         		ImageID = #v_IMAGEID# -->
+<!--         	AND  -->
+<!--         		ItemID = #v_ITEMID# -->
+<!-- 		]]> -->
+<!-- 	</update> -->
 	
 	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
 		<![CDATA[

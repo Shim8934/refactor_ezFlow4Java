@@ -106,6 +106,7 @@ public class LoginDAO extends EgovAbstractDAO {
                         loginVO.setJikChek((String)result.get("role1"));
                         loginVO.setJikChek2((String)result.get("role2"));
                         loginVO.setTenantId(Integer.parseInt((String)result.get("tenantId")));
+                        loginVO.setPrimary((String)result.get("primary"));
                     }                   
                 }
             }

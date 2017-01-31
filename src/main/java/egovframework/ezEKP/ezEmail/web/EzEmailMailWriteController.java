@@ -1908,13 +1908,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			HttpServletRequest request) throws Exception {
 		logger.debug("mailInterSend started.");
 		
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userInfo.get(1);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = loginInfo.getId();
-		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userId + "@" + domainName;
 		
 		//변수들은 메일발송 실패 시 다시 사용되므로 메일발송 로직 도중 값이 바뀌면 안된다.
@@ -2147,6 +2145,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					retryFlag = false;
 					draftUID = 0;
+				}
+				
+				//편지함 용량 체크
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+				double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+				double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+				logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+				
+				if (mailboxUsage >= mailboxQuota) {
+					throw new Exception("OVERQUOTA");
 				}
 				
 				// MIME Message를 생성한다.
@@ -2600,7 +2608,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 		        }        
 		        
-		        
 		        if (cmd.equalsIgnoreCase("SAVE")) {
 		        	logger.debug("Saving the message");
 		        	
@@ -2635,8 +2642,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        
 			        if (!delaySendTime.equals("")) {
 			        	//예약발송
-			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, loginInfo.getOffset(), true);
-			            doDelaySend(loginInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
+			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
+			            doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
 			        	
 			            // this deletion code block has been moved here because
 			            // it needs to be kept in Drafts if an error occurs during the above process.
@@ -2707,7 +2714,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            if (reservedId != null && !reservedId.trim().equals("")) {
 							ezEmailService.deleteMailReserved(reservedId);
 			            	
-							String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", loginInfo.getTenantId());
+							String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", userInfo.getTenantId());
 				    		pDirPath = realPath + pDirPath;
 				            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
 							if (f.exists()) {
@@ -2746,7 +2753,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        }
 			        
 			        //file system의 templist txt파일 삭제
-			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
+			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
 			        pDirPath += commonUtil.separator + stateName + ".txt";
 			        File f = new File(pDirPath);
 			        if (f.exists()) {
@@ -2770,7 +2777,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	            	
 	    	            	imagePath = imagePathList.item(i).getTextContent();
 	    	            	
-	    	            	if (!imagePath.trim().equals("") && imagePath.contains(commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()))) {
+	    	            	if (!imagePath.trim().equals("") && imagePath.contains(commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()))) {
 	    	                	imagePath = new URL(imagePath).getPath();
 	    	                	String pDirPath = realPath + imagePath;
 	    	            		File f = new File(pDirPath);
@@ -2817,7 +2824,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} while (retryFlag && retryCount > -1);
 		
 		logger.debug("mailInterSend ended. pResult=" + pResult);
-		
 		return "<DATA>" + pResult + "</DATA>";
 	}
 	

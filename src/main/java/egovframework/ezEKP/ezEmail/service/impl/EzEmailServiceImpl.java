@@ -1206,4 +1206,44 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return returnValue;
 	}
+	
+	@Override
+	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception {
+		logger.debug("checkMailQuota started.");
+		
+		boolean returnValue = true;
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userAccount=" + userAccount);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, userInfo.getLocale());
+					
+			long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+			
+			double mailboxUsage = storageUsageAndLimit[0]; // in KBs
+			double mailboxQuota = storageUsageAndLimit[1]; // in KBs
+			
+			logger.debug("mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);
+			
+			if (mailboxUsage >= mailboxQuota) {
+				returnValue = false;
+			}
+		
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("checkMailQuota ended. returnValue=" + returnValue);
+		return returnValue;
+	}
 }

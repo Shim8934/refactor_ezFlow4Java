@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzEmailService {
 
@@ -47,4 +48,5 @@ public interface EzEmailService {
 	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception;
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
+	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 }

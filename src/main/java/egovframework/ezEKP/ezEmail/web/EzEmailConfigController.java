@@ -268,7 +268,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 기본 환경설정 내부 화면 호출 함수
+	 * 메일 기본 환경설정 내부 화면(용량) 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
