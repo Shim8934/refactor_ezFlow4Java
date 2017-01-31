@@ -196,8 +196,8 @@
 		                }
 		            }
 		            AttatchReturnValue = null;
-		            window.parent.returnvalue(xhr.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
+		            
 		            FileUpdataAfterComplete();
 		        }
 		        
@@ -237,7 +237,6 @@
 		                }
 		            }
 		            AttatchReturnValue = null;
-		            window.parent.returnvalue(xhr2.responseText);
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr2.responseText);
 		            FileUpdataAfterComplete();
 		        }

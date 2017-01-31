@@ -698,6 +698,8 @@
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
 		            }
+		            
+		            returnvalue(strXML);
 	        	}
 	        }
 	        else {
