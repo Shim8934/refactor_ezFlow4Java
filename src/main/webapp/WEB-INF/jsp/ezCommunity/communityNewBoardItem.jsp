@@ -109,6 +109,7 @@
 		    </c:if>
 			
 			window.onload = function () {
+alert(strEndDate);
 				<c:if test="${isCrossBrowser != true}">
 			        document.all.EzHTTPTrans.SetBigLang = "${userInfo.lang}" == "1" ? 1 : 0;
 			        document.all.EzHTTPTrans.UseDbCl = true;
@@ -134,7 +135,7 @@
 		            	$("#Sdatepicker").datepicker('setDate', "");
 		            }
 		        }
-												
+		        
 		        if (ExpireDays == "-1") {
 		        	document.getElementById('Makedate').style.display = "none";
 		        }
@@ -400,7 +401,7 @@
 		            return;
 		        }
 							
-		        if (pStartDate == "" && pReservedItem == "TRUE") {
+		        if (pStartDate == "" && pReservedItem == "true") {
 		            strParentWriteDate = "";
 		        }
 	
@@ -610,20 +611,6 @@
 		            document.getElementById("Makedate").style.display = "none";
 		        } else {
 		            document.getElementById("Makedate").style.display = "";
-		            
-		            if(strEndDate != "") {
-		                if(strEndDate.substring(0, 4) == "9999") {
-		                    var NowDate2 = new Date();
-		                    NowDate2.setMonth(NowDate2.getMonth() + 1);
-		                    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		                    $("#Edatepicker").datepicker('setDate', NowDate2);
-		                } else {
-		                    var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
-		                    NowDate.setMonth(NowDate.getMonth() - 1);
-	
-		                    $("#Edatepicker").datepicker('setDate', NowDate);
-		                }
-		            }
 		        }
 		    }
 	
@@ -978,7 +965,7 @@
 	                    </tr>
 	                    
 	                    <c:choose>
-	                    	<c:when test="${(pMode == 'new' || reservedItem == 'true' || pUrl != '') && boardInfo.gubun != '2' }">
+	                    	<c:when test="${(pMode == 'new' || pReservedItem == 'true' || pUrl != '') && boardInfo.gubun != '2' }">
 	                    		<tr id="tdReservationDate">
 	                    	</c:when>
 	                    	<c:otherwise>
@@ -989,7 +976,7 @@
 	                        <th><spring:message code='ezCommunity.t1169'/></th>
 	                        <td>
 	                        	<c:choose>
-	                        		<c:when test="${reservedItem == 'true' }">
+	                        		<c:when test="${pReservedItem == 'true' }">
 	                        			<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked><spring:message code='ezCommunity.t913'/>
 	                        		</c:when>
 	                        		<c:otherwise>
@@ -1008,7 +995,7 @@
 	                        <td>
 	                        
 	                        	<c:choose>
-	                        		<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(strEndDate, 0, 4) == '9999') || pUrl != '' }">
+	                        		<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
 	                        			<span id="Chkbox"><input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked><spring:message code='ezCommunity.t930'/></span>
 	                        			<span id="Makedate"><input type="text" id="Edatepicker" style="width:80px;text-align:center"></span>
 	                        		</c:when>

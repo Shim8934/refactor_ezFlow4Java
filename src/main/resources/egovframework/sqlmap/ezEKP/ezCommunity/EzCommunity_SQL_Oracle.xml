@@ -1129,7 +1129,7 @@
 <!-- 	<procedure id="EzCommunityDAO.getReservedItemListXML"		parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
 <!-- 		{CALL EZCOMMUNITY.EZSP_GETRESERVEDITEMLISTXML(#v_PENDROW#, #v_STRLANG#, #v_PUSERID#, #v_PSORTBY#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.getReservedItemListXML"			parameterClass="Map"		resultClass="CommunityBoardListVO">
+	<select id="EzCommunityDAO.getReservedItemListXML"			parameterClass="Map"		resultClass="CommunityBoardListVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				*
@@ -1142,7 +1142,7 @@
 					A.ATTACHMENTS,
 					A.IMPORTANCE,
 					B.BOARDID,
-					B.BOARDNAME$v_strLang$',
+					B.BOARDNAME$v_strLang$,
 					A.ABSTRACT
 				FROM
 					EZCOMMUNITY.TBL_COMM_ITEM A
@@ -1167,6 +1167,19 @@
 				AND
 					A.TENANT_ID = #tenantID#
 		]]>
+		<isEqual compareProperty="v_pSortBy" compareValue="">
+			ORDER BY A.parentwritedate DESC
+		</isEqual>
+		<isNotEqual compareProperty="v_pSortBy" compareValue="">
+			ORDER BY #v_pSortBy# DESC
+		</isNotEqual>
+		
+		<![CDATA[
+			) WHERE
+				ROWNUM <= #v_pEndRow#
+		]]>
+				
+		
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO"> -->
