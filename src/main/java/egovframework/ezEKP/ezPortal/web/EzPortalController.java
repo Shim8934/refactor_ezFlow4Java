@@ -1289,7 +1289,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				//<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>
 				//filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
 				//filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
-				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + result.getFilePath();
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
 			} else {
 				filePath = "/images/default_pic.jpg";
 			}
