@@ -25,7 +25,7 @@
 			switch(idx)
 			{
 				case 1:
-					url = "/admin/ezCommunity/bbsList.do?bName=c_board";
+					url = "/admin/ezCommunity/bbsList.do?bName=tbl_c_board";
 					break;
 				case 2:
 					url ="/admin/ezCommunity/searchKey.do?sRadio=C_ClubName&keyword=&key&pDivi=admin";

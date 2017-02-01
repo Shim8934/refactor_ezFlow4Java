@@ -10,50 +10,50 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT C_CLUBNO,
-					CLOSESTATE,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					APPLICATIONDATE
+					DISTINCT c_clubno,
+					closestate,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					applicationdate
 				FROM
-					C_COMCLOSE A
+					TBL_C_COMCLOSE A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
-					APPLICATIONDATE DESC
+					applicationdate DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT C_CLUBNO,
-					CLOSESTATE,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					APPLICATIONDATE
+					DISTINCT c_clubno,
+					closestate,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					applicationdate
 				FROM
-					C_COMCLOSE A
+					TBL_C_COMCLOSE A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
 			]]>
@@ -64,46 +64,46 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT C_CLUBNO,
-					CLOSESTATE,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					APPLICATIONDATE
+					DISTINCT c_clubno,
+					closestate,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					applicationdate
 				FROM
-					C_COMCLOSE A
+					TBL_C_COMCLOSE A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
-					APPLICATIONDATE DESC
+					applicationdate DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT C_CLUBNO,
-					CLOSESTATE,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					APPLICATIONDATE
+					DISTINCT c_clubno,
+					closestate,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					applicationdate
 				FROM
-					C_COMCLOSE A
+					TBL_C_COMCLOSE A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
 			]]>
@@ -116,23 +116,23 @@
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(C_CLUBNO), 0)
+				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_COMCLOSE
+				TBL_C_COMCLOSE
 			WHERE
 				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		SELECT
-			NVL(COUNT(C_CLUBNO), 0)
+			NVL(COUNT(c_clubno), 0)
 		FROM
-			C_COMCLOSE
+			TBL_C_COMCLOSE
 		WHERE
-			TENANT_ID = #tenantID#
+			tenant_id = #tenantID#
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO"> -->
@@ -142,52 +142,52 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					C_CLUBNO,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					C_REGDATE
+					c_clubno,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					c_regdate
 				FROM
-					C_CLUB A
+					TBL_C_CLUB A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
-					A.C_ADMINCONFIRM = 'N'
+					A.c_adminconfirm = 'N'
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
-					A.C_REGDATE DESC
+					A.c_regdate DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					C_CLUBNO,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					C_REGDATE
+					c_clubno,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					c_regdate
 				FROM
-					C_CLUB A
+					TBL_C_CLUB A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 				AND
-					A.C_ADMINCONFIRM = 'N'
+					A.c_adminconfirm = 'N'
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
 			]]>
@@ -198,48 +198,48 @@
 		<isEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					DISTINCT C_CLUBNO,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					C_REGDATE
+					DISTINCT c_clubno,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					c_regdate
 				FROM
-					C_CLUB A
+					TBL_C_CLUB A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = B.USERID
+					RTRIM(A.c_sysopid) = B.userid
 				AND
-					A.C_ADMINCONFIRM = 'N'
+					A.c_adminconfirm = 'N'
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
-					A.C_REGDATE DESC
+					A.c_regdate DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_S" compareValue="">
 			<![CDATA[
 				SELECT
-					C_CLUBNO,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					USERNAME$v_USERINFO_LANG$ USERNAME,
-					C_SYSOPID,
-					C_REGDATE
+					c_clubno,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
+					username$v_USERINFO_LANG$ username,
+					c_sysopid,
+					c_regdate
 				FROM
-					C_CLUB A
+					TBL_C_CLUB A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
-					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
-					A.C_ADMINCONFIRM = 'N'
+					A.c_adminconfirm = 'N'
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 				ORDER BY
 					$v_SORT1$ $v_SORT2$
 			]]>
@@ -253,28 +253,28 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(C_CLUBNO), 0) 
+				NVL(COUNT(c_clubno), 0) 
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
-				C_ADMINCONFIRM = 'N'
+				c_adminconfirm = 'N'
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(C_CLUBNO), 0)
+				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
-				C_ADMINCONFIRM = 'N'
+				c_adminconfirm = 'N'
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -287,40 +287,40 @@
 				*
 			FROM
 				(SELECT
-					C_CLUBNO,
-					C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-					C_SYSOPID,
-					C_CLUBDESC,
-					C_REGDATE
+					c_clubno,
+					c_clubname$v_USERINFO_LANG$ C_CLUBNAME,
+					c_sysopid,
+					c_clubdesc,
+					c_regdate
 				FROM
 					(SELECT
 						*
 					FROM
 						(SELECT
-							C_CLUBNO,
-							C_CLUBNAME$v_USERINFO_LANG$ C_CLUBNAME,
-							C_SYSOPID,
-							C_CLUBDESC,
-							C_REGDATE
+							c_clubno,
+							c_clubname$v_USERINFO_LANG$ c_clubname,
+							c_sysopid,
+							c_clubdesc,
+							c_regdate
 						FROM
-							C_CLUB
+							TBL_C_CLUB
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
 			<![CDATA[
 				WHERE
-					C_CLUBNO IN (SELECT
-									C_CLUBNO
+					c_clubno IN (SELECT
+									c_clubno
 								FROM
-									C_CLUB
+									TBL_C_CLUB
 								WHERE
-									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
+									c_clubdesc LIKE '%' || #v_STRQUERY# || '%'
 								AND
-									TENANT_ID = #tenantID#)
+									tenant_id = #tenantID#)
 				AND
-					C_ADMINCONFIRM = 'Y'
+					c_adminconfirm = 'Y'
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		
@@ -328,38 +328,38 @@
 			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
 				<![CDATA[
 					 WHERE
-					 	C_CLUBNO IN (SELECT
-					 					C_CLUBNO
+					 	c_clubno IN (SELECT
+					 					c_clubno
 									FROM
-										C_CLUB
+										TBL_C_CLUB
 									WHERE
-										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+										c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
 									AND
-										TENANT_ID = #tenantID#)
+										tenant_id = #tenantID#)
 					AND
-						C_ADMINCONFIRM = 'Y'
+						c_adminconfirm = 'Y'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			
 			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
 				<![CDATA[
 					WHERE
-						C_ADMINCONFIRM = 'Y'
+						c_adminconfirm = 'Y'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<![CDATA[
 						ORDER BY
-							C_REGDATE ASC) A
+							c_regdate ASC) A
 					WHERE
 						ROWNUM <= #v_IQUERYCOUNT#)                                 
 				ORDER BY
-					C_REGDATE DESC)
+					c_regdate DESC)
 			WHERE
 				ROWNUM <=10
 		]]>
@@ -371,26 +371,26 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(C_CLUBNO), 0) 
+				NVL(COUNT(c_clubno), 0) 
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
 			<![CDATA[
 				 WHERE
-				 	C_CLUBNO IN (SELECT
-									C_CLUBNO
+				 	c_clubno IN (SELECT
+									c_clubno
 								FROM
-									C_CLUB
+									TBL_C_CLUB
 								WHERE
-									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
+									c_clubdesc LIKE '%' || #v_STRQUERY# || '%'
 								AND
-									TENANT_ID = #tenantID#)
+									tenant_id = #tenantID#)
 				AND
-					C_ADMINCONFIRM = 'Y'
+					c_adminconfirm = 'Y'
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		
@@ -398,27 +398,27 @@
 			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
 				<![CDATA[
 					WHERE
-						C_CLUBNO IN (SELECT
-										C_CLUBNO
+						c_clubno IN (SELECT
+										c_clubno
 									FROM
-										C_CLUB
+										TBL_C_CLUB
 									WHERE
-										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+										c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
 									AND
-										TENANT_ID = #tenantID#)
+										tenant_id = #tenantID#)
 					AND
-						C_ADMINCONFIRM = 'Y'
+						c_adminconfirm = 'Y'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			
 			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
 				<![CDATA[
 					WHERE
-						C_ADMINCONFIRM = 'Y'
+						c_adminconfirm = 'Y'
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -430,21 +430,21 @@
 	<select id="EzCommunityAdminDAO.admCommunityInfoEdit"				parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				C_SYSOPID,
-				C_CLUBGUBUN,
-				ISIN,
-				C_CLUBDESC,
-				C_CLUBCONFIRMTYPE,
-				C_CLUBNAME$v_USERINFO_LANG$ AS C_CLUBNAME,
-				C_CATE_A,
-				C_CATE_B,
-				C_CATE_C
+				c_sysopid,
+				c_clubgubun,
+				isin,
+				c_clubdesc,
+				c_clubconfirmtype,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_cate_a,
+				c_cate_b,
+				c_cate_c
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -454,17 +454,17 @@
 	<update id="EzCommunityAdminDAO.admCommunityInfoEditOk"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
-				C_CATE_A = #v_C_CATE_A#,
-				C_CATE_B = #v_C_CATE_B#,
-				C_CATE_C = #v_C_CATE_C#,
-				C_CLUBNAME$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
-				ISIN = 2
+				c_cate_a = #v_C_CATE_A#,
+				c_cate_b = #v_C_CATE_B#,
+				c_cate_c = #v_C_CATE_C#,
+				c_clubname$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
+				isin = 2
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -474,13 +474,13 @@
 	<select id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
-				CLOSEREASON
+				closereason
 			FROM
-				C_COMCLOSE
+				TBL_C_COMCLOSE
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -490,13 +490,13 @@
 	<select id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
-				C_CLUBDESC
+				c_clubdesc
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -506,13 +506,13 @@
 	<update id="EzCommunityAdminDAO.aspCommCloseAllUpdate"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_COMCLOSE
+				TBL_C_COMCLOSE
 			SET
-				CLOSESTATE = #v_PCLOSESTATE#
+				closestate = #v_PCLOSESTATE#
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
@@ -522,23 +522,23 @@
 	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet1Update"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
-				C_ADMINCONFIRM = 'C'
+				c_adminconfirm = 'C'
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
@@ -548,45 +548,45 @@
 	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet2Update"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
-				C_ADMINCONFIRM = 'Y'
+				c_adminconfirm = 'Y'
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</update>
 	
 	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert1"			parameterClass="Map">
 		<![CDATA[
 			INSERT INTO USER
-				(USERID,
-				USERNM,
-				PASSWD,
-				EMPNO,
-				EMPTYPE,
-				DEPTID,
-				POSITIONID,
-				JOBTITLEID,
-				STATUS,
-				EMAIL,
-				MOBILETEL,
-				OFFICETEL,
-      			FAX,
-      			HOMETEL,
-      			USERINTRO,
-      			JOINDATE,
-      			RETIREDATE,
-      			TOTALMILEAGE,
-      			RECENTMILEAGE,
-      			SEQ,
-      			REGDATE,
-      			PHOTOPATH,
-      			CONLEVEL,
-      			SUBDEPTID,
-      			ROLEINFO,
-      			TENANT_ID)
+				(userid,
+				usernm,
+				passwd,
+				empno,
+				emptype,
+				deptid,
+				positionid,
+				jobtitleid,
+				status,
+				email,
+				mobiletel,
+				officetel,
+      			fax,
+      			hometel,
+      			userintro,
+      			joindate,
+      			retiredate,
+      			totalmileage,
+      			recentmileage,
+      			seq,
+      			regdate,
+      			photopath,
+      			conlevel,
+      			subdeptid,
+      			roleinfo,
+      			tenant_id)
       		VALUES
       			(#v_CODE#,
       			#v_COMNAME#,
@@ -620,9 +620,9 @@
 	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert2"			parameterClass="Map">
 		<![CDATA[
 			INSERT INTO ROLE
-				(USERID,
-				ROLETYPE,
-				TENANT_ID)
+				(userid,
+				roletype,
+				tenant_id)
 			VALUES
 				(#v_CODE#,
 				'C',
@@ -633,21 +633,21 @@
 	<select id="EzCommunityAdminDAO.aspCommAdmitokSet2Select"			parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
-				B.EMAIL,
-				B.USERNAME$v_USERINFO_LANG$,
-				A.C_CLUBNAME$v_USERINFO_LANG$
+				B.email,
+				B.username$v_USERINFO_LANG$,
+				A.c_clubname$v_USERINFO_LANG$
 			FROM
-				C_CLUB A
+				TBL_C_CLUB A
 			INNER JOIN
-				C_MEMBERINFO B
+				TBL_C_MEMBERINFO B
 			ON
-				RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
+				RTRIM(A.c_sysopid) = RTRIM(B.userid)
 			AND
-				A.COMPANYID = B.COMPANYID
+				A.companyid = B.companyid
 			AND
-				A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = B.tenant_id
 			WHERE
-				RTRIM(A.C_CLUBNO) = #v_CODE#
+				RTRIM(A.c_clubno) = #v_CODE#
 			AND
 				A.TENANT_ID = #tenantID#
 		]]>
@@ -659,24 +659,24 @@
 	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
-				RTRIM(C_CLUBNO) = #v_CODE#
+				RTRIM(c_clubno) = #v_CODE#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</delete>
 	
 	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
-				USERNAME
+				username
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
-				RTRIM(USERID) = #v_ID#
+				RTRIM(userid) = #v_ID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 </sqlMap>
