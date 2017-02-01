@@ -21,9 +21,9 @@ public interface EzPersonalService {
 	
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID) throws Exception;
 	
-	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode) throws Exception;
+	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode, int tenantID) throws Exception;
 	
-	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL) throws Exception;
+	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL, int tenantID) throws Exception;
 	
 	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID, int tenantID) throws Exception;
 	
