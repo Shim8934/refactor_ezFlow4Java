@@ -218,7 +218,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_QSTLIST(#v_PSTRBRDID#, #v_PUSERID#, #v_PTOTALCNT#, #v_PPAGESIZE#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 		
@@ -244,7 +244,7 @@
 										                    B.END_FLG,
 										                    B.RESPONSE_RANGE
             											FROM
-              												EZQUESTION.TBLPOLL_ITEM A INNER JOIN EZQUESTION.TBLPOLL_PERMISSION B
+              												TBLPOLL_ITEM A INNER JOIN TBLPOLL_PERMISSION B
               											ON A.BRD_ID = B.BRD_ID
               											AND A.BRD_ID = #v_PSTRBRDID#
               											AND A.ITEM_NO = B.ITEM_NO
@@ -306,9 +306,9 @@
 				    B.END_FLG, 
 				    B.RESPONSE_RANGE 
    				FROM 
-      				EZQUESTION.TBLPOLL_ITEM A, 
-      				EZQUESTION.TBLPOLL_PERMISSION B, 
-      				EZQUESTION.TBLPOLL_RESPONSEPERSON D
+      				TBLPOLL_ITEM A, 
+      				TBLPOLL_PERMISSION B, 
+      				TBLPOLL_RESPONSEPERSON D
     			WHERE (  	A.BRD_ID = B.BRD_ID 
       						AND
       							A.ITEM_NO = B.ITEM_NO
@@ -372,7 +372,7 @@
 
 	<!-- <procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItemVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETUSERPOLLITEM(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -381,7 +381,7 @@
 			SELECT
 				* 
     		FROM
-      			EZQUESTION.TBLPOLL_ITEM
+      			TBLPOLL_ITEM
     		WHERE
       			BRD_ID = #v_pstrBrdID# 
       		AND
@@ -393,7 +393,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getUserPermission"	parameterClass="Map" resultMap="qstUserPermissionVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETUSERPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -402,7 +402,7 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_PERMISSION 
+        		TBLPOLL_PERMISSION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -414,7 +414,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getAttachInfo" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETATTACHINFO(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -426,7 +426,7 @@
              	ATTACHURL ,
              	ATTACHTYPE 
         	FROM
-        		EZQUESTION.TBLPOLL_ATTACH 
+        		TBLPOLL_ATTACH 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -442,7 +442,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getAttachInfo3" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETATTACHINFO3(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETATTACHINFO3(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -454,7 +454,7 @@
              	ATTACHURL ,
              	ATTACHTYPE 
         	FROM
-        		EZQUESTION.TBLPOLL_ATTACH 
+        		TBLPOLL_ATTACH 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -468,7 +468,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQuestionForResponse" parameterClass="Map" resultMap="qstVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETQUESTIONFORRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -477,7 +477,7 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION 
+        		TBLPOLL_QUESTION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -493,7 +493,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQuestionForSubjective" parameterClass="Map" resultMap="qstVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETQUESTIONFORSUBJECTIVE(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETQUESTIONFORSUBJECTIVE(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -502,7 +502,7 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION 
+        		TBLPOLL_QUESTION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -519,7 +519,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getAnswerAnswerCnt" parameterClass="Map" resultMap="qstAnswerAnswerVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETANSWER_ANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -528,7 +528,7 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_TABLE_ANSWER 
+        		TBLPOLL_TABLE_ANSWER 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -543,7 +543,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getAnswerCnt" parameterClass="Map" resultMap="qstAnswerVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETANSWERCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -552,7 +552,7 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_ANSWER 
+        		TBLPOLL_ANSWER 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
             AND
@@ -568,7 +568,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getResponseRange" parameterClass="Map" resultMap="qstResponsePermissionVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETRESPONSERANGE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETRESPONSERANGE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -578,7 +578,7 @@
 				PUBLIC_FLG ,
              	RESPONSE_RANGE 
         	FROM
-        		EZQUESTION.TBLPOLL_PERMISSION 
+        		TBLPOLL_PERMISSION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
             AND
@@ -590,7 +590,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getResponsePerson" parameterClass="Map" resultMap="qstResponsePersonVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETRESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -600,7 +600,7 @@
 				USER_ID ,
              	RESPONSE_DATE 
         	FROM
-        		EZQUESTION.TBLPOLL_RESPONSEPERSON 
+        		TBLPOLL_RESPONSEPERSON 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
             AND
@@ -614,7 +614,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getAttachInfo2" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETATTACHINFO2(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -626,7 +626,7 @@
              	ATTACHURL ,
              	ATTACHTYPE 
         	FROM
-        		EZQUESTION.TBLPOLL_ATTACH 
+        		TBLPOLL_ATTACH 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -644,7 +644,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.resultSubjectiveList" parameterClass="Map" resultMap="qstResponseVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_RESULTSUBJECTIVELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -661,7 +661,7 @@
               								RESPONSEUSER_POSITION$v_pLang$ AS RESPONSEUSER_POSITION, RESPONSEUSER_JIKGUB$v_pLang$ AS RESPONSEUSER_JIKGUB,
               								RESPONSEUSER_GENDER, RESPONSEUSER_AGE, RESPONSE_DATE, RESPONSEUSER_IP 
               						  FROM
-              						  	EZQUESTION.TBLPOLL_RESPONSE  
+              						  	TBLPOLL_RESPONSE  
               						  WHERE
               						  	BRD_ID = #v_pstrBrdID# AND ITEM_NO = #v_pItemNo# AND QUESTION_NO=#v_pQuesNo# AND ANSWER_SUBJECTIVITY IS NOT NULL  AND TENANT_ID = #tenantID# 
           							) P 
@@ -677,7 +677,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -700,7 +700,7 @@
 							                MAX(RESPONSEUSER_AGE) AS USER_AGE,
 							                MAX(RESPONSE_DATE) AS RESPONSE_DATE 
                 						FROM
-                							EZQUESTION.TBLPOLL_RESPONSE  
+                							TBLPOLL_RESPONSE  
                 						WHERE
                 							BRD_ID=#v_pstrBrdID# AND ITEM_NO=#v_pItemNo# AND TENANT_ID = #tenantID# 
                 						GROUP BY
@@ -736,7 +736,7 @@
 					                        USER_AGE AS USER_AGE,
 					                        RESPONSE_DATE AS RESPONSE_DATE
                         				FROM
-                        					EZQUESTION.TBLPOLL_RESPONSEPERSON 
+                        					TBLPOLL_RESPONSEPERSON 
                         				WHERE
                         					BRD_ID = #v_pstrBrdID# AND ITEM_NO = #v_pItemNo# AND RESPONSE_DATE IS NULL	AND	TENANT_ID = #tenantID#      
                 						) P
@@ -756,7 +756,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getObjQuestion" parameterClass="Map" resultMap="objQuestion">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETOBJQUESTION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETOBJQUESTION(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -767,7 +767,7 @@
              	QUESCONTENT ,
              	ANSWERTYPE 
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION 
+        		TBLPOLL_QUESTION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
             AND
@@ -783,7 +783,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQuestion" parameterClass="Map" resultMap="qstVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -793,7 +793,7 @@
 				SELECT
 					* 
         		FROM
-        			EZQUESTION.TBLPOLL_QUESTION 
+        			TBLPOLL_QUESTION 
        			WHERE
        				BRD_ID = #v_pstrBrdID#
                 AND
@@ -812,7 +812,7 @@
 				SELECT
 					* 
            		FROM
-           			EZQUESTION.TBLPOLL_QUESTION 
+           			TBLPOLL_QUESTION 
           		WHERE
           			BRD_ID = #v_pstrBrdID#
 				AND
@@ -832,7 +832,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.gwPollGetSearch" parameterClass="Map" resultMap="responseDeptVO">
 		<![CDATA[
-			{CALL EZQUESTION.GWPOLL_GET_SERACH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL GWPOLL_GET_SERACH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -848,9 +848,9 @@
                 	MAX(TBLPOLL_ANSWER.ANSWERCONTENT) as answer  ,
                 	COUNT(*) as Q_count  
 	           	FROM
-	           		EZQUESTION.TBLPOLL_RESPONSE r
+	           		TBLPOLL_RESPONSE r
 				INNER JOIN
-					EZQUESTION.TBLPOLL_QUESTION Q
+					TBLPOLL_QUESTION Q
 				ON
 					r.QUESTION_NO = Q.QUESTION_NO
 				AND
@@ -858,15 +858,15 @@
 				AND
 					r.TENANT_ID = Q.TENANT_ID	
 				INNER JOIN
-					EZQUESTION.TBLPOLL_ANSWER
+					TBLPOLL_ANSWER
 				ON
-					EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+					TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
 				AND
 					r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
 				AND
-					EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+					TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
 				AND
-					EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+					TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
 	          	WHERE
 	          		( r.ITEM_NO = #v_item_num#  )
 				AND
@@ -895,9 +895,9 @@
                 	MAX(TBLPOLL_ANSWER.AnswerContent) as answer  ,
                 	COUNT(*) as Q_count  
            		FROM
-           			EZQUESTION.TBLPOLL_RESPONSE r
+           			TBLPOLL_RESPONSE r
                	INNER JOIN
-               		EZQUESTION.TBLPOLL_QUESTION Q 
+               		TBLPOLL_QUESTION Q 
                	ON
                		r.QUESTION_NO = Q.QUESTION_NO
                 AND
@@ -905,25 +905,25 @@
                 AND
                 	r.TENANT_ID = Q.TENANT_ID	
                	INNER JOIN
-               		EZQUESTION.TBLPOLL_ANSWER
+               		TBLPOLL_ANSWER
                	ON
-               		EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+               		TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
                 AND
-                	r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                	r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID
+                	TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID
           		WHERE
           			( r.ITEM_NO = #v_item_num#  )
                 AND
-                	( EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num#  )
+                	( TBLPOLL_ANSWER.ITEM_NO = #v_item_num#  )
                 AND
                 	( Q.QUESTION_NO = #v_Que_num#  )
                 AND
                 	r.TENANT_ID = #tenantID#
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = #tenantID#		
+                	TBLPOLL_ANSWER.TENANT_ID = #tenantID#		
           		GROUP BY
           			ROLLUP(r.QUESTION_NO, r.ANSWER_OBJECTIVITY, r.RESPONSEUSER_DEPT_NAME)
           		ORDER BY
@@ -937,7 +937,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.gwPollPositionSearch" parameterClass="Map" resultMap="responsePositionVO">
 		<![CDATA[
-			{CALL EZQUESTION.GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL GWPOLL_POSITION_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -958,9 +958,9 @@
                 	MAX(TBLPOLL_ANSWER.ANSWERCONTENT)  answer  ,
                 	COUNT(*)  Q_count  
            		FROM
-           			EZQUESTION.TBLPOLL_RESPONSE r
+           			TBLPOLL_RESPONSE r
 				JOIN
-					EZQUESTION.TBLPOLL_QUESTION Q
+					TBLPOLL_QUESTION Q
 				ON
 					r.QUESTION_NO = Q.QUESTION_NO
 				AND
@@ -968,23 +968,23 @@
 				AND
 					r.TENANT_ID = Q.TENANT_ID	
 				JOIN
-					EZQUESTION.TBLPOLL_ANSWER
+					TBLPOLL_ANSWER
 				ON
-					EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+					TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
 				AND
-					r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+					r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
 				AND
-					EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+					TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
 				AND
-					EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+					TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
           		WHERE
           			( r.ITEM_NO = #v_item_num# )
 				AND
-					( EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
+					( TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
 				AND
 					r.TENANT_ID = #tenantID#
 				AND
-					EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = #tenantID#		
+					TBLPOLL_ANSWER.TENANT_ID = #tenantID#		
            		GROUP BY
            			ROLLUP( r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_POSITION )
            		ORDER BY
@@ -1011,9 +1011,9 @@
                 	MAX(TBLPOLL_ANSWER.ANSWERCONTENT)  answer  ,
                 	COUNT(*)  Q_count  
            		FROM
-           			EZQUESTION.TBLPOLL_RESPONSE r
+           			TBLPOLL_RESPONSE r
                	JOIN
-               		EZQUESTION.TBLPOLL_QUESTION Q
+               		TBLPOLL_QUESTION Q
                	ON
                		r.QUESTION_NO = Q.QUESTION_NO
                	AND
@@ -1021,23 +1021,23 @@
                	AND
                		r.TENANT_ID = Q.TENANT_ID	
                	JOIN
-               		EZQUESTION.TBLPOLL_ANSWER
+               		TBLPOLL_ANSWER
                	ON
-               		EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+               		TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
                	AND
-               		r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+               		r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+                	TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
           		WHERE
           			( r.ITEM_NO = #v_item_num# )
                 AND
-                	( EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
+                	( TBLPOLL_ANSWER.ITEM_NO = #v_item_num# )
                 AND
                 	( Q.QUESTION_NO = #v_Que_num# )
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = #tenantID#
+                	TBLPOLL_ANSWER.TENANT_ID = #tenantID#
                 AND
                 	Q.TENANT_ID = #tenantID#		
            		GROUP BY
@@ -1053,7 +1053,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.gwPollJikgubSearch" parameterClass="Map" resultMap="responseJikgubVO">
 		<![CDATA[
-			{CALL EZQUESTION.GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL GWPOLL_JIKGUB_SEARCH(#v_pItemNo#, #v_pQuesNo#, #CV_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1067,12 +1067,12 @@
                 	/* CASE r.responseUser_jikGub2 WHEN N'' THEN N'' ELSE r.responseUser_jikGub2 END AS responseUser_jikGub, */
                 	r.RESPONSEUSER_JIKGUB2 as responseUser_JikGub,
                 	MAX(Q.QUESCONTENT) as quescontent,
-                	MAX(EZQUESTION.TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
+                	MAX(TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
                 	COUNT(*) AS Q_count  
            		FROM
-           			EZQUESTION.TBLPOLL_RESPONSE r
+           			TBLPOLL_RESPONSE r
                 INNER JOIN
-                	EZQUESTION.TBLPOLL_QUESTION Q
+                	TBLPOLL_QUESTION Q
                 ON
                 	r.QUESTION_NO = Q.QUESTION_NO
                 AND
@@ -1080,19 +1080,19 @@
                 AND
                 	r.TENANT_ID = Q.TENANT_ID	
                 INNER JOIN
-                	EZQUESTION.TBLPOLL_ANSWER
+                	TBLPOLL_ANSWER
                 ON
-                	EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+                	TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
                 AND
-                	r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                	r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+                	TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
           		WHERE
           			(r.ITEM_NO = #v_item_num#)
                	AND
-               		(EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
+               		(TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
           		GROUP BY
           			ROLLUP(r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
           		ORDER BY
@@ -1111,12 +1111,12 @@
                  	/* CASE r.responseUser_jikGub2 WHEN N'' THEN N' ' ELSE r.responseUser_jikGub2 END AS responseUser_jikGub, */
                 	r.RESPONSEUSER_JIKGUB2 AS responseUser_jikGub,
                 	MAX(Q.QUESCONTENT) as quescontent,
-                	MAX(EZQUESTION.TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
+                	MAX(TBLPOLL_ANSWER.ANSWERCONTENT) as answer,
                 	COUNT(*) AS Q_count  
            		FROM
-           			EZQUESTION.TBLPOLL_RESPONSE r
+           			TBLPOLL_RESPONSE r
                	INNER JOIN
-               		EZQUESTION.TBLPOLL_QUESTION Q
+               		TBLPOLL_QUESTION Q
                	ON
                		r.QUESTION_NO = Q.QUESTION_NO
                 AND
@@ -1124,19 +1124,19 @@
                 AND
                 	r.TENANT_ID = Q.TENANT_ID	
                 INNER JOIN
-                	EZQUESTION.TBLPOLL_ANSWER
+                	TBLPOLL_ANSWER
                 ON
-                	EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
+                	TBLPOLL_ANSWER.ITEM_NO = r.ITEM_NO
                 AND
-                	r.ANSWER_OBJECTIVITY = EZQUESTION.TBLPOLL_ANSWER.ANSWERNO
+                	r.ANSWER_OBJECTIVITY = TBLPOLL_ANSWER.ANSWERNO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBLPOLL_ANSWER.QUESTION_NO = r.QUESTION_NO
                 AND
-                	EZQUESTION.TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
+                	TBLPOLL_ANSWER.TENANT_ID = r.TENANT_ID	
           		WHERE
           			(r.ITEM_NO = #v_item_num#)
                 AND
-                	(EZQUESTION.TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
+                	(TBLPOLL_ANSWER.ITEM_NO = #v_item_num#)
                 AND
                 	(Q.QUESTION_NO = #v_Que_num#)
            		GROUP BY
@@ -1151,7 +1151,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getResponsePersonForResultTotalSave" parameterClass="Integer" resultMap="qstResponseVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETRESPERSONFORRESULTTOTA(#v_pItemNo#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETRESPERSONFORRESULTTOTA(#v_pItemNo#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1160,9 +1160,9 @@
 			SELECT
 				B.* 
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION A
+        		TBLPOLL_QUESTION A
 			JOIN
-				EZQUESTION.TBLPOLL_RESPONSE B
+				TBLPOLL_RESPONSE B
 			ON
 				A.ITEM_NO = B.ITEM_NO
 			AND
@@ -1182,7 +1182,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.reUseQuestionData"  parameterClass="Map" resultMap="qstReuseQuestionVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_REUSEQUESTIONDATA(#v_BRD_ID#, #v_ITEM_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1197,9 +1197,9 @@
              	B.PUBLIC_RESULT_FLG ,
              	B.RESPONSE_RANGE 
         	FROM
-        		EZQUESTION.TBLPOLL_ITEM A
+        		TBLPOLL_ITEM A
         	JOIN
-        		EZQUESTION.TBLPOLL_PERMISSION B 
+        		TBLPOLL_PERMISSION B 
         	ON
         		A.BRD_ID = B.BRD_ID
          	AND
@@ -1217,7 +1217,7 @@
 		
 	<!-- <procedure id="EzQuestionDAO.analysisCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_ANALYSISCOUNT(#v_pItemNo#, #v_pQuesNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1227,7 +1227,7 @@
 				SELECT
 					COUNT(DISTINCT RESPONSEUSER_ID)  
         		FROM
-        			EZQUESTION.TBLPOLL_RESPONSE 
+        			TBLPOLL_RESPONSE 
         		WHERE
         			ITEM_NO = #v_pItemNo#
         		AND
@@ -1242,7 +1242,7 @@
 				SELECT
 					COUNT(DISTINCT RESPONSEUSER_ID)  
        			FROM
-       				EZQUESTION.TBLPOLL_RESPONSE 
+       				TBLPOLL_RESPONSE 
        			WHERE
        				ITEM_NO = #v_pItemNo#
        			AND
@@ -1258,7 +1258,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.resultSubjectiveListCnt" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_RESULTSUBJECTIVELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_RESULTSUBJECTIVELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1273,7 +1273,7 @@
    							RESPONSEUSER_POSITION$v_pLang$ AS RESPONSEUSER_POSITION, RESPONSEUSER_JIKGUB$v_pLang$ AS RESPONSEUSER_JIKGUB,
    							RESPONSEUSER_GENDER, RESPONSEUSER_AGE, RESPONSE_DATE, RESPONSEUSER_IP 
    		 				FROM
-   		 					EZQUESTION.TBLPOLL_RESPONSE  
+   		 					TBLPOLL_RESPONSE  
    	   					WHERE
    	   						BRD_ID = #v_pstrBrdID# AND ITEM_NO = #v_pItemNo# AND QUESTION_NO= #v_pQuesNo#  AND ANSWER_SUBJECTIVITY IS NOT NULL AND TENANT_ID = #tenantID#
    					) P
@@ -1282,7 +1282,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETTABLEANSWER(#v_pStrBrdID#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETTABLEANSWER(#v_pStrBrdID#, #v_pItemNo#, #v_pQuestionNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1291,7 +1291,7 @@
 			SELECT
 				ANSWER_ANSWERCONTENT 
         	FROM
-        		EZQUESTION.TBLPOLL_TABLE_ANSWER 
+        		TBLPOLL_TABLE_ANSWER 
        		WHERE
        			ITEM_NO = #v_PITEMNO#
 			AND
@@ -1307,7 +1307,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.tableAnswerValue" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_TABLEANSWERVALUE(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_TABLEANSWERVALUE(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1316,7 +1316,7 @@
 			SELECT
 				ANSWER_ANSWERCONTENT 
         	FROM
-        		EZQUESTION.TBLPOLL_TABLE_ANSWER 
+        		TBLPOLL_TABLE_ANSWER 
        		WHERE
        			BRD_ID = #v_PSTRBRDID#
 			AND
@@ -1331,12 +1331,12 @@
 	</select>
 	
 <!-- 	<procedure id="EzQuestionDAO.getResponseAnswer" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL EZQUESTION.EZSP_GETRESPONSEANSWER(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_GETRESPONSEANSWER(#v_PSTRBRDID#, #v_PITEMNO#, #v_PQUESNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 		
 	 <!-- <procedure id="EzQuestionDAO.responseListCnt" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_RESPONSELISTCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> --> 
 	
@@ -1357,7 +1357,7 @@
                         		MAX(RESPONSEUSER_AGE) AS USER_AGE,
                         		MAX(RESPONSE_DATE) AS RESPONSE_DATE 
                         	FROM
-                        		EZQUESTION.TBLPOLL_RESPONSE  
+                        		TBLPOLL_RESPONSE  
                         	WHERE
                         		BRD_ID= #v_pstrBrdID#
                         	AND
@@ -1386,7 +1386,7 @@
                       			USER_AGE AS USER_AGE,
                       			RESPONSE_DATE AS RESPONSE_DATE
                     		FROM
-                    			EZQUESTION.TBLPOLL_RESPONSEPERSON 
+                    			TBLPOLL_RESPONSEPERSON 
                     		WHERE
                     			BRD_ID = #v_pstrBrdID#
                     		AND
@@ -1402,7 +1402,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getItemNoCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_GETITEMNOCNT(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1411,7 +1411,7 @@
 			SELECT
 				COUNT(*)  ITEM_NO
         	FROM
-        		EZQUESTION.TBLPOLL_ITEM 
+        		TBLPOLL_ITEM 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -1423,7 +1423,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_QSTLISTCNT(#v_PSTRBRDID#, #v_PUSERID#, #v_PTITLE#, #v_PRANGE#, #v_PSDATE#, #v_PEDATE#, #v_PLANG#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1447,7 +1447,7 @@
       						B.END_FLG, 
       						B.RESPONSE_RANGE 
   						FROM  
-      						EZQUESTION.TBLPOLL_ITEM A INNER JOIN EZQUESTION.TBLPOLL_PERMISSION B
+      						TBLPOLL_ITEM A INNER JOIN TBLPOLL_PERMISSION B
         				ON
         					A.BRD_ID = B.BRD_ID 
       					AND
@@ -1517,9 +1517,9 @@
 				    B.END_FLG, 
 				    B.RESPONSE_RANGE 
    				FROM 
-      				EZQUESTION.TBLPOLL_ITEM A, 
-      				EZQUESTION.TBLPOLL_PERMISSION B, 
-      				EZQUESTION.TBLPOLL_RESPONSEPERSON D
+      				TBLPOLL_ITEM A, 
+      				TBLPOLL_PERMISSION B, 
+      				TBLPOLL_RESPONSEPERSON D
     			WHERE (  	A.BRD_ID = B.BRD_ID 
       						AND
       							A.ITEM_NO = B.ITEM_NO
@@ -1579,7 +1579,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQuestionNo" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_GETQUESTIONNO(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1588,7 +1588,7 @@
 			SELECT
 				MAX(question_no) maxquesNo  
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION 
+        		TBLPOLL_QUESTION 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
             AND
@@ -1600,7 +1600,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getQstResponse"	parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_GETQSTRESPONSE(#v_pstrBrdID#, #v_pItemNo#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1609,7 +1609,7 @@
 			SELECT
 				RESPONSENO
         	FROM
-        		EZQUESTION.TBLPOLL_RESPONSE 
+        		TBLPOLL_RESPONSE 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -1621,7 +1621,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.stepSave" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
+			{CALL EZSP_STEPSAVE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#,  #v_pPostDate#, #v_pPostTerm#, #v_pItemRef#, #v_pItemImp#, #v_pSDate#, #v_pEdate#, #v_pDataCount#)}
 		]]>
 	</procedure> -->
 	
@@ -1629,7 +1629,7 @@
 		<isEqual property="v_pDataCount" compareValue="1">
 			<![CDATA[
 				UPDATE
-					EZQUESTION.TBLPOLL_ITEM
+					TBLPOLL_ITEM
          		SET
          			USER_ID = #v_pUserID#,
              		USER_NM = #v_pUserNM#,
@@ -1657,7 +1657,7 @@
 		<isNotEqual property="v_pDataCount" compareValue="1">
 			<![CDATA[
 				INSERT INTO
-					EZQUESTION.TBLPOLL_ITEM
+					TBLPOLL_ITEM
         			( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID )
         		VALUES
         			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
@@ -1668,7 +1668,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.stepSave2" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
+			{CALL EZSP_STEPSAVE2(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #v_PDATACOUNT#)}
 		]]>
 	</procedure> -->
 	
@@ -1676,7 +1676,7 @@
 		<isEqual property="v_PDATACOUNT" compareValue="1">
 			<![CDATA[
 				UPDATE
-					EZQUESTION.TBLPOLL_PERMISSION
+					TBLPOLL_PERMISSION
          		SET
          			PUBLIC_RESULT_FLG = #v_PRESULTFLG#,
              		PUBLIC_FLG = #v_PPUBLICFLG#,
@@ -1694,7 +1694,7 @@
 		<isNotEqual property="v_PDATACOUNT" compareValue="1">
 			<![CDATA[
 				INSERT INTO
-					EZQUESTION.TBLPOLL_PERMISSION
+					TBLPOLL_PERMISSION
         			( BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID )
         		VALUES
         			( #v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID# )
@@ -1705,7 +1705,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callCreateMother" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
+			{CALL EZSP_CALLCREATEMOTHER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#)}
 		]]>
 	</procedure> -->
 	
@@ -1723,7 +1723,7 @@
                                  			GUBUN ,
                                  			GUBUN_ID 
                           				FROM
-                          					EZQUESTION.TBLPOLL_ITEMACL 
+                          					TBLPOLL_ITEMACL 
                            				WHERE
                            					BRD_ID = #v_pstrBrdID#
                                     	AND
@@ -1740,7 +1740,7 @@
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO
-					EZQUESTION.TBLPOLL_ITEMACL
+					TBLPOLL_ITEMACL
      				( BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID )
      			VALUES
      				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID# )
@@ -1750,7 +1750,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callGetItemSeq" parameterClass="Map" resultClass="Integer" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLGETITEMSEQ(#v_pstrBrdID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_CALLGETITEMSEQ(#v_pstrBrdID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1759,7 +1759,7 @@
 			SELECT
 				MAX(ITEM_NO)  MAXNO  
         	FROM
-        		EZQUESTION.TBL_QS_ITEMSEQ 
+        		TBL_QS_ITEMSEQ 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
        		AND
@@ -1769,14 +1769,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callUpdateItemSeq" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.callUpdateItemSeq" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBL_QS_ITEMSEQ
+				TBL_QS_ITEMSEQ
          	SET
          		ITEM_NO = #v_pItemNo#
        		WHERE
@@ -1788,14 +1788,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callInsertItemSeq" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#}
+			{CALL EZSP_CALLUPDATEITEMSEQ(#v_pstrBrdID#}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.callInsertItemSeq" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBL_QS_ITEMSEQ
+				TBL_QS_ITEMSEQ
         	VALUES
         		( #v_pstrBrdID#, '1', #tenantID# )
 		]]>
@@ -1803,7 +1803,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
+			{CALL EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
 		]]>
 	</procedure> -->
 	
@@ -1820,7 +1820,7 @@
                                  			ITEM_NO ,
                                  			USER_ID 
                           				FROM
-                          					EZQUESTION.TBLPOLL_RESPONSEPERSON 
+                          					TBLPOLL_RESPONSEPERSON 
                            				WHERE
                            					BRD_ID = #v_pstrBrdID#
                                     	AND
@@ -1835,7 +1835,7 @@
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO
-					EZQUESTION.TBLPOLL_RESPONSEPERSON
+					TBLPOLL_RESPONSEPERSON
      				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID )
      			VALUES
      				( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID# )
@@ -1845,7 +1845,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callInsertPollResponseper" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
+			{CALL EZSP_CALLINSERTPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#)}
 		]]>
 	</procedure> -->
 	
@@ -1862,7 +1862,7 @@
                                  			ITEM_NO ,
                                  			USER_ID 
                           				FROM
-                          					EZQUESTION.TBLPOLL_RESPONSEPERSON 
+                          					TBLPOLL_RESPONSEPERSON 
                            				WHERE
                            					BRD_ID = #v_pstrBrdID#
                                     	AND
@@ -1877,7 +1877,7 @@
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO
-					EZQUESTION.TBLPOLL_RESPONSEPERSON
+					TBLPOLL_RESPONSEPERSON
      				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID )
      			VALUES
      				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID# )
@@ -1889,7 +1889,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
 		]]>
 	</procedure> -->
 	
@@ -1899,7 +1899,7 @@
 				SELECT
 					NVL(MAX(QUES_SN)  + 1, 1) 
 			    FROM
-			    	EZQUESTION.TBLPOLL_QUESTION 
+			    	TBLPOLL_QUESTION 
     			WHERE
     				ITEM_NO = #v_PITEMNO#
     			AND
@@ -1908,7 +1908,7 @@
 		</selectKey>
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLPOLL_QUESTION
+				TBLPOLL_QUESTION
         		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
         	VALUES
         		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_PQUES_SN#, #tenantID# )
@@ -1917,14 +1917,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
+			{CALL EZSP_POLLSAVEATTACH(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLPOLL_ATTACH
+				TBLPOLL_ATTACH
         		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID )
         	VALUES
         		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID# )
@@ -1933,14 +1933,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertAnswerAnswerContent"	parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_INSERTANSWER_ANSWERCONTEN(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
+			{CALL EZSP_INSERTANSWER_ANSWERCONTEN(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.insertAnswerAnswerContent" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLPOLL_TABLE_ANSWER
+				TBLPOLL_TABLE_ANSWER
         		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID )
         	VALUES
         		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID# )
@@ -1949,14 +1949,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
+			{CALL EZSP_INSERTANSWERCONTENT(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLPOLL_ANSWER
+				TBLPOLL_ANSWER
         		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID )
         	VALUES
         		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID# )
@@ -1965,14 +1965,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updatePollItem" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_UPDATEPOLLITEM(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updatePollItem" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
          	SET
          		COMPLETE_FLAG = 'Y'
        		WHERE
@@ -1986,14 +1986,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updatePollEndDate" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATEPOLLENDDATE(#v_pstrBrdID#, #v_pItemNo#, #v_penddate#, #v_pendflg#)}
+			{CALL EZSP_UPDATEPOLLENDDATE(#v_pstrBrdID#, #v_pItemNo#, #v_penddate#, #v_pendflg#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updatePollEndDate_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
    			SET
    				poll_enddate = #v_penddate#
    			WHERE
@@ -2008,7 +2008,7 @@
 	<update id="EzQuestionDAO.updatePollEndDate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_PERMISSION
+				TBLPOLL_PERMISSION
 			SET
 				END_FLG = #v_pendflg#
             WHERE
@@ -2022,14 +2022,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callDeleteItemSeq" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLDELETEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_CALLDELETEITEMSEQ(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.callDeleteItemSeq" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ITEMACL
+				TBLPOLL_ITEMACL
           	WHERE
           		BRD_ID = #v_pstrBrdID#
           	AND
@@ -2041,14 +2041,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.deleteItem" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_DELETEITEM(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.deleteItem_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_RESPONSE
+				TBLPOLL_RESPONSE
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2061,7 +2061,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ANSWER
+				TBLPOLL_ANSWER
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2074,7 +2074,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_QUESTION
+				TBLPOLL_QUESTION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2087,7 +2087,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D4" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_PERMISSION
+				TBLPOLL_PERMISSION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2100,7 +2100,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D5" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2113,7 +2113,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D6" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ITEMREAD
+				TBLPOLL_ITEMREAD
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2126,7 +2126,7 @@
 	<delete id="EzQuestionDAO.deleteItem_D7" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ITEMACL
+				TBLPOLL_ITEMACL
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2139,7 +2139,7 @@
 	<delete id="EzQuestionDAO.deleteItem" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_RESPONSEPERSON
+				TBLPOLL_RESPONSEPERSON
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2151,14 +2151,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.deletePermission" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_DELETEPERMISSION(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.deletePermission_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_PERMISSION
+				TBLPOLL_PERMISSION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
              AND
@@ -2183,14 +2183,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.callDeletePollResponseper" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CALLDELETEPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_CALLDELETEPOLLRESPONSEPER(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.callDeletePollResponseper" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_RESPONSEPERSON
+				TBLPOLL_RESPONSEPERSON
 	       WHERE
 				BRD_ID = #v_pstrBrdID#
 			AND
@@ -2202,14 +2202,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_UPDATEREADCNT(#v_pReadCnt#, #v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updateReadCnt" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
          	SET
          		READ_CNT = #v_pReadCnt#
        		WHERE
@@ -2223,14 +2223,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updateReadDate" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
+			{CALL EZSP_UPDATEREADDATE(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updateReadDate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_ITEMREAD
+				TBLPOLL_ITEMREAD
          	SET
          		READ_DATE = #v_pReadDate#
        		WHERE
@@ -2246,14 +2246,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updateResponsePerson" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATERESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#)}
+			{CALL EZSP_UPDATERESPONSEPERSON(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updateResponsePerson" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_RESPONSEPERSON
+				TBLPOLL_RESPONSEPERSON
          	SET
          		RESPONSE_DATE = SYSDATE
        		WHERE
@@ -2269,14 +2269,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.updateResCnt" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_UPDATERESCNT(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_UPDATERESCNT(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.updateResCnt" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-			 	EZQUESTION.TBLPOLL_ITEM
+			 	TBLPOLL_ITEM
           	SET
           		RES_CNT = RES_CNT + 1
            	WHERE
@@ -2290,14 +2290,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertItemRead" parameterClass="Map">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
+			{CALL EZSP_INSERTITEMREAD(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.insertItemRead" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZQUESTION.TBLPOLL_ITEMREAD
+				TBLPOLL_ITEMREAD
         		( BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID )
         	VALUES
         		( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID# )
@@ -2306,14 +2306,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.changePermission"	parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
+			{CALL EZSP_CHANGEPERMISSION(#v_pstrBrdID#, #v_pItemNo#, #v_psubject#, #v_pcontent#, #v_ppostterm#, #v_pstartdate#, #v_penddate#, #v_presultflg#, #v_pflg#, #v_pmultiflg#, #v_pendflg#, #v_presponserange#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzQuestionDAO.changePermission_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
       		SET
       			TITLE = #v_psubject#,
           		CONTENT = #v_pcontent#,
@@ -2332,7 +2332,7 @@
 	<update id="EzQuestionDAO.changePermission" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZQUESTION.TBLPOLL_PERMISSION
+				TBLPOLL_PERMISSION
          	SET
          		PUBLIC_RESULT_FLG = #v_presultflg#,
              	PUBLIC_FLG = #v_pflg#,
@@ -2350,7 +2350,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.tempSave"	parameterClass="Map"  resultMap="qstTempSaveVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_TEMPSAVE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_TEMPSAVE(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -2359,9 +2359,9 @@
 			SELECT
 				* 
         	FROM
-        		EZQUESTION.TBLPOLL_QUESTION a
+        		TBLPOLL_QUESTION a
 			JOIN
-				EZQUESTION.TBLPOLL_ANSWER b 
+				TBLPOLL_ANSWER b 
 			ON
 				a.BRD_ID = b.BRD_ID
 			AND
@@ -2384,14 +2384,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.questionDelete2"	parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_QUESTIONDELETE2(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_QUESTIONDELETE2(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.questionDelete2_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ANSWER
+				TBLPOLL_ANSWER
    			WHERE
    				BRD_ID = #v_pstrBrdID#
    			AND
@@ -2404,7 +2404,7 @@
 	<delete id="EzQuestionDAO.questionDelete2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_QUESTION
+				TBLPOLL_QUESTION
             WHERE
             	BRD_ID = #v_pstrBrdID#
             AND
@@ -2416,14 +2416,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.questionDelete1"	parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_QUESTIONDELETE1(#v_pstrBrdID#, #v_pItemNo#, #v_QuesNo#)}
+			{CALL EZSP_QUESTIONDELETE1(#v_pstrBrdID#, #v_pItemNo#, #v_QuesNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.questionDelete1" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_QUESTION
+				TBLPOLL_QUESTION
           	WHERE
           		BRD_ID = #v_pstrBrdID#
           	AND
@@ -2437,7 +2437,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.getDeleteAttachUrl"	parameterClass="Map"  resultClass="qstDeleteAttachUrlVO">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_GETDELETEATTACHURL(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETDELETEATTACHURL(#v_pstrBrdID#, #v_pItemNo#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -2447,7 +2447,7 @@
 				ATTACHURL ,
              	ATTACHTYPE	 
         	FROM
-        		EZQUESTION.TBLPOLL_ATTACH 
+        		TBLPOLL_ATTACH 
        		WHERE
        			BRD_ID = #v_pstrBrdID#
 			AND
@@ -2459,14 +2459,14 @@
 	
 	<!-- <procedure id="EzQuestionDAO.deletePollAttach"	parameterClass="Map" >
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_DELETEPOLLATTACH(#v_pstrBrdID#, #v_pItemNo#)}
+			{CALL EZSP_DELETEPOLLATTACH(#v_pstrBrdID#, #v_pItemNo#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzQuestionDAO.deletePollAttach" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZQUESTION.TBLPOLL_ATTACH
+				TBLPOLL_ATTACH
 	       WHERE
 				BRD_ID = #v_pstrBrdID#
 			AND
@@ -2478,7 +2478,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.wpCountPollCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZQUESTION.EZSP_WPCONT_POLLCOUNT(#v_pUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_WPCONT_POLLCOUNT(#v_pUSERID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -2490,9 +2490,9 @@
 	        		( 	SELECT
 	        				A.ITEM_NO 
 	               		FROM
-	               			EZQUESTION.TBLPOLL_RESPONSEPERSON A
+	               			TBLPOLL_RESPONSEPERSON A
 	                    LEFT JOIN
-	                    	EZQUESTION.TBLPOLL_ITEM B
+	                    	TBLPOLL_ITEM B
 	                    ON
 	                    	A.BRD_ID = B.BRD_ID
 	                    AND
@@ -2517,9 +2517,9 @@
 		            	SELECT
 		            		A.ITEM_NO 
 	               		FROM
-	               			EZQUESTION.TBLPOLL_ITEM A
+	               			TBLPOLL_ITEM A
 						LEFT JOIN
-							EZQUESTION.TBLPOLL_RESPONSE B
+							TBLPOLL_RESPONSE B
 						ON
 							A.BRD_ID = B.BRD_ID
 	                    AND
@@ -2529,7 +2529,7 @@
 	                    AND
 	                    	B.RESPONSEUSER_ID = #v_pUSERID#
 	                    LEFT JOIN
-	                    	EZQUESTION.TBLPOLL_PERMISSION C 
+	                    	TBLPOLL_PERMISSION C 
 	                    ON
 	                    	A.BRD_ID = C.BRD_ID
 	                    AND
@@ -2561,7 +2561,7 @@
 			SELECT 
 				NVL(MAX(ITEM_NO),-1) as maxno
 			FROM 
-				EZQUESTION.TBL_QS_ITEMSEQ 
+				TBL_QS_ITEMSEQ 
 			WHERE  
 				BRD_ID = #brdID#
 			AND
@@ -2574,7 +2574,7 @@
 			SELECT 
 				READ_DATE 
 			FROM 
-				EZQUESTION.TBLPOLL_ITEMREAD 
+				TBLPOLL_ITEMREAD 
 			WHERE  
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2591,7 +2591,7 @@
 			SELECT 
 				NVL(COUNT(*), 0)
 			FROM
-				EZQUESTION.TBLPOLL_RESPONSE
+				TBLPOLL_RESPONSE
 			WHERE
 				BRD_ID	=	#v_pstrBrdID#
 			AND 
@@ -2608,7 +2608,7 @@
 			SELECT
 				USER_ID 
 			FROM
-				EZQUESTION.TBL_QS_BRDMNG 
+				TBL_QS_BRDMNG 
 			WHERE
 				BRD_ID	=	#brdID#
 			AND 
@@ -2621,7 +2621,7 @@
 			SELECT
 				COUNT(RESPONSE_DATE)  
         	FROM
-        		EZQUESTION.TBLPOLL_RESPONSE 
+        		TBLPOLL_RESPONSE 
        		WHERE
        			BRD_ID	=	#v_pstrBrdID#
             AND 
@@ -2638,7 +2638,7 @@
 			SELECT
 				RES_CNT 
       		FROM
-      			EZQUESTION.TBLPOLL_ITEM 
+      			TBLPOLL_ITEM 
       		WHERE
       			BRD_ID	=	#v_pstrBrdID#
       		AND
@@ -2653,7 +2653,7 @@
 			SELECT
 				COUNT(READ_DATE)  
         	FROM
-        		EZQUESTION.TBLPOLL_ITEMREAD 
+        		TBLPOLL_ITEMREAD 
        		WHERE
        			BRD_ID	=	#v_pstrBrdID#
             AND
@@ -2670,7 +2670,7 @@
 			SELECT 
 				MAX(responseno) RESNO  
 			FROM
-				EZQUESTION.TBLPOLL_RESPONSE 
+				TBLPOLL_RESPONSE 
 			WHERE
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2687,7 +2687,7 @@
 			SELECT 
 				COUNT(*) ANSCNT  
 			FROM
-				EZQUESTION.TBLPOLL_ANSWER 
+				TBLPOLL_ANSWER 
 			WHERE
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2703,7 +2703,7 @@
 		<![CDATA[
 			SELECT 
 				DISTINCT COUNT(*)  RESPERSON  
-			FROM EZQUESTION.TBLPOLL_RESPONSE 
+			FROM TBLPOLL_RESPONSE 
 			WHERE 
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2720,7 +2720,7 @@
 			SELECT 
 				COUNT(*)  CNT  
 			FROM 
-				EZQUESTION.TBLPOLL_RESPONSE 
+				TBLPOLL_RESPONSE 
 			WHERE  
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2739,7 +2739,7 @@
 			SELECT 
 				COUNT(*)  CNT  
 			FROM 
-				EZQUESTION.TBLPOLL_RESPONSE 
+				TBLPOLL_RESPONSE 
 			WHERE  
 				BRD_ID = #v_pstrBrdID#
 			AND 
@@ -2757,7 +2757,7 @@
 		SELECT 
 			COUNT(QUESTION_NO)  
 		FROM 
-			ezQuestion.TBLPOLL_QUESTION 
+			TBLPOLL_QUESTION 
 		WHERE
 			ITEM_NO = #v_pItemNo#
 		AND 
@@ -2770,7 +2770,7 @@
 		SELECT 
 			ANSWER_SUBJECTIVITY 
         FROM 
-        	ezQuestion.TBLPOLL_RESPONSE 
+        	TBLPOLL_RESPONSE 
 		WHERE
 			BRD_ID = #v_PSTRBRDID#
         AND 
@@ -2784,7 +2784,7 @@
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZQUESTION.TBL_QS_ITEMSEQ (
+			INSERT INTO TBL_QS_ITEMSEQ (
 			) 
 			VALUES(
 				#v_pstrBrdID#, '1', #tenantID#
@@ -2794,7 +2794,7 @@
 			
 	<insert id="EzQuestionDAO.insertResponse" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZQUESTION.TBLPOLL_RESPONSE(
+			INSERT INTO TBLPOLL_RESPONSE(
 				BRD_ID,			ITEM_NO,		QUESTION_NO,	RESPONSENO,	ANSWER_OBJECTIVITY, RESPONSEUSER_ID,	RESPONSEUSER_NAME,	RESPONSEUSER_NAME2,	RESPONSEUSER_EMAIL,	RESPONSEUSER_DEPT_ID,	RESPONSEUSER_DEPT_NAME,	RESPONSEUSER_DEPT_NAME2,	RESPONSEUSER_POSITION,	RESPONSEUSER_POSITION2,	RESPONSEUSER_JIKGUB,	RESPONSEUSER_JIKGUB2,	RESPONSEUSER_GENDER,	RESPONSEUSER_AGE,	RESPONSE_DATE,	RESPONSEUSER_IP, TENANT_ID 
 			)
 			VALUES (
@@ -2805,7 +2805,7 @@
 	
 	<insert id="EzQuestionDAO.insertResponse2" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZQUESTION.TBLPOLL_RESPONSE(
+			INSERT INTO TBLPOLL_RESPONSE(
 				BRD_ID,			ITEM_NO,		QUESTION_NO,	RESPONSENO,	ANSWER_SUBJECTIVITY,	RESPONSEUSER_ID,	RESPONSEUSER_NAME,	RESPONSEUSER_NAME2,	RESPONSEUSER_EMAIL,	RESPONSEUSER_DEPT_ID,	RESPONSEUSER_DEPT_NAME,	RESPONSEUSER_DEPT_NAME2,	RESPONSEUSER_POSITION,	RESPONSEUSER_POSITION2,	RESPONSEUSER_JIKGUB,	RESPONSEUSER_JIKGUB2,	RESPONSEUSER_GENDER,	RESPONSEUSER_AGE,	RESPONSE_DATE,	RESPONSEUSER_IP, TENANT_ID
 			)
 			VALUES (
@@ -2817,7 +2817,7 @@
 	 <update id="EzQuestionDAO.updateItemSeq" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZQUESTION.TBL_QS_ITEMSEQ
+				TBL_QS_ITEMSEQ
 			SET 
 				ITEM_NO = #v_pItemNo#
 			WHERE
@@ -2830,7 +2830,7 @@
 	 <update id="EzQuestionDAO.updateTblPollItem" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZQUESTION.TBLPOLL_ITEM
+				TBLPOLL_ITEM
 			SET 
 				POLL_ENDDATE = #endDate#
 			WHERE
@@ -2845,7 +2845,7 @@
 	 <update id="EzQuestionDAO.updateTblPollPermission" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZQUESTION.TBLPOLL_PERMISSION
+				TBLPOLL_PERMISSION
 			SET 
 				END_FLG = #endFlag#
 			WHERE
