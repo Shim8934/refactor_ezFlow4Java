@@ -241,10 +241,10 @@
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
 		<c:choose>
-			<c:when test="${bName == 'c_notice'}">
+			<c:when test="${bName == 'tbl_c_notice'}">
 				<h1><spring:message code = "ezCommunity.t73"/><span id="mailBoxInfo"></span></h1>
 			</c:when>
-			<c:when test="${bName == 'c_board'}">
+			<c:when test="${bName == 'tbl_c_board'}">
 				<h1><spring:message code = "ezCommunity.t2001"/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
@@ -255,10 +255,10 @@
 		<div id="mainmenu">
 			<ul>
 				<c:choose>
-					<c:when test="${bName == 'c_board'}">
+					<c:when test="${bName == 'tbl_c_board'}">
 						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
 					</c:when>
-					<c:when test="${fn:indexOf(userInfo.rollInfo, 'k=1') > -1 && bName == 'c_notice'}">
+					<c:when test="${fn:indexOf(userInfo.rollInfo, 'k=1') > -1 && bName == 'tbl_c_notice'}">
 						<li><span onClick="btn_write('${bName }')"><spring:message code = "ezCommunity.t167"/></span></li>
 					</c:when>
 				</c:choose>

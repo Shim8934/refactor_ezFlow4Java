@@ -857,7 +857,9 @@
 					async : true,
 					url : "/ezCommunity/todayCop.do",
 					success: function(result){
-						event_get_todaycop(result);
+						if (result["clubVO"] != null) {
+							event_get_todaycop(result);
+						}
 					}
 				});
 	        }

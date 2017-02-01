@@ -318,22 +318,22 @@
 		</isNotEqual>
 		
 		
-		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
 			<![CDATA[
 				ORDER BY
 					no DESC
 			]]>
 		</isEqual>
 		
-		<isEqual property="v_BNAME" compareValue="C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 			<![CDATA[
 				ORDER BY
    					no DESC
    			]]>
 		</isEqual>
 		
-		<isNotEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 				<![CDATA[
 					ORDER BY
 		   				ref DESC,
@@ -2230,7 +2230,7 @@
 			AND
 				TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
 			WHERE
-				RTRIM(C_CLUBUSER.c_id) = #v_USERID#
+				RTRIM(TBL_C_CLUBUSER.c_id) = #v_USERID#
 			AND
 				TBL_C_CLUB.c_adminconfirm = 'Y'
 			AND
@@ -2966,7 +2966,7 @@
 <!-- 		{CALL EZSP_EZCOMMUNITYBASE_GET4(#v_STRBOARDNAME#, #v_STRCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.ezCommunityBaseGet4"				parameterClass="Map"		resultClass="String">
-		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBNOTICE">
+		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBNOTICE">
 			<![CDATA[
 				SELECT
 					c_clubnoticetitle ONEVALUE  
@@ -2978,7 +2978,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBBOARD">
+		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD">
 			<![CDATA[
 				SELECT
 					c_clubboardtitle ONEVALUE  
@@ -2990,7 +2990,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBBOARD1">
+		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD1">
 			<![CDATA[
 				SELECT
 					c_clubboard1title ONEVALUE  
@@ -3002,7 +3002,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBBOARD2">
+		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD2">
 			<![CDATA[
 				SELECT
 					c_clubboard2title ONEVALUE  
@@ -3014,7 +3014,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="C_CLUBPDS">
+		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBPDS">
 			<![CDATA[
 				SELECT
 					c_clubpdstitle ONEVALUE  
@@ -3089,7 +3089,7 @@
 			SELECT 
 				filename
 			FROM
-				$v_BNAME$  
+				$v_BNAME$
 			WHERE
 				$v_MAXIDFIELDNAME$ = #v_STRMAXNUM#
 			AND
@@ -4511,10 +4511,10 @@
 				content = #v_TEXTCONTENT#
 		]]>
 		
-		<isEqual property="v_BNAME" compareValue="C_CLUBPDS">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBPDS">
 			, charfilename = #v_ATTACHLIST#
 		</isEqual>
-		<isEqual property="v_BNAME" compareValue="C_CLUBPDS1">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBPDS1">
 			, charfilename = #v_ATTACHLIST#
 		</isEqual>
 		
@@ -4562,33 +4562,45 @@
 <!-- 		{CALL EZSP_BBS_EDIT_OK_INSERT(#v_BNAME#, #v_MYREF#, #v_NEWSTEP#, #v_NEWLEVEL#, #v_ATTACHLIST#, #v_NUMBER#, #v_TEXTCONTENT#, #v_DATETIME_NOW#, #v_FILENAME#, #v_CODE#, #v_USERINFO_COMPANYID#, #v_USERINFO_USERID#, #v_USERNM#, #v_USERNM2#, #v_TITLE#, #v_MAXIDFIELDNAME#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.bbsEditOkInsert"					parameterClass="Map">
+		<selectKey keyProperty="no" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					NVL(MAX(no), 0) + 1
+				FROM 
+					$v_BNAME$
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		
 		<![CDATA[
 			INSERT INTO $v_BNAME$
-				(companyid,
+				(no,
+				companyid,
 				id,
 				username,
 				username2,
 				title,
 		]]>
 		
-		<isNotEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
 			ref,
 			step,
 			re_level,
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 				ref,
 				step,
 				re_level,
 			</isNotEqual>
 		</isEqual>
 		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+		<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
 			charfilename,
 		</isEqual>
-		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
-			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+		<isNotEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS1">
 				charfilename,
 			</isEqual>
 		</isNotEqual>
@@ -4602,6 +4614,7 @@
 			c_clubno,
 			tenant_id)
 			VALUES (
+				#no#,
 				#v_USERINFO_COMPANYID#,
 				#v_USERINFO_USERID#,
 				#v_USERINFO_DISPLAYNAME1#,
@@ -4609,24 +4622,24 @@
 				#v_TITLE#
 		]]>
 		
-		<isNotEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
+		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
 			,#v_MYREF#,
 			#v_NEWSTEP#,
 			#v_NEWLEVEL#
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
 				,#v_MYREF#,
 				#v_NEWSTEP#,
 				#v_NEWLEVEL#
 			</isNotEqual>
 		</isEqual>
 		
-		<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
+		<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
 			,#v_ATTACHLIST#
 		</isEqual>
-		<isNotEqual property="v_BNAME" compareValue="D_C_CLUBPDS">
-			<isEqual property="v_BNAME" compareValue="D_C_CLUBPDS1">
+		<isNotEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
+			<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS1">
 			,#v_ATTACHLIST#
 		</isEqual>
 		</isNotEqual>
@@ -5192,8 +5205,31 @@
 <!-- 		{CALL EZSP_GUEST_EDIT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME1#, #v_USERINFO_DISPLAYNAME2#, #v_USERINFO_COMPANYID#, #v_MEMO#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.guestEditOkInsert"			parameterClass="Map">
+		<selectKey keyProperty="no" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					NVL(MAX(no), 0) + 1
+				FROM 
+					TBL_C_CLUBGUEST
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		<selectKey keyProperty="c_no" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					NVL(MAX(c_no) , 0) + 1
+	       		FROM
+	       			TBL_C_CLUBGUEST 
+				WHERE
+					RTRIM(c_clubno) = #v_CODE#
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
 		INSERT INTO TBL_C_CLUBGUEST
-       		(c_no,
+       		(no,
+       		c_no,
        		id,
        		username,
        		username2,
@@ -5204,14 +5240,8 @@
        		c_clubno,
        		tenant_id)
 		VALUES
-			((SELECT
-				NVL(MAX(c_no) , 0) + 1
-       		FROM
-       			C_CLUBGUEST 
-			WHERE
-				RTRIM(c_clubno) = #v_CODE#
-			AND
-				tenant_id = #tenantID#),
+			(#no#,
+			#c_no#,
 			#v_USERINFO_USERID#,
 			#v_USERINFO_DISPLAYNAME1#,
 			#v_USERINFO_DISPLAYNAME2#,

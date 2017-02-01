@@ -50,7 +50,7 @@
 			window.onload = function() {
 				document.getElementById("title").focus();
 
-                if (pMode == "write" && pNo != "" && (pBname == "c_clubpds" || pBname == "c_clubpds1")) {
+                if (pMode == "write" && pNo != "" && (pBname == "tbl_c_clubpds" || pBname == "tbl_c_clubpds1")) {
 //첨부파일 부분을 아예 사용안함
 // 				    document.getElementById("divBody").innerHTML = makeAttachDIV(document.getElementById("preAttachList").innerText);	
 // 				    document.getElementById("attachedFile").innerHTML = makeAttachDIV2(document.getElementById("preAttachList").innerText);
@@ -102,7 +102,7 @@
 					retVal.collapse(true);
 					retVal.select();
 				} else {
-					if (pBname == "c_clubpds" || pBname == "c_clubpds1") {
+					if (pBname == "tbl_c_clubpds" || pBname == "tbl_c_clubpds1") {
 						pAttachFileList = AttachFileList();
 					}
 					
@@ -218,7 +218,7 @@
 		</script>
 		
 <!-- 		사용안함 -->
-		<%-- <c:if test="${mode == 'edit' && no != '' && (bName == 'c_clubpds' || bName == 'c_clubpds1')}">
+		<%-- <c:if test="${mode == 'edit' && no != '' && (bName == 'tbl_c_clubpds' || bName == 'tbl_c_clubpds1')}">
 			<script type="text/javascript">
 				function makeAttachDIV(attachStr){
 				
