@@ -2496,4 +2496,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		return reverseDate.toString();
 	}
+
+	@Override
+	public String getContentInfo(String type, String docID, int tenantID) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getContentInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("docID", docID);
+		map.put("tenantID", tenantID);
+
+		logger.debug("getContentInfo ended");
+		
+		return ezBoardDAO.getContentInfo(map);
+	}
+	
+	
 }

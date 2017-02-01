@@ -2868,6 +2868,45 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getContentInfo" parameterClass="Map" resultClass="String">
+		<isEqual property="type" compareValue="BOARDCONTENT">
+			<![CDATA[
+				SELECT 
+					CONTENTLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_ITEM
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					ITEMID = #docID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BOARDCONTENTTEMP">
+			<![CDATA[
+				SELECT 
+					CONTENTLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_ITEM_TEMP
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					ITEMID = #docID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BOARDFORM">
+			<![CDATA[
+				SELECT 
+					FORMLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_BOARDINFO
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #docID#
+			]]>
+		</isEqual>
+	</select>
+	
 	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_Item_Attachments ( 
