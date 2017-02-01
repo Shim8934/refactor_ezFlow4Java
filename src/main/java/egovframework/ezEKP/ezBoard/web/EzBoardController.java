@@ -537,7 +537,9 @@ public class EzBoardController extends EgovFileMngUtil{
             	boardInfo.setSortBy(boardPropertyVO.getSortBy());
             }
             
-            pBoardName = boardInfo.getBoardName();
+            if (boardInfo.getBoardName() != null) {
+            	pBoardName = boardInfo.getBoardName();
+            }
         }
 
         model.addAttribute("boardInfo", boardInfo);

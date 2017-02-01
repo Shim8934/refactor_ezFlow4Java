@@ -88,7 +88,7 @@
             <isEqual property="v_STRLANG" compareValue="2"> result2 </isEqual> 
             <isEqual property="v_STRLANG" compareValue=""> result </isEqual>
          FROM 
-            EZBOARDSTD.TBL_Board_TreeCache 
+            TBL_Board_TreeCache 
          WHERE 
             TENANT_ID = #v_TENANTID#
          AND 
@@ -100,7 +100,7 @@
 			SELECT 
 				BOARDID || ';' BOARDID  
 	        FROM 
-	        	EZBOARDSTD.TBL_Board_BoardManage 
+	        	TBL_Board_BoardManage 
 	        WHERE
 	        	TENANT_ID = #v_TENANTID#
 	        AND  
@@ -125,14 +125,14 @@
              	(SELECT 
              		COUNT(*)
      			FROM 
-     				EZBOARDSTD.TBL_Board_MyTree 
+     				TBL_Board_MyTree 
     			WHERE  
     				TENANT_ID = #v_TENANTID#
     			AND
     				TREEUPPER = A.TREEID) CHILDCNT,
              	TREEBOARDID 
         	FROM 
-        		EZBOARDSTD.TBL_Board_MyTree A
+        		TBL_Board_MyTree A
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -159,7 +159,7 @@
 	                    A.gubun,
 	                    '' BoardGroupACL
 	              	FROM 
-	              		EZBOARDSTD.TBL_Board_BoardInfo A
+	              		TBL_Board_BoardInfo A
 	                JOIN 
 	                	(  SELECT 
 	                	   	   boardid ,
@@ -167,7 +167,7 @@
 	                           access_,
 	                           tenant_id
 	                       FROM 
-	                       	   EZBOARDSTD.TBL_Board_BoardManage 
+	                       	   TBL_Board_BoardManage 
 	                       WHERE
 	                       	   TENANT_ID = #v_TENANTID#
 	                       AND  
@@ -205,7 +205,7 @@
 	                    A.Gubun ,
 	                    B.BOARDGROUPACL BOARDGROUPACL  
 	                FROM 
-	                	EZBOARDSTD.TBL_Board_BoardInfo A
+	                	TBL_Board_BoardInfo A
 	                JOIN 
 	                	( SELECT 
 	                		C.BoardID ,
@@ -214,9 +214,9 @@
 	                        C.BoardGroupACL ,
 	                        C.tenant_id
 	                      FROM 
-	                      	EZBOARDSTD.TBL_Board_BoardManage C
+	                      	TBL_Board_BoardManage C
 	                      LEFT JOIN 
-	                      	EZBOARDSTD.TBL_Board_BoardInfo D   
+	                      	TBL_Board_BoardInfo D   
 	                      ON
 	                      	C.TENANT_ID = D.TENANT_ID 
 	                      AND
@@ -254,7 +254,7 @@
                     A.Gubun ,
                     '' BoardGroupACL
            		FROM 
-           			EZBOARDSTD.TBL_Board_BoardInfo A
+           			TBL_Board_BoardInfo A
           		WHERE
           			A.TENANT_ID = #v_TENANTID#
           		AND
@@ -285,7 +285,7 @@
                         		WIDTH ,
                         		VIEW_FG  
                         	FROM 
-                        		EZBOARDSTD.TBL_Board_Item_ListOption_Boar 
+                        		TBL_Board_Item_ListOption_Boar 
                         	WHERE
                         		tenant_id = #v_TENANTID#
                         	AND  
@@ -306,7 +306,7 @@
                	WIDTH ,
                	VIEW_FG  
        	    FROM 
-       	    	EZBOARDSTD.TBL_Board_Item_ListOption_Boar 
+       	    	TBL_Board_Item_ListOption_Boar 
             WHERE
             	tenant_id = #v_TENANTID#
             AND  
@@ -331,7 +331,7 @@
 				WIDTH ,
 				VIEW_FG  
             FROM 
-            	EZBOARDSTD.TBL_Board_Item_ListOption 
+            	TBL_Board_Item_ListOption 
             WHERE
             	tenant_id = #v_TENANTID#
             AND  
@@ -348,7 +348,7 @@
 			SELECT 
 				COUNT(BOARDID) CNT
 			FROM 
-				EZBOARDSTD.TBL_Board_BoardInfo 
+				TBL_Board_BoardInfo 
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
@@ -358,7 +358,7 @@
 	
 	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_MyBoards ( 
+			INSERT INTO TBL_Board_MyBoards ( 
 				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
 			)
          	( SELECT 
@@ -369,7 +369,7 @@
                 ( SELECT 
                 	COUNT(BOARDID) + 1
      			  FROM 
-     			  	EZBOARDSTD.TBL_Board_MyBoards 
+     			  	TBL_Board_MyBoards 
      			  WHERE
      			  	TENANT_ID = #v_TENANTID#
      			  AND  
@@ -377,14 +377,14 @@
                 ( SELECT 
                 	NVL(MAX(VIEWORDER), 1) + 1 
                   FROM 
-                  	EZBOARDSTD.TBL_Board_MyBoards 
+                  	TBL_Board_MyBoards 
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
                   	USERID = #v_PUSERID# ),
                 TENANT_ID
            	  FROM 
-           	  	EZBOARDSTD.TBL_Board_BoardInfo 
+           	  	TBL_Board_BoardInfo 
            	  WHERE
            	  	TENANT_ID = #v_TENANTID#
            	  AND
@@ -395,7 +395,7 @@
 	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
 		<![CDATA[
 			DELETE 
-				EZBOARDSTD.TBL_Board_TreeCache
+				TBL_Board_TreeCache
 	    	WHERE
 	    		TENANT_ID = #v_TENANTID#
 	    	AND  
@@ -406,7 +406,7 @@
 	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
 		<isEqual property="v_STRLANG" compareValue="2">
 			<![CDATA[
-				INSERT INTO EZBOARDSTD.TBL_Board_TreeCache ( 
+				INSERT INTO TBL_Board_TreeCache ( 
 					QUERY, 		RESULT2 , 	TENANT_ID 
 				)
 	        	VALUES ( 
@@ -416,7 +416,7 @@
 		</isEqual>
 		<isNotEqual property="v_STRLANG" compareValue="2">
 			<![CDATA[
-				INSERT INTO EZBOARDSTD.TBL_Board_TreeCache ( 
+				INSERT INTO TBL_Board_TreeCache ( 
 					QUERY, 		RESULT, 	TENANT_ID 
 				)
 	        	VALUES (
@@ -431,7 +431,7 @@
 			SELECT 
 				COUNT(AccessID) TOTALCOUNT
         	FROM 
-        		EZBOARDSTD.TBL_Board_BoardManage
+        		TBL_Board_BoardManage
         	WHERE 
         		TENANT_ID = #v_TENANTID#
             AND 
@@ -445,7 +445,7 @@
             	BoardID = ( SELECT 
             					BoardGroupID 
          					FROM 
-         						EZBOARDSTD.TBL_Board_BoardInfo 
+         						TBL_Board_BoardInfo 
          					WHERE  
          						TENANT_ID = #v_TENANTID#
          					AND 
@@ -455,18 +455,18 @@
 	
 	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardInfo ( 
+			INSERT INTO TBL_Board_BoardInfo ( 
 				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID 
 			)
      		VALUES ( 
-     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT NVL(MAX(BOARDNO), 0)  + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID# 
+     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT NVL(MAX(BOARDNO), 0)  + 1 FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID# 
      		)
 		]]>
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage( 
+			INSERT INTO TBL_Board_BoardManage( 
 				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID 
 			)
      		VALUES ( 
@@ -477,18 +477,18 @@
 	
 	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardInfo ( 
+			INSERT INTO TBL_Board_BoardInfo ( 
 				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID 
 			)
 	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 5, ( SELECT NVL(MAX(BOARDNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID# 
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT NVL(MAX(TREEVIEWORDER), 0) + 1 FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 5, ( SELECT NVL(MAX(BOARDNO), 0) + 1 FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID# 
 	   		)
 		]]>
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+			INSERT INTO TBL_Board_BoardManage ( 
 				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID 
 			)
      		VALUES ( 
@@ -502,7 +502,7 @@
 			SELECT 
 				PARENTBOARDID
        		FROM 
-       			EZBOARDSTD.TBL_BOARD_BOARDINFO 
+       			TBL_BOARD_BOARDINFO 
        		WHERE 
        			TENANT_ID = #tenantID#
        		AND
@@ -515,7 +515,7 @@
 			SELECT 
 				BOARDID
        		FROM 
-       			EZBOARDSTD.TBL_BOARD_BOARDINFO 
+       			TBL_BOARD_BOARDINFO 
        		WHERE 
        			TENANT_ID = #tenantID#
        		AND
@@ -525,7 +525,7 @@
 	
 	<update id="EzBoardAdminDAO.createBoard_U" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardInfo 
+			UPDATE TBL_Board_BoardInfo 
       		SET 
       			BOARDTREEPATH = #boardTreePath#
     		WHERE
@@ -537,7 +537,7 @@
 	
 	<update id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+			UPDATE TBL_Board_BoardInfo
             SET 
             	TreeViewOrder = #v_count#
             WHERE  
@@ -549,17 +549,17 @@
 	
 	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardBackGroundInfo ( 
+			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
 				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
 			)
            	VALUES ( 
-           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, NVL((select 0 from dual where 8 < (SELECT COUNT(*) FROM EZBOARDSTD.TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')), 1), ( SELECT COUNT(*) FROM EZBOARDSTD.TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, NVL((select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')), 1), ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
            	)
 		]]>
 	</insert>
 	
 	<update id="EzBoardAdminDAO.saveBackGroundImage_U" parameterClass="Map" >
-		UPDATE EZBOARDSTD.TBL_Board_BoardBackGroundInfo
+		UPDATE TBL_Board_BoardBackGroundInfo
            SET 
         	<isNotEmpty property="v_ORGFILENAME">
 	           	ORGFILENAME = #v_ORGFILENAME#,
@@ -577,7 +577,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_BoardManage
+			DELETE TBL_Board_BoardManage
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -587,7 +587,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_BoardInfo
+			DELETE TBL_Board_BoardInfo
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -597,7 +597,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardMyBoard" parameterClass="Map" >
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_MyBoards
+			DELETE TBL_Board_MyBoards
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -607,7 +607,7 @@
 	
 	<insert id="EzBoardAdminDAO.insertDeleteReservedBoard" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_DeleteReservedBoard( 
+			INSERT INTO TBL_Board_DeleteReservedBoard( 
 				BoardID, 	  TENANT_ID
 			)
       		VALUES ( 
@@ -618,7 +618,7 @@
 	
 	<update id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+			UPDATE TBL_Board_BoardInfo
          	SET 
          		ParentBoardID = #v_pNewParentBoardID#,
              	BoardGroupID = #v_pNewBoardGroupID#
@@ -631,7 +631,7 @@
 	
 	<update id="EzBoardAdminDAO.moveBoard2" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardManage
+			UPDATE TBL_Board_BoardManage
             SET 
             	ParentBoardID = #v_pNewParentBoardID#
            	WHERE
@@ -643,7 +643,7 @@
 	
 	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+			UPDATE TBL_Board_BoardInfo
       		SET 
       			BOARDDESCRIPTION = #v_PDESCRIPTION#,
           		ITEMEXPIRES = #v_PEXPIRES#,
@@ -670,7 +670,7 @@
 	
 	<update id="EzBoardAdminDAO.saveBoardProperty2" parameterClass="Map" >
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyBoards
+			UPDATE TBL_Board_MyBoards
       		SET 
       			BOARDNAME = #v_PBOARDNAME#,
           		BOARDNAME2 = #v_PBOARDNAME2#
@@ -705,7 +705,7 @@
 	            T1.DELETE_FG ,
 	            T1.POSTNOTICE 
         	FROM 
-        		EZBOARDSTD.TBL_Board_BoardManage T1
+        		TBL_Board_BoardManage T1
         	JOIN 
         		EZHRMASTER.TBLUSERMASTER T2   
         	ON 
@@ -741,7 +741,7 @@
 	            T1.DELETE_FG ,
 	            T1.POSTNOTICE 
         	FROM 
-        		EZBOARDSTD.TBL_Board_BoardManage T1
+        		TBL_Board_BoardManage T1
         	JOIN 
         		EZHRMASTER.TBLDEPTMASTER T3   
         	ON 
@@ -757,18 +757,18 @@
 	
 	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_MyTree ( 
+			INSERT INTO TBL_Board_MyTree ( 
 				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID 
 			)
             VALUES ( 
-            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT NVL(MAX(TREESTEP), 0) + 1 FROM EZBOARDSTD.TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
+            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT NVL(MAX(TREESTEP), 0) + 1 FROM TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
             )
 		]]>
 	</insert>
 	
 	<update id="EzBoardAdminDAO.setMyBoardTreeConfig_M" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyTree
+			UPDATE TBL_Board_MyTree
 		    SET 
 		    	TREENAME = #treeName#,
 		    	TREENAME2 = #treeName2#
@@ -783,7 +783,7 @@
 	
 	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_MyTree
+			DELETE TBL_Board_MyTree
 			WHERE  
 				TENANT_ID = #tenantID#
 			AND
@@ -796,13 +796,13 @@
 	
 	<update id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyTree
+			UPDATE TBL_Board_MyTree
             SET 
             	TREEUPPER = #moveTreeID#,
             	TREESTEP = ( SELECT 
             					COUNT(TREENAME) + 1 
                              FROM 
-                             	EZBOARDSTD.TBL_Board_MyTree 
+                             	TBL_Board_MyTree 
                              WHERE  
                              	TREEUPPER = #moveTreeID#
                              AND 
@@ -821,7 +821,7 @@
 			SELECT 
 				COUNT(AccessID)
      		FROM 
-     			EZBOARDSTD.TBL_Board_BoardManage 
+     			TBL_Board_BoardManage 
      		WHERE  
      			tenant_id = #v_TENANTID#
      		AND
@@ -833,7 +833,7 @@
 	
 	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+			INSERT INTO TBL_Board_BoardManage ( 
 				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id 
 			)
         	VALUES ( 
@@ -844,7 +844,7 @@
 	
 	<update id="EzBoardAdminDAO.saveACL_U" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardManage
+			UPDATE TBL_Board_BoardManage
          	SET 
          		inherit_FG = #v_pInherit#,
              	BoardAdmin_FG = #v_pAdmin#,
@@ -867,7 +867,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_BoardManage
+			DELETE TBL_Board_BoardManage
       		WHERE
       			tenant_id = #v_TENANTID#
       		AND  
@@ -898,9 +898,9 @@
                 	B.PostNotice ,
                 	B.BoardGroupACL 
            		FROM 
-           			EZBOARDSTD.TBL_Board_BoardManage B
+           			TBL_Board_BoardManage B
                 JOIN 
-                	EZBOARDSTD.TBL_Board_BoardInfo A   
+                	TBL_Board_BoardInfo A   
                 ON 
                 	A.tenant_id = B.tenant_id
                 AND
@@ -917,7 +917,7 @@
 					BOARDID ,
                 	PARENTBOARDID
            		FROM 
-           			EZBOARDSTD.TBL_Board_BoardInfo A
+           			TBL_Board_BoardInfo A
         		WHERE  
         			TENANT_ID = #v_TENANTID#
         		AND
@@ -927,7 +927,7 @@
 	</select>
 	
 	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
-		UPDATE EZBOARDSTD.TBL_Board_BoardManage
+		UPDATE TBL_Board_BoardManage
         SET 
         	BOARDID = #v_pBoardID#,
             ACCESSID = #v_pAccessID#,
@@ -959,7 +959,7 @@
 	</update>
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
-		INSERT INTO EZBOARDSTD.TBL_Board_BoardManage (
+		INSERT INTO TBL_Board_BoardManage (
 			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
 		)
         VALUES ( 
@@ -969,7 +969,7 @@
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+			INSERT INTO TBL_Board_BoardManage ( 
 				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
 			)
             ( SELECT 
@@ -991,7 +991,7 @@
                 BOARDGROUPACL,
                 TENANT_ID
       	      FROM 
-      	      	EZBOARDSTD.TBL_Board_BoardManage 
+      	      	TBL_Board_BoardManage 
               WHERE  
               	TENANT_ID = #v_TENANTID#
               AND
@@ -1001,7 +1001,7 @@
 	
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_BoardManage ( 
+			INSERT INTO TBL_Board_BoardManage ( 
 				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
 			)
         	( SELECT
@@ -1023,7 +1023,7 @@
                 BOARDGROUPACL ,
                 TENANT_ID
           	  FROM 
-          	  	EZBOARDSTD.TBL_Board_BoardManage 
+          	  	TBL_Board_BoardManage 
           	  WHERE  
           	  	TENANT_ID = #v_TENANTID#
           	  AND
@@ -1033,7 +1033,7 @@
 	
 	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_ApprList
+			DELETE TBL_Board_ApprList
           	WHERE
           		TENANT_ID = #v_TENANTID#
           	AND  
@@ -1043,7 +1043,7 @@
 	
 	<insert id="EzBoardAdminDAO.saveBoardProperty_appr_I" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_ApprList ( 
+			INSERT INTO TBL_Board_ApprList ( 
 				BOARDID, APPRUSERID, TENANT_ID 
 			)
           	VALUES ( 
@@ -1055,7 +1055,7 @@
 	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
 		<isEqual property="v_PMODE" compareValue="Y">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Item
+				UPDATE TBL_Board_Item
            		SET 
            			APPRFLAG = 'N'
          		WHERE  
@@ -1066,7 +1066,7 @@
 		</isEqual>
 		<isNotEqual property="v_PMODE" compareValue="Y">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Item
+				UPDATE TBL_Board_Item
            		SET 
            			APPRFLAG = NULL
          		WHERE  
@@ -1081,7 +1081,7 @@
 		SELECT 
 			COUNT(BOARDID) CNT 
         FROM 
-        	EZBOARDSTD.TBL_Board_BoardInfo 
+        	TBL_Board_BoardInfo 
         WHERE
         	TENANT_ID = #v_TENANTID#
         AND  
@@ -1095,7 +1095,7 @@
 	
 	<update id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_BoardInfo
+			UPDATE TBL_Board_BoardInfo
       		SET 
       			FORMLOCATION = #v_PFORMLOCATION#
     		WHERE  
@@ -1110,7 +1110,7 @@
 			SELECT 
 				DISTINCT appruserid 
 			FROM 
-				ezBoardSTD.TBL_BOARD_APPRLIST
+				TBL_BOARD_APPRLIST
 			WHERE 
 				tenant_id = #tenantID#
 		]]>
@@ -1127,7 +1127,7 @@
 				'' as gubun,
 				'' as boardgroupacl
 			FROM 
-				ezBoardSTD.TBL_Board_BoardInfo
+				TBL_Board_BoardInfo
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -1158,7 +1158,7 @@
 	            postnotice ,
 	            boardgroupacl  
 	       FROM 
-	        	ezBoardSTD.TBL_BOARD_BOARDMANAGE 
+	        	TBL_BOARD_BOARDMANAGE 
 	       WHERE  
 	       		TENANT_ID = #tenantID#
 	       AND
@@ -1183,7 +1183,7 @@
 	            width ,
 	            height
 	       FROM 
-	        	ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO	       
+	        	TBL_BOARD_BOARDBACKGROUNDINFO	       
 	       WHERE
 	       		tenant_id = #tenantID#
 		]]>
@@ -1204,7 +1204,7 @@
        			coltype ,
        			must  
 	       FROM 
-	       		ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE 
+	       		TBL_BOARD_BOARDINFO_ATTRIBUTE 
 	       WHERE  
 	       		tenant_id = #v_TENANTID#
 	       AND
@@ -1216,7 +1216,7 @@
 	
 	<insert id="EzBoardAdminDAO.saveAttribute" parameterClass="BoardAttributeVO">
 		<![CDATA[
-			INSERT INTO	ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE(
+			INSERT INTO	TBL_BOARD_BOARDINFO_ATTRIBUTE(
 				boardid, 	tablecol, 		sn, 	colname1,	 	colname2, 		value, 		coltype, 	must,   tenant_id
 			)
 			VALUES(
@@ -1227,7 +1227,7 @@
 	
 	<insert id="EzBoardAdminDAO.saveHeader" parameterClass="BoardListHeaderVO">
 		<![CDATA[
-			INSERT INTO	ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR(
+			INSERT INTO	TBL_BOARD_ITEM_LISTOPTION_BOAR(
 				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg, tenant_id
 			)
 			VALUES(
@@ -1237,7 +1237,7 @@
 	</insert>
 	
 	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">		
-		UPDATE ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO
+		UPDATE TBL_BOARD_BOARDBACKGROUNDINFO
 		SET
 			<isEqual property="type" compareValue="U"> isuse = #isUse#</isEqual>
 			<isNotEqual property="type" compareValue="U"> sn = #isUse#</isNotEqual>
@@ -1249,7 +1249,7 @@
 	
 	<update id="EzBoardAdminDAO.updateAttribute" parameterClass="BoardAttributeVO">
 		<![CDATA[		
-			UPDATE ezBoardSTD.TBL_BOARD_BOARDINFO
+			UPDATE TBL_BOARD_BOARDINFO
 			SET
 				attributeyn = #value#	
 			WHERE
@@ -1262,7 +1262,7 @@
 	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">
 		<![CDATA[		
 			DELETE FROM 
-				ezBoardSTD.TBL_BOARD_BOARDBACKGROUNDINFO		
+				TBL_BOARD_BOARDBACKGROUNDINFO		
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -1273,7 +1273,7 @@
 	<delete id="EzBoardAdminDAO.deleteAttribute" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
-				ezBoardSTD.TBL_BOARD_BOARDINFO_ATTRIBUTE		
+				TBL_BOARD_BOARDINFO_ATTRIBUTE		
 			WHERE
 				tenant_id = #v_TENANTID#
 			AND
@@ -1284,7 +1284,7 @@
 	<delete id="EzBoardAdminDAO.deleteHeader" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM 
-				ezBoardSTD.TBL_BOARD_ITEM_LISTOPTION_BOAR		
+				TBL_BOARD_ITEM_LISTOPTION_BOAR		
 			WHERE
 				tenant_id = #v_TENANTID#
 			AND
@@ -1295,7 +1295,7 @@
 	<delete id="EzBoardAdminDAO.trunkBoard" parameterClass="Integer">
 		<![CDATA[
 			DELETE FROM
-				ezBoardSTD.TBL_BOARD_TREECACHE
+				TBL_BOARD_TREECACHE
 			WHERE
 				tenant_id = #tenantID#
 		]]>
