@@ -245,18 +245,20 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 	
 	@Override
-	public int getSubResCnt(String resID, String companyID) throws Exception {
+	public int getSubResCnt(String resID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resID", resID);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		return ezResourceAdminDAO.getSubResCnt(map);
 	}
 	
 	@Override
-	public int getSubClsCnt(String resID, String companyID) throws Exception {
+	public int getSubClsCnt(String resID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resID", resID);
 		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
 		return ezResourceAdminDAO.getSubClsCnt(map);
 	}
 
@@ -305,29 +307,27 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		return true;
 	}
 	
-	public String getSubCntOfCls(String xmlStr) {
+	public String getSubCntOfCls(String xmlStr, int tenantID) throws Exception {
 		String resID = "";
 		String companyID = "";
 		int resCnt = 0;
 		int clsCnt = 0;
 		StringBuilder returnXML = new StringBuilder();
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
-		try {
-			resID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
-			companyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
-			
-			resCnt = getSubResCnt(resID, companyID);
-			clsCnt = getSubClsCnt(resID, companyID);
-			
-			returnXML.append("<RTN_DATA>");
-			returnXML.append("<ERRCHK>True</ERRCHK>");
-			returnXML.append("<ERRDESC></ERRDESC>");
-			returnXML.append("<SUBRESCNT>" + resCnt + "</SUBRESCNT>");
-			returnXML.append("<SUBCLSCNT>" + clsCnt + "</SUBCLSCNT>");
-			returnXML.append("</RTN_DATA>");
-		} catch (Exception e) {
-			e.printStackTrace(); 
-		}
+		
+		resID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
+		companyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
+		
+		resCnt = getSubResCnt(resID, companyID, tenantID);
+		clsCnt = getSubClsCnt(resID, companyID, tenantID);
+		
+		returnXML.append("<RTN_DATA>");
+		returnXML.append("<ERRCHK>True</ERRCHK>");
+		returnXML.append("<ERRDESC></ERRDESC>");
+		returnXML.append("<SUBRESCNT>" + resCnt + "</SUBRESCNT>");
+		returnXML.append("<SUBCLSCNT>" + clsCnt + "</SUBCLSCNT>");
+		returnXML.append("</RTN_DATA>");
+	
 		return returnXML.toString();
 	}
 	

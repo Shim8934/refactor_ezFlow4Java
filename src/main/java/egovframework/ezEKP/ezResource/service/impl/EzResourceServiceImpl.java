@@ -98,11 +98,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID,String memberID) throws Exception {
+	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID,String memberID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("resID", resID);
 		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
 		return ezResourceDAO.getAdmFlag(map);
 	}
 
@@ -2339,11 +2340,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return strDate;
 	}
 	
-	public String getAdminFlag(String companyID, String brdID, String userID) throws Exception {
+	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID) throws Exception {
 		String accessLvl = "";
 
 		
-		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID);
+		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
 
 		String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);

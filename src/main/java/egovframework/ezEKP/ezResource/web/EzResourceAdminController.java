@@ -473,7 +473,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			tempStr.append("<NODE>"+companyID+"</NODE>");
 			tempStr.append("</PARA_DATA>");
 			
-			strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString());
+			strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
 
 			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
 			
@@ -573,7 +573,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			strXMLPara.append("<NODE>" + selCompanyID + "</NODE>");
 			strXMLPara.append("</PARA_DATA>");
 			
-			String strRtnXML = ezResourceAdminService.getSubCntOfCls(strXMLPara.toString());
+			String strRtnXML = ezResourceAdminService.getSubCntOfCls(strXMLPara.toString(), userInfo.getTenantId());
 			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
 			
 			String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
@@ -655,7 +655,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				tempStr.append("<DATA>"+companyID+"</DATA>");
 				tempStr.append("</PARA_DATA>");
 				
-				String strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString());
+				String strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
 				Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
 				
 				String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
