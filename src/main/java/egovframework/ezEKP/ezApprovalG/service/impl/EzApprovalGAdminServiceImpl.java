@@ -2134,10 +2134,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("tenantID", tenantID);
 		
 		logger.debug("insertFormContainerConti started.");
-		String contID = ezApprovalGAdminDAO.insertFormContainerConti(map).toString();
+		String contID = ezApprovalGAdminDAO.insertFormContainerConti(map);
 		logger.debug("insertFormContainerConti ended. contID=" + contID);
 		
-		if (contID.substring(0, 4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
+		if (contID != null && contID.substring(0, 4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
 			int tempID = Integer.parseInt(contID) + 1;
 			contID = Integer.toString(tempID);
 		} else {

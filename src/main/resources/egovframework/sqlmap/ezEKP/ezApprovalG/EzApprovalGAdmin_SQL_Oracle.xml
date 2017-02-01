@@ -2391,10 +2391,10 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.insertFormContainerConti"
-		parameterClass="Map" resultClass="Integer">
+		parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				NVL(MAX(formcontid),0)  
+				MAX(formcontid)  
 			FROM
 				TBL_FORMCONTAINER
 			WHERE

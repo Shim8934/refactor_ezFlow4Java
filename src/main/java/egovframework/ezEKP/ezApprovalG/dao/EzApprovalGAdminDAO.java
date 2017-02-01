@@ -139,8 +139,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalGAdmin.insertContainerContID", map);
 	}
 	
-	public Integer insertFormContainerConti(Map<String, Object> map) throws Exception {
-		return (Integer) select("EzApprovalGAdmin.insertFormContainerConti", map);
+	public String insertFormContainerConti(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdmin.insertFormContainerConti", map);
 	}
 	
 	public String setFormDataSelect(Map<String, Object> map) throws Exception {
