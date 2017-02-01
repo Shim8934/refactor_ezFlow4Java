@@ -28,12 +28,6 @@
 		<result property="position"						column="POSITION"				columnIndex="8"/>		
 	</resultMap>
 	
-<!-- 	<procedure id="EzPersonalAdmin.EZSP_GETNOTICEINFO" 			parameterClass="String"		resultMap="personalNoticeVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETNOTICEINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_GETNOTICEINFO" parameterClass="Map"		resultMap="personalNoticeVO">
 		<![CDATA[
 			SELECT
@@ -43,19 +37,13 @@
              	CONTENT,
              	ITEMSEQ
         	FROM
-        		EZPERSONAL.TBL_PS_NOTICE 
+        		TBL_PS_NOTICE 
        		WHERE
        			ITEMSEQ = #v_pItemSeq#
        		AND
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETPOPUPINFO" 			parameterClass="String"		resultMap="personalPopupVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOPUPINFO(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETPOPUPINFO" parameterClass="Map"		resultMap="personalPopupVO">
 		<![CDATA[
@@ -69,19 +57,13 @@
              	STARTDATE ,
              	ENDDATE 
         	FROM
-        		EZPERSONAL.TBLPOPUP 
+        		TBL_PS_POPUP 
        		WHERE
        			ITEMSEQ = #v_pItemSeq#
        		AND
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETNOTICELIST" 			parameterClass="Map"		resultClass="PersonalNoticeVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETNOTICELIST(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETNOTICELIST" parameterClass="Map"		resultClass="PersonalNoticeVO">
 		<isEqual property="v_pStart" compareValue="0">
@@ -95,7 +77,7 @@
                     		TITLE ,
                     		TITLE2 
            				FROM
-           					EZPERSONAL.TBL_PS_NOTICE 
+           					TBL_PS_NOTICE 
           				WHERE
           					COMPANYID = #v_pCompanyID#
           				AND
@@ -126,7 +108,7 @@
                                   			TITLE ,
                                   			TITLE2 
                   						FROM
-                  							EZPERSONAL.TBL_PS_NOTICE 
+                  							TBL_PS_NOTICE 
                    						WHERE
                    							CompanyID = #v_pCompanyID#
                    						AND
@@ -134,7 +116,7 @@
                     					ORDER BY
                     						ITEMSEQ ASC )
                     			WHERE
-                    				ROWNUM <= #v_pTotal# - #v_pStart# ) TEMPTBL_PS_NOTICE
+                    				ROWNUM <= #v_pTotal# - #v_pStart# ) temp
            				ORDER BY
            					ITEMSEQ DESC )
            		WHERE
@@ -142,12 +124,6 @@
 			]]>
 		</isNotEqual>
 	</select>
-	
-	 <!-- <procedure id="EzPersonalAdmin.EZSP_GETPOLLLIST" 			parameterClass="Map"		resultClass="PersonalLightPollVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOLLLIST(#v_pCompanyID#, #v_pTotal#, #v_pCount#, #v_pStart#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> --> 
 	
 	 <select id="EzPersonalAdmin.EZSP_GETPOLLLIST" parameterClass="Map"		resultClass="PersonalLightPollVO">
 		<isEqual property="v_pStart" compareValue="0">
@@ -162,7 +138,7 @@
                          	STARTDATE ,
                          	NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
            				FROM
-           					EZPERSONAL.TBLLIGHTPOLL 
+           					TBL_PS_LIGHTPOLL 
           				WHERE
           					COMPANYID = #v_pCompanyID#
           				AND
@@ -190,7 +166,7 @@
                                   						STARTDATE ,
                                   						NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
                   									FROM
-                  										EZPERSONAL.TBLLIGHTPOLL 
+                  										TBL_PS_LIGHTPOLL 
                    									WHERE
                    										COMPANYID = #v_pCompanyID#
                    									AND
@@ -198,19 +174,13 @@
                     								ORDER BY
                     									ITEMSEQ ASC )
                     					WHERE
-                    						ROWNUM <= #v_pTotal# - #v_pStart# ) TEMPTBLLIGHTPOLL
+                    						ROWNUM <= #v_pTotal# - #v_pStart# ) temp
            					ORDER BY ITEMSEQ DESC )
            		WHERE
            			ROWNUM <= #v_pCount#
 			]]>
 		</isNotEqual>
 	</select> 
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETSLIDERLIST" 			parameterClass="Map"		resultClass="PersonalSliderImageVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETSLIDERLIST(#v_COMPANYID#, #v_MODE#, #v_SLIDERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETSLIDERLIST" parameterClass="Map"		resultClass="PersonalSliderImageVO">
 		<isEqual property="v_MODE" compareValue="ADMIN">
@@ -226,7 +196,7 @@
                    		SN ,
                    		ISUSE 
               		FROM
-              			EZPERSONAL.TBL_SLIDERIMAGE 
+              			TBL_PS_SLIDERIMAGE 
              		WHERE
              			COMPANYID = #v_COMPANYID#
              		AND
@@ -248,7 +218,7 @@
                    		SN ,
                    		ISUSE 
               		FROM
-              			EZPERSONAL.TBL_SLIDERIMAGE 
+              			TBL_PS_SLIDERIMAGE 
              		WHERE
              			COMPANYID = #v_COMPANYID#
                     AND
@@ -273,7 +243,7 @@
                 	SN ,
                 	ISUSE 
            		FROM
-           			EZPERSONAL.TBL_SLIDERIMAGE 
+           			TBL_PS_SLIDERIMAGE 
           		WHERE
           			COMPANYID = #v_COMPANYID#
                 AND
@@ -285,12 +255,6 @@
 			]]>
 		</isNotEqual>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK" 			parameterClass="String"		resultClass="PersonalQuickLinkVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETQUICKLINK(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK" parameterClass="Map" resultClass="PersonalQuickLinkVO">
 		<![CDATA[
@@ -305,19 +269,13 @@
              	REGUSERID ,
              	SIZE_ 
         	FROM
-        		EZPERSONAL.TBLQUICKLINK 
+        		TBL_PS_QUICKLINK 
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
        			TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" 		parameterClass="String"		resultClass="PersonalQuickLinkVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETQUICKLINK_ACL(#v_QUICKLINKID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINK_ACL" parameterClass="Map"		resultClass="PersonalQuickLinkVO">
 		<![CDATA[
@@ -328,7 +286,7 @@
              	ACCESSNAME2 ,
              	VIEW_FLAG 
         	FROM
-        		EZPERSONAL.TBLQUICKLINK_ACL 
+        		TBL_PS_QUICKLINK_ACL 
        		WHERE
        			QUICKLINKID = #v_QUICKLINKID#
        		AND
@@ -336,19 +294,13 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETPOLLRESULT" 			parameterClass="String"		resultClass="PersonalLightPollVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOLLRESULT(#v_pItemSeq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_GETPOLLRESULT" parameterClass="Map"		resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
 				RESULT ,
              	COUNT(RESULT)  COUNT  
         	FROM
-        		EZPERSONAL.TBLLIGHTPOLLRESULT 
+        		TBL_PS_LIGHTPOLLRESULT 
        		WHERE
        			ITEMSEQ = #v_pItemSeq#
        		AND
@@ -359,12 +311,6 @@
         		RESULT
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETPOLLINFO" 			parameterClass="String"		resultClass="PersonalLightPollVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOLLINFO(#v_pItemSwq#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETPOLLINFO" parameterClass="Map"		resultClass="PersonalLightPollVO">
 		<![CDATA[
@@ -386,19 +332,13 @@
 	            ANSWER9 ,
 	            ANSWER10 
 	        FROM 
-				EZPERSONAL.TBLLIGHTPOLL 
+				TBL_PS_LIGHTPOLL 
 	       	WHERE
 				ITEMSEQ = #v_pItemSeq#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETPOPUPLIST" 			parameterClass="String"		resultClass="PersonalPopupVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOPUPLIST(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETPOPUPLIST" parameterClass="Map"		resultClass="PersonalPopupVO">
 		<![CDATA[
@@ -412,7 +352,7 @@
              	HEIGHT ,
              	POSITION 
         	FROM
-        		EZPERSONAL.TBLPOPUP 
+        		TBL_PS_POPUP 
        		WHERE
        			COMPANYID = #v_pCompanyID#
        		AND
@@ -422,18 +362,12 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" 		parameterClass="String"		resultClass="PersonalEmpMonthVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETEMPLOYEEMONTH(#v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" parameterClass="Map"		resultClass="PersonalEmpMonthVO">
 		<![CDATA[
 			SELECT
 				* 
         	FROM
-        		EZPERSONAL.TBLEMPMONTH 
+        		TBL_PS_EMPMONTH 
        		WHERE
        			PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
        		AND
@@ -442,12 +376,6 @@
         		DATE_ DESC
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST" 									resultClass="PersonalQuickLinkVO" >
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETQUICKLINKLIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-		]]>
-	</procedure> -->
 	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKLIST"  parameterClass="Map" resultClass="PersonalQuickLinkVO">
 		<![CDATA[
@@ -465,7 +393,7 @@
 	            U.DISPLAYNAME DISPLAYNAME  ,
 	            U.DISPLAYNAME2 DISPLAYNAME2  
         	FROM
-        		EZPERSONAL.TBLQUICKLINK Q
+        		TBL_PS_QUICKLINK Q
             JOIN
             	EZHRMASTER.TBLUSERMASTER U
             ON
@@ -479,19 +407,13 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETNOTICECOUNT"			parameterClass="Map"		resultClass="Integer">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETNOTICECOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>	
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_GETNOTICECOUNT" parameterClass="Map"		resultClass="Integer">
 		<isEqual property="v_pMode" compareValue="A">
 			<![CDATA[
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBL_PS_NOTICE 
+           			TBL_PS_NOTICE 
           		WHERE
           			COMPANYID = #v_pCompanyID#
           		AND
@@ -503,7 +425,7 @@
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBL_PS_NOTICE 
+           			TBL_PS_NOTICE 
           		WHERE
           			COMPANYID = #v_pCompanyID#
                 OR
@@ -514,19 +436,13 @@
 		</isNotEqual>
 	</select>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_GETPOLLCOUNT"			parameterClass="Map"		resultClass="Integer">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_GETPOLLCOUNT(#v_pCompanyID#, #v_pMode#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>	
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_GETPOLLCOUNT" parameterClass="Map"		resultClass="Integer">
 		<isEqual property="v_pMode" compareValue="A">
 			<![CDATA[
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBLLIGHTPOLL 
+           			TBL_PS_LIGHTPOLL 
           		WHERE
           			COMPANYID = #v_pCompanyID#
           		AND
@@ -538,7 +454,7 @@
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBLLIGHTPOLL 
+           			TBL_PS_LIGHTPOLL 
           		WHERE
           			COMPANYID = #v_pCompanyID#
                 OR
@@ -549,32 +465,20 @@
 		</isNotEqual>
 	</select>
 	
-	<!--  <procedure id="EzPersonalAdmin.EZSP_INSERTNOTICE"			parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_INSERTNOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
-		]]>	
-	</procedure>  -->
-	
 	 <insert id="EzPersonalAdmin.EZSP_INSERTNOTICE" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBL_PS_NOTICE
+				TBL_PS_NOTICE
      			( COMPANYID, TITLE, TITLE2, CONTENT, POSTDATE, TENANT_ID )
      		VALUES
      			( #companyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID# )
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM"		parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_SETQUICKLINKITEM(#v_PMODE#, #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, #v_QUICKLINKNAME4#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#)}
-		]]>	
-	</procedure> -->
-	
 	<insert id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLQUICKLINK
+				TBL_PS_QUICKLINK
         		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, TENANT_ID )
         	VALUES
         		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, #v_QUICKLINKNAME4#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
@@ -584,7 +488,7 @@
 	<update id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBLQUICKLINK
+				TBL_PS_QUICKLINK
          	SET
          		QUICKLINKNAME = #v_QUICKLINKNAME#,
              	QUICKLINKNAME2 = #v_QUICKLINKNAME2#,
@@ -602,16 +506,10 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL"		parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_SETQUICKLINK_ACL(#v_PMODE#, #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLQUICKLINK_ACL
+				TBL_PS_QUICKLINK_ACL
 	       WHERE
 	       		QUICKLINKID = #v_QUICKLINKID#
 	       	AND
@@ -622,23 +520,17 @@
 	<insert id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLQUICKLINK_ACL
+				TBL_PS_QUICKLINK_ACL
         		( QUICKLINKID, ACCESSID, ACCESSNAME, ACCESSNAME2, VIEW_FLAG, TENANT_ID )
         	VALUES
         		( #v_QUICKLINKID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, #v_VIEW_FLAG#, #tenantID# )
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_UPDATENOTICE"			parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_UPDATENOTICE(#v_pCompanyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #v_pItemSeq#)}
-		]]>	
-	</procedure> -->
-	
 	<update id="EzPersonalAdmin.EZSP_UPDATENOTICE" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBL_PS_NOTICE
+				TBL_PS_NOTICE
       		SET
       			TITLE = #v_pTitle#,
           		TITLE2 = #v_pTitle2#,
@@ -650,16 +542,10 @@
 		]]>
 	</update>
 
-	<!-- <procedure id="EzPersonalAdmin.EZSP_INSERTPOLL"				parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_INSERTPOLL(#v_pCompanyID#, #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#)}
-		]]>	
-	</procedure> -->
-	
 	<update id="EzPersonalAdmin.EZSP_INSERTPOLL_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBLLIGHTPOLL
+				TBL_PS_LIGHTPOLL
       		SET
       			ENDDATE = #nowDate#
     		WHERE
@@ -672,7 +558,7 @@
 	<update id="EzPersonalAdmin.EZSP_INSERTPOLL_U2" parameterClass="Map"> 
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBLLIGHTPOLL
+				TBL_PS_LIGHTPOLL
          	SET
          		ENDDATE = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
        		WHERE
@@ -687,7 +573,7 @@
 	<insert id="EzPersonalAdmin.EZSP_INSERTPOLL_I1" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLLIGHTPOLL
+				TBL_PS_LIGHTPOLL
         		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
         		( #v_pCompanyID#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
@@ -697,39 +583,27 @@
 	<insert id="EzPersonalAdmin.EZSP_INSERTPOLL_I2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLLIGHTPOLL
+				TBL_PS_LIGHTPOLL
         		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
         		( UPPER(#v_pCompanyID#), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
-<!-- 	<procedure id="EzPersonalAdmin.EZSP_INSERTPOPUP"			parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_INSERTPOPUP(#v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
-		]]>	
-	</procedure> -->
-	
 	<insert id="EzPersonalAdmin.EZSP_INSERTPOPUP" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLPOPUP
+				TBL_PS_POPUP
      			( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID )
    			VALUES 
      			( #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# )
 		]]>
 	</insert>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_UPDATEPOPUP"			parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_UPDATEPOPUP(#v_pItemSeq#, #v_pStartDate#, #v_pEndDate#, #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#)}
-		]]>	
-	</procedure> -->
-	
 	<update id="EzPersonalAdmin.EZSP_UPDATEPOPUP" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBLPOPUP
+				TBL_PS_POPUP
       		SET
       			STARTDATE = TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'),
           		ENDDATE = TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'),
@@ -746,16 +620,10 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH"		parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_SETEMPLOYEEMONTH(#v_pType#, #v_pUserID#, #v_pDeptID#, #v_pTerm#, #tenantID#)}
-		]]>	
-	</procedure> -->
-	
 	<insert id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLEMPMONTH
+				TBL_PS_EMPMONTH
         		( CN, DISPLAYNAME, DISPLAYNAME2, DEPARTMENT, DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TERM, DATE_, TENANT_ID)
         		( 	SELECT
 	        			CN ,
@@ -822,7 +690,7 @@
 	<delete id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLEMPMONTH
+				TBL_PS_EMPMONTH
 	  	    WHERE
 	  	    	TERM = #v_pTerm#
 	  	    AND
@@ -830,25 +698,21 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE"			parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_SETSLIDERIMAGE(#v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, #v_MODE#)}
-		]]>	
-	</procedure> -->
-	
 	<select id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_S" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				COUNT(*)  
 		    FROM
-		    	EZPERSONAL.TBL_SLIDERIMAGE
+		    	TBL_PS_SLIDERIMAGE
+		    WHERE
+	  	    	TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
 	<insert id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBL_SLIDERIMAGE
+				TBL_PS_SLIDERIMAGE
         		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID )
         	VALUES
         		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, 1, #count# + 1, #tenantID# )
@@ -858,7 +722,7 @@
 	<update id="EzPersonalAdmin.EZSP_SETSLIDERIMAGE_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBL_SLIDERIMAGE
+				TBL_PS_SLIDERIMAGE
          	SET
          		SLIDERNAME = #v_SLIDERNAME#,
              	SLIDERNAME2 = #v_SLIDERNAME2#,
@@ -871,17 +735,11 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_STATUSCHANGESLIDER"		parameterClass="Map">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_STATUSCHANGESLIDER(#v_SLIDERID#, #v_VALUE#, #v_MODE#)}
-		]]>	
-	</procedure> -->
-	
 	<update id="EzPersonalAdmin.EZSP_STATUSCHANGESLIDER" parameterClass="Map">
 		<isEqual property="v_MODE" compareValue="U">
 			<![CDATA[
 				 UPDATE
-				 	EZPERSONAL.TBL_SLIDERIMAGE
+				 	TBL_PS_SLIDERIMAGE
          		SET
          			ISUSE = #v_VALUE#
        			WHERE
@@ -893,7 +751,7 @@
 		<isNotEqual property="v_MODE" compareValue="U">
 			<![CDATA[
 				 UPDATE
-				 	EZPERSONAL.TBL_SLIDERIMAGE
+				 	TBL_PS_SLIDERIMAGE
          		SET
          			SN = #v_VALUE#
        			WHERE
@@ -904,16 +762,10 @@
 		</isNotEqual>
 	</update>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_DELETENOTICE"			parameterClass="String">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_DELETENOTICE(#v_pItemSeq#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.EZSP_DELETENOTICE" parameterClass="Map">
 		<![CDATA[
 			 DELETE
-			 	EZPERSONAL.TBL_PS_NOTICE
+			 	TBL_PS_NOTICE
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
     		AND
@@ -921,16 +773,10 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_DELETEPOLL"				parameterClass="String">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_DELETEPOLL(#v_pItemSeq#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLLIGHTPOLL
+				TBL_PS_LIGHTPOLL
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
     		AND
@@ -941,7 +787,7 @@
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLLIGHTPOLLRESULT
+				TBL_PS_LIGHTPOLLRESULT
 		    WHERE
 		    	ITEMSEQ = #v_pItemSeq#
 		    AND
@@ -949,16 +795,10 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_DELETEPOPUP"			parameterClass="String">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_DELETEPOPUP(#v_pItemSeq#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOPUP" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLPOPUP
+				TBL_PS_POPUP
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
     		AND
@@ -966,16 +806,10 @@
 		]]>
 	</delete>
 	
-	<!-- <procedure id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE"			parameterClass="String">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_DELSLIDERIMAGE(#v_SLIDERID#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBL_SLIDERIMAGE
+				TBL_PS_SLIDERIMAGE
    			WHERE
    				SLIDERID = #v_SLIDERID#
    			AND
@@ -986,34 +820,28 @@
 	<statement id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE">
 		<![CDATA[
 			MERGE INTO
-				EZPERSONAL.TBL_SLIDERIMAGE 
+				TBL_PS_SLIDERIMAGE 
       		USING (	SELECT
-      						EZPERSONAL.TBL_SLIDERIMAGE.ROWID row_id, TEMPTABLE.SN
+      						TBL_PS_SLIDERIMAGE.ROWID row_id, TEMPTABLE.SN
       					FROM
-      						EZPERSONAL.TBL_SLIDERIMAGE 
+      						TBL_PS_SLIDERIMAGE 
              			JOIN ( SELECT
              						 SLIDERID , ROW_NUMBER() OVER ( ORDER BY SN  ) SN  
                     			FROM
-                    				EZPERSONAL.TBL_SLIDERIMAGE  ) TEMPTABLE 
+                    				TBL_PS_SLIDERIMAGE  ) TEMPTABLE 
                     	ON
-                    		EZPERSONAL.TBL_SLIDERIMAGE.SliderID = TEMPTABLE.SLIDERID ) src
+                    		TBL_PS_SLIDERIMAGE.SliderID = TEMPTABLE.SLIDERID ) src
       		ON
-      			( TBL_SLIDERIMAGE.ROWID = src.row_id )
+      			( TBL_PS_SLIDERIMAGE.ROWID = src.row_id )
       		WHEN
       			MATCHED THEN UPDATE SET SN = src.SN		
 		]]>
 	</statement>
 	
-	<!-- <procedure id="EzPersonalAdmin.delQuickLink"			parameterClass="String">
-		<![CDATA[
-			{CALL EZPERSONAL.EZSP_DELQUICKLINK(#v_QUICKLINKID#)}
-		]]>	
-	</procedure> -->
-	
 	<delete id="EzPersonalAdmin.delQuickLink_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLQUICKLINK_ACL
+				TBL_PS_QUICKLINK_ACL
 		    WHERE
 		    	QUICKLINKID = #v_QUICKLINKID#
 		    AND
@@ -1024,16 +852,18 @@
 	<delete id="EzPersonalAdmin.delQuickLink" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZPERSONAL.TBLQUICKLINK
+				TBL_PS_QUICKLINK
 		    WHERE
 		    	QUICKLINKID = #v_QUICKLINKID#
+		    AND
+		    	TENANT_ID = #tenantID#	
 		]]>
 	</delete>
 	
 	<delete id="EzPersonalAdmin.deleteQuickLinkID" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				 EZPERSONAL.TBLQUICKLINK_ACL
+				 TBL_PS_QUICKLINK_ACL
 			WHERE
 				QUICKLINKID = #quickLinkID#
 			AND

@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPersonal.service.impl;
 
 import java.lang.reflect.Field;
-import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +30,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
-import egovframework.ezEKP.ezPortal.service.impl.EzPortalServiceImpl;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -261,19 +259,21 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public List<PersonalGetWebPartGroupVO> getWebPartGroup(String pCompanyID, String pMode) throws Exception {
+	public List<PersonalGetWebPartGroupVO> getWebPartGroup(String pCompanyID, String pMode, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("v_pMode", pMode);
+		map.put("tenantID", tenantID);
 		return ezPersonalDAO.getWebPartGroup(map);
 	}
 	
 	@Override
-	public List<PersonalGetWebPartVO> getUserWebPart(String pUserID, String pCompanyID, String pACL) throws Exception {
+	public List<PersonalGetWebPartVO> getUserWebPart(String pUserID, String pCompanyID, String pACL, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("v_pACL", pACL.replace(",", "','"));
+		map.put("tenantID", tenantID);
 		
 		String temp = ezPersonalDAO.getUserWebPart_S1(map);
 		

@@ -524,11 +524,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_REGDATE", regDate);
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", mode);
+		map.put("tenantID", userInfo.getTenantId());
 		
 		int count = ezPersonalAdminDAO.setSliderImage_S(map);
 		
 		map.put("count", count);
-		map.put("tenantID", userInfo.getTenantId());
 		
 		if (mode != null && mode.equals("NEW")) {
 			ezPersonalAdminDAO.setSliderImage_I(map);

@@ -895,8 +895,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		Address[] arrRecipientsCC = null;
 		Address[] arrRecipientsBCC = null;
 		Date date = null;
-		String fromStr = null;
 		String fromEmail = null;
+		String fromStr = "";
 		String toStr = "";
 		String ccStr = "";
 		String bccStr = "";

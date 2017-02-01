@@ -729,8 +729,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String userManageWebPart(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 	
-		List<PersonalGetWebPartGroupVO> listGroup = ezPersonalService.getWebPartGroup(userInfo.getCompanyID(), "U");
-		List<PersonalGetWebPartVO> list = ezPersonalService.getUserWebPart(userInfo.getId(), userInfo.getCompanyID(), userInfo.getDeptPathCode());
+		List<PersonalGetWebPartGroupVO> listGroup = ezPersonalService.getWebPartGroup(userInfo.getCompanyID(), "U", userInfo.getTenantId());
+		List<PersonalGetWebPartVO> list = ezPersonalService.getUserWebPart(userInfo.getId(), userInfo.getCompanyID(), userInfo.getDeptPathCode(), userInfo.getTenantId());
 		
 		model.addAttribute("listGroup", listGroup);
 		model.addAttribute("list", list);
