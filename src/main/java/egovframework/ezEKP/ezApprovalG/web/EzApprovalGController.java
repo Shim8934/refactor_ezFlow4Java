@@ -379,15 +379,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
             
             if (tempQuery.indexOf("KEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
             
             if (tempQuery.indexOf("CAPR;") != -1) {
-                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
             
             if (tempQuery.indexOf("CEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
             
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
@@ -3066,65 +3066,65 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			tempQuery = xmlDomSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
 			
 			if (tempQuery.indexOf("DOCNO;") != -1) {
-				returnQuery += " AND TBAPRDOCINFO.DOCNO LIKE '%" + xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+				returnQuery += " AND TBL_APRDOCINFO.DOCNO LIKE '%" + xmlDomSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
 			}
 			
 			if (tempQuery.indexOf("DOCTITLE;") != -1) {
-                returnQuery += " AND TBAPRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+                returnQuery += " AND TBL_APRDOCINFO.DocTitle LIKE '%" + xmlDomSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
             }
 
             if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND TBAPRDOCINFO.WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND TBAPRDOCINFO.WRITERNAME LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WRITERNAME LIKE '%" + xmlDomSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                 }
             }
 
             if (commonUtil.getPrimaryData(userLang).equals("2")) {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND TBAPRDOCINFO.WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName" + userLang + " LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             } else {
                 if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND TBAPRDOCINFO.WriterDeptName LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
+                    returnQuery += " AND TBL_APRDOCINFO.WriterDeptName LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             }
             
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
-            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {
-                returnQuery += " AND TBAPRDOCINFO.FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_APRDOCINFO.FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
             }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
             
             if (tempQuery.indexOf("KEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
             
             if (tempQuery.indexOf("CAPR;") != -1) {
-                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
             }
             
             if (tempQuery.indexOf("CEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
             }
             
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
-            returnQuery += " AND TBAPRRECEIPTPROCESSINFO.TENANT_ID =" + userInfo.getTenantId();
+            returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.TENANT_ID =" + userInfo.getTenantId();
             searchQuery = returnQuery;
 		}
 		
@@ -3946,13 +3946,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
             if (tempQuery.indexOf("KEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + xmlDomSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
             }
             if (tempQuery.indexOf("CAPR;") != -1) {
-                returnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
             if (tempQuery.indexOf("CEND;") != -1) {
-                returnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmlDomSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
             }
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
                 returnQuery += " AND URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
@@ -4289,8 +4289,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		sqlStr.append("BEGIN \n DECLARE v_pCount Number := 0; \n BEGIN SELECT COUNT(DOCID) INTO v_pCount FROM TBAPRDOCINFO WHERE ORGDOCID= '" + docID + "';\n");
         sqlStr.append("IF v_pCount = 0 THEN \n");
         sqlStr.append("BEGIN \n");
-        sqlStr.append("    UPDATE TBEXPENDAPRDOCINFO SET SIGNCHECK = '" + signCheck + "' WHERE DocID = '" + docID + "'; \n");
-        sqlStr.append("    DELETE FROM TBSIGNINFO WHERE DocID = '" + docID + "'; \n");
+        sqlStr.append("    UPDATE TBL_EXPENDAPRDOCINFO SET SIGNCHECK = '" + signCheck + "' WHERE DocID = '" + docID + "'; \n");
+        sqlStr.append("    DELETE FROM TBL_SIGNINFO WHERE DocID = '" + docID + "'; \n");
         sqlStr.append("END; END IF; END; END;\n");
         
         String result = ezApprovalGService.updateSignCheck(sqlStr.toString(), userInfo.getCompanyID());
