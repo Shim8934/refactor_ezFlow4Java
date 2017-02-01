@@ -8520,6 +8520,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>" + cabinetClassNO + "001" + "</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID);
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -9346,7 +9347,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateSerialNo(map);
 		}
 		
-		return String.valueOf(result);
+		return result;
 	}
 
 	public boolean compareLineHistory(String docID, String companyID, int tenantID) throws Exception{
@@ -10366,7 +10367,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} 
+				} else {
+					strSQL.append(subSQL);
+				}
 			}
 			
 			if (rtnVal) {
@@ -10423,7 +10426,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} 
+				} else {
+					strSQL.append(subSQL);
+				}
 			}
 			
 			if (rtnVal) {
@@ -10474,7 +10479,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} 
+				} else {
+					strSQL.append(subSQL);
+				}
 			}
 			
 			if (rtnVal) {
@@ -10541,7 +10548,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} 
+					} else {
+						strSQL.append(subSQL);
+					}
 				}
 
 				if (rtnVal) {
@@ -10572,7 +10581,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} 
+				} else {
+					strSQL.append(subSQL);
+				}
 				
 				if (rtnVal) {
 					subSQL = updateGamsaResult(docID, companyID, orgDocID, orgCompanyID, aprLinersDeptID, aprLinersDeptName, aprLinersDeptName2, "Y", lang, userInfo);
@@ -10616,6 +10627,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
+			}else {
+				strSQL.append(subSQL);
 			}
 			
 			if (rtnVal) {
@@ -10645,6 +10658,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
+			}else {
+				strSQL.append(subSQL);
 			}
 			
 			if (rtnVal) {
@@ -10674,6 +10689,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
+			}else {
+				strSQL.append(subSQL);
 			}
 			
 			if (rtnVal) {
@@ -10717,7 +10734,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} 
+			} else {
+				strSQL.append(subSQL);
+			}
 			
 			if (rtnVal) {
 				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
@@ -10745,7 +10764,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} 
+				} else {
+					strSQL.append(subSQL);
+				}
 			}
 			
 			if (rtnVal) {
@@ -11570,59 +11591,63 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String source = dirPath + commonUtil.separator + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 				
 				rtnVal = copyFile(source, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
-
 				if (rtnVal) {
-					strSQL = " INSERT INTO TBL_ENDAPRDOCINFO ( DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )" +
-							"( SELECT '" + docID +"', FormID, OrgDocID, DocType, DocState, '003','" + endURL +"', DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, '"+ containerID + "', isPublic, TENANT_ID  FROM TBL_APRDOCINFO  WHERE  DocID = '" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);
-					
-					strSQL	= " INSERT INTO TBL_ENDAPRLINEINFO ( DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )"+
-							"(SELECT '" + docID +"', AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID FROM TBL_APRLINEINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);
-					
-					strSQL  = "INSERT INTO TBL_ENDATTACHINFO ( DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )"+
-							"(SELECT '" + docID +"', AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  FROM TBL_APRATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);		
-					
-					strSQL  ="INSERT INTO TBL_ENDAPRDOCATTACHINFO ( DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID )"+
-							"(SELECT '" + docID +"', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID FROM TBL_APRDOCATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);	
-					
-					strSQL  ="INSERT INTO TBL_ENDAPROPINIONINFO ( DocID, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID )" +
-							"(SELECT '" + docID +"', UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  FROM TBL_APROPINIONINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);			
-							
-					strSQL  =" INSERT INTO TBL_ENDRECEIPTPOINTINFO ( DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID )"+
-							"(SELECT '" + docID +"', ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID FROM TBL_RECEIPTPOINTINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);
-					
-					strSQL  ="INSERT INTO TBL_ENDRECEIPTPROCESSINFO ( DocID, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID )"+
-							"(SELECT '" + docID +"', ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   FROM TBL_APRRECEIPTPROCESSINFO     WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);
-					
-					strSQL  =" INSERT INTO TBL_EXPENDAPRDOCINFO ( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )"+
-							" (SELECT '" + docID +"', SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   FROM TBL_EXPAPRDOCINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);
-					
-					strSQL  ="INSERT INTO TBL_EXPENDAPRLINE ( docid, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID )"+
-							"(SELECT '" + docID +"', aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   FROM TBL_EXPAPRLINE   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
-					map.put("sqlString", strSQL);
-					ezApprovalGDAO.insertStrSql(map);		
-					//							"	"APRApproveEnd('" + docID + "', '" + endURL + "','" + containerID + "');\n";
+					strSQL = "APRApproveEnd('" + docID + "', '" + endURL + "','" + containerID + "');\n";
+				}
+				
 				break;
-			}
+//				if (rtnVal) {
+//					strSQL = " INSERT INTO TBL_ENDAPRDOCINFO ( DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )" +
+//							"( SELECT '" + docID +"', FormID, OrgDocID, DocType, DocState, '003','" + endURL +"', DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, '"+ containerID + "', isPublic, TENANT_ID  FROM TBL_APRDOCINFO  WHERE  DocID = '" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);
+//					
+//					strSQL	= " INSERT INTO TBL_ENDAPRLINEINFO ( DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )"+
+//							"(SELECT '" + docID +"', AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID FROM TBL_APRLINEINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);
+//					
+//					strSQL  = "INSERT INTO TBL_ENDATTACHINFO ( DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )"+
+//							"(SELECT '" + docID +"', AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  FROM TBL_APRATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);		
+//					
+//					strSQL  ="INSERT INTO TBL_ENDAPRDOCATTACHINFO ( DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID )"+
+//							"(SELECT '" + docID +"', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID FROM TBL_APRDOCATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);	
+//					
+//					strSQL  ="INSERT INTO TBL_ENDAPROPINIONINFO ( DocID, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID )" +
+//							"(SELECT '" + docID +"', UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  FROM TBL_APROPINIONINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);			
+//							
+//					strSQL  =" INSERT INTO TBL_ENDRECEIPTPOINTINFO ( DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID )"+
+//							"(SELECT '" + docID +"', ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID FROM TBL_RECEIPTPOINTINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);
+//					
+//					strSQL  ="INSERT INTO TBL_ENDRECEIPTPROCESSINFO ( DocID, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID )"+
+//							"(SELECT '" + docID +"', ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   FROM TBL_APRRECEIPTPROCESSINFO     WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);
+//					
+//					strSQL  =" INSERT INTO TBL_EXPENDAPRDOCINFO ( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )"+
+//							" (SELECT '" + docID +"', SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   FROM TBL_EXPAPRDOCINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);
+//					
+//					strSQL  ="INSERT INTO TBL_EXPENDAPRLINE ( docid, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID )"+
+//							"(SELECT '" + docID +"', aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   FROM TBL_EXPAPRLINE   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')";
+//					map.put("sqlString", strSQL);
+//					ezApprovalGDAO.insertStrSql(map);		
+//					//							"	"APRApproveEnd('" + docID + "', '" + endURL + "','" + containerID + "');\n";
+//				break;
+//			}
 			}
 		}
 		if (rtnVal) {
-			return "TRUE";
+			return strSQL;
 		} else {
 			return "FALSE";
 		}
@@ -11644,10 +11669,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CONTAINERTYPEID", containerID2);
 		
 		String containerID3 = ezApprovalGDAO.returnContainerID3(map);
-		String containerType = containerID3.split(":")[1];
-		
+		String containerType ="";
+		if(containerID2 != null){
+			containerType = containerID3.split(":")[1];
+		}
+		if(containerID != null){
 		containerID3 = containerID3.split(":")[0];
-		
+		}
 		if (containerID3.trim().equals("")) {
 			containerID3 = makeContainer(deptID, makeListField(containerType), companyID, tenantID);
 		}

@@ -868,7 +868,7 @@
 			SELECT
 				* 
       		FROM
-      			TBLPROXYINFO 
+      			TBL_PROXYINFO 
       		WHERE
       			USERID = #v_USERID#
       		AND
