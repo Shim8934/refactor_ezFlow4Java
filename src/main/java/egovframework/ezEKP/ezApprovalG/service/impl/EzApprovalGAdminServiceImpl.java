@@ -1451,7 +1451,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
-				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang, tenantID, offset) + "</VALUE></CELL>");
 			}
 			sb.append("</ROW>");
 		}
@@ -2324,7 +2324,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			result = "FALSE";
 		}
 		
-		logger.debug("delForm ended.");
+		logger.debug("delForm ended. result=" + result);
 		
 		return result;
 	}
@@ -2425,8 +2425,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteForm catch.");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return "FALSE";
 		}
