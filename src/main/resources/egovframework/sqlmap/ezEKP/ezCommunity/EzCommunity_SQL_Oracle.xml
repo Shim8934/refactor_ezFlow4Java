@@ -472,10 +472,10 @@
 	<select id="EzCommunityDAO.aspCommInfoGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				C_CLUB.c_clubno,
-             	C_CLUB.c_regdate,
-             	C_CLUB.c_clubname,
-             	C_CLUB.c_clubname2,
+				TBL_C_CLUB.c_clubno,
+             	TBL_C_CLUB.c_regdate,
+             	TBL_C_CLUB.c_clubname,
+             	TBL_C_CLUB.c_clubname2,
              	c_clubgubun,
              	c_cate_a,
              	c_cate_b,
@@ -508,9 +508,9 @@
 						TBL_COMM_BOARDINFO.tenant_id = #tenantID#
 				) T1
 			WHERE
-				RTRIM(C_CLUB.c_clubno) = #v_CODE#
+				RTRIM(TBL_C_CLUB.c_clubno) = #v_CODE#
 			AND
-				C_CLUB.tenant_id = #tenantID#
+				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
 	</select>
 		
@@ -5205,16 +5205,6 @@
 <!-- 		{CALL EZSP_GUEST_EDIT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME1#, #v_USERINFO_DISPLAYNAME2#, #v_USERINFO_COMPANYID#, #v_MEMO#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.guestEditOkInsert"			parameterClass="Map">
-		<selectKey keyProperty="no" resultClass="Integer">
-			<![CDATA[
-				SELECT
-					NVL(MAX(no), 0) + 1
-				FROM 
-					TBL_C_CLUBGUEST
-				WHERE
-					tenant_id = #tenantID#
-			]]>
-		</selectKey>
 		<selectKey keyProperty="c_no" resultClass="Integer">
 			<![CDATA[
 				SELECT
@@ -5240,7 +5230,7 @@
        		c_clubno,
        		tenant_id)
 		VALUES
-			(#no#,
+			(SEQ_TBL_C_CLUBGUEST.nextval,
 			#c_no#,
 			#v_USERINFO_USERID#,
 			#v_USERINFO_DISPLAYNAME1#,
@@ -5294,7 +5284,8 @@
 	<insert id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_C_POLLMANAGER
-				(c_clubno,
+				(managerID,
+				c_clubno,
 				pollgroupno,
 				pollsubject,
 				questioncount,
@@ -5305,7 +5296,8 @@
 				tenant_id
 				)
 			VALUES
-				(#v_CODE#,
+				(SEQ_TBL_C_POLLMANAGER.nextval,
+				#v_CODE#,
 				#v_MAXNO#,
 				#v_SUBJECT#,
 				1,
@@ -5324,7 +5316,8 @@
 	<insert id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_C_POLLQUESTION
-				(pollmanagerid,
+				(questionID,
+				pollmanagerid,
 				questionno,
 				questioncontent,
 				answercount,
@@ -5332,7 +5325,8 @@
 				answerviewtype,
 				tenant_id)
 			VALUES
-				(#v_MANAGERID#,
+				(SEQ_TBL_C_POLLQUESTION.nextval,
+				#v_MANAGERID#,
 				1,
 				#v_SUBJECT#,
 				#v_ANSWERCOUNT#,
@@ -5378,7 +5372,8 @@
 	<insert id="EzCommunityDAO.pollResOkSetInsert"					parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_C_POLLRESPONSE
-				(questionid,
+				(responseid,
+				questionid,
 				answerid,
 				answerno,
 				answeretc,
@@ -5386,7 +5381,8 @@
 				companyid,
 				tenant_id) 
 			VALUES
-				(#v_QUESTIONID#,
+				(SEQ_TBL_C_POLLRESPONSE.nextval,
+				#v_QUESTIONID#,
 				#v_ANSWERID#,
 				#v_POLLSELECT#,
 		]]>
@@ -6586,7 +6582,8 @@
         	INTO
         		TBL_COMM_ITEM_ATTACHMENTS
        		VALUES
-       			(#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#, #tenantID#)
+       			(SEQ_TBL_COMM_ITEM_ATTACHMENTS.nextval,
+       			#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -6599,7 +6596,7 @@
 				answercontent,
 				tenant_id)
        		VALUES
-       			(C_POLLANSWER_ANSWERID_SEQ.NEXTVAL,
+       			(SEQ_TBL_C_POLLANSWER.nextval,
        			#v_POLLQUESTIONID#,
        			#v_ANSWERNO#,
        			#v_ANSWERCONTENT#,
@@ -6706,5 +6703,32 @@
 			AND
 				tenant_id = #tenantID#
 		]]>
+	</select>
+	
+	<select id="EzCommunityDAO.getContentInfo"					parameterClass="Map"	resultClass="String">
+		<isEqual property="v_PTYPE" compareValue="COMMUNITYNOTI">
+			<![CDATA[
+				SELECT
+					filename AS filepath
+				FROM
+					TBL_C_BOARD
+				WHERE
+					no = #v_PID#
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PTYPE" compareValue="COMMUNITYCONTENT">
+			<![CDATA[
+				SELECT
+					contentlocation AS filepath
+				FROM
+					TBL_COMM_ITEM
+				WHERE
+					itemid = #v_PID#
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</isEqual>
 	</select>
 </sqlMap>

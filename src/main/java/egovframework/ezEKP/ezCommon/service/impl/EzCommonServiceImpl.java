@@ -789,8 +789,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	url = request.getParameter("href");
         } else if (type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM")) {
         	url = ezBoardService.getContentInfo(type, itemID, tenantID);
-//        } else if (type.equals("COMMUNITYNOTI") || type.equals("COMMUNITYCONTENT")) {
-//        	url = ezCommunityService.getContentInfo(type, itemID, tenantID);
+        } else if (type.equals("COMMUNITYNOTI") || type.equals("COMMUNITYCONTENT")) {
+        	url = ezCommunityService.getContentInfo(type, itemID, tenantID);
         } else {
         	//나머지도 바꿔야함~
         	url = getContentInfo(type, itemID);

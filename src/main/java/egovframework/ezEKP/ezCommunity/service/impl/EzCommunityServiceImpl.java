@@ -6967,7 +6967,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	//이효진 추가 필요
 	@Override
 	public String getContentInfo(String type, String itemID, int tenantID) throws Exception {
-		return null;
+		logger.debug("getContentInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PTYPE", type);
+		map.put("v_PID", itemID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getContentInfo ended.");
+		
+		return ezCommunityDAO.getContentInfo(map);
 	}
 
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {
